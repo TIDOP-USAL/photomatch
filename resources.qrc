@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>FMELogo.png</file>
+        <file>Tidop_en.png</file>
+        <file>check.png</file>
+    </qresource>
+</RCC>
