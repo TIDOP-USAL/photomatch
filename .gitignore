@@ -37,3 +37,4 @@ Makefile
 Makefile.Debug
 Makefile.Release
 .qmake.stash
+/CMakeLists.txt.user
