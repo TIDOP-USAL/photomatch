@@ -4,11 +4,12 @@
 #include <opencv/cv.h>
 #include <QDir>
 
-class LambertiMontrucchioSanna2006_Process:public ProcessConcurrent
+class LambertiMontrucchioSanna2006_Process : public ProcessConcurrent
 {
 public:
-    LambertiMontrucchioSanna2006_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right,cv::Size blockSize,cv::Size blockRegions, QDir outputDir);
-    virtual void run();
+    LambertiMontrucchioSanna2006_Process(cv::Mat &cvImg_Left, cv::Mat &cvImg_Right, cv::Size blockSize, cv::Size blockRegions, QDir outputDir);
+    virtual void run() override;
+
 private:
     cv::Mat& mCvImg_left;
     cv::Mat& mCvImg_right;

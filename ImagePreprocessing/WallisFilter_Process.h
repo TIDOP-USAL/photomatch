@@ -4,7 +4,7 @@
 #include <QDir>
 #include "opencv/cv.hpp"
 
-class WallisFilter_Process:public ProcessConcurrent
+class WallisFilter_Process : public ProcessConcurrent
 {
 public:
     WallisFilter_Process(cv::Mat& cvImg_Left,cv::Mat& cvImg_Right,float contrast,float brightness, int imposedAverage,int imposedLocalStandardDeviation,int kernelSize, QDir outputDir);

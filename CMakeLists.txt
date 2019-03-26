@@ -356,7 +356,7 @@ list(APPEND FME_SRC FME.rc)
 qt5_add_resources(UI_FME_RES ${FME_RES})
 
 
-add_executable(${PROJECT_NAME}
+add_executable(${PROJECT_NAME} WIN32
                ${FME_SRC}
                ${FME_HEADERS}
                ${FME_FORMS}

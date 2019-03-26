@@ -4,11 +4,12 @@
 #include <opencv/cv.h>
 #include <QDir>
 
-class WadudKabirDewanChae2007_Process:public ProcessConcurrent
+class WadudKabirDewanChae2007_Process : public ProcessConcurrent
 {
 public:
-    WadudKabirDewanChae2007_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right,int power, QDir outputDir);
-    virtual void run();
+    WadudKabirDewanChae2007_Process(cv::Mat &cvImg_Left, cv::Mat &cvImg_Right, int power, QDir outputDir);
+    virtual void run() override;
+
 private:
     cv::Mat& mCvImg_left;
     cv::Mat& mCvImg_right;

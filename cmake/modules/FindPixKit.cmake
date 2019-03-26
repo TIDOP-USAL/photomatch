@@ -1,24 +1,25 @@
 
 unset(PIXKIT_FOUND)
 
-list(APPEND PIXKIT_CHECK_INCLUDE_DIRS
+SET(PIXKIT_DIR "" CACHE PATH "Root folder of PIXKIT dependency")
+
+list(APPEND PIXKIT_INCLUDE_DIRS
+     ${PIXKIT_DIR}/include
      /opt/local/include
      /opt/local/include/ufsparse # Mac OS X
      /usr/local/homebrew/include # Mac OS X
      /usr/local/include
      /usr/include)
      
-list(APPEND PIXKIT_CHECK_LIBRARY_DIRS
+list(APPEND PIXKIT_LIBRARY_DIRS
+     ${PIXKIT_DIR}/lib
+     ${PIXKIT_DIR}/lib/x64
      /opt/local/lib
      /opt/local/lib/ufsparse # Mac OS X
      /usr/local/homebrew/lib # Mac OS X
      /usr/local/lib
      /usr/lib)
      
-# Additional suffixes to try appending to each search path.
-list(APPEND PIXKIT_CHECK_PATH_SUFFIXES
-     PixKit) # Windows/Ubuntu
-  
 include(FindPackageHandleStandardArgs)
 
 # Include
@@ -31,12 +32,12 @@ find_path(PIXKIT_INCLUDE_DIR
 ################################### 
 # pixkit_cv
 find_library(PIXKIT_CV_LIBRARY
-             NAMES pixkit_cv052
-             PATHS ${PIXKIT_CV_LIBRARY_DIRS}
+             NAMES pixkit_cv pixkit_cv052
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )
 find_library(PIXKIT_CV_LIBRARY_DEBUG
-             NAMES pixkit_cv052d
-             PATHS ${PIXKIT_CV_LIBRARY_DEBUG_DIRS}
+             NAMES pixkit_cvd pixkit_cv052d
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )
 
 find_package_handle_standard_args(PIXKIT_CV
@@ -59,12 +60,12 @@ endif()
 ###################################
 # PIXKIT_FILE
 find_library(PIXKIT_FILE_LIBRARY
-             NAMES pixkit_file052
-             PATHS ${PIXKIT_FILE_LIBRARY_DIRS}
+             NAMES pixkit_file pixkit_file052
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )
 find_library(PIXKIT_FILE_LIBRARY_DEBUG
-             NAMES pixkit_file052d
-             PATHS ${PIXKIT_FILE_LIBRARY_DEBUG_DIRS}
+             NAMES pixkit_filed pixkit_file052d
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )
 
 find_package_handle_standard_args(PIXKIT_FILE
@@ -85,12 +86,12 @@ endif()
 ###################################  
 # PIXKIT_IMAGE
 find_library(PIXKIT_IMAGE_LIBRARY
-             NAMES pixkit_image052
-             PATHS ${PIXKIT_IMAGE_LIBRARY_DIRS}
+             NAMES pixkit_image pixkit_image052
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )   
 find_library(PIXKIT_IMAGE_LIBRARY_DEBUG
-             NAMES pixkit_image052d
-             PATHS ${PIXKIT_IMAGE_LIBRARY_DEBUG_DIRS}
+             NAMES pixkit_imaged pixkit_image052d
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )   
 
 find_package_handle_standard_args(PIXKIT_IMAGE
@@ -111,12 +112,12 @@ endif()
 ###################################
 # PIXKIT_ML
 find_library(PIXKIT_ML_LIBRARY
-             NAMES pixkit_ml052
-             PATHS ${PIXKIT_ML_LIBRARY_DIRS}
+             NAMES pixkit_ml pixkit_ml052
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )  
 find_library(PIXKIT_ML_LIBRARY_DEBUG
-             NAMES pixkit_ml052d
-             PATHS ${PIXKIT_ML_LIBRARY_DEBUG_DIRS}
+             NAMES pixkit_mld pixkit_ml052d
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )  
 
 find_package_handle_standard_args(PIXKIT_ML
@@ -136,12 +137,12 @@ endif()
 ###################################
 # PIXKIT_TIMER
 find_library(PIXKIT_TIMER_LIBRARY
-             NAMES pixkit_timer052
-             PATHS ${PIXKIT_TIMER_LIBRARY_DIRS}
+             NAMES pixkit_timer pixkit_timer052
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )  
 find_library(PIXKIT_TIMER_LIBRARY_DEBUG
-             NAMES pixkit_timer052d
-             PATHS ${PIXKIT_TIMER_LIBRARY_DEBUG_DIRS}
+             NAMES pixkit_timerd pixkit_timer052d
+             PATHS ${PIXKIT_LIBRARY_DIRS}
 )  
 
 find_package_handle_standard_args(PIXKIT_TIMER

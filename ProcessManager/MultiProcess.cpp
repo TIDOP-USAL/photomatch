@@ -166,6 +166,8 @@ Process *MultiProcess::at(int i)
 {
     if(i<mProcessList.count())
         return mProcessList.at(i);
+    else 
+      return Q_NULLPTR;
 }
 
 int MultiProcess::getSteps()

@@ -4,11 +4,12 @@
 #include <opencv/cv.h>
 #include <QDir>
 
-class Kimori2013_Process:public ProcessConcurrent
+class Kimori2013_Process : public ProcessConcurrent
 {
 public:
     Kimori2013_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right,cv::Size blockSize, QDir outputDir);
-    virtual void run();
+    virtual void run() override;
+
 private:
     cv::Mat& mCvImg_left;
     cv::Mat& mCvImg_right;

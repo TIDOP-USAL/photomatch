@@ -4,11 +4,12 @@
 #include <opencv/cv.h>
 #include <QDir>
 
-class YuBajaj2004_Process:public ProcessConcurrent
+class YuBajaj2004_Process : public ProcessConcurrent
 {
 public:
-    YuBajaj2004_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right,cv::Size blockSize,float c,bool anisotropicMode,float r, QDir outputDir);
-    virtual void run();
+    YuBajaj2004_Process(cv::Mat &cvImg_Left, cv::Mat &cvImg_Right, cv::Size blockSize, float c, bool anisotropicMode, float r, QDir outputDir);
+    virtual void run() override;
+
 private:
     cv::Mat& mCvImg_left;
     cv::Mat& mCvImg_right;

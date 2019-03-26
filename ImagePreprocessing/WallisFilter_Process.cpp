@@ -3,28 +3,38 @@ using namespace cv;
 using namespace std;
 
 WallisFilter_Process::WallisFilter_Process(cv::Mat& cvImg_Left,cv::Mat& cvImg_Right,float contrast,float brightness, int imposedAverage,int imposedLocalStandardDeviation,int kernelSize, QDir outputDir):
-    mCvImg_left(cvImg_Left),mCvImg_right(cvImg_Right),mOutputDir(outputDir),
-    mContrast(contrast),mBrightness(brightness),mImposedAverage(imposedAverage),mImposedLocalStandardDeviation(imposedLocalStandardDeviation),mKernelSize(kernelSize)
+    mCvImg_left(cvImg_Left),
+    mCvImg_right(cvImg_Right),
+    mOutputDir(outputDir),
+    mContrast(contrast),
+    mBrightness(brightness),
+    mImposedAverage(imposedAverage),
+    mImposedLocalStandardDeviation(imposedLocalStandardDeviation),
+    mKernelSize(kernelSize)
 {
 
 }
 void WallisFilter_Process::run(){
 
     cv::Mat color_boost;
-    cv::decolor(mCvImg_left, mCvImg_left, color_boost);
-    cv::decolor(mCvImg_right, mCvImg_right, color_boost);
+    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+      cv::decolor(mCvImg_left, mCvImg_left, color_boost);
+      cv::decolor(mCvImg_right, mCvImg_right, color_boost);
+    }
 
     mCvImg_left.convertTo(mCvImg_left, CV_32F);
 
     cv::Mat localMean;
-    blur(mCvImg_left, localMean, Size(mKernelSize, mKernelSize)); //Easier to compute this way
+    cv::blur(mCvImg_left, localMean, Size(mKernelSize, mKernelSize)); //Easier to compute this way
     cv::Mat differentialImage;
-    blur(mCvImg_left.mul(mCvImg_left), differentialImage, Size(mKernelSize, mKernelSize));
+    cv::blur(mCvImg_left.mul(mCvImg_left), differentialImage, Size(mKernelSize, mKernelSize));
     cv::Mat localStandardDeviation;
     cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
 
-    cv::Mat r1 = mContrast * mImposedLocalStandardDeviation / (localStandardDeviation+(1-mContrast));
-    cv::Mat r0 = mBrightness * mImposedAverage + localMean.mul(1-mBrightness-r1);
+    cv::Mat r1 = static_cast<double>(mContrast * mImposedLocalStandardDeviation)
+                 / (localStandardDeviation+(1. - static_cast<double>(mContrast)));
+    cv::Mat r0 = static_cast<double>(mBrightness * mImposedAverage)
+                 + localMean.mul(1.- static_cast<double>(mBrightness) - r1);
     mCvImg_left = mCvImg_left.mul(r1) + r0;
 
     mCvImg_right.convertTo(mCvImg_right, CV_32F);
@@ -35,8 +45,10 @@ void WallisFilter_Process::run(){
     cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
 
 
-    r1 = mContrast * mImposedLocalStandardDeviation / (localStandardDeviation+(1-mContrast));
-    r0 = mBrightness * mImposedAverage + localMean.mul(1-mBrightness-r1);
+    r1 = static_cast<double>(mContrast * mImposedLocalStandardDeviation)
+         / (localStandardDeviation+(1.-static_cast<double>(mContrast)));
+    r0 = static_cast<double>(mBrightness * mImposedAverage)
+         + localMean.mul(1. - static_cast<double>(mBrightness) - r1);
     mCvImg_right = mCvImg_right.mul(r1) + r0;
 
 

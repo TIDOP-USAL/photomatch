@@ -2,20 +2,38 @@
 #include <pixkit-image.hpp>
 
 Lal2014_Process::Lal2014_Process(cv::Mat& cvImg_Left,cv::Mat& cvImg_Right,cv::Size blockSize, QDir outputDir):
-    mCvImg_left(cvImg_Left),mCvImg_right(cvImg_Right),mBlockSize(blockSize),mOutputDir(outputDir)
+    mCvImg_left(cvImg_Left),
+    mCvImg_right(cvImg_Right),
+    mBlockSize(blockSize),
+    mOutputDir(outputDir)
 {
 
 }
 
-void Lal2014_Process::run(){
+void Lal2014_Process::run()
+{
 
-        cv::Mat color_boost;
-        cv::decolor(mCvImg_left, mCvImg_left, color_boost);
-        cv::decolor(mCvImg_right, mCvImg_right, color_boost);
+    cv::Mat color_boost;
 
-        pixkit::enhancement::local::Lal2014(mCvImg_left,mCvImg_left,mBlockSize);
-        pixkit::enhancement::local::Lal2014(mCvImg_right,mCvImg_right,mBlockSize);
-        cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
-        cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
+    cv::Mat tmpLeft;
+    cv::Mat tmpRight;
+    if (mCvImg_left.channels() == 1)  cv::cvtColor(mCvImg_left, tmpLeft, cv::COLOR_GRAY2BGR);
+    else mCvImg_left.copyTo(tmpLeft);
+    if (mCvImg_right.channels() == 1) cv::cvtColor(mCvImg_right, tmpRight, cv::COLOR_GRAY2BGR);
+    else mCvImg_left.copyTo(tmpRight);
+
+    pixkit::enhancement::local::Lal2014(tmpLeft, tmpLeft, mBlockSize);
+    pixkit::enhancement::local::Lal2014(tmpRight, tmpRight, mBlockSize);
+
+    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+        cv::decolor(tmpLeft, mCvImg_left, color_boost);
+        cv::decolor(tmpRight, mCvImg_right, color_boost);
+    } else {
+        cv::cvtColor(tmpLeft, mCvImg_left, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(tmpRight, mCvImg_right, cv::COLOR_BGR2GRAY);
+    }
+
+    cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
+    cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
 
 }

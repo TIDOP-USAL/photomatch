@@ -5,11 +5,12 @@
 #include <QDir>
 
 
-class LiuJinChenLiuLi2011_Process:public ProcessConcurrent
+class LiuJinChenLiuLi2011_Process : public ProcessConcurrent
 {
 public:
-    LiuJinChenLiuLi2011_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right,cv::Size blockSize, QDir outputDir);
-    virtual void run();
+    LiuJinChenLiuLi2011_Process(cv::Mat &cvImg_Left, cv::Mat &cvImg_Right, cv::Size blockSize, QDir outputDir);
+    virtual void run() override;
+
 private:
     cv::Mat& mCvImg_left;
     cv::Mat& mCvImg_right;

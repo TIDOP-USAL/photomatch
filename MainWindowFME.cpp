@@ -1393,8 +1393,10 @@ void MainWindowFME::on_PbComputePreprocessing_triggered(){
     mMainTabWidget->setTabEnabled(3, false);
     mMainTabWidget->setTabEnabled(4, false);
     mMainTabWidget->setTabEnabled(5, false);
-    mCvImg_left = cv::imread(mLeftImageFileInfo->absoluteFilePath().toStdString(), CV_LOAD_IMAGE_COLOR);
-    mCvImg_right = cv::imread(mRightImageFileInfo->absoluteFilePath().toStdString(), CV_LOAD_IMAGE_COLOR);
+    //mCvImg_left = cv::imread(mLeftImageFileInfo->absoluteFilePath().toStdString(), CV_LOAD_IMAGE_COLOR);
+    //mCvImg_right = cv::imread(mRightImageFileInfo->absoluteFilePath().toStdString(), CV_LOAD_IMAGE_COLOR);
+    mCvImg_left = cv::imread(mLeftImageFileInfo->absoluteFilePath().toStdString(), cv::IMREAD_UNCHANGED);
+    mCvImg_right = cv::imread(mRightImageFileInfo->absoluteFilePath().toStdString(), cv::IMREAD_UNCHANGED);
 
     mCvLeft_key.clear();
 
@@ -1455,7 +1457,7 @@ void MainWindowFME::on_PbComputePreprocessing_triggered(){
         mProcessContainer->appendProcess(new LambertiMontrucchioSanna2006_Process(mCvImg_left,mCvImg_right,cv::Size(11,11),cv::Size(44,44),mLeftImageFileInfo->absoluteDir()));
         break;
     case PREP_Yu_Bajaj2004:
-        mProcessContainer->appendProcess(new YuBajaj2004_Process(mCvImg_left,mCvImg_right,cv::Size(11,11),1,false,0.1,mLeftImageFileInfo->absoluteDir()));
+        mProcessContainer->appendProcess(new YuBajaj2004_Process(mCvImg_left,mCvImg_right,cv::Size(11,11),1.f,false,0.1f,mLeftImageFileInfo->absoluteDir()));
         break;
 
 

@@ -4,7 +4,7 @@
 #include <opencv/cv.h>
 #include <QDir>
 
-class RajuNair2014_Process:public ProcessConcurrent
+class RajuNair2014_Process : public ProcessConcurrent
 {
 public:
     RajuNair2014_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right, QDir outputDir);

@@ -4,11 +4,12 @@
 #include <opencv/cv.h>
 #include <QDir>
 
-class FAHE2006_Process:public ProcessConcurrent
+class FAHE2006_Process : public ProcessConcurrent
 {
 public:
-    FAHE2006_Process(cv::Mat &cvImg_Left,cv::Mat &cvImg_Right,cv::Size blockSize, QDir outputDir);
-    virtual void run();
+    FAHE2006_Process(cv::Mat &cvImg_Left, cv::Mat &cvImg_Right, cv::Size blockSize, QDir outputDir);
+    virtual void run() override;
+
 private:
     cv::Mat& mCvImg_left;
     cv::Mat& mCvImg_right;

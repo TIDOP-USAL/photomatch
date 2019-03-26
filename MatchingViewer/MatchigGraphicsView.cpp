@@ -20,10 +20,10 @@ void MatchigGraphicsView::wheelEvent(QWheelEvent *event)
     if(ctrlPressed) {
         setTransformationAnchor(AnchorUnderMouse);
         if(event->delta() > 0)
-            emit scaleChanged(1.25);
+            emit scaleChanged(1.25f);
 //            scale(1.25,1.25);
         else
-            emit scaleChanged(0.8);
+            emit scaleChanged(0.8f);
 //            scale(0.8,0.8);
 
     } else
