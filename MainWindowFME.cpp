@@ -181,14 +181,15 @@ MainWindowFME::MainWindowFME(QWidget *parent) :
     mCbPreprocessingAlgorithm->addItem("FAHE2006");
     mCbPreprocessingAlgorithm->addItem("LambertiMontrucchioSanna2006");
     mCbPreprocessingAlgorithm->addItem("YuBajaj2004");
-    mCbPreprocessingAlgorithm->addItem("KimKimHwang2001");
-    mCbPreprocessingAlgorithm->addItem("Stark2000");
-    mCbPreprocessingAlgorithm->addItem("MSRCR1997");
-    mCbPreprocessingAlgorithm->addItem("GlobalHistogramEqualization1992");
-    mCbPreprocessingAlgorithm->addItem("AHE1974");
-    mCbPreprocessingAlgorithm->addItem("CLAHE1987");
-    mCbPreprocessingAlgorithm->addItem("CLAHEnon1987");
-    mCbPreprocessingAlgorithm->addItem("SimplestColorBalance");
+    ///TODO: sin implementar aun
+    //mCbPreprocessingAlgorithm->addItem("KimKimHwang2001");
+    //mCbPreprocessingAlgorithm->addItem("Stark2000");
+    //mCbPreprocessingAlgorithm->addItem("MSRCR1997");
+    //mCbPreprocessingAlgorithm->addItem("GlobalHistogramEqualization1992");
+    //mCbPreprocessingAlgorithm->addItem("AHE1974");
+    //mCbPreprocessingAlgorithm->addItem("CLAHE1987");
+    //mCbPreprocessingAlgorithm->addItem("CLAHEnon1987");
+    //mCbPreprocessingAlgorithm->addItem("SimplestColorBalance");
 
 
     //    connect(mCbPreprocessingAlgorithm,SIGNAL(currentIndexChanged(int)),this,SLOT(on_LeftImageFeatureDetector_ItemChanged(int)));

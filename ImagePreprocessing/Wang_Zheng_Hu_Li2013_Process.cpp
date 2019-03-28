@@ -43,9 +43,11 @@ bool WangZhengHuLi2013(const cv::Mat &ori,cv::Mat &ret){
         printf("The type of input image should be CV_8UC3.\n");
         CV_Assert(false);
     }
+    try {
+
     std::vector <cv::Mat> HSV(3);
     cv::Mat_<cv::Vec3b> Result=cv::Mat::zeros(ori.rows,ori.cols,ori.type());
-    cv::Mat_<cv::Vec3f> reflectance_f=cv::Mat::zeros(ori.rows,ori.cols,CV_32FC1);	//equation (13)
+    cv::Mat_<cv::Vec3f> reflectance_f=cv::Mat::zeros(ori.rows,ori.cols, CV_32FC3);	//equation (13)
     cv::Mat_<float> L1g=cv::Mat::zeros(ori.rows,ori.cols,CV_32FC1);					//equation (14)
     cv::Mat_<uchar> Lm=cv::Mat::zeros(ori.rows,ori.cols,CV_8UC1);					//equation (22)
     cv::Mat_<float> clv=cv::Mat::zeros(1,256,CV_32FC1);								//equation (17)
@@ -191,31 +193,51 @@ bool WangZhengHuLi2013(const cv::Mat &ori,cv::Mat &ret){
         }
     }
     ret=Result.clone();
+    } catch (std::exception &e){
+      std::string msg = e.what();
+      return 0;
+    }
     return 1;
 }
 
 
 Wang_Zheng_Hu_Li2013_Process::Wang_Zheng_Hu_Li2013_Process(cv::Mat& cvImg_Left,cv::Mat& cvImg_Right, QDir outputDir):
-    mCvImg_left(cvImg_Left),mCvImg_right(cvImg_Right),mOutputDir(outputDir)
+    mCvImg_left(cvImg_Left),
+    mCvImg_right(cvImg_Right),
+    mOutputDir(outputDir)
 {
 
 }
-void Wang_Zheng_Hu_Li2013_Process::run(){
 
-        cv::Mat color_boost;
+void Wang_Zheng_Hu_Li2013_Process::run()
+{
 
-        cv::Mat tmpLeft;
-        cv::Mat tmpRight;
-        WangZhengHuLi2013(mCvImg_left,tmpLeft);
-        WangZhengHuLi2013(mCvImg_right,tmpRight);
+    cv::Mat color_boost;
+
+    cv::Mat tmpLeft;
+    cv::Mat tmpRight;
+    if (mCvImg_left.channels() == 1)  cv::cvtColor(mCvImg_left, tmpLeft, cv::COLOR_GRAY2BGR);
+    else mCvImg_left.copyTo(tmpLeft);
+    if (mCvImg_right.channels() == 1) cv::cvtColor(mCvImg_right, tmpRight, cv::COLOR_GRAY2BGR);
+    else mCvImg_left.copyTo(tmpRight);
+    WangZhengHuLi2013(tmpLeft, tmpLeft);
+    WangZhengHuLi2013(tmpRight, tmpRight);
 
 
-        tmpLeft.copyTo(mCvImg_left);
-        tmpRight.copyTo(mCvImg_right);
+    //tmpLeft.copyTo(mCvImg_left);
+    //tmpRight.copyTo(mCvImg_right);
 
-        cv::decolor(mCvImg_left, mCvImg_left, color_boost);
-        cv::decolor(mCvImg_right, mCvImg_right, color_boost);
-        cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
-        cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
+    //cv::decolor(mCvImg_left, mCvImg_left, color_boost);
+    //cv::decolor(mCvImg_right, mCvImg_right, color_boost);
+    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+        cv::decolor(tmpLeft, mCvImg_left, color_boost);
+        cv::decolor(tmpRight, mCvImg_right, color_boost);
+    } else {
+        cv::cvtColor(tmpLeft, mCvImg_left, cv::COLOR_BGR2GRAY);
+        cv::cvtColor(tmpRight, mCvImg_right, cv::COLOR_BGR2GRAY);
+    }
+
+    cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
+    cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
 
 }
