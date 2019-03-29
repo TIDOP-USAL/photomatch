@@ -25,11 +25,14 @@ void Lal2014_Process::run()
     pixkit::enhancement::local::Lal2014(tmpLeft, tmpLeft, mBlockSize);
     pixkit::enhancement::local::Lal2014(tmpRight, tmpRight, mBlockSize);
 
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(tmpLeft, mCvImg_left, color_boost);
-        cv::decolor(tmpRight, mCvImg_right, color_boost);
     } else {
         cv::cvtColor(tmpLeft, mCvImg_left, cv::COLOR_BGR2GRAY);
+    }
+    if (mCvImg_right.channels() >= 3){
+        cv::decolor(tmpRight, mCvImg_right, color_boost);
+    } else {
         cv::cvtColor(tmpRight, mCvImg_right, cv::COLOR_BGR2GRAY);
     }
 

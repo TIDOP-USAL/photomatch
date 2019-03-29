@@ -223,17 +223,14 @@ void Wang_Zheng_Hu_Li2013_Process::run()
     WangZhengHuLi2013(tmpLeft, tmpLeft);
     WangZhengHuLi2013(tmpRight, tmpRight);
 
-
-    //tmpLeft.copyTo(mCvImg_left);
-    //tmpRight.copyTo(mCvImg_right);
-
-    //cv::decolor(mCvImg_left, mCvImg_left, color_boost);
-    //cv::decolor(mCvImg_right, mCvImg_right, color_boost);
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(tmpLeft, mCvImg_left, color_boost);
-        cv::decolor(tmpRight, mCvImg_right, color_boost);
     } else {
         cv::cvtColor(tmpLeft, mCvImg_left, cv::COLOR_BGR2GRAY);
+    }
+    if (mCvImg_right.channels() >= 3){
+        cv::decolor(tmpRight, mCvImg_right, color_boost);
+    } else {
         cv::cvtColor(tmpRight, mCvImg_right, cv::COLOR_BGR2GRAY);
     }
 

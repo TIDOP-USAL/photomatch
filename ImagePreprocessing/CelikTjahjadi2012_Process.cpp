@@ -12,25 +12,21 @@ CelikTjahjadi2012_Process::CelikTjahjadi2012_Process(cv::Mat& cvImg_Left,cv::Mat
 
 void CelikTjahjadi2012_Process::run()
 {
-  try
-  {
-      cv::Mat color_boost;
-      if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
-          cv::decolor(mCvImg_left, mCvImg_left, color_boost);
-          cv::decolor(mCvImg_right, mCvImg_right, color_boost);
-      }
-      cv::Mat tmpLeft;
-      cv::Mat tmpRight;
-      pixkit::enhancement::global::CelikTjahjadi2012(mCvImg_left, tmpLeft,mN);
-      pixkit::enhancement::global::CelikTjahjadi2012(mCvImg_right, tmpRight,mN);
-      tmpLeft.copyTo(mCvImg_left);
-      tmpRight.copyTo(mCvImg_right);
-      cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
-      cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
-  } catch (const std::exception &e) {
-     std::string msg = e.what();
-     emit error(0, msg.c_str());
-  }
+    cv::Mat color_boost;
+    if (mCvImg_left.channels() >= 3){
+        cv::decolor(mCvImg_left, mCvImg_left, color_boost);
+    }
+    if (mCvImg_right.channels() >= 3){
+        cv::decolor(mCvImg_right, mCvImg_right, color_boost);
+    }
+    cv::Mat tmpLeft;
+    cv::Mat tmpRight;
+    pixkit::enhancement::global::CelikTjahjadi2012(mCvImg_left, tmpLeft,mN);
+    pixkit::enhancement::global::CelikTjahjadi2012(mCvImg_right, tmpRight,mN);
+    tmpLeft.copyTo(mCvImg_left);
+    tmpRight.copyTo(mCvImg_right);
 
+    cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
+    cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
 
 }

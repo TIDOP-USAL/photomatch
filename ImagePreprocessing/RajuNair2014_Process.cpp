@@ -9,13 +9,16 @@ RajuNair2014_Process::RajuNair2014_Process(cv::Mat& cvImg_Left,cv::Mat& cvImg_Ri
 void RajuNair2014_Process::run(){
 
     cv::Mat color_boost;
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
-
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(mCvImg_left, mCvImg_left, color_boost);
+    }
+    if (mCvImg_right.channels() >= 3){
         cv::decolor(mCvImg_right, mCvImg_right, color_boost);
     }
+
     pixkit::enhancement::global::RajuNair2014(mCvImg_left,mCvImg_left);
     pixkit::enhancement::global::RajuNair2014(mCvImg_right,mCvImg_right);
+
     cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
     cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
 

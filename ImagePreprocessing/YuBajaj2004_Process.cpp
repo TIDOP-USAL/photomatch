@@ -17,8 +17,10 @@ void YuBajaj2004_Process::run()
 {
 
     cv::Mat color_boost;
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(mCvImg_left, mCvImg_left, color_boost);
+    }
+    if (mCvImg_right.channels() >= 3){
         cv::decolor(mCvImg_right, mCvImg_right, color_boost);
     }
     cv::Mat tmpLeft;

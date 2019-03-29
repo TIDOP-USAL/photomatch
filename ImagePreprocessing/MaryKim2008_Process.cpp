@@ -14,8 +14,10 @@ void MaryKim2008_Process::run()
 {
 
     cv::Mat color_boost;
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(mCvImg_left, mCvImg_left, color_boost);
+    }
+    if (mCvImg_right.channels() >= 3){
         cv::decolor(mCvImg_right, mCvImg_right, color_boost);
     }
     cv::Mat tmpLeft;
@@ -24,6 +26,7 @@ void MaryKim2008_Process::run()
     pixkit::enhancement::global::MaryKim2008(mCvImg_right,tmpRight,mMorD,mR);
     tmpLeft.copyTo(mCvImg_left);
     tmpRight.copyTo(mCvImg_right);
+
     cv::imwrite(mOutputDir.absoluteFilePath("leftPreprocessed.png").toStdString(), mCvImg_left);
     cv::imwrite(mOutputDir.absoluteFilePath("rightPreprocessed.png").toStdString(), mCvImg_right);
 

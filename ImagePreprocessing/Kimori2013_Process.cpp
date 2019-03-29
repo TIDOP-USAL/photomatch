@@ -17,14 +17,16 @@ void Kimori2013_Process::run()
     
     cv::Mat tmpLeft;
     cv::Mat tmpRight;
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(mCvImg_left, tmpLeft, color_boost);
-        cv::decolor(mCvImg_right, tmpRight, color_boost);
     } else {
         mCvImg_left.copyTo(tmpLeft);
+    }
+    if (mCvImg_right.channels() >= 3){
+        cv::decolor(mCvImg_right, tmpRight, color_boost);
+    } else {
         mCvImg_right.copyTo(tmpRight);
     }
-
     pixkit::enhancement::local::Kimori2013(tmpLeft, mCvImg_left, mBlockSize);
     pixkit::enhancement::local::Kimori2013(tmpRight, mCvImg_right, mBlockSize);
 

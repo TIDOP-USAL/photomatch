@@ -26,11 +26,14 @@ void POHE2013_Process::run()
     pixkit::enhancement::local::MSRCP2014(tmpLeft, tmpLeft2);
     pixkit::enhancement::local::MSRCP2014(tmpRight, tmpRight2);
 
-    if (mCvImg_left.channels() >= 3 && mCvImg_right.channels() >= 3){
+    if (mCvImg_left.channels() >= 3){
         cv::decolor(tmpLeft2, mCvImg_left, color_boost);
-        cv::decolor(tmpRight2, mCvImg_right, color_boost);
     } else {
         cv::cvtColor(tmpLeft2, mCvImg_left, cv::COLOR_BGR2GRAY);
+    }
+    if (mCvImg_right.channels() >= 3){
+        cv::decolor(tmpRight2, mCvImg_right, color_boost);
+    } else {
         cv::cvtColor(tmpRight2, mCvImg_right, cv::COLOR_BGR2GRAY);
     }
 
