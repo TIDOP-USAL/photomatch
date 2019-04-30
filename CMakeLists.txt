@@ -46,7 +46,28 @@ endif(UNIX)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE_PATH})
 
 
+# Build test
+OPTION (BUILD_TEST            "Include test"          OFF)
 
+if(BUILD_TEST)
+  enable_testing()
+endif(BUILD_TEST)
+
+# Se permite elegir entre libreria estatica o dinamica
+#OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
+
+# Por defecto se establece el tipo de librería estática
+set (LIB_TYPE STATIC)
+
+#if (BUILD_SHARED_LIBS)
+#  # Se configura como libreria estática
+#  set (LIB_TYPE SHARED)
+#  
+#  if (MSVC)
+#    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251")
+#  endif(MSVC)
+#  
+#endif (BUILD_SHARED_LIBS)
 
 ##############################################################
 # 3rd-party libraries                                        #
@@ -61,10 +82,16 @@ option(WITH_PIXKIT   "Include PixKit"                  ON)
 #------------------------------------------------------------#
 
 # Qt
-find_package(Qt5 REQUIRED
-             COMPONENTS
-                 Core
-                 Widgets)
+find_package(Qt5 REQUIRED 
+             COMPONENTS 
+               Core 
+               Widgets)
+
+if(BUILD_TEST)
+find_package(Qt5 REQUIRED 
+             COMPONENTS 
+               Test)
+endif(BUILD_TEST)
 
 if (Qt5_POSITION_INDEPENDENT_CODE)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -73,8 +100,7 @@ endif(Qt5_POSITION_INDEPENDENT_CODE)
 if(Qt5_FOUND)
 
     include_directories(${Qt5Core_INCLUDE_DIRS}
-                        ${Qt5Widgets_INCLUDE_DIRS}
-                        )
+                        ${Qt5Widgets_INCLUDE_DIRS})
 
     message(STATUS "Found Qt")
     message(STATUS "  Module : ${Qt5Core_DIR}")
@@ -152,13 +178,6 @@ if(WITH_PIXKIT)
 
 endif(WITH_PIXKIT)
 
-
-
-
-##############################################################
-# EXE                                                        #
-##############################################################
-
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
@@ -166,6 +185,16 @@ set(CMAKE_AUTOMOC ON)
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+
+##############################################################
+# LIB                                                        #
+##############################################################
+
+add_subdirectory(src)
+
+##############################################################
+# EXE                                                        #
+##############################################################
 
 # includes
 include_directories(${CMAKE_BUILD_DIR})
@@ -384,6 +413,17 @@ target_link_libraries(${PROJECT_NAME}
 if(ENABLE_SOLUTION_FOLDERS)
   set_target_properties(${PROJECT_NAME}  PROPERTIES FOLDER "fme")
 endif()
+
+
+
+##############################################################
+# Test                                                       #
+##############################################################
+
+if (BUILD_TEST)
+add_subdirectory(test)
+endif(BUILD_TEST)
+
 
 
 
