@@ -3,6 +3,7 @@
 #include <QSpinBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -173,42 +174,48 @@ void MserWidget::reset()
 void MserWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
-
-  layout->addWidget(new QLabel(tr("Delta:")), 0, 0);
-  mDelta->setRange(0, 10000);
-  layout->addWidget(mDelta, 0, 1);
-
-  layout->addWidget(new QLabel(tr("Min Area:")), 1, 0);
-  mMinArea->setRange(0, 100000);
-  layout->addWidget(mMinArea, 1, 1);
-
-  layout->addWidget(new QLabel(tr("Max Area:")), 2, 0);
-  mMaxArea->setRange(0, 100000);
-  layout->addWidget(mMaxArea, 2, 1);
-
-  layout->addWidget(new QLabel(tr("Max Variation:")), 3, 0);
-  layout->addWidget(mMaxVariation, 3, 1);
-
-  layout->addWidget(new QLabel(tr("Min Diversity:")), 4, 0);
-  layout->addWidget(mMinDiversity, 4, 1);
-
-  layout->addWidget(new QLabel(tr("Max Evolution:")), 5, 0);
-  mMaxEvolution->setRange(0, 10000);
-  layout->addWidget(mMaxEvolution, 5, 1);
-
-  layout->addWidget(new QLabel(tr("Area Threshold:")), 6, 0);
-  mAreaThreshold->setRange(0, 99.99);
-  layout->addWidget(mAreaThreshold, 6, 1);
-
-  layout->addWidget(new QLabel(tr("Min Margin:")), 7, 0);
-  mMinMargin->setDecimals(3);
-  layout->addWidget(mMinMargin, 7, 1);
-
-  layout->addWidget(new QLabel(tr("Edge Blur Size:")), 8, 0);
-  mEdgeBlurSize->setRange(0, 10000);
-  layout->addWidget(mEdgeBlurSize, 8, 1);
-
+  layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
+
+  QGroupBox *mGroupBox = new QGroupBox(tr("MSER Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Delta:")), 0, 0);
+  mDelta->setRange(0, 10000);
+  propertiesLayout->addWidget(mDelta, 0, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Min Area:")), 1, 0);
+  mMinArea->setRange(0, 100000);
+  propertiesLayout->addWidget(mMinArea, 1, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Max Area:")), 2, 0);
+  mMaxArea->setRange(0, 100000);
+  propertiesLayout->addWidget(mMaxArea, 2, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Max Variation:")), 3, 0);
+  propertiesLayout->addWidget(mMaxVariation, 3, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Min Diversity:")), 4, 0);
+  propertiesLayout->addWidget(mMinDiversity, 4, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Max Evolution:")), 5, 0);
+  mMaxEvolution->setRange(0, 10000);
+  propertiesLayout->addWidget(mMaxEvolution, 5, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Area Threshold:")), 6, 0);
+  mAreaThreshold->setRange(0, 99.99);
+  propertiesLayout->addWidget(mAreaThreshold, 6, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Min Margin:")), 7, 0);
+  mMinMargin->setDecimals(3);
+  propertiesLayout->addWidget(mMinMargin, 7, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Edge Blur Size:")), 8, 0);
+  mEdgeBlurSize->setRange(0, 10000);
+  propertiesLayout->addWidget(mEdgeBlurSize, 8, 1);
 
   reset(); /// set default values
 

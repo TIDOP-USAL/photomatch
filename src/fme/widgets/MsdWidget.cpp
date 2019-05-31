@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -194,59 +195,65 @@ void MsdWidget::init()
 {
 
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Threshold Saliency:")), 0, 0, 1, 2);
+  QGroupBox *mGroupBox = new QGroupBox(tr("MSD Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Threshold Saliency:")), 0, 0, 1, 2);
   mThresholdSaliency->setRange(0, 2000);
   mThresholdSaliency->setSingleStep(1);
-  layout->addWidget(mThresholdSaliency, 0, 2, 1, 2);
+  propertiesLayout->addWidget(mThresholdSaliency, 0, 2, 1, 2);
 
-  layout->addWidget(new QLabel(tr("Path radius:")), 1, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Path radius:")), 1, 0);
   mPathRadius->setRange(1, 10);
   mPathRadius->setSingleStep(1);
-  layout->addWidget(mPathRadius, 1, 1);
+  propertiesLayout->addWidget(mPathRadius, 1, 1);
 
-  layout->addWidget(new QLabel(tr("KNN:")), 1, 2);
+  propertiesLayout->addWidget(new QLabel(tr("KNN:")), 1, 2);
   mKNN->setRange(1,10);
   mKNN->setSingleStep(1);
-  layout->addWidget(mKNN, 1, 3);
+  propertiesLayout->addWidget(mKNN, 1, 3);
 
-  layout->addWidget(new QLabel(tr("Area radius:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Area radius:")), 2, 0);
   mAreaRadius->setRange(1, 10);
   mAreaRadius->setSingleStep(1);
-  layout->addWidget(mAreaRadius, 2, 1);
+  propertiesLayout->addWidget(mAreaRadius, 2, 1);
 
-  layout->addWidget(new QLabel(tr("Scale factor:")), 2, 2);
+  propertiesLayout->addWidget(new QLabel(tr("Scale factor:")), 2, 2);
   mScaleFactor->setRange(1, 10);
   mScaleFactor->setSingleStep(0.05);
-  layout->addWidget(mScaleFactor, 2, 3);
+  propertiesLayout->addWidget(mScaleFactor, 2, 3);
 
-  layout->addWidget(new QLabel(tr("NMS radius:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("NMS radius:")), 3, 0);
   mNMSRadius->setRange(1, 10);
   mNMSRadius->setSingleStep(1);
-  layout->addWidget(mNMSRadius, 3, 1);
+  propertiesLayout->addWidget(mNMSRadius, 3, 1);
 
-  layout->addWidget(new QLabel(tr("N Scales:")), 3, 2);
+  propertiesLayout->addWidget(new QLabel(tr("N Scales:")), 3, 2);
   mNScales->setRange(-1, 10);
   mNScales->setSingleStep(1);
-  layout->addWidget(mNScales, 3, 3);
+  propertiesLayout->addWidget(mNScales, 3, 3);
 
-  layout->addWidget(new QLabel(tr("NMS Scale R.:")), 4, 0);
+  propertiesLayout->addWidget(new QLabel(tr("NMS Scale R.:")), 4, 0);
   mNMSScaleR->setRange(0, 10);
   mNMSScaleR->setSingleStep(1);
-  layout->addWidget(mNMSScaleR, 4, 1);
+  propertiesLayout->addWidget(mNMSScaleR, 4, 1);
 
   mComputeOrientations->setText(tr("Compute orientations"));
-  layout->addWidget(mComputeOrientations, 4, 2, 1, 2); //Check orientations
+  propertiesLayout->addWidget(mComputeOrientations, 4, 2, 1, 2); //Check orientations
 
   mAffineMSD->setText(tr("Affine MSD"));
-  layout->addWidget(mAffineMSD, 5, 0, 1, 2); //CheckAffine
+  propertiesLayout->addWidget(mAffineMSD, 5, 0, 1, 2); //CheckAffine
 
-  layout->addWidget(new QLabel(tr("Tilts:")), 5, 2);
+  propertiesLayout->addWidget(new QLabel(tr("Tilts:")), 5, 2);
   mTilts->setRange(3,10);
   mTilts->setSingleStep(1);
-  layout->addWidget(mTilts, 5, 3);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mTilts, 5, 3);
 
   reset();
 

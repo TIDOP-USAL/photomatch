@@ -5,6 +5,12 @@ add_library(libwidgets ${LIB_TYPE}
             AkazeWidget.h
             BriskWidget.cpp
             BriskWidget.h
+            CLAHEWidget.cpp
+            CLAHEWidget.h
+            DaisyWidget.cpp
+            DaisyWidget.h
+            DescriptorMatcherWidget.cpp
+            DescriptorMatcherWidget.h
             FastWidget.cpp
             FastWidget.h
             GfttWidget.cpp
@@ -20,7 +26,9 @@ add_library(libwidgets ${LIB_TYPE}
             SiftWidget.cpp
             SiftWidget.h
             SurfWidget.cpp
-            SurfWidget.h)
+            SurfWidget.h
+            WallisWidget.cpp
+            WallisWidget.h)
 
 set_property(TARGET libwidgets PROPERTY FOLDER "lib")
 

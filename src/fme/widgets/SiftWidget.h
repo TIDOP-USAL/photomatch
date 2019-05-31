@@ -6,7 +6,6 @@
 class QSpinBox;
 class QDoubleSpinBox;
 
-
 namespace fme
 {
 
@@ -152,6 +151,7 @@ protected:
   QDoubleSpinBox *mContrastThreshold;
   QDoubleSpinBox *mEdgeThreshold;
   QDoubleSpinBox *mSigma;
+
 };
 
 } // namespace fme

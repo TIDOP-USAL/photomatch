@@ -6,6 +6,7 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -121,36 +122,40 @@ void KazeWidget::reset()
 void KazeWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  //layout->addWidget(new QLabel(tr("Extended:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("KAZE Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
   mExtended->setText(tr("Extended"));
-  layout->addWidget(mExtended, 0, 0);
+  propertiesLayout->addWidget(mExtended, 0, 0);
 
-  //layout->addWidget(new QLabel(tr("Upright:")), 1, 0);
   mUpright->setText(tr("Upright"));
-  layout->addWidget(mUpright, 1, 0);
+  propertiesLayout->addWidget(mUpright, 1, 0);
 
-  layout->addWidget(new QLabel(tr("Threshold:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 2, 0);
   mThreshold->setDecimals(3);
   mThreshold->setRange(0, 99.99);
-  layout->addWidget(mThreshold, 2, 1);
+  propertiesLayout->addWidget(mThreshold, 2, 1);
 
-  layout->addWidget(new QLabel(tr("Octaves:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 3, 0);
   mOctaves->setRange(0, 100);
-  layout->addWidget(mOctaves, 3, 1);
+  propertiesLayout->addWidget(mOctaves, 3, 1);
 
-  layout->addWidget(new QLabel(tr("Octave Layers:")), 4, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octave Layers:")), 4, 0);
   mOctaveLayers->setRange(0, 100);
-  layout->addWidget(mOctaveLayers, 4, 1);
+  propertiesLayout->addWidget(mOctaveLayers, 4, 1);
 
-  layout->addWidget(new QLabel(tr("Diffusivity:")), 5, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Diffusivity:")), 5, 0);
   mDiffusivity->addItem("DIFF_PM_G1");
   mDiffusivity->addItem("DIFF_PM_G2");
   mDiffusivity->addItem("DIFF_WEICKERT");
   mDiffusivity->addItem("DIFF_CHARBONNIER");
-  layout->addWidget(mDiffusivity, 5, 1);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mDiffusivity, 5, 1);
 
   reset(); /// set default values
 

@@ -5,6 +5,7 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -77,21 +78,27 @@ void FastWidget::reset()
 void FastWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Threshold:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("FAST Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 0, 0);
   mThreshold->setRange(0, 100);
-  layout->addWidget(mThreshold, 0, 1);
+  propertiesLayout->addWidget(mThreshold, 0, 1);
 
   mNonmaxSuppression->setText(tr("Nonmax Suppression"));
-  layout->addWidget(mNonmaxSuppression, 1, 0);
+  propertiesLayout->addWidget(mNonmaxSuppression, 1, 0);
 
-  layout->addWidget(new QLabel(tr("Detector Type:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Detector Type:")), 2, 0);
   mDetectorType->addItem("TYPE_5_8");
   mDetectorType->addItem("TYPE_7_12");
   mDetectorType->addItem("TYPE_9_16");
-  layout->addWidget(mDetectorType, 2, 1);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mDetectorType, 2, 1);
 
   reset(); /// set default values
 

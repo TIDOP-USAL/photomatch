@@ -4,6 +4,7 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -139,44 +140,50 @@ void AkazeWidget::reset()
 void AkazeWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Descriptor Type:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("AKAZE Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Descriptor Type:")), 0, 0);
   mDescriptorType->addItem("KAZE");
   mDescriptorType->addItem("KAZE_UPRIGHT");
   mDescriptorType->addItem("MLDB");
   mDescriptorType->addItem("MLDB_UPRIGHT");
   mDescriptorType->setCurrentText("MLDB");
-  layout->addWidget(mDescriptorType, 0, 1);
+  propertiesLayout->addWidget(mDescriptorType, 0, 1);
 
-  layout->addWidget(new QLabel(tr("Descriptor Size:")), 1, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Descriptor Size:")), 1, 0);
   mDescriptorSize->setRange(0, 64); // TODO: creo que no soporta mas que 64. comprobar
-  layout->addWidget(mDescriptorSize, 1, 1);
+  propertiesLayout->addWidget(mDescriptorSize, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Descriptor Channels:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Descriptor Channels:")), 2, 0);
   mDescriptorChannels->setRange(1, 3);
-  layout->addWidget(mDescriptorChannels, 2, 1);
+  propertiesLayout->addWidget(mDescriptorChannels, 2, 1);
 
-  layout->addWidget(new QLabel(tr("Threshold:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 3, 0);
   mThreshold->setDecimals(3);
   mThreshold->setRange(0, 99.99);
-  layout->addWidget(mThreshold, 3, 1);
+  propertiesLayout->addWidget(mThreshold, 3, 1);
 
-  layout->addWidget(new QLabel(tr("Octaves:")), 4, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 4, 0);
   mOctaves->setRange(0, 100);
-  layout->addWidget(mOctaves, 4, 1);
+  propertiesLayout->addWidget(mOctaves, 4, 1);
 
-  layout->addWidget(new QLabel(tr("Octave Layers:")), 5, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octave Layers:")), 5, 0);
   mOctaveLayers->setRange(0, 100);
-  layout->addWidget(mOctaveLayers, 5, 1);
+  propertiesLayout->addWidget(mOctaveLayers, 5, 1);
 
-  layout->addWidget(new QLabel(tr("Diffusivity:")), 6, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Diffusivity:")), 6, 0);
   mDiffusivity->addItem("DIFF_PM_G1");
   mDiffusivity->addItem("DIFF_PM_G2");
   mDiffusivity->addItem("DIFF_WEICKERT");
   mDiffusivity->addItem("DIFF_CHARBONNIER");
-  layout->addWidget(mDiffusivity, 6, 1);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mDiffusivity, 6, 1);
 
   reset();  /// set default values
 

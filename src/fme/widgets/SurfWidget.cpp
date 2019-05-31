@@ -5,6 +5,7 @@
 #include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -18,7 +19,6 @@ SurfWidget::SurfWidget(QWidget *parent)
     mRotatedFeatures(new QCheckBox(this))
 {
   init();
-
 
   /// Signals and slots
   connect(mHessianThreshold,    SIGNAL(valueChanged(double)),    this, SIGNAL(hessianThresholdChange(double)));
@@ -105,26 +105,34 @@ void SurfWidget::reset()
 void SurfWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Hessian Threshold:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("SURF Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Hessian Threshold:")), 0, 0);
   mHessianThreshold->setRange(0, 10000);
-  layout->addWidget(mHessianThreshold, 0, 1);
+  propertiesLayout->addWidget(mHessianThreshold, 0, 1);
 
-  layout->addWidget(new QLabel(tr("Octaves:")), 1, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 1, 0);
   mOctaves->setRange(0, 100);
-  layout->addWidget(mOctaves, 1, 1);
+  propertiesLayout->addWidget(mOctaves, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Octave Layers:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octave Layers:")), 2, 0);
   mOctaveLayers->setRange(0, 100);
-  layout->addWidget(mOctaveLayers, 2, 1);
+  propertiesLayout->addWidget(mOctaveLayers, 2, 1);
 
   mExtendedDescriptor->setText(tr("Extended Descriptor"));
-  layout->addWidget(mExtendedDescriptor, 3, 0);
+  propertiesLayout->addWidget(mExtendedDescriptor, 3, 0);
 
   mRotatedFeatures->setText(tr("Rotated Features"));
-  layout->addWidget(mRotatedFeatures, 4, 0);
+  propertiesLayout->addWidget(mRotatedFeatures, 4, 0);
 
-  this->setLayout(layout);
+
 
   reset(); /// set default values
 

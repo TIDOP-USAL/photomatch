@@ -3,6 +3,7 @@
 #include <QSpinBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -78,20 +79,26 @@ void BriskWidget::reset()
 void BriskWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
-
-  layout->addWidget(new QLabel(tr("Threshold:")), 0, 0);
-  mThreshold->setRange(0, 100);
-  layout->addWidget(mThreshold, 0, 1);
-
-  layout->addWidget(new QLabel(tr("Octaves:")), 1, 0);
-  mOctaves->setRange(0, 100);
-  layout->addWidget(mOctaves, 1, 1);
-
-  layout->addWidget(new QLabel(tr("Pattern Scale:")), 2, 0);
-  mPatternScale->setRange(0., 10000.);
-  layout->addWidget(mPatternScale, 2, 1);
-
+  layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
+
+  QGroupBox *mGroupBox = new QGroupBox(tr("BRISK Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 0, 0);
+  mThreshold->setRange(0, 100);
+  propertiesLayout->addWidget(mThreshold, 0, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 1, 0);
+  mOctaves->setRange(0, 100);
+  propertiesLayout->addWidget(mOctaves, 1, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Pattern Scale:")), 2, 0);
+  mPatternScale->setRange(0., 10000.);
+  propertiesLayout->addWidget(mPatternScale, 2, 1);
 
   reset(); // set default values
 

@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -47,44 +48,50 @@ void OrbWidget::init()
 {
 
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Features Number:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("ORB Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Features Number:")), 0, 0);
   mFeaturesNumber->setRange(0, 50000);
-  layout->addWidget(mFeaturesNumber, 0, 1);
+  propertiesLayout->addWidget(mFeaturesNumber, 0, 1);
 
-  layout->addWidget(new QLabel(tr("Scale Factor:")), 1, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Scale Factor:")), 1, 0);
   mScaleFactor->setRange(1., 100.);
-  layout->addWidget(mScaleFactor, 1, 1);
+  propertiesLayout->addWidget(mScaleFactor, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Levels Number:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Levels Number:")), 2, 0);
   mLevelsNumber->setRange(0, 100);
-  layout->addWidget(mLevelsNumber, 2, 1);
+  propertiesLayout->addWidget(mLevelsNumber, 2, 1);
 
-  layout->addWidget(new QLabel(tr("Edge Threshold:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Edge Threshold:")), 3, 0);
   mEdgeThreshold->setRange(0, 100);
-  layout->addWidget(mEdgeThreshold, 3, 1);
+  propertiesLayout->addWidget(mEdgeThreshold, 3, 1);
 
   /// OpenCV -> It should be 0 in the current implementation
   //mFirstLevel->setValue(0);
 
-  layout->addWidget(new QLabel(tr("WTA_K:")), 4, 0);
+  propertiesLayout->addWidget(new QLabel(tr("WTA_K:")), 4, 0);
   mWTA_K->setRange(2, 4);
-  layout->addWidget(mWTA_K, 4, 1);
+  propertiesLayout->addWidget(mWTA_K, 4, 1);
 
-  layout->addWidget(new QLabel(tr("Score Type:")), 5, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Score Type:")), 5, 0);
   mScoreType->addItem("Harris");
   mScoreType->addItem("FAST");
-  layout->addWidget(mScoreType, 5, 1);
+  propertiesLayout->addWidget(mScoreType, 5, 1);
 
-  layout->addWidget(new QLabel(tr("Patch Size:")), 6, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Patch Size:")), 6, 0);
   mPatchSize->setRange(0, 100);
-  layout->addWidget(mPatchSize, 6, 1);
+  propertiesLayout->addWidget(mPatchSize, 6, 1);
 
-  layout->addWidget(new QLabel(tr("Fast Threshold:")), 7, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Fast Threshold:")), 7, 0);
   mFastThreshold->setRange(0, 100);
-  layout->addWidget(mFastThreshold, 7, 1);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mFastThreshold, 7, 1);
 
   reset(); /// set default values
 

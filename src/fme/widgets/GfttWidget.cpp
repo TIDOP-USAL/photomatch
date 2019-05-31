@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QCheckBox>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -122,31 +123,37 @@ void GfttWidget::reset()
 void GfttWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Max Features:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("GFTT Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Max Features:")), 0, 0);
   mMaxFeatures->setRange(0, 1000000);
-  layout->addWidget(mMaxFeatures, 0, 1);
+  propertiesLayout->addWidget(mMaxFeatures, 0, 1);
 
-  layout->addWidget(new QLabel(tr("Quality Level:")), 1, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Quality Level:")), 1, 0);
   mQualityLevel->setRange(0., 100.);
-  layout->addWidget(mQualityLevel, 1, 1);
+  propertiesLayout->addWidget(mQualityLevel, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Min Distance:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Min Distance:")), 2, 0);
   mMinDistance->setRange(0., 10000.);
-  layout->addWidget(mMinDistance, 2, 1);
+  propertiesLayout->addWidget(mMinDistance, 2, 1);
 
-  layout->addWidget(new QLabel(tr("Block Size:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Block Size:")), 3, 0);
   mBlockSize->setRange(0, 100);
-  layout->addWidget(mBlockSize, 3, 1);
+  propertiesLayout->addWidget(mBlockSize, 3, 1);
 
   mHarrisDetector->setText(tr("Harris Detector"));
-  layout->addWidget(mHarrisDetector, 4, 0);
+  propertiesLayout->addWidget(mHarrisDetector, 4, 0);
 
-  layout->addWidget(new QLabel(tr("K:")), 5, 0);
+  propertiesLayout->addWidget(new QLabel(tr("K:")), 5, 0);
   mK->setRange(0., 100.);
-  layout->addWidget(mK, 5, 1);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mK, 5, 1);
 
   reset(); /// set default values
 

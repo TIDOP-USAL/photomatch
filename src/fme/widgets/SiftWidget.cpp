@@ -4,6 +4,7 @@
 #include <QDoubleSpinBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -111,29 +112,35 @@ void SiftWidget::reset()
 void SiftWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Features Number:")), 0, 0);
+  QGroupBox *mGroupBox = new QGroupBox(tr("SIFT Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(new QLabel(tr("Features Number:")), 0, 0);
   mFeaturesNumber->setRange(0, 50000);
-  layout->addWidget(mFeaturesNumber, 0, 1);
+  propertiesLayout->addWidget(mFeaturesNumber, 0, 1);
 
-  layout->addWidget(new QLabel(tr("Octave Layers:")), 1, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Octave Layers:")), 1, 0);
   mOctaveLayers->setRange(0, 10);
-  layout->addWidget(mOctaveLayers, 1, 1);
+  propertiesLayout->addWidget(mOctaveLayers, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Contrast Threshold:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Contrast Threshold:")), 2, 0);
   mContrastThreshold->setRange(0., 10.);  //TODO: ver que el rango tenga sentido
   mContrastThreshold->setDecimals(3);
-  layout->addWidget(mContrastThreshold, 2, 1);
+  propertiesLayout->addWidget(mContrastThreshold, 2, 1);
 
-  layout->addWidget(new QLabel(tr("Edge Threshold:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Edge Threshold:")), 3, 0);
   mEdgeThreshold->setRange(0., 100.);
-  layout->addWidget(mEdgeThreshold, 3, 1);
+  propertiesLayout->addWidget(mEdgeThreshold, 3, 1);
 
-  layout->addWidget(new QLabel(tr("Sigma:")), 4, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Sigma:")), 4, 0);
   mSigma->setRange(0., 100.);
-  layout->addWidget(mSigma, 4, 1);
-
-  this->setLayout(layout);
+  propertiesLayout->addWidget(mSigma, 4, 1);
 
   reset(); /// set default values
 
