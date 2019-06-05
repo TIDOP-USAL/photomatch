@@ -1,6 +1,8 @@
 #ifndef FME_DESCRIPTOR_MATCHER_WIDGET_H
 #define FME_DESCRIPTOR_MATCHER_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -12,7 +14,7 @@ class QLabel;
 namespace fme
 {
 
-class IDescriptorMatcherWidget
+class FME_EXPORT IDescriptorMatcherWidget
   : public QWidget
 {
   Q_OBJECT
@@ -114,7 +116,7 @@ private:
 
 };
 
-class DescriptorMatcherWidget
+class FME_EXPORT DescriptorMatcherWidget
   : public IDescriptorMatcherWidget
 {
 
@@ -130,6 +132,8 @@ private slots:
   void onMatchingMethodChanged(const QString &method);
 
 // IDescriptorMatcherWidget interface
+
+public:
 
   QString matchingMethod() const override;
   QString normType() const override;

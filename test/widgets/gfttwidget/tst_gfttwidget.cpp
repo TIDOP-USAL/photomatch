@@ -63,12 +63,13 @@ void TestGfttWidget::cleanupTestCase()
 void TestGfttWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(1000, mGfttWidget->maxFeatures());
-  QCOMPARE(0.01, mGfttWidget->qualityLevel());
-  QCOMPARE(1, mGfttWidget->minDistance());
-  QCOMPARE(3, mGfttWidget->blockSize());
-  QCOMPARE(false, mGfttWidget->harrisDetector());
-  QCOMPARE(0.04, mGfttWidget->k());
+  GfttWidget gfttWidget;
+  QCOMPARE(1000, gfttWidget.maxFeatures());
+  QCOMPARE(0.01, gfttWidget.qualityLevel());
+  QCOMPARE(1, gfttWidget.minDistance());
+  QCOMPARE(3, gfttWidget.blockSize());
+  QCOMPARE(false, gfttWidget.harrisDetector());
+  QCOMPARE(0.04, gfttWidget.k());
 }
 
 void TestGfttWidget::testMaxFeatures_data()

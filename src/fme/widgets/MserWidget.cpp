@@ -196,9 +196,11 @@ void MserWidget::init()
   propertiesLayout->addWidget(mMaxArea, 2, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Max Variation:")), 3, 0);
+  mMaxVariation->setSingleStep(0.01);
   propertiesLayout->addWidget(mMaxVariation, 3, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Min Diversity:")), 4, 0);
+  mMinDiversity->setSingleStep(0.1);
   propertiesLayout->addWidget(mMinDiversity, 4, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Max Evolution:")), 5, 0);
@@ -207,10 +209,12 @@ void MserWidget::init()
 
   propertiesLayout->addWidget(new QLabel(tr("Area Threshold:")), 6, 0);
   mAreaThreshold->setRange(0, 99.99);
+  mAreaThreshold->setSingleStep(0.01);
   propertiesLayout->addWidget(mAreaThreshold, 6, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Min Margin:")), 7, 0);
   mMinMargin->setDecimals(3);
+  mMinMargin->setSingleStep(0.001);
   propertiesLayout->addWidget(mMinMargin, 7, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Edge Blur Size:")), 8, 0);

@@ -1,6 +1,8 @@
 #ifndef FME_FAST_WIDGET_H
 #define FME_FAST_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -10,7 +12,7 @@ class QCheckBox;
 namespace fme
 {
 
-class IFastWidget
+class FME_EXPORT IFastWidget
   : public QWidget
 {
   Q_OBJECT
@@ -45,7 +47,7 @@ private:
 
 };
 
-class FastWidget
+class FME_EXPORT FastWidget
   : public IFastWidget
 {
 

@@ -1,6 +1,8 @@
 #ifndef FME_AGAST_WIDGET_H
 #define FME_AGAST_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -10,7 +12,7 @@ class QCheckBox;
 namespace fme
 {
 
-class IAgastWidget
+class FME_EXPORT IAgastWidget
   : public QWidget
 {
   Q_OBJECT
@@ -44,7 +46,7 @@ private:
   virtual void init() = 0;
 };
 
-class AgastWidget
+class FME_EXPORT AgastWidget
   : public IAgastWidget
 {
   Q_OBJECT

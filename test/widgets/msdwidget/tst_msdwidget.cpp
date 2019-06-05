@@ -72,17 +72,18 @@ void TestMsdWidget::cleanupTestCase()
 void TestMsdWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(250, mMsdWidget->thresholdSaliency());
-  QCOMPARE(3, mMsdWidget->pathRadius());
-  QCOMPARE(4, mMsdWidget->knn());
-  QCOMPARE(5, mMsdWidget->areaRadius());
-  QCOMPARE(1.25, mMsdWidget->scaleFactor());
-  QCOMPARE(5, mMsdWidget->NMSRadius());
-  QCOMPARE(-1, mMsdWidget->nScales());
-  QCOMPARE(0, mMsdWidget->NMSScaleR());
-  QCOMPARE(false, mMsdWidget->computeOrientations());
-  QCOMPARE(false, mMsdWidget->affineMSD());
-  QCOMPARE(3, mMsdWidget->tilts());
+  MsdWidget msdWidget;
+  QCOMPARE(250, msdWidget.thresholdSaliency());
+  QCOMPARE(3, msdWidget.pathRadius());
+  QCOMPARE(4, msdWidget.knn());
+  QCOMPARE(5, msdWidget.areaRadius());
+  QCOMPARE(1.25, msdWidget.scaleFactor());
+  QCOMPARE(5, msdWidget.NMSRadius());
+  QCOMPARE(-1, msdWidget.nScales());
+  QCOMPARE(0, msdWidget.NMSScaleR());
+  QCOMPARE(false, msdWidget.computeOrientations());
+  QCOMPARE(false, msdWidget.affineMSD());
+  QCOMPARE(3, msdWidget.tilts());
 }
 
 void TestMsdWidget::testThresholdSaliency_data()

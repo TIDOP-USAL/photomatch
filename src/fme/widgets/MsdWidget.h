@@ -1,6 +1,8 @@
 #ifndef FME_MSD_WIDGET_H
 #define FME_MSD_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QDoubleSpinBox;
@@ -10,7 +12,7 @@ class QCheckBox;
 namespace fme
 {
 
-class IMsdWidget
+class FME_EXPORT IMsdWidget
   : public QWidget
 {
   Q_OBJECT
@@ -68,7 +70,7 @@ private:
   virtual void init() = 0;
 };
 
-class MsdWidget
+class FME_EXPORT MsdWidget
   : public IMsdWidget
 {
   Q_OBJECT

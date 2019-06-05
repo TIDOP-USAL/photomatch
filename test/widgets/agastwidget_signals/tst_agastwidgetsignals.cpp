@@ -14,10 +14,12 @@ class TestAgastWidgetSignals : public AgastWidget
   Q_OBJECT
 
 public:
+
   TestAgastWidgetSignals();
   ~TestAgastWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void testThresholdChange();

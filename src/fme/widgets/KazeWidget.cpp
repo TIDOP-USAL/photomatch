@@ -140,6 +140,7 @@ void KazeWidget::init()
   propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 2, 0);
   mThreshold->setDecimals(3);
   mThreshold->setRange(0, 99.99);
+  mThreshold->setSingleStep(0.001);
   propertiesLayout->addWidget(mThreshold, 2, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 3, 0);

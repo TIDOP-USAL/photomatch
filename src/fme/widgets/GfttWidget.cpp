@@ -138,6 +138,7 @@ void GfttWidget::init()
 
   propertiesLayout->addWidget(new QLabel(tr("Quality Level:")), 1, 0);
   mQualityLevel->setRange(0., 100.);
+  mQualityLevel->setSingleStep(0.01);
   propertiesLayout->addWidget(mQualityLevel, 1, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Min Distance:")), 2, 0);
@@ -153,6 +154,7 @@ void GfttWidget::init()
 
   propertiesLayout->addWidget(new QLabel(tr("K:")), 5, 0);
   mK->setRange(0., 100.);
+  mK->setSingleStep(0.01);
   propertiesLayout->addWidget(mK, 5, 1);
 
   reset(); /// set default values

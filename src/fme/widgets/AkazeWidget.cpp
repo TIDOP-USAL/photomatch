@@ -168,6 +168,7 @@ void AkazeWidget::init()
   propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 3, 0);
   mThreshold->setDecimals(3);
   mThreshold->setRange(0, 99.99);
+  mThreshold->setSingleStep(0.01);
   propertiesLayout->addWidget(mThreshold, 3, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 4, 0);

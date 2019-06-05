@@ -143,16 +143,19 @@ void DescriptorMatcherWidget::init()
   layout->addWidget(new QLabel(tr("Ratio:")), 2, 0);
   mRatio->setDecimals(3);
   mRatio->setRange(0.001, 100.);
+  mRatio->setSingleStep(0.1);
   layout->addWidget(mRatio, 2, 1);
 
   layout->addWidget(new QLabel(tr("Distance:")), 3, 0);
   mDistance->setRange(0.001, 100.);
   mDistance->setDecimals(3);
+  mDistance->setSingleStep(0.1);
   layout->addWidget(mDistance, 3, 1);
 
   layout->addWidget(new QLabel(tr("Confidence:")), 4, 0);
   mConfidence->setRange(0., 1.);
   mConfidence->setDecimals(3);
+  mConfidence->setSingleStep(0.001);
   layout->addWidget(mConfidence, 4, 1);
 
   mCrossMatching->setText(tr("Cross Matching"));

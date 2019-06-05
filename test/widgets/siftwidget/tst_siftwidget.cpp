@@ -62,11 +62,12 @@ void TestSiftWidget::cleanupTestCase()
 void TestSiftWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(5000, mSiftWidget->featuresNumber());
-  QCOMPARE(3, mSiftWidget->octaveLayers());
-  QCOMPARE(0.04, mSiftWidget->contrastThreshold());
-  QCOMPARE(10., mSiftWidget->edgeThreshold());
-  QCOMPARE(1.6, mSiftWidget->sigma());
+  SiftWidget siftWidget;
+  QCOMPARE(5000, siftWidget.featuresNumber());
+  QCOMPARE(3, siftWidget.octaveLayers());
+  QCOMPARE(0.04, siftWidget.contrastThreshold());
+  QCOMPARE(10., siftWidget.edgeThreshold());
+  QCOMPARE(1.6, siftWidget.sigma());
 }
 
 void TestSiftWidget::testFeaturesNumber_data()

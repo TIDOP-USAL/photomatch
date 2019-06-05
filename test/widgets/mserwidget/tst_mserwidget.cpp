@@ -71,15 +71,16 @@ void TestMserWidget::cleanupTestCase()
 void TestMserWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(5, mMserWidget->delta());
-  QCOMPARE(60, mMserWidget->minArea());
-  QCOMPARE(14400, mMserWidget->maxArea());
-  QCOMPARE(0.25, mMserWidget->maxVariation());
-  QCOMPARE(.2, mMserWidget->minDiversity());
-  QCOMPARE(200, mMserWidget->maxEvolution());
-  QCOMPARE(1.01, mMserWidget->areaThreshold());
-  QCOMPARE(0.003, mMserWidget->minMargin());
-  QCOMPARE(5, mMserWidget->edgeBlurSize());
+  MserWidget mserWidget;
+  QCOMPARE(5, mserWidget.delta());
+  QCOMPARE(60, mserWidget.minArea());
+  QCOMPARE(14400, mserWidget.maxArea());
+  QCOMPARE(0.25, mserWidget.maxVariation());
+  QCOMPARE(.2, mserWidget.minDiversity());
+  QCOMPARE(200, mserWidget.maxEvolution());
+  QCOMPARE(1.01, mserWidget.areaThreshold());
+  QCOMPARE(0.003, mserWidget.minMargin());
+  QCOMPARE(5, mserWidget.edgeBlurSize());
 }
 
 void TestMserWidget::testDelta_data()

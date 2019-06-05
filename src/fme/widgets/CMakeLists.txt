@@ -3,6 +3,8 @@ add_library(libwidgets ${LIB_TYPE}
             AgastWidget.h
             AkazeWidget.cpp
             AkazeWidget.h
+            BriefWidget.cpp
+            BriefWidget.h
             BriskWidget.cpp
             BriskWidget.h
             CLAHEWidget.cpp
@@ -13,10 +15,18 @@ add_library(libwidgets ${LIB_TYPE}
             DescriptorMatcherWidget.h
             FastWidget.cpp
             FastWidget.h
+            FreakWidget.cpp
+            FreakWidget.h
             GfttWidget.cpp
             GfttWidget.h
+            HogWidget.cpp
+            HogWidget.h
             KazeWidget.cpp
             KazeWidget.h
+            LatchWidget.cpp
+            LatchWidget.h
+            LucidWidget.cpp
+            LucidWidget.h
             MsdWidget.cpp
             MsdWidget.h
             MserWidget.cpp
@@ -25,6 +35,8 @@ add_library(libwidgets ${LIB_TYPE}
             OrbWidget.h
             SiftWidget.cpp
             SiftWidget.h
+            StarWidget.cpp
+            StarWidget.h
             SurfWidget.cpp
             SurfWidget.h
             WallisWidget.cpp

@@ -36,26 +36,26 @@ private:
 };
 
 TestOrbWidget::TestOrbWidget()
+  : mOrbWidget(new OrbWidget())
 {
 
 }
 
 TestOrbWidget::~TestOrbWidget()
 {
-
-}
-
-void TestOrbWidget::initTestCase()
-{
-  mOrbWidget = new OrbWidget();
-}
-
-void TestOrbWidget::cleanupTestCase()
-{
   if (mOrbWidget){
     delete mOrbWidget;
     mOrbWidget = nullptr;
   }
+}
+
+void TestOrbWidget::initTestCase()
+{
+}
+
+void TestOrbWidget::cleanupTestCase()
+{
+
 }
 
 void TestOrbWidget::testDefaultConstructor()

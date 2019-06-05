@@ -1,6 +1,8 @@
 #ifndef FME_CLAHE_WIDGET_H
 #define FME_CLAHE_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QDoubleSpinBox;
@@ -14,7 +16,7 @@ namespace fme
  * Equalizes the histogram of a grayscale image using Contrast Limited
  * Adaptive Histogram Equalization.
  */
-class ICLAHEWidget
+class FME_EXPORT ICLAHEWidget
   : public QWidget
 {
   Q_OBJECT
@@ -47,7 +49,7 @@ private:
 };
 
 
-class CLAHEWidget
+class FME_EXPORT CLAHEWidget
   : public ICLAHEWidget
 {
   Q_OBJECT

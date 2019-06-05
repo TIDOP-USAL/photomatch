@@ -1,6 +1,8 @@
 #ifndef FME_ORB_WIDGET_H
 #define FME_ORB_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -13,7 +15,7 @@ namespace fme
 /*!
  * \brief Interface ORB Widget
  */
-class IOrbWidget
+class FME_EXPORT IOrbWidget
   : public QWidget
 {
   Q_OBJECT
@@ -64,7 +66,7 @@ private:
 
 };
 
-class OrbWidget
+class FME_EXPORT OrbWidget
   : public IOrbWidget
 {
   Q_OBJECT

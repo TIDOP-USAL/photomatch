@@ -10,6 +10,7 @@ class TestAgastWidget : public QObject
   Q_OBJECT
 
 public:
+
   TestAgastWidget();
   ~TestAgastWidget();
 

@@ -1,6 +1,8 @@
 #ifndef FME_SIFT_WIDGET_H
 #define FME_SIFT_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -12,7 +14,7 @@ namespace fme
 /*!
  * \brief Interface SIFT Widget
  */
-class ISiftWidget
+class FME_EXPORT ISiftWidget
   : public QWidget
 {
   Q_OBJECT
@@ -109,8 +111,8 @@ private:
 };
 
 
-class SiftWidget
-    : public ISiftWidget
+class FME_EXPORT SiftWidget
+  : public ISiftWidget
 {
   Q_OBJECT
 

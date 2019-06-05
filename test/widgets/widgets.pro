@@ -1,7 +1,6 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    MainWindowTest \
     orbwidget \
     orbwidget_signals \
     siftwidget \
@@ -31,4 +30,16 @@ SUBDIRS += \
     clahewidget \
     clahewidget_signals \
     daisywidget \
-    daisywidget_signals
+    daisywidget_signals \
+    hogwidget \
+    hogwidget_signals \
+    briefwidget \
+    briefwidget_signals \
+    freakwidget \
+    freakwidget_signals \
+    latchwidget \
+    latchwidget_signals \
+    lucidwidget \
+    lucidwidget_signals \
+    starwidget \
+    starwidget_signals

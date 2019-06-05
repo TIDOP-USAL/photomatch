@@ -57,8 +57,9 @@ void TestCLAHEWidget::cleanupTestCase()
 void TestCLAHEWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(40.0, mCLAHEWidget->clipLimit());
-  QCOMPARE(QSize(8, 8), mCLAHEWidget->tileGridSize());
+  CLAHEWidget claheWidget;
+  QCOMPARE(40.0, claheWidget.clipLimit());
+  QCOMPARE(QSize(8, 8), claheWidget.tileGridSize());
 }
 
 void TestCLAHEWidget::testClipLimit_data()

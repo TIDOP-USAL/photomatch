@@ -1,6 +1,8 @@
 #ifndef FME_MSER_WIDGET_H
 #define FME_MSER_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -9,7 +11,7 @@ class QDoubleSpinBox;
 namespace fme
 {
 
-class IMserWidget
+class FME_EXPORT IMserWidget
   : public QWidget
 {
   Q_OBJECT
@@ -62,7 +64,7 @@ private:
 
 };
 
-class MserWidget
+class FME_EXPORT MserWidget
   : public IMserWidget
 {
   Q_OBJECT

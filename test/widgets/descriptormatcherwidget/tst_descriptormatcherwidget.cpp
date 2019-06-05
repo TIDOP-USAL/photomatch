@@ -66,12 +66,13 @@ void TestDescriptorMatcherWidget::cleanupTestCase()
 void TestDescriptorMatcherWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
-  QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
-  QCOMPARE(0.7, mDescriptorMatcherWidget->distance());
-  QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
-  QCOMPARE(0.999, mDescriptorMatcherWidget->confidence());
-  QCOMPARE(true, mDescriptorMatcherWidget->crossMatching());
+  DescriptorMatcherWidget descriptorMatcherWidget;
+  QCOMPARE("Brute-Force", descriptorMatcherWidget.matchingMethod());
+  QCOMPARE("NORM_L1", descriptorMatcherWidget.normType());
+  QCOMPARE(0.7, descriptorMatcherWidget.distance());
+  QCOMPARE(0.8, descriptorMatcherWidget.ratio());
+  QCOMPARE(0.999, descriptorMatcherWidget.confidence());
+  QCOMPARE(true, descriptorMatcherWidget.crossMatching());
 }
 
 void TestDescriptorMatcherWidget::testDescriptorMatcher_data()

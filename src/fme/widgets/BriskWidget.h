@@ -1,6 +1,8 @@
 #ifndef FME_BRISK_WIDGET_H
 #define FME_BRISK_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -9,7 +11,7 @@ class QDoubleSpinBox;
 namespace fme
 {
 
-class IBriskWidget
+class FME_EXPORT IBriskWidget
   : public QWidget
 {
   Q_OBJECT
@@ -44,7 +46,7 @@ private:
 
 };
 
-class BriskWidget
+class FME_EXPORT BriskWidget
   : public IBriskWidget
 {
   Q_OBJECT

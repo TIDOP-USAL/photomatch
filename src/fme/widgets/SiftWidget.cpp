@@ -132,6 +132,7 @@ void SiftWidget::init()
   propertiesLayout->addWidget(new QLabel(tr("Contrast Threshold:")), 2, 0);
   mContrastThreshold->setRange(0., 10.);  //TODO: ver que el rango tenga sentido
   mContrastThreshold->setDecimals(3);
+  mContrastThreshold->setSingleStep(0.01);
   propertiesLayout->addWidget(mContrastThreshold, 2, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Edge Threshold:")), 3, 0);
@@ -140,6 +141,7 @@ void SiftWidget::init()
 
   propertiesLayout->addWidget(new QLabel(tr("Sigma:")), 4, 0);
   mSigma->setRange(0., 100.);
+  mSigma->setSingleStep(0.1);
   propertiesLayout->addWidget(mSigma, 4, 1);
 
   reset(); /// set default values

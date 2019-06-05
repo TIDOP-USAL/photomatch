@@ -1,6 +1,8 @@
 #ifndef FME_WALLIS_WIDGET_H
 #define FME_WALLIS_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QDoubleSpinBox;
@@ -9,7 +11,7 @@ class QSpinBox;
 namespace fme
 {
 
-class IWallisWidget
+class FME_EXPORT IWallisWidget
   : public QWidget
 {
   Q_OBJECT
@@ -49,7 +51,7 @@ private:
   virtual void init() = 0;
 };
 
-class WallisWidget
+class FME_EXPORT WallisWidget
   : public IWallisWidget
 {
   Q_OBJECT

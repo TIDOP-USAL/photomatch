@@ -63,6 +63,7 @@ void OrbWidget::init()
 
   propertiesLayout->addWidget(new QLabel(tr("Scale Factor:")), 1, 0);
   mScaleFactor->setRange(1., 100.);
+  mScaleFactor->setSingleStep(0.1);
   propertiesLayout->addWidget(mScaleFactor, 1, 1);
 
   propertiesLayout->addWidget(new QLabel(tr("Levels Number:")), 2, 0);

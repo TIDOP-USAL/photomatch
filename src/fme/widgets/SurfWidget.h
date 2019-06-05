@@ -1,5 +1,7 @@
-#ifndef SURFWIDGET_H
-#define SURFWIDGET_H
+#ifndef FME_SURF_WIDGET_H
+#define FME_SURF_WIDGET_H
+
+#include "fme/fme_global.h"
 
 #include <QWidget>
 
@@ -13,7 +15,7 @@ namespace fme
 /*!
  * \brief Interface SURF Widget
  */
-class ISurfWidget
+class FME_EXPORT ISurfWidget
   : public QWidget
 {
 
@@ -110,8 +112,8 @@ private:
 
 };
 
-class SurfWidget
-    : public ISurfWidget
+class FME_EXPORT SurfWidget
+  : public ISurfWidget
 {
 
   Q_OBJECT

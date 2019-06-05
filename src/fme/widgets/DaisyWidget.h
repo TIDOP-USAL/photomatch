@@ -1,6 +1,8 @@
 #ifndef FME_DAISY_WIDGET_H
 #define FME_DAISY_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QSpinBox;
@@ -11,7 +13,7 @@ class QCheckBox;
 namespace fme
 {
 
-class IDaisyWidget
+class FME_EXPORT IDaisyWidget
   : public QWidget
 {
   Q_OBJECT
@@ -99,7 +101,7 @@ private:
 
 };
 
-class DaisyWidget
+class FME_EXPORT DaisyWidget
   : public IDaisyWidget
 {
   Q_OBJECT

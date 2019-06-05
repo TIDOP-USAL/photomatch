@@ -62,11 +62,12 @@ void TestWallisWidget::cleanupTestCase()
 void TestWallisWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(1.0, mWallisWidget->contrast());
-  QCOMPARE(0.2, mWallisWidget->brightness());
-  QCOMPARE(41, mWallisWidget->imposedAverage());
-  QCOMPARE(127, mWallisWidget->imposedLocalStdDev());
-  QCOMPARE(50, mWallisWidget->kernelSize());
+  WallisWidget wallisWidget;
+  QCOMPARE(1.0, wallisWidget.contrast());
+  QCOMPARE(0.2, wallisWidget.brightness());
+  QCOMPARE(41, wallisWidget.imposedAverage());
+  QCOMPARE(127, wallisWidget.imposedLocalStdDev());
+  QCOMPARE(50, wallisWidget.kernelSize());
 }
 
 void TestWallisWidget::testContrast_data()

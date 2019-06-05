@@ -1,6 +1,8 @@
 #ifndef FME_AKAZE_WIDGET_H
 #define FME_AKAZE_WIDGET_H
 
+#include "fme/fme_global.h"
+
 #include <QWidget>
 
 class QCheckBox;
@@ -11,7 +13,7 @@ class QComboBox;
 namespace fme
 {
 
-class IAkazeWidget
+class FME_EXPORT IAkazeWidget
   : public QWidget
 {
   Q_OBJECT
@@ -112,7 +114,7 @@ private:
 
 };
 
-class AkazeWidget
+class FME_EXPORT AkazeWidget
   : public IAkazeWidget
 {
   Q_OBJECT
