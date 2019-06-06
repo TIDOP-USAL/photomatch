@@ -46,4 +46,6 @@ SUBDIRS += \
     lcebsescswidget \
     lcebsescswidget_signals \
     acebsfwidget \
-    acebsfwidget_signals
+    acebsfwidget_signals \
+    msrcpwidget \
+    msrcpwidget_signals

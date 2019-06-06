@@ -72,20 +72,19 @@ void TestHogWidget::cleanupTestCase()
 void TestHogWidget::testDefaultConstructor()
 {
   /// Check default values
-  HogWidget hogWidget;
-  QCOMPARE(QSize(64,128), hogWidget.winSize());
-  QCOMPARE(QSize(16,16), hogWidget.blockSize());
-  QCOMPARE(QSize(8,8), hogWidget.blockStride());
-  QCOMPARE(QSize(8,8), hogWidget.cellSize());
-  QCOMPARE(9, hogWidget.nbins());
-  QCOMPARE(1, hogWidget.derivAperture());
-//  QCOMPARE(-1, hogWidget.winSigma());
-//  QCOMPARE("L2Hys", hogWidget.histogramNormType());
-//  QCOMPARE(0.2, hogWidget.l2HysThreshold());
-//  QCOMPARE(true, hogWidget.gammaCorrection());
-//  QCOMPARE(-1., hogWidget.freeCoef());
-//  QCOMPARE(64, hogWidget.nlevels());
-//  QCOMPARE(false, hogWidget.signedGradient());
+  QCOMPARE(QSize(64,128), mHogWidget->winSize());
+  QCOMPARE(QSize(16,16), mHogWidget->blockSize());
+  QCOMPARE(QSize(8,8), mHogWidget->blockStride());
+  QCOMPARE(QSize(8,8), mHogWidget->cellSize());
+  QCOMPARE(9, mHogWidget->nbins());
+  QCOMPARE(1, mHogWidget->derivAperture());
+//  QCOMPARE(-1, mHogWidget->winSigma());
+//  QCOMPARE("L2Hys", mHogWidget->histogramNormType());
+//  QCOMPARE(0.2, mHogWidget->l2HysThreshold());
+//  QCOMPARE(true, mHogWidget->gammaCorrection());
+//  QCOMPARE(-1., mHogWidget->freeCoef());
+//  QCOMPARE(64, mHogWidget->nlevels());
+//  QCOMPARE(false, mHogWidget->signedGradient());
 }
 
 void TestHogWidget::testWinSize_data()
@@ -247,6 +246,12 @@ void TestHogWidget::testDerivAperture()
 
 void TestHogWidget::testReset()
 {
+  mHogWidget->setWinSize(QSize(64,64));
+  mHogWidget->setBlockSize(QSize(64,64));
+  mHogWidget->setBlockStride(QSize(64,64));
+  mHogWidget->setCellSize(QSize(64,64));
+  mHogWidget->setNbins(250);
+  mHogWidget->setDerivAperture(250);
 
   mHogWidget->reset();
 

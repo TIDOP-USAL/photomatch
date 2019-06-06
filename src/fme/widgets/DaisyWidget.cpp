@@ -162,18 +162,20 @@ void DaisyWidget::init()
   mQHist->setRange(0, 100);
   propertiesLayout->addWidget(mQHist, 3, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Descriptor normalization type:")), 4, 0);
+  mInterpolation->setText(tr("Interpolation"));
+  propertiesLayout->addWidget(mInterpolation, 4, 0);
+
+  mUseOrientation->setText(tr("Keypoints orientation"));
+  propertiesLayout->addWidget(mUseOrientation, 5, 0);
+
+  propertiesLayout->addWidget(new QLabel(tr("Descriptor normalization type:")), 6, 0);
   mNorm->addItem("NRM_NONE");
   mNorm->addItem("NRM_PARTIAL");
   mNorm->addItem("NRM_FULL");
   mNorm->addItem("NRM_SIFT");
-  propertiesLayout->addWidget(mNorm, 4, 1);
+  propertiesLayout->addWidget(mNorm, 6, 1);
 
-  mInterpolation->setText(tr("Interpolation"));
-  propertiesLayout->addWidget(mInterpolation, 5, 0);
 
-  mUseOrientation->setText(tr("Keypoints orientation"));
-  propertiesLayout->addWidget(mUseOrientation, 6, 0);
 
   reset();
 

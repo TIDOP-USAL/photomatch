@@ -18,17 +18,17 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
-  void testFeaturesNumber_data();
-  void testFeaturesNumber();
-  void testOctaveLayers_data();
-  void testOctaveLayers();
-  void testContrastThreshold_data();
-  void testContrastThreshold();
-  void testEdgeThreshold_data();
-  void testEdgeThreshold();
-  void testSigma_data();
-  void testSigma();
-  void testReset();
+  void test_featuresNumber_data();
+  void test_featuresNumber();
+  void test_octaveLayers_data();
+  void test_octaveLayers();
+  void test_contrastThreshold_data();
+  void test_contrastThreshold();
+  void test_edgeThreshold_data();
+  void test_edgeThreshold();
+  void test_sigma_data();
+  void test_sigma();
+  void test_reset();
 
 private:
 
@@ -62,15 +62,14 @@ void TestSiftWidget::cleanupTestCase()
 void TestSiftWidget::testDefaultConstructor()
 {
   /// Check default values
-  SiftWidget siftWidget;
-  QCOMPARE(5000, siftWidget.featuresNumber());
-  QCOMPARE(3, siftWidget.octaveLayers());
-  QCOMPARE(0.04, siftWidget.contrastThreshold());
-  QCOMPARE(10., siftWidget.edgeThreshold());
-  QCOMPARE(1.6, siftWidget.sigma());
+  QCOMPARE(5000, mSiftWidget->featuresNumber());
+  QCOMPARE(3, mSiftWidget->octaveLayers());
+  QCOMPARE(0.04, mSiftWidget->contrastThreshold());
+  QCOMPARE(10., mSiftWidget->edgeThreshold());
+  QCOMPARE(1.6, mSiftWidget->sigma());
 }
 
-void TestSiftWidget::testFeaturesNumber_data()
+void TestSiftWidget::test_featuresNumber_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -80,7 +79,7 @@ void TestSiftWidget::testFeaturesNumber_data()
   QTest::newRow("Out of range value") << 50001 << 50000;
 }
 
-void TestSiftWidget::testFeaturesNumber()
+void TestSiftWidget::test_featuresNumber()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -89,7 +88,7 @@ void TestSiftWidget::testFeaturesNumber()
   QCOMPARE(result, mSiftWidget->featuresNumber());
 }
 
-void TestSiftWidget::testOctaveLayers_data()
+void TestSiftWidget::test_octaveLayers_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -102,7 +101,7 @@ void TestSiftWidget::testOctaveLayers_data()
   QTest::newRow("Out of range value") << 11 << 10;
 }
 
-void TestSiftWidget::testOctaveLayers()
+void TestSiftWidget::test_octaveLayers()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -111,7 +110,7 @@ void TestSiftWidget::testOctaveLayers()
   QCOMPARE(result, mSiftWidget->octaveLayers());
 }
 
-void TestSiftWidget::testContrastThreshold_data()
+void TestSiftWidget::test_contrastThreshold_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -122,7 +121,7 @@ void TestSiftWidget::testContrastThreshold_data()
   QTest::newRow("Out of range value") << 11.1 << 10.;
 }
 
-void TestSiftWidget::testContrastThreshold()
+void TestSiftWidget::test_contrastThreshold()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -131,7 +130,7 @@ void TestSiftWidget::testContrastThreshold()
   QCOMPARE(result, mSiftWidget->contrastThreshold());
 }
 
-void TestSiftWidget::testEdgeThreshold_data()
+void TestSiftWidget::test_edgeThreshold_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -142,7 +141,7 @@ void TestSiftWidget::testEdgeThreshold_data()
   QTest::newRow("Out of range value") << 100.1 << 100.;
 }
 
-void TestSiftWidget::testEdgeThreshold()
+void TestSiftWidget::test_edgeThreshold()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -151,7 +150,7 @@ void TestSiftWidget::testEdgeThreshold()
   QCOMPARE(result, mSiftWidget->edgeThreshold());
 }
 
-void TestSiftWidget::testSigma_data()
+void TestSiftWidget::test_sigma_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -162,7 +161,7 @@ void TestSiftWidget::testSigma_data()
   QTest::newRow("Out of range value") << 100.1 << 100.;
 }
 
-void TestSiftWidget::testSigma()
+void TestSiftWidget::test_sigma()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -171,7 +170,7 @@ void TestSiftWidget::testSigma()
   QCOMPARE(result, mSiftWidget->sigma());
 }
 
-void TestSiftWidget::testReset()
+void TestSiftWidget::test_reset()
 {
   mSiftWidget->setFeaturesNumber(500);
   mSiftWidget->setOctaveLayers(4);

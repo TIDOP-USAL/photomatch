@@ -10,17 +10,18 @@ class TestBriefWidget : public QObject
   Q_OBJECT
 
 public:
+
   TestBriefWidget();
   ~TestBriefWidget();
 
 private slots:
 
   void testDefaultConstructor();
-  void testBytes_data();
-  void testBytes();
-  void testUseOrientation_data();
-  void testUseOrientation();
-  void testReset();
+  void test_bytes_data();
+  void test_bytes();
+  void test_useOrientation_data();
+  void test_useOrientation();
+  void test_reset();
 
 private:
 
@@ -43,13 +44,12 @@ TestBriefWidget::~TestBriefWidget()
 
 void TestBriefWidget::testDefaultConstructor()
 {
-  BriefWidget brief;
   /// Check default values
-  QCOMPARE("32", brief.bytes());
-  QCOMPARE(false, brief.useOrientation());
+  QCOMPARE("32", mBriefWidget->bytes());
+  QCOMPARE(false, mBriefWidget->useOrientation());
 }
 
-void TestBriefWidget::testBytes_data()
+void TestBriefWidget::test_bytes_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -61,7 +61,7 @@ void TestBriefWidget::testBytes_data()
 
 }
 
-void TestBriefWidget::testBytes()
+void TestBriefWidget::test_bytes()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -70,7 +70,7 @@ void TestBriefWidget::testBytes()
   QCOMPARE(result, mBriefWidget->bytes());
 }
 
-void TestBriefWidget::testUseOrientation_data()
+void TestBriefWidget::test_useOrientation_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -79,7 +79,7 @@ void TestBriefWidget::testUseOrientation_data()
   QTest::newRow("true") << true << true;
 }
 
-void TestBriefWidget::testUseOrientation()
+void TestBriefWidget::test_useOrientation()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -88,7 +88,7 @@ void TestBriefWidget::testUseOrientation()
   QCOMPARE(result, mBriefWidget->useOrientation());
 }
 
-void TestBriefWidget::testReset()
+void TestBriefWidget::test_reset()
 {
   mBriefWidget->setBytes("16");
   mBriefWidget->setUseOrientation(true);

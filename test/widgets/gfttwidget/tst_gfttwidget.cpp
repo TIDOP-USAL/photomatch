@@ -19,19 +19,19 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
-  void testMaxFeatures_data();
-  void testMaxFeatures();
-  void testQualityLevel_data();
-  void testQualityLevel();
-  void testMinDistance_data();
-  void testMinDistance();
-  void testBlockSize_data();
-  void testBlockSize();
-  void testHarrisDetector_data();
-  void testHarrisDetector();
-  void testB_data();
-  void testB();
-  void testReset();
+  void test_maxFeatures_data();
+  void test_maxFeatures();
+  void test_qualityLevel_data();
+  void test_qualityLevel();
+  void test_minDistance_data();
+  void test_minDistance();
+  void test_blockSize_data();
+  void test_blockSize();
+  void test_harrisDetector_data();
+  void test_harrisDetector();
+  void test_k_data();
+  void test_k();
+  void test_reset();
 
 private:
 
@@ -63,16 +63,15 @@ void TestGfttWidget::cleanupTestCase()
 void TestGfttWidget::testDefaultConstructor()
 {
   /// Check default values
-  GfttWidget gfttWidget;
-  QCOMPARE(1000, gfttWidget.maxFeatures());
-  QCOMPARE(0.01, gfttWidget.qualityLevel());
-  QCOMPARE(1, gfttWidget.minDistance());
-  QCOMPARE(3, gfttWidget.blockSize());
-  QCOMPARE(false, gfttWidget.harrisDetector());
-  QCOMPARE(0.04, gfttWidget.k());
+  QCOMPARE(1000, mGfttWidget->maxFeatures());
+  QCOMPARE(0.01, mGfttWidget->qualityLevel());
+  QCOMPARE(1, mGfttWidget->minDistance());
+  QCOMPARE(3, mGfttWidget->blockSize());
+  QCOMPARE(false, mGfttWidget->harrisDetector());
+  QCOMPARE(0.04, mGfttWidget->k());
 }
 
-void TestGfttWidget::testMaxFeatures_data()
+void TestGfttWidget::test_maxFeatures_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -83,7 +82,7 @@ void TestGfttWidget::testMaxFeatures_data()
   QTest::newRow("Out of range value") << 1000001 << 1000000;
 }
 
-void TestGfttWidget::testMaxFeatures()
+void TestGfttWidget::test_maxFeatures()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -92,7 +91,7 @@ void TestGfttWidget::testMaxFeatures()
   QCOMPARE(result, mGfttWidget->maxFeatures());
 }
 
-void TestGfttWidget::testQualityLevel_data()
+void TestGfttWidget::test_qualityLevel_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -103,7 +102,7 @@ void TestGfttWidget::testQualityLevel_data()
   QTest::newRow("Out of range value") << 100.1 << 100.;
 }
 
-void TestGfttWidget::testQualityLevel()
+void TestGfttWidget::test_qualityLevel()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -112,7 +111,7 @@ void TestGfttWidget::testQualityLevel()
   QCOMPARE(result, mGfttWidget->qualityLevel());
 }
 
-void TestGfttWidget::testMinDistance_data()
+void TestGfttWidget::test_minDistance_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -123,7 +122,7 @@ void TestGfttWidget::testMinDistance_data()
   QTest::newRow("Out of range value") << 10000.1 << 10000.;
 }
 
-void TestGfttWidget::testMinDistance()
+void TestGfttWidget::test_minDistance()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -132,7 +131,7 @@ void TestGfttWidget::testMinDistance()
   QCOMPARE(result, mGfttWidget->minDistance());
 }
 
-void TestGfttWidget::testBlockSize_data()
+void TestGfttWidget::test_blockSize_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -143,7 +142,7 @@ void TestGfttWidget::testBlockSize_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestGfttWidget::testBlockSize()
+void TestGfttWidget::test_blockSize()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -152,7 +151,7 @@ void TestGfttWidget::testBlockSize()
   QCOMPARE(result, mGfttWidget->blockSize());
 }
 
-void TestGfttWidget::testHarrisDetector_data()
+void TestGfttWidget::test_harrisDetector_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -161,7 +160,7 @@ void TestGfttWidget::testHarrisDetector_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestGfttWidget::testHarrisDetector()
+void TestGfttWidget::test_harrisDetector()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -170,7 +169,7 @@ void TestGfttWidget::testHarrisDetector()
   QCOMPARE(result, mGfttWidget->harrisDetector());
 }
 
-void TestGfttWidget::testB_data()
+void TestGfttWidget::test_k_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -181,7 +180,7 @@ void TestGfttWidget::testB_data()
   QTest::newRow("Out of range value") << 100.1 << 100.;
 }
 
-void TestGfttWidget::testB()
+void TestGfttWidget::test_k()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -190,7 +189,7 @@ void TestGfttWidget::testB()
   QCOMPARE(result, mGfttWidget->k());
 }
 
-void TestGfttWidget::testReset()
+void TestGfttWidget::test_reset()
 {
   mGfttWidget->setMaxFeatures(5000);
   mGfttWidget->setQualityLevel(0.1);

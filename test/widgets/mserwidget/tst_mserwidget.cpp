@@ -19,25 +19,25 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
-  void testDelta_data();
-  void testDelta();
-  void testMinArea_data();
-  void testMinArea();
-  void testMaxArea_data();
-  void testMaxArea();
-  void testMaxVariation_data();
-  void testMaxVariation();
-  void testMinDiversity_data();
-  void testMinDiversity();
-  void testMaxEvolution_data();
-  void testMaxEvolution();
-  void testAreaThreshold_data();
-  void testAreaThreshold();
-  void testMinMargin_data();
-  void testMinMargin();
-  void testEdgeBlurSize_data();
-  void testEdgeBlurSize();
-  void testReset();
+  void test_delta_data();
+  void test_delta();
+  void test_minArea_data();
+  void test_minArea();
+  void test_maxArea_data();
+  void test_maxArea();
+  void test_maxVariation_data();
+  void test_maxVariation();
+  void test_minDiversity_data();
+  void test_minDiversity();
+  void test_maxEvolution_data();
+  void test_maxEvolution();
+  void test_areaThreshold_data();
+  void test_areaThreshold();
+  void test_minMargin_data();
+  void test_minMargin();
+  void test_edgeBlurSize_data();
+  void test_edgeBlurSize();
+  void test_reset();
 
 private:
 
@@ -71,19 +71,18 @@ void TestMserWidget::cleanupTestCase()
 void TestMserWidget::testDefaultConstructor()
 {
   /// Check default values
-  MserWidget mserWidget;
-  QCOMPARE(5, mserWidget.delta());
-  QCOMPARE(60, mserWidget.minArea());
-  QCOMPARE(14400, mserWidget.maxArea());
-  QCOMPARE(0.25, mserWidget.maxVariation());
-  QCOMPARE(.2, mserWidget.minDiversity());
-  QCOMPARE(200, mserWidget.maxEvolution());
-  QCOMPARE(1.01, mserWidget.areaThreshold());
-  QCOMPARE(0.003, mserWidget.minMargin());
-  QCOMPARE(5, mserWidget.edgeBlurSize());
+  QCOMPARE(5, mMserWidget->delta());
+  QCOMPARE(60, mMserWidget->minArea());
+  QCOMPARE(14400, mMserWidget->maxArea());
+  QCOMPARE(0.25, mMserWidget->maxVariation());
+  QCOMPARE(.2, mMserWidget->minDiversity());
+  QCOMPARE(200, mMserWidget->maxEvolution());
+  QCOMPARE(1.01, mMserWidget->areaThreshold());
+  QCOMPARE(0.003, mMserWidget->minMargin());
+  QCOMPARE(5, mMserWidget->edgeBlurSize());
 }
 
-void TestMserWidget::testDelta_data()
+void TestMserWidget::test_delta_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -94,7 +93,7 @@ void TestMserWidget::testDelta_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestMserWidget::testDelta()
+void TestMserWidget::test_delta()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -103,7 +102,7 @@ void TestMserWidget::testDelta()
   QCOMPARE(result, mMserWidget->delta());
 }
 
-void TestMserWidget::testMinArea_data()
+void TestMserWidget::test_minArea_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -114,7 +113,7 @@ void TestMserWidget::testMinArea_data()
   QTest::newRow("Out of range value") << 100001 << 100000;
 }
 
-void TestMserWidget::testMinArea()
+void TestMserWidget::test_minArea()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -123,7 +122,7 @@ void TestMserWidget::testMinArea()
   QCOMPARE(result, mMserWidget->minArea());
 }
 
-void TestMserWidget::testMaxArea_data()
+void TestMserWidget::test_maxArea_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -133,7 +132,7 @@ void TestMserWidget::testMaxArea_data()
   QTest::newRow("Out of range value") << 100001 << 100000;
 }
 
-void TestMserWidget::testMaxArea()
+void TestMserWidget::test_maxArea()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -142,7 +141,7 @@ void TestMserWidget::testMaxArea()
   QCOMPARE(result, mMserWidget->maxArea());
 }
 
-void TestMserWidget::testMaxVariation_data()
+void TestMserWidget::test_maxVariation_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -152,7 +151,7 @@ void TestMserWidget::testMaxVariation_data()
   QTest::newRow("Out of range value") << 200. << 99.99;
 }
 
-void TestMserWidget::testMaxVariation()
+void TestMserWidget::test_maxVariation()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -161,7 +160,7 @@ void TestMserWidget::testMaxVariation()
   QCOMPARE(result, mMserWidget->maxVariation());
 }
 
-void TestMserWidget::testMinDiversity_data()
+void TestMserWidget::test_minDiversity_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -171,7 +170,7 @@ void TestMserWidget::testMinDiversity_data()
   QTest::newRow("Out of range value") << 200. << 99.99;
 }
 
-void TestMserWidget::testMinDiversity()
+void TestMserWidget::test_minDiversity()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -180,7 +179,7 @@ void TestMserWidget::testMinDiversity()
   QCOMPARE(result, mMserWidget->minDiversity());
 }
 
-void TestMserWidget::testMaxEvolution_data()
+void TestMserWidget::test_maxEvolution_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -191,7 +190,7 @@ void TestMserWidget::testMaxEvolution_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestMserWidget::testMaxEvolution()
+void TestMserWidget::test_maxEvolution()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -200,7 +199,7 @@ void TestMserWidget::testMaxEvolution()
   QCOMPARE(result, mMserWidget->maxEvolution());
 }
 
-void TestMserWidget::testAreaThreshold_data()
+void TestMserWidget::test_areaThreshold_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -210,7 +209,7 @@ void TestMserWidget::testAreaThreshold_data()
   QTest::newRow("Out of range value") << 200. << 99.99;
 }
 
-void TestMserWidget::testAreaThreshold()
+void TestMserWidget::test_areaThreshold()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -219,7 +218,7 @@ void TestMserWidget::testAreaThreshold()
   QCOMPARE(result, mMserWidget->areaThreshold());
 }
 
-void TestMserWidget::testMinMargin_data()
+void TestMserWidget::test_minMargin_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -229,7 +228,7 @@ void TestMserWidget::testMinMargin_data()
   QTest::newRow("Out of range value") << 200. << 99.99;
 }
 
-void TestMserWidget::testMinMargin()
+void TestMserWidget::test_minMargin()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -238,7 +237,7 @@ void TestMserWidget::testMinMargin()
   QCOMPARE(result, mMserWidget->minMargin());
 }
 
-void TestMserWidget::testEdgeBlurSize_data()
+void TestMserWidget::test_edgeBlurSize_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -249,7 +248,7 @@ void TestMserWidget::testEdgeBlurSize_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestMserWidget::testEdgeBlurSize()
+void TestMserWidget::test_edgeBlurSize()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -259,7 +258,7 @@ void TestMserWidget::testEdgeBlurSize()
 }
 
 
-void TestMserWidget::testReset()
+void TestMserWidget::test_reset()
 {
   mMserWidget->setDelta(10);
   mMserWidget->setMinArea(50);

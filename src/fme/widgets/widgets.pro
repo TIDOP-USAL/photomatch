@@ -52,7 +52,8 @@ SOURCES += \
     LucidWidget.cpp \
     StarWidget.cpp \
     LceBsescsWidget.cpp \
-    AcebsfWidget.cpp
+    AcebsfWidget.cpp \
+    MsrcpWidget.cpp
 
 HEADERS += \
     OrbWidget.h \
@@ -78,7 +79,8 @@ HEADERS += \
     StarWidget.h \
     fme_global.h \
     LceBsescsWidget.h \
-    AcebsfWidget.h
+    AcebsfWidget.h \
+    MsrcpWidget.h
 
 unix {
     target.path = /usr/lib

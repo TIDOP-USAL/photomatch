@@ -59,10 +59,9 @@ void TestLatchWidget::cleanupTestCase()
 
 void TestLatchWidget::testDefaultConstructor()
 {
-  LatchWidget latch;
-  QCOMPARE("32", latch.bytes());
-  QCOMPARE(true, latch.rotationInvariance());
-  QCOMPARE(3, latch.halfSsdSize());
+  QCOMPARE("32", mLatchWidget->bytes());
+  QCOMPARE(true, mLatchWidget->rotationInvariance());
+  QCOMPARE(3, mLatchWidget->halfSsdSize());
 }
 
 void TestLatchWidget::test_bytes_data()

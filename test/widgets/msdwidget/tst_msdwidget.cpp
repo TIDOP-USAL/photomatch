@@ -17,29 +17,29 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
-  void testThresholdSaliency_data();
-  void testThresholdSaliency();
-  void testPathRadius_data();
-  void testPathRadius();
-  void testKNN_data();
-  void testKNN();
-  void testAreaRadius_data();
-  void testAreaRadius();
-  void testScaleFactor_data();
-  void testScaleFactor();
-  void testNMSRadius_data();
-  void testNMSRadius();
-  void testNScales_data();
-  void testNScales();
-  void tstNMSScaleR_data();
-  void tstNMSScaleR();
-  void tstComputeOrientations_data();
-  void tstComputeOrientations();
-  void tstAffineMSD_data();
-  void tstAffineMSD();
-  void tstTilts_data();
-  void tstTilts();
-  void testReset();
+  void test_thresholdSaliency_data();
+  void test_thresholdSaliency();
+  void test_pathRadius_data();
+  void test_pathRadius();
+  void test_knn_data();
+  void test_knn();
+  void test_areaRadius_data();
+  void test_areaRadius();
+  void test_scaleFactor_data();
+  void test_scaleFactor();
+  void test_NMSRadius_data();
+  void test_NMSRadius();
+  void test_nScales_data();
+  void test_nScales();
+  void test_nmsScaleR_data();
+  void test_nmsScaleR();
+  void test_computeOrientations_data();
+  void test_computeOrientations();
+  void test_affineMSD_data();
+  void test_affineMSD();
+  void test_tilts_data();
+  void test_tilts();
+  void test_Reset();
 
 protected:
 
@@ -72,21 +72,20 @@ void TestMsdWidget::cleanupTestCase()
 void TestMsdWidget::testDefaultConstructor()
 {
   /// Check default values
-  MsdWidget msdWidget;
-  QCOMPARE(250, msdWidget.thresholdSaliency());
-  QCOMPARE(3, msdWidget.pathRadius());
-  QCOMPARE(4, msdWidget.knn());
-  QCOMPARE(5, msdWidget.areaRadius());
-  QCOMPARE(1.25, msdWidget.scaleFactor());
-  QCOMPARE(5, msdWidget.NMSRadius());
-  QCOMPARE(-1, msdWidget.nScales());
-  QCOMPARE(0, msdWidget.NMSScaleR());
-  QCOMPARE(false, msdWidget.computeOrientations());
-  QCOMPARE(false, msdWidget.affineMSD());
-  QCOMPARE(3, msdWidget.tilts());
+  QCOMPARE(250, mMsdWidget->thresholdSaliency());
+  QCOMPARE(3, mMsdWidget->pathRadius());
+  QCOMPARE(4, mMsdWidget->knn());
+  QCOMPARE(5, mMsdWidget->areaRadius());
+  QCOMPARE(1.25, mMsdWidget->scaleFactor());
+  QCOMPARE(5, mMsdWidget->NMSRadius());
+  QCOMPARE(-1, mMsdWidget->nScales());
+  QCOMPARE(0, mMsdWidget->NMSScaleR());
+  QCOMPARE(false, mMsdWidget->computeOrientations());
+  QCOMPARE(false, mMsdWidget->affineMSD());
+  QCOMPARE(3, mMsdWidget->tilts());
 }
 
-void TestMsdWidget::testThresholdSaliency_data()
+void TestMsdWidget::test_thresholdSaliency_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -97,7 +96,7 @@ void TestMsdWidget::testThresholdSaliency_data()
   QTest::newRow("Out of range value") << 2001. << 2000.;
 }
 
-void TestMsdWidget::testThresholdSaliency()
+void TestMsdWidget::test_thresholdSaliency()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -106,7 +105,7 @@ void TestMsdWidget::testThresholdSaliency()
   QCOMPARE(result, mMsdWidget->thresholdSaliency());
 }
 
-void TestMsdWidget::testPathRadius_data()
+void TestMsdWidget::test_pathRadius_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -117,7 +116,7 @@ void TestMsdWidget::testPathRadius_data()
   QTest::newRow("Out of range value") << 11 << 10;
 }
 
-void TestMsdWidget::testPathRadius()
+void TestMsdWidget::test_pathRadius()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -126,7 +125,7 @@ void TestMsdWidget::testPathRadius()
   QCOMPARE(result, mMsdWidget->pathRadius());
 }
 
-void TestMsdWidget::testKNN_data()
+void TestMsdWidget::test_knn_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -137,7 +136,7 @@ void TestMsdWidget::testKNN_data()
   QTest::newRow("Out of range value") << 11 << 10;
 }
 
-void TestMsdWidget::testKNN()
+void TestMsdWidget::test_knn()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -146,7 +145,7 @@ void TestMsdWidget::testKNN()
   QCOMPARE(result, mMsdWidget->knn());
 }
 
-void TestMsdWidget::testAreaRadius_data()
+void TestMsdWidget::test_areaRadius_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -157,7 +156,7 @@ void TestMsdWidget::testAreaRadius_data()
   QTest::newRow("Out of range value") << 11 << 10;
 }
 
-void TestMsdWidget::testAreaRadius()
+void TestMsdWidget::test_areaRadius()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -166,7 +165,7 @@ void TestMsdWidget::testAreaRadius()
   QCOMPARE(result, mMsdWidget->areaRadius());
 }
 
-void TestMsdWidget::testScaleFactor_data()
+void TestMsdWidget::test_scaleFactor_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -177,7 +176,7 @@ void TestMsdWidget::testScaleFactor_data()
   QTest::newRow("Out of range value") << 10.1 << 10.;
 }
 
-void TestMsdWidget::testScaleFactor()
+void TestMsdWidget::test_scaleFactor()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -186,7 +185,7 @@ void TestMsdWidget::testScaleFactor()
   QCOMPARE(result, mMsdWidget->scaleFactor());
 }
 
-void TestMsdWidget::testNMSRadius_data()
+void TestMsdWidget::test_NMSRadius_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -197,7 +196,7 @@ void TestMsdWidget::testNMSRadius_data()
   QTest::newRow("Out of range value") << 11 << 10;
 }
 
-void TestMsdWidget::testNMSRadius()
+void TestMsdWidget::test_NMSRadius()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -206,7 +205,7 @@ void TestMsdWidget::testNMSRadius()
   QCOMPARE(result, mMsdWidget->NMSRadius());
 }
 
-void TestMsdWidget::testNScales_data()
+void TestMsdWidget::test_nScales_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -218,7 +217,7 @@ void TestMsdWidget::testNScales_data()
   QTest::newRow("Out of range value 2") << -2 << -1;
 }
 
-void TestMsdWidget::testNScales()
+void TestMsdWidget::test_nScales()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -227,7 +226,7 @@ void TestMsdWidget::testNScales()
   QCOMPARE(result, mMsdWidget->nScales());
 }
 
-void TestMsdWidget::tstNMSScaleR_data()
+void TestMsdWidget::test_nmsScaleR_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -239,7 +238,7 @@ void TestMsdWidget::tstNMSScaleR_data()
   QTest::newRow("Out of range value 2") << -1 << 0;
 }
 
-void TestMsdWidget::tstNMSScaleR()
+void TestMsdWidget::test_nmsScaleR()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -248,7 +247,7 @@ void TestMsdWidget::tstNMSScaleR()
   QCOMPARE(result, mMsdWidget->NMSScaleR());
 }
 
-void TestMsdWidget::tstComputeOrientations_data()
+void TestMsdWidget::test_computeOrientations_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -257,7 +256,7 @@ void TestMsdWidget::tstComputeOrientations_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestMsdWidget::tstComputeOrientations()
+void TestMsdWidget::test_computeOrientations()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -266,7 +265,7 @@ void TestMsdWidget::tstComputeOrientations()
   QCOMPARE(result, mMsdWidget->computeOrientations());
 }
 
-void TestMsdWidget::tstAffineMSD_data()
+void TestMsdWidget::test_affineMSD_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -275,7 +274,7 @@ void TestMsdWidget::tstAffineMSD_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestMsdWidget::tstAffineMSD()
+void TestMsdWidget::test_affineMSD()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -284,7 +283,7 @@ void TestMsdWidget::tstAffineMSD()
   QCOMPARE(result, mMsdWidget->affineMSD());
 }
 
-void TestMsdWidget::tstTilts_data()
+void TestMsdWidget::test_tilts_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -295,7 +294,7 @@ void TestMsdWidget::tstTilts_data()
   QTest::newRow("Out of range value") << 11 << 10;
 }
 
-void TestMsdWidget::tstTilts()
+void TestMsdWidget::test_tilts()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -304,7 +303,7 @@ void TestMsdWidget::tstTilts()
   QCOMPARE(result, mMsdWidget->tilts());
 }
 
-void TestMsdWidget::testReset()
+void TestMsdWidget::test_Reset()
 {
   mMsdWidget->setThresholdSaliency(200);
   mMsdWidget->setPathRadius(4);

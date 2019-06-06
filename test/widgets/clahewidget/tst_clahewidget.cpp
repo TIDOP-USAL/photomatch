@@ -19,11 +19,11 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
-  void testClipLimit_data();
-  void testClipLimit();
-  void testTilesGridSize_data();
-  void testTilesGridSize();
-  void testReset();
+  void test_clipLimit_data();
+  void test_clipLimit();
+  void test_tilesGridSize_data();
+  void test_tilesGridSize();
+  void test_reset();
 
 private:
 
@@ -57,12 +57,11 @@ void TestCLAHEWidget::cleanupTestCase()
 void TestCLAHEWidget::testDefaultConstructor()
 {
   /// Check default values
-  CLAHEWidget claheWidget;
-  QCOMPARE(40.0, claheWidget.clipLimit());
-  QCOMPARE(QSize(8, 8), claheWidget.tileGridSize());
+  QCOMPARE(40.0, mCLAHEWidget->clipLimit());
+  QCOMPARE(QSize(8, 8), mCLAHEWidget->tileGridSize());
 }
 
-void TestCLAHEWidget::testClipLimit_data()
+void TestCLAHEWidget::test_clipLimit_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -73,7 +72,7 @@ void TestCLAHEWidget::testClipLimit_data()
   QTest::newRow("Out of range value") << 101. << 100.;
 }
 
-void TestCLAHEWidget::testClipLimit()
+void TestCLAHEWidget::test_clipLimit()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -82,7 +81,7 @@ void TestCLAHEWidget::testClipLimit()
   QCOMPARE(result, mCLAHEWidget->clipLimit());
 }
 
-void TestCLAHEWidget::testTilesGridSize_data()
+void TestCLAHEWidget::test_tilesGridSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -93,7 +92,7 @@ void TestCLAHEWidget::testTilesGridSize_data()
   QTest::newRow("Out of range value y") << QSize(50, 101) << QSize(50, 100);
 }
 
-void TestCLAHEWidget::testTilesGridSize()
+void TestCLAHEWidget::test_tilesGridSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
@@ -102,7 +101,7 @@ void TestCLAHEWidget::testTilesGridSize()
   QCOMPARE(result, mCLAHEWidget->tileGridSize());
 }
 
-void TestCLAHEWidget::testReset()
+void TestCLAHEWidget::test_reset()
 {
   mCLAHEWidget->setClipLimit(50.);
   mCLAHEWidget->setTilesGridSize(QSize(5, 5));

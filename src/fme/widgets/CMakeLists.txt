@@ -44,7 +44,9 @@ add_library(libwidgets ${LIB_TYPE}
             LceBsescsWidget.cpp
             LceBsescsWidget.h
             AcebsfWidget.cpp
-            AcebsfWidget.h)
+            AcebsfWidget.h
+            MsrcpWidget.cpp
+            MsrcpWidget.h)
 
 set_property(TARGET libwidgets PROPERTY FOLDER "lib")
 

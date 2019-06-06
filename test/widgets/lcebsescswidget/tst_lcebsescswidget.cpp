@@ -19,9 +19,9 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
-  void testTilesGridSize_data();
-  void testTilesGridSize();
-  void testReset();
+  void test_tilesGridSize_data();
+  void test_tilesGridSize();
+  void test_reset();
 
 private:
 
@@ -55,12 +55,11 @@ void TestLceBsescsWidget::cleanupTestCase()
 void TestLceBsescsWidget::testDefaultConstructor()
 {
   /// Check default values
-  LceBsescsWidget lceBsescsWidget;
-  QCOMPARE(QSize(33, 33), lceBsescsWidget.blockSize());
+  QCOMPARE(QSize(33, 33), mLceBsescsWidget->blockSize());
 }
 
 
-void TestLceBsescsWidget::testTilesGridSize_data()
+void TestLceBsescsWidget::test_tilesGridSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -71,7 +70,7 @@ void TestLceBsescsWidget::testTilesGridSize_data()
   QTest::newRow("Out of range value y") << QSize(50, 101) << QSize(50, 100);
 }
 
-void TestLceBsescsWidget::testTilesGridSize()
+void TestLceBsescsWidget::test_tilesGridSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
@@ -80,7 +79,7 @@ void TestLceBsescsWidget::testTilesGridSize()
   QCOMPARE(result, mLceBsescsWidget->blockSize());
 }
 
-void TestLceBsescsWidget::testReset()
+void TestLceBsescsWidget::test_reset()
 {
   mLceBsescsWidget->setBlockSize(QSize(5, 5));
 
