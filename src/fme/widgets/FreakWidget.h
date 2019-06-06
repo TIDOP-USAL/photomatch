@@ -12,6 +12,12 @@ class QCheckBox;
 namespace fme
 {
 
+/*!
+ * \brief Interface for FREAK Widgets class
+ * Alexandre Alahi, Raphael Ortiz, and Pierre Vandergheynst.
+ * Freak: Fast retina keypoint. In Computer Vision and Pattern
+ * Recognition (CVPR), 2012 IEEE Conference on, pages 510–517. Ieee, 2012.
+ */
 class FME_EXPORT IFreakWidget
   : public QWidget
 {
@@ -23,25 +29,25 @@ public:
   virtual ~IFreakWidget() = default;
 
   /*!
-   * \brief Orientation normalization
+   * \brief Orientation normalization (Default=true)
    * \return
    */
   virtual bool orientationNormalized() const = 0;
 
   /*!
-   * \brief Scale normalization
+   * \brief Scale normalization (Default=true)
    * \return
    */
   virtual bool scaleNormalized() const = 0;
 
   /*!
-   * \brief Scaling of the description pattern
+   * \brief Scaling of the description pattern (Default=22.)
    * \return
    */
   virtual double patternScale() const = 0;
 
   /*!
-   * \brief Number of octaves covered by the detected keypoints
+   * \brief Number of octaves covered by the detected keypoints (Default=4)
    * \return Number of octaves
    */
   virtual int octaves() const = 0;

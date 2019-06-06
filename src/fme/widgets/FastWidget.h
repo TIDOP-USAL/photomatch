@@ -12,6 +12,10 @@ class QCheckBox;
 namespace fme
 {
 
+/*!
+ * \brief Interface for FAST Widgets class
+ *
+ */
 class FME_EXPORT IFastWidget
   : public QWidget
 {
@@ -22,8 +26,25 @@ public:
   IFastWidget(QWidget *parent = nullptr) : QWidget(parent){}
   virtual ~IFastWidget() = default;
 
+  /*!
+   * \brief threshold (Default=10)
+   * \return
+   */
   virtual int threshold() const = 0;
+
+  /*!
+   * \brief Non Maximal Suppression for removing adjacent corners (default=true)
+   * \return
+   */
   virtual bool nonmaxSuppression() const = 0;
+
+  /*!
+   * \brief Detector Types
+   * - TYPE_5_8: FAST-5 decision tree whith the 8 pixels mask
+   * - TYPE_7_12: FAST-7 decision tree whith the 12 pixels mask
+   * - TYPE_9_16: FAST-9 decision tree whith the 16 pixels mask (default)
+   * \return Detector Type
+   */
   virtual QString detectorType() const = 0;
 
 signals:
@@ -34,8 +55,27 @@ signals:
 
 public slots:
 
+  /*!
+   * \brief Set the threshold
+   * \param threshold Threshold
+   */
   virtual void setThreshold(int threshold) = 0;
+
+  /*!
+   * \brief Set Non Maximal Suppression
+   * \param[in] nonmaxSuppression Non Maximal Suppression for removing adjacent corners (Default=true)
+   */
   virtual void setNonmaxSuppression(bool nonmaxSuppression) = 0;
+
+  /*!
+   * \brief Set the Detector Type
+   * Suported types:
+   * - TYPE_5_8: FAST-5 decision tree whith the 8 pixels mask
+   * - TYPE_7_12: FAST-7 decision tree whith the 12 pixels mask
+   * - TYPE_9_16: FAST-9 decision tree whith the 16 pixels mask (default)
+   *
+   * \param[in] detectorType Detector Type
+   */
   virtual void setDetectorType(QString detectorType) = 0;
 
   virtual void update() = 0;

@@ -56,7 +56,7 @@ void AgastWidget::setNonmaxSuppression(bool nonmaxSuppression)
   mNonmaxSuppression->setChecked(nonmaxSuppression);
 }
 
-void AgastWidget::setDetectorType(QString detectorType)
+void AgastWidget::setDetectorType(const QString &detectorType)
 {
   const QSignalBlocker blockerDetectorType(mDetectorType);
   mDetectorType->setCurrentText(detectorType);
@@ -94,7 +94,6 @@ void AgastWidget::init()
   mThreshold->setRange(0, 100);
   propertiesLayout->addWidget(mThreshold, 0, 1);
 
-  //layout->addWidget(new QLabel(tr("Nonmax Suppression:")), 1, 0);
   mNonmaxSuppression->setText(tr("Nonmax Suppression"));
   propertiesLayout->addWidget(mNonmaxSuppression, 1, 0);
 

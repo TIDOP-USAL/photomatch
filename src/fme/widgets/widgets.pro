@@ -50,7 +50,9 @@ SOURCES += \
     FreakWidget.cpp \
     LatchWidget.cpp \
     LucidWidget.cpp \
-    StarWidget.cpp
+    StarWidget.cpp \
+    LceBsescsWidget.cpp \
+    AcebsfWidget.cpp
 
 HEADERS += \
     OrbWidget.h \
@@ -74,7 +76,9 @@ HEADERS += \
     LatchWidget.h \
     LucidWidget.h \
     StarWidget.h \
-    fme_global.h
+    fme_global.h \
+    LceBsescsWidget.h \
+    AcebsfWidget.h
 
 unix {
     target.path = /usr/lib

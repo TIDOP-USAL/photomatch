@@ -42,4 +42,8 @@ SUBDIRS += \
     lucidwidget \
     lucidwidget_signals \
     starwidget \
-    starwidget_signals
+    starwidget_signals \
+    lcebsescswidget \
+    lcebsescswidget_signals \
+    acebsfwidget \
+    acebsfwidget_signals

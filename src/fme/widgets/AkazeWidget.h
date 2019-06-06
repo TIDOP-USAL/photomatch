@@ -36,7 +36,7 @@ public:
   virtual int descriptorSize() const = 0;
 
   /*!
-   * \brief Number of channels in the descriptor (1, 2, 3)
+   * \brief Number of channels in the descriptor [1, 2, 3 (default)]
    * \return Number of channels
    */
   virtual int descriptorChannels() const = 0;
@@ -61,7 +61,7 @@ public:
 
   /*!
    * \brief Diffusivity type
-   * \return DIFF_PM_G1, DIFF_PM_G2, DIFF_WEICKERT or DIFF_CHARBONNIER
+   * \return DIFF_PM_G1, DIFF_PM_G2 (default), DIFF_WEICKERT or DIFF_CHARBONNIER
    */
   virtual QString diffusivity() const = 0;
 
@@ -95,13 +95,27 @@ public slots:
    */
   virtual void setDescriptorChannels(int channels) = 0;
 
+  /*!
+   * \brief Set the detector response threshold to accept point
+   * \param[in] threshold
+   */
   virtual void setThreshold(double threshold) = 0;
+
+  /*!
+   * \brief Set the maximum octave evolution of the image
+   * \param[in] octaves
+   */
   virtual void setOctaves(int octaves) = 0;
+
+  /*!
+   * \brief Sets the default number of sublevels per scale level
+   * \param[in] octaveLayers
+   */
   virtual void setOctaveLayers(int octaveLayers) = 0;
 
   /*!
    * \brief Set diffusivity type
-   * \param[in] diffusivity
+   * \param[in] diffusivity DIFF_PM_G1, DIFF_PM_G2 (default), DIFF_WEICKERT or DIFF_CHARBONNIER
    */
   virtual void setDiffusivity(const QString &diffusivity) = 0;
 

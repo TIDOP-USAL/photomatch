@@ -10,6 +10,11 @@ class QSpinBox;
 namespace fme
 {
 
+/*!
+ * \brief Interface for LUCID Widgets class
+ * Eric Christiansen David Kriegman Ziegler, Andrew and Serge J. Belongie.
+ * Locally uniform comparison image descriptor
+ */
 class FME_EXPORT ILucidWidget
   : public QWidget
 {
@@ -21,7 +26,18 @@ public:
   ILucidWidget(QWidget *parent = nullptr) : QWidget(parent){}
   virtual ~ILucidWidget() = default;
 
+  /*!
+   * \brief kernel for descriptor construction
+   * 1=3x3, 2=5x5, 3=7x7 and so forth. Default=1
+   * \return
+   */
   virtual int lucidKernel() const = 0;
+
+  /*!
+   * \brief kernel for blurring image prior to descriptor construction
+   * 1=3x3, 2=5x5, 3=7x7 and so forth. Default=2
+   * \return
+   */
   virtual int blurKernel() const = 0;
 
 signals:
@@ -31,7 +47,16 @@ signals:
 
 public slots:
 
+  /*!
+   * \brief Set the kernel for descriptor construction
+   * \param[in] lucidKernel kernel for descriptor construction
+   */
   virtual void setLucidKernel(int lucidKernel) = 0;
+
+  /*!
+   * \brief Set the kernel for descriptor construction
+   * \param[in] blurKernel kernel for descriptor construction
+   */
   virtual void setBlurKernel(int blurKernel) = 0;
 
   virtual void update() = 0;

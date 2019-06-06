@@ -37,7 +37,7 @@ signals:
 public slots:
 
   virtual void setClipLimit(double clipLimit) = 0;
-  virtual void setTilesGridSize (QSize tileGridSize) = 0;
+  virtual void setTilesGridSize (const QSize &tileGridSize) = 0;
 
   virtual void update() = 0;
   virtual void reset() = 0;
@@ -74,7 +74,7 @@ public:
 public slots:
 
   void setClipLimit(double clipLimit) override;
-  void setTilesGridSize(QSize tileGridSize) override;
+  void setTilesGridSize(const QSize &tileGridSize) override;
   void update() override;
   void reset() override;
 

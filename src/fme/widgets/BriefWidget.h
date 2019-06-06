@@ -12,7 +12,12 @@ namespace fme
 {
 
 /*!
- * \brief Interface for BriefWidget class
+ * \brief Interface for BRIEF Widgets
+ *
+ * Michael Calonder, Vincent Lepetit, Christoph Strecha, and Pascal Fua.
+ * Brief: Binary robust independent elementary features. In Computer
+ * Vision–ECCV 2010, pages 778–792. Springer, 2010
+ * https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
  */
 class FME_EXPORT IBriefWidget
   : public QWidget
@@ -24,7 +29,17 @@ public:
   IBriefWidget(QWidget *parent = nullptr) : QWidget(parent){}
   virtual ~IBriefWidget() = default;
 
+  /*!
+   * \brief Legth of the descriptor in bytes
+   * Valid values are: 16, 32 (default) or 64
+   * \return Legth of the descriptor
+   */
   virtual QString bytes() const = 0;
+
+  /*!
+   * \brief useOrientation
+   * \return
+   */
   virtual bool useOrientation() const = 0;
 
 signals:
@@ -34,7 +49,16 @@ signals:
 
 public slots:
 
+  /*!
+   * \brief Set the legth of the descriptor in bytes
+   * \param[in] bytes
+   */
   virtual void setBytes(const QString &bytes) = 0;
+
+  /*!
+   * \brief setUseOrientation
+   * \param[in] useOrientation
+   */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
   virtual void update() = 0;

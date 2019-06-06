@@ -3,6 +3,7 @@
 #include <QSpinBox>
 #include <QGridLayout>
 #include <QLabel>
+#include <QGroupBox>
 
 namespace fme
 {
@@ -53,7 +54,7 @@ void CLAHEWidget::setClipLimit(double clipLimit)
   mClipLimit->setValue(clipLimit);
 }
 
-void CLAHEWidget::setTilesGridSize(QSize tileGridSize)
+void CLAHEWidget::setTilesGridSize(const QSize &tileGridSize)
 {
   const QSignalBlocker blockerTilesGridX(mTilesGridX);
   const QSignalBlocker blockerTilesGridY(mTilesGridY);
@@ -80,20 +81,33 @@ void CLAHEWidget::reset()
 void CLAHEWidget::init()
 {
   QGridLayout *layout = new QGridLayout();
-
-  layout->addWidget(new QLabel(tr("Clip Limit:")), 0, 0);
-  mClipLimit->setRange(0, 100);
-  layout->addWidget(mClipLimit, 0, 1);
-
-  layout->addWidget(new QLabel(tr("Tiles Size X:")), 1, 0);
-  mTilesGridX->setRange(0, 100);
-  layout->addWidget(mTilesGridX, 1, 1);
-
-  layout->addWidget(new QLabel(tr("Tiles Size Y:")), 1, 0);
-  mTilesGridY->setRange(0, 100);
-  layout->addWidget(mTilesGridY, 2, 1);
-
+  layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
+
+  QGroupBox *mGroupBox = new QGroupBox(tr("CLAHE Parameters"), this);
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout(this);
+  mGroupBox->setLayout(propertiesLayout);
+
+  QLabel *lbl = new QLabel(tr("Contrast Limited Adaptive Histogram Equalization"), this);
+  lbl->setWordWrap(true);
+  QFont font;
+  font.setBold(true);
+  lbl->setFont(font);
+  propertiesLayout->addWidget(lbl, 0, 0);
+
+  propertiesLayout->addWidget(new QLabel(tr("Clip Limit:")), 0, 0);
+  mClipLimit->setRange(0, 100);
+  propertiesLayout->addWidget(mClipLimit, 0, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Tiles Size X:")), 1, 0);
+  mTilesGridX->setRange(0, 100);
+  propertiesLayout->addWidget(mTilesGridX, 1, 1);
+
+  propertiesLayout->addWidget(new QLabel(tr("Tiles Size Y:")), 1, 0);
+  mTilesGridY->setRange(0, 100);
+  propertiesLayout->addWidget(mTilesGridY, 2, 1);
 
   reset(); /// set default values
 

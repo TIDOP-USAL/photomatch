@@ -11,6 +11,14 @@ class QDoubleSpinBox;
 namespace fme
 {
 
+/*!
+ * \brief Interface for BRISK Widgets class
+ * Stefan Leutenegger, Margarita Chli, and Roland Yves Siegwart.
+ * Brisk: Binary robust invariant scalable keypoints. In Computer
+ * Vision (ICCV), 2011 IEEE International Conference on, pages
+ * 2548–2555. IEEE, 2011
+ * http://margaritachli.com/papers/ICCV2011paper.pdf
+ */
 class FME_EXPORT IBriskWidget
   : public QWidget
 {
@@ -21,8 +29,22 @@ public:
   IBriskWidget(QWidget *parent = nullptr) : QWidget(parent){}
   virtual ~IBriskWidget() = default;
 
+  /*!
+   * \brief AGAST detection threshold score (Default=30)
+   * \return Threshold
+   */
   virtual int threshold() const = 0;
+
+  /*!
+   * \brief Detection octaves (Default=3)
+   * \return
+   */
   virtual int octaves() const = 0;
+
+  /*!
+   * \brief Pattern Scale (Default=1.0)
+   * \return
+   */
   virtual double patternScale() const = 0;
 
 signals:
@@ -33,8 +55,22 @@ signals:
 
 public slots:
 
+  /*!
+   * \brief Set the AGAST detection threshold score
+   * \param[in] threshold AGAST detection threshold
+   */
   virtual void setThreshold(int threshold) = 0;
+
+  /*!
+   * \brief Set detection octaves
+   * \param[in] octaves Octaves
+   */
   virtual void setOctaves(int octaves) = 0;
+
+  /*!
+   * \brief Set Pattern Scale
+   * \param[in] patternScale Pattern Scale
+   */
   virtual void setPatternScale(double patternScale) = 0;
 
   virtual void update() = 0;
