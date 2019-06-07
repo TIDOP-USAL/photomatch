@@ -99,12 +99,18 @@ void TestAcebsfWidgetSignals::test_k2Change()
 void TestAcebsfWidgetSignals::test_reset()
 {
   QSignalSpy spy_blockSizeChange(this, &AcebsfWidget::blockSizeChange);
+  QSignalSpy spy_k1Change(this, &AcebsfWidget::k1Change);
+  QSignalSpy spy_k2Change(this, &AcebsfWidget::k2Change);
 
   this->setBlockSize(QSize(5, 7));
+  this->setK1(15.);
+  this->setK2(0.6);
 
   this->reset();
 
   QCOMPARE(spy_blockSizeChange.count(), 0);
+  QCOMPARE(spy_k1Change.count(), 0);
+  QCOMPARE(spy_k2Change.count(), 0);
 }
 
 

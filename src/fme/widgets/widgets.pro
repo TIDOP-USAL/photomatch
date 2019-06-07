@@ -30,57 +30,68 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += ../../
 
 SOURCES += \
-    OrbWidget.cpp \
-    SiftWidget.cpp \
-    SurfWidget.cpp \
-    FastWidget.cpp \
-    BriskWidget.cpp \
-    MserWidget.cpp \
-    AgastWidget.cpp \
-    KazeWidget.cpp \
-    AkazeWidget.cpp \
-    GfttWidget.cpp \
-    MsdWidget.cpp \
-    DescriptorMatcherWidget.cpp \
-    WallisWidget.cpp \
-    CLAHEWidget.cpp \
-    DaisyWidget.cpp \
-    HogWidget.cpp \
-    BriefWidget.cpp \
-    FreakWidget.cpp \
-    LatchWidget.cpp \
-    LucidWidget.cpp \
-    StarWidget.cpp \
-    LceBsescsWidget.cpp \
     AcebsfWidget.cpp \
-    MsrcpWidget.cpp
+    AgastWidget.cpp \
+    AkazeWidget.cpp \
+    BriefWidget.cpp \
+    BriskWidget.cpp \
+    CLAHEWidget.cpp \
+    CmbfheWidget.cpp \
+    DaisyWidget.cpp \
+    DescriptorMatcherWidget.cpp \
+    FaheWidget.cpp \
+    FastWidget.cpp \
+    FreakWidget.cpp \
+    GfttWidget.cpp \
+    HmclaheWidget.cpp \
+    HogWidget.cpp \
+    KazeWidget.cpp \
+    LatchWidget.cpp \
+    LceBsescsWidget.cpp \
+    LucidWidget.cpp \
+    MsdWidget.cpp \
+    MserWidget.cpp \
+    MsrcpWidget.cpp \
+    NoshpWidget.cpp \
+    OrbWidget.cpp \
+    PoheWidget.cpp \
+    SiftWidget.cpp \
+    StarWidget.cpp \
+    SurfWidget.cpp \
+    WallisWidget.cpp
+
 
 HEADERS += \
-    OrbWidget.h \
-    SiftWidget.h \
-    SurfWidget.h \
-    FastWidget.h \
-    BriskWidget.h \
-    MserWidget.h \
-    AgastWidget.h \
-    KazeWidget.h \
-    AkazeWidget.h \
-    GfttWidget.h \
-    MsdWidget.h \
-    DescriptorMatcherWidget.h \
-    WallisWidget.h \
-    CLAHEWidget.h \
-    DaisyWidget.h \
-    HogWidget.h \
-    BriefWidget.h \
-    FreakWidget.h \
-    LatchWidget.h \
-    LucidWidget.h \
-    StarWidget.h \
-    fme_global.h \
-    LceBsescsWidget.h \
     AcebsfWidget.h \
-    MsrcpWidget.h
+    AgastWidget.h \
+    AkazeWidget.h \
+    BriefWidget.h \
+    BriskWidget.h \
+    CLAHEWidget.h \
+    CmbfheWidget.h \
+    DaisyWidget.h \
+    DescriptorMatcherWidget.h \
+    FaheWidget.h \
+    FastWidget.h \
+    fme_global.h \
+    FreakWidget.h \
+    GfttWidget.h \
+    HmclaheWidget.h \
+    HogWidget.h \
+    KazeWidget.h \
+    LatchWidget.h \
+    LceBsescsWidget.h \
+    LucidWidget.h \
+    MsdWidget.h \
+    MserWidget.h \
+    MsrcpWidget.h \
+    NoshpWidget.h \
+    OrbWidget.h \
+    PoheWidget.h \
+    SiftWidget.h \
+    StarWidget.h \
+    SurfWidget.h \
+    WallisWidget.h
 
 unix {
     target.path = /usr/lib
