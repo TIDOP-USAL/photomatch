@@ -1,9 +1,7 @@
 #ifndef FME_SURF_WIDGET_H
 #define FME_SURF_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -16,14 +14,14 @@ namespace fme
  * \brief Interface SURF Widget
  */
 class FME_EXPORT ISurfWidget
-  : public QWidget
+  : public FmeWidget
 {
 
   Q_OBJECT
 
 public:
 
-  ISurfWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ISurfWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ISurfWidget() = default;
 
   /*!
@@ -96,20 +94,6 @@ public slots:
    */
   virtual void setRotatedFeatures(bool rotatedFeatures) = 0;
 
-  /*!
-   * \brief update
-   */
-  virtual void update() = 0;
-
-  /*!
-   * \brief reset
-   */
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT SurfWidget
@@ -140,6 +124,11 @@ public slots:
   void setOctaveLayers(int octaveLayers) override;
   void setExtendedDescriptor(bool extendedDescriptor) override;
   void setRotatedFeatures(bool rotatedFeatures) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

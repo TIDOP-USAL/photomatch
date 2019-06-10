@@ -1,9 +1,7 @@
 #ifndef FME_KAZE_WIDGET_H
 #define FME_KAZE_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QCheckBox;
 class QSpinBox;
@@ -26,13 +24,13 @@ namespace fme
  * https://www.doc.ic.ac.uk/~ajd/Publications/alcantarilla_etal_eccv2012.pdf
  */
 class FME_EXPORT IKazeWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IKazeWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IKazeWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IKazeWidget() = default;
 
   /*!
@@ -118,12 +116,6 @@ public slots:
    */
   virtual void setDiffusivity(const QString &diffusivity) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT KazeWidget
@@ -153,6 +145,10 @@ public slots:
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;
   void setDiffusivity(const QString &diffusivity) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

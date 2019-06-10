@@ -1,9 +1,7 @@
 #ifndef FME_CMBFHE_WIDGET_H
 #define FME_CMBFHE_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -18,13 +16,13 @@ namespace fme
  * histogram equalization," TCE, vol. 52, no. 3, 2006.
  */
 class FME_EXPORT ICmbfheWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  ICmbfheWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ICmbfheWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ICmbfheWidget() {}
 
   virtual QSize blockSize() const = 0;
@@ -44,13 +42,6 @@ public slots:
 
   virtual void setBlockSize(const QSize &blockSize) = 0;
   //virtual void setStepSize(const QSize &stepSize) = 0;
-  
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -79,6 +70,11 @@ public:
 public slots:
 
   void setBlockSize(const QSize &blockSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

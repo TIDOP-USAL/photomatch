@@ -17,10 +17,13 @@ add_library(libwidgets ${LIB_TYPE}
             DaisyWidget.h
             DescriptorMatcherWidget.cpp
             DescriptorMatcherWidget.h
+            DheWidget.cpp
+            DheWidget.h
             FaheWidget.cpp
             FaheWidget.h
             FastWidget.cpp
             FastWidget.h
+            FmeWidget.h
             FreakWidget.cpp
             FreakWidget.h
             GfttWidget.cpp
@@ -49,6 +52,8 @@ add_library(libwidgets ${LIB_TYPE}
             OrbWidget.h
             PoheWidget.cpp
             PoheWidget.h
+            RswheWidget.cpp
+            RswheWidget.h
             SiftWidget.cpp
             SiftWidget.h
             StarWidget.cpp

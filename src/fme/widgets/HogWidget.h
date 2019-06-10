@@ -1,7 +1,7 @@
 #ifndef FME_HOG_WIDGET_H
 #define FME_HOG_WIDGET_H
 
-#include "fme/fme_global.h"
+#include "fme/widgets/FmeWidget.h"
 
 #include <QWidget>
 
@@ -19,13 +19,13 @@ namespace fme
  * Navneet Dalal and Bill Triggs @cite Dalal2005
  */
 class FME_EXPORT IHogWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IHogWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IHogWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IHogWidget() = default;
 
   virtual QSize winSize() const = 0;
@@ -74,12 +74,6 @@ public slots:
 //  virtual void setNlevels(int nlevels) = 0;
 //  virtual void setSignedGradient(bool signedGradient) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT HogWidget
@@ -137,6 +131,10 @@ public slots:
 //  void setFreeCoef(double freeCoef) override;
 //  void setNlevels(int nlevels) override;
 //  void setSignedGradient(bool signedGradient) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

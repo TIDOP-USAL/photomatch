@@ -1,9 +1,7 @@
 #ifndef FME_ORB_WIDGET_H
 #define FME_ORB_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QDoubleSpinBox;
@@ -16,14 +14,14 @@ namespace fme
  * \brief Interface ORB Widget
  */
 class FME_EXPORT IOrbWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
   IOrbWidget(QWidget *parent = nullptr)
-    : QWidget(parent){}
+    : FmeWidget(parent){}
   virtual ~IOrbWidget() = default;
 
   virtual int featuresNumber() const = 0;
@@ -56,13 +54,6 @@ public slots:
   virtual void setScoreType(const QString &scoreType) = 0;
   virtual void setPatchSize(int patchSize) = 0;
   virtual void setFastThreshold(int fastThreshold) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -99,6 +90,10 @@ public slots:
   void setScoreType(const QString &scoreType) override;
   void setPatchSize(int patchSize) override;
   void setFastThreshold(int fastThreshold) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

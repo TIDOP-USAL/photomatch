@@ -1,9 +1,7 @@
 #ifndef FME_LUCID_WIDGET_H
 #define FME_LUCID_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 
@@ -16,14 +14,14 @@ namespace fme
  * Locally uniform comparison image descriptor
  */
 class FME_EXPORT ILucidWidget
-  : public QWidget
+  : public FmeWidget
 {
 
   Q_OBJECT
 
 public:
 
-  ILucidWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ILucidWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ILucidWidget() = default;
 
   /*!
@@ -59,12 +57,6 @@ public slots:
    */
   virtual void setBlurKernel(int blurKernel) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 
@@ -90,6 +82,11 @@ public slots:
 
   void setLucidKernel(int lucidKernel) override;
   void setBlurKernel(int blurKernel) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

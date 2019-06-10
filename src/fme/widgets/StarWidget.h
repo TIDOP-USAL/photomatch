@@ -1,9 +1,7 @@
 #ifndef FME_STAR_WIDGET_H
 #define FME_STAR_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 
@@ -11,13 +9,13 @@ namespace fme
 {
 
 class FME_EXPORT IStarWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IStarWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IStarWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IStarWidget() = default;
 
   virtual int maxSize() const  = 0;
@@ -42,12 +40,6 @@ public slots:
   virtual void setLineThresholdBinarized(int lineThresholdBinarized) = 0;
   virtual void setSuppressNonmaxSize(int suppressNonmaxSize) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT StarWidget
@@ -77,6 +69,11 @@ public slots:
   void setLineThresholdProjected(int lineThresholdProjected) override;
   void setLineThresholdBinarized(int lineThresholdBinarized) override;
   void setSuppressNonmaxSize(int suppressNonmaxSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

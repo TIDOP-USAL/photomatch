@@ -1,7 +1,8 @@
 #ifndef FME_BRISK_WIDGET_H
 #define FME_BRISK_WIDGET_H
 
-#include "fme/fme_global.h"
+#include "fme/widgets/FmeWidget.h"
+
 
 #include <QWidget>
 
@@ -20,13 +21,13 @@ namespace fme
  * http://margaritachli.com/papers/ICCV2011paper.pdf
  */
 class FME_EXPORT IBriskWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IBriskWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IBriskWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IBriskWidget() = default;
 
   /*!
@@ -73,13 +74,6 @@ public slots:
    */
   virtual void setPatternScale(double patternScale) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT BriskWidget
@@ -103,6 +97,10 @@ public slots:
   void setThreshold(int threshold) override;
   void setOctaves(int octaves) override;
   void setPatternScale(double patternScale) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

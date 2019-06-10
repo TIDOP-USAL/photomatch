@@ -1,9 +1,7 @@
 #ifndef FME_MSER_WIDGET_H
 #define FME_MSER_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QDoubleSpinBox;
@@ -12,13 +10,13 @@ namespace fme
 {
 
 class FME_EXPORT IMserWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IMserWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IMserWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IMserWidget() = default;
 
   virtual int delta() const = 0;
@@ -55,13 +53,6 @@ public slots:
   virtual void setMinMargin(double minMargin) = 0;
   virtual void setEdgeBlurSize(int edgeBlurSize) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT MserWidget
@@ -97,6 +88,10 @@ public slots:
   void setAreaThreshold(double areaThreshold) override;
   void setMinMargin(double minMargin) override;
   void setEdgeBlurSize(int edgeBlurSize) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

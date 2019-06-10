@@ -1,9 +1,7 @@
 #ifndef FME_LCE_BSESCS_WIDGET_H
 #define FME_LCE_BSESCS_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -12,13 +10,13 @@ namespace fme
 {
 
 class FME_EXPORT ILceBsescsWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  ILceBsescsWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ILceBsescsWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ILceBsescsWidget() {}
 
   virtual QSize blockSize() const = 0;
@@ -30,13 +28,6 @@ signals:
 public slots:
 
   virtual void setBlockSize(const QSize &blockSize) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -65,6 +56,11 @@ public:
 public slots:
 
   void setBlockSize(const QSize &blockSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

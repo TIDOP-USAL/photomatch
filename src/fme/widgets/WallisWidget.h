@@ -1,9 +1,7 @@
 #ifndef FME_WALLIS_WIDGET_H
 #define FME_WALLIS_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -12,13 +10,13 @@ namespace fme
 {
 
 class FME_EXPORT IWallisWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IWallisWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IWallisWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IWallisWidget() = default;
 
   virtual double contrast() const = 0;
@@ -43,12 +41,6 @@ public slots:
   virtual void setImposedLocalStdDev(int imposedLocalStdDev) = 0;
   virtual void setKernelSize(int kernelSize) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT WallisWidget
@@ -78,6 +70,10 @@ public slots:
   void setImposedAverage(int imposedAverage) override;
   void setImposedLocalStdDev(int imposedLocalStdDev) override;
   void setKernelSize(int kernelSize) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

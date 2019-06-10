@@ -1,9 +1,7 @@
 #ifndef FME_POHE_WIDGET_H
 #define FME_POHE_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -18,13 +16,13 @@ namespace fme
  * in Proc. IEEE ICASSP, pp. 2444-2448, 26-31 May 2013.
  */
 class FME_EXPORT IPoheWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IPoheWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IPoheWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IPoheWidget() {}
 
   virtual QSize blockSize() const = 0;
@@ -36,13 +34,6 @@ signals:
 public slots:
 
   virtual void setBlockSize(const QSize &blockSize) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -71,6 +62,11 @@ public:
 public slots:
 
   void setBlockSize(const QSize &blockSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

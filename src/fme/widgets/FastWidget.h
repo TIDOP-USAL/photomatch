@@ -1,9 +1,7 @@
 #ifndef FME_FAST_WIDGET_H
 #define FME_FAST_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QComboBox;
@@ -17,13 +15,13 @@ namespace fme
  *
  */
 class FME_EXPORT IFastWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IFastWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IFastWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IFastWidget() = default;
 
   /*!
@@ -78,13 +76,6 @@ public slots:
    */
   virtual void setDetectorType(QString detectorType) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT FastWidget
@@ -111,6 +102,10 @@ public slots:
   void setThreshold(int threshold) override;
   void setNonmaxSuppression(bool nonmaxSuppression) override;
   void setDetectorType(QString detectorType) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

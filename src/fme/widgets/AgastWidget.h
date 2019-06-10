@@ -1,9 +1,7 @@
 #ifndef FME_AGAST_WIDGET_H
 #define FME_AGAST_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QComboBox;
@@ -23,13 +21,13 @@ namespace fme
  * https://mediatum.ub.tum.de/doc/1287456/1287456.pdf
  */
 class FME_EXPORT IAgastWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IAgastWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IAgastWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IAgastWidget() = default;
 
   /*!
@@ -93,12 +91,6 @@ public slots:
    */
   virtual void setDetectorType(const QString &detectorType) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT AgastWidget
@@ -122,6 +114,10 @@ public slots:
   void setThreshold(int threshold) override;
   void setNonmaxSuppression(bool nonmaxSuppression) override;
   void setDetectorType(const QString &detectorType) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

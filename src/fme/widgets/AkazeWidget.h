@@ -1,9 +1,7 @@
 #ifndef FME_AKAZE_WIDGET_H
 #define FME_AKAZE_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QCheckBox;
 class QSpinBox;
@@ -14,13 +12,13 @@ namespace fme
 {
 
 class FME_EXPORT IAkazeWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IAkazeWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IAkazeWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IAkazeWidget() = default;
 
   /*!
@@ -119,13 +117,6 @@ public slots:
    */
   virtual void setDiffusivity(const QString &diffusivity) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT AkazeWidget
@@ -157,6 +148,10 @@ public slots:
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;
   void setDiffusivity(const QString &diffusivity) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

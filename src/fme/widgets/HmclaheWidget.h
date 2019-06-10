@@ -1,9 +1,7 @@
 #ifndef FME_HMCLAHE_WIDGET_H
 #define FME_HMCLAHE_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QDoubleSpinBox;
@@ -12,13 +10,13 @@ namespace fme
 {
 
 class IHmclaheWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IHmclaheWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IHmclaheWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IHmclaheWidget() = default;
 
   virtual QSize blockSize() const = 0;
@@ -36,13 +34,6 @@ public slots:
   virtual void setBlockSize(const QSize &blockSize) = 0;
   virtual void setL(double l) = 0;
   virtual void setPhi(double phi) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -74,6 +65,11 @@ public slots:
   void setBlockSize(const QSize &blockSize) override;
   void setL(double l) override;
   void setPhi(double phi) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

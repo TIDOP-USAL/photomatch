@@ -1,9 +1,7 @@
 #ifndef FME_BRIEF_WIDGET_H
 #define FME_BRIEF_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QCheckBox;
 class QComboBox;
@@ -20,13 +18,13 @@ namespace fme
  * https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
  */
 class FME_EXPORT IBriefWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IBriefWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IBriefWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IBriefWidget() = default;
 
   /*!
@@ -61,12 +59,6 @@ public slots:
    */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT BriefWidget
@@ -90,6 +82,10 @@ public slots:
 
   void setBytes(const QString &bytes) override;
   void setUseOrientation(bool useOrientation) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

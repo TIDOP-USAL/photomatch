@@ -14,10 +14,13 @@ SUBDIRS += \
     clahewidget \
     clahewidget_signals \
     cmbfhewidget \
+    cmbfhewidget_signals \
     daisywidget \
     daisywidget_signals \
     descriptormatcherwidget \
     descriptormatcherwidget_signals \  
+    dhewidget \
+    dhewidget_signals \
     fahewidget \
     fahewidget_signals \ 
     fastwidget \
@@ -58,4 +61,5 @@ SUBDIRS += \
     surfwidget_signals \
     walliswidget \
     walliswidget_signals \
-    cmbfhewidget_signals
+    rswhewidget \
+    rswhewidget_signals

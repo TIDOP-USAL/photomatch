@@ -1,9 +1,7 @@
 #ifndef FME_CLAHE_WIDGET_H
 #define FME_CLAHE_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -17,13 +15,13 @@ namespace fme
  * Adaptive Histogram Equalization.
  */
 class FME_EXPORT ICLAHEWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  ICLAHEWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ICLAHEWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ICLAHEWidget() {}
 
   virtual double clipLimit() const = 0;
@@ -38,13 +36,6 @@ public slots:
 
   virtual void setClipLimit(double clipLimit) = 0;
   virtual void setTilesGridSize (const QSize &tileGridSize) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -75,6 +66,11 @@ public slots:
 
   void setClipLimit(double clipLimit) override;
   void setTilesGridSize(const QSize &tileGridSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

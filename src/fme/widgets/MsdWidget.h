@@ -1,9 +1,7 @@
 #ifndef FME_MSD_WIDGET_H
 #define FME_MSD_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -13,13 +11,13 @@ namespace fme
 {
 
 class FME_EXPORT IMsdWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IMsdWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IMsdWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IMsdWidget() = default;
 
   virtual double thresholdSaliency() const = 0;
@@ -62,12 +60,6 @@ public slots:
   virtual void setAffineMSD(bool affineMSD) = 0;
   virtual void setTilts(int tilts) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT MsdWidget
@@ -110,6 +102,10 @@ public slots:
   void setComputeOrientations(bool computeOrientations) override;
   void setAffineMSD(bool affineMSD) override;
   void setTilts(int tilts) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

@@ -1,9 +1,7 @@
 #ifndef FME_NOSHP_WIDGET_H
 #define FME_NOSHP_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -15,13 +13,13 @@ namespace fme
  * \brief Interface for NOSHP Widgets class
  */
 class FME_EXPORT INoshpWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  INoshpWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  INoshpWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~INoshpWidget() {}
 
   virtual QSize blockSize() const = 0;
@@ -33,13 +31,6 @@ signals:
 public slots:
 
   virtual void setBlockSize(const QSize &blockSize) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -68,6 +59,11 @@ public:
 public slots:
 
   void setBlockSize(const QSize &blockSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

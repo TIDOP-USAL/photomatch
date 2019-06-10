@@ -1,9 +1,7 @@
 #ifndef FME_FREAK_WIDGET_H
 #define FME_FREAK_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 class QSpinBox;
@@ -19,13 +17,13 @@ namespace fme
  * Recognition (CVPR), 2012 IEEE Conference on, pages 510–517. Ieee, 2012.
  */
 class FME_EXPORT IFreakWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IFreakWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IFreakWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IFreakWidget() = default;
 
   /*!
@@ -85,12 +83,6 @@ public slots:
    */
   virtual void setOctaves(int octaves) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT FreakWidget
@@ -118,6 +110,10 @@ public slots:
   void setScaleNormalized(bool scaleNormalized) override;
   void setPatternScale(double patternScale) override;
   void setOctaves(int octaves) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

@@ -1,9 +1,7 @@
 #ifndef FME_DESCRIPTOR_MATCHER_WIDGET_H
 #define FME_DESCRIPTOR_MATCHER_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QComboBox;
@@ -15,13 +13,13 @@ namespace fme
 {
 
 class FME_EXPORT IDescriptorMatcherWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IDescriptorMatcherWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IDescriptorMatcherWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IDescriptorMatcherWidget() = default;
 
   /*!
@@ -107,13 +105,6 @@ public slots:
    */
   virtual void setCrossMatching(bool crossMatching) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT DescriptorMatcherWidget
@@ -150,6 +141,10 @@ public slots:
   void setDistance(double distance) override;
   void setConfidence(double confidence) override;
   void setCrossMatching(bool crossMatching) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

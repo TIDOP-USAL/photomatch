@@ -1,9 +1,7 @@
 #ifndef FME_GFTT_WIDGET_H
 #define FME_GFTT_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QDoubleSpinBox;
@@ -13,13 +11,13 @@ namespace fme
 {
 
 class FME_EXPORT IGfttWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IGfttWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IGfttWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IGfttWidget() = default;
 
   virtual int maxFeatures() const = 0;
@@ -46,13 +44,6 @@ public slots:
   virtual void setBlockSize(int blockSize) = 0;
   virtual void setHarrisDetector(bool value) = 0;
   virtual void setK(double k) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 class FME_EXPORT GfttWidget
@@ -84,6 +75,10 @@ public slots:
   void setBlockSize(int blockSize) override;
   void setHarrisDetector(bool value) override;
   void setK(double k) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

@@ -1,9 +1,7 @@
 #ifndef FME_SIFT_WIDGET_H
 #define FME_SIFT_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QDoubleSpinBox;
@@ -15,13 +13,13 @@ namespace fme
  * \brief Interface SIFT Widget
  */
 class FME_EXPORT ISiftWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  ISiftWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ISiftWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ISiftWidget() = default;
 
   /*!
@@ -94,20 +92,6 @@ public slots:
    */
   virtual void setSigma(double sigma) = 0;
 
-  /*!
-   * \brief update
-   */
-  virtual void update() = 0;
-
-  /*!
-   * \brief reset
-   */
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 
@@ -138,6 +122,10 @@ public slots:
   void setContrastThreshold(double contrastThreshold) override;
   void setEdgeThreshold(double edgeThreshold) override;
   void setSigma(double sigma) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;

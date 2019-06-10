@@ -1,9 +1,7 @@
 #ifndef FME_MSRCP_WIDGET_H
 #define FME_MSRCP_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QDoubleSpinBox;
 
@@ -11,13 +9,13 @@ namespace fme
 {
 
 class IMsrcpWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IMsrcpWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IMsrcpWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IMsrcpWidget() = default;
 
   virtual double smallScale() const = 0;
@@ -36,12 +34,6 @@ public slots:
   virtual void setMidScale(double midScale) = 0;
   virtual void setLargeScale(double largeScale) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 };
 
 
@@ -69,6 +61,11 @@ public slots:
   void setSmallScale(double smallScale) override;
   void setMidScale(double midScale) override;
   void setLargeScale(double largeScale) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

@@ -39,6 +39,7 @@ SOURCES += \
     CmbfheWidget.cpp \
     DaisyWidget.cpp \
     DescriptorMatcherWidget.cpp \
+    DheWidget.cpp \
     FaheWidget.cpp \
     FastWidget.cpp \
     FreakWidget.cpp \
@@ -58,7 +59,8 @@ SOURCES += \
     SiftWidget.cpp \
     StarWidget.cpp \
     SurfWidget.cpp \
-    WallisWidget.cpp
+    WallisWidget.cpp \
+    RswheWidget.cpp
 
 
 HEADERS += \
@@ -71,9 +73,11 @@ HEADERS += \
     CmbfheWidget.h \
     DaisyWidget.h \
     DescriptorMatcherWidget.h \
+    DheWidget.h \
     FaheWidget.h \
     FastWidget.h \
     fme_global.h \
+    FmeWidget.h \
     FreakWidget.h \
     GfttWidget.h \
     HmclaheWidget.h \
@@ -91,7 +95,8 @@ HEADERS += \
     SiftWidget.h \
     StarWidget.h \
     SurfWidget.h \
-    WallisWidget.h
+    WallisWidget.h \
+    RswheWidget.h
 
 unix {
     target.path = /usr/lib

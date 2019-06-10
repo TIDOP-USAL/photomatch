@@ -1,9 +1,7 @@
 #ifndef FME_LATCH_WIDGET_H
 #define FME_LATCH_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QComboBox;
 class QCheckBox;
@@ -13,13 +11,13 @@ namespace fme
 {
 
 class FME_EXPORT ILatchWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  ILatchWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  ILatchWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~ILatchWidget() = default;
 
   virtual QString bytes() const = 0;
@@ -37,13 +35,6 @@ public slots:
   virtual void setBytes(const QString &bytes) = 0;
   virtual void setRotationInvariance(bool rotationInvariance) = 0;
   virtual void setHalfSsdSize(int halfSsdSize) = 0;
-
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
 
 };
 
@@ -71,6 +62,11 @@ public slots:
   void setBytes(const QString &bytes) override;
   void setRotationInvariance(bool rotationInvariance) override;
   void setHalfSsdSize(int halfSsdSize) override;
+
+// FmeWidget interface
+
+public slots:
+
   void update() override;
   void reset() override;
 

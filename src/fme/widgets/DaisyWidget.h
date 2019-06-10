@@ -1,9 +1,7 @@
 #ifndef FME_DAISY_WIDGET_H
 #define FME_DAISY_WIDGET_H
 
-#include "fme/fme_global.h"
-
-#include <QWidget>
+#include "fme/widgets/FmeWidget.h"
 
 class QSpinBox;
 class QDoubleSpinBox;
@@ -21,13 +19,13 @@ namespace fme
  * Intelligence, 32(5):815–830, May 2010.
  */
 class FME_EXPORT IDaisyWidget
-  : public QWidget
+  : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  IDaisyWidget(QWidget *parent = nullptr) : QWidget(parent){}
+  IDaisyWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
   virtual ~IDaisyWidget() = default;
 
   /*!
@@ -138,13 +136,6 @@ public slots:
    */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
-  virtual void update() = 0;
-  virtual void reset() = 0;
-
-private:
-
-  virtual void init() = 0;
-
 };
 
 class FME_EXPORT DaisyWidget
@@ -178,6 +169,10 @@ public slots:
   void setNorm(const QString &norm) override;
   void setInterpolation(bool interpolation) override;
   void setUseOrientation(bool useOrientation) override;
+
+// FmeWidget interface
+
+public slots:
 
   void update() override;
   void reset() override;
