@@ -1,0 +1,10 @@
+#ifndef FME_CONFIG_H
+#define FME_CONFIG_H
+
+
+#define FME_VERSION_MAJOR @FME_VERSION_MAJOR@
+#define FME_VERSION_MINOR @FME_VERSION_MINOR@
+
+#cmakedefine HAVE_PIXKIT
+
+#endif // FME_CONFIG_H

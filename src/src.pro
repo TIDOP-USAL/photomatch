@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    fme/widgets
+    fme/widgets \
+    fme/process

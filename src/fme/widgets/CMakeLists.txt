@@ -82,5 +82,5 @@ set_property(TARGET libwidgets PROPERTY FOLDER "lib")
 #endif()
 
 install(DIRECTORY .
-        DESTINATION include/widgets
+        DESTINATION include/fme/widgets
         FILES_MATCHING PATTERN "*.h")

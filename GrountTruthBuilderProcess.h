@@ -1,7 +1,9 @@
 #ifndef GROUNTTRUTHBUILDERPROCESS_H
 #define GROUNTTRUTHBUILDERPROCESS_H
-#include "ProcessManager/ExternalProcess.h"
+
 #include <QFileInfo>
+
+#include "fme/process/ExternalProcess.h"
 
 class GrountTruthBuilderProcess: public ExternalProcess
 {

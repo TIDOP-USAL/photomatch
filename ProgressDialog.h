@@ -4,8 +4,8 @@
 #include <QDialog>
 #include <QTextEdit>
 
-#include "Process.h"
-#include "ProcessManager/Process.h"
+#include "process.h"   /// TODO: esto es solo para Visual Studio. No se para que se utiliza
+#include "fme/process/Process.h"
 namespace Ui {
     class ProgressDialog;
 }
@@ -15,7 +15,7 @@ class ProgressDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit ProgressDialog(QWidget *parent = 0);
+    explicit ProgressDialog(QWidget *parent = nullptr);
     ~ProgressDialog();
 
     void setStatusText(QString text);

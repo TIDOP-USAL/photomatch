@@ -70,9 +70,9 @@
 
 #include <QMainWindow>
 #include <QDockWidget>
-#include <MatchingViewer/MatchingViewer.h>
+#include <fme/ui/MatchingViewer/MatchingViewer.h>
 #include <QFileInfo>
-#include <MatchingViewer/PWImage.h>
+#include <fme/ui/MatchingViewer/PWImage.h>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
@@ -85,14 +85,7 @@
 #include <QTabWidget>
 #include <QCheckBox>
 
-//#include "SIFT/SIFT_KPDescProcess.h"
-//#include "SIFT/SIFT_KPDetProcess.h"
-//#include "MSD/MSD_KPDetProcess.h"
-//#include "ORB/ORB_KPDetProcess.h"
-//#include "ORB/ORB_KPDescProcess.h"
-//#include "SURF/SURF_KPDetProcess.h"
-//#include "SURF/SUFT_KPDescProcess.h"
-#include "ProcessManager/MultiProcess.h"
+#include "fme/process/MultiProcess.h"
 
 namespace Ui {
 class MainWindowFME;

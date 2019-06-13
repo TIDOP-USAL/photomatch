@@ -1,61 +1,59 @@
 #include "MainWindowFME.h"
 #include "ui_MainWindowFME.h"
+
+#include "AboutFME.h"
+
+#include "fme/process/sift/SIFT_KPDescProcess.h"
+#include "fme/process/sift/SIFT_KPDetProcess.h"
+#include "fme/process/msd/MSD_KPDetProcess.h"
+#include "fme/process/orb/ORB_KPDetProcess.h"
+#include "fme/process/orb/ORB_KPDescProcess.h"
+#include "fme/process/surf/SURF_KPDetProcess.h"
+#include "fme/process/surf/SUFT_KPDescProcess.h"
+#include "fme/process/hog/HOG_KPDescProcess.h"
+#include "fme/process/mutualinformation/MutualInformation_KPDescProcess.h"
+#include "fme/process/mtm/MTM_KPDescProcess.h"
+#include "fme/process/lss/LSS_KPDescProcess.h"
+#include "fme/process/daisy/DAISY_KPDescProcess.h"
+#include "fme/process/freak/FREAK_KPDescProcess.h"
+#include "fme/process/latch/LATCH_KPDescProcess.h"
+#include "fme/process/fast/FAST_KPDetProcess.h"
+#include "fme/process/gftt/GFTT_KPDetProcess.h"
+#include "fme/process/mser/MSER_KPDetProcess.h"
+#include "fme/process/brisk/BRISK_KPDetProcess.h"
+#include "fme/process/brisk/BRISK_KPDescProcess.h"
+#include "fme/process/brief/BRIEF_KPDescProcess.h"
+#include "fme/process/Matching/FLANNMatcherProcess.h"
+#include "fme/process/Matching/BFMatcherProcess.h"
+#include "fme/process/Matching/RobustMatcherRefinementProcess.h"
+#include "fme/process/Matching/WriteMatchesToAperoProcess.h"
+#include "GrountTruthBuilderProcess.h"
+#include "fme/process/ImagePreprocessing/ContrastPreservingDecolorization__Process.h"
+#include "fme/process/ImagePreprocessing/WallisFilter_Process.h"
+#include "fme/process/ImagePreprocessing/Downsample_Process.h"
+#include "fme/process/ImagePreprocessing/LCE_BSESCS2014_Process.h"
+#include "fme/process/ImagePreprocessing/RajuNair2014_Process.h"
+#include "fme/process/ImagePreprocessing/Lal2014_Process.h"
+#include "fme/process/ImagePreprocessing/MSRCP2014_Process.h"
+#include "fme/process/ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h"
+#include "fme/process/ImagePreprocessing/POHE2013_Process.h"
+#include "fme/process/ImagePreprocessing/Kimori2013_Process.h"
+#include "fme/process/ImagePreprocessing/CelikTjahjadi2012_Process.h"
+#include "fme/process/ImagePreprocessing/LiuJinChenLiuLi2011_Process.h"
+#include "fme/process/ImagePreprocessing/Sundarami2011_Process.h"
+#include "fme/process/ImagePreprocessing/MaryKim2008_Process.h"
+#include "fme/process/ImagePreprocessing/WadudKabirDewanChae2007_Process.h"
+#include "fme/process/ImagePreprocessing/FAHE2006_Process.h"
+#include "fme/process/ImagePreprocessing/LambertiMontrucchioSanna2006_Process.h"
+#include "fme/process/ImagePreprocessing/YuBajaj2004_Process.h"
+
+
+#include <QMessageBox>
+#include <QDateTime>
+#include <QScrollArea>
+#include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QFileDialog>
-#include "AboutFME.h"
-#include <QDesktopWidget>
-#include "SIFT/SIFT_KPDescProcess.h"
-#include "SIFT/SIFT_KPDetProcess.h"
-#include "MSD/MSD_KPDetProcess.h"
-#include "ORB/ORB_KPDetProcess.h"
-#include "ORB/ORB_KPDescProcess.h"
-#include "SURF/SURF_KPDetProcess.h"
-#include "SURF/SUFT_KPDescProcess.h"
-#include "HOG/HOG_KPDescProcess.h"
-#include "MutualInformation/MutualInformation_KPDescProcess.h"
-#include "MTM/MTM_KPDescProcess.h"
-#include "LSS/LSS_KPDescProcess.h"
-#include "DAISY/DAISY_KPDescProcess.h"
-#include "FREAK/FREAK_KPDescProcess.h"
-#include "LATCH/LATCH_KPDescProcess.h"
-#include "FAST/FAST_KPDetProcess.h"
-#include "GFTT/GFTT_KPDetProcess.h"
-#include "MSER/MSER_KPDetProcess.h"
-#include "BRISK/BRISK_KPDetProcess.h"
-#include "BRISK/BRISK_KPDescProcess.h"
-#include "BRIEF/BRIEF_KPDescProcess.h"
-#include "Matching/FLANNMatcherProcess.h"
-#include "Matching/BFMatcherProcess.h"
-#include "Matching/RobustMatcherRefinementProcess.h"
-#include "GrountTruthBuilderProcess.h"
-#include "QMessageBox"
-#include <QDateTime>
-#include "Matching/WriteMatchesToAperoProcess.h"
-#include <QScrollArea>
-
-#include "ImagePreprocessing/ContrastPreservingDecolorization__Process.h"
-#include "ImagePreprocessing/WallisFilter_Process.h"
-#include "ImagePreprocessing/Downsample_Process.h"
-#include "ImagePreprocessing/LCE_BSESCS2014_Process.h"
-#include "ImagePreprocessing/RajuNair2014_Process.h"
-#include "ImagePreprocessing/Lal2014_Process.h"
-#include "ImagePreprocessing/MSRCP2014_Process.h"
-#include "ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h"
-#include "ImagePreprocessing/POHE2013_Process.h"
-#include "ImagePreprocessing/Kimori2013_Process.h"
-#include "ImagePreprocessing/CelikTjahjadi2012_Process.h"
-#include "ImagePreprocessing/LiuJinChenLiuLi2011_Process.h"
-#include "ImagePreprocessing/Sundarami2011_Process.h"
-#include "ImagePreprocessing/MaryKim2008_Process.h"
-#include "ImagePreprocessing/WadudKabirDewanChae2007_Process.h"
-#include "ImagePreprocessing/FAHE2006_Process.h"
-#include "ImagePreprocessing/LambertiMontrucchioSanna2006_Process.h"
-#include "ImagePreprocessing/YuBajaj2004_Process.h"
-
-
-
-
-
 
 
 using namespace std;
