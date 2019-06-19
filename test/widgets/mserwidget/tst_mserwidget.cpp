@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_delta_data();
   void test_delta();
   void test_minArea_data();
@@ -80,6 +81,11 @@ void TestMserWidget::testDefaultConstructor()
   QCOMPARE(1.01, mMserWidget->areaThreshold());
   QCOMPARE(0.003, mMserWidget->minMargin());
   QCOMPARE(5, mMserWidget->edgeBlurSize());
+}
+
+void TestMserWidget::test_windowTitle()
+{
+  QCOMPARE("MSER", mMserWidget->windowTitle());
 }
 
 void TestMserWidget::test_delta_data()

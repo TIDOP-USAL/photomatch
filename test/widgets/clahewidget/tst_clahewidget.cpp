@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_clipLimit_data();
   void test_clipLimit();
   void test_tilesGridSize_data();
@@ -59,6 +60,11 @@ void TestCLAHEWidget::testDefaultConstructor()
   /// Check default values
   QCOMPARE(40.0, mCLAHEWidget->clipLimit());
   QCOMPARE(QSize(8, 8), mCLAHEWidget->tileGridSize());
+}
+
+void TestCLAHEWidget::test_windowTitle()
+{
+  QCOMPARE("CLAHE", mCLAHEWidget->windowTitle());
 }
 
 void TestCLAHEWidget::test_clipLimit_data()

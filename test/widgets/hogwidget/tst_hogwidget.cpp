@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testWinSize_data();
   void testWinSize();
   void testBlockSize_data();
@@ -84,7 +85,12 @@ void TestHogWidget::testDefaultConstructor()
 //  QCOMPARE(true, mHogWidget->gammaCorrection());
 //  QCOMPARE(-1., mHogWidget->freeCoef());
 //  QCOMPARE(64, mHogWidget->nlevels());
-//  QCOMPARE(false, mHogWidget->signedGradient());
+  //  QCOMPARE(false, mHogWidget->signedGradient());
+}
+
+void TestHogWidget::test_windowTitle()
+{
+  QCOMPARE("HOG", mHogWidget->windowTitle());
 }
 
 void TestHogWidget::testWinSize_data()

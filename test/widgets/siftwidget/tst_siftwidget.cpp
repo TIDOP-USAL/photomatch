@@ -18,6 +18,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_featuresNumber_data();
   void test_featuresNumber();
   void test_octaveLayers_data();
@@ -67,6 +68,11 @@ void TestSiftWidget::testDefaultConstructor()
   QCOMPARE(0.04, mSiftWidget->contrastThreshold());
   QCOMPARE(10., mSiftWidget->edgeThreshold());
   QCOMPARE(1.6, mSiftWidget->sigma());
+}
+
+void TestSiftWidget::test_windowTitle()
+{
+  QCOMPARE("SIFT", mSiftWidget->windowTitle());
 }
 
 void TestSiftWidget::test_featuresNumber_data()

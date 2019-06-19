@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testThreshold_data();
   void testThreshold();
   void testNonmaxSuppression_data();
@@ -62,6 +63,11 @@ void TestAgastWidget::testDefaultConstructor()
   QCOMPARE(10, mAgastWidget->threshold());
   QCOMPARE("OAST_9_16", mAgastWidget->detectorType());
   QCOMPARE(true, mAgastWidget->nonmaxSuppression());
+}
+
+void TestAgastWidget::test_windowTitle()
+{
+  QCOMPARE("AGAST", mAgastWidget->windowTitle());
 }
 
 void TestAgastWidget::testThreshold_data()

@@ -408,10 +408,10 @@ void MsdDetector::contextualSelfDissimilarity(const cv::Mat &img, int xmin, int 
 float MsdDetector::computeOrientation(const cv::Mat &img, int x, int y, const std::vector<cv::Point2f> &circle)
 {
   int temp;
-  int w = img.cols;
-  int h = img.rows;
+//  int w = img.cols;
+//  int h = img.rows;
 
-  int side = m_search_area_radius * 2 + 1;
+  //int side = m_search_area_radius * 2 + 1;
   int nBins = 36;
   float step = float((2 * M_PI) / nBins);
   std::vector<float> hist(nBins, 0);

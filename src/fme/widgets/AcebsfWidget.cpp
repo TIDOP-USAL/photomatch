@@ -109,6 +109,8 @@ void AcebsfWidget::reset()
 
 void AcebsfWidget::init()
 {
+  this->setWindowTitle("ACEBSF");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

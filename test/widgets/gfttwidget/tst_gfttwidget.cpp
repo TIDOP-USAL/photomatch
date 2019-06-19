@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_maxFeatures_data();
   void test_maxFeatures();
   void test_qualityLevel_data();
@@ -69,6 +70,11 @@ void TestGfttWidget::testDefaultConstructor()
   QCOMPARE(3, mGfttWidget->blockSize());
   QCOMPARE(false, mGfttWidget->harrisDetector());
   QCOMPARE(0.04, mGfttWidget->k());
+}
+
+void TestGfttWidget::test_windowTitle()
+{
+  QCOMPARE("GFTT", mGfttWidget->windowTitle());
 }
 
 void TestGfttWidget::test_maxFeatures_data()

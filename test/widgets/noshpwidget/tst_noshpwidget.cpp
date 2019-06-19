@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -58,6 +59,10 @@ void TestNoshpWidget::testDefaultConstructor()
   QCOMPARE(QSize(127, 127), mNoshpWidget->blockSize());
 }
 
+void TestNoshpWidget::test_windowTitle()
+{
+  QCOMPARE("NOSHP", mNoshpWidget->windowTitle());
+}
 
 void TestNoshpWidget::test_tilesGridSize_data()
 {

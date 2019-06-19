@@ -18,6 +18,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testContrast_data();
   void testContrast();
   void testBrightness_data();
@@ -68,6 +69,11 @@ void TestWallisWidget::testDefaultConstructor()
   QCOMPARE(41, wallisWidget.imposedAverage());
   QCOMPARE(127, wallisWidget.imposedLocalStdDev());
   QCOMPARE(50, wallisWidget.kernelSize());
+}
+
+void TestWallisWidget::test_windowTitle()
+{
+  QCOMPARE("WALLIS", mWallisWidget->windowTitle());
 }
 
 void TestWallisWidget::testContrast_data()

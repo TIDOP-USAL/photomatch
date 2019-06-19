@@ -17,6 +17,7 @@ public:
 private slots:
 
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_bytes_data();
   void test_bytes();
   void test_useOrientation_data();
@@ -47,6 +48,11 @@ void TestBriefWidget::testDefaultConstructor()
   /// Check default values
   QCOMPARE("32", mBriefWidget->bytes());
   QCOMPARE(false, mBriefWidget->useOrientation());
+}
+
+void TestBriefWidget::test_windowTitle()
+{
+  QCOMPARE("BRIEF", mBriefWidget->windowTitle());
 }
 
 void TestBriefWidget::test_bytes_data()

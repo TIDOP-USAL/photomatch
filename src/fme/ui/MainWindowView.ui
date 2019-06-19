@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowView</class>
+ <widget class="QMainWindow" name="MainWindowView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>861</width>
+    <height>684</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindowView</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>861</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="menuRecent_Projects">
+     <property name="title">
+      <string>Recent Projects</string>
+     </property>
+     <addaction name="actionNotRecentProjects"/>
+     <addaction name="separator"/>
+     <addaction name="actionClearHistory"/>
+    </widget>
+    <addaction name="actionNewProject"/>
+    <addaction name="actionOpenProject"/>
+    <addaction name="menuRecent_Projects"/>
+    <addaction name="separator"/>
+    <addaction name="actionSaveProject"/>
+    <addaction name="actionSaveProjectAs"/>
+    <addaction name="separator"/>
+    <addaction name="actionCloseProject"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionLoadImages"/>
+    <addaction name="separator"/>
+    <addaction name="actionNewProcessing"/>
+    <addaction name="separator"/>
+    <addaction name="actionAssistant"/>
+    <addaction name="separator"/>
+    <addaction name="actionPreprocess"/>
+    <addaction name="actionFeatureExtraction"/>
+    <addaction name="actionFeatureMatching"/>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuQualityControl">
+    <property name="title">
+     <string>Quality Control</string>
+    </property>
+    <widget class="QMenu" name="menuPhotogrammetric_Quality_Control">
+     <property name="title">
+      <string>Photogrammetric Quality Control</string>
+     </property>
+     <addaction name="actionExportTiePoints"/>
+     <addaction name="actionMatchesViewer"/>
+    </widget>
+    <widget class="QMenu" name="menuComputer_Vision_Quality_Control">
+     <property name="title">
+      <string>Computer Vision Quality Control</string>
+     </property>
+     <addaction name="actionHomography"/>
+     <addaction name="actionRepeteability"/>
+     <addaction name="actionRecall"/>
+    </widget>
+    <addaction name="menuPhotogrammetric_Quality_Control"/>
+    <addaction name="menuComputer_Vision_Quality_Control"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuQualityControl"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <property name="windowTitle">
+    <string>File</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNewProject"/>
+   <addaction name="actionOpenProject"/>
+   <addaction name="actionSaveProject"/>
+   <addaction name="actionSaveProjectAs"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBarTools">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionNewProcessing"/>
+   <addaction name="separator"/>
+   <addaction name="actionPreprocess"/>
+   <addaction name="actionFeatureExtraction"/>
+   <addaction name="actionFeatureMatching"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_3">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_4">
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_5">
+   <attribute name="dockWidgetArea">
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_5"/>
+  </widget>
+  <action name="actionNewProject">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-empty-document.png</normaloff>:/ico/24/img/material/24/icons8-empty-document.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOpenProject">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-open.png</normaloff>:/ico/24/img/material/24/icons8-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSaveProject">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-save.png</normaloff>:/ico/24/img/material/24/icons8-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Project</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSaveProjectAs">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-save-as.png</normaloff>:/ico/24/img/material/24/icons8-save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save Project As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionCloseProject">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-close-button.png</normaloff>:/ico/24/img/material/24/icons8-close-button.png</iconset>
+   </property>
+   <property name="text">
+    <string>Close Project</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-switch-power-off.png</normaloff>:/ico/24/img/material/24/icons8-switch-power-off.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F4</string>
+   </property>
+  </action>
+  <action name="actionLoadImages">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-pictures-folder.png</normaloff>:/ico/24/img/material/24/icons8-pictures-folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>Load Images</string>
+   </property>
+  </action>
+  <action name="actionNewProcessing">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-add-list.png</normaloff>:/ico/24/img/material/24/icons8-add-list.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Processing</string>
+   </property>
+  </action>
+  <action name="actionAssistant">
+   <property name="text">
+    <string>Assistant</string>
+   </property>
+  </action>
+  <action name="actionPreprocess">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-settings-button.png</normaloff>:/ico/24/img/material/24/icons8-settings-button.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preprocess</string>
+   </property>
+  </action>
+  <action name="actionFeatureExtraction">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/features.png</normaloff>:/ico/24/img/material/24/features.png</iconset>
+   </property>
+   <property name="text">
+    <string>Feature Extraction</string>
+   </property>
+  </action>
+  <action name="actionFeatureMatching">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-match_view.png</normaloff>:/ico/24/img/material/24/icons8-match_view.png</iconset>
+   </property>
+   <property name="text">
+    <string>Feature Matching</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-settings.png</normaloff>:/ico/24/img/material/24/icons8-settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-help.png</normaloff>:/ico/24/img/material/24/icons8-help.png</iconset>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-about.png</normaloff>:/ico/24/img/material/24/icons8-about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionExportTiePoints">
+   <property name="text">
+    <string>Export Tie Points</string>
+   </property>
+  </action>
+  <action name="actionMatchesViewer">
+   <property name="text">
+    <string>Matches Viewer</string>
+   </property>
+  </action>
+  <action name="actionHomography">
+   <property name="text">
+    <string>Homography</string>
+   </property>
+  </action>
+  <action name="actionRepeteability">
+   <property name="text">
+    <string>Repeteability</string>
+   </property>
+  </action>
+  <action name="actionRecall">
+   <property name="text">
+    <string>Recall</string>
+   </property>
+  </action>
+  <action name="actionNotRecentProjects">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Not recent projects</string>
+   </property>
+  </action>
+  <action name="actionClearHistory">
+   <property name="icon">
+    <iconset resource="../../../res/res.qrc">
+     <normaloff>:/ico/24/img/material/24/icons8-delete-2.png</normaloff>:/ico/24/img/material/24/icons8-delete-2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear History</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="../../../res/res.qrc"/>
+ </resources>
+ <connections/>
+</ui>

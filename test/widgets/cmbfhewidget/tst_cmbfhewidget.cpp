@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -56,6 +57,11 @@ void TestCmbfheWidget::testDefaultConstructor()
 {
   /// Check default values
   QCOMPARE(QSize(11, 11), mCmbfheWidget->blockSize());
+}
+
+void TestCmbfheWidget::test_windowTitle()
+{
+  QCOMPARE("CMBFHE", mCmbfheWidget->windowTitle());
 }
 
 

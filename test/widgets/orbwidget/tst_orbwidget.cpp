@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testFeaturesNumber_data();
   void testFeaturesNumber();
   void testScaleFactor();
@@ -69,6 +70,11 @@ void TestOrbWidget::testDefaultConstructor()
   QCOMPARE("Harris", mOrbWidget->scoreType());
   QCOMPARE(31, mOrbWidget->patchSize());
   QCOMPARE(20, mOrbWidget->fastThreshold());
+}
+
+void TestOrbWidget::test_windowTitle()
+{
+  QCOMPARE("ORB", mOrbWidget->windowTitle());
 }
 
 void TestOrbWidget::testFeaturesNumber_data()

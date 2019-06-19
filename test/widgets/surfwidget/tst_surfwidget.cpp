@@ -17,6 +17,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testHessianThreshold_data();
   void testHessianThreshold();
   void testOctaves_data();
@@ -66,6 +67,11 @@ void TestSurfWidget::testDefaultConstructor()
   QCOMPARE(3, mSurfWidget->octaveLayers());
   QCOMPARE(false, mSurfWidget->extendedDescriptor());
   QCOMPARE(false, mSurfWidget->rotatedFeatures());
+}
+
+void TestSurfWidget::test_windowTitle()
+{
+  QCOMPARE("SURF", mSurfWidget->windowTitle());
 }
 
 void TestSurfWidget::testHessianThreshold_data()

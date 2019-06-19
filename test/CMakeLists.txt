@@ -1,1 +1,3 @@
 add_subdirectory(widgets)
+add_subdirectory(process)
+add_subdirectory(new_project_dialog)

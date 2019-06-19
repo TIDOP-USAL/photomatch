@@ -1,6 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
+#include "fme/fme_global.h"
 #include "fme/widgets/AcebsfWidget.h"
 
 using namespace fme;
@@ -16,6 +17,7 @@ public:
 private slots:
 
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
   void test_l_data();
@@ -26,6 +28,7 @@ private slots:
   void test_k2();
   void test_reset();
 
+  /// TODO: void test_FocusOrder();
 private:
 
   IAcebsfWidget *mAcebsfWidget;
@@ -51,6 +54,12 @@ void TestAcebsfWidget::testDefaultConstructor()
   QCOMPARE(0.03, mAcebsfWidget->l());
   QCOMPARE(10., mAcebsfWidget->k1());
   QCOMPARE(0.5, mAcebsfWidget->k2());
+
+}
+
+void TestAcebsfWidget::test_windowTitle()
+{
+  QCOMPARE("ACEBSF", mAcebsfWidget->windowTitle());
 }
 
 void TestAcebsfWidget::test_blockSize_data()

@@ -79,6 +79,7 @@ void AgastWidget::reset()
 
 void AgastWidget::init()
 {
+  this->setWindowTitle("AGAST");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);

@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -56,6 +57,11 @@ void TestLceBsescsWidget::testDefaultConstructor()
 {
   /// Check default values
   QCOMPARE(QSize(33, 33), mLceBsescsWidget->blockSize());
+}
+
+void TestLceBsescsWidget::test_windowTitle()
+{
+  QCOMPARE("LCE-BSESCS", mLceBsescsWidget->windowTitle());
 }
 
 

@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_lucidKernel_data();
   void test_lucidKernel();
   void test_blurKernel_data();
@@ -59,6 +60,11 @@ void TestLucidWidget::testDefaultConstructor()
   /// Check default values
   QCOMPARE(1, mLucidWidget->lucidKernel());
   QCOMPARE(2, mLucidWidget->blurKernel());
+}
+
+void TestLucidWidget::test_windowTitle()
+{
+  QCOMPARE("LUCID", mLucidWidget->windowTitle());
 }
 
 void TestLucidWidget::test_lucidKernel_data()

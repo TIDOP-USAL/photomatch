@@ -16,6 +16,7 @@ public:
 private slots:
 
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_maxSize_data();
   void test_maxSize();
   void test_responseThreshold_data();
@@ -55,6 +56,11 @@ void TestStarWidget::testDefaultConstructor()
   QCOMPARE(10, mStarWidget->lineThresholdProjected());
   QCOMPARE(8, mStarWidget->lineThresholdBinarized());
   QCOMPARE(5, mStarWidget->suppressNonmaxSize());
+}
+
+void TestStarWidget::test_windowTitle()
+{
+  QCOMPARE("ACEBSF", mStarWidget->windowTitle());
 }
 
 void TestStarWidget::test_maxSize_data()

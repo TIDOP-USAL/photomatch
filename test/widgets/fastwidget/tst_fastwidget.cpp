@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testThreshold_data();
   void testThreshold();
   void testNonmaxSuppression_data();
@@ -62,6 +63,11 @@ void TestFastWidget::testDefaultConstructor()
   QCOMPARE(10, mFastWidget->threshold());
   QCOMPARE("TYPE_9_16", mFastWidget->detectorType());
   QCOMPARE(true, mFastWidget->nonmaxSuppression());
+}
+
+void TestFastWidget::test_windowTitle()
+{
+  QCOMPARE("FAST", mFastWidget->windowTitle());
 }
 
 void TestFastWidget::testThreshold_data()

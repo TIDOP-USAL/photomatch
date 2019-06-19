@@ -17,6 +17,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testDescriptorMatcher_data();
   void testDescriptorMatcher();
   void testNormType_data();
@@ -73,6 +74,11 @@ void TestDescriptorMatcherWidget::testDefaultConstructor()
   QCOMPARE(0.8, descriptorMatcherWidget.ratio());
   QCOMPARE(0.999, descriptorMatcherWidget.confidence());
   QCOMPARE(true, descriptorMatcherWidget.crossMatching());
+}
+
+void TestDescriptorMatcherWidget::test_windowTitle()
+{
+  QCOMPARE("Descriptor Matcher", mDescriptorMatcherWidget->windowTitle());
 }
 
 void TestDescriptorMatcherWidget::testDescriptorMatcher_data()

@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -58,6 +59,10 @@ void TestPoheWidget::testDefaultConstructor()
   QCOMPARE(QSize(127, 127), mPoheWidget->blockSize());
 }
 
+void TestPoheWidget::test_windowTitle()
+{
+  QCOMPARE("POHE", mPoheWidget->windowTitle());
+}
 
 void TestPoheWidget::test_tilesGridSize_data()
 {

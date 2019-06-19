@@ -11,15 +11,15 @@ HOG_KPDescProcess::HOG_KPDescProcess(cv::Mat &cvImgLeft, cv::Mat &cvImgRight,
                                      cv::Mat &cvDescLeft, cv::Mat &cvDescRight,
                                      int sizePatch, const QString &leftImageName, 
                                      const QString &rightImageName)
-  : mCvImgLeft(cvImgLeft),
-    mCvkeyLeft(cvkeyLeft),
-    mCvDescLeft(cvDescLeft),
+  : mLeftImageName(leftImageName),
+    mRightImageName(rightImageName),
+    mCvImgLeft(cvImgLeft),
     mCvImgRight(cvImgRight),
+    mCvkeyLeft(cvkeyLeft),
     mCvkeyRight(cvkeyRight),
+    mCvDescLeft(cvDescLeft),
     mCvDescRight(cvDescRight),
-    mSizePatch(sizePatch),
-    mLeftImageName(leftImageName),
-    mRightImageName(rightImageName)
+    mSizePatch(sizePatch)
 {
 
 }
@@ -40,16 +40,16 @@ void HOG_KPDescProcess::run()
   punto_central.y = mSizePatch / 2;
   p_c.push_back(punto_central);
 
-  int left_max = mCvkeyLeft.size();
-  int right_max = mCvkeyRight.size();
+  int left_max = static_cast<int>(mCvkeyLeft.size());
+  int right_max = static_cast<int>(mCvkeyRight.size());
 
 
   HOGDescriptor hog(Size(mSizePatch, mSizePatch), Size(4, 4),
     Size(2, 2), Size(2, 2), 9);
-  mCvDescLeft = cv::Mat(left_max, hog.getDescriptorSize(), CV_32FC1);
+  mCvDescLeft = cv::Mat(left_max, static_cast<int>(hog.getDescriptorSize()), CV_32FC1);
 
   emit newStdData("Starting HOG key-point description for image " + mRightImageName);
-  mCvDescRight = cv::Mat(right_max, hog.getDescriptorSize(), CV_32FC1);
+  mCvDescRight = cv::Mat(right_max, static_cast<int>(hog.getDescriptorSize()), CV_32FC1);
 
 
   for (int i = 0; i < left_max; i++) {
@@ -57,7 +57,7 @@ void HOG_KPDescProcess::run()
     cv::Mat left_patch;
     normalizepatch(i, left_patch, 0);
     hog.compute(left_patch, hogdescriptor_left_aux);
-    for (int j = 0; j < hogdescriptor_left_aux.size(); j++)mCvDescLeft.at<float>(i, j) = hogdescriptor_left_aux[j];
+    for (size_t j = 0; j < hogdescriptor_left_aux.size(); j++) mCvDescLeft.at<float>(i, static_cast<int>(j)) = hogdescriptor_left_aux[j];
   }
   emit newStdData("HOG key-point description finished for image " + mLeftImageName);
 
@@ -67,7 +67,7 @@ void HOG_KPDescProcess::run()
     cv::Mat right_patch;
     normalizepatch(i, right_patch, 1);
     hog.compute(right_patch, hogdescriptor_right_aux);
-    for (int j = 0; j < hogdescriptor_right_aux.size(); j++)mCvDescRight.at<float>(i, j) = hogdescriptor_right_aux[j];
+    for (size_t j  = 0; j < hogdescriptor_right_aux.size(); j++) mCvDescRight.at<float>(i, static_cast<int>(j)) = hogdescriptor_right_aux[j];
   }
 
   emit newStdData("HOG key-point description finished for image " + mRightImageName);
@@ -85,12 +85,12 @@ void HOG_KPDescProcess::normalizepatch(int i, Mat &output, int leftorright)
 
   if (leftorright == 0) {
     gray = mCvImgLeft;
-    aux_key = mCvkeyLeft[i];
+    aux_key = mCvkeyLeft[static_cast<size_t>(i)];
   }
 
   if (leftorright == 1) {
     gray = mCvImgRight;
-    aux_key = mCvkeyRight[i];
+    aux_key = mCvkeyRight[static_cast<size_t>(i)];
   }
 
   Point center = aux_key.pt;
@@ -128,20 +128,20 @@ void HOG_KPDescProcess::normalizepatch(int i, Mat &output, int leftorright)
     pt.x = cvRound(input.cols / 2.0);
     pt.y = cvRound(input.rows / 2.0);
   } else if ((input.cols % 4) == 0) {
-    pt.x = (input.cols / 2.0) - 0.5;
-    pt.y = (input.rows / 2.0) - 0.5;
+    pt.x = (input.cols / 2.0f) - 0.5f;
+    pt.y = (input.rows / 2.0f) - 0.5f;
   } else if ((input.cols % 4) == 2) {
-    pt.x = (input.cols / 2.0) - 0.5;
-    pt.y = (input.rows / 2.0) - 0.5;
+    pt.x = (input.cols / 2.0f) - 0.5f;
+    pt.y = (input.rows / 2.0f) - 0.5f;
   } else if ((input.cols % 4) == 3) {
-    pt.x = (input.cols / 2.0) - 0.5;
-    pt.y = (input.rows / 2.0) - 0.5;
+    pt.x = (input.cols / 2.0f) - 0.5f;
+    pt.y = (input.rows / 2.0f) - 0.5f;
   }
   // to calculate the scale, is the size of the keypoint between
   // the scale is related to the diagonal of both pathces
  // float scale = 1.0f*std::sqrt((maskenter.height*maskenter.height)+(maskenter.height*maskenter.height))/std::sqrt((outsize.height*outsize.height)+(outsize.height*outsize.height));
 
-  Mat transform = cv::getRotationMatrix2D(pt, aux_key.angle, 1.0);
+  Mat transform = cv::getRotationMatrix2D(pt, static_cast<double>(aux_key.angle), 1.0);
   Mat source1;
 
   //ROTATE

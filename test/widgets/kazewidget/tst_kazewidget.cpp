@@ -17,6 +17,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testExtendedDescriptor_data();
   void testExtendedDescriptor();
   void testUpright_data();
@@ -69,6 +70,11 @@ void TestKazeWidget::testDefaultConstructor()
   QCOMPARE(4, mKazeWidget->octaves());
   QCOMPARE(4, mKazeWidget->octaveLayers());
   QCOMPARE("DIFF_PM_G2", mKazeWidget->diffusivity());
+}
+
+void TestKazeWidget::test_windowTitle()
+{
+  QCOMPARE("KAZE", mKazeWidget->windowTitle());
 }
 
 void TestKazeWidget::testExtendedDescriptor_data()

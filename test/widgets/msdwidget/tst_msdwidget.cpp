@@ -14,9 +14,11 @@ public:
   ~TestMsdWidget();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_thresholdSaliency_data();
   void test_thresholdSaliency();
   void test_pathRadius_data();
@@ -83,6 +85,11 @@ void TestMsdWidget::testDefaultConstructor()
   QCOMPARE(false, mMsdWidget->computeOrientations());
   QCOMPARE(false, mMsdWidget->affineMSD());
   QCOMPARE(3, mMsdWidget->tilts());
+}
+
+void TestMsdWidget::test_windowTitle()
+{
+  QCOMPARE("MSD", mMsdWidget->windowTitle());
 }
 
 void TestMsdWidget::test_thresholdSaliency_data()

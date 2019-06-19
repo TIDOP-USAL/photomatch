@@ -59,8 +59,8 @@ void MSD_KPDetProcess::run()
 
     float maxX = 0;
     float maxY = 0;
-    int cols = mCvImg.cols;
-    int rows = mCvImg.rows;
+//    int cols = mCvImg.cols;
+//    int rows = mCvImg.rows;
     int i = 0;
     for (int tl = 1; tl <= mAffineTilts; tl++)
     {

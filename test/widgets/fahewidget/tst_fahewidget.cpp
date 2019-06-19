@@ -19,6 +19,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -56,6 +57,11 @@ void TestFaheWidget::testDefaultConstructor()
 {
   /// Check default values
   QCOMPARE(QSize(11, 11), mFaheWidget->blockSize());
+}
+
+void TestFaheWidget::test_windowTitle()
+{
+  QCOMPARE("FAHE", mFaheWidget->windowTitle());
 }
 
 

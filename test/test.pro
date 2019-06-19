@@ -3,4 +3,6 @@ TEMPLATE = subdirs
 
 
 SUBDIRS += \
-           widgets
+           widgets \
+    process \
+    new_project_dialog

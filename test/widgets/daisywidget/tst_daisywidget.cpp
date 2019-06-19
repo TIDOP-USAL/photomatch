@@ -18,6 +18,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testRadius_data();
   void testRadius();
   void testQRadius_data();
@@ -73,6 +74,11 @@ void TestDaisyWidget::testDefaultConstructor()
   QCOMPARE("NRM_NONE", mDaisyWidget->norm());
   QCOMPARE(true, mDaisyWidget->interpolation());
   QCOMPARE(false, mDaisyWidget->useOrientation());
+}
+
+void TestDaisyWidget::test_windowTitle()
+{
+  QCOMPARE("DAISY", mDaisyWidget->windowTitle());
 }
 
 void TestDaisyWidget::testRadius_data()

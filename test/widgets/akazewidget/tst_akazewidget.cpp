@@ -18,6 +18,7 @@ private slots:
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
+  void test_windowTitle();
   void testDescriptorType_data();
   void testDescriptorType();
   void testDescriptorSize_data();
@@ -73,6 +74,11 @@ void TestAkazeWidget::testDefaultConstructor()
   QCOMPARE(4, mAkazeWidget->octaves());
   QCOMPARE(4, mAkazeWidget->octaveLayers());
   QCOMPARE("DIFF_PM_G2", mAkazeWidget->diffusivity());
+}
+
+void TestAkazeWidget::test_windowTitle()
+{
+  QCOMPARE("AKAZE", mAkazeWidget->windowTitle());
 }
 
 void TestAkazeWidget::testDescriptorType_data()
