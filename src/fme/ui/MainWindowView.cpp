@@ -33,6 +33,23 @@ void MainWindowView::clear()
 
 }
 
+void MainWindowView::setProjectTitle(const QString &title)
+{
+  setWindowTitle(title);
+
+//  ui->treeWidget->header()->close();
+
+//  QTreeWidgetItem *itemProject = ui->treeWidget->topLevelItem(0);
+//  if (itemProject == nullptr) {
+//    itemProject = new QTreeWidgetItem();
+//    //itemProject->setIcon(0, QIcon(":/ico/img/48x48/digiflights.png"));
+//    ui->treeWidget->addTopLevelItem(itemProject);
+//    itemProject->setExpanded(true);
+//  }
+
+//  itemProject->setText(0, tr("Project: ").append(title));
+}
+
 void MainWindowView::changeEvent(QEvent *e)
 {
   QMainWindow::changeEvent(e);

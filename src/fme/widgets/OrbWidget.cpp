@@ -46,6 +46,7 @@ OrbWidget::~OrbWidget()
 
 void OrbWidget::init()
 {
+  this->setWindowTitle("ORB");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);

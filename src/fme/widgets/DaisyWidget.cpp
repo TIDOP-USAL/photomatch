@@ -136,6 +136,8 @@ void DaisyWidget::reset()
 
 void DaisyWidget::init()
 {
+  this->setWindowTitle("DAISY");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

@@ -107,6 +107,8 @@ void WallisWidget::reset()
 
 void WallisWidget::init()
 {
+  this->setWindowTitle("Wallis Filter");
+
   QGridLayout *layout = new QGridLayout();
 
   layout->addWidget(new QLabel(tr("Contrast:")), 0, 0);

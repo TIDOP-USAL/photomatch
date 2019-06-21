@@ -147,13 +147,13 @@ void TestNewProjectView::test_pushButtonProjectPath()
 void TestNewProjectView::test_dialogButtonBox()
 {
 
-  QSignalSpy spy_accepted(this, &NewProjectView::accepted);
-  QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Save), Qt::LeftButton);
-  QCOMPARE(spy_accepted.count(), 1);
-
   QSignalSpy spy_rejected(this, &NewProjectView::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
+
+  QSignalSpy spy_accepted(this, &NewProjectView::accepted);
+  QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Save), Qt::LeftButton);
+  QCOMPARE(spy_accepted.count(), 1);
 
   QSignalSpy spy_help(this, &NewProjectView::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);

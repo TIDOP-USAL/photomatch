@@ -50,11 +50,13 @@ void DheWidget::reset()
 
 void DheWidget::init()
 {
+  this->setWindowTitle("DHE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("Dhe Parameters"), this);
+  QGroupBox *groupBox = new QGroupBox(tr("DHE Parameters"), this);
   layout->addWidget(groupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout(this);

@@ -65,6 +65,8 @@ void CmbfheWidget::reset()
 
 void CmbfheWidget::init()
 {
+  this->setWindowTitle("CMBFHE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

@@ -122,6 +122,8 @@ void GfttWidget::reset()
 
 void GfttWidget::init()
 {
+  this->setWindowTitle("GFTT");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

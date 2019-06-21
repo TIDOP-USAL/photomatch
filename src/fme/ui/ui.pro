@@ -22,7 +22,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+DEFINES += QT_PROJECT
+
+include(..\..\..\config.pri)
+
 CONFIG += c++11
+
+INCLUDEPATH += ../../
 
 SOURCES += \
         main.cpp \
@@ -31,7 +37,8 @@ SOURCES += \
         MainWindowModel.cpp \
         NewProjectModel.cpp \
         NewProjectPresenter.cpp \
-        NewProjectView.cpp
+        NewProjectView.cpp \
+    ProjectModel.cpp
 
 HEADERS += \
         MainWindowView.h \
@@ -41,7 +48,8 @@ HEADERS += \
         NewProjectInterfaces.h \
         NewProjectModel.h \
         NewProjectPresenter.h \
-        NewProjectView.h
+        NewProjectView.h \
+    ProjectModel.h
 
 FORMS += \
         MainWindowView.ui
@@ -53,3 +61,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     ../../../res/res.qrc
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../core/release/ -lcore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../core/debug/ -lcore
+else:unix:!macx: LIBS += -L$$OUT_PWD/../core/ -lcore
+
+#INCLUDEPATH += $$PWD/../core
+#DEPENDPATH += $$PWD/../core
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core/release/libcore.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core/debug/libcore.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core/release/core.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core/debug/core.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../core/libcore.a

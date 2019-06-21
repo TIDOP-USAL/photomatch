@@ -94,6 +94,8 @@ void HmclaheWidget::reset()
 
 void HmclaheWidget::init()
 {
+  this->setWindowTitle("HMCLAHE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

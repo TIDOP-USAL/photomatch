@@ -78,6 +78,8 @@ void LatchWidget::reset()
 
 void LatchWidget::init()
 {
+  this->setWindowTitle("LATCH");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

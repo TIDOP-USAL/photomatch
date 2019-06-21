@@ -10,6 +10,8 @@ class MainWindowView;
 class MainWindowModel;
 class INewProjectPresenter;
 class INewProjectModel;
+class IProjectIO;
+class IProject;
 
 class MainWindowPresenter
   : public IPresenter
@@ -38,6 +40,11 @@ protected slots:
   void closeProject();
   void exit();
 
+  /*!
+   * \brief Carga del proyecto
+   */
+  void loadProject();
+
 // IPresenter interface
 
 public slots:
@@ -58,6 +65,9 @@ protected:
 
   MainWindowView *mView;
   MainWindowModel *mModel;
+
+  IProjectIO *mProjectIO;
+  IProject *mProjectModel;
 
   /* Dialogo de creación de un nuevo proyecto */
 

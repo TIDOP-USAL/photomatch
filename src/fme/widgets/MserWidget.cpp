@@ -173,6 +173,8 @@ void MserWidget::reset()
 
 void MserWidget::init()
 {
+  this->setWindowTitle("MSER");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

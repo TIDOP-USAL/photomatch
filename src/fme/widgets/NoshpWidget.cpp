@@ -65,6 +65,8 @@ void NoshpWidget::reset()
 
 void NoshpWidget::init()
 {
+  this->setWindowTitle("NOSHP");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

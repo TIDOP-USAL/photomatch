@@ -124,6 +124,7 @@ void DescriptorMatcherWidget::reset()
 
 void DescriptorMatcherWidget::init()
 {
+  this->setWindowTitle("Descriptor Matcher");
 
   QGridLayout *layout = new QGridLayout();
 

@@ -108,6 +108,7 @@ void StarWidget::reset()
 
 void StarWidget::init()
 {
+  this->setWindowTitle("STAR");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);

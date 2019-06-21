@@ -77,6 +77,8 @@ void FastWidget::reset()
 
 void FastWidget::init()
 {
+  this->setWindowTitle("FAST");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

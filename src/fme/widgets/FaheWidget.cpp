@@ -65,6 +65,8 @@ void FaheWidget::reset()
 
 void FaheWidget::init()
 {
+  this->setWindowTitle("FAHE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

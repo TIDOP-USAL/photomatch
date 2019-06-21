@@ -77,10 +77,10 @@ public:
   virtual void setProjectName(const QString &name) = 0;
 
   /*!
-   * \brief Establece la ruta del proyecto
+   * \brief Establece el directorio de proyecto
    * \param path Ruta del proyecto
    */
-  virtual void setProjectPath(const QString &path) = 0;
+  virtual void setProjectFolder(const QString &path) = 0;
 
   /*!
    * \brief Establece la descripción del proyecto

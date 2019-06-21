@@ -283,6 +283,7 @@ void HogWidget::reset()
 
 void HogWidget::init()
 {
+  this->setWindowTitle("HOG");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);

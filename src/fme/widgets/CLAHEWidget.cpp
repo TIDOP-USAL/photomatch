@@ -80,6 +80,8 @@ void CLAHEWidget::reset()
 
 void CLAHEWidget::init()
 {
+  this->setWindowTitle("CLAHE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

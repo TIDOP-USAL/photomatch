@@ -78,6 +78,8 @@ void BriskWidget::reset()
 
 void BriskWidget::init()
 {
+  this->setWindowTitle("BRISK");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

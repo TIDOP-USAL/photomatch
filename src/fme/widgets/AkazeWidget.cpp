@@ -139,6 +139,8 @@ void AkazeWidget::reset()
 
 void AkazeWidget::init()
 {
+  this->setWindowTitle("AKAZE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

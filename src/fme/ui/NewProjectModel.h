@@ -3,17 +3,20 @@
 
 #include "NewProjectInterfaces.h"
 
+
+
 namespace fme
 {
 
-///TODO: Clase proyecto como inyección de dependencias para facilitar los test.
+class IProject;
+
 class NewProjectModel
   : public INewProjectModel
 {
 
 public:
 
-  NewProjectModel();
+  NewProjectModel(IProject *project);
   ~NewProjectModel() override;
 
 // INewProjectModel interface
@@ -21,7 +24,7 @@ public:
   void newProject() override;
   void save(const QString &file) override;
   void setProjectName(const QString &name) override;
-  void setProjectPath(const QString &path) override;
+  void setProjectFolder(const QString &dir) override;
   void setProjectDescription(const QString &description) override;
 
 // IModel interface
@@ -30,6 +33,9 @@ private:
 
   void init() override;
 
+protected:
+
+  IProject *mProject;
 };
 
 } // namespace fme

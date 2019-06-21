@@ -61,6 +61,8 @@ void BriefWidget::reset()
 
 void BriefWidget::init()
 {
+  this->setWindowTitle("BRIEF");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

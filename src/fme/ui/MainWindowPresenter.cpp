@@ -8,6 +8,8 @@
 #include "NewProjectModel.h"
 #include "NewProjectView.h"
 
+#include "fme/core/project.h"
+
 /* Qt */
 #include <QFileDialog>
 #include <QMessageBox>
@@ -19,6 +21,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   : IPresenter(),
     mView(view),
     mModel(model),
+    mProjectIO(nullptr),
+    mProjectModel(nullptr),
     mNewProjectPresenter(nullptr),
     mNewProjectModel(nullptr)
 {
@@ -37,6 +41,16 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
 MainWindowPresenter::~MainWindowPresenter()
 {
+  if (mProjectIO) {
+    delete mProjectIO;
+    mProjectIO =nullptr;
+  }
+
+  if (mProjectModel){
+    delete mProjectModel;
+    mProjectModel = nullptr;
+  }
+
   if (mNewProjectPresenter) {
     delete mNewProjectPresenter;
     mNewProjectPresenter = nullptr;
@@ -104,6 +118,16 @@ void MainWindowPresenter::exit()
 
 }
 
+void MainWindowPresenter::loadProject()
+{
+  QString prjFile = mProjectModel->path();
+
+  mView->clear();
+  mView->setProjectTitle(QString("FME - ").append(mProjectModel->name()));
+
+
+}
+
 void MainWindowPresenter::help()
 {
 }
@@ -115,12 +139,16 @@ void fme::MainWindowPresenter::open()
 
 void MainWindowPresenter::init()
 {
+  mProjectIO = new ProjectIO;
+  mProjectModel = new Project(mProjectIO);
 }
 
 void MainWindowPresenter::initNewProjectDialog()
 {
   if (mNewProjectPresenter == nullptr){
-    mNewProjectModel = new NewProjectModel;
+    ///TODO: NewProjectModel es un simple wrapper de Project.
+    /// igual interesa utilizar Project directamente
+    mNewProjectModel = new NewProjectModel(mProjectModel);
     INewProjectView *newProjectView = new NewProjectView(mView);
     mNewProjectPresenter = new NewProjectPresenter(newProjectView, mNewProjectModel);
     //mNewProjectPresenter->setHelp(mHelp);
@@ -130,6 +158,4 @@ void MainWindowPresenter::initNewProjectDialog()
 }
 
 } // namespace fme
-
-
 

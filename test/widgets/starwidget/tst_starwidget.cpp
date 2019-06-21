@@ -37,7 +37,6 @@ private:
 TestStarWidget::TestStarWidget()
   : mStarWidget(new StarWidget)
 {
-
 }
 
 TestStarWidget::~TestStarWidget()
@@ -60,7 +59,7 @@ void TestStarWidget::testDefaultConstructor()
 
 void TestStarWidget::test_windowTitle()
 {
-  QCOMPARE("ACEBSF", mStarWidget->windowTitle());
+  QCOMPARE("STAR", mStarWidget->windowTitle());
 }
 
 void TestStarWidget::test_maxSize_data()

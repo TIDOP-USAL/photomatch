@@ -104,6 +104,8 @@ void SurfWidget::reset()
 
 void SurfWidget::init()
 {
+  this->setWindowTitle("SURF");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

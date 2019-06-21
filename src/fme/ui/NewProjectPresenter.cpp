@@ -54,7 +54,7 @@ void NewProjectPresenter::saveProject()
   if (mView->createProjectFolder())
     prj_path.append("/").append(mView->projectName());
   mModel->setProjectName(mView->projectName());
-  mModel->setProjectPath(prj_path);
+  mModel->setProjectFolder(prj_path);
   mModel->setProjectDescription(mView->projectDescription());
   mModel->save(prj_path.append("/").append(mView->projectName()).append(".xml"));
 

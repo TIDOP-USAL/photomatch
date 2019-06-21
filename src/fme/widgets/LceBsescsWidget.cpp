@@ -65,6 +65,8 @@ void LceBsescsWidget::reset()
 
 void LceBsescsWidget::init()
 {
+  this->setWindowTitle("LCE-BSESCS");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

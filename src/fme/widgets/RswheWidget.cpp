@@ -83,6 +83,8 @@ void RswheWidget::reset()
 
 void RswheWidget::init()
 {
+  this->setWindowTitle("RSWHE");
+
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);

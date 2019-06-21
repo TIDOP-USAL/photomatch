@@ -1,6 +1,6 @@
 #include "NewProjectModel.h"
 
-//#include "utils/project.h"
+#include "fme/core/project.h"
 
 #include <QDir>
 
@@ -8,7 +8,8 @@
 namespace fme
 {
 
-NewProjectModel::NewProjectModel()
+NewProjectModel::NewProjectModel(IProject *project)
+  : mProject(project)
 {
   init();
 }
@@ -21,33 +22,31 @@ NewProjectModel::~NewProjectModel()
 
 void NewProjectModel::newProject()
 {
-//  Project &prj = Project::getInstance();
-//  prj.clear(); // Se establecen los valores por defecto
+  mProject->clear();
 }
 
 void NewProjectModel::save(const QString &file)
 {
-//  Project &prj = Project::getInstance();
-//  QDir dir(prj.dir());
-//  if (!dir.exists()) {
-//    dir.mkpath(".");
-//  }
-//  prj.saveAs(file);
+  QDir dir(mProject->projectFolder());
+  if (!dir.exists()) {
+    dir.mkpath(".");
+  }
+  mProject->saveAs(file);
 }
 
 void NewProjectModel::setProjectName(const QString &name)
 {
-//  Project::getInstance().setName(name);
+  mProject->setName(name);
 }
 
-void NewProjectModel::setProjectPath(const QString &path)
+void NewProjectModel::setProjectFolder(const QString &dir)
 {
-//  Project::getInstance().setDir(path);
+  mProject->setProjectFolder(dir);
 }
 
 void NewProjectModel::setProjectDescription(const QString &description)
 {
-//  Project::getInstance().setDescription(description);
+  mProject->setDescription(description);
 }
 
 // IModel interface

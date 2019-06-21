@@ -73,7 +73,7 @@ void TestWallisWidget::testDefaultConstructor()
 
 void TestWallisWidget::test_windowTitle()
 {
-  QCOMPARE("WALLIS", mWallisWidget->windowTitle());
+  QCOMPARE("Wallis Filter", mWallisWidget->windowTitle());
 }
 
 void TestWallisWidget::testContrast_data()

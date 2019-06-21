@@ -7,9 +7,8 @@ TEMPLATE = subdirs
 FME_MAJOR_VERSION = 2
 FME_MINOR_VERSION = 0
 FME_VERSION = $${FME_MAJOR_VERSION}"."$${FME_MINOR_VERSION}
-QMAKE_SUBSTITUTES += config_fme.h.in
+#QMAKE_SUBSTITUTES += config_fme.h.in
 
 SUBDIRS += \
     test \
-    src \
-    src/fme/ui
+    src

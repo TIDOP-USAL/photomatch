@@ -193,6 +193,7 @@ void MsdWidget::reset()
 
 void MsdWidget::init()
 {
+  this->setWindowTitle("MSD");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);

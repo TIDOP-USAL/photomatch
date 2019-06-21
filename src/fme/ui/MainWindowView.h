@@ -23,6 +23,7 @@ public:
   ~MainWindowView();
 
   void clear();
+  void setProjectTitle(const QString &title);
 
 signals:
 
