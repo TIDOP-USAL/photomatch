@@ -31,7 +31,7 @@ void NewProjectModel::save(const QString &file)
   if (!dir.exists()) {
     dir.mkpath(".");
   }
-  mProject->saveAs(file);
+  //mProject->saveAs(file);
 }
 
 void NewProjectModel::setProjectName(const QString &name)

@@ -12,29 +12,13 @@
 namespace fme
 {
 
-Project::Project(IProjectIO *projectIO)
+Project::Project()
   : IProject(),
     mName(""),
     mDescription(""),
-    mPath(""),
     mProjectFolder(""),
-    mVersion(FME_PROJECT_FILE_VERSION),
-    bUnsavedChanges(false),
-    mProjectIO(projectIO)
+    mVersion(FME_PROJECT_FILE_VERSION)
 {
-}
-
-Project::Project(IProjectIO *projectIO, const QString &file)
-  : IProject(),
-    mName(""),
-    mDescription(""),
-    mPath("file"),
-    mProjectFolder(""),
-    mVersion(FME_PROJECT_FILE_VERSION),
-    bUnsavedChanges(false),
-    mProjectIO(projectIO)
-{
-  load(file);
 }
 
 QString Project::name() const
@@ -45,7 +29,6 @@ QString Project::name() const
 void Project::setName(const QString &name)
 {
   mName = name;
-  bUnsavedChanges = true;
 }
 
 QString Project::description() const
@@ -56,12 +39,6 @@ QString Project::description() const
 void Project::setDescription(const QString &description)
 {
   mDescription = description;
-  bUnsavedChanges = true;
-}
-
-QString Project::path() const
-{
-  return mPath;
 }
 
 QString Project::projectFolder() const
@@ -72,7 +49,6 @@ QString Project::projectFolder() const
 void Project::setProjectFolder(const QString &dir)
 {
   mProjectFolder = dir;
-  bUnsavedChanges = true;
 }
 
 
@@ -91,7 +67,6 @@ void Project::addImage(const std::shared_ptr<Image> &img)
   } else {
     mImages.push_back(img);
   }
-  bUnsavedChanges = true;
 }
 
 void Project::deleteImage(const QString &img)
@@ -99,7 +74,6 @@ void Project::deleteImage(const QString &img)
   size_t id = findImageId(img);
   if (id != std::numeric_limits<size_t>().max()){
     mImages.erase(mImages.begin()+ static_cast<long long>(id));
-    bUnsavedChanges = true;
   }
 }
 
@@ -107,7 +81,6 @@ void Project::deleteImage(size_t imgId)
 {
   if (imgId != std::numeric_limits<size_t>().max()){
     mImages.erase(mImages.begin()+ static_cast<long long>(imgId));
-    bUnsavedChanges = true;
   }
 }
 
@@ -176,60 +149,13 @@ size_t Project::imagesCount() const
   return mImages.size();
 }
 
-void Project::load(const QString &file)
-{
-  mPath = file;
-  ///TODO: La lectura y escritura dificultará el testeo. Crear una interfaz ProjectIO para
-  /// gestionar esa parte y poder crear una clase para la simulación de la lectura escritura
-  /// en los test
-  bool err = mProjectIO->read(file, *this);
-
-  bUnsavedChanges = false;
-
-}
-
-void Project::save()
-{
-  saveAs(mPath);
-}
-
-void Project::saveAs(const QString &file)
-{
-
-  mPath = file;
-
-  bool err = mProjectIO->write(file, *this);
-
-  bUnsavedChanges = false;
-}
-
-bool Project::checkUnsavedChanges() const
-{
-  return bUnsavedChanges;
-}
-
-bool Project::checkOldVersion(const QString &file) const
-{
-  return false;
-}
-
-void Project::oldVersionBak(const QString &file) const
-{
-}
-
-//bool Project::empty() const
-//{
-//}
-
 void Project::clear()
 {
   mName = "";
   mDescription = "";
-  mPath = "";
   mProjectFolder = "";
   mVersion = FME_PROJECT_FILE_VERSION;
   mImages.resize(0);
-  bUnsavedChanges = false;
 }
 
 
@@ -383,6 +309,36 @@ bool ProjectIO::checkOldVersion(const QString &file) const
     }
   }
   return bUpdateVersion;
+}
+
+void ProjectIO::oldVersionBak(const QString &file) const
+{
+  // Versión antigua
+  QString version = "0";
+  QFile input(file);
+  if (input.open(QIODevice::ReadOnly)) {
+    QXmlStreamReader xmlReader;
+    xmlReader.setDevice(&input);
+
+    if (xmlReader.readNextStartElement()) {
+      if (xmlReader.name() == "FME") {
+        for (auto &attr : xmlReader.attributes()) {
+          if (attr.name().compare(QString("version")) == 0) {
+            version = attr.value().toString();
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  QFileInfo file_info(file);
+  QString tmpfile = file_info.path().append(file_info.baseName()).append("_v").append(version).append(".bak");
+  std::ifstream  src(file.toStdString().c_str(), std::ios::binary);
+  std::ofstream  dst(tmpfile.toStdString().c_str(), std::ios::binary);
+  dst << src.rdbuf();
+  src.close();
+  dst.close();
 }
 
 } // namespace fme

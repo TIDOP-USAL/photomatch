@@ -29,16 +29,17 @@ include(..\..\..\config.pri)
 CONFIG += c++11
 
 INCLUDEPATH += ../../
+INCLUDEPATH += ../../../third_party
 
 SOURCES += \
         main.cpp \
         MainWindowView.cpp \
         MainWindowPresenter.cpp \
         MainWindowModel.cpp \
-        NewProjectModel.cpp \
         NewProjectPresenter.cpp \
         NewProjectView.cpp \
-    ProjectModel.cpp
+        ProjectModel.cpp \
+        SettingsModel.cpp
 
 HEADERS += \
         MainWindowView.h \
@@ -46,10 +47,10 @@ HEADERS += \
         MainWindowModel.h \
         mvp.h \
         NewProjectInterfaces.h \
-        NewProjectModel.h \
         NewProjectPresenter.h \
         NewProjectView.h \
-    ProjectModel.h
+        ProjectModel.h \
+        SettingsModel.h
 
 FORMS += \
         MainWindowView.ui

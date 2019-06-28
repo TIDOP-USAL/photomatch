@@ -9,7 +9,7 @@ namespace fme
 class MainWindowView;
 class MainWindowModel;
 class INewProjectPresenter;
-class INewProjectModel;
+class IProjectModel;
 class IProjectIO;
 class IProject;
 
@@ -40,10 +40,28 @@ protected slots:
   void closeProject();
   void exit();
 
+  /* Menú View */
+
+
+  /* Menú herramientas */
+
+  void loadImages();
+  void newProcessing();
+  void openAssistant();
+  void openPreprocess();
+  void openFeatureExtraction();
+  void openFeatureMatching();
+  void openSettings();
+
+  /* Menú Ayuda */
+  void openAboutDialog();
+
   /*!
    * \brief Carga del proyecto
    */
   void loadProject();
+
+  void updateProject();
 
 // IPresenter interface
 
@@ -67,12 +85,13 @@ protected:
   MainWindowModel *mModel;
 
   IProjectIO *mProjectIO;
-  IProject *mProjectModel;
+  IProject *mProject;
+  IProjectModel *mProjectModel;
 
   /* Dialogo de creación de un nuevo proyecto */
 
   INewProjectPresenter *mNewProjectPresenter;
-  INewProjectModel *mNewProjectModel;
+  //INewProjectModel *mNewProjectModel;
 
 };
 

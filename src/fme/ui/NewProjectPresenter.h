@@ -12,7 +12,7 @@ namespace fme
 {
 
 class INewProjectView;
-class INewProjectModel;
+class IProjectModel;
 class Help;
 
 class NewProjectPresenter
@@ -23,13 +23,13 @@ class NewProjectPresenter
 private:
 
   INewProjectView *mView;
-  INewProjectModel *mModel;
+  IProjectModel *mProjectModel;
   QString mProjectsDefaultPath;
   std::shared_ptr<Help> mHelp;
 
 public:
 
-  NewProjectPresenter(INewProjectView *view, INewProjectModel *model);
+  NewProjectPresenter(INewProjectView *view, IProjectModel *mModel);
   ~NewProjectPresenter() override;
 
 // INewProjectPresenter interface

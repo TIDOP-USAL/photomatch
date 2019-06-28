@@ -1,3 +1,4 @@
-add_subdirectory(widgets)
+add_subdirectory(core)
 add_subdirectory(process)
-add_subdirectory(new_project_dialog)
+add_subdirectory(ui)
+add_subdirectory(widgets)

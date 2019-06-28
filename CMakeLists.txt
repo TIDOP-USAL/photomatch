@@ -178,6 +178,12 @@ if(WITH_PIXKIT)
 
 endif(WITH_PIXKIT)
 
+
+
+##############################################################
+# LIB / EXE                                                  #
+##############################################################
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
@@ -186,23 +192,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-# Configuration header file 
+# Configuration header file
 configure_file("${PROJECT_SOURCE_DIR}/cmake/config_fme.h.in" "${PROJECT_BINARY_DIR}/config_fme.h")
 include_directories("${PROJECT_BINARY_DIR}")
 
-
-##############################################################
-# LIB                                                        #
-##############################################################
+# resources
+set(FME_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/res.qrc)
 
 add_subdirectory(src)
 
-##############################################################
-# EXE                                                        #
-##############################################################
-
-# resources
-set(FME_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/res.qrc)
 
 ## includes
 #include_directories(${CMAKE_BUILD_DIR})

@@ -55,12 +55,6 @@ public:
   virtual void setDescription(const QString &description) = 0;
 
   /*!
-   * \brief Devuelve la ruta del fichero de proyecto
-   * \return Ruta del fichero de proyecto
-   */
-  virtual QString path() const = 0;
-
-  /*!
    * \brief Devuelve el directorio del proyecto
    * \return Directorio del proyecto
    */
@@ -149,48 +143,6 @@ public:
   virtual size_t imagesCount() const = 0;
 
   /*!
-   * \brief Carga un proyecto
-   * \param[in] file Fichero de proyecto
-   */
-  virtual void load(const QString &file) = 0;
-
-  /*!
-   * \brief Guarda el proyecto
-   */
-  virtual void save() = 0;
-
-  /*!
-   * \brief Guarda un proyecto como...
-   * \param[in] file Nombre con el cual se guarda el proyecto
-   */
-  virtual void saveAs(const QString &file) = 0;
-
-  /*!
-   * \brief Comprueba si hay cambios sin guardar en el proyecto
-   * \return
-   */
-  virtual bool checkUnsavedChanges() const = 0;
-
-  /*!
-   * \brief Comprueba si un proyecto es de una versión antigua
-   * \param[in] file Nombre del fichero
-   * \return true si es una versión antigua
-   */
-  virtual bool checkOldVersion(const QString &file) const = 0;
-
-  /*!
-   * \brief Crea una copia de un proyecto antiguo con el mismo nombre y un sufijo con la versión
-   * \param[in] file
-   */
-  virtual void oldVersionBak(const QString &file) const = 0;
-
-  /*!
-   * \brief Comprueba si el proyecto esta vacio
-   * \return true si el proyecto esta vacio
-   */
-  //virtual bool empty() const = 0;
-
-  /*!
    * \brief Limpia el proyecto
    */
   virtual void clear() = 0;
@@ -202,7 +154,7 @@ public:
 /*!
  * \brief Interfaz para las operaciones de lectura y escritura del proyecto
  */
-class IProjectIO
+class FME_EXPORT IProjectIO
 {
 
 public:
@@ -233,6 +185,12 @@ public:
    */
   virtual bool checkOldVersion(const QString &file) const = 0;
 
+  /*!
+   * \brief Crea una copia de un proyecto antiguo con el mismo nombre y un sufijo con la versión
+   * \param[in] file
+   */
+  virtual void oldVersionBak(const QString &file) const = 0;
+
 };
 
 
@@ -242,8 +200,7 @@ class FME_EXPORT Project
 
 public:
 
-  Project(IProjectIO *projectIO);
-  Project(IProjectIO *projectIO, const QString &file);
+  Project();
   ~Project() override = default;
 
 // IProject interface
@@ -254,7 +211,6 @@ public:
   void setName(const QString &name) override;
   QString description() const override;
   void setDescription(const QString &description) override;
-  QString path() const override;
   QString projectFolder() const override;
   void setProjectFolder(const QString &dir) override;
   QString version() const override;
@@ -270,13 +226,6 @@ public:
   image_iterator imageEnd() override;
   image_const_iterator imageEnd() const override;
   size_t imagesCount() const override;
-  void load(const QString &file) override;
-  void save() override;
-  void saveAs(const QString &file) override;
-  bool checkUnsavedChanges() const override;
-  bool checkOldVersion(const QString &file) const override;
-  void oldVersionBak(const QString &file) const override;
-  //bool empty() const override;
   void clear() override;
 
 
@@ -288,13 +237,11 @@ protected:
   QString mProjectFolder;
   QString mVersion;
   std::vector<std::shared_ptr<Image>> mImages;
-  bool bUnsavedChanges;
-  IProjectIO *mProjectIO;
 
 };
 
 
-class ProjectIO
+class FME_EXPORT ProjectIO
   : public IProjectIO
 {
 
@@ -309,6 +256,7 @@ public:
   bool read(const QString &file, IProject &prj) override;
   bool write(const QString &file, const IProject &prj) const override;
   bool checkOldVersion(const QString &file) const override;
+  void oldVersionBak(const QString &file) const override;
 
 protected:
 

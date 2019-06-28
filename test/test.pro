@@ -1,10 +1,7 @@
 TEMPLATE = subdirs
 
-
-
 SUBDIRS += \
            widgets \
-    process \
-    new_project_dialog \
-    core \
-    mainwindow
+           process \
+           core \
+           ui

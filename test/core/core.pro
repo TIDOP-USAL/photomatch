@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     project \
-    image
+    image \
+    settings

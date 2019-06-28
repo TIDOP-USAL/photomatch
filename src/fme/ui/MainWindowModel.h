@@ -16,19 +16,26 @@ public:
   explicit MainWindowModel();
 
   /*!
-   * \brief Comprueba si hay cambios sin guardar en el proyecto
+   * \brief Devuelve la ruta por defecto donde se situan los proyectos
    * \return
    */
-  bool checkUnsavedChanges() const;
+  QString defaultPath() const;
 
 signals:
 
 public slots:
 
 
-  // IModel interface
+// IModel interface
+
 private:
+
   void init() override;
+
+protected:
+
+  QString mPrjDefaultPath;
+
 };
 
 } // namespace fme

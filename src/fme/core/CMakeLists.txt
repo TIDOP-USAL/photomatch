@@ -1,6 +1,8 @@
 add_library(libcore ${LIB_TYPE}
             project.cpp
-            project.h)
+            project.h
+            image.cpp
+            image.h)
 
 set_property(TARGET libcore PROPERTY FOLDER "lib")
 

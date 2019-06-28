@@ -1,6 +1,7 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
-  
+include_directories(${CMAKE_SOURCE_DIR}/third_party)
+
 #--------------------------------------------------------------------------------------------#
 # Configuración para Qt                                                                      #
 #--------------------------------------------------------------------------------------------#
@@ -31,10 +32,12 @@ set(FME_SRC
     NewProjectInterfaces.h
     NewProjectView.cpp
     NewProjectView.h
-    NewProjectModel.cpp
-    NewProjectModel.h
     NewProjectPresenter.cpp
     NewProjectPresenter.h
+    ProjectModel.cpp
+    ProjectModel.h
+    SettingsModel.cpp
+    SettingsModel.h
 )  
 
 if(MSVC)
@@ -55,6 +58,8 @@ set(FME_FORMS
 
 #qt5_add_translation(FME_QM_FILES ${FME_TS_FILES})
 
+QT5_ADD_RESOURCES(UI_FME_RES ${FME_RESOURCES} )
+
 add_executable(${PROJECT_NAME} WIN32
                ${FME_SRC}
                ${FME_HEADERS}
@@ -64,13 +69,14 @@ add_executable(${PROJECT_NAME} WIN32
 )
 
 source_group("Form Files"  FILES ${FME_FORMS})
-source_group("Resource Files"  FILES ${FME_RES})
+source_group("Resource Files"  FILES ${FME_RESOURCES})
 #source_group("Translation Files"  FILES ${FME_TS_FILES})
 
 # Lincado de librerias
 target_link_libraries(${PROJECT_NAME}
                       Qt5::Core
                       Qt5::Widgets
+                      libcore
 #                      ${OpenCV_LIBS}
 #                      ${Boost_SYSTEM_LIBRARY}
 #                      ${Boost_THREAD_LIBRARY}

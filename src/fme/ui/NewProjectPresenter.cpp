@@ -1,6 +1,6 @@
 #include "NewProjectPresenter.h"
 
-#include "NewProjectModel.h"
+#include "ProjectModel.h"
 #include "NewProjectView.h"
 //#include "ui/help.h"
 
@@ -11,10 +11,10 @@
 namespace fme
 {
 
-NewProjectPresenter::NewProjectPresenter(INewProjectView *view, INewProjectModel *model)
+NewProjectPresenter::NewProjectPresenter(INewProjectView *view, IProjectModel *model)
   : INewProjectPresenter(),
     mView(view),
-    mModel(model)/*,
+    mProjectModel(model)/*,
     mHelp(nullptr)*/
 {
   init();
@@ -50,13 +50,19 @@ void NewProjectPresenter::saveProject()
   ///   QRegExp re("(^(PRN|AUX|NUL|CON|COM[1-9]|LPT[1-9]|(\\.+)$)(\\..*)?$)|(([\\x00-\\x1f\\\\?*:\";|/<>])+)|(([\\. ]+)");
   /// https://www.boost.org/doc/libs/1_43_0/libs/filesystem/doc/portability_guide.htm
 
+  QDir dir(mProjectModel->projectFolder());
+  if (!dir.exists()) {
+    dir.mkpath(".");
+  }
+
   QString prj_path = mView->projectPath();
   if (mView->createProjectFolder())
     prj_path.append("/").append(mView->projectName());
-  mModel->setProjectName(mView->projectName());
-  mModel->setProjectFolder(prj_path);
-  mModel->setProjectDescription(mView->projectDescription());
-  mModel->save(prj_path.append("/").append(mView->projectName()).append(".xml"));
+  mProjectModel->setName(mView->projectName());
+  mProjectModel->setProjectFolder(prj_path);
+  mProjectModel->setDescription(mView->projectDescription());
+  prj_path.append("/").append(mView->projectName()).append(".xml");
+  mProjectModel->saveAs(prj_path);
 
   emit projectCreate();
 
@@ -74,7 +80,7 @@ void NewProjectPresenter::discartProject()
 
 void NewProjectPresenter::open()
 {
-  mModel->newProject();
+  mProjectModel->clear();
 
   mView->setProjectPath(mProjectsDefaultPath);
 

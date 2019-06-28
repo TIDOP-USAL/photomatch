@@ -99,7 +99,7 @@ class IModel
 
 public:
 
-  IModel(){}
+  IModel(QObject *parent = nullptr) : QObject(parent){}
   virtual ~IModel(){}
 
 private:

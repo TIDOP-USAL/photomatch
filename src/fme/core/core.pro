@@ -33,11 +33,13 @@ INCLUDEPATH += ../../ \
 
 SOURCES += \
     project.cpp \
-    image.cpp
+    image.cpp \
+    settings.cpp
 
 HEADERS += \
     project.h \
-    image.h
+    image.h \
+    settings.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
