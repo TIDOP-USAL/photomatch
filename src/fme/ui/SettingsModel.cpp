@@ -56,5 +56,10 @@ void SettingsModel::write()
   bUnsavedChanges = false;
 }
 
+bool SettingsModel::checkUnsavedChanges() const
+{
+  return bUnsavedChanges;
+}
+
 } // namespace fme
 

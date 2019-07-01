@@ -33,6 +33,11 @@ public:
    */
   virtual void write() = 0;
 
+  /*!
+   * \brief Comprueba si hay cambios sin guardar en el proyecto
+   * \return
+   */
+  virtual bool checkUnsavedChanges() const = 0;
 };
 
 class SettingsModel
@@ -65,6 +70,7 @@ public:
 
   void read() override;
   void write() override;
+  bool checkUnsavedChanges() const override;
 
 protected:
 
