@@ -2,7 +2,6 @@
 #define FME_SETTINGS_MODEL_H
 
 #include <QObject>
-#include <QSettings>
 
 #include "fme/core/settings.h"
 #include "fme/ui/mvp.h"
@@ -48,7 +47,9 @@ class SettingsModel
 
 public:
 
-  explicit SettingsModel(ISettings *settings, QObject *parent = nullptr);
+  explicit SettingsModel(ISettings *settings,
+                         ISettingsRW *settingsRW,
+                         QObject *parent = nullptr);
   ~SettingsModel() override;
 
 // ISettings interface
@@ -57,6 +58,7 @@ public:
 
   QString language() const override;
   void setLanguage(const QString &language) override;
+  void reset() override;
 
 // IModel interface
 
@@ -75,7 +77,7 @@ public:
 protected:
 
   ISettings *mSettings;
-  QSettings *mSettingsRW;
+  ISettingsRW *mSettingsRW;
   bool bUnsavedChanges;
 };
 

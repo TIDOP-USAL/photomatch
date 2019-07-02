@@ -4,10 +4,12 @@
 
 using namespace fme;
 
-class SettingsModelFake
-  : public ISettingsModel
+
+class SettingsRWFake
+  : public ISettingsRW
 {
-  Q_OBJECT
+
+protected:
 
   struct Data{
     QString lang = "en";
@@ -15,79 +17,32 @@ class SettingsModelFake
 
 public:
 
-  explicit SettingsModelFake(ISettings *settings, QObject *parent = nullptr)
-    : ISettingsModel(parent),
-      mSettings(settings),
-      bUnsavedChanges(false)
-  {
-    init();
-  }
+  SettingsRWFake()
+    : ISettingsRW()
+  {}
 
-  ~SettingsModelFake() override
-  {
+  ~SettingsRWFake() override {}
 
-  }
-
-  // ISettings interface
+// ISettingsRW interface
 
 public:
 
-  QString language() const override
+  void read(ISettings &settings) override
   {
-    return mSettings->language();
+    settings.setLanguage(this->data.lang);
   }
 
-  void setLanguage(const QString &language) override
+  void write(const ISettings &settings) override
   {
-    mSettings->setLanguage(language);
-    bUnsavedChanges = true;
-  }
-
-// IModel interface
-
-private:
-
-  void init() override
-  {
-    read();
-  }
-
-// ISettingsModel interface
-
-public:
-
-  void read() override
-  {
-    mSettings->setLanguage(this->data.lang);
-  }
-
-  void write() override
-  {
-    this->data.lang = mSettings->language();
-
-    bUnsavedChanges = false;
-  }
-
-  bool checkUnsavedChanges() const override
-  {
-    return bUnsavedChanges;
+    this->data.lang = settings.language();
   }
 
 protected:
 
-  ISettings *mSettings;
-  bool bUnsavedChanges;
   Data data;
+
+
 };
-
-
-
-
-
-
-
-
-
 
 
 
@@ -102,31 +57,46 @@ public:
 private slots:
   void initTestCase();
   void cleanupTestCase();
+  void test_defaultValues();
   void test_language();
-  void test_checkUnsavedChanges();
+  void test_reset();
 
 protected:
 
   ISettings *mSettings;
+  ISettingsRW *mSettingsRWFake;
   ISettingsModel *mSettingsModel;
 
 };
 
 TestSettingsModel::TestSettingsModel()
   : mSettings(new Settings),
-    mSettingsModel(new SettingsModelFake(mSettings))
+    mSettingsRWFake(new SettingsRWFake)
 {
-
+  mSettingsModel = new SettingsModel(mSettings, mSettingsRWFake);
 }
 
 TestSettingsModel::~TestSettingsModel()
 {
+  if (mSettings){
+    delete mSettings;
+    mSettings = nullptr;
+  }
 
+  if (mSettingsRWFake){
+    delete mSettingsRWFake;
+    mSettingsRWFake = nullptr;
+  }
+
+  if (mSettingsModel){
+    delete mSettingsModel;
+    mSettingsModel = nullptr;
+  }
 }
 
 void TestSettingsModel::initTestCase()
 {
-
+  mSettingsModel->read();
 }
 
 void TestSettingsModel::cleanupTestCase()
@@ -134,16 +104,32 @@ void TestSettingsModel::cleanupTestCase()
 
 }
 
+void TestSettingsModel::test_defaultValues()
+{
+  Settings settings;
+  SettingsRWFake rw;
+  SettingsModel settingsModel(&settings, &rw);
+
+  QCOMPARE("en", settingsModel.language());
+  QCOMPARE(false, settingsModel.checkUnsavedChanges());
+}
+
 void TestSettingsModel::test_language()
 {
+  QCOMPARE(false, mSettingsModel->checkUnsavedChanges());
+  QCOMPARE("en", mSettingsModel->language());
 
+  mSettingsModel->setLanguage("es");
+  QCOMPARE("es", mSettingsModel->language());
+  QCOMPARE(true, mSettingsModel->checkUnsavedChanges());
 }
 
-void TestSettingsModel::test_checkUnsavedChanges()
+void TestSettingsModel::test_reset()
 {
-
+  mSettingsModel->reset();
+  QCOMPARE("en", mSettingsModel->language());
+  QCOMPARE(false, mSettingsModel->checkUnsavedChanges());
 }
-
 
 QTEST_MAIN(TestSettingsModel)
 

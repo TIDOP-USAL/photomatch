@@ -7,8 +7,11 @@
 
 #include "NewProjectInterfaces.h"
 #include "NewProjectPresenter.h"
-//#include "NewProjectModel.h"
 #include "NewProjectView.h"
+
+#include "SettingsModel.h"
+#include "SettingsPresenter.h"
+#include "SettingsView.h"
 
 #include "fme/core/project.h"
 
@@ -23,10 +26,14 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   : IPresenter(),
     mView(view),
     mModel(model),
-    mProjectIO(new ProjectIO),
     mProject(new Project),
+    mProjectIO(new ProjectRW),
     mProjectModel(nullptr),
-    mNewProjectPresenter(nullptr)
+    mNewProjectPresenter(nullptr),
+    mSettings(new Settings),
+    mSettingsRW(new SettingsRW),
+    mSettingsModel(nullptr),
+    mSettingsPresenter(nullptr)
 {
   init();
 
@@ -82,6 +89,21 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mNewProjectPresenter) {
     delete mNewProjectPresenter;
     mNewProjectPresenter = nullptr;
+  }
+
+  if(mSettings){
+    delete mSettings;
+    mSettings = nullptr;
+  }
+
+  if(mSettingsRW){
+    delete mSettingsRW;
+    mSettingsRW = nullptr;
+  }
+
+  if (mSettingsModel){
+    delete mSettingsModel;
+    mSettingsModel = nullptr;
   }
 }
 
@@ -286,7 +308,8 @@ void MainWindowPresenter::openFeatureMatching()
 
 void MainWindowPresenter::openSettings()
 {
-
+  initSettingsDialog();
+  mSettingsPresenter->open();
 }
 
 void MainWindowPresenter::openAboutDialog()
@@ -326,17 +349,27 @@ void MainWindowPresenter::open()
 void MainWindowPresenter::init()
 {
   mProjectModel = new ProjectModel(mProjectIO, mProject);
+  mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
 }
 
 void MainWindowPresenter::initNewProjectDialog()
 {
   if (mNewProjectPresenter == nullptr){
-    //mNewProjectModel = new NewProjectModel(mProjectModel);
     INewProjectView *newProjectView = new NewProjectView(mView);
     mNewProjectPresenter = new NewProjectPresenter(newProjectView, mProjectModel);
     //mNewProjectPresenter->setHelp(mHelp);
 
     connect(mNewProjectPresenter, SIGNAL(projectCreate()), this, SLOT(loadProject()));
+  }
+}
+
+void MainWindowPresenter::initSettingsDialog()
+{
+  if (mSettingsPresenter == nullptr){
+    ISettingsView *view = new SettingsView(mView);
+    mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
+    mSettingsPresenter = new SettingsPresenter(view, mSettingsModel);
+    //mSettingsPresenter->setHelp(mHelp);
   }
 }
 

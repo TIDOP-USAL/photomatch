@@ -154,13 +154,13 @@ public:
 /*!
  * \brief Interfaz para las operaciones de lectura y escritura del proyecto
  */
-class FME_EXPORT IProjectIO
+class FME_EXPORT IProjectRW
 {
 
 public:
 
-  IProjectIO() {}
-  virtual ~IProjectIO() = default;
+  IProjectRW() {}
+  virtual ~IProjectRW() = default;
 
   /*!
    * \brief read
@@ -241,13 +241,13 @@ protected:
 };
 
 
-class FME_EXPORT ProjectIO
-  : public IProjectIO
+class FME_EXPORT ProjectRW
+  : public IProjectRW
 {
 
 public:
 
-  ProjectIO();
+  ProjectRW();
 
 // IProjectIO interface
 

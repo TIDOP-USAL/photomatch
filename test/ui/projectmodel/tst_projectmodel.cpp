@@ -5,13 +5,13 @@
 
 using namespace fme;
 
-class ProjectIOFake
-  : public IProjectIO
+class ProjectRWFake
+  : public IProjectRW
 {
 
 public:
 
-  ProjectIOFake()
+  ProjectRWFake()
   {
     mProjectFileText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                        "<FME version=\"1.0\">"
@@ -37,7 +37,7 @@ public:
                        "</FME>";
   }
 
-  ~ProjectIOFake() override {}
+  ~ProjectRWFake() override {}
 
   // IProjectIO interface
 public:
@@ -147,13 +147,13 @@ private slots:
 
 protected:
 
-  IProjectIO *mProjectIOFake;
+  IProjectRW *mProjectIOFake;
   IProject *mProject;
   IProjectModel *mProjectModel;
 };
 
 TestProjectModel::TestProjectModel()
-  : mProjectIOFake(new ProjectIOFake),
+  : mProjectIOFake(new ProjectRWFake),
     mProject(new Project),
     mProjectModel(new ProjectModel(mProjectIOFake, mProject))
 {
@@ -191,7 +191,7 @@ void TestProjectModel::cleanupTestCase()
 
 void TestProjectModel::testConstructor()
 {
-  ProjectIOFake *projectIOFake = new ProjectIOFake;
+  ProjectRWFake *projectIOFake = new ProjectRWFake;
   Project *project = new Project;
 
   ProjectModel prj(projectIOFake, project);

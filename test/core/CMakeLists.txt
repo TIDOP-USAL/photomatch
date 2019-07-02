@@ -8,7 +8,7 @@ MACRO(DEFINE_TEST_CORE name srcs)
     set(the_target "${test_kind}_${name}")
     add_executable(${the_target} ${srcs})
 
-    target_link_libraries(${the_target} PRIVATE Qt5::Core Qt5::Widgets Qt5::Test libcore)
+    target_link_libraries(${the_target} PRIVATE Qt5::Core Qt5::Test libcore)
 
     set_property(TARGET ${the_target} PROPERTY FOLDER "test/core")
 
@@ -41,3 +41,4 @@ ENDMACRO()
 
 add_subdirectory(image)
 add_subdirectory(project)
+add_subdirectory(settings)

@@ -46,52 +46,6 @@ protected slots:
 
 
 /*!
- * \brief The INewProjectModel class
- */
-//class INewProjectModel
-//  : public IModel
-//{
-
-//  Q_OBJECT
-
-//public:
-
-//  INewProjectModel() {}
-
-//  virtual ~INewProjectModel() {}
-  
-//  /*!
-//   * \brief Se crea un nuevo proyecto
-//   */
-//  virtual void newProject() = 0;
-
-//  /*!
-//   * \brief Se guarda el proyecto
-//   */
-//  virtual void save(const QString &file) = 0;
-
-//  /*!
-//   * \brief Establece el nombre del proyecto
-//   * \param name Nombre
-//   */
-//  virtual void setProjectName(const QString &name) = 0;
-
-//  /*!
-//   * \brief Establece el directorio de proyecto
-//   * \param path Ruta del proyecto
-//   */
-//  virtual void setProjectFolder(const QString &path) = 0;
-
-//  /*!
-//   * \brief Establece la descripción del proyecto
-//   * \param description Descripción del proyecto
-//   */
-//  virtual void setProjectDescription(const QString &description) = 0;
-
-//};
-
-
-/*!
  * \brief INewProjectView
  */
 class INewProjectView

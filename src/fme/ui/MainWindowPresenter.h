@@ -10,8 +10,12 @@ class MainWindowView;
 class MainWindowModel;
 class INewProjectPresenter;
 class IProjectModel;
-class IProjectIO;
+class IProjectRW;
 class IProject;
+class ISettings;
+class ISettingsRW;
+class ISettingsModel;
+class ISettingsPresenter;
 
 class MainWindowPresenter
   : public IPresenter
@@ -79,19 +83,26 @@ private:
    */
   void initNewProjectDialog();
 
+  /*!
+   * \brief Inicializa la herramienta de configuración de la aplicación
+   */
+  void initSettingsDialog();
+
 protected:
 
   MainWindowView *mView;
   MainWindowModel *mModel;
 
-  IProjectIO *mProjectIO;
   IProject *mProject;
+  IProjectRW *mProjectIO;
   IProjectModel *mProjectModel;
 
-  /* Dialogo de creación de un nuevo proyecto */
-
   INewProjectPresenter *mNewProjectPresenter;
-  //INewProjectModel *mNewProjectModel;
+
+  ISettings *mSettings;
+  ISettingsRW *mSettingsRW;
+  ISettingsModel *mSettingsModel;
+  ISettingsPresenter *mSettingsPresenter;
 
 };
 

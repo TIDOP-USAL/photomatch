@@ -1,11 +1,5 @@
 set(test_filename tst_projectmodel.cpp)
 get_filename_component(test_name ${test_filename} NAME_WE)
-#DEFINE_TEST_NEW_PROJECT(${test} ${test_filename}
-#                                ${CMAKE_SOURCE_DIR}/src/fme/ui/NewProjectView.cpp
-#                                ${CMAKE_SOURCE_DIR}/src/fme/ui/NewProjectInterfaces.h
-#                                ${CMAKE_SOURCE_DIR}/src/fme/ui/NewProjectView.h
-#                                ${CMAKE_SOURCE_DIR}/src/fme/ui/mvp.h
-#    )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 

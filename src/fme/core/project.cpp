@@ -160,17 +160,17 @@ void Project::clear()
 
 
 
-std::mutex ProjectIO::sMutex;
+std::mutex ProjectRW::sMutex;
 
-ProjectIO::ProjectIO()
- : IProjectIO()
+ProjectRW::ProjectRW()
+ : IProjectRW()
 {
 
 }
 
-bool ProjectIO::read(const QString &file, IProject &prj)
+bool ProjectRW::read(const QString &file, IProject &prj)
 {
-  std::lock_guard<std::mutex> lck(ProjectIO::sMutex);
+  std::lock_guard<std::mutex> lck(ProjectRW::sMutex);
 
   QFile input(file);
   if (input.open(QIODevice::ReadOnly)) {
@@ -224,7 +224,7 @@ bool ProjectIO::read(const QString &file, IProject &prj)
   return false;
 }
 
-bool ProjectIO::write(const QString &file, const IProject &prj) const
+bool ProjectRW::write(const QString &file, const IProject &prj) const
 {
   QFileInfo file_info(file);
   QString tmpfile = file_info.path().append(file_info.baseName()).append(".bak");
@@ -234,7 +234,7 @@ bool ProjectIO::write(const QString &file, const IProject &prj) const
   src.close();
   dst.close();
 
-  std::lock_guard<std::mutex> lck(ProjectIO::sMutex);
+  std::lock_guard<std::mutex> lck(ProjectRW::sMutex);
 
   QFile output(file);
   output.open(QFile::WriteOnly);
@@ -282,9 +282,9 @@ bool ProjectIO::write(const QString &file, const IProject &prj) const
   return false;
 }
 
-bool ProjectIO::checkOldVersion(const QString &file) const
+bool ProjectRW::checkOldVersion(const QString &file) const
 {
-  std::lock_guard<std::mutex> lck(ProjectIO::sMutex);
+  std::lock_guard<std::mutex> lck(ProjectRW::sMutex);
   bool bUpdateVersion = false;
   QFile input(file);
   if (input.open(QIODevice::ReadOnly)) {
@@ -311,7 +311,7 @@ bool ProjectIO::checkOldVersion(const QString &file) const
   return bUpdateVersion;
 }
 
-void ProjectIO::oldVersionBak(const QString &file) const
+void ProjectRW::oldVersionBak(const QString &file) const
 {
   // Versión antigua
   QString version = "0";

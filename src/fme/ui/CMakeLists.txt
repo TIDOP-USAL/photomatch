@@ -38,6 +38,10 @@ set(FME_SRC
     ProjectModel.h
     SettingsModel.cpp
     SettingsModel.h
+    SettingsPresenter.cpp
+    SettingsPresenter.h
+    SettingsView.cpp
+    SettingsView.h
 )  
 
 if(MSVC)

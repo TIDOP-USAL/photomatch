@@ -14,9 +14,10 @@ public:
 
 private slots:
 
+  void test_defaultValues();
   void test_language_data();
   void test_language();
-
+  void test_reset();
 protected:
 
   ISettings *mSettings;
@@ -31,6 +32,12 @@ TestSettings::TestSettings()
 TestSettings::~TestSettings()
 {
 
+}
+
+void TestSettings::test_defaultValues()
+{
+  Settings settings;
+  QCOMPARE("en", settings.language());
 }
 
 void TestSettings::test_language_data()
@@ -49,6 +56,13 @@ void TestSettings::test_language()
 
   mSettings->setLanguage(value);
   QCOMPARE(result, mSettings->language());
+}
+
+void TestSettings::test_reset()
+{
+  mSettings->setLanguage("es");
+  mSettings->reset();
+  QCOMPARE("en", mSettings->language());
 }
 
 QTEST_APPLESS_MAIN(TestSettings)

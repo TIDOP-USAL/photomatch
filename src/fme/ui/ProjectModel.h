@@ -9,12 +9,6 @@
 namespace fme
 {
 
-///TODO: Interfaz IProjectModel que extienda de IProject
-///      - ProjectModel hara composición de Project y ProjectIO
-///      - Los metodos save, saveAs y load se quitaran de IProject
-///      - bUnsavedChanges se quitará de Project y se movera a ProjectModel
-///      - Cuando se establezca algún cambio en ProjectModel se emitira una señal
-
 class IProjectModel
   : public IModel,
     public IProject
@@ -90,7 +84,7 @@ class ProjectModel
 
 public:
 
-  explicit ProjectModel(IProjectIO *projectIO, IProject *project, QObject *parent = nullptr);
+  explicit ProjectModel(IProjectRW *projectIO, IProject *project, QObject *parent = nullptr);
   ~ProjectModel() override;
 
 signals:
@@ -142,7 +136,7 @@ private:
 
 protected:
 
-  IProjectIO *mProjectIO;
+  IProjectRW *mProjectIO;
   IProject *mProject;
   QString mPrjFile;
   bool bUnsavedChanges;

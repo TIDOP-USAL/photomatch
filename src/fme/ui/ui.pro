@@ -39,7 +39,9 @@ SOURCES += \
         NewProjectPresenter.cpp \
         NewProjectView.cpp \
         ProjectModel.cpp \
-        SettingsModel.cpp
+        SettingsModel.cpp \
+        SettingsPresenter.cpp \
+        SettingsView.cpp
 
 HEADERS += \
         MainWindowView.h \
@@ -50,7 +52,9 @@ HEADERS += \
         NewProjectPresenter.h \
         NewProjectView.h \
         ProjectModel.h \
-        SettingsModel.h
+        SettingsModel.h \
+        SettingsPresenter.h \
+        SettingsView.h
 
 FORMS += \
         MainWindowView.ui

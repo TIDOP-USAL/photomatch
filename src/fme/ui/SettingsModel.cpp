@@ -7,10 +7,12 @@
 namespace fme
 {
 
-SettingsModel::SettingsModel(ISettings *settings, QObject *parent)
+SettingsModel::SettingsModel(ISettings *settings,
+                             ISettingsRW *settingsRW,
+                             QObject *parent)
   : ISettingsModel(parent),
     mSettings(settings),
-    mSettingsRW(nullptr),
+    mSettingsRW(settingsRW),
     bUnsavedChanges(false)
 {
   init();
@@ -18,10 +20,6 @@ SettingsModel::SettingsModel(ISettings *settings, QObject *parent)
 
 SettingsModel::~SettingsModel()
 {
-  if (mSettingsRW){
-    delete mSettingsRW;
-    mSettingsRW = nullptr;
-  }
 }
 
 QString SettingsModel::language() const
@@ -35,24 +33,24 @@ void SettingsModel::setLanguage(const QString &language)
   bUnsavedChanges = true;
 }
 
+void SettingsModel::reset()
+{
+  mSettings->reset();
+  bUnsavedChanges = false;
+}
+
 void SettingsModel::init()
 {
-  mSettingsRW = new QSettings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "FME");
-
-  read();
 }
 
 void SettingsModel::read()
 {
-  QString lang = QLocale::system().name();
-  lang.truncate(lang.lastIndexOf('_'));
-  mSettings->setLanguage(mSettingsRW->value("lang", lang).toString());
+  mSettingsRW->read(*mSettings);
 }
 
 void SettingsModel::write()
 {
-  mSettingsRW->setValue("lang", mSettings->language());
-
+  mSettingsRW->write(*mSettings);
   bUnsavedChanges = false;
 }
 

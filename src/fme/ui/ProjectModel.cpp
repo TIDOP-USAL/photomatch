@@ -5,7 +5,7 @@
 namespace fme
 {
 
-ProjectModel::ProjectModel(IProjectIO *projectIO, IProject *project, QObject *parent)
+ProjectModel::ProjectModel(IProjectRW *projectIO, IProject *project, QObject *parent)
   : IProjectModel(parent),
     mProjectIO(projectIO),
     mProject(project),
