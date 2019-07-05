@@ -59,6 +59,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultValues();
   void test_language();
+  void test_languages();
   void test_reset();
 
 protected:
@@ -111,24 +112,27 @@ void TestSettingsModel::test_defaultValues()
   SettingsModel settingsModel(&settings, &rw);
 
   QCOMPARE("en", settingsModel.language());
-  QCOMPARE(false, settingsModel.checkUnsavedChanges());
 }
 
 void TestSettingsModel::test_language()
 {
-  QCOMPARE(false, mSettingsModel->checkUnsavedChanges());
   QCOMPARE("en", mSettingsModel->language());
 
   mSettingsModel->setLanguage("es");
   QCOMPARE("es", mSettingsModel->language());
-  QCOMPARE(true, mSettingsModel->checkUnsavedChanges());
+}
+
+void TestSettingsModel::test_languages()
+{
+  /// Sólo se chequea el valor por defecto (si no existen ficheros de idioma)
+  QStringList languages = mSettingsModel->languages();
+  QCOMPARE("fme_en.qm", languages[0]);
 }
 
 void TestSettingsModel::test_reset()
 {
   mSettingsModel->reset();
   QCOMPARE("en", mSettingsModel->language());
-  QCOMPARE(false, mSettingsModel->checkUnsavedChanges());
 }
 
 QTEST_MAIN(TestSettingsModel)

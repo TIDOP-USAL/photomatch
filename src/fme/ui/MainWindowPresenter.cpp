@@ -39,14 +39,14 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   /* Menú Archivo */
 
-  connect(mView, SIGNAL(openNew()),                this, SLOT(openNew()));
-  connect(mView, SIGNAL(openProject()),            this, SLOT(openProject()));
-  connect(mView, SIGNAL(openFromHistory(QString)), this, SLOT(openFromHistory(QString)));  ///TODO: falta test señal
-  connect(mView, SIGNAL(clearHistory()),           this, SLOT(deleteHistory()));
-  connect(mView, SIGNAL(saveProject()),            this, SLOT(saveProject()));
-  connect(mView, SIGNAL(saveProjectAs()),          this, SLOT(saveProjectAs()));
-  connect(mView, SIGNAL(closeProject()),           this, SLOT(closeProject()));
-  connect(mView, SIGNAL(exit()),                   this, SLOT(exit()));
+  connect(mView, SIGNAL(openNew()),                       this, SLOT(openNew()));
+  connect(mView, SIGNAL(openProject()),                   this, SLOT(openProject()));
+  connect(mView, SIGNAL(openProjectFromHistory(QString)), this, SLOT(openFromHistory(QString)));  ///TODO: falta test señal
+  connect(mView, SIGNAL(clearHistory()),                  this, SLOT(deleteHistory()));
+  connect(mView, SIGNAL(saveProject()),                   this, SLOT(saveProject()));
+  connect(mView, SIGNAL(saveProjectAs()),                 this, SLOT(saveProjectAs()));
+  connect(mView, SIGNAL(closeProject()),                  this, SLOT(closeProject()));
+  connect(mView, SIGNAL(exit()),                          this, SLOT(exit()));
 
   /* Menú View */
 

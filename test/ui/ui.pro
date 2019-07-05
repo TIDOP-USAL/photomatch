@@ -4,4 +4,5 @@ SUBDIRS += \
     mainwindowview \
     projectmodel \
     newprojectview \
-    settingsmodel
+    settingsmodel \
+    settingsview

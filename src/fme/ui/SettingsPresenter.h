@@ -13,6 +13,25 @@ namespace fme
 class ISettingsView;
 class ISettingsModel;
 
+class IAgastWidget;
+class IAkazeWidget;
+class IBriefWidget;
+class IBriskWidget;
+class IDaisyWidget;
+class IFastWidget;
+class IFreakWidget;
+class IGfttWidget;
+class IHogWidget;
+class IKazeWidget;
+class ILatchWidget;
+class ILucidWidget;
+class IMsdWidget;
+class IMserWidget;
+class IOrbWidget;
+class ISiftWidget;
+class IStarWidget;
+class ISurfWidget;
+
 class ISettingsPresenter
   : public IPresenter
 {
@@ -27,8 +46,20 @@ signals:
 
 private slots:
 
+  /*!
+   * \brief Establece el idioma de la aplicación
+   * \param[in] language
+   */
+  virtual void setLanguage(const QString &language) = 0;
+
+  /*!
+   * \brief save
+   */
   virtual void save() = 0;
 
+  /*!
+   * \brief discart
+   */
   virtual void discart() = 0;
 };
 
@@ -40,7 +71,7 @@ class SettingsPresenter
 public:
 
   SettingsPresenter(ISettingsView *view, ISettingsModel *model);
-  ~SettingsPresenter() override {}
+  ~SettingsPresenter() override;
 
 // IPresenter interface
 
@@ -57,6 +88,7 @@ private:
 
 private slots:
 
+  void setLanguage(const QString &language) override;
   void save() override;
   void discart() override;
 
@@ -64,6 +96,29 @@ protected:
 
   ISettingsView *mView;
   ISettingsModel *mModel;
+
+  /* Detectores/descriptores */
+
+  IAgastWidget *mAgast;
+  IAkazeWidget *mAkaze;
+  IBriefWidget *mBrief;
+  IBriskWidget *mBrisk;
+  IDaisyWidget *mDaisy;
+  IFastWidget *mFast;
+  IFreakWidget *mFreak;
+  IGfttWidget *mGftt;
+  IHogWidget *mHog;
+  IKazeWidget *mKaze;
+  ILatchWidget *mLatch;
+  ILucidWidget *mLucid;
+  IMsdWidget *mMsd;
+  IMserWidget *mMser;
+  IOrbWidget *mOrb;
+  ISiftWidget *mSift;
+  IStarWidget *mStar;
+  ISurfWidget *mSurf;
+
+  std::map<QString, QString> mLang;
 
 };
 

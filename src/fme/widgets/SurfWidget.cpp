@@ -134,8 +134,6 @@ void SurfWidget::init()
   mRotatedFeatures->setText(tr("Rotated Features"));
   propertiesLayout->addWidget(mRotatedFeatures, 4, 0);
 
-
-
   reset(); /// set default values
 
   update();

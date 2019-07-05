@@ -81,6 +81,7 @@ target_link_libraries(${PROJECT_NAME}
                       Qt5::Core
                       Qt5::Widgets
                       libcore
+                      libwidgets
 #                      ${OpenCV_LIBS}
 #                      ${Boost_SYSTEM_LIBRARY}
 #                      ${Boost_THREAD_LIBRARY}

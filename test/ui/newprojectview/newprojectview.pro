@@ -4,8 +4,6 @@ CONFIG += qt warn_on depend_includepath testcase
 
 TEMPLATE = app
 
-
-
 SOURCES +=  tst_newprojectview.cpp \
     ../../../src/fme/ui/NewProjectView.cpp
 

@@ -3,6 +3,13 @@
 
 #include "mvp.h"
 
+class QListWidget;
+class QStackedWidget;
+class QComboBox;
+class QDialogButtonBox;
+class QTabWidget;
+class QGridLayout;
+
 namespace fme
 {
 
@@ -19,11 +26,16 @@ public:
 
   virtual void setLanguages(const QStringList &languages) = 0;
   virtual void setActiveLanguage(const QString &language) = 0;
+  virtual void addFeatureDetectorMethod(QWidget *detector) = 0;
+
+public slots:
+
+  virtual void setUnsavedChanges(bool unsaveChanges) = 0;
 
 signals:
 
   void languageChange(QString);
-
+  void applyChanges();
 
 };
 
@@ -36,6 +48,10 @@ public:
 
   SettingsView(QWidget *parent = nullptr);
   ~SettingsView() override;
+
+protected slots:
+
+  void onFeatureDetectorDescriptorChange(const QString &method);
 
 // IDialogView interface
 
@@ -57,6 +73,25 @@ public:
 
   void setLanguages(const QStringList &languages) override;
   void setActiveLanguage(const QString &language) override;
+  void addFeatureDetectorMethod(QWidget *detector) override;
+
+public slots:
+
+  void setUnsavedChanges(bool unsaveChanges) override;
+
+protected:
+
+  QListWidget *mListWidget;
+  QStackedWidget *mStackedWidget;
+  QComboBox *mLanguages;
+  QTabWidget *mTabWidgetTools;
+  QGridLayout *mGridLayoutFeatures;
+
+  QListWidget *mListWidgetPreprocess;
+  QListWidget *mListWidgetFeatures;
+  QListWidget *mListWidgetMatching;
+  QDialogButtonBox *mButtonBox;
+  bool bUnsaveChanges;
 };
 
 } // namespace fme
