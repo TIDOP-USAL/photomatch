@@ -1,18 +1,18 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/CLAHEWidget.h"
+#include "fme/widgets/ClaheWidget.h"
 
 using namespace fme;
 
-class TestCLAHEWidget : public QObject
+class TestClaheWidget : public QObject
 {
   Q_OBJECT
 
 public:
 
-  TestCLAHEWidget();
-  ~TestCLAHEWidget();
+  TestClaheWidget();
+  ~TestClaheWidget();
 
 private slots:
 
@@ -28,46 +28,46 @@ private slots:
 
 private:
 
-  ICLAHEWidget *mCLAHEWidget;
+  IClaheWidget *mClaheWidget;
 };
 
-TestCLAHEWidget::TestCLAHEWidget()
-  : mCLAHEWidget(new CLAHEWidget)
+TestClaheWidget::TestClaheWidget()
+  : mClaheWidget(new ClaheWidget)
 {
 
 }
 
-TestCLAHEWidget::~TestCLAHEWidget()
+TestClaheWidget::~TestClaheWidget()
 {
-  if (mCLAHEWidget){
-    delete mCLAHEWidget;
-    mCLAHEWidget = nullptr;
+  if (mClaheWidget){
+    delete mClaheWidget;
+    mClaheWidget = nullptr;
   }
 }
 
-void TestCLAHEWidget::initTestCase()
+void TestClaheWidget::initTestCase()
 {
 
 }
 
-void TestCLAHEWidget::cleanupTestCase()
+void TestClaheWidget::cleanupTestCase()
 {
 
 }
 
-void TestCLAHEWidget::testDefaultConstructor()
+void TestClaheWidget::testDefaultConstructor()
 {
   /// Check default values
-  QCOMPARE(40.0, mCLAHEWidget->clipLimit());
-  QCOMPARE(QSize(8, 8), mCLAHEWidget->tileGridSize());
+  QCOMPARE(40.0, mClaheWidget->clipLimit());
+  QCOMPARE(QSize(8, 8), mClaheWidget->tileGridSize());
 }
 
-void TestCLAHEWidget::test_windowTitle()
+void TestClaheWidget::test_windowTitle()
 {
-  QCOMPARE("CLAHE", mCLAHEWidget->windowTitle());
+  QCOMPARE("CLAHE", mClaheWidget->windowTitle());
 }
 
-void TestCLAHEWidget::test_clipLimit_data()
+void TestClaheWidget::test_clipLimit_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -78,16 +78,16 @@ void TestCLAHEWidget::test_clipLimit_data()
   QTest::newRow("Out of range value") << 101. << 100.;
 }
 
-void TestCLAHEWidget::test_clipLimit()
+void TestClaheWidget::test_clipLimit()
 {
   QFETCH(double, value);
   QFETCH(double, result);
 
-  mCLAHEWidget->setClipLimit(value);
-  QCOMPARE(result, mCLAHEWidget->clipLimit());
+  mClaheWidget->setClipLimit(value);
+  QCOMPARE(result, mClaheWidget->clipLimit());
 }
 
-void TestCLAHEWidget::test_tilesGridSize_data()
+void TestClaheWidget::test_tilesGridSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -98,27 +98,27 @@ void TestCLAHEWidget::test_tilesGridSize_data()
   QTest::newRow("Out of range value y") << QSize(50, 101) << QSize(50, 100);
 }
 
-void TestCLAHEWidget::test_tilesGridSize()
+void TestClaheWidget::test_tilesGridSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
 
-  mCLAHEWidget->setTilesGridSize(value);
-  QCOMPARE(result, mCLAHEWidget->tileGridSize());
+  mClaheWidget->setTilesGridSize(value);
+  QCOMPARE(result, mClaheWidget->tileGridSize());
 }
 
-void TestCLAHEWidget::test_reset()
+void TestClaheWidget::test_reset()
 {
-  mCLAHEWidget->setClipLimit(50.);
-  mCLAHEWidget->setTilesGridSize(QSize(5, 5));
+  mClaheWidget->setClipLimit(50.);
+  mClaheWidget->setTilesGridSize(QSize(5, 5));
 
-  mCLAHEWidget->reset();
+  mClaheWidget->reset();
 
-  QCOMPARE(40.0, mCLAHEWidget->clipLimit());
-  QCOMPARE(QSize(8, 8), mCLAHEWidget->tileGridSize());
+  QCOMPARE(40.0, mClaheWidget->clipLimit());
+  QCOMPARE(QSize(8, 8), mClaheWidget->tileGridSize());
 }
 
 
-QTEST_MAIN(TestCLAHEWidget)
+QTEST_MAIN(TestClaheWidget)
 
 #include "tst_clahewidget.moc"

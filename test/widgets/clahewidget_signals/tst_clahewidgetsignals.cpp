@@ -1,20 +1,20 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/CLAHEWidget.h"
+#include "fme/widgets/ClaheWidget.h"
 
 #include <QSpinBox>
 
 using namespace fme;
 
 
-class TestCLAHEWidgetSignals : public CLAHEWidget
+class TestClaheWidgetSignals : public ClaheWidget
 {
   Q_OBJECT
 
 public:
-  TestCLAHEWidgetSignals();
-  ~TestCLAHEWidgetSignals();
+  TestClaheWidgetSignals();
+  ~TestClaheWidgetSignals();
 
 private slots:
   void initTestCase();
@@ -25,30 +25,30 @@ private slots:
 
 };
 
-TestCLAHEWidgetSignals::TestCLAHEWidgetSignals()
-  : CLAHEWidget()
+TestClaheWidgetSignals::TestClaheWidgetSignals()
+  : ClaheWidget()
 {
 
 }
 
-TestCLAHEWidgetSignals::~TestCLAHEWidgetSignals()
+TestClaheWidgetSignals::~TestClaheWidgetSignals()
 {
 
 }
 
-void TestCLAHEWidgetSignals::initTestCase()
+void TestClaheWidgetSignals::initTestCase()
 {
 
 }
 
-void TestCLAHEWidgetSignals::cleanupTestCase()
+void TestClaheWidgetSignals::cleanupTestCase()
 {
 
 }
 
-void TestCLAHEWidgetSignals::testClipLimitChange()
+void TestClaheWidgetSignals::testClipLimitChange()
 {
-  QSignalSpy spyClipLimitChange(this, &CLAHEWidget::clipLimitChange);
+  QSignalSpy spyClipLimitChange(this, &ClaheWidget::clipLimitChange);
 
   this->mClipLimit->setValue(50.);
 
@@ -61,9 +61,9 @@ void TestCLAHEWidgetSignals::testClipLimitChange()
   QCOMPARE(spyClipLimitChange.count(), 0);
 }
 
-void TestCLAHEWidgetSignals::testTilesGridSizeChange()
+void TestClaheWidgetSignals::testTilesGridSizeChange()
 {
-  QSignalSpy spyTilesGridSizeChange(this, &CLAHEWidget::tileGridSizeChange);
+  QSignalSpy spyTilesGridSizeChange(this, &ClaheWidget::tileGridSizeChange);
 
   this->mTilesGridX->setValue(10);
   //this->mTilesGridY->setValue(10);
@@ -77,10 +77,10 @@ void TestCLAHEWidgetSignals::testTilesGridSizeChange()
   QCOMPARE(spyTilesGridSizeChange.count(), 0);
 }
 
-void TestCLAHEWidgetSignals::testReset()
+void TestClaheWidgetSignals::testReset()
 {
-  QSignalSpy spyClipLimitChange(this, &CLAHEWidget::clipLimitChange);
-  QSignalSpy spyTilesGridSizeChange(this, &CLAHEWidget::tileGridSizeChange);
+  QSignalSpy spyClipLimitChange(this, &ClaheWidget::clipLimitChange);
+  QSignalSpy spyTilesGridSizeChange(this, &ClaheWidget::tileGridSizeChange);
 
   this->setClipLimit(30.);
   this->setTilesGridSize(QSize(5, 7));
@@ -91,6 +91,6 @@ void TestCLAHEWidgetSignals::testReset()
   QCOMPARE(spyTilesGridSizeChange.count(), 0);
 }
 
-QTEST_MAIN(TestCLAHEWidgetSignals)
+QTEST_MAIN(TestClaheWidgetSignals)
 
 #include "tst_clahewidgetsignals.moc"

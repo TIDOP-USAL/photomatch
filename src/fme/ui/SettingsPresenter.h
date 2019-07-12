@@ -15,7 +15,7 @@ class ISettingsModel;
 
 /* Image preprocess */
 class IAcebsfWidget;
-class ICLAHEWidget;
+class IClaheWidget;
 class ICmbfheWidget;
 class IDheWidget;
 class IFaheWidget;
@@ -115,7 +115,7 @@ protected:
   /* Image preprocess */
 
   //IAcebsfWidget *mACEBS;
-  //ICLAHEWidget *mCLAHE;
+  //IClaheWidget *mCLAHE;
   //ICmbfheWidget *mCMBFHE;
   //IDheWidget *mDHE;
   IFaheWidget *mFAHE;

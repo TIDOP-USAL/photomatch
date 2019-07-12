@@ -18,7 +18,7 @@ class IProjectModel;
 class ISettingsModel;
 
 class IAcebsfWidget;
-class ICLAHEWidget;
+class IClaheWidget;
 class ICmbfheWidget;
 class IDheWidget;
 class IFaheWidget;
@@ -88,7 +88,7 @@ protected:
   ISettingsModel *mSettingsModel;
 
   IAcebsfWidget *mACEBS;
-  ICLAHEWidget *mCLAHE;
+  IClaheWidget *mCLAHE;
   ICmbfheWidget *mCMBFHE;
   IDheWidget *mDHE;
   IFaheWidget *mFAHE;

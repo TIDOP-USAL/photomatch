@@ -5,7 +5,7 @@
 
 /* Image preprocess */
 //#include "fme/widgets/AcebsfWidget.h"
-//#include "fme/widgets/CLAHEWidget.h"
+//#include "fme/widgets/ClaheWidget.h"
 //#include "fme/widgets/CmbfheWidget.h"
 //#include "fme/widgets/CmbfheWidget.h"
 //#include "fme/widgets/DheWidget.h"
@@ -49,7 +49,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mModel(model),
     /*mHelp(nullptr),*/
     //mACEBS(new AcebsfWidget),
-    //mCLAHE(new CLAHEWidget),
+    //mCLAHE(new ClaheWidget),
     //mCMBFHE(new CmbfheWidget),
     //mDHE(new DheWidget),
     mFAHE(new FaheWidget),

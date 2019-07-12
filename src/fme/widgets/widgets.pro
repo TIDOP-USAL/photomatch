@@ -41,7 +41,7 @@ SOURCES += \
     AkazeWidget.cpp \
     BriefWidget.cpp \
     BriskWidget.cpp \
-    CLAHEWidget.cpp \
+    CLaheWidget.cpp \
     CmbfheWidget.cpp \
     DaisyWidget.cpp \
     DescriptorMatcherWidget.cpp \
@@ -76,7 +76,7 @@ HEADERS += ../fme_global.h \
     AkazeWidget.h \
     BriefWidget.h \
     BriskWidget.h \
-    CLAHEWidget.h \
+    CLaheWidget.h \
     CmbfheWidget.h \
     DaisyWidget.h \
     DescriptorMatcherWidget.h \

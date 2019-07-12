@@ -46,7 +46,7 @@ private slots:
 private:
 
   IAcebsfWidget *mACEBS;
-  ICLAHEWidget *mCLAHE;
+  IClaheWidget *mCLAHE;
   ICmbfheWidget *mCMBFHE;
   IDheWidget *mDHE;
   IFaheWidget *mFAHE;
@@ -62,7 +62,7 @@ private:
 TestPreprocessView::TestPreprocessView()
   : PreprocessView(),
     mACEBS(new AcebsfWidget),
-    mCLAHE(new CLAHEWidget),
+    mCLAHE(new ClaheWidget),
     mCMBFHE(new CmbfheWidget),
     mDHE(new DheWidget),
     mFAHE(new FaheWidget),

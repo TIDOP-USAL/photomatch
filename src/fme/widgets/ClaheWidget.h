@@ -14,15 +14,15 @@ namespace fme
  * Equalizes the histogram of a grayscale image using Contrast Limited
  * Adaptive Histogram Equalization.
  */
-class FME_EXPORT ICLAHEWidget
+class FME_EXPORT IClaheWidget
   : public FmeWidget
 {
   Q_OBJECT
 
 public:
 
-  ICLAHEWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
-  virtual ~ICLAHEWidget() {}
+  IClaheWidget(QWidget *parent = nullptr) : FmeWidget(parent){}
+  virtual ~IClaheWidget() {}
 
   virtual double clipLimit() const = 0;
   virtual QSize tileGridSize() const = 0;
@@ -40,15 +40,15 @@ public slots:
 };
 
 
-class FME_EXPORT CLAHEWidget
-  : public ICLAHEWidget
+class FME_EXPORT ClaheWidget
+  : public IClaheWidget
 {
   Q_OBJECT
 
 public:
 
-  CLAHEWidget(QWidget *parent = nullptr);
-  ~CLAHEWidget() override;
+  ClaheWidget(QWidget *parent = nullptr);
+  ~ClaheWidget() override;
 
 protected slots:
 

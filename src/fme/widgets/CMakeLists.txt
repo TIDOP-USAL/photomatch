@@ -9,8 +9,8 @@ add_library(libwidgets ${LIB_TYPE}
             BriefWidget.h
             BriskWidget.cpp
             BriskWidget.h
-            CLAHEWidget.cpp
-            CLAHEWidget.h
+            CLaheWidget.cpp
+            CLaheWidget.h
             CmbfheWidget.cpp
             CmbfheWidget.h
             DaisyWidget.cpp

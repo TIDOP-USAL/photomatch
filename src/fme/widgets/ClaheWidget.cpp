@@ -1,4 +1,4 @@
-#include "CLAHEWidget.h"
+#include "ClaheWidget.h"
 
 #include <QSpinBox>
 #include <QGridLayout>
@@ -8,8 +8,8 @@
 namespace fme
 {
 
-CLAHEWidget::CLAHEWidget(QWidget *parent)
-  : ICLAHEWidget(parent),
+ClaheWidget::ClaheWidget(QWidget *parent)
+  : IClaheWidget(parent),
     mClipLimit(new QDoubleSpinBox(this)),
     mTilesGridX(new QSpinBox(this)),
     mTilesGridY(new QSpinBox(this))
@@ -23,38 +23,38 @@ CLAHEWidget::CLAHEWidget(QWidget *parent)
 
 }
 
-CLAHEWidget::~CLAHEWidget()
+ClaheWidget::~ClaheWidget()
 {
 
 }
 
-void CLAHEWidget::onTilesGridXChange(int gx)
+void ClaheWidget::onTilesGridXChange(int gx)
 {
   emit tileGridSizeChange(QSize(gx, mTilesGridY->value()));
 }
 
-void CLAHEWidget::onTilesGridYChange(int gy)
+void ClaheWidget::onTilesGridYChange(int gy)
 {
   emit tileGridSizeChange(QSize(mTilesGridX->value(), gy));
 }
 
-double CLAHEWidget::clipLimit() const
+double ClaheWidget::clipLimit() const
 {
   return mClipLimit->value();
 }
 
-QSize CLAHEWidget::tileGridSize() const
+QSize ClaheWidget::tileGridSize() const
 {
   return QSize(mTilesGridX->value(), mTilesGridY->value());
 }
 
-void CLAHEWidget::setClipLimit(double clipLimit)
+void ClaheWidget::setClipLimit(double clipLimit)
 {
   const QSignalBlocker blockerClipLimit(mClipLimit);
   mClipLimit->setValue(clipLimit);
 }
 
-void CLAHEWidget::setTilesGridSize(const QSize &tileGridSize)
+void ClaheWidget::setTilesGridSize(const QSize &tileGridSize)
 {
   const QSignalBlocker blockerTilesGridX(mTilesGridX);
   const QSignalBlocker blockerTilesGridY(mTilesGridY);
@@ -63,11 +63,11 @@ void CLAHEWidget::setTilesGridSize(const QSize &tileGridSize)
 
 }
 
-void CLAHEWidget::update()
+void ClaheWidget::update()
 {
 }
 
-void CLAHEWidget::reset()
+void ClaheWidget::reset()
 {
   const QSignalBlocker blockerClipLimit(mClipLimit);
   const QSignalBlocker blockerTilesGridX(mTilesGridX);
@@ -78,7 +78,7 @@ void CLAHEWidget::reset()
   mTilesGridY->setValue(8);
 }
 
-void CLAHEWidget::init()
+void ClaheWidget::init()
 {
   this->setWindowTitle("CLAHE");
 
