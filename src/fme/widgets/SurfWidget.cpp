@@ -113,7 +113,7 @@ void SurfWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("SURF Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Hessian Threshold:")), 0, 0);

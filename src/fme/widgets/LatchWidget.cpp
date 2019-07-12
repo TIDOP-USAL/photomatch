@@ -81,13 +81,13 @@ void LatchWidget::init()
   this->setWindowTitle("LATCH");
 
   QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
+  layout->setContentsMargins(0, 0, 0, 0);
   this->setLayout(layout);
 
   QGroupBox *mGroupBox = new QGroupBox(tr("LATCH Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Descriptor Bytes:")), 0, 0);

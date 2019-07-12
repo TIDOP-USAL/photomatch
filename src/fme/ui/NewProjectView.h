@@ -1,7 +1,7 @@
 #ifndef FME_NEW_PROJECT_VIEW_H
 #define FME_NEW_PROJECT_VIEW_H
 
-#include "NewProjectInterfaces.h"
+#include "fme/ui/mvp.h"
 
 class QLineEdit;
 class QCheckBox;
@@ -11,6 +11,52 @@ class QPushButton;
 
 namespace fme
 {
+
+/*!
+ * \brief INewProjectView
+ */
+class INewProjectView
+  : public IDialogView
+{
+
+  Q_OBJECT
+
+public:
+
+  INewProjectView(QWidget *parent) : IDialogView(parent) {}
+  virtual ~INewProjectView() {}
+
+  /*!
+   * \brief Devuelve el nombre del proyecto
+   * \return Nombre del proyecto
+   */
+  virtual QString projectName() const = 0;
+
+  /*!
+   * \brief Devuelve la ruta del proyecto
+   * \return Ruta del proyecto
+   */
+  virtual QString projectPath() const = 0;
+
+  /*!
+   * \brief Establece la ruta del proyecto
+   * \param path Ruta del proyecto
+   */
+  virtual void setProjectPath(const QString &path) = 0;
+
+  /*!
+   * \brief Devuelve la descripción del proyecto
+   * \return Descripción del proyecto
+   */
+  virtual QString projectDescription() const = 0;
+
+  virtual bool createProjectFolder() const = 0;
+
+protected slots:
+
+  virtual void onClickButtonSelectPath() = 0;
+
+};
 
 class NewProjectView 
   : public INewProjectView

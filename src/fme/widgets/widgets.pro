@@ -66,7 +66,8 @@ SOURCES += \
     StarWidget.cpp \
     SurfWidget.cpp \
     WallisWidget.cpp \
-    RswheWidget.cpp
+    RswheWidget.cpp \ 
+    ThumbnailsWidget.cpp
 
 
 HEADERS += ../fme_global.h \
@@ -101,7 +102,8 @@ HEADERS += ../fme_global.h \
     StarWidget.h \
     SurfWidget.h \
     WallisWidget.h \
-    RswheWidget.h
+    RswheWidget.h \ 
+    ThumbnailsWidget.h
 
 unix {
     target.path = /usr/lib

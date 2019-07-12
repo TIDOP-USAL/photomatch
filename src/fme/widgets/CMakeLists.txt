@@ -61,7 +61,9 @@ add_library(libwidgets ${LIB_TYPE}
             SurfWidget.cpp
             SurfWidget.h
             WallisWidget.cpp
-            WallisWidget.h)
+            WallisWidget.h
+            ThumbnailsWidget.cpp
+            ThumbnailsWidget.h)
 
 set_property(TARGET libwidgets PROPERTY FOLDER "lib")
 

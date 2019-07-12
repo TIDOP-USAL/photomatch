@@ -87,8 +87,8 @@ add_library(libprocess ${LIB_TYPE}
             ImagePreprocessing/MaryKim2008_Process.h
             ImagePreprocessing/WadudKabirDewanChae2007_Process.cpp
             ImagePreprocessing/WadudKabirDewanChae2007_Process.h
-            ImagePreprocessing/FAHE2006_Process.cpp
-            ImagePreprocessing/FAHE2006_Process.h
+            ImagePreprocessing/FaheProcess.cpp
+            ImagePreprocessing/FaheProcess.h
             ImagePreprocessing/LambertiMontrucchioSanna2006_Process.cpp
             ImagePreprocessing/LambertiMontrucchioSanna2006_Process.h
             ImagePreprocessing/YuBajaj2004_Process.cpp

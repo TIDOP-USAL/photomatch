@@ -82,8 +82,7 @@ void MsrcpWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("MSRCP Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("MultiScale Retinex with Chromaticity Preservation"), this);
   lbl->setWordWrap(true);

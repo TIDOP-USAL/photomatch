@@ -98,7 +98,7 @@ void FreakWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("FREAK Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   mOrientationNormalized->setText(tr("Orientation Normalization"));

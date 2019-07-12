@@ -74,8 +74,7 @@ void LceBsescsWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("LCE-BSESCS Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Local Contrast Enhancement Utilizing "
                            "Bidirectional Switching Equalization of "

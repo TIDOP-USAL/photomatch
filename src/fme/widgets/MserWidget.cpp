@@ -182,7 +182,7 @@ void MserWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("MSER Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Delta:")), 0, 0);

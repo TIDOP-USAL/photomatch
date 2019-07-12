@@ -27,6 +27,10 @@ private slots:
   void test_languageChange();
   void test_dialogButtonBox();
   void test_setUnsavedChanges();
+  void test_onFeatureDetectorDescriptorChange();
+  void test_addFeatureDetectorMethod();
+  void test_onPreprocessChange();
+  void test_addPreprocess();
 
 private:
 
@@ -50,6 +54,8 @@ void TestSettingsView::initTestCase()
   list.push_back("English");
   list.push_back("Spanish");
   this->setLanguages(list);
+
+
 }
 
 void TestSettingsView::cleanupTestCase()
@@ -118,6 +124,26 @@ void TestSettingsView::test_setUnsavedChanges()
 
   this->setUnsavedChanges(false);
   QCOMPARE(false, mButtonBox->button(QDialogButtonBox::Apply)->isEnabled());
+}
+
+void TestSettingsView::test_onFeatureDetectorDescriptorChange()
+{
+  ///TODO: completar test
+}
+
+void TestSettingsView::test_addFeatureDetectorMethod()
+{
+  ///TODO: completar test
+}
+
+void TestSettingsView::test_onPreprocessChange()
+{
+  ///TODO: completar test
+}
+
+void TestSettingsView::test_addPreprocess()
+{
+  ///TODO: completar test
 }
 
 QTEST_MAIN(TestSettingsView)

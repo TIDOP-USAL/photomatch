@@ -148,7 +148,7 @@ void AkazeWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("AKAZE Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Descriptor Type:")), 0, 0);

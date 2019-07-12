@@ -1,7 +1,7 @@
 #include "NewProjectPresenter.h"
 
-#include "ProjectModel.h"
-#include "NewProjectView.h"
+#include "fme/ui/ProjectModel.h"
+#include "fme/ui/NewProjectView.h"
 //#include "ui/help.h"
 
 #include <QStandardPaths>
@@ -24,6 +24,10 @@ NewProjectPresenter::NewProjectPresenter(INewProjectView *view, IProjectModel *m
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
+NewProjectPresenter::~NewProjectPresenter()
+{
+}
+
 /* public slots */
 
 void NewProjectPresenter::help()
@@ -33,10 +37,6 @@ void NewProjectPresenter::help()
 //    mHelp->setModal(true);
 //    mHelp->showMaximized();
 //  }
-}
-
-NewProjectPresenter::~NewProjectPresenter()
-{
 }
 
 // INewProjectPresenter interface

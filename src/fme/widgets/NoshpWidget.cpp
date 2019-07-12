@@ -74,8 +74,7 @@ void NoshpWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("NOSHP Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Non-Overlapped Sub-blocks and local Histogram Projection"), this);
   lbl->setWordWrap(true);

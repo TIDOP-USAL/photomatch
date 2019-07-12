@@ -10,6 +10,7 @@
 #include <QString>
 
 #include "fme/core/image.h"
+#include "fme/core/session.h"
 
 namespace fme
 {
@@ -24,6 +25,8 @@ public:
 
   typedef std::vector<std::shared_ptr<Image>>::iterator image_iterator;
   typedef std::vector<std::shared_ptr<Image>>::const_iterator image_const_iterator;
+  typedef std::vector<std::shared_ptr<Session>>::iterator session_iterator;
+  typedef std::vector<std::shared_ptr<Session>>::const_iterator session_const_iterator;
 
 public:
 
@@ -143,6 +146,97 @@ public:
   virtual size_t imagesCount() const = 0;
 
   /*!
+   * \brief Añade una sesión
+   * \param[in] name Nombre de la sesión
+   * \param[in] description Descripción de la sesión
+   */
+  virtual void addSession(const QString &name, const QString &description) = 0;
+
+  /*!
+   * \brief Añade una sesión
+   * \param[in] session Sesión
+   */
+  virtual void addSession(const std::shared_ptr<Session> &session) = 0;
+
+  /*!
+   * \brief Borra una sesión
+   * \param[in] nameSession Nombre de la sesión
+   */
+  virtual void deleteSession(const QString &nameSession) = 0;
+
+  /*!
+   * \brief Borra una sesión
+   * \param[in] sessionId Identificador de la sesión
+   */
+  virtual void deleteSession(size_t sessionId) = 0;
+
+  /*!
+   * \brief Busca una sesión en el proyecto
+   * \param[in] sessionName Nombre de la sesión
+   * \return
+   */
+  virtual std::shared_ptr<Session> findSession(const QString &sessionName) = 0;
+
+  /*!
+   * \brief Busca una sesión en el proyecto
+   * \param[in] sessionName Nombre de la sesión
+   * \return
+   */
+  virtual const std::shared_ptr<Session> findSession(const QString &sessionName) const = 0;
+
+  /*!
+   * \brief Busca el identificador de una sesión en el proyecto
+   * \param[in] sessionName Nombre de la sesión
+   * \return
+   */
+  virtual size_t findSessionId(const QString &sessionName) = 0;
+
+  /*!
+   * \brief Busca el identificador de una sesión en el proyecto
+   * \param[in] sessionName Nombre de la sesión
+   * \return
+   */
+  virtual size_t findSessionId(const QString &sessionName) const = 0;
+
+  /*!
+   * \brief Devuelve un iterador al inicio del listado de sessiones
+   * \return Iterador al primer elemento del listado de sessiones
+   */
+  virtual session_iterator sessionBegin() = 0;
+
+  /*!
+   * \brief Devuelve un iterador constante al inicio del listado de sessiones
+   * \return Iterador al primer elemento del listado de sessiones
+   */
+  virtual session_const_iterator sessionBegin() const = 0;
+
+  /*!
+   * \brief Devuelve un iterador al siguiente elemento después después de la última sesión
+   * Este elemento actúa como un marcador de posición, intentar acceder a él
+   * resulta en un comportamiento no definido
+   * \return Iterador al siguiente elemento después de la última sesión
+   */
+  virtual session_iterator sessionEnd() = 0;
+
+  /*!
+   * \brief Devuelve un iterador constante al siguiente elemento después de la última sesión
+   * Este elemento actúa como un marcador de posición, intentar acceder a él
+   * resulta en un comportamiento no definido
+   * \return Iterador constante al siguiente elemento después de la última sesión
+   */
+  virtual session_const_iterator sessionEnd() const = 0;
+
+  /*!
+   * \brief Número de sesiones del proyecto
+   * \return
+   */
+  virtual size_t sessionCount() const = 0;
+
+  virtual std::shared_ptr<Session> currentSession() = 0;
+  virtual const std::shared_ptr<Session> currentSession() const = 0;
+  virtual void setCurrentSession(const QString &sessionName) = 0;
+
+  /*!
    * \brief Limpia el proyecto
    */
   virtual void clear() = 0;
@@ -226,6 +320,22 @@ public:
   image_iterator imageEnd() override;
   image_const_iterator imageEnd() const override;
   size_t imagesCount() const override;
+  void addSession(const QString &name, const QString &description) override;
+  void addSession(const std::shared_ptr<Session> &session) override;
+  void deleteSession(const QString &sessionName) override;
+  void deleteSession(size_t sessionId) override;
+  std::shared_ptr<Session> findSession(const QString &sessionName) override;
+  const std::shared_ptr<Session> findSession(const QString &sessionName) const override;
+  size_t findSessionId(const QString &sessionName) override;
+  size_t findSessionId(const QString &sessionName) const override;
+  session_iterator sessionBegin() override;
+  session_const_iterator sessionBegin() const override;
+  session_iterator sessionEnd() override;
+  session_const_iterator sessionEnd() const override;
+  size_t sessionCount() const override;
+  std::shared_ptr<Session> currentSession() override;
+  const std::shared_ptr<Session> currentSession() const override;
+  void setCurrentSession(const QString &sessionName) override;
   void clear() override;
 
 
@@ -237,7 +347,8 @@ protected:
   QString mProjectFolder;
   QString mVersion;
   std::vector<std::shared_ptr<Image>> mImages;
-
+  std::vector<std::shared_ptr<Session>> mSessions;
+  int mCurrentSession;
 };
 
 

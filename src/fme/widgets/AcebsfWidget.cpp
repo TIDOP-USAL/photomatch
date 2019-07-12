@@ -118,7 +118,7 @@ void AcebsfWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("ACEBSF Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   groupBox->setLayout(propertiesLayout);
 
   QLabel *lbl = new QLabel(tr("Adaptive Contrast Enhancement Based on modified Sigmoid Function"), this);

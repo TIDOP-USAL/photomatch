@@ -4,80 +4,214 @@
 #include "fme/fme_global.h"
 
 #include <QString>
+#include <QStringList>
+#include <QSize>
+
+#include "fme/core/features.h"
+#include "fme/core/preprocess.h"
+
 
 class QSettings;
 
 namespace fme
 {
 
-class FME_EXPORT ISurf
+/*----------------------------------------------------------------*/
+
+/*!
+ * \brief Settings interface
+ */
+class FME_EXPORT ISettings
 {
+
 public:
 
-  ISurf() {}
-  virtual ~ISurf() = default;
+  ISettings() {}
+  virtual ~ISettings() = default;
 
   /*!
-   * \brief Threshold for hessian keypoint detector used in SURF
+   * \brief Idioma actual
    * \return
    */
-  virtual double hessianThreshold() const = 0;
+  virtual QString language() const = 0;
 
   /*!
-   * \brief Threshold for hessian keypoint detector used in SURF
-   * \param[in] hessianThreshold
+   * \brief Establece el idioma del programa
+   * \param[in] language Idioma
    */
-  virtual void setHessianThreshold(double hessianThreshold) = 0;
+  virtual void setLanguage(const QString &language) = 0;
 
   /*!
-   * \brief Number of pyramid octaves the keypoint detector will use.
+   * \brief Historial del proyectos recientes
+   * \return Listado con los proyectos recientes
+   */
+  virtual QStringList history() const = 0;
+
+  /*!
+   * \brief Añade un proyecto al historial
+   * \param[in] project Fichero de proyecto
+   */
+  virtual void addToHistory(const QString &project) = 0;
+
+  /*!
+   * \brief Borra el historial de proyectos recientes
+   */
+  virtual void clearHistory() = 0;
+
+  /*!
+   * \brief Tamaño máximo del historial
    * \return
    */
-  virtual int octaves() const = 0;
+  virtual int historyMaxSize() const = 0;
 
   /*!
-   * \brief Set the number of pyramid octaves
-   * \param[in] octaves Number of pyramid octaves the keypoint detector will use.
+   * \brief Establece el tamaño máximo de elementos del historial
+   * \param[in] maxSize Tamaño máximo del historial
    */
-  virtual void setOctaves(int octaves) = 0;
+  virtual void setHistoryMaxSize(int maxSize) = 0;
+
+  virtual IFahe *fahe() = 0;
+  virtual const IFahe *fahe() const = 0;
+
+  virtual IAgast *agast() = 0;
+  virtual const IAgast *agast() const = 0;
+  virtual IAkaze *akaze() = 0;
+  virtual const IAkaze *akaze() const = 0;
+  virtual ISift *sift() = 0;
+  virtual const ISift *sift() const = 0;
+  virtual ISurf *surf() = 0;
+  virtual const ISurf *surf() const = 0;
 
   /*!
-   * \brief Number of octave layers within each octave
-   * \return
+   * \brief Recupera la configuración por defecto
    */
-  virtual int octaveLayers() const = 0;
-
-  /*!
-   * \brief Set the number of octave layers
-   * \param[in] octaveLayers Number of octave layers within each octave
-   */
-  virtual void setOctaveLayers(int octaveLayers) = 0;
-
-  /*!
-   * \brief Extended descriptor
-   * \return true (use extended 128-element descriptors) or false (use 64-element descriptors)
-   */
-  virtual bool extendedDescriptor() const = 0;
-
-  /*!
-   * \brief setExtendedDescriptor
-   * \param[in] extendedDescriptor true for use extended 128-element descriptors or false for use 64-element descriptors)
-   */
-  virtual void setExtendedDescriptor(bool extendedDescriptor) = 0;
-
-  /*!
-   * \brief Up-right or rotated features
-   * \return true (do not compute orientation of features) or false (compute orientation)
-   */
-  virtual bool rotatedFeatures() const = 0;
-
-  /*!
-   * \brief compute orientation of features
-   * \param[in] rotatedFeatures false for compute orientation
-   */
-  virtual void setRotatedFeatures(bool rotatedFeatures) = 0;
+  virtual void reset() = 0;
 };
 
+
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief Settings read and write interface
+ */
+class FME_EXPORT ISettingsRW
+{
+
+public:
+
+  ISettingsRW() {}
+  virtual ~ISettingsRW() = default;
+
+  /*!
+   * \brief read
+   * \return
+   */
+  virtual void read(ISettings &settings) = 0;
+
+  /*!
+   * \brief write
+   * \return
+   */
+  virtual void write(const ISettings &settings) = 0;
+
+  virtual void writeHistory(const ISettings &settings) = 0;
+};
+
+
+
+/*----------------------------------------------------------------*/
+/* Feature Detectors/descriptors                                  */
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief AGAST detector properties class
+ */
+class FME_EXPORT Agast
+  : public IAgast
+{
+
+public:
+
+  Agast();
+  ~Agast() override;
+
+// IAgast interface
+
+public:
+
+  int threshold() const override;
+  bool nonmaxSuppression() const override;
+  QString detectorType() const override;
+  void setThreshold(int threshold) override;
+  void setNonmaxSuppression(bool nonmaxSuppression) override;
+  void setDetectorType(const QString &detectorType) override;
+  void reset() override;
+
+protected:
+
+  int mThreshold;
+  bool mNonmaxSuppression;
+  QString mDetectorType;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief AKAZE detector/descriptor properties class
+ */
+class FME_EXPORT Akaze
+  : public IAkaze
+{
+
+public:
+
+  Akaze();
+  ~Akaze() override;
+
+// IAkaze interface
+
+public:
+
+  QString descriptorType() const override;
+  int descriptorSize() const override;
+  int descriptorChannels() const override;
+  double threshold() const override;
+  int octaves() const override;
+  int octaveLayers() const override;
+  QString diffusivity() const override;
+  void setDescriptorType(const QString &descriptorType) override;
+  void setDescriptorSize(int descriptorSize) override;
+  void setDescriptorChannels(int channels) override;
+  void setThreshold(double threshold) override;
+  void setOctaves(int octaves) override;
+  void setOctaveLayers(int octaveLayers) override;
+  void setDiffusivity(const QString &diffusivity) override;
+  void reset() override;
+
+protected:
+
+  QString mDescriptorType;
+  int mDescriptorSize;
+  int mDescriptorChannels;
+  double mThreshold;
+  int mOctaves;
+  int mOctaveLayers;
+  QString mDiffusivity;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief SURF detector/descriptor properties class
+ */
 class FME_EXPORT Surf
   : public ISurf
 {
@@ -101,6 +235,7 @@ public:
   void setExtendedDescriptor(bool extendedDescriptor) override;
   bool rotatedFeatures() const override;
   void setRotatedFeatures(bool rotatedFeatures) override;
+  void reset() override;
 
 protected:
 
@@ -112,73 +247,12 @@ protected:
 };
 
 
-class FME_EXPORT ISift
-{
-public:
-  ISift() {}
-  virtual ~ISift() = default;
+/*----------------------------------------------------------------*/
 
-  /*!
-   * \brief featuresNumber
-   * \return
-   */
-  virtual int featuresNumber() const = 0;
 
-  /*!
-   * \brief octaveLayers
-   * \return
-   */
-  virtual int octaveLayers() const = 0;
-
-  /*!
-   * \brief contrastThreshold
-   * \return
-   */
-  virtual double contrastThreshold() const = 0;
-
-  /*!
-   * \brief edgeThreshold
-   * \return
-   */
-  virtual double edgeThreshold() const = 0;
-
-  /*!
-   * \brief sigma
-   * \return
-   */
-  virtual double sigma() const = 0;
-
-  /*!
-   * \brief setFeaturesNumber
-   * \param featuresNumber
-   */
-  virtual void setFeaturesNumber(int featuresNumber) = 0;
-
-  /*!
-   * \brief setOctaveLayers
-   * \param octaveLayers
-   */
-  virtual void setOctaveLayers(int octaveLayers) = 0;
-
-  /*!
-   * \brief setContrastThreshold
-   * \param contrastThreshold
-   */
-  virtual void setContrastThreshold(double contrastThreshold) = 0;
-
-  /*!
-   * \brief setEdgeThreshold
-   * \param edgeThreshold
-   */
-  virtual void setEdgeThreshold(double edgeThreshold) = 0;
-
-  /*!
-   * \brief setSigma
-   * \param sigma
-   */
-  virtual void setSigma(double sigma) = 0;
-};
-
+/*!
+ * \brief SIFT detector/descriptor properties class
+ */
 class FME_EXPORT Sift
   : public ISift
 {
@@ -202,6 +276,7 @@ public:
   void setContrastThreshold(double contrastThreshold) override;
   void setEdgeThreshold(double edgeThreshold) override;
   void setSigma(double sigma) override;
+  void reset() override;
 
 protected:
 
@@ -213,60 +288,41 @@ protected:
 };
 
 
-class FME_EXPORT ISettings
+/*----------------------------------------------------------------*/
+/* Image preprocessing                                            */
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief Fahe image preprocess class
+ */
+class FME_EXPORT Fahe
+  : public IFahe
 {
 
 public:
 
-  ISettings() {}
-  virtual ~ISettings() = default;
+  Fahe();
+  ~Fahe() override = default;
 
-  /*!
-   * \brief getLanguage
-   * \return
-   */
-  virtual QString language() const = 0;
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
 
-  /*!
-   * \brief setLanguage
-   * \param[in] language
-   */
-  virtual void setLanguage(const QString &language) = 0;
+  void reset() override;
 
-  virtual ISift *sift() = 0;
-  virtual const ISift *sift() const = 0;
-  virtual ISurf *surf() = 0;
-  virtual const ISurf *surf() const = 0;
+protected:
 
-  /*!
-   * \brief Recupera la configuración por defecto
-   */
-  virtual void reset() = 0;
-};
-
-class FME_EXPORT ISettingsRW
-{
-
-public:
-
-  ISettingsRW() {}
-  virtual ~ISettingsRW() = default;
-
-  /*!
-   * \brief read
-   * \return
-   */
-  virtual void read(ISettings &settings) = 0;
-
-  /*!
-   * \brief write
-   * \return
-   */
-  virtual void write(const ISettings &settings) = 0;
+  QSize mBlockSize;
 
 };
 
 
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief The Settings class
+ */
 class FME_EXPORT Settings
   : public ISettings
 {
@@ -282,6 +338,20 @@ public:
 
   QString language() const override;
   void setLanguage(const QString &language) override;
+
+  QStringList history() const override;
+  void addToHistory(const QString &project) override;
+  void clearHistory() override;
+  int historyMaxSize() const override;
+  void setHistoryMaxSize(int maxSize) override;
+
+  IFahe *fahe() override;
+  const IFahe *fahe() const override;
+
+  IAgast *agast() override;
+  const IAgast *agast() const override;
+  IAkaze *akaze() override;
+  const IAkaze *akaze() const override;
   ISift *sift() override;
   const ISift *sift() const override;
   ISurf *surf() override;
@@ -292,12 +362,24 @@ public:
 protected:
 
   QString mLanguage;
+  int mHistoyMaxSize;
+  QStringList mHistory;
 
+  IFahe *mFahe;
+
+  IAgast *mAgast;
+  IAkaze *mAkaze;
   ISift *mSift;
   ISurf *mSurf;
 };
 
 
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief The SettingsRW class
+ */
 class FME_EXPORT SettingsRW
   : public ISettingsRW
 {
@@ -313,6 +395,7 @@ public:
 
   void read(ISettings &settings) override;
   void write(const ISettings &settings) override;
+  void writeHistory(const ISettings &settings) override;
 
 protected:
 

@@ -202,7 +202,7 @@ void MsdWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("MSD Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Threshold Saliency:")), 0, 0, 1, 2);

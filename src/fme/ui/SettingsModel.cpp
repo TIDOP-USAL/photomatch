@@ -27,10 +27,94 @@ QString SettingsModel::language() const
   return mSettings->language();
 }
 
-void SettingsModel::setLanguage(const QString &language)
+QStringList SettingsModel::history() const
 {
-  mSettings->setLanguage(language);
-  emit unsavedChanges(true);
+  return mSettings->history();
+}
+
+int SettingsModel::historyMaxSize() const
+{
+  return mSettings->historyMaxSize();
+}
+
+QSize SettingsModel::faheBlockSize() const
+{
+  return mSettings->fahe()->blockSize();
+}
+
+int SettingsModel::agastThreshold() const
+{
+  return mSettings->agast()->threshold();
+}
+
+bool SettingsModel::agastNonmaxSuppression() const
+{
+  return mSettings->agast()->nonmaxSuppression();
+}
+
+QString SettingsModel::agastDetectorType() const
+{
+  return mSettings->agast()->detectorType();
+}
+
+QString SettingsModel::akazeDescriptorType() const
+{
+  return mSettings->akaze()->descriptorType();
+}
+
+int SettingsModel::akazeDescriptorSize() const
+{
+  return mSettings->akaze()->descriptorSize();
+}
+
+int SettingsModel::akazeDescriptorChannels() const
+{
+  return mSettings->akaze()->descriptorChannels();
+}
+
+double SettingsModel::akazeThreshold() const
+{
+  return mSettings->akaze()->threshold();
+}
+
+int SettingsModel::akazeOctaves() const
+{
+  return mSettings->akaze()->octaves();
+}
+
+int SettingsModel::akazeOctaveLayers() const
+{
+  return mSettings->akaze()->octaveLayers();
+}
+
+QString SettingsModel::akazeDiffusivity() const
+{
+  return mSettings->akaze()->diffusivity();
+}
+
+int SettingsModel::siftFeaturesNumber() const
+{
+  return mSettings->sift()->featuresNumber();
+}
+
+int SettingsModel::siftOctaveLayers() const
+{
+  return mSettings->sift()->octaveLayers();
+}
+
+double SettingsModel::siftContrastThreshold()
+{
+  return mSettings->sift()->contrastThreshold();
+}
+
+double SettingsModel::siftEdgeThreshold()
+{
+  return mSettings->sift()->edgeThreshold();
+}
+
+double SettingsModel::siftSigma()
+{
+  return mSettings->sift()->sigma();
 }
 
 double SettingsModel::surfHessianThreshold() const
@@ -58,29 +142,124 @@ bool SettingsModel::surfRotatedFeatures() const
   return mSettings->surf()->rotatedFeatures();
 }
 
-int SettingsModel::siftFeaturesNumber() const
+void SettingsModel::setLanguage(const QString &language)
 {
-  return mSettings->sift()->featuresNumber();
+  mSettings->setLanguage(language);
+  emit unsavedChanges(true);
 }
 
-int SettingsModel::siftOctaveLayers() const
+void SettingsModel::addToHistory(const QString &project)
 {
-  return mSettings->sift()->octaveLayers();
+  mSettings->addToHistory(project);
+  mSettingsRW->writeHistory(*mSettings);
 }
 
-double SettingsModel::siftContrastThreshold()
+void SettingsModel::clearHistory()
 {
-  return mSettings->sift()->contrastThreshold();
+  mSettings->clearHistory();
+  mSettingsRW->writeHistory(*mSettings);
 }
 
-double SettingsModel::siftEdgeThreshold()
+void SettingsModel::setHistoryMaxSize(int maxSize)
 {
-  return mSettings->sift()->edgeThreshold();
+  mSettings->setHistoryMaxSize(maxSize);
+  emit unsavedChanges(true);
 }
 
-double SettingsModel::siftSigma()
+void SettingsModel::setFaheBlockSize(const QSize &size)
 {
-  return mSettings->sift()->sigma();
+  mSettings->fahe()->setBlockSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAgastThreshold(int threshold)
+{
+  mSettings->agast()->setThreshold(threshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAgastNonmaxSuppression(bool nonmaxSuppression)
+{
+  mSettings->agast()->setNonmaxSuppression(nonmaxSuppression);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAgastDetectorType(const QString &detectorType)
+{
+  mSettings->agast()->setDetectorType(detectorType);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeDescriptorType(const QString &descriptorType)
+{
+  mSettings->akaze()->setDescriptorType(descriptorType);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeDescriptorSize(int descriptorSize)
+{
+  mSettings->akaze()->setDescriptorSize(descriptorSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeDescriptorChannels(int channels)
+{
+  mSettings->akaze()->setDescriptorChannels(channels);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeThreshold(double threshold)
+{
+  mSettings->akaze()->setThreshold(threshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeOctaves(int octaves)
+{
+  mSettings->akaze()->setOctaves(octaves);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeOctaveLayers(int octaveLayers)
+{
+  mSettings->akaze()->setOctaveLayers(octaveLayers);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAkazeDiffusivity(const QString &diffusivity)
+{
+  mSettings->akaze()->setDiffusivity(diffusivity);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setSiftFeaturesNumber(int featuresNumber)
+{
+  mSettings->sift()->setFeaturesNumber(featuresNumber);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setSiftOctaveLayers(int octaveLayers)
+{
+  mSettings->sift()->setOctaveLayers(octaveLayers);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setSiftContrastThreshold(double contrastThreshold)
+{
+  mSettings->sift()->setContrastThreshold(contrastThreshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setSiftEdgeThreshold(double edgeThreshold)
+{
+  mSettings->sift()->setEdgeThreshold(edgeThreshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setSiftSigma(double sigma)
+{
+  mSettings->sift()->setSigma(sigma);
+  emit unsavedChanges(true);
 }
 
 void SettingsModel::setSurfHessianThreshold(double hessianThreshold)
@@ -110,36 +289,6 @@ void SettingsModel::setSurfExtendedDescriptor(bool extendedDescriptor)
 void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
 {
   mSettings->surf()->setRotatedFeatures(rotatedFeatures);
-  emit unsavedChanges(true);
-}
-
-void SettingsModel::setSiftFeaturesNumber(int featuresNumber)
-{
-  mSettings->sift()->setSigma(featuresNumber);
-  emit unsavedChanges(true);
-}
-
-void SettingsModel::setSiftOctaveLayers(int octaveLayers)
-{
-  mSettings->sift()->setOctaveLayers(octaveLayers);
-  emit unsavedChanges(true);
-}
-
-void SettingsModel::setSiftContrastThreshold(double contrastThreshold)
-{
-  mSettings->sift()->setContrastThreshold(contrastThreshold);
-  emit unsavedChanges(true);
-}
-
-void SettingsModel::setSiftEdgeThreshold(double edgeThreshold)
-{
-  mSettings->sift()->setEdgeThreshold(edgeThreshold);
-  emit unsavedChanges(true);
-}
-
-void SettingsModel::setSiftSigma(double sigma)
-{
-  mSettings->sift()->setSigma(sigma);
   emit unsavedChanges(true);
 }
 

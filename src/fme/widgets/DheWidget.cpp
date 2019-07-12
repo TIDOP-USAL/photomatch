@@ -59,19 +59,18 @@ void DheWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("DHE Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Dynamic Histogram Equalization"), this);
   lbl->setWordWrap(true);
   QFont font;
   font.setBold(true);
   lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("x:")), 0, 0);
+  propertiesLayout->addWidget(new QLabel(tr("x:")), 1, 0, 1, 1);
   mX->setRange(0, 5);
-  propertiesLayout->addWidget(mX, 0, 1);
+  propertiesLayout->addWidget(mX, 1, 1, 1, 1);
 
   reset(); /// set default values
 

@@ -92,23 +92,24 @@ void RswheWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("RSWHE Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Recursively Separated and Weighted Histogram Equalization"), this);
   lbl->setWordWrap(true);
   QFont font;
   font.setBold(true);
   lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
 
+  mHistogramCutByMean->setText(tr("Histogram cut by mean"));
+  propertiesLayout->addWidget(mHistogramCutByMean, 1, 0, 1, 2);
 
-  propertiesLayout->addWidget(mHistogramCutByMean, 0, 1);
-  propertiesLayout->addWidget(mHistogramCutByMedian, 1, 1);
+  mHistogramCutByMedian->setText(tr("Histogram cut by median"));
+  propertiesLayout->addWidget(mHistogramCutByMedian, 2, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("Histogram Divisions:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Histogram Divisions:")), 3, 0, 1, 1);
   mHistogramDivisions->setRange(1, 256);
-  propertiesLayout->addWidget(mHistogramDivisions, 2, 1);
+  propertiesLayout->addWidget(mHistogramDivisions, 3, 1, 1, 1);
 
   reset(); /// set default values
 

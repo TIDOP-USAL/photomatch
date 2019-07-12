@@ -6,6 +6,178 @@
 namespace fme
 {
 
+/*----------------------------------------------------------------*/
+/* Feature Detectors/descriptors                                  */
+/*----------------------------------------------------------------*/
+
+Agast::Agast()
+  : IAgast(),
+    mThreshold(10),
+    mNonmaxSuppression(true),
+    mDetectorType("OAST_9_16")
+{}
+
+Agast::~Agast()
+{
+}
+
+int Agast::threshold() const
+{
+  return mThreshold;
+}
+
+bool Agast::nonmaxSuppression() const
+{
+  return mNonmaxSuppression;
+}
+
+QString Agast::detectorType() const
+{
+  return mDetectorType;
+}
+
+void Agast::setThreshold(int threshold)
+{
+  mThreshold = threshold;
+}
+
+void Agast::setNonmaxSuppression(bool nonmaxSuppression)
+{
+  mNonmaxSuppression = nonmaxSuppression;
+}
+
+void Agast::setDetectorType(const QString &detectorType)
+{
+  if (detectorType.compare("AGAST_5_8") == 0 ||
+      detectorType.compare("AGAST_7_12d") == 0 ||
+      detectorType.compare("AGAST_7_12s") == 0 ||
+      detectorType.compare("OAST_9_16") == 0) {
+    mDetectorType = detectorType;
+  }
+}
+
+void Agast::reset()
+{
+  mThreshold = 10;
+  mNonmaxSuppression = true;
+  mDetectorType = "OAST_9_16";
+}
+
+
+/*----------------------------------------------------------------*/
+
+
+Akaze::Akaze()
+  : IAkaze(),
+    mDescriptorType("MLDB"),
+    mDescriptorSize(0),
+    mDescriptorChannels(3),
+    mThreshold(0.001),
+    mOctaves(4),
+    mOctaveLayers(4),
+    mDiffusivity("DIFF_PM_G2")
+{
+}
+
+Akaze::~Akaze()
+{
+}
+
+QString Akaze::descriptorType() const
+{
+  return mDescriptorType;
+}
+
+int Akaze::descriptorSize() const
+{
+  return mDescriptorSize;
+}
+
+int Akaze::descriptorChannels() const
+{
+  return mDescriptorChannels;
+}
+
+double Akaze::threshold() const
+{
+  return mThreshold;
+}
+
+int Akaze::octaves() const
+{
+  return mOctaves;
+}
+
+int Akaze::octaveLayers() const
+{
+  return mOctaveLayers;
+}
+
+QString Akaze::diffusivity() const
+{
+  return mDiffusivity;
+}
+
+void Akaze::setDescriptorType(const QString &descriptorType)
+{
+  if (descriptorType.compare("KAZE") == 0 ||
+      descriptorType.compare("KAZE_UPRIGHT") == 0 ||
+      descriptorType.compare("MLDB") == 0 ||
+      descriptorType.compare("MLDB_UPRIGHT") == 0){
+    mDescriptorType = descriptorType;
+  }
+}
+
+void Akaze::setDescriptorSize(int descriptorSize)
+{
+  mDescriptorSize = descriptorSize;
+}
+
+void Akaze::setDescriptorChannels(int channels)
+{
+  mDescriptorChannels = channels;
+}
+
+void Akaze::setThreshold(double threshold)
+{
+  mThreshold = threshold;
+}
+
+void Akaze::setOctaves(int octaves)
+{
+  mOctaves = octaves;
+}
+
+void Akaze::setOctaveLayers(int octaveLayers)
+{
+  mOctaveLayers = octaveLayers;
+}
+
+void Akaze::setDiffusivity(const QString &diffusivity)
+{
+  if (diffusivity.compare("DIFF_PM_G1") == 0 ||
+      diffusivity.compare("DIFF_PM_G2") == 0 ||
+      diffusivity.compare("DIFF_WEICKERT") == 0 ||
+      diffusivity.compare("DIFF_CHARBONNIER") == 0){
+    mDiffusivity = diffusivity;
+  }
+}
+
+void Akaze::reset()
+{
+  mDescriptorType = "MLDB";
+  mDescriptorSize = 0;
+  mDescriptorChannels = 3;
+  mThreshold = 0.001;
+  mOctaves = 4;
+  mOctaveLayers = 4;
+  mDiffusivity = "DIFF_PM_G2";
+}
+
+
+/*----------------------------------------------------------------*/
+
+
 Surf::Surf()
   : ISurf(),
     mHessianThreshold(100),
@@ -70,7 +242,17 @@ void Surf::setRotatedFeatures(bool rotatedFeatures)
   mRotatedFeatures = rotatedFeatures;
 }
 
+void Surf::reset()
+{
+  mHessianThreshold = 100;
+  mOctaves = 4;
+  mOctaveLayers = 3;
+  mExtendedDescriptor = false;
+  mRotatedFeatures = false;
+}
 
+
+/*----------------------------------------------------------------*/
 
 
 Sift::Sift()
@@ -134,11 +316,54 @@ void Sift::setSigma(double sigma)
   mSigma = sigma;
 }
 
+void Sift::reset()
+{
+  mFeaturesNumber = 5000;
+  mOctaveLayers = 3;
+  mContrastThreshold = 0.04;
+  mEdgeThreshold = 10.;
+  mSigma = 1.6;
+}
 
+
+
+/*----------------------------------------------------------------*/
+/* Image preprocessing                                            */
+/*----------------------------------------------------------------*/
+
+
+Fahe::Fahe()
+  : mBlockSize(QSize(11, 11))
+{
+  reset();
+}
+
+QSize Fahe::blockSize() const
+{
+  return mBlockSize;
+}
+
+void Fahe::setBlockSize(const QSize &blockSize)
+{
+  mBlockSize = blockSize;
+}
+
+void Fahe::reset()
+{
+  mBlockSize = QSize(11, 11);
+}
+
+
+
+/*----------------------------------------------------------------*/
 
 
 Settings::Settings()
   : ISettings(),
+    mHistoyMaxSize(10),
+    mFahe(new Fahe),
+    mAgast(new Agast),
+    mAkaze(new Akaze),
     mSift(new Sift),
     mSurf(new Surf)
 {
@@ -147,6 +372,16 @@ Settings::Settings()
 
 Settings::~Settings()
 {
+  if (mAgast){
+    delete mAgast;
+    mAgast = nullptr;
+  }
+
+  if (mAkaze){
+    delete mAkaze;
+    mAkaze = nullptr;
+  }
+
   if (mSift){
     delete mSift;
     mSift = nullptr;
@@ -155,6 +390,11 @@ Settings::~Settings()
   if (mSurf){
     delete mSurf;
     mSurf = nullptr;
+  }
+
+  if (mFahe){
+    delete mFahe;
+    mFahe = nullptr;
   }
 }
 
@@ -166,6 +406,65 @@ QString Settings::language() const
 void Settings::setLanguage(const QString &language)
 {
   mLanguage = language;
+}
+
+QStringList Settings::history() const
+{
+  return mHistory;
+}
+
+void Settings::addToHistory(const QString &project)
+{
+  mHistory.removeAll(project);
+  mHistory.prepend(project);
+
+  while (mHistory.size() > mHistoyMaxSize)
+    mHistory.removeLast();
+}
+
+void Settings::clearHistory()
+{
+  mHistory.clear();
+}
+
+int Settings::historyMaxSize() const
+{
+  return mHistoyMaxSize;
+}
+
+void Settings::setHistoryMaxSize(int maxSize)
+{
+  mHistoyMaxSize = maxSize;
+}
+
+IFahe *Settings::fahe()
+{
+  return mFahe;
+}
+
+const IFahe *Settings::fahe() const
+{
+  return mFahe;
+}
+
+IAgast *Settings::agast()
+{
+  return mAgast;
+}
+
+const IAgast *Settings::agast() const
+{
+  return mAgast;
+}
+
+IAkaze *Settings::akaze()
+{
+  return mAkaze;
+}
+
+const IAkaze *Settings::akaze() const
+{
+  return mAkaze;
 }
 
 ISift *Settings::sift()
@@ -191,8 +490,20 @@ const ISurf *Settings::surf() const
 void Settings::reset()
 {
   mLanguage = "en";
+
+  mHistoyMaxSize = 10;
+  mHistory.clear();
+
+  mFahe->reset();
+
+  mAgast->reset();
+  mAkaze->reset();
+  mSift->reset();
+  mSurf->reset();
 }
 
+
+/*----------------------------------------------------------------*/
 
 
 SettingsRW::SettingsRW()
@@ -216,6 +527,30 @@ void SettingsRW::read(ISettings &settings)
   lang.truncate(lang.lastIndexOf('_'));
   settings.setLanguage(mSettingsRW->value("lang", lang).toString());
 
+  settings.setHistoryMaxSize(mSettingsRW->value("HISTORY/MaxSize", settings.historyMaxSize()).toInt());
+  QStringList history = mSettingsRW->value("HISTORY/RecentProjects", settings.history()).toStringList();
+  settings.clearHistory();
+  for(auto &prj : history){
+    settings.addToHistory(prj);
+  }
+
+  /* FAHE */
+  settings.fahe()->setBlockSize(mSettingsRW->value("FAHE/BlockSize", settings.fahe()->blockSize()).toSize());
+
+  /* AGAST */
+  settings.agast()->setThreshold(mSettingsRW->value("AGAST/Threshold", settings.agast()->threshold()).toInt());
+  settings.agast()->setNonmaxSuppression(mSettingsRW->value("AGAST/NonmaxSuppression", settings.agast()->nonmaxSuppression()).toBool());
+  settings.agast()->setDetectorType(mSettingsRW->value("AGAST/DetectorType", settings.agast()->detectorType()).toString());
+
+  /* AKAZE */
+  settings.akaze()->setOctaves(mSettingsRW->value("AKAZE/Octaves", settings.akaze()->octaves()).toInt());
+  settings.akaze()->setThreshold(mSettingsRW->value("AKAZE/Threshold", settings.akaze()->threshold()).toDouble());
+  settings.akaze()->setDiffusivity(mSettingsRW->value("AKAZE/Diffusivity", settings.akaze()->diffusivity()).toString());
+  settings.akaze()->setOctaveLayers(mSettingsRW->value("AKAZE/OctaveLayers", settings.akaze()->octaveLayers()).toInt());
+  settings.akaze()->setDescriptorSize(mSettingsRW->value("AKAZE/DescriptorSize", settings.akaze()->descriptorSize()).toInt());
+  settings.akaze()->setDescriptorType(mSettingsRW->value("AKAZE/DescriptorType", settings.akaze()->descriptorType()).toString());
+  settings.akaze()->setDescriptorChannels(mSettingsRW->value("AKAZE/DescriptorChannels", settings.akaze()->descriptorChannels()).toInt());
+
   /* SIFT */
   settings.sift()->setSigma(mSettingsRW->value("SIFT/Sigma", settings.sift()->sigma()).toDouble());
   settings.sift()->setOctaveLayers(mSettingsRW->value("SIFT/OctaveLayers", settings.sift()->octaveLayers()).toInt());
@@ -235,6 +570,26 @@ void SettingsRW::write(const ISettings &settings)
 {
   mSettingsRW->setValue("lang", settings.language());
 
+  mSettingsRW->setValue("HISTORY/MaxSize", settings.historyMaxSize());
+  mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
+
+  /* FAHE */
+  mSettingsRW->setValue("FAHE/BlockSize", settings.fahe()->blockSize());
+
+  /* AGAST */
+  mSettingsRW->setValue("AGAST/Threshold", settings.agast()->threshold());
+  mSettingsRW->setValue("AGAST/NonmaxSuppression", settings.agast()->nonmaxSuppression());
+  mSettingsRW->setValue("AGAST/DetectorType", settings.agast()->detectorType());
+
+  /* AKAZE */
+  mSettingsRW->setValue("AKAZE/Octaves", settings.akaze()->octaves());
+  mSettingsRW->setValue("AKAZE/Threshold", settings.akaze()->threshold());
+  mSettingsRW->setValue("AKAZE/Diffusivity", settings.akaze()->diffusivity());
+  mSettingsRW->setValue("AKAZE/OctaveLayers", settings.akaze()->octaveLayers());
+  mSettingsRW->setValue("AKAZE/DescriptorSize", settings.akaze()->descriptorSize());
+  mSettingsRW->setValue("AKAZE/DescriptorType", settings.akaze()->descriptorType());
+  mSettingsRW->setValue("AKAZE/DescriptorChannels", settings.akaze()->descriptorChannels());
+
   /* SIFT */
   mSettingsRW->setValue("SIFT/Sigma", settings.sift()->sigma());
   mSettingsRW->setValue("SIFT/OctaveLayers", settings.sift()->octaveLayers());
@@ -250,4 +605,11 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
 }
 
+void SettingsRW::writeHistory(const ISettings &settings)
+{
+  mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
+}
+
 } // namespace fme
+
+

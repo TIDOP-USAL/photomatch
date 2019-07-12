@@ -33,18 +33,32 @@ SettingsView::SettingsView(QWidget *parent)
 
   connect(mLanguages,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(languageChange(QString)));
 
-  connect(mListWidgetFeatures, SIGNAL(currentTextChanged(QString)), this, SLOT(onFeatureDetectorDescriptorChange(QString)));
+  connect(mListWidgetPreprocess, SIGNAL(currentTextChanged(QString)), this, SLOT(onPreprocessChange(QString)));
+  connect(mListWidgetFeatures,   SIGNAL(currentTextChanged(QString)), this, SLOT(onFeatureDetectorDescriptorChange(QString)));
 
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)), this, SIGNAL(applyChanges()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
+  connect(mButtonBox,                                    SIGNAL(accepted()),      this, SLOT(accept()));
+  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(applyChanges()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 
 }
 
 SettingsView::~SettingsView()
 {
 
+}
+
+void SettingsView::onPreprocessChange(const QString &method)
+{
+  for (int idx = 1; idx < mGridLayoutPreprocess->count(); idx++){
+    QLayoutItem * const item = mGridLayoutPreprocess->itemAt(idx);
+    if(dynamic_cast<QWidgetItem *>(item)){
+      if (item->widget()->windowTitle().compare(method) == 0)
+        item->widget()->setVisible(true);
+      else
+        item->widget()->setVisible(false);
+    }
+  }
 }
 
 void SettingsView::onFeatureDetectorDescriptorChange(const QString &method)
@@ -113,10 +127,9 @@ void SettingsView::init()
   scrollAreaPreprocess->setFrameShape(QFrame::Shape::NoFrame);
   QWidget *scrollAreaWidgetContents = new QWidget();
   scrollAreaWidgetContents->setGeometry(QRect(0, 0, 439, 358));
-  QGridLayout *gridLayoutscrollAreaWidgetContents = new QGridLayout(scrollAreaWidgetContents);
-  gridLayoutscrollAreaWidgetContents->setObjectName(QStringLiteral("gridLayout_9"));
+  mGridLayoutPreprocess = new QGridLayout(scrollAreaWidgetContents);
   mListWidgetPreprocess = new QListWidget(scrollAreaWidgetContents);
-  gridLayoutscrollAreaWidgetContents->addWidget(mListWidgetPreprocess, 0, 0, 1, 1);
+  mGridLayoutPreprocess->addWidget(mListWidgetPreprocess, 0, 0, 1, 1);
   scrollAreaPreprocess->setWidget(scrollAreaWidgetContents);
   gridLayoutTabPreprocess->addWidget(scrollAreaPreprocess, 0, 0, 1, 1);
   mTabWidgetTools->addTab(tabPreprocess, QString("Preprocess"));
@@ -125,7 +138,6 @@ void SettingsView::init()
   QGridLayout *gridLayoutFeatures = new QGridLayout(tabFeatures);
   gridLayoutFeatures->setContentsMargins(0, 0, 0, 0);
   QScrollArea *scrollAreaFeatures = new QScrollArea(tabFeatures);
-  scrollAreaFeatures->setObjectName(QStringLiteral("scrollAreaFeatures"));
   scrollAreaFeatures->setWidgetResizable(true);
   scrollAreaFeatures->setFrameShape(QFrame::Shape::NoFrame);
   QWidget *scrollAreaWidgetFeatures = new QWidget();
@@ -189,6 +201,13 @@ void SettingsView::setActiveLanguage(const QString &language)
 {
   const QSignalBlocker blocker(mLanguages);
   mLanguages->setCurrentText(language);
+}
+
+void SettingsView::addPreprocess(QWidget *preprocess)
+{
+  mListWidgetPreprocess->addItem(preprocess->windowTitle());
+  mGridLayoutPreprocess->addWidget(preprocess, 1, 0, 1, 1);
+  preprocess->setVisible(false);
 }
 
 void SettingsView::addFeatureDetectorMethod(QWidget *detector)

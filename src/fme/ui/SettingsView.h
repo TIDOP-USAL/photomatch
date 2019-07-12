@@ -26,6 +26,7 @@ public:
 
   virtual void setLanguages(const QStringList &languages) = 0;
   virtual void setActiveLanguage(const QString &language) = 0;
+  virtual void addPreprocess(QWidget *preprocess) = 0;
   virtual void addFeatureDetectorMethod(QWidget *detector) = 0;
 
 public slots:
@@ -51,6 +52,7 @@ public:
 
 protected slots:
 
+  void onPreprocessChange(const QString &method);
   void onFeatureDetectorDescriptorChange(const QString &method);
 
 // IDialogView interface
@@ -73,6 +75,7 @@ public:
 
   void setLanguages(const QStringList &languages) override;
   void setActiveLanguage(const QString &language) override;
+  void addPreprocess(QWidget *preprocess) override;
   void addFeatureDetectorMethod(QWidget *detector) override;
 
 public slots:
@@ -85,6 +88,7 @@ protected:
   QStackedWidget *mStackedWidget;
   QComboBox *mLanguages;
   QTabWidget *mTabWidgetTools;
+  QGridLayout *mGridLayoutPreprocess;
   QGridLayout *mGridLayoutFeatures;
 
   QListWidget *mListWidgetPreprocess;

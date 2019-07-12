@@ -78,7 +78,7 @@ SOURCES += Process.cpp \
            ImagePreprocessing/Sundarami2011_Process.cpp \
            ImagePreprocessing/MaryKim2008_Process.cpp \
            ImagePreprocessing/WadudKabirDewanChae2007_Process.cpp \
-           ImagePreprocessing/FAHE2006_Process.cpp \
+           ImagePreprocessing/FaheProcess.cpp \
            ImagePreprocessing/LambertiMontrucchioSanna2006_Process.cpp \
            ImagePreprocessing/YuBajaj2004_Process.cpp \
            Matching/BFMatcherProcess.cpp \
@@ -132,7 +132,7 @@ HEADERS += ../fme_global.h \
            ImagePreprocessing/Sundarami2011_Process.h \
            ImagePreprocessing/MaryKim2008_Process.h \
            ImagePreprocessing/WadudKabirDewanChae2007_Process.h \
-           ImagePreprocessing/FAHE2006_Process.h \
+           ImagePreprocessing/FaheProcess.h \
            ImagePreprocessing/LambertiMontrucchioSanna2006_Process.h \
            ImagePreprocessing/YuBajaj2004_Process.h \
            Matching/BFMatcherProcess.h \

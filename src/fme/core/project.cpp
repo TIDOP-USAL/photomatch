@@ -17,7 +17,8 @@ Project::Project()
     mName(""),
     mDescription(""),
     mProjectFolder(""),
-    mVersion(FME_PROJECT_FILE_VERSION)
+    mVersion(FME_PROJECT_FILE_VERSION),
+    mCurrentSession(-1)
 {
 }
 
@@ -71,10 +72,7 @@ void Project::addImage(const std::shared_ptr<Image> &img)
 
 void Project::deleteImage(const QString &img)
 {
-  size_t id = findImageId(img);
-  if (id != std::numeric_limits<size_t>().max()){
-    mImages.erase(mImages.begin()+ static_cast<long long>(id));
-  }
+  deleteImage(findImageId(img));
 }
 
 void Project::deleteImage(size_t imgId)
@@ -149,6 +147,126 @@ size_t Project::imagesCount() const
   return mImages.size();
 }
 
+void Project::addSession(const QString &name, const QString &description)
+{
+  std::shared_ptr<Session> session(new Session(name, description));
+  addSession(session);
+}
+
+void Project::addSession(const std::shared_ptr<Session> &session)
+{
+  std::shared_ptr<Session> _session = findSession(session->name());
+  if (_session != nullptr) {
+    QByteArray ba = session->name().toLocal8Bit();
+    /// TODO: mensajes de la aplicación
+    //msgWarning("Image %s already in the project", ba.data());
+  } else {
+    mSessions.push_back(session);
+    /// Se establece como sesión activa
+    mCurrentSession = static_cast<int>(mSessions.size()) - 1;
+  }
+}
+
+void Project::deleteSession(const QString &sessionName)
+{
+  deleteSession(findSessionId(sessionName));
+}
+
+void Project::deleteSession(size_t sessionId)
+{
+  if (sessionId != std::numeric_limits<size_t>().max()){
+    if (mCurrentSession == static_cast<int>(sessionId)){
+      mCurrentSession = mSessions.size() == 1 ? -1 : static_cast<int>(mSessions.size()) - 1;
+    }
+    mSessions.erase(mSessions.begin()+ static_cast<long long>(sessionId));
+  }
+}
+
+std::shared_ptr<Session> Project::findSession(const QString &sessionName)
+{
+  for (auto &session : mSessions) {
+    if (session->name().compare(sessionName) == 0) {
+      return session;
+    }
+  }
+  return nullptr;
+}
+
+const std::shared_ptr<Session> Project::findSession(const QString &sessionName) const
+{
+  for (auto &session : mSessions) {
+    if (session->name().compare(sessionName) == 0) {
+      return session;
+    }
+  }
+  return nullptr;
+}
+
+size_t Project::findSessionId(const QString &sessionName)
+{
+  for (size_t i = 0; i < mSessions.size(); i++){
+    if (mSessions[i]->name().compare(sessionName) == 0) {
+      return i;
+    }
+  }
+  return std::numeric_limits<size_t>().max();
+}
+
+size_t Project::findSessionId(const QString &sessionName) const
+{
+  for (size_t i = 0; i < mSessions.size(); i++){
+    if (mSessions[i]->name().compare(sessionName) == 0) {
+      return i;
+    }
+  }
+  return std::numeric_limits<size_t>().max();
+}
+
+IProject::session_iterator Project::sessionBegin()
+{
+  return mSessions.begin();
+}
+
+IProject::session_const_iterator Project::sessionBegin() const
+{
+  return mSessions.cbegin();
+}
+
+IProject::session_iterator Project::sessionEnd()
+{
+  return mSessions.end();
+}
+
+IProject::session_const_iterator Project::sessionEnd() const
+{
+  return mSessions.cend();
+}
+
+size_t Project::sessionCount() const
+{
+  return mSessions.size();
+}
+
+std::shared_ptr<Session> Project::currentSession()
+{
+  session_iterator it = mSessions.begin() + mCurrentSession;
+  return (*it);
+}
+
+const std::shared_ptr<Session> Project::currentSession() const
+{
+  session_const_iterator it = mSessions.begin() + mCurrentSession;
+  return (*it);
+}
+
+void Project::setCurrentSession(const QString &sessionName)
+{
+  size_t id = this->findSessionId(sessionName);
+  if (id != std::numeric_limits<size_t>().max()){
+    mCurrentSession = static_cast<int>(id);
+  }
+}
+
 void Project::clear()
 {
   mName = "";
@@ -156,6 +274,8 @@ void Project::clear()
   mProjectFolder = "";
   mVersion = FME_PROJECT_FILE_VERSION;
   mImages.resize(0);
+  mSessions.resize(0);
+  mCurrentSession = -1;
 }
 
 
@@ -210,6 +330,23 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                     xmlReader.skipCurrentElement();
                 }
                 prj.addImage(photo);
+              } else
+                xmlReader.skipCurrentElement();
+            }
+          } else if (xmlReader.name() == "Sessions") {
+            while (xmlReader.readNextStartElement()) {
+
+              if (xmlReader.name() == "Session") {
+                std::shared_ptr<Session> session(new Session);
+                while (xmlReader.readNextStartElement()) {
+                  if (xmlReader.name() == "Name") {
+                    session->setName(xmlReader.readElementText());
+                  } else if (xmlReader.name() == "Description") {
+                    session->setDescription(xmlReader.readElementText());
+                  } else
+                    xmlReader.skipCurrentElement();
+                }
+                prj.addSession(session);
               } else
                 xmlReader.skipCurrentElement();
             }
@@ -272,8 +409,25 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
       }
     }
     stream.writeEndElement();  // Images
+
+    /// Sessions
+    stream.writeStartElement("Sessions");
+    {
+      for (auto it = prj.sessionBegin(); it != prj.sessionEnd(); it++){
+        stream.writeStartElement("Session");
+        {
+          stream.writeTextElement("Name", (*it)->name());
+          stream.writeTextElement("Description", (*it)->description());
+        }
+        stream.writeEndElement(); // Session
+      }
+    }
+    stream.writeEndElement();  // Sessions
   }
-  stream.writeEndElement(); // Graphos
+
+
+
+  stream.writeEndElement(); // Fme
 
   output.close();
 

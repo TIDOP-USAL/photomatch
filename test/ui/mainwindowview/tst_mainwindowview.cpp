@@ -2,6 +2,7 @@
 #include <QCoreApplication>
 
 #include "fme/ui/MainWindowView.h"
+#include "fme/widgets/ThumbnailsWidget.h"
 
 #include <QTreeWidgetItem>
 #include <QAction>
@@ -29,6 +30,7 @@ private slots:
   void test_clear();
   void test_updateHistory();
   void test_deleteHistory();
+  void test_imageActive();
 
 // signals:
 
@@ -58,6 +60,13 @@ private slots:
   void test_openHelpDialog();
   void test_openAboutDialog();
 
+  /* Panel de vistas en miniatura */
+
+  void test_openImage();
+  void test_selectImage();
+  void test_selectImages();
+  void test_deleteImages();
+  void test_deleteImage();
 };
 
 TestMainWindowView::TestMainWindowView()
@@ -79,6 +88,14 @@ void TestMainWindowView::initTestCase()
     QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba3\\Prueba3.xml")
   };
   this->updateHistory(history);
+
+  /// Se simula la carga de un proyecto
+  this->setProjectTitle("Example");
+  setFlag(MainWindowView::Flag::project_exists, true);
+  QStringList images {"C:\\img01.jpg", "C:\\img02.jpg"};
+  addImages(images);
+
+  setActiveImage("C:\\img01.jpg");
 }
 
 void TestMainWindowView::cleanupTestCase()
@@ -103,7 +120,7 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(false, mActionCloseProject->isEnabled());
   QCOMPARE(true, mActionExit->isEnabled());
   QCOMPARE(false, mActionLoadImages->isEnabled());
-  QCOMPARE(false, mActionNewProcessing->isEnabled());
+  QCOMPARE(false, mActionNewSession->isEnabled());
   QCOMPARE(false, mActionAssistant->isEnabled());
   QCOMPARE(false, mActionPreprocess->isEnabled());
   QCOMPARE(false, mActionFeatureExtraction->isEnabled());
@@ -133,10 +150,10 @@ void TestMainWindowView::test_setFlag()
 
   /// Imagenes añadidas
   setFlag(MainWindowView::Flag::images_added, true);
-  QCOMPARE(true, mActionNewProcessing->isEnabled());
+  QCOMPARE(true, mActionNewSession->isEnabled());
 
   /// Procesamiento, sesion o test (no se muy bien como llamarlo todavía)
-  setFlag(MainWindowView::Flag::processing, true);
+  setFlag(MainWindowView::Flag::session_created, true);
   QCOMPARE(true, mActionAssistant->isEnabled());
   QCOMPARE(true, mActionPreprocess->isEnabled());
 
@@ -167,7 +184,7 @@ void TestMainWindowView::test_clear()
   QCOMPARE(false, mFlags.isActive(Flag::project_modified));
   QCOMPARE(false, mFlags.isActive(Flag::images_added));
   QCOMPARE(false, mFlags.isActive(Flag::image_open));
-  QCOMPARE(false, mFlags.isActive(Flag::processing));
+  QCOMPARE(false, mFlags.isActive(Flag::session_created));
   QCOMPARE(false, mFlags.isActive(Flag::preprocess));
   QCOMPARE(false, mFlags.isActive(Flag::feature_extraction));
   QCOMPARE(false, mFlags.isActive(Flag::feature_matching));
@@ -201,6 +218,11 @@ void TestMainWindowView::test_deleteHistory()
 
 }
 
+void TestMainWindowView::test_imageActive()
+{
+
+}
+
 void TestMainWindowView::test_openNew()
 {
   QSignalSpy spy_openNew(this, &MainWindowView::openNew);
@@ -225,7 +247,6 @@ void TestMainWindowView::test_openFromHistory()
   QCOMPARE(spy_openProjectFromHistory.count(), 1);
   QList<QVariant> args = spy_openProjectFromHistory.takeFirst();
   QCOMPARE(args.at(0).toString(), QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba1\\Prueba1.xml"));
-
 }
 
 void TestMainWindowView::test_clearHistory()
@@ -278,9 +299,9 @@ void TestMainWindowView::test_loadImages()
 
 void TestMainWindowView::test_newProcessing()
 {
-  QSignalSpy spy_newProcessing(this, &MainWindowView::newProcessing);
+  QSignalSpy spy_newProcessing(this, &MainWindowView::newSession);
 
-  emit mActionNewProcessing->triggered(true);
+  emit mActionNewSession->triggered(true);
   QCOMPARE(spy_newProcessing.count(), 1);
 }
 
@@ -338,6 +359,49 @@ void TestMainWindowView::test_openAboutDialog()
 
   emit mActionAbout->triggered(true);
   QCOMPARE(spy_openAboutDialog.count(), 1);
+}
+
+void TestMainWindowView::test_openImage()
+{
+  QSignalSpy spy_openImage(this, &MainWindowView::openImage);
+  emit mThumbnailsWidget->openImage("C:\\img01.jpg");
+  QCOMPARE(spy_openImage.count(), 1);
+  QList<QVariant> args = spy_openImage.takeFirst();
+  QCOMPARE(args.at(0).toString(), QString("C:\\img01.jpg"));
+}
+
+void TestMainWindowView::test_selectImage()
+{
+  QSignalSpy spy_selectImage(this, &MainWindowView::selectImage);
+  emit mThumbnailsWidget->selectImage("C:\\img01.jpg");
+  QCOMPARE(spy_selectImage.count(), 1);
+  QList<QVariant> args = spy_selectImage.takeFirst();
+  QCOMPARE(args.at(0).toString(), QString("C:\\img01.jpg"));
+
+  /// la señal selectImage es escuchada desde MainWindowPresenter y se
+  /// establece la imagen activa mediante setImageActive
+  setActiveImage("C:\\img02.jpg");
+  QCOMPARE(spy_selectImage.count(), 0);
+}
+
+void TestMainWindowView::test_selectImages()
+{
+
+}
+
+void TestMainWindowView::test_deleteImages()
+{
+  QSignalSpy spy_deleteImages(this, &MainWindowView::deleteImages);
+  QStringList images {"C:\\img01.jpg", "C:\\img02.jpg"};
+  emit mThumbnailsWidget->deleteImages(images);
+  QCOMPARE(spy_deleteImages.count(), 1);
+  QList<QVariant> args = spy_deleteImages.takeFirst();
+  QCOMPARE(args.at(0).toStringList(), images);
+}
+
+void TestMainWindowView::test_deleteImage()
+{
+
 }
 
 QTEST_MAIN(TestMainWindowView)

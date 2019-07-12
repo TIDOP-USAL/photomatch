@@ -122,6 +122,90 @@ size_t ProjectModel::imagesCount() const
   return mProject->imagesCount();
 }
 
+void ProjectModel::addSession(const QString &name, const QString &description)
+{
+  mProject->addSession(name, description);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::addSession(const std::shared_ptr<Session> &session)
+{
+  mProject->addSession(session);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::deleteSession(const QString &nameSession)
+{
+  mProject->deleteSession(nameSession);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::deleteSession(size_t sessionId)
+{
+  mProject->deleteSession(sessionId);
+  bUnsavedChanges = true;
+}
+
+std::shared_ptr<Session> ProjectModel::findSession(const QString &sessionName)
+{
+  return mProject->findSession(sessionName);
+}
+
+const std::shared_ptr<Session> ProjectModel::findSession(const QString &sessionName) const
+{
+  return mProject->findSession(sessionName);
+}
+
+size_t ProjectModel::findSessionId(const QString &sessionName)
+{
+  return mProject->findSessionId(sessionName);
+}
+
+size_t ProjectModel::findSessionId(const QString &sessionName) const
+{
+  return mProject->findSessionId(sessionName);
+}
+
+ProjectModel::session_iterator ProjectModel::sessionBegin()
+{
+  return mProject->sessionBegin();
+}
+
+ProjectModel::session_const_iterator ProjectModel::sessionBegin() const
+{
+  return mProject->sessionBegin();
+}
+
+ProjectModel::session_iterator ProjectModel::sessionEnd()
+{
+  return mProject->sessionEnd();
+}
+
+ProjectModel::session_const_iterator ProjectModel::sessionEnd() const
+{
+  return mProject->sessionEnd();
+}
+
+size_t ProjectModel::sessionCount() const
+{
+  return mProject->sessionCount();
+}
+
+std::shared_ptr<Session> ProjectModel::currentSession()
+{
+  return mProject->currentSession();
+}
+
+const std::shared_ptr<Session> ProjectModel::currentSession() const
+{
+  return mProject->currentSession();
+}
+
+void ProjectModel::setCurrentSession(const QString &sessionName)
+{
+  mProject->setCurrentSession(sessionName);
+}
+
 void ProjectModel::clear()
 {
   mProject->clear();
@@ -169,6 +253,24 @@ bool ProjectModel::checkOldVersion(const QString &file) const
 void ProjectModel::oldVersionBak(const QString &file) const
 {
   mProjectIO->oldVersionBak(file);
+}
+
+void ProjectModel::addImages(const QStringList &fileNames)
+{
+  for (const auto &file : fileNames){
+    std::shared_ptr<Image> photo(new Image(file));
+
+    ///TODO: Lectura de metadatos EXIF
+
+    mProject->addImage(photo);
+  }
+}
+
+void ProjectModel::deleteImages(const QStringList &images)
+{
+  for (const auto &image : images){
+    deleteImage(image);
+  }
 }
 
 void fme::ProjectModel::init()

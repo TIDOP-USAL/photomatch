@@ -131,7 +131,7 @@ void GfttWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("GFTT Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Max Features:")), 0, 0);

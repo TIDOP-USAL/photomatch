@@ -62,4 +62,5 @@ SUBDIRS += \
     walliswidget \
     walliswidget_signals \
     rswhewidget \
-    rswhewidget_signals
+    rswhewidget_signals \
+    thumbnailswidget

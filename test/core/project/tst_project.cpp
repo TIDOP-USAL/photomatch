@@ -33,6 +33,16 @@ public:
                        "            <AltitudeExif>10.1</AltitudeExif>"
                        "        </Image>"
                        "    </Images>"
+                       "    <Sessions>"
+                       "        <Session>"
+                       "            <Name>session001</Name>"
+                       "            <Description>Session 1</Description>"
+                       "        </Session>"
+                       "        <Session>"
+                       "            <Name>session002</Name>"
+                       "            <Description>Session 2</Description>"
+                       "        </Session>"
+                       "    </Sessions>"
                        "</FME>";
   }
 
@@ -80,6 +90,23 @@ public:
                     xmlReader.skipCurrentElement();
                 }
                 prj.addImage(photo);
+              } else
+                xmlReader.skipCurrentElement();
+            }
+          } else if (xmlReader.name() == "Sessions") {
+            while (xmlReader.readNextStartElement()) {
+
+              if (xmlReader.name() == "Session") {
+                std::shared_ptr<Session> session(new Session);
+                while (xmlReader.readNextStartElement()) {
+                  if (xmlReader.name() == "Name") {
+                    session->setName(xmlReader.readElementText());
+                  } else if (xmlReader.name() == "Description") {
+                    session->setDescription(xmlReader.readElementText());
+                  } else
+                    xmlReader.skipCurrentElement();
+                }
+                prj.addSession(session);
               } else
                 xmlReader.skipCurrentElement();
             }
@@ -210,6 +237,13 @@ private slots:
   void test_findImageId_data();
   void test_findImageId();
   void test_imageIterator();
+  void test_addImage_deleteImage();
+  void test_addSession_deleteSession();
+  void test_findSession();
+  void test_findSessionId_data();
+  void test_findSessionId();
+  void test_sessionIterator();
+  void test_currentSession();
   void test_clear();
 
 protected:
@@ -380,6 +414,74 @@ void TestProject::test_imageIterator()
       QCOMPARE(10.1, (*it)->altitudeExif());
     }
   }
+}
+
+void TestProject::test_addImage_deleteImage()
+{
+  std::shared_ptr<Image> img(new Image("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png"));
+
+  mProjectXml->addImage(img);
+
+  QCOMPARE(3, mProjectXml->imagesCount());
+
+  mProjectXml->deleteImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png");
+  QCOMPARE(2, mProjectXml->imagesCount());
+}
+
+void TestProject::test_addSession_deleteSession()
+{
+  mProjectXml->addSession("SessionSIFT", "Sesión SIFT");
+  mProjectXml->deleteSession("SessionSIFT");
+}
+
+void TestProject::test_findSession()
+{
+  std::shared_ptr<Session> session1 = mProjectXml->findSession("session001");
+  QCOMPARE("session001", session1->name());
+  QCOMPARE("Session 1", session1->description());
+
+  std::shared_ptr<Session> session2 = mProjectXml->findSession("session002");
+  QCOMPARE("session002", session2->name());
+  QCOMPARE("Session 2", session2->description());
+}
+
+void TestProject::test_findSessionId_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<size_t>("result");
+
+  QTest::newRow("session001") << "session001" << size_t{0};
+  QTest::newRow("session002") << "session002" << size_t{1};
+  QTest::newRow("session003") << "session003" << std::numeric_limits<size_t>().max();
+}
+
+void TestProject::test_findSessionId()
+{
+  QFETCH(QString, value);
+  QFETCH(size_t, result);
+
+  QCOMPARE(result, mProjectXml->findSessionId(value));
+}
+
+void TestProject::test_sessionIterator()
+{
+  std::shared_ptr<Session> session;
+  int i = 0;
+  for (auto it = mProjectXml->sessionBegin(); it != mProjectXml->sessionEnd(); it++, i++){
+
+    if (i == 0){
+      QCOMPARE("session001", (*it)->name());
+      QCOMPARE("Session 1", (*it)->description());
+    } else {
+      QCOMPARE("session002", (*it)->name());
+      QCOMPARE("Session 2", (*it)->description());
+    }
+  }
+}
+
+void TestProject::test_currentSession()
+{
+  ///TODO: completar
 }
 
 void TestProject::test_clear()

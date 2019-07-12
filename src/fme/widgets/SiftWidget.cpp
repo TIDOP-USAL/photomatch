@@ -120,7 +120,7 @@ void SiftWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("SIFT Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Features Number:")), 0, 0);

@@ -145,7 +145,7 @@ void DaisyWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("DAISY Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Radius:")), 0, 0);

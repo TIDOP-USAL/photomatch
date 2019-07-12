@@ -89,27 +89,36 @@ void CLAHEWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("CLAHE Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   QLabel *lbl = new QLabel(tr("Contrast Limited Adaptive Histogram Equalization"), this);
   lbl->setWordWrap(true);
   QFont font;
   font.setBold(true);
+  font.setWeight(75);
   lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  lbl->setWordWrap(true);
+  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("Clip Limit:")), 0, 0);
-  mClipLimit->setRange(0, 100);
-  propertiesLayout->addWidget(mClipLimit, 0, 1);
+  propertiesLayout->addWidget(new QLabel(tr("Clip Limit:")), 1, 0, 1, 1);
+  mClipLimit->setRange(0., 100.);
+  propertiesLayout->addWidget(mClipLimit, 1, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Tiles Size X:")), 1, 0);
+  QGroupBox *groupBoxTiles = new QGroupBox(mGroupBox);
+  QGridLayout *gridLayoutTiles = new QGridLayout(groupBoxTiles);
+  gridLayoutTiles->setSpacing(6);
+  gridLayoutTiles->setContentsMargins(11, 11, 11, 11);
+
+  gridLayoutTiles->addWidget(new QLabel(tr("Tiles Size X:")), 0, 0, 1, 1);
   mTilesGridX->setRange(0, 100);
-  propertiesLayout->addWidget(mTilesGridX, 1, 1);
+  gridLayoutTiles->addWidget(mTilesGridX, 0, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Tiles Size Y:")), 1, 0);
+  gridLayoutTiles->addWidget(new QLabel(tr("Tiles Size Y:")), 1, 0, 1, 1);
   mTilesGridY->setRange(0, 100);
-  propertiesLayout->addWidget(mTilesGridY, 2, 1);
+  gridLayoutTiles->addWidget(mTilesGridY, 1, 1, 1, 1);
+
+  propertiesLayout->addWidget(groupBoxTiles, 2, 0, 1, 2);
 
   reset(); /// set default values
 

@@ -13,6 +13,21 @@ namespace fme
 class ISettingsView;
 class ISettingsModel;
 
+/* Image preprocess */
+class IAcebsfWidget;
+class ICLAHEWidget;
+class ICmbfheWidget;
+class IDheWidget;
+class IFaheWidget;
+class IHmclaheWidget;
+class ILceBsescsWidget;
+class IMsrcpWidget;
+class INoshpWidget;
+class IPoheWidget;
+class IRswheWidget;
+class IWallisWidget;
+
+/* Feature detector/extractor */
 class IAgastWidget;
 class IAkazeWidget;
 class IBriefWidget;
@@ -97,7 +112,22 @@ protected:
   ISettingsView *mView;
   ISettingsModel *mModel;
 
-  /* Detectores/descriptores */
+  /* Image preprocess */
+
+  //IAcebsfWidget *mACEBS;
+  //ICLAHEWidget *mCLAHE;
+  //ICmbfheWidget *mCMBFHE;
+  //IDheWidget *mDHE;
+  IFaheWidget *mFAHE;
+  //IHmclaheWidget *mHMCLAHE;
+  //ILceBsescsWidget *mLCEBSESCS;
+  //IMsrcpWidget *mMSRCP;
+  //INoshpWidget *mNOSHP;
+  //IPoheWidget *mPOHE;
+  //IRswheWidget *mRSWHE;
+  //IWallisWidget *mWallis;
+
+  /* Feature detector/extractor */
 
   IAgastWidget *mAgast;
   IAkazeWidget *mAkaze;

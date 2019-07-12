@@ -33,28 +33,37 @@ INCLUDEPATH += ../../../third_party
 
 SOURCES += \
         main.cpp \
-        MainWindowView.cpp \
-        MainWindowPresenter.cpp \
         MainWindowModel.cpp \
-        NewProjectPresenter.cpp \
+        MainWindowPresenter.cpp \
+        MainWindowView.cpp \
         NewProjectView.cpp \
+        NewProjectPresenter.cpp \
+        NewSessionView.cpp \
+        NewSessionPresenter.cpp \
         ProjectModel.cpp \
         SettingsModel.cpp \
         SettingsPresenter.cpp \
-        SettingsView.cpp
+        SettingsView.cpp \
+        PreprocessView.cpp \
+        PreprocessModel.cpp \
+        PreprocessPresenter.cpp
 
 HEADERS += \
-        MainWindowView.h \
-        MainWindowPresenter.h \
-        MainWindowModel.h \
         mvp.h \
-        NewProjectInterfaces.h \
-        NewProjectPresenter.h \
+        MainWindowModel.h \
+        MainWindowPresenter.h \
+        MainWindowView.h \
         NewProjectView.h \
+        NewProjectPresenter.h \
+        NewSessionView.h \
+        NewSessionPresenter.h \
         ProjectModel.h \
         SettingsModel.h \
         SettingsPresenter.h \
-        SettingsView.h
+        SettingsView.h \
+        PreprocessView.h \
+        PreprocessModel.h \
+        PreprocessPresenter.h
 
 FORMS += \
         MainWindowView.ui
@@ -79,3 +88,29 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core/release/core.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../core/debug/core.lib
 else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../core/libcore.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../widgets/release/ -llibwidgets
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../widgets/debug/ -llibwidgets
+else:unix:!macx: LIBS += -L$$OUT_PWD/../widgets/ -llibwidgets
+
+#INCLUDEPATH += $$PWD/../widgets
+#DEPENDPATH += $$PWD/../widgets
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/liblibwidgets.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/liblibwidgets.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/libwidgets.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/libwidgets.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../widgets/liblibwidgets.a
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../widgets/release/ -llibwidgets
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../widgets/debug/ -llibwidgets
+else:unix:!macx: LIBS += -L$$OUT_PWD/../widgets/ -llibwidgets
+
+#INCLUDEPATH += $$PWD/../widgets
+#DEPENDPATH += $$PWD/../widgets
+
+win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/liblibwidgets.a
+else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/liblibwidgets.a
+else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/release/libwidgets.lib
+else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../widgets/debug/libwidgets.lib
+else:unix:!macx: PRE_TARGETDEPS += $$OUT_PWD/../widgets/liblibwidgets.a

@@ -117,7 +117,7 @@ void StarWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("STAR Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Max Size:")), 0, 0);

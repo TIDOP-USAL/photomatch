@@ -4,7 +4,11 @@ add_library(libcore ${LIB_TYPE}
             image.cpp
             image.h
             settings.cpp
-            settings.h)
+            settings.h
+            session.cpp
+            session.h
+            features.h
+            preprocess.h)
 
 set_property(TARGET libcore PROPERTY FOLDER "lib")
 

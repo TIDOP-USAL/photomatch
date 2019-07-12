@@ -8,7 +8,13 @@ MACRO(DEFINE_TEST_PROCESS name srcs)
     set(the_target "${test_kind}_${name}")
     add_executable(${the_target} ${srcs})
     
-    target_link_libraries(${the_target} PRIVATE Qt5::Core Qt5::Widgets Qt5::Test libprocess)
+    target_link_libraries(${the_target} PRIVATE 
+                          Qt5::Core 
+                          Qt5::Widgets 
+                          Qt5::Test 
+                          libprocess
+                          ${OpenCV_LIBS}
+                          ${PIXKIT_LIBRARIES})
 
     set_property(TARGET ${the_target} PROPERTY FOLDER "test/process")
     
@@ -19,27 +25,12 @@ MACRO(DEFINE_TEST_PROCESS name srcs)
     if(ENABLE_SOLUTION_FOLDERS)
       set_target_properties(${the_target} PROPERTIES FOLDER "test/process")
     endif()
-
-    #if(WIN32)
-    #  if (MSVC AND NOT BUILD_SHARED_LIBS)
-    #    set_target_properties(${the_target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:atlthunk.lib /NODEFAULTLIB:atlsd.lib /DEBUG")
-    #  endif()
-    #  install(TARGETS ${the_target}
-    #          RUNTIME DESTINATION "${PROJECT_BINARY_DIR}" COMPONENT test)
-    #endif()
-	
-	
-    #if (BUILD_SHARED_LIBS)
-    #  set_target_properties(${the_target}
-    #    PROPERTIES
-    #    COMPILE_DEFINITIONS "GTEST_LINKED_AS_SHARED_LIBRARY=1")
-    #endif()
   
     add_test(NAME ${the_target} COMMAND $<TARGET_FILE:${the_target}>)
 	
 ENDMACRO()
 
-# Añadir subdirectorios con los test
-#add_subdirectory()
+
+add_subdirectory(faheprocess)
 
 

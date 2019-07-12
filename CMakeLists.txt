@@ -85,7 +85,10 @@ option(WITH_PIXKIT   "Include PixKit"                  ON)
 find_package(Qt5 REQUIRED 
              COMPONENTS 
                Core 
-               Widgets)
+               Widgets
+               Help
+               Concurrent
+               LinguistTools)
 
 if(BUILD_TEST)
 find_package(Qt5 REQUIRED 
@@ -100,11 +103,17 @@ endif(Qt5_POSITION_INDEPENDENT_CODE)
 if(Qt5_FOUND)
 
     include_directories(${Qt5Core_INCLUDE_DIRS}
-                        ${Qt5Widgets_INCLUDE_DIRS})
+                        ${Qt5Widgets_INCLUDE_DIRS}
+                        ${Qt5Help_INCLUDE_DIRS}
+                        ${Qt5Concurrent_INCLUDE_DIRS}
+                        ${Qt5LinguistTools_INCLUDE_DIRS})
 
     message(STATUS "Found Qt")
     message(STATUS "  Module : ${Qt5Core_DIR}")
     message(STATUS "  Module : ${Qt5Widgets_DIR}")
+    message(STATUS "  Module : ${Qt5Help_DIR}")
+    message(STATUS "  Module : ${Qt5Concurrent_DIR}")
+    message(STATUS "  Module : ${Qt5LinguistTools_DIR}")
 endif()
 
 #------------------------------------------------------------#

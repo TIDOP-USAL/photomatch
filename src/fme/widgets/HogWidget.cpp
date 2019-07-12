@@ -292,7 +292,7 @@ void HogWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("HOG Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Window Width:")), 0, 0);

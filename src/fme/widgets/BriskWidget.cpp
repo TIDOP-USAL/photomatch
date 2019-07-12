@@ -87,7 +87,7 @@ void BriskWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("BRISK Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 0, 0);

@@ -74,8 +74,7 @@ void FaheWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("FAHE Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Fast implementation of Adaptive Histogram Equalization"), this);
   lbl->setWordWrap(true);

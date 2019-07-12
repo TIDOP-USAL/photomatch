@@ -103,41 +103,40 @@ void HmclaheWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("HMCLAHE Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Histogram Modified Contrast Limited Adaptive Histogram Equalization"), this);
   lbl->setWordWrap(true);
   QFont font;
   font.setBold(true);
   lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
-  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(this);
-  groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
+  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), groupBox);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);
+  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(groupBoxBlocksize);
+
+  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0, 1, 1);
   mBlockSizeX->setRange(0, 1000);
-  propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1);
+  propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1, 1, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")), 1, 0);
+  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")),  1, 0, 1, 1);
   mBlockSizeY->setRange(0, 1000);
-  propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1);
+  propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1, 1, 1);
 
+  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0, 1, 2);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("L:")), 2, 0);
+  propertiesLayout->addWidget(new QLabel(tr("L:")), 2, 0, 1, 1);
   mL->setRange(0., 1.);
   mL->setSingleStep(0.01);
   mL->setDecimals(2);
-  propertiesLayout->addWidget(mL, 2, 1);
+  propertiesLayout->addWidget(mL, 2, 1, 1, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Phi:")), 3, 0);
+  propertiesLayout->addWidget(new QLabel(tr("Phi:")), 3, 0, 1, 1);
   mPhi->setRange(0., 1.);
   mPhi->setSingleStep(0.1);
   mPhi->setDecimals(2);
-  propertiesLayout->addWidget(mPhi, 3, 1);
+  propertiesLayout->addWidget(mPhi, 3, 1, 1, 1);
 
   reset();
   update();

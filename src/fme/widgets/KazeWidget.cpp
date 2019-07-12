@@ -130,7 +130,7 @@ void KazeWidget::init()
   QGroupBox *mGroupBox = new QGroupBox(tr("KAZE Parameters"), this);
   layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
   mExtended->setText(tr("Extended"));

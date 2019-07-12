@@ -14,6 +14,8 @@ class QTreeWidget;
 namespace fme
 {
 
+class ThumbnailsWidget;
+
 class MainWindowView
   : public QMainWindow
 {
@@ -27,7 +29,7 @@ public:
     project_modified      = (1 << 1),  // Se ha modificado el proyecto
     images_added          = (1 << 2),  // Se han añadido fotogramas
     image_open            = (1 << 3),  // Hay una imagen abierta
-    processing            = (1 << 4),
+    session_created       = (1 << 4),
     preprocess            = (1 << 5),
     feature_extraction    = (1 << 6),
     feature_matching      = (1 << 7)
@@ -47,6 +49,10 @@ public:
   void setProjectTitle(const QString &title);
 
   void setFlag(Flag flag, bool value);
+  void addImages(const QStringList &images);
+  void setActiveImage(const QString &image);
+  void setActiveImages(const QStringList &images);
+  void addSession(const QString &sessionName, const QString &sessionDescription);
 
 public slots:
 
@@ -60,6 +66,12 @@ public slots:
    * \brief Borra el historial de proyectos recientes
    */
   void deleteHistory();
+
+  /*!
+   * \brief Elimina una imagen
+   * \param[in] file
+   */
+  void deleteImage(const QString &file);
 
 signals:
 
@@ -77,7 +89,7 @@ signals:
   /* Menú herramientas */
 
   void loadImages();
-  void newProcessing();
+  void newSession();
   void openAssistant();
   void openPreprocess();
   void openFeatureExtraction();
@@ -89,14 +101,22 @@ signals:
   void openHelpDialog();
   void openAboutDialog();
 
+  /* Panel de vistas en miniatura */
+
+  void openImage(QString);
+  void selectImage(QString);
+  void selectImages(QStringList);
+  void deleteImages(QStringList);
+
 protected:
 
-  void changeEvent(QEvent *e);
+  void changeEvent(QEvent *e) override;
 
 private slots:
 
   void update();
   void openFromHistory();
+  void onSelectionChanged();
 
 private:
 
@@ -119,7 +139,7 @@ protected:
   QAction *mActionCloseProject;
   QAction *mActionExit;
   QAction *mActionLoadImages;
-  QAction *mActionNewProcessing;
+  QAction *mActionNewSession;
   QAction *mActionAssistant;
   QAction *mActionPreprocess;
   QAction *mActionFeatureExtraction;
@@ -135,6 +155,7 @@ protected:
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
   QMenu *mMenuRecentProjects;
+  ThumbnailsWidget *mThumbnailsWidget;
 
   tl::EnumFlags<Flag> mFlags;
   std::vector<QAction*> mHistory;

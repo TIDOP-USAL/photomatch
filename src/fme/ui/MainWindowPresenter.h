@@ -16,6 +16,9 @@ class ISettings;
 class ISettingsRW;
 class ISettingsModel;
 class ISettingsPresenter;
+class INewSessionPresenter;
+class IPreprocessPresenter;
+class IPreprocessModel;
 
 class MainWindowPresenter
   : public IPresenter
@@ -50,7 +53,7 @@ protected slots:
   /* Menú herramientas */
 
   void loadImages();
-  void newProcessing();
+  void newSession();
   void openAssistant();
   void openPreprocess();
   void openFeatureExtraction();
@@ -66,6 +69,13 @@ protected slots:
   void loadProject();
 
   void updateProject();
+
+  void openImage(const QString &image);
+  void activeImage(const QString &image);
+  void activeImages(const QStringList &images);
+  void deleteImages(const QStringList &images);
+
+  void loadSession(const QString &session);
 
 // IPresenter interface
 
@@ -84,9 +94,19 @@ private:
   void initNewProjectDialog();
 
   /*!
+   * \brief Inicializa la herramienta de creación de una nueva sesión
+   */
+  void initNewSessionDialog();
+
+  /*!
    * \brief Inicializa la herramienta de configuración de la aplicación
    */
   void initSettingsDialog();
+
+  /*!
+   * \brief Inicializa la herramienta de preprocesado
+   */
+  void initPreprocessDialog();
 
 protected:
 
@@ -99,10 +119,15 @@ protected:
 
   INewProjectPresenter *mNewProjectPresenter;
 
+  INewSessionPresenter *mNewSessionPresenter;
+
   ISettings *mSettings;
   ISettingsRW *mSettingsRW;
   ISettingsModel *mSettingsModel;
   ISettingsPresenter *mSettingsPresenter;
+
+  IPreprocessModel *mPreprocessModel;
+  IPreprocessPresenter *mPreprocessPresenter;
 
 };
 

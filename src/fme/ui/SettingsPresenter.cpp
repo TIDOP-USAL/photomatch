@@ -3,6 +3,22 @@
 #include "SettingsModel.h"
 #include "SettingsView.h"
 
+/* Image preprocess */
+//#include "fme/widgets/AcebsfWidget.h"
+//#include "fme/widgets/CLAHEWidget.h"
+//#include "fme/widgets/CmbfheWidget.h"
+//#include "fme/widgets/CmbfheWidget.h"
+//#include "fme/widgets/DheWidget.h"
+#include "fme/widgets/FaheWidget.h"
+//#include "fme/widgets/HmclaheWidget.h"
+//#include "fme/widgets/LceBsescsWidget.h"
+//#include "fme/widgets/MsrcpWidget.h"
+//#include "fme/widgets/NoshpWidget.h"
+//#include "fme/widgets/PoheWidget.h"
+//#include "fme/widgets/RswheWidget.h"
+//#include "fme/widgets/WallisWidget.h"
+
+/* Feature detector/extractor */
 #include "fme/widgets/AgastWidget.h"
 #include "fme/widgets/AkazeWidget.h"
 #include "fme/widgets/BriefWidget.h"
@@ -32,6 +48,18 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mView(view),
     mModel(model),
     /*mHelp(nullptr),*/
+    //mACEBS(new AcebsfWidget),
+    //mCLAHE(new CLAHEWidget),
+    //mCMBFHE(new CmbfheWidget),
+    //mDHE(new DheWidget),
+    mFAHE(new FaheWidget),
+    //mHMCLAHE(new HmclaheWidget),
+    //mLCEBSESCS(new LceBsescsWidget),
+    //mMSRCP(new MsrcpWidget),
+    //mNOSHP(new NoshpWidget),
+    //mPOHE(new PoheWidget),
+    //mRSWHE(new RswheWidget),
+    //mWallis(new WallisWidget),
     mAgast(new AgastWidget),
     mAkaze(new AkazeWidget),
     mBrief(new BriefWidget),
@@ -62,6 +90,23 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
   connect(mModel, SIGNAL(unsavedChanges(bool)), mView, SLOT(setUnsavedChanges(bool)));
 
+  /* FAHE */
+  connect(mFAHE,  SIGNAL(blockSizeChange(QSize)),          mModel, SLOT(setFaheBlockSize(QSize)));
+
+  /* AGAST */
+  connect(mAgast, SIGNAL(thresholdChange(int)),            mModel, SLOT(setAgastThreshold(int)));
+  connect(mAgast, SIGNAL(nonmaxSuppressionChange(bool)),   mModel, SLOT(setAgastNonmaxSuppression(bool)));
+  connect(mAgast, SIGNAL(detectorTypeChange(QString)),     mModel, SLOT(setAgastDetectorType(QString)));
+
+  /* AKAZE */
+  connect(mAkaze, SIGNAL(descriptorTypeChange(QString)),   mModel, SLOT(setAkazeDescriptorType(QString)));
+  connect(mAkaze, SIGNAL(descriptorSizeChange(int)),       mModel, SLOT(setAkazeDescriptorSize(int)));
+  connect(mAkaze, SIGNAL(descriptorChannelsChange(int)),   mModel, SLOT(setAkazeDescriptorChannels(int)));
+  connect(mAkaze, SIGNAL(thresholdChange(double)),         mModel, SLOT(setAkazeThreshold(double)));
+  connect(mAkaze, SIGNAL(octavesChange(int)),              mModel, SLOT(setAkazeOctaves(int)));
+  connect(mAkaze, SIGNAL(octaveLayersChange(int)),         mModel, SLOT(setAkazeOctaveLayers(int)));
+  connect(mAkaze, SIGNAL(diffusivityChange(QString)),      mModel, SLOT(setAkazeDiffusivity(QString)));
+
   /* SIFT */
   connect(mSift, SIGNAL(featuresNumberChange(int)),        mModel, SLOT(setSiftFeaturesNumber(int)));
   connect(mSift, SIGNAL(octaveLayersChange(int)),          mModel, SLOT(setSiftOctaveLayers(int)));
@@ -79,6 +124,57 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
 SettingsPresenter::~SettingsPresenter()
 {
+//  if (mACEBS){
+//    delete mACEBS;
+//    mACEBS = nullptr;
+//  }
+//  if (mCLAHE){
+//    delete mCLAHE;
+//    mCLAHE = nullptr;
+//  }
+//  if (mCMBFHE){
+//    delete mCMBFHE;
+//    mCMBFHE = nullptr;
+//  }
+//  if (mDHE){
+//    delete mDHE;
+//    mDHE = nullptr;
+//  }
+
+  if (mFAHE){
+    delete mFAHE;
+    mFAHE = nullptr;
+  }
+
+//  if (mHMCLAHE){
+//    delete mHMCLAHE;
+//    mHMCLAHE = nullptr;
+//  }
+//  if (mLCEBSESCS){
+//    delete mLCEBSESCS;
+//    mLCEBSESCS = nullptr;
+//  }
+//  if (mMSRCP){
+//    delete mMSRCP;
+//    mMSRCP = nullptr;
+//  }
+//  if (mNOSHP){
+//    delete mNOSHP;
+//    mNOSHP = nullptr;
+//  }
+//  if (mPOHE){
+//    delete mPOHE;
+//    mPOHE = nullptr;
+//  }
+//  if (mRSWHE){
+//    delete mRSWHE;
+//    mRSWHE = nullptr;
+//  }
+//  if (mWallis){
+//    delete mWallis;
+//    mWallis = nullptr;
+//  }
+
   if (mAgast){
     delete mAgast;
     mAgast = nullptr;
@@ -195,6 +291,27 @@ void SettingsPresenter::open()
 
   mView->setLanguages(langs);
 
+  ///TODO: completar....
+  mFAHE->setBlockSize(mModel->faheBlockSize());
+
+  mAgast->setThreshold(mModel->agastThreshold());
+  mAgast->setDetectorType(mModel->agastDetectorType());
+  mAgast->setNonmaxSuppression(mModel->agastNonmaxSuppression());
+
+  mAkaze->setOctaves(mModel->akazeOctaves());
+  mAkaze->setThreshold(mModel->akazeThreshold());
+  mAkaze->setDiffusivity(mModel->akazeDiffusivity());
+  mAkaze->setOctaveLayers(mModel->akazeOctaveLayers());
+  mAkaze->setDescriptorSize(mModel->akazeDescriptorSize());
+  mAkaze->setDescriptorType(mModel->akazeDescriptorType());
+  mAkaze->setDescriptorChannels(mModel->akazeDescriptorChannels());
+
+  mSift->setSigma(mModel->siftSigma());
+  mSift->setOctaveLayers(mModel->siftOctaveLayers());
+  mSift->setEdgeThreshold(mModel->siftEdgeThreshold());
+  mSift->setFeaturesNumber(mModel->siftFeaturesNumber());
+  mSift->setContrastThreshold(mModel->siftContrastThreshold());
+
   mSurf->setOctaves(mModel->surfOctaves());
   mSurf->setOctaveLayers(mModel->surfOctaveLayers());
   mSurf->setRotatedFeatures(mModel->surfRotatedFeatures());
@@ -206,6 +323,8 @@ void SettingsPresenter::open()
 
 void SettingsPresenter::init()
 {
+  mView->addPreprocess(mFAHE);
+
   mView->addFeatureDetectorMethod(mSift);
   mView->addFeatureDetectorMethod(mSurf);
   mView->addFeatureDetectorMethod(mOrb);

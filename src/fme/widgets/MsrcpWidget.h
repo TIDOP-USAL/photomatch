@@ -8,7 +8,7 @@ class QDoubleSpinBox;
 namespace fme
 {
 
-class IMsrcpWidget
+class FME_EXPORT IMsrcpWidget
   : public FmeWidget
 {
   Q_OBJECT
@@ -37,7 +37,7 @@ public slots:
 };
 
 
-class MsrcpWidget
+class FME_EXPORT MsrcpWidget
   : public IMsrcpWidget
 {
   Q_OBJECT

@@ -16,7 +16,13 @@ add_executable(${the_target}
     ${CMAKE_SOURCE_DIR}/src/fme/ui/MainWindowView.ui
     )
 
-target_link_libraries(${the_target} PRIVATE Qt5::Core Qt5::Widgets Qt5::Test libcore)
+target_link_libraries(${the_target} PRIVATE
+                      Qt5::Core
+                      Qt5::Widgets
+                      Qt5::Test
+                      Qt5::Concurrent
+                      libcore
+                      libwidgets)
 
 set_property(TARGET ${the_target} PROPERTY FOLDER "test/mainwindowview")
 

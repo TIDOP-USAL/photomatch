@@ -74,8 +74,7 @@ void PoheWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("POHE Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
-  groupBox->setLayout(propertiesLayout);
+  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
 
   QLabel *lbl = new QLabel(tr("Parametric-Oriented Histogram Equalization"), this);
   lbl->setWordWrap(true);

@@ -1,6 +1,8 @@
 #include "MainWindowView.h"
 #include "ui_MainWindowView.h"
 
+#include "fme/widgets/ThumbnailsWidget.h"
+
 #include <QTreeWidgetItem>
 #include <QFileInfo>
 #include <QSettings>
@@ -17,7 +19,7 @@ MainWindowView::MainWindowView(QWidget *parent) :
   mActionCloseProject(new QAction(this)),
   mActionExit(new QAction(this)),
   mActionLoadImages(new QAction(this)),
-  mActionNewProcessing(new QAction(this)),
+  mActionNewSession(new QAction(this)),
   mActionAssistant(new QAction(this)),
   mActionPreprocess(new QAction(this)),
   mActionFeatureExtraction(new QAction(this)),
@@ -54,7 +56,7 @@ MainWindowView::MainWindowView(QWidget *parent) :
 
   /* Menú herramientas */
   connect(mActionLoadImages,         SIGNAL(triggered(bool)),   this,   SIGNAL(loadImages()));
-  connect(mActionNewProcessing,      SIGNAL(triggered(bool)),   this,   SIGNAL(newProcessing()));
+  connect(mActionNewSession,         SIGNAL(triggered(bool)),   this,   SIGNAL(newSession()));
   connect(mActionAssistant,          SIGNAL(triggered(bool)),   this,   SIGNAL(openAssistant()));
   connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
   connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
@@ -64,6 +66,14 @@ MainWindowView::MainWindowView(QWidget *parent) :
   /* Menú Ayuda */
   connect(mActionHelp,  SIGNAL(triggered(bool)), this, SIGNAL(openHelpDialog()));
   connect(mActionAbout, SIGNAL(triggered(bool)), this, SIGNAL(openAboutDialog()));
+
+  /* Panel de vistas en miniatura */
+  connect(mThumbnailsWidget, SIGNAL(openImage(QString)),        this, SIGNAL(openImage(QString)));
+  connect(mThumbnailsWidget, SIGNAL(selectImage(QString)),      this, SIGNAL(selectImage(QString)));
+  connect(mThumbnailsWidget, SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
+  connect(mThumbnailsWidget, SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
+
+  connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
 }
 
 MainWindowView::~MainWindowView()
@@ -75,7 +85,7 @@ void MainWindowView::clear()
 {
   setWindowTitle(QString("FME"));
   mTreeWidgetProject->clear();
-
+  mThumbnailsWidget->clear();
   mFlags.clear();
 
   update();
@@ -100,6 +110,147 @@ void MainWindowView::setFlag(MainWindowView::Flag flag, bool value)
 {
   mFlags.activeFlag(flag, value);
   update();
+}
+
+void MainWindowView::addImages(const QStringList &images)
+{
+  if (images.empty() == false) {
+    for (auto &image : images) {
+      if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+        /* Fotogramas */
+
+        QTreeWidgetItem *itemImages = nullptr;
+        for (int i = 0; i < itemProject->childCount(); i++) {
+          QTreeWidgetItem *temp = itemProject->child(i);
+          if (temp->text(0).compare(tr("Images")) == 0) {
+            itemImages = itemProject->child(i);
+            break;
+          }
+        }
+
+        if (itemImages == nullptr) {
+          itemImages = new QTreeWidgetItem();
+          itemImages->setText(0, tr("Images"));
+          itemImages->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-pictures-folder.png"));
+          itemImages->setFlags(itemImages->flags() | Qt::ItemIsTristate);
+          itemProject->addChild(itemImages);
+          itemImages->setExpanded(true);
+        }
+
+        /* Se añade el fotograma al árbol del proyecto */
+        QTreeWidgetItem *itemPhotogram = new QTreeWidgetItem();
+        //itemPhotogram->setExpanded(true);
+        //itemPhotogram->setCheckState(0, Qt::CheckState::Checked);
+        itemPhotogram->setText(0, QFileInfo(image).baseName());
+        itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-image-file.png"));
+        itemPhotogram->setToolTip(0, image);
+        itemImages->addChild(itemPhotogram);
+
+        update();
+      }
+    }
+
+    mThumbnailsWidget->addThumbnails(images);
+
+  }
+}
+
+void MainWindowView::setActiveImage(const QString &image)
+{
+  const QSignalBlocker blocker1(mTreeWidgetProject);
+  const QSignalBlocker blocker2(mThumbnailsWidget);
+
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    QTreeWidgetItem *itemImages = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      QTreeWidgetItem *temp = itemProject->child(i);
+      if (temp->text(0).compare(tr("Images")) == 0) {
+        itemImages = itemProject->child(i);
+        break;
+      }
+    }
+
+    if (itemImages) {
+      // Se busca la imagen en el árbol
+      for (int i = 0; i < itemImages->childCount(); i++) {
+        QTreeWidgetItem *temp = itemImages->child(i);
+        itemImages->child(i)->setSelected(temp->toolTip(0).compare(image) == 0);
+      }
+    }
+  }
+
+  mThumbnailsWidget->setActiveImage(image);
+
+}
+
+void MainWindowView::setActiveImages(const QStringList &images)
+{
+  const QSignalBlocker blocker1(mTreeWidgetProject);
+  const QSignalBlocker blocker2(mThumbnailsWidget);
+
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    QTreeWidgetItem *itemImages = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      QTreeWidgetItem *temp = itemProject->child(i);
+      if (temp->text(0).compare(tr("Images")) == 0) {
+        itemImages = itemProject->child(i);
+        break;
+      }
+    }
+
+    if (itemImages) {
+      // Se busca la imagen en el árbol
+      for (int i = 0; i < itemImages->childCount(); i++) {
+        QTreeWidgetItem *temp = itemImages->child(i);
+        temp->setSelected(false);
+        for (auto &image : images){
+          if (temp->toolTip(0).compare(image) == 0){
+            temp->setSelected(true);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  mThumbnailsWidget->setActiveImages(images);
+}
+
+void MainWindowView::addSession(const QString &sessionName, const QString &sessionDescription)
+{
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    /* Sessions */
+
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      QTreeWidgetItem *temp = itemProject->child(i);
+      if (temp->text(0).compare(tr("Sessions")) == 0) {
+        itemSessions = itemProject->child(i);
+        break;
+      }
+    }
+
+    if (itemSessions == nullptr) {
+      itemSessions = new QTreeWidgetItem();
+      itemSessions->setText(0, tr("Sessions"));
+      itemSessions->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-add-list.png"));
+      itemSessions->setFlags(itemSessions->flags() | Qt::ItemIsTristate);
+      itemProject->addChild(itemSessions);
+      itemSessions->setExpanded(true);
+    }
+
+    QTreeWidgetItem *itemSession = new QTreeWidgetItem();
+    itemSession->setText(0, sessionName);
+    itemSession->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-list.png"));
+    itemSession->setToolTip(0, sessionDescription);
+    itemSessions->addChild(itemSession);
+
+    update();
+  }
 }
 
 void MainWindowView::updateHistory(const QStringList &history)
@@ -138,6 +289,40 @@ void MainWindowView::deleteHistory()
   update();
 }
 
+void MainWindowView::deleteImage(const QString &file)
+{
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    QTreeWidgetItem *itemImages = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      QTreeWidgetItem *temp = itemProject->child(i);
+      if (temp->text(0).compare(tr("Images")) == 0) {
+        itemImages = itemProject->child(i);
+        break;
+      }
+    }
+
+    if (itemImages) {
+
+      // Se busca la imagen en el árbol
+      QTreeWidgetItem *itemImage = nullptr;
+      for (int i = 0; i < itemImages->childCount(); i++) {
+        QTreeWidgetItem *temp = itemImages->child(i);
+        if (temp->toolTip(0).compare(file) == 0) {
+          itemImage = itemImages->child(i);
+          delete itemImage;
+          itemImage = nullptr;
+          break;
+        }
+      }
+    }
+
+    setFlag(MainWindowView::Flag::images_added, itemProject->childCount() > 0);
+  }
+
+  mThumbnailsWidget->deleteThumbnail(file);
+}
+
 void MainWindowView::changeEvent(QEvent *e)
 {
   QMainWindow::changeEvent(e);
@@ -161,9 +346,9 @@ void MainWindowView::update()
   mActionCloseProject->setEnabled(bProjectExists);
 
   mActionLoadImages->setEnabled(bProjectExists);
-  mActionNewProcessing->setEnabled(mFlags.isActive(Flag::images_added));
-  mActionAssistant->setEnabled(mFlags.isActive(Flag::processing));
-  mActionPreprocess->setEnabled(mFlags.isActive(Flag::processing));
+  mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added));
+  mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created));
+  mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created));
   mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess));
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction));
   mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction));
@@ -182,6 +367,23 @@ void MainWindowView::openFromHistory()
   QAction *action = qobject_cast<QAction *>(sender());
   if (action)
     emit openProjectFromHistory(action->data().toString());
+}
+
+void MainWindowView::onSelectionChanged()
+{
+  QList<QTreeWidgetItem*> item = mTreeWidgetProject->selectedItems();
+  int size = item.size();
+  if(size > 0){
+    if (size == 1) {
+      emit selectImage(item[0]->toolTip(0));
+    } else {
+      QStringList selected_images;
+      for (int i = 0; i < size; i++){
+        selected_images.push_back(item[i]->toolTip(0));
+      }
+      emit selectImages(selected_images);
+    }
+  }
 }
 
 void MainWindowView::init()
@@ -245,11 +447,11 @@ void MainWindowView::init()
   icon6.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-pictures-folder.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionLoadImages->setIcon(icon6);
 
-  mActionNewProcessing->setText(QApplication::translate("MainWindowView", "New Processing", nullptr));
-  mActionNewProcessing->setObjectName(QStringLiteral("actionNewProcessing"));
+  mActionNewSession->setText(QApplication::translate("MainWindowView", "New Processing", nullptr));
+  mActionNewSession->setObjectName(QStringLiteral("actionNewProcessing"));
   QIcon icon7;
   icon7.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-add-list.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionNewProcessing->setIcon(icon7);
+  mActionNewSession->setIcon(icon7);
 
   mActionAssistant->setText(QApplication::translate("MainWindowView", "Assistant", nullptr));
   mActionAssistant->setObjectName(QStringLiteral("actionAssistant"));
@@ -319,6 +521,14 @@ void MainWindowView::init()
   mTreeWidgetProject->setColumnCount(1);
   ui->gridLayout->addWidget(mTreeWidgetProject, 0, 0, 1, 1);
 
+  /* Thumbnails */
+  QGridLayout *gridLayoutThumb = new QGridLayout(ui->dockWidgetThumbContents);
+  gridLayoutThumb->setSpacing(6);
+  gridLayoutThumb->setContentsMargins(11, 11, 11, 11);
+  gridLayoutThumb->setContentsMargins(0, 0, 0, 0);
+  mThumbnailsWidget = new ThumbnailsWidget(ui->dockWidgetThumbContents);
+  gridLayoutThumb->addWidget(mThumbnailsWidget, 0, 0, 1, 1);
+
   /* Menu file */
 
   ui->menuFile->addAction(mActionNewProject);
@@ -359,7 +569,7 @@ void MainWindowView::init()
 
   ui->menuTools->addAction(mActionLoadImages);
   ui->menuTools->addSeparator();
-  ui->menuTools->addAction(mActionNewProcessing);
+  ui->menuTools->addAction(mActionNewSession);
   ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionAssistant);
   ui->menuTools->addSeparator();
@@ -392,7 +602,7 @@ void MainWindowView::init()
   ui->mainToolBar->addAction(mActionOpenProject);
   ui->mainToolBar->addAction(mActionSaveProject);
   ui->mainToolBar->addAction(mActionSaveProjectAs);
-  ui->toolBarTools->addAction(mActionNewProcessing);
+  ui->toolBarTools->addAction(mActionNewSession);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionPreprocess);
   ui->toolBarTools->addAction(mActionFeatureExtraction);

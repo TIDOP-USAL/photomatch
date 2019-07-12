@@ -5,13 +5,19 @@
 
 #include "ProjectModel.h"
 
-#include "NewProjectInterfaces.h"
 #include "NewProjectPresenter.h"
 #include "NewProjectView.h"
+
+#include "NewSessionPresenter.h"
+#include "NewSessionView.h"
 
 #include "SettingsModel.h"
 #include "SettingsPresenter.h"
 #include "SettingsView.h"
+
+#include "fme/ui/PreprocessPresenter.h"
+#include "fme/ui/PreprocessModel.h"
+#include "fme/ui/PreprocessView.h"
 
 #include "fme/core/project.h"
 
@@ -30,10 +36,13 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mProjectIO(new ProjectRW),
     mProjectModel(nullptr),
     mNewProjectPresenter(nullptr),
+    mNewSessionPresenter(nullptr),
     mSettings(new Settings),
     mSettingsRW(new SettingsRW),
     mSettingsModel(nullptr),
-    mSettingsPresenter(nullptr)
+    mSettingsPresenter(nullptr),
+    mPreprocessModel(nullptr),
+    mPreprocessPresenter(nullptr)
 {
   init();
 
@@ -53,7 +62,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   /* Menú herramientas */
 
   connect(mView,   SIGNAL(loadImages()),              this, SLOT(loadImages()));
-  connect(mView,   SIGNAL(newProcessing()),           this, SLOT(newProcessing()));
+  connect(mView,   SIGNAL(newSession()),              this, SLOT(newSession()));
   connect(mView,   SIGNAL(openAssistant()),           this, SLOT(openAssistant()));
   connect(mView,   SIGNAL(openPreprocess()),          this, SLOT(openPreprocess()));
   connect(mView,   SIGNAL(openFeatureExtraction()),   this, SLOT(openFeatureExtraction()));
@@ -65,6 +74,12 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(openHelpDialog()),            this, SLOT(help()));
   connect(mView, SIGNAL(openAboutDialog()),           this, SLOT(openAboutDialog()));
 
+  /* Panel de vistas en miniatura */
+
+  connect(mView, SIGNAL(openImage(QString)),          this, SLOT(openImage(QString)));
+  connect(mView, SIGNAL(selectImage(QString)),        this, SLOT(activeImage(QString)));
+  connect(mView, SIGNAL(selectImages(QStringList)),   this, SLOT(activeImages(QStringList)));
+  connect(mView, SIGNAL(deleteImages(QStringList)),   this, SLOT(deleteImages(QStringList)));
 
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
 }
@@ -91,6 +106,11 @@ MainWindowPresenter::~MainWindowPresenter()
     mNewProjectPresenter = nullptr;
   }
 
+  if (mNewSessionPresenter){
+    delete mNewSessionPresenter;
+    mNewSessionPresenter = nullptr;
+  }
+
   if(mSettings){
     delete mSettings;
     mSettings = nullptr;
@@ -104,6 +124,16 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mSettingsModel){
     delete mSettingsModel;
     mSettingsModel = nullptr;
+  }
+
+  if(mPreprocessModel){
+    delete mPreprocessModel;
+    mPreprocessModel = nullptr;
+  }
+
+  if(mPreprocessPresenter){
+    delete mPreprocessPresenter;
+    mPreprocessPresenter = nullptr;
   }
 }
 
@@ -212,9 +242,9 @@ void MainWindowPresenter::openFromHistory(const QString &file)
 
 void MainWindowPresenter::deleteHistory()
 {
-  ///TODO: mModel->deleteHistory();
-  /// mover deleteHistory a una clase SettingsModel
-  ///TODO: mView->deleteHistory();
+  TL_TODO("mModel->deleteHistory();")
+  TL_TODO("mover deleteHistory a una clase SettingsModel")
+  TL_TODO("mView->deleteHistory();")
 }
 
 void MainWindowPresenter::saveProject()
@@ -278,12 +308,26 @@ void MainWindowPresenter::exit()
 
 void MainWindowPresenter::loadImages()
 {
+  QStringList fileNames = QFileDialog::getOpenFileNames(Q_NULLPTR,
+                                                        tr("Add images"),
+                                                        mProjectModel->projectFolder(),
+                                                        tr("Image files (*.tif *.jpg *.png);;TIFF (*.tif);;png (*.png);;JPEG (*.jpg)"));
+  if (fileNames.size() > 0) {
+    //msgInfo("Loading photos...");
+    mProjectModel->addImages(fileNames);
 
+    mView->addImages(fileNames);
+
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+    mView->setFlag(MainWindowView::Flag::images_added, true);
+  }
 }
 
-void MainWindowPresenter::newProcessing()
+void MainWindowPresenter::newSession()
 {
+  initNewSessionDialog();
 
+  mNewSessionPresenter->open();
 }
 
 void MainWindowPresenter::openAssistant()
@@ -293,7 +337,8 @@ void MainWindowPresenter::openAssistant()
 
 void MainWindowPresenter::openPreprocess()
 {
-
+  initPreprocessDialog();
+  mPreprocessPresenter->open();
 }
 
 void MainWindowPresenter::openFeatureExtraction()
@@ -319,22 +364,76 @@ void MainWindowPresenter::openAboutDialog()
 
 void MainWindowPresenter::loadProject()
 {
+  mView->clear();
+
   QString prjFile = mProjectModel->path();
 
-  mView->clear();
+  /// Se añade al historial de proyectos recientes
+  mSettingsModel->addToHistory(prjFile);
+  mView->updateHistory(mSettingsModel->history());
+
+
   mView->setProjectTitle(mProjectModel->name());
   mView->setFlag(MainWindowView::Flag::project_exists, true);
 //  QString msg = tr("Load project: ").append(prjFile);
 //  mView->setStatusBarMsg(msg);
 //  msgInfo(msg.toStdString().c_str());
 
-//  mView->addImages(mModel->getImages());
+  QStringList images;
+  for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+    images.push_back((*it)->path());
+  }
 
+  if (images.size() > 0){
+    mView->addImages(images);
+    mView->setFlag(MainWindowView::Flag::images_added, true);
+  }
+
+  for(auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
+    //loadSession((*it)->name());
+    mView->addSession((*it)->name(), (*it)->description());
+    mView->setFlag(MainWindowView::Flag::session_created, true);
+  }
 }
 
 void MainWindowPresenter::updateProject()
 {
 
+}
+
+void MainWindowPresenter::openImage(const QString &image)
+{
+  //mView->showImage(image);
+}
+
+void MainWindowPresenter::activeImage(const QString &image)
+{
+  mView->setActiveImage(image);
+}
+
+void MainWindowPresenter::activeImages(const QStringList &images)
+{
+  mView->setActiveImages(images);
+}
+
+void MainWindowPresenter::deleteImages(const QStringList &images)
+{
+  mProjectModel->deleteImages(images);
+  for (const auto &image : images){
+    mView->deleteImage(image);
+  }
+  mView->setFlag(MainWindowView::Flag::project_modified, true);
+
+  mView->setFlag(MainWindowView::Flag::images_added, mProjectModel->imagesCount() > 0);
+}
+
+void MainWindowPresenter::loadSession(const QString &session)
+{
+  std::shared_ptr<Session> _session = mProjectModel->findSession(session);
+
+  mView->addSession(_session->name(), _session->description());
+
+  mView->setFlag(MainWindowView::Flag::session_created, true);
 }
 
 void MainWindowPresenter::help()
@@ -350,6 +449,9 @@ void MainWindowPresenter::init()
 {
   mProjectModel = new ProjectModel(mProjectIO, mProject);
   mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
+  mSettingsModel->read();
+
+  mView->updateHistory(mSettingsModel->history());
 }
 
 void MainWindowPresenter::initNewProjectDialog()
@@ -363,13 +465,34 @@ void MainWindowPresenter::initNewProjectDialog()
   }
 }
 
+void MainWindowPresenter::initNewSessionDialog()
+{
+  if (mNewSessionPresenter == nullptr){
+    INewSessionView *newSessionView = new NewSessionView(mView);
+    mNewSessionPresenter = new NewSessionPresenter(newSessionView, mProjectModel);
+
+    connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(loadSession(QString)));
+  }
+}
+
 void MainWindowPresenter::initSettingsDialog()
 {
   if (mSettingsPresenter == nullptr){
     ISettingsView *view = new SettingsView(mView);
-    mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
+    //mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
     mSettingsPresenter = new SettingsPresenter(view, mSettingsModel);
     //mSettingsPresenter->setHelp(mHelp);
+  }
+}
+
+void MainWindowPresenter::initPreprocessDialog()
+{
+  ///TODO: Hay que pasar mSettingsModel y mProjectModel para leer los valores
+  /// por defecto de los preprocesos y las imágenes del proyecto
+  if (mPreprocessPresenter == nullptr){
+    mPreprocessModel = new PreprocessModel;
+    IPreprocessView *preprocessView = new PreprocessView(mView);
+    mPreprocessPresenter = new PreprocessPresenter(preprocessView, mPreprocessModel, mProjectModel, mSettingsModel);
   }
 }
 

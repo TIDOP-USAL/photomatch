@@ -3,4 +3,5 @@ TEMPLATE = subdirs
 SUBDIRS += \
     project \
     image \
-    settings
+    settings \
+    session

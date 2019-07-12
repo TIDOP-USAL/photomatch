@@ -74,7 +74,7 @@ void CmbfheWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("CMBFHE Parameters"), this);
   layout->addWidget(groupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(this);
+  QGridLayout *propertiesLayout = new QGridLayout();
   groupBox->setLayout(propertiesLayout);
 
   QLabel *lbl = new QLabel(tr("Cascaded Multistep Binomial Filtering Histogram Equalization"), this);

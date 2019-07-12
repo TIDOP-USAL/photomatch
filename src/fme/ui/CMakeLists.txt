@@ -20,29 +20,41 @@ set(CMAKE_AUTORCC ON)
 
 project(fme)
 
-set(FME_SRC
+set(FME_SOURCES
     main.cpp
-    mvp.h
     MainWindowModel.cpp
-    MainWindowModel.h
     MainWindowPresenter.cpp
-    MainWindowPresenter.h
     MainWindowView.cpp
-    MainWindowView.h
-    NewProjectInterfaces.h
     NewProjectView.cpp
-    NewProjectView.h
     NewProjectPresenter.cpp
-    NewProjectPresenter.h
+    NewSessionView.cpp
+    NewSessionPresenter.cpp
     ProjectModel.cpp
-    ProjectModel.h
     SettingsModel.cpp
-    SettingsModel.h
     SettingsPresenter.cpp
-    SettingsPresenter.h
     SettingsView.cpp
-    SettingsView.h
+    PreprocessView.cpp
+    PreprocessModel.cpp
+    PreprocessPresenter.cpp
 )  
+
+set(FME_HEADERS
+    mvp.h
+    MainWindowModel.h
+    MainWindowPresenter.h
+    MainWindowView.h
+    NewProjectView.h
+    NewProjectPresenter.h
+    NewSessionView.h
+    NewSessionPresenter.h
+    ProjectModel.h
+    SettingsModel.h
+    SettingsPresenter.h
+    SettingsView.h
+    PreprocessView.h
+    PreprocessModel.h
+    PreprocessPresenter.h
+)
 
 if(MSVC)
   #list(APPEND FME_SRC ui/resource.h ui/fme.rc)
@@ -65,7 +77,7 @@ set(FME_FORMS
 QT5_ADD_RESOURCES(UI_FME_RES ${FME_RESOURCES} )
 
 add_executable(${PROJECT_NAME} WIN32
-               ${FME_SRC}
+               ${FME_SOURCES}
                ${FME_HEADERS}
                ${FME_FORMS}
                ${UI_FME_RES}
@@ -80,15 +92,18 @@ source_group("Resource Files"  FILES ${FME_RESOURCES})
 target_link_libraries(${PROJECT_NAME}
                       Qt5::Core
                       Qt5::Widgets
+                      Qt5::Help
+                      Qt5::Concurrent
                       libcore
                       libwidgets
-#                      ${OpenCV_LIBS}
+                      libprocess
+                      ${OpenCV_LIBS}
 #                      ${Boost_SYSTEM_LIBRARY}
 #                      ${Boost_THREAD_LIBRARY}
 #                      ${Boost_CHRONO_LIBRARY}
 #                      ${Boost_DATE_TIME_LIBRARY}
 #                      ${Boost_ATOMIC_LIBRARY}
-#                      ${PIXKIT_LIBRARIES}
+                      ${PIXKIT_LIBRARIES}
 )
 
 if(ENABLE_SOLUTION_FOLDERS)

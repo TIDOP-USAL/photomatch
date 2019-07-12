@@ -5,7 +5,7 @@
 
 #include <QObject>
 
-#include "NewProjectInterfaces.h"
+#include "fme/ui/mvp.h"
 
 
 namespace fme
@@ -15,21 +15,50 @@ class INewProjectView;
 class IProjectModel;
 class Help;
 
+/*!
+ * \brief The INewProjectPresenter class
+ */
+class INewProjectPresenter
+  : public IPresenter
+{
+
+  Q_OBJECT
+
+public:
+
+  INewProjectPresenter(){}
+
+  virtual ~INewProjectPresenter() {}
+
+signals:
+
+  /*!
+   * \brief Señal que se emite cuando se crea el proyecto
+   */
+  void projectCreate();
+
+protected slots:
+
+  /*!
+   * \brief Guarda el proyecto
+   */
+  virtual void saveProject() = 0;
+
+  /*!
+   * \brief Descarta los cambios en el proyecto
+   */
+  virtual void discartProject() = 0;
+
+};
+
 class NewProjectPresenter
   : public INewProjectPresenter
 {
   Q_OBJECT
 
-private:
-
-  INewProjectView *mView;
-  IProjectModel *mProjectModel;
-  QString mProjectsDefaultPath;
-  std::shared_ptr<Help> mHelp;
-
 public:
 
-  NewProjectPresenter(INewProjectView *view, IProjectModel *mModel);
+  NewProjectPresenter(INewProjectView *view, IProjectModel *model);
   ~NewProjectPresenter() override;
 
 // INewProjectPresenter interface
@@ -50,6 +79,13 @@ public slots:
 private:
 
   void init() override;
+
+private:
+
+  INewProjectView *mView;
+  IProjectModel *mProjectModel;
+  QString mProjectsDefaultPath;
+  std::shared_ptr<Help> mHelp;
 
 };
 

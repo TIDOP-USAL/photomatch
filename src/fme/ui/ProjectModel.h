@@ -62,7 +62,8 @@ public:
    */
   virtual void oldVersionBak(const QString &file) const = 0;
 
-
+  virtual void addImages(const QStringList &fileNames) = 0;
+  virtual void deleteImages(const QStringList &images) = 0;
 
 signals:
 
@@ -114,6 +115,22 @@ public:
   image_iterator imageEnd() override;
   image_const_iterator imageEnd() const override;
   size_t imagesCount() const override;
+  void addSession(const QString &name, const QString &description) override;
+  void addSession(const std::shared_ptr<Session> &session) override;
+  void deleteSession(const QString &nameSession) override;
+  void deleteSession(size_t sessionId) override;
+  std::shared_ptr<Session> findSession(const QString &sessionName) override;
+  const std::shared_ptr<Session> findSession(const QString &sessionName) const override;
+  size_t findSessionId(const QString &sessionName) override;
+  size_t findSessionId(const QString &sessionName) const override;
+  session_iterator sessionBegin() override;
+  session_const_iterator sessionBegin() const override;
+  session_iterator sessionEnd() override;
+  session_const_iterator sessionEnd() const override;
+  size_t sessionCount() const override;
+  std::shared_ptr<Session> currentSession() override;
+  const std::shared_ptr<Session> currentSession() const override;
+  void setCurrentSession(const QString &sessionName) override;
   void clear() override;
 
 // IProjectModel interface
@@ -127,6 +144,8 @@ public:
   bool checkUnsavedChanges() const override;
   bool checkOldVersion(const QString &file) const override;
   void oldVersionBak(const QString &file) const override;
+  void addImages(const QStringList &fileNames) override;
+  void deleteImages(const QStringList &images) override;
 
 // IModel interface
 
@@ -140,6 +159,7 @@ protected:
   IProject *mProject;
   QString mPrjFile;
   bool bUnsavedChanges;
+
 };
 
 } // namespace fme

@@ -34,6 +34,16 @@ public:
                        "            <AltitudeExif>10.1</AltitudeExif>"
                        "        </Image>"
                        "    </Images>"
+                       "    <Sessions>"
+                       "        <Session>"
+                       "            <Name>session001</Name>"
+                       "            <Description>Session 1</Description>"
+                       "        </Session>"
+                       "        <Session>"
+                       "            <Name>session002</Name>"
+                       "            <Description>Session 2</Description>"
+                       "        </Session>"
+                       "    </Sessions>"
                        "</FME>";
   }
 
@@ -81,6 +91,23 @@ public:
                     xmlReader.skipCurrentElement();
                 }
                 prj.addImage(photo);
+              } else
+                xmlReader.skipCurrentElement();
+            }
+          } else if (xmlReader.name() == "Sessions") {
+            while (xmlReader.readNextStartElement()) {
+
+              if (xmlReader.name() == "Session") {
+                std::shared_ptr<Session> session(new Session);
+                while (xmlReader.readNextStartElement()) {
+                  if (xmlReader.name() == "Name") {
+                    session->setName(xmlReader.readElementText());
+                  } else if (xmlReader.name() == "Description") {
+                    session->setDescription(xmlReader.readElementText());
+                  } else
+                    xmlReader.skipCurrentElement();
+                }
+                prj.addSession(session);
               } else
                 xmlReader.skipCurrentElement();
             }
@@ -143,6 +170,13 @@ private slots:
   void test_findImageId_data();
   void test_findImageId();
   void test_imageIterator();
+  void test_addImage_deleteImage();
+  void test_addImages_deleteImages();
+  void test_addSession_deleteSession();
+  void test_findSession();
+  void test_findSessionId_data();
+  void test_findSessionId();
+  void test_sessionIterator();
   void test_z_clear();
 
 protected:
@@ -200,6 +234,7 @@ void TestProjectModel::testConstructor()
   QCOMPARE(QString(), prj.projectFolder());
   QCOMPARE(QString("1.0"), prj.version());
   QCOMPARE(0, prj.imagesCount());
+  QCOMPARE(0, prj.sessionCount());
   QCOMPARE(QString(), prj.path());
   QCOMPARE(false, prj.checkUnsavedChanges());
   //QCOMPARE(false, prj.checkOldVersion());
@@ -215,6 +250,7 @@ void TestProjectModel::testConstructor()
   QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001"), mProjectModel->projectFolder());
   QCOMPARE(QString("1.0"), mProjectModel->version());
   QCOMPARE(2, mProjectModel->imagesCount());
+  QCOMPARE(2, mProjectModel->sessionCount());
   QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001/prj001.xml"), mProjectModel->path());
   QCOMPARE(false, mProjectModel->checkUnsavedChanges());
   //QCOMPARE(false, mProjectModel->checkOldVersion());
@@ -289,14 +325,12 @@ void TestProjectModel::test_findImage()
 {
   std::shared_ptr<Image> img = mProjectModel->findImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png");
   QCOMPARE("img001", img->name());
-  //QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png", img->path());
   QCOMPARE(0.5, img->longitudeExif());
   QCOMPARE(2.3, img->latitudeExif());
   QCOMPARE(10.2, img->altitudeExif());
 
   std::shared_ptr<Image> img2 = mProjectModel->findImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png");
   QCOMPARE("img002", img2->name());
-  //QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png", img2->path());
   QCOMPARE(0.51, img2->longitudeExif());
   QCOMPARE(2.3, img2->latitudeExif());
   QCOMPARE(10.1, img2->altitudeExif());
@@ -309,7 +343,7 @@ void TestProjectModel::test_findImageId_data()
 
   QTest::newRow("img001") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png" << size_t{0};
   QTest::newRow("img002") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png" << size_t{1};
-  QTest::newRow("img003") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png" << std::numeric_limits<size_t>().max();
+  QTest::newRow("img003") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img005.png" << std::numeric_limits<size_t>().max();
 }
 
 void TestProjectModel::test_findImageId()
@@ -342,6 +376,84 @@ void TestProjectModel::test_imageIterator()
   }
 }
 
+void TestProjectModel::test_addImage_deleteImage()
+{
+  std::shared_ptr<Image> img(new Image("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png"));
+  mProjectModel->addImage(img);
+
+  QCOMPARE(3, mProjectModel->imagesCount());
+
+  mProjectModel->deleteImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png");
+  QCOMPARE(2, mProjectModel->imagesCount());
+  mProjectModel->save();
+}
+
+void TestProjectModel::test_addImages_deleteImages()
+{
+  mProjectModel->addImages({"C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png",
+                            "C:/Users/User01/Documents/fme/Projects/prj001/images/img004.png"});
+
+  QCOMPARE(4, mProjectModel->imagesCount());
+
+  mProjectModel->deleteImages({"C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png",
+                               "C:/Users/User01/Documents/fme/Projects/prj001/images/img004.png"});
+  QCOMPARE(2, mProjectModel->imagesCount());
+  mProjectModel->save();
+}
+
+void TestProjectModel::test_addSession_deleteSession()
+{
+  mProjectModel->addSession("Session01", "Sesión SIFT");
+  mProjectModel->deleteSession("Session01");
+  mProjectModel->save();
+}
+
+void TestProjectModel::test_findSession()
+{
+  std::shared_ptr<Session> session1 = mProjectModel->findSession("session001");
+  QCOMPARE("session001", session1->name());
+  QCOMPARE("Session 1", session1->description());
+
+  std::shared_ptr<Session> session2 = mProjectModel->findSession("session002");
+  QCOMPARE("session002", session2->name());
+  QCOMPARE("Session 2", session2->description());
+}
+
+void TestProjectModel::test_findSessionId_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<size_t>("result");
+
+  QTest::newRow("session001") << "session001" << size_t{0};
+  QTest::newRow("session002") << "session002" << size_t{1};
+  QTest::newRow("session003") << "session003" << std::numeric_limits<size_t>().max();
+}
+
+void TestProjectModel::test_findSessionId()
+{
+  QFETCH(QString, value);
+  QFETCH(size_t, result);
+
+  QCOMPARE(result, mProjectModel->findSessionId(value));
+}
+
+void TestProjectModel::test_sessionIterator()
+{
+  std::shared_ptr<Session> session;
+  int i = 0;
+  for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++, i++){
+
+    if (i == 0){
+      QCOMPARE("session001", (*it)->name());
+      QCOMPARE("Session 1", (*it)->description());
+    } else {
+      QCOMPARE("session002", (*it)->name());
+      QCOMPARE("Session 2", (*it)->description());
+    }
+  }
+}
+
+/// _z para que lo ejecute al final...
 void TestProjectModel::test_z_clear()
 {
   mProjectModel->clear();
@@ -351,6 +463,7 @@ void TestProjectModel::test_z_clear()
   QCOMPARE(QString(), mProjectModel->projectFolder());
   QCOMPARE(QString("1.0"), mProjectModel->version());
   QCOMPARE(0, mProjectModel->imagesCount());
+  QCOMPARE(0, mProjectModel->sessionCount());
   QCOMPARE(QString(), mProjectModel->path());
   QCOMPARE(false, mProjectModel->checkUnsavedChanges());
 }
