@@ -70,6 +70,10 @@ private slots:
   void test_languages();
   void test_history();
 
+  /* CLAHE */
+  void test_claheClipLimit();
+  void test_claheTilesGridSize();
+
   /* FAHE */
   void test_faheBlockSize();
 
@@ -159,6 +163,9 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(10, settingsModel.historyMaxSize());
   QCOMPARE(QStringList(), settingsModel.history());
 
+  QCOMPARE(40., settingsModel.claheClipLimit());
+  QCOMPARE(QSize(8, 8), settingsModel.claheTilesGridSize());
+
   QCOMPARE(QSize(11,11), settingsModel.faheBlockSize());
 
   QCOMPARE(10, settingsModel.agastThreshold());
@@ -229,6 +236,18 @@ void TestSettingsModel::test_history()
   mSettingsModel->clearHistory();
   h = mSettings->history();
   QCOMPARE(0, h.size());
+}
+
+void TestSettingsModel::test_claheClipLimit()
+{
+  mSettingsModel->setClaheClipLimit(20.);
+  QCOMPARE(20., mSettingsModel->claheClipLimit());
+}
+
+void TestSettingsModel::test_claheTilesGridSize()
+{
+  mSettingsModel->setClaheTilesGridSize(QSize(4, 4));
+  QCOMPARE(QSize(4, 4), mSettingsModel->claheTilesGridSize());
 }
 
 void TestSettingsModel::test_faheBlockSize()
@@ -405,6 +424,8 @@ void TestSettingsModel::test_siftSigma()
 void TestSettingsModel::test_reset()
 {
   mSettingsModel->setLanguage("es");
+  mSettingsModel->setClaheClipLimit(20.);
+  mSettingsModel->setClaheTilesGridSize(QSize(4, 4));
   mSettingsModel->setFaheBlockSize(QSize(7,7));
   mSettingsModel->setAgastThreshold(30);
   mSettingsModel->setAgastDetectorType("AGAST_7_12s");
@@ -430,6 +451,9 @@ void TestSettingsModel::test_reset()
   mSettingsModel->reset();
 
   QCOMPARE("en", mSettingsModel->language());
+
+  QCOMPARE(40., mSettingsModel->claheClipLimit());
+  QCOMPARE(QSize(8, 8), mSettingsModel->claheTilesGridSize());
 
   QCOMPARE(QSize(11,11), mSettingsModel->faheBlockSize());
 

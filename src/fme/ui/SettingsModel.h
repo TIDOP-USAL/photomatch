@@ -44,6 +44,9 @@ public:
    */
   virtual int historyMaxSize() const = 0;
 
+  virtual double claheClipLimit() const = 0;
+  virtual QSize claheTilesGridSize() const = 0;
+
   virtual QSize faheBlockSize() const = 0;
 
   virtual QString akazeDescriptorType() const = 0;
@@ -113,6 +116,9 @@ public slots:
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
 
+  virtual void setClaheClipLimit(double clipLimit) = 0;
+  virtual void setClaheTilesGridSize (const QSize &tilesGridSize) = 0;
+
   virtual void setFaheBlockSize(const QSize &size) = 0;
 
   virtual void setAgastThreshold(int threshold) = 0;
@@ -166,6 +172,9 @@ public:
   QStringList history() const override;
   int historyMaxSize() const override;
 
+  double claheClipLimit() const override;
+  QSize claheTilesGridSize() const override;
+
   QSize faheBlockSize() const override;
 
   int agastThreshold() const override;
@@ -203,6 +212,9 @@ public slots:
   void addToHistory(const QString &project) override;
   void clearHistory() override;
   void setHistoryMaxSize(int maxSize) override;
+
+  void setClaheClipLimit(double clipLimit) override;
+  void setClaheTilesGridSize(const QSize &tilesGridSize) override;
 
   void setFaheBlockSize(const QSize &size) override;
 

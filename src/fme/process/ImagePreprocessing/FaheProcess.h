@@ -1,8 +1,6 @@
 #ifndef FME_FAHE_PROCESS_H
 #define FME_FAHE_PROCESS_H
 
-#include <QDir>
-
 #include "fme/process/ProcessConcurrent.h"
 #include "fme/core/preprocess.h"
 

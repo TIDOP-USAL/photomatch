@@ -115,7 +115,7 @@ protected:
   /* Image preprocess */
 
   //IAcebsfWidget *mACEBS;
-  //IClaheWidget *mCLAHE;
+  IClaheWidget *mCLAHE;
   //ICmbfheWidget *mCMBFHE;
   //IDheWidget *mDHE;
   IFaheWidget *mFAHE;

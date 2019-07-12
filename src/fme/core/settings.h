@@ -70,6 +70,8 @@ public:
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
 
+  virtual IClahe *clahe() = 0;
+  virtual const IClahe *clahe() const = 0;
   virtual IFahe *fahe() = 0;
   virtual const IFahe *fahe() const = 0;
 
@@ -294,6 +296,37 @@ protected:
 
 
 /*!
+ * \brief CLAHE image preprocess class
+ */
+class FME_EXPORT Clahe
+  : public IClahe
+{
+
+public:
+
+  Clahe();
+  ~Clahe() override = default;
+
+// IClahe interface
+
+public:
+
+  double clipLimit() const override;
+  void setClipLimit(double clipLimit) override;
+  QSize tilesGridSize() const override;
+  void setTilesGridSize(const QSize &tilesGridSize) override;
+
+  void reset() override;
+
+protected:
+
+  double mClipLimit;
+  QSize mTilesGridSize;
+};
+
+
+
+/*!
  * \brief Fahe image preprocess class
  */
 class FME_EXPORT Fahe
@@ -345,6 +378,8 @@ public:
   int historyMaxSize() const override;
   void setHistoryMaxSize(int maxSize) override;
 
+  IClahe *clahe() override;
+  const IClahe *clahe() const override;
   IFahe *fahe() override;
   const IFahe *fahe() const override;
 
@@ -365,6 +400,7 @@ protected:
   int mHistoyMaxSize;
   QStringList mHistory;
 
+  IClahe *mClahe;
   IFahe *mFahe;
 
   IAgast *mAgast;

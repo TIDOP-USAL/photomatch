@@ -57,6 +57,8 @@ add_library(libprocess ${LIB_TYPE}
             surf/SURF_KPDetProcess.h
             surf/SUFT_KPDescProcess.cpp
             surf/SUFT_KPDescProcess.h
+            ImagePreprocessing/ClaheProcess.cpp
+            ImagePreprocessing/ClaheProcess.h
             ImagePreprocessing/ContrastPreservingDecolorization__Process.cpp
             ImagePreprocessing/ContrastPreservingDecolorization__Process.h
             ImagePreprocessing/WallisFilter_Process.cpp

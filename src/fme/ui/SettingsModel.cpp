@@ -37,6 +37,16 @@ int SettingsModel::historyMaxSize() const
   return mSettings->historyMaxSize();
 }
 
+double SettingsModel::claheClipLimit() const
+{
+  return mSettings->clahe()->clipLimit();
+}
+
+QSize SettingsModel::claheTilesGridSize() const
+{
+  return mSettings->clahe()->tilesGridSize();
+}
+
 QSize SettingsModel::faheBlockSize() const
 {
   return mSettings->fahe()->blockSize();
@@ -163,6 +173,18 @@ void SettingsModel::clearHistory()
 void SettingsModel::setHistoryMaxSize(int maxSize)
 {
   mSettings->setHistoryMaxSize(maxSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setClaheClipLimit(double clipLimit)
+{
+  mSettings->clahe()->setClipLimit(clipLimit);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setClaheTilesGridSize(const QSize &tilesGridSize)
+{
+  mSettings->clahe()->setTilesGridSize(tilesGridSize);
   emit unsavedChanges(true);
 }
 

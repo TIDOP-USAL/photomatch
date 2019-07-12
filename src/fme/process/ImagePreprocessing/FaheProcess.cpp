@@ -8,17 +8,6 @@
 namespace fme
 {
 
-//FaheProcess::FaheProcess(cv::Mat &cvImgLeft, cv::Mat &cvImgRight, const cv::Size &blockSize, const QDir &outputDir)
-//  : mCvImg_left(cvImgLeft),
-//    mCvImg_right(cvImgRight),
-//    mBlockSize(blockSize),
-//    mOutputDir(outputDir)
-//{
-
-//}
-
-
-
 FaheProcess::FaheProcess()
   : ProcessConcurrent(),
     IFahe(),
@@ -95,6 +84,8 @@ void FaheProcess::setBlockSize(const QSize &blockSize)
 
 void FaheProcess::reset()
 {
+  mImgInput = "";
+  mImgOutput = "";
   mBlockSize = QSize(11, 11);
 }
 

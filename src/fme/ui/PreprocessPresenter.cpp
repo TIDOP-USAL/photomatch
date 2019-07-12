@@ -21,6 +21,10 @@
 
 #include "fme/process/MultiProcess.h"
 #include "fme/process/ImagePreprocessing/FaheProcess.h"
+#include "fme/process/ImagePreprocessing/ClaheProcess.h"
+
+#include <QFileInfo>
+#include <QDir>
 
 namespace fme
 {
@@ -176,7 +180,8 @@ void PreprocessPresenter::run()
     if (mView->currentPreprocess().compare("ACEBS") == 0) {
 
     } else if (mView->currentPreprocess().compare("CLAHE") == 0) {
-
+      ClaheProcess *clahe_process = new ClaheProcess(file_in, file_out, mCLAHE->clipLimit(), mCLAHE->tileGridSize());
+      mMultiProcess->appendProcess(clahe_process);
     } else if (mView->currentPreprocess().compare("CMBFHE") == 0) {
 
     } else if (mView->currentPreprocess().compare("DHE") == 0) {

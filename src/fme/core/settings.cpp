@@ -332,10 +332,47 @@ void Sift::reset()
 /*----------------------------------------------------------------*/
 
 
-Fahe::Fahe()
-  : mBlockSize(QSize(11, 11))
+Clahe::Clahe()
+  : IClahe(),
+    mClipLimit(40.),
+    mTilesGridSize(QSize(8, 8))
 {
-  reset();
+}
+
+double Clahe::clipLimit() const
+{
+  return mClipLimit;
+}
+
+void Clahe::setClipLimit(double clipLimit)
+{
+  mClipLimit = clipLimit;
+}
+
+QSize Clahe::tilesGridSize() const
+{
+  return mTilesGridSize;
+}
+
+void Clahe::setTilesGridSize(const QSize &tilesGridSize)
+{
+  mTilesGridSize = tilesGridSize;
+}
+
+void Clahe::reset()
+{
+  mClipLimit = 40.0;
+  mTilesGridSize = QSize(8, 8);
+}
+
+
+/*----------------------------------------------------------------*/
+
+
+Fahe::Fahe()
+  : IFahe(),
+    mBlockSize(QSize(11, 11))
+{
 }
 
 QSize Fahe::blockSize() const
@@ -361,6 +398,7 @@ void Fahe::reset()
 Settings::Settings()
   : ISettings(),
     mHistoyMaxSize(10),
+    mClahe(new Clahe),
     mFahe(new Fahe),
     mAgast(new Agast),
     mAkaze(new Akaze),
@@ -390,6 +428,11 @@ Settings::~Settings()
   if (mSurf){
     delete mSurf;
     mSurf = nullptr;
+  }
+
+  if (mClahe){
+    delete mClahe;
+    mClahe = nullptr;
   }
 
   if (mFahe){
@@ -435,6 +478,16 @@ int Settings::historyMaxSize() const
 void Settings::setHistoryMaxSize(int maxSize)
 {
   mHistoyMaxSize = maxSize;
+}
+
+IClahe *Settings::clahe()
+{
+  return mClahe;
+}
+
+const IClahe *Settings::clahe() const
+{
+  return mClahe;
 }
 
 IFahe *Settings::fahe()
@@ -494,6 +547,7 @@ void Settings::reset()
   mHistoyMaxSize = 10;
   mHistory.clear();
 
+  mClahe->reset();
   mFahe->reset();
 
   mAgast->reset();
@@ -534,6 +588,10 @@ void SettingsRW::read(ISettings &settings)
     settings.addToHistory(prj);
   }
 
+  /* CLAHE */
+  settings.clahe()->setClipLimit(mSettingsRW->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
+  settings.clahe()->setTilesGridSize(mSettingsRW->value("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize()).toSize());
+
   /* FAHE */
   settings.fahe()->setBlockSize(mSettingsRW->value("FAHE/BlockSize", settings.fahe()->blockSize()).toSize());
 
@@ -573,6 +631,10 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("HISTORY/MaxSize", settings.historyMaxSize());
   mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
 
+  /* CLAHE */
+  mSettingsRW->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());
+  mSettingsRW->setValue("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize());
+
   /* FAHE */
   mSettingsRW->setValue("FAHE/BlockSize", settings.fahe()->blockSize());
 
@@ -611,5 +673,3 @@ void SettingsRW::writeHistory(const ISettings &settings)
 }
 
 } // namespace fme
-
-

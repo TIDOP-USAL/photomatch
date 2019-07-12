@@ -5,7 +5,7 @@
 
 /* Image preprocess */
 //#include "fme/widgets/AcebsfWidget.h"
-//#include "fme/widgets/ClaheWidget.h"
+#include "fme/widgets/ClaheWidget.h"
 //#include "fme/widgets/CmbfheWidget.h"
 //#include "fme/widgets/CmbfheWidget.h"
 //#include "fme/widgets/DheWidget.h"
@@ -49,7 +49,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mModel(model),
     /*mHelp(nullptr),*/
     //mACEBS(new AcebsfWidget),
-    //mCLAHE(new ClaheWidget),
+    mCLAHE(new ClaheWidget),
     //mCMBFHE(new CmbfheWidget),
     //mDHE(new DheWidget),
     mFAHE(new FaheWidget),
@@ -90,6 +90,10 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
   connect(mModel, SIGNAL(unsavedChanges(bool)), mView, SLOT(setUnsavedChanges(bool)));
 
+  /* CLAHE */
+  connect(mCLAHE, SIGNAL(clipLimitChange(double)),         mModel, SLOT(setClaheClipLimit(double)));
+  connect(mCLAHE, SIGNAL(tileGridSizeChange(QSize)),       mModel, SLOT(setClaheTilesGridSize(QSize)));
+
   /* FAHE */
   connect(mFAHE,  SIGNAL(blockSizeChange(QSize)),          mModel, SLOT(setFaheBlockSize(QSize)));
 
@@ -128,11 +132,13 @@ SettingsPresenter::~SettingsPresenter()
 //    delete mACEBS;
 //    mACEBS = nullptr;
 //  }
-//  if (mCLAHE){
-//    delete mCLAHE;
-//    mCLAHE = nullptr;
-//  }
-//  if (mCMBFHE){
+
+  if (mCLAHE){
+    delete mCLAHE;
+    mCLAHE = nullptr;
+  }
+
+  //  if (mCMBFHE){
 //    delete mCMBFHE;
 //    mCMBFHE = nullptr;
 //  }
@@ -292,6 +298,9 @@ void SettingsPresenter::open()
   mView->setLanguages(langs);
 
   ///TODO: completar....
+  mCLAHE->setClipLimit(mModel->claheClipLimit());
+  mCLAHE->setTilesGridSize(mModel->claheTilesGridSize());
+
   mFAHE->setBlockSize(mModel->faheBlockSize());
 
   mAgast->setThreshold(mModel->agastThreshold());
@@ -323,6 +332,7 @@ void SettingsPresenter::open()
 
 void SettingsPresenter::init()
 {
+  mView->addPreprocess(mCLAHE);
   mView->addPreprocess(mFAHE);
 
   mView->addFeatureDetectorMethod(mSift);
