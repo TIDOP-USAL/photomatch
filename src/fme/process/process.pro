@@ -77,9 +77,9 @@ SOURCES += Process.cpp \
            ImagePreprocessing/LiuJinChenLiuLi2011_Process.cpp \
            ImagePreprocessing/Sundarami2011_Process.cpp \
            ImagePreprocessing/MaryKim2008_Process.cpp \
-           ImagePreprocessing/WadudKabirDewanChae2007_Process.cpp \
+           ImagePreprocessing/DheProcess.cpp \
            ImagePreprocessing/FaheProcess.cpp \
-           ImagePreprocessing/LambertiMontrucchioSanna2006_Process.cpp \
+           ImagePreprocessing/CmbfheProcess.cpp \
            ImagePreprocessing/YuBajaj2004_Process.cpp \
            Matching/BFMatcherProcess.cpp \
            Matching/RobustMatcherRefinementProcess.cpp \
@@ -131,9 +131,9 @@ HEADERS += ../fme_global.h \
            ImagePreprocessing/LiuJinChenLiuLi2011_Process.h \
            ImagePreprocessing/Sundarami2011_Process.h \
            ImagePreprocessing/MaryKim2008_Process.h \
-           ImagePreprocessing/WadudKabirDewanChae2007_Process.h \
+           ImagePreprocessing/DheProcess.h \
            ImagePreprocessing/FaheProcess.h \
-           ImagePreprocessing/LambertiMontrucchioSanna2006_Process.h \
+           ImagePreprocessing/CmbfheProcess.h \
            ImagePreprocessing/YuBajaj2004_Process.h \
            Matching/BFMatcherProcess.h \
            Matching/RobustMatcherRefinementProcess.h \

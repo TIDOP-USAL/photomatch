@@ -116,8 +116,8 @@ protected:
 
   //IAcebsfWidget *mACEBS;
   IClaheWidget *mCLAHE;
-  //ICmbfheWidget *mCMBFHE;
-  //IDheWidget *mDHE;
+  ICmbfheWidget *mCMBFHE;
+  IDheWidget *mDHE;
   IFaheWidget *mFAHE;
   //IHmclaheWidget *mHMCLAHE;
   //ILceBsescsWidget *mLCEBSESCS;

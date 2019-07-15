@@ -21,7 +21,9 @@
 
 #include "fme/process/MultiProcess.h"
 #include "fme/process/ImagePreprocessing/FaheProcess.h"
+#include "fme/process/ImagePreprocessing/CmbfheProcess.h"
 #include "fme/process/ImagePreprocessing/ClaheProcess.h"
+#include "fme/process/ImagePreprocessing/DheProcess.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -136,7 +138,11 @@ void PreprocessPresenter::help()
 void PreprocessPresenter::open()
 {
   ///TODO: establecer valores de las herramientas según los almacenados en el fichero de configuración
-  //mSettingsModel->
+  mCLAHE->setClipLimit(mSettingsModel->claheClipLimit());
+  mCLAHE->setTilesGridSize(mSettingsModel->claheTilesGridSize());
+  mCMBFHE->setBlockSize(mSettingsModel->faheBlockSize());
+  mDHE->setX(mSettingsModel->dheX());
+  mFAHE->setBlockSize(mSettingsModel->faheBlockSize());
 
   mView->exec();
 }
@@ -183,12 +189,26 @@ void PreprocessPresenter::run()
       ClaheProcess *clahe_process = new ClaheProcess(file_in, file_out, mCLAHE->clipLimit(), mCLAHE->tileGridSize());
       mMultiProcess->appendProcess(clahe_process);
     } else if (mView->currentPreprocess().compare("CMBFHE") == 0) {
-
+      CmbfheProcess *cmbfhe_process = new CmbfheProcess(file_in, file_out, mCMBFHE->blockSize());
+      mMultiProcess->appendProcess(cmbfhe_process);
     } else if (mView->currentPreprocess().compare("DHE") == 0) {
-
+      DheProcess *dhe_process = new DheProcess(file_in, file_out, mDHE->x());
+      mMultiProcess->appendProcess(dhe_process);
     } else if (mView->currentPreprocess().compare("FAHE") == 0) {
       FaheProcess *fahe_process = new FaheProcess(file_in, file_out, mFAHE->blockSize());
       mMultiProcess->appendProcess(fahe_process);
+    } else if (mView->currentPreprocess().compare("HMCLAHE") == 0) {
+    } else if (mView->currentPreprocess().compare("LCEBSESCS") == 0) {
+    } else if (mView->currentPreprocess().compare("MSRCP") == 0) {
+
+    } else if (mView->currentPreprocess().compare("NOSHP") == 0) {
+
+    } else if (mView->currentPreprocess().compare("POHE") == 0) {
+
+    } else if (mView->currentPreprocess().compare("RSWHE") == 0) {
+
+    } else if (mView->currentPreprocess().compare("Wallis") == 0) {
+
     }
   }
 

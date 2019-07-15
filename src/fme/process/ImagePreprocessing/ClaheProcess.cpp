@@ -13,8 +13,9 @@ ClaheProcess::ClaheProcess()
     IClahe(),
     mImgInput(""),
     mImgOutput(""),
-    mClipLimit(40.0),
-    mTilesGridSize(8, 8)
+//    mClipLimit(40.0),
+//    mTilesGridSize(8, 8),
+    mCvClahe(cv::createCLAHE())
 {
 
 }
@@ -27,10 +28,12 @@ ClaheProcess::ClaheProcess(const QString &imgInput,
     IClahe(),
     mImgInput(imgInput),
     mImgOutput(imgOutput),
-    mClipLimit(clipLimit),
-    mTilesGridSize(tilesGridSize)
+//    mClipLimit(clipLimit),
+//    mTilesGridSize(tilesGridSize)
+    mCvClahe(cv::createCLAHE())
 {
-
+  setClipLimit(clipLimit);
+  setTilesGridSize(tilesGridSize);
 }
 
 QString ClaheProcess::imgOutput() const
@@ -55,30 +58,31 @@ void ClaheProcess::setImgInput(const QString &imgInput)
 
 double ClaheProcess::clipLimit() const
 {
-  return mClipLimit;
+  return mCvClahe->getClipLimit();
 }
 
 void ClaheProcess::setClipLimit(double clipLimit)
 {
-  mClipLimit = clipLimit;
+  mCvClahe->setClipLimit(clipLimit);
 }
 
 QSize ClaheProcess::tilesGridSize() const
 {
-  return mTilesGridSize;
+  cv::Size size = mCvClahe->getTilesGridSize();
+  return QSize(size.width, size.height);
 }
 
 void ClaheProcess::setTilesGridSize(const QSize &tilesGridSize)
 {
-  mTilesGridSize = tilesGridSize;
+  mCvClahe->setTilesGridSize(cv::Size(tilesGridSize.width(), tilesGridSize.height()));
 }
 
 void ClaheProcess::reset()
 {
   mImgInput = "";
   mImgOutput = "";
-  mClipLimit = 40.0;
-  mTilesGridSize = QSize(8, 8);
+  setClipLimit(40.0);
+  setTilesGridSize(QSize(8, 8));
 }
 
 void ClaheProcess::run()
@@ -94,10 +98,7 @@ void ClaheProcess::run()
     cv::decolor(img, img, color_boost);
   }
 
-  cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE();
-  clahe->setClipLimit(mClipLimit);
-  clahe->setTilesGridSize(cv::Size(mTilesGridSize.width(), mTilesGridSize.height()));
-  clahe->apply(img, img);
+  mCvClahe->apply(img, img);
 
   ba = mImgOutput.toLocal8Bit();
   const char *output_img = ba.data();

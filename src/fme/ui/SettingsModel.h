@@ -47,6 +47,10 @@ public:
   virtual double claheClipLimit() const = 0;
   virtual QSize claheTilesGridSize() const = 0;
 
+  virtual QSize cmbfheBlockSize() const = 0;
+
+  virtual int dheX() const = 0;
+
   virtual QSize faheBlockSize() const = 0;
 
   virtual QString akazeDescriptorType() const = 0;
@@ -119,6 +123,10 @@ public slots:
   virtual void setClaheClipLimit(double clipLimit) = 0;
   virtual void setClaheTilesGridSize (const QSize &tilesGridSize) = 0;
 
+  virtual void setCmbfheBlockSize(const QSize &size) = 0;
+
+  virtual void setDheX(int x) = 0;
+
   virtual void setFaheBlockSize(const QSize &size) = 0;
 
   virtual void setAgastThreshold(int threshold) = 0;
@@ -175,6 +183,10 @@ public:
   double claheClipLimit() const override;
   QSize claheTilesGridSize() const override;
 
+  QSize cmbfheBlockSize() const override;
+
+  int dheX() const override;
+
   QSize faheBlockSize() const override;
 
   int agastThreshold() const override;
@@ -215,6 +227,10 @@ public slots:
 
   void setClaheClipLimit(double clipLimit) override;
   void setClaheTilesGridSize(const QSize &tilesGridSize) override;
+
+  void setCmbfheBlockSize(const QSize &size) override;
+
+  void setDheX(int x) override;
 
   void setFaheBlockSize(const QSize &size) override;
 

@@ -6,9 +6,8 @@
 /* Image preprocess */
 //#include "fme/widgets/AcebsfWidget.h"
 #include "fme/widgets/ClaheWidget.h"
-//#include "fme/widgets/CmbfheWidget.h"
-//#include "fme/widgets/CmbfheWidget.h"
-//#include "fme/widgets/DheWidget.h"
+#include "fme/widgets/CmbfheWidget.h"
+#include "fme/widgets/DheWidget.h"
 #include "fme/widgets/FaheWidget.h"
 //#include "fme/widgets/HmclaheWidget.h"
 //#include "fme/widgets/LceBsescsWidget.h"
@@ -50,8 +49,8 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     /*mHelp(nullptr),*/
     //mACEBS(new AcebsfWidget),
     mCLAHE(new ClaheWidget),
-    //mCMBFHE(new CmbfheWidget),
-    //mDHE(new DheWidget),
+    mCMBFHE(new CmbfheWidget),
+    mDHE(new DheWidget),
     mFAHE(new FaheWidget),
     //mHMCLAHE(new HmclaheWidget),
     //mLCEBSESCS(new LceBsescsWidget),
@@ -93,6 +92,12 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   /* CLAHE */
   connect(mCLAHE, SIGNAL(clipLimitChange(double)),         mModel, SLOT(setClaheClipLimit(double)));
   connect(mCLAHE, SIGNAL(tileGridSizeChange(QSize)),       mModel, SLOT(setClaheTilesGridSize(QSize)));
+
+  /* CMBFHE */
+  connect(mCMBFHE, SIGNAL(blockSizeChange(QSize)),         mModel, SLOT(setCmbfheBlockSize(QSize)));
+
+  /* DHE */
+  connect(mDHE, SIGNAL(xChange(int)),                      mModel, SLOT(setDheX(int)));
 
   /* FAHE */
   connect(mFAHE,  SIGNAL(blockSizeChange(QSize)),          mModel, SLOT(setFaheBlockSize(QSize)));
@@ -138,14 +143,15 @@ SettingsPresenter::~SettingsPresenter()
     mCLAHE = nullptr;
   }
 
-  //  if (mCMBFHE){
-//    delete mCMBFHE;
-//    mCMBFHE = nullptr;
-//  }
-//  if (mDHE){
-//    delete mDHE;
-//    mDHE = nullptr;
-//  }
+  if (mCMBFHE){
+    delete mCMBFHE;
+    mCMBFHE = nullptr;
+  }
+
+  if (mDHE){
+    delete mDHE;
+    mDHE = nullptr;
+  }
 
   if (mFAHE){
     delete mFAHE;
@@ -301,6 +307,10 @@ void SettingsPresenter::open()
   mCLAHE->setClipLimit(mModel->claheClipLimit());
   mCLAHE->setTilesGridSize(mModel->claheTilesGridSize());
 
+  mCMBFHE->setBlockSize(mModel->faheBlockSize());
+
+  mDHE->setX(mModel->dheX());
+
   mFAHE->setBlockSize(mModel->faheBlockSize());
 
   mAgast->setThreshold(mModel->agastThreshold());
@@ -333,6 +343,8 @@ void SettingsPresenter::open()
 void SettingsPresenter::init()
 {
   mView->addPreprocess(mCLAHE);
+  mView->addPreprocess(mCMBFHE);
+  mView->addPreprocess(mDHE);
   mView->addPreprocess(mFAHE);
 
   mView->addFeatureDetectorMethod(mSift);

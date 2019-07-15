@@ -72,8 +72,14 @@ public:
 
   virtual IClahe *clahe() = 0;
   virtual const IClahe *clahe() const = 0;
+  virtual ICmbfhe *cmbfhe() = 0;
+  virtual const ICmbfhe *cmbfhe() const = 0;
+  virtual IDhe *dhe() = 0;
+  virtual const IDhe *dhe() const = 0;
   virtual IFahe *fahe() = 0;
   virtual const IFahe *fahe() const = 0;
+  virtual IHmclahe *hmclahe() = 0;
+  virtual const IHmclahe *hmclahe() const = 0;
 
   virtual IAgast *agast() = 0;
   virtual const IAgast *agast() const = 0;
@@ -325,6 +331,63 @@ protected:
 };
 
 
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief CMBFHE image preprocess class
+ */
+class FME_EXPORT Cmbfhe
+  : public ICmbfhe
+{
+public:
+  Cmbfhe();
+  ~Cmbfhe() override {}
+
+// ICmbfhe interface
+
+public:
+
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
+
+  void reset() override;
+
+protected:
+
+  QSize mBlockSize;
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class FME_EXPORT Dhe
+  : public IDhe
+{
+
+public:
+
+  Dhe();
+  ~Dhe() override = default;
+
+// IDhe interface
+
+public:
+
+  int x() const override;
+  void setX(int x) override;
+
+  void reset() override;
+
+protected:
+
+  int mX;
+};
+
+
+/*----------------------------------------------------------------*/
+
 
 /*!
  * \brief Fahe image preprocess class
@@ -349,6 +412,98 @@ protected:
 
 };
 
+
+/*----------------------------------------------------------------*/
+
+
+class Hmclahe
+  : public IHmclahe
+{
+
+public:
+
+  Hmclahe();
+  ~Hmclahe() override;
+
+// IHmclahe interface
+
+public:
+
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
+  double l() const override;
+  void setL(double l) override;
+  double phi() const override;
+  void setPhi(double phi) override;
+
+  void reset() override;
+
+protected:
+
+  QSize mBlockSize;
+  double mL;
+  double mPhi;
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class LceBsescs
+{
+public:
+  LceBsescs() {}
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class Msrcp
+{
+public:
+  Msrcp() {}
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class Noshp
+{
+public:
+  Noshp() {}
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class Pohe
+{
+public:
+  Pohe() {}
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class Rswhe
+{
+public:
+  Rswhe() {}
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class Wallis
+{
+public:
+  Wallis() {}
+};
 
 /*----------------------------------------------------------------*/
 
@@ -380,8 +535,14 @@ public:
 
   IClahe *clahe() override;
   const IClahe *clahe() const override;
+  ICmbfhe *cmbfhe() override;
+  const ICmbfhe *cmbfhe() const override;
+  IDhe *dhe() override;
+  const IDhe *dhe() const override;
   IFahe *fahe() override;
   const IFahe *fahe() const override;
+  IHmclahe *hmclahe() override;
+  const IHmclahe *hmclahe() const override;
 
   IAgast *agast() override;
   const IAgast *agast() const override;
@@ -401,7 +562,16 @@ protected:
   QStringList mHistory;
 
   IClahe *mClahe;
+  ICmbfhe *mCmbfhe;
+  IDhe *mDhe;
   IFahe *mFahe;
+  IHmclahe *mHmclahe;
+  ILceBsescs *mLceBsescs;
+  IMsrcp *mMsrcp;
+  INoshp *mNoshp;
+  IPohe *mPohe;
+  IRswhe *mRswhe;
+  IWallis *mWallis;
 
   IAgast *mAgast;
   IAkaze *mAkaze;

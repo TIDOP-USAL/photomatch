@@ -87,12 +87,12 @@ add_library(libprocess ${LIB_TYPE}
             ImagePreprocessing/Sundarami2011_Process.h
             ImagePreprocessing/MaryKim2008_Process.cpp
             ImagePreprocessing/MaryKim2008_Process.h
-            ImagePreprocessing/WadudKabirDewanChae2007_Process.cpp
-            ImagePreprocessing/WadudKabirDewanChae2007_Process.h
+            ImagePreprocessing/DheProcess.cpp
+            ImagePreprocessing/DheProcess.h
             ImagePreprocessing/FaheProcess.cpp
             ImagePreprocessing/FaheProcess.h
-            ImagePreprocessing/LambertiMontrucchioSanna2006_Process.cpp
-            ImagePreprocessing/LambertiMontrucchioSanna2006_Process.h
+            ImagePreprocessing/CmbfheProcess.cpp
+            ImagePreprocessing/CmbfheProcess.h
             ImagePreprocessing/YuBajaj2004_Process.cpp
             ImagePreprocessing/YuBajaj2004_Process.h
             Matching/BFMatcherProcess.cpp

@@ -369,6 +369,55 @@ void Clahe::reset()
 /*----------------------------------------------------------------*/
 
 
+Cmbfhe::Cmbfhe()
+  : ICmbfhe(),
+    mBlockSize(11,11)
+{}
+
+QSize Cmbfhe::blockSize() const
+{
+  return mBlockSize;
+}
+
+void Cmbfhe::setBlockSize(const QSize &blockSize)
+{
+  mBlockSize = blockSize;
+}
+
+void Cmbfhe::reset()
+{
+  mBlockSize = QSize(11,11);
+}
+
+
+/*----------------------------------------------------------------*/
+
+
+Dhe::Dhe()
+  : IDhe(),
+    mX(1)
+{
+}
+
+int Dhe::x() const
+{
+  return mX;
+}
+
+void Dhe::setX(int x)
+{
+  mX = x;
+}
+
+void Dhe::reset()
+{
+  mX = 1;
+}
+
+
+/*----------------------------------------------------------------*/
+
+
 Fahe::Fahe()
   : IFahe(),
     mBlockSize(QSize(11, 11))
@@ -391,6 +440,56 @@ void Fahe::reset()
 }
 
 
+/*----------------------------------------------------------------*/
+
+Hmclahe::Hmclahe()
+  : IHmclahe(),
+    mBlockSize(17,17),
+    mL(0.03),
+    mPhi(0.5)
+{
+}
+
+Hmclahe::~Hmclahe()
+{}
+
+QSize Hmclahe::blockSize() const
+{
+  return mBlockSize;
+}
+
+void Hmclahe::setBlockSize(const QSize &blockSize)
+{
+  mBlockSize = blockSize;
+}
+
+double Hmclahe::l() const
+{
+  return mL;
+}
+
+void Hmclahe::setL(double l)
+{
+  mL = l;
+}
+
+double Hmclahe::phi() const
+{
+  return mPhi;
+}
+
+void Hmclahe::setPhi(double phi)
+{
+  mPhi = phi;
+}
+
+void Hmclahe::reset()
+{
+  mBlockSize = QSize(17, 17);
+  mL = 0.03;
+  mPhi = 0.5;
+}
+
 
 /*----------------------------------------------------------------*/
 
@@ -399,7 +498,10 @@ Settings::Settings()
   : ISettings(),
     mHistoyMaxSize(10),
     mClahe(new Clahe),
+    mCmbfhe(new Cmbfhe),
+    mDhe(new Dhe),
     mFahe(new Fahe),
+    mHmclahe(new Hmclahe),
     mAgast(new Agast),
     mAkaze(new Akaze),
     mSift(new Sift),
@@ -435,9 +537,24 @@ Settings::~Settings()
     mClahe = nullptr;
   }
 
+  if (mCmbfhe){
+    delete mCmbfhe;
+    mCmbfhe = nullptr;
+  }
+
+  if (mDhe){
+    delete mDhe;
+    mDhe = nullptr;
+  }
+
   if (mFahe){
     delete mFahe;
     mFahe = nullptr;
+  }
+
+  if (mHmclahe){
+    delete mHmclahe;
+    mHmclahe = nullptr;
   }
 }
 
@@ -490,6 +607,26 @@ const IClahe *Settings::clahe() const
   return mClahe;
 }
 
+ICmbfhe *Settings::cmbfhe()
+{
+  return mCmbfhe;
+}
+
+const ICmbfhe *Settings::cmbfhe() const
+{
+  return mCmbfhe;
+}
+
+IDhe *Settings::dhe()
+{
+  return mDhe;
+}
+
+const IDhe *Settings::dhe() const
+{
+  return mDhe;
+}
+
 IFahe *Settings::fahe()
 {
   return mFahe;
@@ -498,6 +635,16 @@ IFahe *Settings::fahe()
 const IFahe *Settings::fahe() const
 {
   return mFahe;
+}
+
+IHmclahe *Settings::hmclahe()
+{
+  return mHmclahe;
+}
+
+const IHmclahe *Settings::hmclahe() const
+{
+  return mHmclahe;
 }
 
 IAgast *Settings::agast()
@@ -548,7 +695,9 @@ void Settings::reset()
   mHistory.clear();
 
   mClahe->reset();
+  mCmbfhe->reset();
   mFahe->reset();
+  mHmclahe->reset();
 
   mAgast->reset();
   mAkaze->reset();
@@ -592,8 +741,16 @@ void SettingsRW::read(ISettings &settings)
   settings.clahe()->setClipLimit(mSettingsRW->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
   settings.clahe()->setTilesGridSize(mSettingsRW->value("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize()).toSize());
 
+  /* CMBFHE */
+  settings.cmbfhe()->setBlockSize(mSettingsRW->value("CMBFHE/BlockSize", settings.cmbfhe()->blockSize()).toSize());
+
+  /* DHE */
+  settings.dhe()->setX(mSettingsRW->value("DHE/x", settings.dhe()->x()).toInt());
+
   /* FAHE */
   settings.fahe()->setBlockSize(mSettingsRW->value("FAHE/BlockSize", settings.fahe()->blockSize()).toSize());
+
+  //....
 
   /* AGAST */
   settings.agast()->setThreshold(mSettingsRW->value("AGAST/Threshold", settings.agast()->threshold()).toInt());
@@ -635,8 +792,16 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());
   mSettingsRW->setValue("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize());
 
+  /* CMBFHE */
+  mSettingsRW->setValue("CMBFHE/BlockSize", settings.cmbfhe()->blockSize());
+
+  /* DHE */
+  mSettingsRW->setValue("DHE/x", settings.dhe()->x());
+
   /* FAHE */
   mSettingsRW->setValue("FAHE/BlockSize", settings.fahe()->blockSize());
+
+  //....
 
   /* AGAST */
   mSettingsRW->setValue("AGAST/Threshold", settings.agast()->threshold());

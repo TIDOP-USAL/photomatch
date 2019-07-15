@@ -1,6 +1,8 @@
 #ifndef FME_CLAHE_PROCESS_H
 #define FME_CLAHE_PROCESS_H
 
+#include <opencv2/photo.hpp>
+
 #include "fme/process/ProcessConcurrent.h"
 #include "fme/core/preprocess.h"
 
@@ -48,8 +50,9 @@ private:
 
   QString mImgInput;
   QString mImgOutput;
-  double mClipLimit;
-  QSize mTilesGridSize;
+//  double mClipLimit;
+//  QSize mTilesGridSize;
+  cv::Ptr<cv::CLAHE> mCvClahe;
 };
 
 } // namespace fme

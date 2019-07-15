@@ -47,6 +47,16 @@ QSize SettingsModel::claheTilesGridSize() const
   return mSettings->clahe()->tilesGridSize();
 }
 
+QSize SettingsModel::cmbfheBlockSize() const
+{
+  return mSettings->cmbfhe()->blockSize();
+}
+
+int SettingsModel::dheX() const
+{
+  return mSettings->dhe()->x();
+}
+
 QSize SettingsModel::faheBlockSize() const
 {
   return mSettings->fahe()->blockSize();
@@ -185,6 +195,18 @@ void SettingsModel::setClaheClipLimit(double clipLimit)
 void SettingsModel::setClaheTilesGridSize(const QSize &tilesGridSize)
 {
   mSettings->clahe()->setTilesGridSize(tilesGridSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setCmbfheBlockSize(const QSize &size)
+{
+  mSettings->cmbfhe()->setBlockSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDheX(int x)
+{
+  mSettings->dhe()->setX(x);
   emit unsavedChanges(true);
 }
 
