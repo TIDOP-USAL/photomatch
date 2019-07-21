@@ -32,6 +32,26 @@ DheProcess::~DheProcess()
 
 }
 
+QString DheProcess::imgInput() const
+{
+  return mImgInput;
+}
+
+void DheProcess::setImgInput(const QString &imgInput)
+{
+  mImgInput = imgInput;
+}
+
+QString DheProcess::imgOutput() const
+{
+  return mImgOutput;
+}
+
+void DheProcess::setImgOutput(const QString &imgOutput)
+{
+  mImgOutput = imgOutput;
+}
+
 int DheProcess::x() const
 {
   return mX;
@@ -44,6 +64,8 @@ void DheProcess::setX(int x)
 
 void DheProcess::reset()
 {
+  mImgInput.clear();
+  mImgOutput.clear();
   mX = 1;
 }
 

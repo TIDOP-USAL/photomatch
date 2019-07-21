@@ -76,7 +76,7 @@ void TestHmclaheWidgetSignals::test_phiChange()
   QList<QVariant> args = spy_phiChange.takeFirst();
   QCOMPARE(args.at(0).toDouble(), 0.4);
 
-  this->setPhi(.7);
+  this->setPhi(.7f);
   QCOMPARE(spy_phiChange.count(), 0);
 }
 
@@ -87,8 +87,8 @@ void TestHmclaheWidgetSignals::test_reset()
   QSignalSpy spy_phiChange(this, &HmclaheWidget::phiChange);
 
   this->setBlockSize(QSize(5, 7));
-  this->setL(0.5);
-  this->setPhi(.7);
+  this->setL(0.5f);
+  this->setPhi(.7f);
 
   this->reset();
 

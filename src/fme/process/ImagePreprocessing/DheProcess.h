@@ -20,6 +20,12 @@ public:
              int x);
   ~DheProcess() override;
 
+  QString imgInput() const;
+  void setImgInput(const QString &imgInput);
+
+  QString imgOutput() const;
+  void setImgOutput(const QString &imgOutput);
+
 // IDhe interface
 
 public:

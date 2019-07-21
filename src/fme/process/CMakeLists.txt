@@ -59,40 +59,40 @@ add_library(libprocess ${LIB_TYPE}
             surf/SUFT_KPDescProcess.h
             ImagePreprocessing/ClaheProcess.cpp
             ImagePreprocessing/ClaheProcess.h
-            ImagePreprocessing/ContrastPreservingDecolorization__Process.cpp
-            ImagePreprocessing/ContrastPreservingDecolorization__Process.h
-            ImagePreprocessing/WallisFilter_Process.cpp
-            ImagePreprocessing/WallisFilter_Process.h
-            ImagePreprocessing/Downsample_Process.cpp
-            ImagePreprocessing/Downsample_Process.h
-            ImagePreprocessing/LCE_BSESCS2014_Process.cpp
-            ImagePreprocessing/LCE_BSESCS2014_Process.h
-            ImagePreprocessing/RajuNair2014_Process.cpp
-            ImagePreprocessing/RajuNair2014_Process.h
-            ImagePreprocessing/Lal2014_Process.cpp
-            ImagePreprocessing/Lal2014_Process.h
-            ImagePreprocessing/MSRCP2014_Process.cpp
-            ImagePreprocessing/MSRCP2014_Process.h
-            ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.cpp
-            ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h
-            ImagePreprocessing/POHE2013_Process.cpp
-            ImagePreprocessing/POHE2013_Process.h
-            ImagePreprocessing/Kimori2013_Process.cpp
-            ImagePreprocessing/Kimori2013_Process.h
-            ImagePreprocessing/CelikTjahjadi2012_Process.cpp
-            ImagePreprocessing/CelikTjahjadi2012_Process.h
-            ImagePreprocessing/LiuJinChenLiuLi2011_Process.cpp
-            ImagePreprocessing/LiuJinChenLiuLi2011_Process.h
-            ImagePreprocessing/Sundarami2011_Process.cpp
-            ImagePreprocessing/Sundarami2011_Process.h
-            ImagePreprocessing/MaryKim2008_Process.cpp
-            ImagePreprocessing/MaryKim2008_Process.h
+            ImagePreprocessing/CmbfheProcess.cpp
+            ImagePreprocessing/CmbfheProcess.h
             ImagePreprocessing/DheProcess.cpp
             ImagePreprocessing/DheProcess.h
             ImagePreprocessing/FaheProcess.cpp
             ImagePreprocessing/FaheProcess.h
-            ImagePreprocessing/CmbfheProcess.cpp
-            ImagePreprocessing/CmbfheProcess.h
+            ImagePreprocessing/HmclaheProcess.cpp
+            ImagePreprocessing/HmclaheProcess.h
+            ImagePreprocessing/LceBsescsProcess.cpp
+            ImagePreprocessing/LceBsescsProcess.h
+            ImagePreprocessing/MsrcpProcess.cpp
+            ImagePreprocessing/MsrcpProcess.h
+            ImagePreprocessing/NoshpProcess.cpp
+            ImagePreprocessing/NoshpProcess.h
+            ImagePreprocessing/PoheProcess.cpp
+            ImagePreprocessing/PoheProcess.h      
+            ImagePreprocessing/RswheProcess.cpp
+            ImagePreprocessing/RswheProcess.h
+            ImagePreprocessing/WallisProcess.cpp
+            ImagePreprocessing/WallisProcess.h            
+            ImagePreprocessing/ContrastPreservingDecolorization__Process.cpp
+            ImagePreprocessing/ContrastPreservingDecolorization__Process.h
+            ImagePreprocessing/Downsample_Process.cpp
+            ImagePreprocessing/Downsample_Process.h
+            ImagePreprocessing/RajuNair2014_Process.cpp
+            ImagePreprocessing/RajuNair2014_Process.h
+            ImagePreprocessing/Lal2014_Process.cpp
+            ImagePreprocessing/Lal2014_Process.h
+            ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.cpp
+            ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h
+            ImagePreprocessing/Kimori2013_Process.cpp
+            ImagePreprocessing/Kimori2013_Process.h
+            ImagePreprocessing/CelikTjahjadi2012_Process.cpp
+            ImagePreprocessing/CelikTjahjadi2012_Process.h
             ImagePreprocessing/YuBajaj2004_Process.cpp
             ImagePreprocessing/YuBajaj2004_Process.h
             Matching/BFMatcherProcess.cpp

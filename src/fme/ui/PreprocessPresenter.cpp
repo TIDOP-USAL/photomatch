@@ -24,6 +24,13 @@
 #include "fme/process/ImagePreprocessing/CmbfheProcess.h"
 #include "fme/process/ImagePreprocessing/ClaheProcess.h"
 #include "fme/process/ImagePreprocessing/DheProcess.h"
+#include "fme/process/ImagePreprocessing/HmclaheProcess.h"
+#include "fme/process/ImagePreprocessing/LceBsescsProcess.h"
+#include "fme/process/ImagePreprocessing/MsrcpProcess.h"
+#include "fme/process/ImagePreprocessing/NoshpProcess.h"
+#include "fme/process/ImagePreprocessing/PoheProcess.h"
+#include "fme/process/ImagePreprocessing/RswheProcess.h"
+#include "fme/process/ImagePreprocessing/WallisProcess.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -137,12 +144,37 @@ void PreprocessPresenter::help()
 
 void PreprocessPresenter::open()
 {
-  ///TODO: establecer valores de las herramientas según los almacenados en el fichero de configuración
   mCLAHE->setClipLimit(mSettingsModel->claheClipLimit());
   mCLAHE->setTilesGridSize(mSettingsModel->claheTilesGridSize());
+
   mCMBFHE->setBlockSize(mSettingsModel->faheBlockSize());
+
   mDHE->setX(mSettingsModel->dheX());
+
   mFAHE->setBlockSize(mSettingsModel->faheBlockSize());
+
+  mHMCLAHE->setBlockSize(mSettingsModel->hmclaheBlockSize());
+  mHMCLAHE->setL(mSettingsModel->hmclaheL());
+  mHMCLAHE->setPhi(mSettingsModel->hmclahePhi());
+
+  mLCEBSESCS->setBlockSize(mSettingsModel->lceBsescsBlockSize());
+
+  mMSRCP->setMidScale(mSettingsModel->msrcpMidScale());
+  mMSRCP->setLargeScale(mSettingsModel->msrcpLargeScale());
+  mMSRCP->setSmallScale(mSettingsModel->msrcpSmallScale());
+
+  mNOSHP->setBlockSize(mSettingsModel->noshpBlockSize());
+
+  mPOHE->setBlockSize(mSettingsModel->poheBlockSize());
+
+  mRSWHE->setHistogramCut(static_cast<IRswheWidget::HistogramCut>(mSettingsModel->rswheHistogramCut()));
+  mRSWHE->setHistogramDivisions(mSettingsModel->rswheHistogramDivisions());
+
+  mWallis->setContrast(mSettingsModel->wallisContrast());
+  mWallis->setBrightness(mSettingsModel->wallisBrightness());
+  mWallis->setKernelSize(mSettingsModel->wallisKernelSize());
+  mWallis->setImposedAverage(mSettingsModel->wallisImposedAverage());
+  mWallis->setImposedLocalStdDev(mSettingsModel->wallisImposedLocalStdDev());
 
   mView->exec();
 }
@@ -198,17 +230,26 @@ void PreprocessPresenter::run()
       FaheProcess *fahe_process = new FaheProcess(file_in, file_out, mFAHE->blockSize());
       mMultiProcess->appendProcess(fahe_process);
     } else if (mView->currentPreprocess().compare("HMCLAHE") == 0) {
+      HmclaheProcess *hmclahe_process = new HmclaheProcess(file_in, file_out, mHMCLAHE->blockSize(), mHMCLAHE->l(), mHMCLAHE->phi());
+      mMultiProcess->appendProcess(hmclahe_process);
     } else if (mView->currentPreprocess().compare("LCEBSESCS") == 0) {
+      LceBsescsProcess *lceBsescsProcess = new LceBsescsProcess(file_in, file_out, mLCEBSESCS->blockSize());
+      mMultiProcess->appendProcess(lceBsescsProcess);
     } else if (mView->currentPreprocess().compare("MSRCP") == 0) {
-
+      MsrcpProcess *msrcpProcess = new MsrcpProcess(file_in, file_out, mMSRCP->smallScale(), mMSRCP->midScale(), mMSRCP->largeScale());
+      mMultiProcess->appendProcess(msrcpProcess);
     } else if (mView->currentPreprocess().compare("NOSHP") == 0) {
-
+      NoshpProcess *noshpProcess = new NoshpProcess(file_in, file_out, mNOSHP->blockSize());
+      mMultiProcess->appendProcess(noshpProcess);
     } else if (mView->currentPreprocess().compare("POHE") == 0) {
-
+      PoheProcess *poheProcess = new PoheProcess(file_in, file_out, mPOHE->blockSize());
+      mMultiProcess->appendProcess(poheProcess);
     } else if (mView->currentPreprocess().compare("RSWHE") == 0) {
-
+      RswheProcess *rswheProcess = new RswheProcess(file_in, file_out, mRSWHE->histogramDivisions(), static_cast<RswheProcess::HistogramCut>(mRSWHE->histogramCut()));
+      mMultiProcess->appendProcess(rswheProcess);
     } else if (mView->currentPreprocess().compare("Wallis") == 0) {
-
+      WallisProcess *wallisProcess = new WallisProcess(file_in, file_out, mWallis->contrast(), mWallis->brightness(), mWallis->imposedAverage(), mWallis->imposedLocalStdDev(), mWallis->kernelSize());
+      mMultiProcess->appendProcess(wallisProcess);
     }
   }
 
@@ -217,71 +258,7 @@ void PreprocessPresenter::run()
 
 void PreprocessPresenter::setCurrentPreprocess(const QString &preprocess)
 {
-//  ///TODO: - Se recuperan los valores del fichero de configuración
-//  ///      - Se desactivan las señales del preproceso previo
-//  ///      - Se activan las señales del preproceso actual
-
-//  if (mView->currentPreprocess().compare("ACEBS") == 0) {
-////    disconnect(mACEBS, SIGNAL(blockSizeChange(QSize)), mProcesACEBS, SLOT(setBlockSize(QSize)));
-////    disconnect(mACEBS, SIGNAL(lChange(double)),        mProcesACEBS, SLOT(setL(double)));
-////    disconnect(mACEBS, SIGNAL(k1Change(double)),       mProcesACEBS, SLOT(setK1(double)));
-////    disconnect(mACEBS, SIGNAL(k2Change(double)),       mProcesACEBS, SLOT(setK2(double)));
-//  } else if (preprocess.compare("CLAHE") == 0) {
-
-//  } else if (preprocess.compare("CMBFHE") == 0) {
-
-//  } else if (preprocess.compare("DHE") == 0) {
-
-//  } else if (preprocess.compare("FAHE") == 0) {
-
-//  } else if (preprocess.compare("HMCLAHE") == 0) {
-
-//  } else if (preprocess.compare("LCEBSESCS") == 0) {
-
-//  } else if (preprocess.compare("MSRCP") == 0) {
-
-//  } else if (preprocess.compare("NOSHP") == 0) {
-
-//  } else if (preprocess.compare("POHE") == 0) {
-
-//  } else if (preprocess.compare("RSWHE") == 0) {
-
-//  } else if (preprocess.compare("Wallis") == 0) {
-
-//  }
-
   mView->setCurrentPreprocess(preprocess);
-
-//  if (preprocess.compare("ACEBS") == 0) {
-////    connect(mACEBS, SIGNAL(blockSizeChange(QSize)), mProcesACEBS, SLOT(setBlockSize(QSize)));
-////    connect(mACEBS, SIGNAL(lChange(double)),        mProcesACEBS, SLOT(setL(double)));
-////    connect(mACEBS, SIGNAL(k1Change(double)),       mProcesACEBS, SLOT(setK1(double)));
-////    connect(mACEBS, SIGNAL(k2Change(double)),       mProcesACEBS, SLOT(setK2(double)));
-//  } else if (preprocess.compare("CLAHE") == 0) {
-
-//  } else if (preprocess.compare("CMBFHE") == 0) {
-
-//  } else if (preprocess.compare("DHE") == 0) {
-
-//  } else if (preprocess.compare("FAHE") == 0) {
-
-//  } else if (preprocess.compare("HMCLAHE") == 0) {
-
-//  } else if (preprocess.compare("LCEBSESCS") == 0) {
-
-//  } else if (preprocess.compare("MSRCP") == 0) {
-
-//  } else if (preprocess.compare("NOSHP") == 0) {
-
-//  } else if (preprocess.compare("POHE") == 0) {
-
-//  } else if (preprocess.compare("RSWHE") == 0) {
-
-//  } else if (preprocess.compare("Wallis") == 0) {
-
-//  }
-
-  //mModel->setCurrentPreprocess();
 }
 
 } // namespace fme

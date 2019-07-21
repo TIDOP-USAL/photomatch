@@ -113,13 +113,14 @@ void TestMainWindowView::test_setProjectTitle()
 
 void TestMainWindowView::test_setFlag()
 {
+  setFlag(MainWindowView::Flag::project_exists, true);
   QCOMPARE(true, mActionNewProject->isEnabled());
   QCOMPARE(true, mActionOpenProject->isEnabled());
   QCOMPARE(false, mActionSaveProject->isEnabled());
-  QCOMPARE(false, mActionSaveProjectAs->isEnabled());
-  QCOMPARE(false, mActionCloseProject->isEnabled());
+  QCOMPARE(true, mActionSaveProjectAs->isEnabled());
+  QCOMPARE(true, mActionCloseProject->isEnabled());
   QCOMPARE(true, mActionExit->isEnabled());
-  QCOMPARE(false, mActionLoadImages->isEnabled());
+  QCOMPARE(true, mActionLoadImages->isEnabled());
   QCOMPARE(false, mActionNewSession->isEnabled());
   QCOMPARE(false, mActionAssistant->isEnabled());
   QCOMPARE(false, mActionPreprocess->isEnabled());
@@ -133,13 +134,6 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(false, mActionHomography->isEnabled());
   QCOMPARE(false, mActionRepeteability->isEnabled());
   QCOMPARE(false, mActionRecall->isEnabled());
-
-  /// Projecto cargado
-  setFlag(MainWindowView::Flag::project_exists, true);
-  QCOMPARE(false, mActionSaveProject->isEnabled());
-  QCOMPARE(true, mActionSaveProjectAs->isEnabled());
-  QCOMPARE(true, mActionCloseProject->isEnabled());
-  QCOMPARE(true, mActionLoadImages->isEnabled());
 
   /// Projecto modificado
   setFlag(MainWindowView::Flag::project_modified, true);

@@ -66,13 +66,13 @@ void HmclaheWidget::setBlockSize(const QSize &blockSize)
 void HmclaheWidget::setL(double l)
 {
   const QSignalBlocker blockerL(mL);
-  mL->setValue(l);
+  mL->setValue(static_cast<double>(l));
 }
 
 void HmclaheWidget::setPhi(double phi)
 {
   const QSignalBlocker blockerPhi(mPhi);
-  mPhi->setValue(phi);
+  mPhi->setValue(static_cast<double>(phi));
 }
 
 void HmclaheWidget::update()

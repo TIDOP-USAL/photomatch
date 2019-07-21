@@ -1,5 +1,5 @@
-#ifndef FME_CMBFHE_PROCESS_H
-#define FME_CMBFHE_PROCESS_H
+#ifndef FME_LCE_BSESCS_PROCESS_H
+#define FME_LCE_BSESCS_PROCESS_H
 
 #include "fme/process/ProcessConcurrent.h"
 #include "fme/core/preprocess.h"
@@ -7,26 +7,25 @@
 namespace fme
 {
 
-class FME_EXPORT CmbfheProcess
+class FME_EXPORT LceBsescsProcess
   : public ProcessConcurrent,
-    public ICmbfhe
+    public ILceBsescs
 {
 
 public:
 
-  CmbfheProcess();
-  CmbfheProcess(const QString &imgInput,
-                const QString &imgOutput,
-                const QSize &blockSize);
-  ~CmbfheProcess() override {}
+  LceBsescsProcess();
+  LceBsescsProcess(const QString &imgInput,
+                   const QString &imgOutput,
+                   const QSize &blockSize);
+  ~LceBsescsProcess() override {}
 
   QString imgInput() const;
   void setImgInput(const QString &imgInput);
-
   QString imgOutput() const;
   void setImgOutput(const QString &imgOutput);
 
-// ICmbfhe interface
+// ILceBsescs interface
 
 public:
 
@@ -46,8 +45,9 @@ private:
   QString mImgInput;
   QString mImgOutput;
   QSize mBlockSize;
+
 };
 
 } // namespace fme
 
-#endif // FME_CMBFHE_PROCESS_H
+#endif // FME_LCE_BSESCS_PROCESS_H

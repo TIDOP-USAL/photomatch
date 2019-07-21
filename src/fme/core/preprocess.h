@@ -115,7 +115,7 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class IHmclahe
+class FME_EXPORT IHmclahe
 {
 
 public:
@@ -237,7 +237,7 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class IRswhe
+class FME_EXPORT IRswhe
 {
 
 public:

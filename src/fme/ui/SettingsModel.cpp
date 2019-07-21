@@ -62,6 +62,86 @@ QSize SettingsModel::faheBlockSize() const
   return mSettings->fahe()->blockSize();
 }
 
+QSize SettingsModel::hmclaheBlockSize() const
+{
+  return mSettings->hmclahe()->blockSize();
+}
+
+double SettingsModel::hmclaheL() const
+{
+  return mSettings->hmclahe()->l();
+}
+
+double SettingsModel::hmclahePhi() const
+{
+  return mSettings->hmclahe()->phi();
+}
+
+QSize SettingsModel::lceBsescsBlockSize() const
+{
+  return mSettings->lceBsescs()->blockSize();
+}
+
+double SettingsModel::msrcpSmallScale() const
+{
+  return mSettings->msrcp()->smallScale();
+}
+
+double SettingsModel::msrcpMidScale() const
+{
+  return mSettings->msrcp()->midScale();
+}
+
+double SettingsModel::msrcpLargeScale() const
+{
+  return mSettings->msrcp()->largeScale();
+}
+
+QSize SettingsModel::noshpBlockSize() const
+{
+  return mSettings->noshp()->blockSize();
+}
+
+QSize SettingsModel::poheBlockSize() const
+{
+  return mSettings->pohe()->blockSize();
+}
+
+int SettingsModel::rswheHistogramDivisions() const
+{
+  return mSettings->rswhe()->histogramDivisions();
+}
+
+int SettingsModel::rswheHistogramCut() const
+{
+  return static_cast<int>(mSettings->rswhe()->histogramCut());
+}
+
+double SettingsModel::wallisContrast() const
+{
+  return mSettings->wallis()->contrast();
+}
+
+double SettingsModel::wallisBrightness() const
+{
+  return mSettings->wallis()->brightness();
+}
+
+int SettingsModel::wallisImposedAverage() const
+{
+  return mSettings->wallis()->imposedAverage();
+}
+
+int SettingsModel::wallisImposedLocalStdDev() const
+{
+  return mSettings->wallis()->imposedLocalStdDev();
+}
+
+int SettingsModel::wallisKernelSize() const
+{
+  return mSettings->wallis()->kernelSize();
+}
+
 int SettingsModel::agastThreshold() const
 {
   return mSettings->agast()->threshold();
@@ -112,6 +192,356 @@ QString SettingsModel::akazeDiffusivity() const
   return mSettings->akaze()->diffusivity();
 }
 
+QString SettingsModel::briefBytes() const
+{
+  return mSettings->brief()->bytes();
+}
+
+bool SettingsModel::briefUseOrientation() const
+{
+  return mSettings->brief()->useOrientation();
+}
+
+int SettingsModel::briskThreshold() const
+{
+  return mSettings->brisk()->threshold();
+}
+
+int SettingsModel::briskOctaves() const
+{
+  return mSettings->brisk()->octaves();
+}
+
+double SettingsModel::briskPatternScale() const
+{
+  return mSettings->brisk()->patternScale();
+}
+
+double SettingsModel::daisyRadius() const
+{
+  return mSettings->daisy()->radius();
+}
+
+int SettingsModel::daisyQRadius() const
+{
+  return mSettings->daisy()->qRadius();
+}
+
+int SettingsModel::daisyQTheta() const
+{
+  return mSettings->daisy()->qTheta();
+}
+
+int SettingsModel::daisyQHist() const
+{
+  return mSettings->daisy()->qHist();
+}
+
+QString SettingsModel::daisyNorm() const
+{
+  return mSettings->daisy()->norm();
+}
+
+bool SettingsModel::daisyInterpolation() const
+{
+  return mSettings->daisy()->interpolation();
+}
+
+bool SettingsModel::daisyUseOrientation() const
+{
+  return mSettings->daisy()->useOrientation();
+}
+
+int SettingsModel::fastThreshold() const
+{
+  return mSettings->fast()->threshold();
+}
+
+bool SettingsModel::fastNonmaxSuppression() const
+{
+  return mSettings->fast()->nonmaxSuppression();
+}
+
+QString SettingsModel::fastdetectorType() const
+{
+  return mSettings->fast()->detectorType();
+}
+
+bool SettingsModel::freakOrientationNormalized() const
+{
+  return mSettings->freak()->orientationNormalized();
+}
+
+bool SettingsModel::freakScaleNormalized() const
+{
+  return mSettings->freak()->scaleNormalized();
+}
+
+double SettingsModel::freakPatternScale() const
+{
+  return mSettings->freak()->patternScale();
+}
+
+int SettingsModel::freakOctaves() const
+{
+  return mSettings->freak()->octaves();
+}
+
+int SettingsModel::gfttMaxFeatures() const
+{
+  return mSettings->gftt()->maxFeatures();
+}
+
+double SettingsModel::gfttQualityLevel() const
+{
+  return mSettings->gftt()->qualityLevel();
+}
+
+double SettingsModel::gfttMinDistance() const
+{
+  return mSettings->gftt()->minDistance();
+}
+
+int SettingsModel::gfttBlockSize() const
+{
+  return mSettings->gftt()->blockSize();
+}
+
+bool SettingsModel::gfttHarrisDetector() const
+{
+  return mSettings->gftt()->harrisDetector();
+}
+
+double SettingsModel::gfttK() const
+{
+  return mSettings->gftt()->k();
+}
+
+QSize SettingsModel::hogWinSize() const
+{
+  return mSettings->hog()->winSize();
+}
+
+QSize SettingsModel::hogBlockSize() const
+{
+  return mSettings->hog()->blockSize();
+}
+
+QSize SettingsModel::hogBlockStride() const
+{
+  return mSettings->hog()->blockStride();
+}
+
+QSize SettingsModel::hogCellSize() const
+{
+  return mSettings->hog()->cellSize();
+}
+
+int SettingsModel::hogNbins() const
+{
+  return mSettings->hog()->nbins();
+}
+
+int SettingsModel::hogDerivAperture() const
+{
+  return mSettings->hog()->derivAperture();
+}
+
+bool SettingsModel::kazeExtendedDescriptor() const
+{
+  return mSettings->kaze()->extendedDescriptor();
+}
+
+bool SettingsModel::kazeUpright() const
+{
+  return mSettings->kaze()->upright();
+}
+
+double SettingsModel::kazeThreshold() const
+{
+  return mSettings->kaze()->threshold();
+}
+
+int SettingsModel::kazeOctaves() const
+{
+  return mSettings->kaze()->octaves();
+}
+
+int SettingsModel::kazeOctaveLayers() const
+{
+  return mSettings->kaze()->octaveLayers();
+}
+
+QString SettingsModel::kazeDiffusivity() const
+{
+  return mSettings->kaze()->diffusivity();
+}
+
+QString SettingsModel::latchBytes() const
+{
+  return mSettings->latch()->bytes();
+}
+
+bool SettingsModel::latchRotationInvariance() const
+{
+  return mSettings->latch()->rotationInvariance();
+}
+
+int SettingsModel::latchHalfSsdSize() const
+{
+  return mSettings->latch()->halfSsdSize();
+}
+
+int SettingsModel::lucidKernel() const
+{
+  return mSettings->lucid()->lucidKernel();
+}
+
+int SettingsModel::lucidBlurKernel() const
+{
+  return mSettings->lucid()->blurKernel();
+}
+
+double SettingsModel::msdThresholdSaliency() const
+{
+  return mSettings->msd()->thresholdSaliency();
+}
+
+int SettingsModel::msdPathRadius() const
+{
+  return mSettings->msd()->pathRadius();
+}
+
+int SettingsModel::msdKnn() const
+{
+  return mSettings->msd()->knn();
+}
+
+int SettingsModel::msdAreaRadius() const
+{
+  return mSettings->msd()->areaRadius();
+}
+
+double SettingsModel::msdScaleFactor() const
+{
+  return mSettings->msd()->scaleFactor();
+}
+
+int SettingsModel::msdNMSRadius() const
+{
+  return mSettings->msd()->NMSRadius();
+}
+
+int SettingsModel::msdNScales() const
+{
+  return mSettings->msd()->nScales();
+}
+
+int SettingsModel::msdNMSScaleR() const
+{
+  return mSettings->msd()->NMSScaleR();
+}
+
+bool SettingsModel::msdComputeOrientations() const
+{
+  return mSettings->msd()->computeOrientations();
+}
+
+bool SettingsModel::msdAffineMSD() const
+{
+  return mSettings->msd()->affineMSD();
+}
+
+int SettingsModel::msdTilts() const
+{
+  return mSettings->msd()->tilts();
+}
+
+int SettingsModel::mserDelta() const
+{
+  return mSettings->mser()->delta();
+}
+
+int SettingsModel::mserMinArea() const
+{
+  return mSettings->mser()->minArea();
+}
+
+int SettingsModel::mserMaxArea() const
+{
+  return mSettings->mser()->maxArea();
+}
+
+double SettingsModel::mserMaxVariation() const
+{
+  return mSettings->mser()->maxVariation();
+}
+
+double SettingsModel::mserMinDiversity() const
+{
+  return mSettings->mser()->minDiversity();
+}
+
+int SettingsModel::mserMaxEvolution() const
+{
+  return mSettings->mser()->maxEvolution();
+}
+
+double SettingsModel::mserAreaThreshold() const
+{
+  return mSettings->mser()->areaThreshold();
+}
+
+double SettingsModel::mserMinMargin() const
+{
+  return mSettings->mser()->minMargin();
+}
+
+int SettingsModel::mserEdgeBlurSize() const
+{
+  return mSettings->mser()->edgeBlurSize();
+}
+
+int SettingsModel::orbFeaturesNumber() const
+{
+  return mSettings->orb()->featuresNumber();
+}
+
+double SettingsModel::orbScaleFactor() const
+{
+  return mSettings->orb()->scaleFactor();
+}
+
+int SettingsModel::orbLevelsNumber() const
+{
+  return mSettings->orb()->levelsNumber();
+}
+
+int SettingsModel::orbEdgeThreshold() const
+{
+  return mSettings->orb()->edgeThreshold();
+}
+
+int SettingsModel::orbWta_k() const
+{
+  return mSettings->orb()->wta_k();
+}
+
+QString SettingsModel::orbScoreType() const
+{
+  return mSettings->orb()->scoreType();
+}
+
+int SettingsModel::orbPatchSize() const
+{
+  return mSettings->orb()->patchSize();
+}
+
+int SettingsModel::orbFastThreshold() const
+{
+  return mSettings->orb()->fastThreshold();
+}
+
 int SettingsModel::siftFeaturesNumber() const
 {
   return mSettings->sift()->featuresNumber();
@@ -135,6 +565,31 @@ double SettingsModel::siftEdgeThreshold()
 double SettingsModel::siftSigma()
 {
   return mSettings->sift()->sigma();
+}
+
+int SettingsModel::starMaxSize() const
+{
+  return mSettings->star()->maxSize();
+}
+
+int SettingsModel::starResponseThreshold() const
+{
+  return mSettings->star()->responseThreshold();
+}
+
+int SettingsModel::starLineThresholdProjected() const
+{
+  return mSettings->star()->lineThresholdProjected();
+}
+
+int SettingsModel::starLineThresholdBinarized() const
+{
+  return mSettings->star()->lineThresholdBinarized();
+}
+
+int SettingsModel::starSuppressNonmaxSize() const
+{
+  return mSettings->star()->suppressNonmaxSize();
 }
 
 double SettingsModel::surfHessianThreshold() const
@@ -216,6 +671,102 @@ void SettingsModel::setFaheBlockSize(const QSize &size)
   emit unsavedChanges(true);
 }
 
+void SettingsModel::setHmclaheBlockSize(const QSize &size)
+{
+  mSettings->hmclahe()->setBlockSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHmclaheL(double l)
+{
+  mSettings->hmclahe()->setL(l);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHmclahePhi(double phi)
+{
+  mSettings->hmclahe()->setPhi(phi);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setLceBsescsBlockSize(const QSize &blockSize)
+{
+  mSettings->lceBsescs()->setBlockSize(blockSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsrcpSmallScale(double smallScale)
+{
+  mSettings->msrcp()->setSmallScale(smallScale);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsrcpMidScale(double midScale)
+{
+  mSettings->msrcp()->setMidScale(midScale);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsrcpLargeScale(double largeScale)
+{
+  mSettings->msrcp()->setLargeScale(largeScale);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setNoshpBlockSize(const QSize &blockSize)
+{
+  mSettings->noshp()->setBlockSize(blockSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setPoheBlockSize(const QSize &blockSize)
+{
+  mSettings->pohe()->setBlockSize(blockSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setRswheHistogramDivisions(int histogramDivisions)
+{
+  mSettings->rswhe()->setHistogramDivisions(histogramDivisions);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setRswheHistogramCut(int histogramCut)
+{
+  mSettings->rswhe()->setHistogramCut(static_cast<IRswhe::HistogramCut>(histogramCut));
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setWallisContrast(double contrast)
+{
+  mSettings->wallis()->setContrast(contrast);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setWallisBrightness(double brightness)
+{
+  mSettings->wallis()->setBrightness(brightness);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setWallisImposedAverage(int imposedAverage)
+{
+  mSettings->wallis()->setImposedAverage(imposedAverage);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setWallisImposedLocalStdDev(int imposedLocalStdDev)
+{
+  mSettings->wallis()->setImposedLocalStdDev(imposedLocalStdDev);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setWallisKernelSize(int kernelSize)
+{
+  mSettings->wallis()->setKernelSize(kernelSize);
+  emit unsavedChanges(true);
+}
+
 void SettingsModel::setAgastThreshold(int threshold)
 {
   mSettings->agast()->setThreshold(threshold);
@@ -276,6 +827,426 @@ void SettingsModel::setAkazeDiffusivity(const QString &diffusivity)
   emit unsavedChanges(true);
 }
 
+void SettingsModel::setBriefBytes(const QString &bytes)
+{
+  mSettings->brief()->setBytes(bytes);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBriefUseOrientation(bool useOrientation)
+{
+  mSettings->brief()->setUseOrientation(useOrientation);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBriskThreshold(int threshold)
+{
+  mSettings->brisk()->setThreshold(threshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBriskOctaves(int octaves)
+{
+  mSettings->brisk()->setOctaves(octaves);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBriskPatternScale(double patternScale)
+{
+  mSettings->brisk()->setPatternScale(patternScale);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyRadius(double radius)
+{
+  mSettings->daisy()->setRadius(radius);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyQRadius(int qRadius)
+{
+  mSettings->daisy()->setQRadius(qRadius);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyQTheta(int qTheta)
+{
+  mSettings->daisy()->setQTheta(qTheta);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyQHist(int qHist)
+{
+  mSettings->daisy()->setQHist(qHist);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyNorm(const QString &norm)
+{
+  mSettings->daisy()->setNorm(norm);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyInterpolation(bool interpolation)
+{
+  mSettings->daisy()->setInterpolation(interpolation);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setDaisyUseOrientation(bool useOrientation)
+{
+  mSettings->daisy()->setUseOrientation(useOrientation);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFastThreshold(int threshold)
+{
+  mSettings->fast()->setThreshold(threshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFastNonmaxSuppression(bool nonmaxSuppression)
+{
+  mSettings->fast()->setNonmaxSuppression(nonmaxSuppression);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFastDetectorType(QString detectorType)
+{
+  mSettings->fast()->setDetectorType(detectorType);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFreakOrientationNormalized(bool orientationNormalized)
+{
+  mSettings->freak()->setOrientationNormalized(orientationNormalized);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFreakScaleNormalized(bool scaleNormalized)
+{
+  mSettings->freak()->setScaleNormalized(scaleNormalized);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFreakPatternScale(double patternScale)
+{
+  mSettings->freak()->setPatternScale(patternScale);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setFreakOctaves(int octaves)
+{
+  mSettings->freak()->setOctaves(octaves);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGfttMaxFeatures(int maxFeatures)
+{
+  mSettings->gftt()->setMaxFeatures(maxFeatures);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGfttQualityLevel(double qlevel)
+{
+  mSettings->gftt()->setQualityLevel(qlevel);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGfttMinDistance(double minDistance)
+{
+  mSettings->gftt()->setMinDistance(minDistance);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGfttBlockSize(int blockSize)
+{
+  mSettings->gftt()->setBlockSize(blockSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGfttHarrisDetector(bool value)
+{
+  mSettings->gftt()->setHarrisDetector(value);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGfttK(double k)
+{
+  mSettings->gftt()->setK(k);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHogWinSize(const QSize &winSize)
+{
+  mSettings->hog()->setWinSize(winSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHogBlockSize(const QSize &blockSize)
+{
+  mSettings->hog()->setBlockSize(blockSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHogBlockStride(const QSize &blockStride)
+{
+  mSettings->hog()->setBlockStride(blockStride);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHogCellSize(const QSize &cellSize)
+{
+  mSettings->hog()->setCellSize(cellSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHogNbins(int nbins)
+{
+  mSettings->hog()->setNbins(nbins);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setHogDerivAperture(int derivAperture)
+{
+  mSettings->hog()->setDerivAperture(derivAperture);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKazeExtendedDescriptor(bool extended)
+{
+  mSettings->kaze()->setExtendedDescriptor(extended);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKazeUpright(bool upright)
+{
+  mSettings->kaze()->setUpright(upright);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKazeThreshold(double threshold)
+{
+  mSettings->kaze()->setThreshold(threshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKazeOctaves(int octaves)
+{
+  mSettings->kaze()->setOctaves(octaves);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKazeOctaveLayers(int octaveLayers)
+{
+  mSettings->kaze()->setOctaveLayers(octaveLayers);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKazeDiffusivity(const QString &diffusivity)
+{
+  mSettings->kaze()->setDiffusivity(diffusivity);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setLatchBytes(const QString &bytes)
+{
+  mSettings->latch()->setBytes(bytes);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setLatchRotationInvariance(bool rotationInvariance)
+{
+  mSettings->latch()->setRotationInvariance(rotationInvariance);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setLatchHalfSsdSize(int halfSsdSize)
+{
+  mSettings->latch()->setHalfSsdSize(halfSsdSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setLucidKernel(int lucidKernel)
+{
+  mSettings->lucid()->setLucidKernel(lucidKernel);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setLucidBlurKernel(int blurKernel)
+{
+  mSettings->lucid()->setBlurKernel(blurKernel);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdThresholdSaliency(double thresholdSaliency)
+{
+  mSettings->msd()->setThresholdSaliency(thresholdSaliency);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdPathRadius(int pathRadius)
+{
+  mSettings->msd()->setPathRadius(pathRadius);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdKNN(int knn)
+{
+  mSettings->msd()->setKNN(knn);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdAreaRadius(int areaRadius)
+{
+  mSettings->msd()->setAreaRadius(areaRadius);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdScaleFactor(double scaleFactor)
+{
+  mSettings->msd()->setScaleFactor(scaleFactor);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdNMSRadius(int NMSRadius)
+{
+  mSettings->msd()->setNMSRadius(NMSRadius);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdNScales(int nScales)
+{
+  mSettings->msd()->setNScales(nScales);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdNMSScaleR(int NMSScaleR)
+{
+  mSettings->msd()->setNMSScaleR(NMSScaleR);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdComputeOrientations(bool computeOrientations)
+{
+  mSettings->msd()->setComputeOrientations(computeOrientations);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdAffineMSD(bool affineMSD)
+{
+  mSettings->msd()->setAffineMSD(affineMSD);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMsdTilts(int tilts)
+{
+  mSettings->msd()->setTilts(tilts);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserDelta(int delta)
+{
+  mSettings->mser()->setDelta(delta);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserMinArea(int minArea)
+{
+  mSettings->mser()->setMinArea(minArea);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserMaxArea(int maxArea)
+{
+  mSettings->mser()->setMaxArea(maxArea);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserMaxVariation(double maxVariation)
+{
+  mSettings->mser()->setMaxVariation(maxVariation);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserMinDiversity(double minDiversity)
+{
+  mSettings->mser()->setMinDiversity(minDiversity);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserMaxEvolution(int maxEvolution)
+{
+  mSettings->mser()->setMaxEvolution(maxEvolution);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserAreaThreshold(double areaThreshold)
+{
+  mSettings->mser()->setAreaThreshold(areaThreshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserMinMargin(double minMargin)
+{
+  mSettings->mser()->setMinMargin(minMargin);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMserEdgeBlurSize(int edgeBlurSize)
+{
+  mSettings->mser()->setEdgeBlurSize(edgeBlurSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbScaleFactor(double scaleFactor)
+{
+  mSettings->orb()->setScaleFactor(scaleFactor);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbFeaturesNumber(int featuresNumber)
+{
+  mSettings->orb()->setFeaturesNumber(featuresNumber);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbLevelsNumber(int levelsNumber)
+{
+  mSettings->orb()->setLevelsNumber(levelsNumber);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbEdgeThreshold(int edgeThreshold)
+{
+  mSettings->orb()->setEdgeThreshold(edgeThreshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbWTA_K(int WTA_K)
+{
+  mSettings->orb()->setWTA_K(WTA_K);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbScoreType(const QString &scoreType)
+{
+  mSettings->orb()->setScoreType(scoreType);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbPatchSize(int patchSize)
+{
+  mSettings->orb()->setPatchSize(patchSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setOrbFastThreshold(int fastThreshold)
+{
+  mSettings->orb()->setFastThreshold(fastThreshold);
+  emit unsavedChanges(true);
+}
+
 void SettingsModel::setSiftFeaturesNumber(int featuresNumber)
 {
   mSettings->sift()->setFeaturesNumber(featuresNumber);
@@ -303,6 +1274,36 @@ void SettingsModel::setSiftEdgeThreshold(double edgeThreshold)
 void SettingsModel::setSiftSigma(double sigma)
 {
   mSettings->sift()->setSigma(sigma);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setStarMaxSize(int maxSize)
+{
+  mSettings->star()->setMaxSize(maxSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setStarResponseThreshold(int responseThreshold)
+{
+  mSettings->star()->setResponseThreshold(responseThreshold);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setStarLineThresholdProjected(int lineThresholdProjected)
+{
+  mSettings->star()->setLineThresholdProjected(lineThresholdProjected);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setStarLineThresholdBinarized(int lineThresholdBinarized)
+{
+  mSettings->star()->setLineThresholdBinarized(lineThresholdBinarized);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setStarSuppressNonmaxSize(int suppressNonmaxSize)
+{
+  mSettings->star()->setSuppressNonmaxSize(suppressNonmaxSize);
   emit unsavedChanges(true);
 }
 

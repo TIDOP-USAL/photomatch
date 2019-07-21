@@ -119,13 +119,13 @@ protected:
   ICmbfheWidget *mCMBFHE;
   IDheWidget *mDHE;
   IFaheWidget *mFAHE;
-  //IHmclaheWidget *mHMCLAHE;
-  //ILceBsescsWidget *mLCEBSESCS;
-  //IMsrcpWidget *mMSRCP;
-  //INoshpWidget *mNOSHP;
-  //IPoheWidget *mPOHE;
-  //IRswheWidget *mRSWHE;
-  //IWallisWidget *mWallis;
+  IHmclaheWidget *mHMCLAHE;
+  ILceBsescsWidget *mLCEBSESCS;
+  IMsrcpWidget *mMSRCP;
+  INoshpWidget *mNOSHP;
+  IPoheWidget *mPOHE;
+  IRswheWidget *mRSWHE;
+  IWallisWidget *mWallis;
 
   /* Feature detector/extractor */
 

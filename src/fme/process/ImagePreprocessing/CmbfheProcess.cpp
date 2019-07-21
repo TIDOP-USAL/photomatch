@@ -18,8 +18,8 @@ CmbfheProcess::CmbfheProcess()
 }
 
 CmbfheProcess::CmbfheProcess(const QString &imgInput,
-                                  const QString &imgOutput,
-                                  const QSize &blockSize)
+                             const QString &imgOutput,
+                             const QSize &blockSize)
   : ProcessConcurrent(),
     ICmbfhe(),
     mImgInput(imgInput),
@@ -27,6 +27,26 @@ CmbfheProcess::CmbfheProcess(const QString &imgInput,
     mBlockSize(blockSize)
 {
 
+}
+
+QString CmbfheProcess::imgInput() const
+{
+  return mImgInput;
+}
+
+void CmbfheProcess::setImgInput(const QString &imgInput)
+{
+  mImgInput = imgInput;
+}
+
+QString CmbfheProcess::imgOutput() const
+{
+  return mImgOutput;
+}
+
+void CmbfheProcess::setImgOutput(const QString &imgOutput)
+{
+  mImgOutput = imgOutput;
 }
 
 QSize CmbfheProcess::blockSize() const
@@ -41,6 +61,8 @@ void CmbfheProcess::setBlockSize(const QSize &blockSize)
 
 void CmbfheProcess::reset()
 {
+  mImgInput.clear();
+  mImgOutput.clear();
   mBlockSize = QSize(11, 11);
 }
 

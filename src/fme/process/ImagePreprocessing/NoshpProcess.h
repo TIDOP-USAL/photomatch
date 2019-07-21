@@ -1,5 +1,5 @@
-#ifndef FME_CMBFHE_PROCESS_H
-#define FME_CMBFHE_PROCESS_H
+#ifndef FME_NOSHP_PROCESS_H
+#define FME_NOSHP_PROCESS_H
 
 #include "fme/process/ProcessConcurrent.h"
 #include "fme/core/preprocess.h"
@@ -7,35 +7,33 @@
 namespace fme
 {
 
-class FME_EXPORT CmbfheProcess
+class FME_EXPORT NoshpProcess
   : public ProcessConcurrent,
-    public ICmbfhe
+    public INoshp
 {
 
 public:
 
-  CmbfheProcess();
-  CmbfheProcess(const QString &imgInput,
-                const QString &imgOutput,
-                const QSize &blockSize);
-  ~CmbfheProcess() override {}
+  NoshpProcess();
+  NoshpProcess(const QString &imgInput,
+               const QString &imgOutput,
+               const QSize &blockSize);
 
   QString imgInput() const;
   void setImgInput(const QString &imgInput);
-
   QString imgOutput() const;
   void setImgOutput(const QString &imgOutput);
 
-// ICmbfhe interface
+// INoshp interface
 
 public:
 
   QSize blockSize() const override;
   void setBlockSize(const QSize &blockSize) override;
-
   void reset() override;
 
 // ProcessConcurrent interface
+
 
 protected:
 
@@ -50,4 +48,4 @@ private:
 
 } // namespace fme
 
-#endif // FME_CMBFHE_PROCESS_H
+#endif // FME_NOSHP_PROCESS_H

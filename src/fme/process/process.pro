@@ -63,23 +63,24 @@ SOURCES += Process.cpp \
            sift/SIFT_KPDetProcess.cpp \
            surf/SURF_KPDetProcess.cpp \
            surf/SUFT_KPDescProcess.cpp \
-           ImagePreprocessing/ContrastPreservingDecolorization__Process.cpp \
-           ImagePreprocessing/WallisFilter_Process.cpp \
-           ImagePreprocessing/Downsample_Process.cpp \
-           ImagePreprocessing/LCE_BSESCS2014_Process.cpp \
-           ImagePreprocessing/RajuNair2014_Process.cpp \
-           ImagePreprocessing/Lal2014_Process.cpp \
-           ImagePreprocessing/MSRCP2014_Process.cpp \
-           ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.cpp \
-           ImagePreprocessing/POHE2013_Process.cpp \
-           ImagePreprocessing/Kimori2013_Process.cpp \
-           ImagePreprocessing/CelikTjahjadi2012_Process.cpp \
-           ImagePreprocessing/LiuJinChenLiuLi2011_Process.cpp \
-           ImagePreprocessing/Sundarami2011_Process.cpp \
-           ImagePreprocessing/MaryKim2008_Process.cpp \
+           ImagePreprocessing/ClaheProcess.cpp \
+           ImagePreprocessing/CmbfheProcess.cpp \
            ImagePreprocessing/DheProcess.cpp \
            ImagePreprocessing/FaheProcess.cpp \
-           ImagePreprocessing/CmbfheProcess.cpp \
+           ImagePreprocessing/HmclaheProcess.cpp \
+           ImagePreprocessing/LceBsescsProcess.cpp \
+           ImagePreprocessing/MsrcpProcess.cpp \
+           ImagePreprocessing/NoshpProcess.cpp \
+           ImagePreprocessing/PoheProcess.cpp \
+           ImagePreprocessing/RswheProcess.cpp \
+           ImagePreprocessing/WallisProcess.cpp \
+           ImagePreprocessing/ContrastPreservingDecolorization__Process.cpp \
+           ImagePreprocessing/Downsample_Process.cpp \
+           ImagePreprocessing/RajuNair2014_Process.cpp \
+           ImagePreprocessing/Lal2014_Process.cpp \
+           ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.cpp \
+           ImagePreprocessing/Kimori2013_Process.cpp \
+           ImagePreprocessing/CelikTjahjadi2012_Process.cpp \
            ImagePreprocessing/YuBajaj2004_Process.cpp \
            Matching/BFMatcherProcess.cpp \
            Matching/RobustMatcherRefinementProcess.cpp \
@@ -117,23 +118,24 @@ HEADERS += ../fme_global.h \
            surf/SUFT_KPDescProcess.h \
            sift/SIFT_KPDetProcess.h \
            sift/SIFT_KPDescProcess.h \
-           ImagePreprocessing/ContrastPreservingDecolorization__Process.h \
-           ImagePreprocessing/WallisFilter_Process.h \
-           ImagePreprocessing/Downsample_Process.h \
-           ImagePreprocessing/LCE_BSESCS2014_Process.h \
-           ImagePreprocessing/RajuNair2014_Process.h \
-           ImagePreprocessing/Lal2014_Process.h \
-           ImagePreprocessing/MSRCP2014_Process.h \
-           ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h \
-           ImagePreprocessing/POHE2013_Process.h \
-           ImagePreprocessing/Kimori2013_Process.h \
-           ImagePreprocessing/CelikTjahjadi2012_Process.h \
-           ImagePreprocessing/LiuJinChenLiuLi2011_Process.h \
-           ImagePreprocessing/Sundarami2011_Process.h \
-           ImagePreprocessing/MaryKim2008_Process.h \
+           ImagePreprocessing/ClaheProcess.h \
+           ImagePreprocessing/CmbfheProcess.h \
            ImagePreprocessing/DheProcess.h \
            ImagePreprocessing/FaheProcess.h \
-           ImagePreprocessing/CmbfheProcess.h \
+           ImagePreprocessing/HmclaheProcess.h \
+           ImagePreprocessing/LceBsescsProcess.h \
+           ImagePreprocessing/MsrcpProcess.h \
+           ImagePreprocessing/NoshpProcess.h \
+           ImagePreprocessing/PoheProcess.h \
+           ImagePreprocessing/RswheProcess.h \
+           ImagePreprocessing/ContrastPreservingDecolorization__Process.h \
+           ImagePreprocessing/WallisProcess.h \
+           ImagePreprocessing/Downsample_Process.h \
+           ImagePreprocessing/RajuNair2014_Process.h \
+           ImagePreprocessing/Lal2014_Process.h \
+           ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h \
+           ImagePreprocessing/Kimori2013_Process.h \
+           ImagePreprocessing/CelikTjahjadi2012_Process.h \
            ImagePreprocessing/YuBajaj2004_Process.h \
            Matching/BFMatcherProcess.h \
            Matching/RobustMatcherRefinementProcess.h \

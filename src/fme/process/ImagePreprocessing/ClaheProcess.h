@@ -50,8 +50,6 @@ private:
 
   QString mImgInput;
   QString mImgOutput;
-//  double mClipLimit;
-//  QSize mTilesGridSize;
   cv::Ptr<cv::CLAHE> mCvClahe;
 };
 

@@ -13,8 +13,6 @@ ClaheProcess::ClaheProcess()
     IClahe(),
     mImgInput(""),
     mImgOutput(""),
-//    mClipLimit(40.0),
-//    mTilesGridSize(8, 8),
     mCvClahe(cv::createCLAHE())
 {
 
@@ -28,8 +26,6 @@ ClaheProcess::ClaheProcess(const QString &imgInput,
     IClahe(),
     mImgInput(imgInput),
     mImgOutput(imgOutput),
-//    mClipLimit(clipLimit),
-//    mTilesGridSize(tilesGridSize)
     mCvClahe(cv::createCLAHE())
 {
   setClipLimit(clipLimit);
@@ -79,8 +75,8 @@ void ClaheProcess::setTilesGridSize(const QSize &tilesGridSize)
 
 void ClaheProcess::reset()
 {
-  mImgInput = "";
-  mImgOutput = "";
+  mImgInput.clear();
+  mImgOutput.clear();
   setClipLimit(40.0);
   setTilesGridSize(QSize(8, 8));
 }

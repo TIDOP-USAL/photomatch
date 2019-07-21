@@ -46,9 +46,10 @@ TestHmclaheWidget::~TestHmclaheWidget()
 
 void TestHmclaheWidget::testDefaultConstructor()
 {
-  QCOMPARE(QSize(17, 17), mHmclaheWidget->blockSize());
-  QCOMPARE(0.03, mHmclaheWidget->l());
-  QCOMPARE(0.5, mHmclaheWidget->phi());
+  HmclaheWidget hmclaheWidget;
+  QCOMPARE(QSize(17, 17), hmclaheWidget.blockSize());
+  QCOMPARE(0.03, hmclaheWidget.l());
+  QCOMPARE(0.5, hmclaheWidget.phi());
 }
 
 void TestHmclaheWidget::test_windowTitle()
