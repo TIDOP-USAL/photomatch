@@ -43,10 +43,13 @@ public:
 
 signals:
 
+  void preprocessFinished();
+
 private slots:
 
   virtual void run() = 0;
   virtual void setCurrentPreprocess(const QString &preprocess) = 0;
+
 };
 
 
@@ -80,6 +83,9 @@ private slots:
 
   void run() override;
   void setCurrentPreprocess(const QString &preprocess) override;
+  void onError(int, QString);
+  void onFinished();
+
 protected:
 
   IPreprocessView *mView;
@@ -87,7 +93,7 @@ protected:
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
 
-  IAcebsfWidget *mACEBS;
+  IAcebsfWidget *mACEBSF;
   IClaheWidget *mCLAHE;
   ICmbfheWidget *mCMBFHE;
   IDheWidget *mDHE;

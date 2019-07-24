@@ -1458,6 +1458,67 @@ void Sift::reset()
 /* Image preprocessing                                            */
 /*----------------------------------------------------------------*/
 
+Acebsf::Acebsf()
+  : IAcebsf(),
+    mBlockSize(8, 8),
+    mL(0.03),
+    mK1(10.),
+    mK2(0.5)
+{
+
+}
+
+QSize Acebsf::blockSize() const
+{
+  return mBlockSize;
+}
+
+void Acebsf::setBlockSize(const QSize &blockSize)
+{
+  mBlockSize = blockSize;
+}
+
+double Acebsf::l() const
+{
+  return mL;
+}
+
+void Acebsf::setL(double l)
+{
+  mL = l;
+}
+
+double Acebsf::k1() const
+{
+  return mK1;
+}
+
+void Acebsf::setK1(double k1)
+{
+  mK1 = k1;
+}
+
+double Acebsf::k2() const
+{
+  return mK2;
+}
+
+void Acebsf::setK2(double k2)
+{
+  mK2 = k2;
+}
+
+void Acebsf::reset()
+{
+  mBlockSize = QSize(8, 8);
+  mL = 0.03;
+  mK1 = 10.;
+  mK2 = 0.5;
+}
+
+
+/*----------------------------------------------------------------*/
+
 
 Clahe::Clahe()
   : IClahe(),
@@ -1885,6 +1946,7 @@ void Wallis::reset()
 Settings::Settings()
   : ISettings(),
     mHistoyMaxSize(10),
+    mAcebsf(new Acebsf),
     mClahe(new Clahe),
     mCmbfhe(new Cmbfhe),
     mDhe(new Dhe),
@@ -1920,6 +1982,11 @@ Settings::Settings()
 
 Settings::~Settings()
 {
+  if (mAcebsf){
+    delete mAcebsf;
+    mAcebsf = nullptr;
+  }
+
   if (mClahe){
     delete mClahe;
     mClahe = nullptr;
@@ -2104,6 +2171,16 @@ int Settings::historyMaxSize() const
 void Settings::setHistoryMaxSize(int maxSize)
 {
   mHistoyMaxSize = maxSize;
+}
+
+IAcebsf *Settings::acebsf()
+{
+  return mAcebsf;
+}
+
+const IAcebsf *Settings::acebsf() const
+{
+  return mAcebsf;
 }
 
 IClahe *Settings::clahe()
@@ -2403,6 +2480,7 @@ void Settings::reset()
   mHistoyMaxSize = 10;
   mHistory.clear();
 
+  mAcebsf->reset();
   mClahe->reset();
   mCmbfhe->reset();
   mDhe->reset();
@@ -2831,6 +2909,8 @@ void SettingsRW::writeHistory(const ISettings &settings)
 {
   mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
 }
+
+
 
 
 } // namespace fme

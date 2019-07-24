@@ -87,7 +87,7 @@ void LceBsescsWidget::init()
 
   QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), this);
   propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
-  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(this);
+  QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
   groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
   propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);

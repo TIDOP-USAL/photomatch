@@ -380,6 +380,7 @@ void MainWindowPresenter::loadProject()
 //  msgInfo(msg.toStdString().c_str());
 
   QStringList images;
+  TL_TODO("Los iteradores sobre las imagenes deberian ser constantes unicamente para evitar que se modifiquen las imagenes. El problema es que no se notificaria al proyecto que ha cambiado")
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     images.push_back((*it)->path());
   }
@@ -389,10 +390,17 @@ void MainWindowPresenter::loadProject()
     mView->setFlag(MainWindowView::Flag::images_added, true);
   }
 
+  TL_TODO("Lo mismo que para las imagenes... ")
   for(auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
     //loadSession((*it)->name());
     mView->addSession((*it)->name(), (*it)->description());
     mView->setFlag(MainWindowView::Flag::session_created, true);
+
+    std::shared_ptr<Preprocess> preprocess = (*it)->preprocess();
+    if (preprocess){
+      mView->setFlag(MainWindowView::Flag::preprocess, true);
+    }
+
   }
 }
 
@@ -434,6 +442,18 @@ void MainWindowPresenter::loadSession(const QString &session)
   mView->addSession(_session->name(), _session->description());
 
   mView->setFlag(MainWindowView::Flag::session_created, true);
+  mView->setFlag(MainWindowView::Flag::project_modified, true);
+}
+
+void MainWindowPresenter::loadPreprocess()
+{
+  std::shared_ptr<Session> _session = mProjectModel->currentSession();
+
+  std::shared_ptr<Preprocess> preprocess = _session->preprocess();
+  if (preprocess){
+    mView->setFlag(MainWindowView::Flag::preprocess, true);
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+  }
 }
 
 void MainWindowPresenter::help()
@@ -493,6 +513,8 @@ void MainWindowPresenter::initPreprocessDialog()
     mPreprocessModel = new PreprocessModel;
     IPreprocessView *preprocessView = new PreprocessView(mView);
     mPreprocessPresenter = new PreprocessPresenter(preprocessView, mPreprocessModel, mProjectModel, mSettingsModel);
+
+    connect(mPreprocessPresenter, SIGNAL(preprocessFinished()), this, SLOT(loadPreprocess()));
   }
 }
 

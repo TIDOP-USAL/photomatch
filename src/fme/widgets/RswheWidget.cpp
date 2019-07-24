@@ -32,12 +32,12 @@ RswheWidget::~RswheWidget()
 
 void RswheWidget::onHistogramCutByMean()
 {
-  emit histogramCutChange(HistogramCut::by_mean);
+  emit histogramCutChange(static_cast<int>(HistogramCut::by_mean));
 }
 
 void RswheWidget::onHistogramCutByMedian()
 {
-  emit histogramCutChange(HistogramCut::by_median);
+  emit histogramCutChange(static_cast<int>(HistogramCut::by_median));
 }
 
 int RswheWidget::histogramDivisions() const

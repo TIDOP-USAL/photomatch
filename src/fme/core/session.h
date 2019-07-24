@@ -3,10 +3,14 @@
 
 #include "fme/fme_global.h"
 
+#include <memory>
+
 #include <QString>
 
 namespace fme
 {
+
+class Preprocess;
 
 class FME_EXPORT ISession
 {
@@ -40,6 +44,10 @@ public:
    */
   virtual void setDescription(const QString &description) = 0;
 
+  virtual std::shared_ptr<Preprocess> preprocess() = 0;
+
+  virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
+
   /*!
    * \brief Limpia la sesión
    */
@@ -66,12 +74,15 @@ public:
   void setName(const QString &name) override;
   QString description() const override;
   void setDescription(const QString &description) override;
+  std::shared_ptr<Preprocess> preprocess() override;
+  void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) override;
   void clear() override;
 
 protected:
 
   QString mName;
   QString mDescription;
+  std::shared_ptr<Preprocess> mPreprocess;
 
 };
 

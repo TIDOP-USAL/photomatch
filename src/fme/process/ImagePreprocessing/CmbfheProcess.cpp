@@ -1,5 +1,7 @@
 #include "CmbfheProcess.h"
 
+#include "fme/core/utils.h"
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -68,20 +70,44 @@ void CmbfheProcess::reset()
 
 void CmbfheProcess::run()
 {
-
-  ///TODO: No hay que leer la imagen a resolución completa si se hace el calculo con un escalado de la imagen
-  ///TODO: Chequeo de los parámetros
   QByteArray ba = mImgInput.toLocal8Bit();
   const char *input_img = ba.data();
-  cv::Mat img = cv::imread(input_img);
+
+  double scale = 1.;
+  cv::Mat img;
+  if (mMaxSize != -1) {
+    QImageReader imageReader(input_img);
+    QSize size = imageReader.size();
+
+    int w = size.width();
+    int h = size.height();
+    if (w > h){
+      scale = w / static_cast<double>(mMaxSize);
+    } else {
+      scale = h / static_cast<double>(mMaxSize);
+    }
+
+    if (scale > 1.) {
+      size /= scale;
+      imageReader.setScaledSize(size);
+      QImage image_scaled = imageReader.read();
+      img = qImageToCvMat(image_scaled);
+    }
+  }
+
+  if (scale <= 1.) {
+    img = cv::imread(input_img);
+  }
 
   cv::Mat color_boost;
   if (img.channels() >= 3) {
     cv::decolor(img, img, color_boost);
+    color_boost.release();
   }
 
   cv::Mat out;
   pixkit::enhancement::local::LambertiMontrucchioSanna2006(img, out, cv::Size(mBlockSize.width(), mBlockSize.height()), cv::Size(44,44));
+  img.release();
 
   ba = mImgOutput.toLocal8Bit();
   const char *output_img = ba.data();

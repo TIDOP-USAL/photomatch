@@ -76,6 +76,7 @@ protected slots:
   void deleteImages(const QStringList &images);
 
   void loadSession(const QString &session);
+  void loadPreprocess();
 
 // IPresenter interface
 

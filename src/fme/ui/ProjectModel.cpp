@@ -77,42 +77,42 @@ void ProjectModel::deleteImage(size_t imgId)
   bUnsavedChanges = true;
 }
 
-std::shared_ptr<Image> ProjectModel::findImage(const QString &path)
-{
-  return mProject->findImage(path);
-}
+//std::shared_ptr<Image> ProjectModel::findImage(const QString &path)
+//{
+//  return mProject->findImage(path);
+//}
 
 const std::shared_ptr<Image> ProjectModel::findImage(const QString &path) const
 {
   return mProject->findImage(path);
 }
 
-size_t ProjectModel::findImageId(const QString &path)
-{
-  return mProject->findImageId(path);
-}
+//size_t ProjectModel::findImageId(const QString &path)
+//{
+//  return mProject->findImageId(path);
+//}
 
 size_t ProjectModel::findImageId(const QString &path) const
 {
   return mProject->findImageId(path);
 }
 
-ProjectModel::image_iterator ProjectModel::imageBegin()
+//ProjectModel::image_iterator ProjectModel::imageBegin()
+//{
+//  return mProject->imageBegin();
+//}
+
+IProject::image_const_iterator ProjectModel::imageBegin() const
 {
   return mProject->imageBegin();
 }
 
-ProjectModel::image_const_iterator ProjectModel::imageBegin() const
-{
-  return mProject->imageBegin();
-}
+//ProjectModel::image_iterator ProjectModel::imageEnd()
+//{
+//  return mProject->imageEnd();
+//}
 
-ProjectModel::image_iterator ProjectModel::imageEnd()
-{
-  return mProject->imageEnd();
-}
-
-ProjectModel::image_const_iterator ProjectModel::imageEnd() const
+IProject::image_const_iterator ProjectModel::imageEnd() const
 {
   return mProject->imageEnd();
 }
@@ -166,22 +166,22 @@ size_t ProjectModel::findSessionId(const QString &sessionName) const
   return mProject->findSessionId(sessionName);
 }
 
-ProjectModel::session_iterator ProjectModel::sessionBegin()
+//ProjectModel::session_iterator ProjectModel::sessionBegin()
+//{
+//  return mProject->sessionBegin();
+//}
+
+IProject::session_const_iterator ProjectModel::sessionBegin() const
 {
   return mProject->sessionBegin();
 }
 
-ProjectModel::session_const_iterator ProjectModel::sessionBegin() const
-{
-  return mProject->sessionBegin();
-}
+//ProjectModel::session_iterator ProjectModel::sessionEnd()
+//{
+//  return mProject->sessionEnd();
+//}
 
-ProjectModel::session_iterator ProjectModel::sessionEnd()
-{
-  return mProject->sessionEnd();
-}
-
-ProjectModel::session_const_iterator ProjectModel::sessionEnd() const
+IProject::session_const_iterator ProjectModel::sessionEnd() const
 {
   return mProject->sessionEnd();
 }
@@ -191,10 +191,10 @@ size_t ProjectModel::sessionCount() const
   return mProject->sessionCount();
 }
 
-std::shared_ptr<Session> ProjectModel::currentSession()
-{
-  return mProject->currentSession();
-}
+//std::shared_ptr<Session> ProjectModel::currentSession()
+//{
+//  return mProject->currentSession();
+//}
 
 const std::shared_ptr<Session> ProjectModel::currentSession() const
 {
@@ -204,6 +204,13 @@ const std::shared_ptr<Session> ProjectModel::currentSession() const
 void ProjectModel::setCurrentSession(const QString &sessionName)
 {
   mProject->setCurrentSession(sessionName);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
+{
+  this->currentSession()->setPreprocess(preprocess);
+  bUnsavedChanges = true;
 }
 
 void ProjectModel::clear()

@@ -2,6 +2,7 @@ set(test_filename tst_settingsmodel.cpp)
 get_filename_component(test_name ${test_filename} NAME_WE)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/third_party)
 
 set(test_kind test)
 set(test_KIND TEST)

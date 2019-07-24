@@ -1,3 +1,5 @@
+include_directories(${CMAKE_SOURCE_DIR}/third_party)
+
 add_library(libprocess ${LIB_TYPE}
             Process.cpp
             Process.h
@@ -57,6 +59,8 @@ add_library(libprocess ${LIB_TYPE}
             surf/SURF_KPDetProcess.h
             surf/SUFT_KPDescProcess.cpp
             surf/SUFT_KPDescProcess.h
+            ImagePreprocessing/AcebsfProcess.cpp
+            ImagePreprocessing/AcebsfProcess.h
             ImagePreprocessing/ClaheProcess.cpp
             ImagePreprocessing/ClaheProcess.h
             ImagePreprocessing/CmbfheProcess.cpp
@@ -85,8 +89,6 @@ add_library(libprocess ${LIB_TYPE}
             ImagePreprocessing/Downsample_Process.h
             ImagePreprocessing/RajuNair2014_Process.cpp
             ImagePreprocessing/RajuNair2014_Process.h
-            ImagePreprocessing/Lal2014_Process.cpp
-            ImagePreprocessing/Lal2014_Process.h
             ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.cpp
             ImagePreprocessing/Wang_Zheng_Hu_Li2013_Process.h
             ImagePreprocessing/Kimori2013_Process.cpp

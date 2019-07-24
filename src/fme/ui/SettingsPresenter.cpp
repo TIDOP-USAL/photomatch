@@ -4,7 +4,7 @@
 #include "SettingsView.h"
 
 /* Image preprocess */
-//#include "fme/widgets/AcebsfWidget.h"
+#include "fme/widgets/AcebsfWidget.h"
 #include "fme/widgets/ClaheWidget.h"
 #include "fme/widgets/CmbfheWidget.h"
 #include "fme/widgets/DheWidget.h"
@@ -47,7 +47,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mView(view),
     mModel(model),
     /*mHelp(nullptr),*/
-    //mACEBS(new AcebsfWidget),
+    mACEBSF(new AcebsfWidget),
     mCLAHE(new ClaheWidget),
     mCMBFHE(new CmbfheWidget),
     mDHE(new DheWidget),
@@ -89,6 +89,12 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
   connect(mModel, SIGNAL(unsavedChanges(bool)), mView, SLOT(setUnsavedChanges(bool)));
 
+  /* ACEBSF */
+  connect(mACEBSF, SIGNAL(blockSizeChange(QSize)),         mModel, SLOT(setAcebsfBlockSize(QSize)));
+  connect(mACEBSF, SIGNAL(lChange(double)),                mModel, SLOT(setAcebsfL(double)));
+  connect(mACEBSF, SIGNAL(k1Change(double)),               mModel, SLOT(setAcebsfK1(double)));
+  connect(mACEBSF, SIGNAL(k2Change(double)),               mModel, SLOT(setAcebsfK2(double)));
+
   /* CLAHE */
   connect(mCLAHE, SIGNAL(clipLimitChange(double)),         mModel, SLOT(setClaheClipLimit(double)));
   connect(mCLAHE, SIGNAL(tileGridSizeChange(QSize)),       mModel, SLOT(setClaheTilesGridSize(QSize)));
@@ -116,14 +122,14 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mMSRCP, SIGNAL(largeScaleChange(double)),         mModel, SLOT(setMsrcpLargeScale(double)));
 
   /* NOSHP */
-  connect(mNOSHP,  SIGNAL(blockSizeChange(QSize)),          mModel, SLOT(setNoshpBlockSize(QString)));
+  connect(mNOSHP,  SIGNAL(blockSizeChange(QSize)),          mModel, SLOT(setNoshpBlockSize(QSize)));
 
   /* POHE */
-  connect(mPOHE, SIGNAL(blockSizeChange(QSize)),            mModel, SLOT(setPoheBlockSize(QString)));
+  connect(mPOHE, SIGNAL(blockSizeChange(QSize)),            mModel, SLOT(setPoheBlockSize(QSize)));
 
   /* RSWHE */
   connect(mRSWHE, SIGNAL(histogramDivisionsChange(int)),    mModel, SLOT(setRswheHistogramDivisions(int)));
-  connect(mRSWHE, SIGNAL(histogramCutChange(IRswheWidget::HistogramCut)),          mModel, SLOT(setRswheHistogramCut(int)));
+  connect(mRSWHE, SIGNAL(histogramCutChange(int)),          mModel, SLOT(setRswheHistogramCut(int)));
 
   /* WALLIS */
   connect(mWallis, SIGNAL(contrastChange(double)),           mModel, SLOT(setWallisContrast(double)));
@@ -147,100 +153,100 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mAkaze, SIGNAL(diffusivityChange(QString)),        mModel, SLOT(setAkazeDiffusivity(QString)));
 
   /* BRIEF */
-  connect(mBrief, SIGNAL(bytesChange(QString)),              mModel, SLOT(setBriefBytes(const QString &bytes)));
-  connect(mBrief, SIGNAL(useOrientationChange(bool)),        mModel, SLOT(setBriefUseOrientation(bool useOrientation)));
+  connect(mBrief, SIGNAL(bytesChange(QString)),              mModel, SLOT(setBriefBytes(QString)));
+  connect(mBrief, SIGNAL(useOrientationChange(bool)),        mModel, SLOT(setBriefUseOrientation(bool)));
 
   /* BRISK */
-  connect(mBrisk, SIGNAL(thresholdChange(int)),              mModel, SLOT(setBriskThreshold(int threshold)));
-  connect(mBrisk, SIGNAL(octavesChange(int)),                mModel, SLOT(setBriskOctaves(int octaves)));
-  connect(mBrisk, SIGNAL(patternScaleChange(double)),        mModel, SLOT(setBriskPatternScale(double patternScale)));
+  connect(mBrisk, SIGNAL(thresholdChange(int)),              mModel, SLOT(setBriskThreshold(int)));
+  connect(mBrisk, SIGNAL(octavesChange(int)),                mModel, SLOT(setBriskOctaves(int)));
+  connect(mBrisk, SIGNAL(patternScaleChange(double)),        mModel, SLOT(setBriskPatternScale(double)));
 
   /* DAISY */
-  connect(mDaisy, SIGNAL(radiusChange(double)),              mModel, SLOT(setDaisyRadius(double radius)));
-  connect(mDaisy, SIGNAL(qRadiusChange(int)),                mModel, SLOT(setDaisyQRadius(int qRadius)));
-  connect(mDaisy, SIGNAL(qThetaChange(int)),                 mModel, SLOT(setDaisyQTheta(int qTheta)));
-  connect(mDaisy, SIGNAL(qHistChange(int)),                  mModel, SLOT(setDaisyQHist(int qHist)));
-  connect(mDaisy, SIGNAL(normChange(QString)),               mModel, SLOT(setDaisyNorm(const QString &norm)));
-  connect(mDaisy, SIGNAL(interpolationChange(bool)),         mModel, SLOT(setDaisyInterpolation(bool interpolation)));
-  connect(mDaisy, SIGNAL(useOrientationChange(bool)),        mModel, SLOT(setDaisyUseOrientation(bool useOrientation)));
+  connect(mDaisy, SIGNAL(radiusChange(double)),              mModel, SLOT(setDaisyRadius(double)));
+  connect(mDaisy, SIGNAL(qRadiusChange(int)),                mModel, SLOT(setDaisyQRadius(int)));
+  connect(mDaisy, SIGNAL(qThetaChange(int)),                 mModel, SLOT(setDaisyQTheta(int)));
+  connect(mDaisy, SIGNAL(qHistChange(int)),                  mModel, SLOT(setDaisyQHist(int)));
+  connect(mDaisy, SIGNAL(normChange(QString)),               mModel, SLOT(setDaisyNorm(QString)));
+  connect(mDaisy, SIGNAL(interpolationChange(bool)),         mModel, SLOT(setDaisyInterpolation(bool)));
+  connect(mDaisy, SIGNAL(useOrientationChange(bool)),        mModel, SLOT(setDaisyUseOrientation(bool)));
 
   /* FAST */
-  connect(mFast, SIGNAL(thresholdChange(int)),               mModel, SLOT(setFastThreshold(int threshold)));
-  connect(mFast, SIGNAL(nonmaxSuppressionChange(bool)),      mModel, SLOT(setFastNonmaxSuppression(bool nonmaxSuppression)));
-  connect(mFast, SIGNAL(detectorTypeChange(QString)),        mModel, SLOT(setFastDetectorType(QString detectorType)));
+  connect(mFast, SIGNAL(thresholdChange(int)),               mModel, SLOT(setFastThreshold(int)));
+  connect(mFast, SIGNAL(nonmaxSuppressionChange(bool)),      mModel, SLOT(setFastNonmaxSuppression(bool)));
+  connect(mFast, SIGNAL(detectorTypeChange(QString)),        mModel, SLOT(setFastDetectorType(QString)));
 
   /* FREAK */
-  connect(mFreak, SIGNAL(orientationNormalizedChange(bool)), mModel, SLOT(setFreakOrientationNormalized(bool orientationNormalized)));
-  connect(mFreak, SIGNAL(scaleNormalizedChange(bool)),       mModel, SLOT(setFreakScaleNormalized(bool scaleNormalized)));
-  connect(mFreak, SIGNAL(patternScaleChange(double)),        mModel, SLOT(setFreakPatternScale(double patternScale)));
-  connect(mFreak, SIGNAL(octavesChange(int)),                mModel, SLOT(setFreakOctaves(int octaves)));
+  connect(mFreak, SIGNAL(orientationNormalizedChange(bool)), mModel, SLOT(setFreakOrientationNormalized(bool)));
+  connect(mFreak, SIGNAL(scaleNormalizedChange(bool)),       mModel, SLOT(setFreakScaleNormalized(bool)));
+  connect(mFreak, SIGNAL(patternScaleChange(double)),        mModel, SLOT(setFreakPatternScale(double)));
+  connect(mFreak, SIGNAL(octavesChange(int)),                mModel, SLOT(setFreakOctaves(int)));
 
   /* GFTT */
-  connect(mGftt, SIGNAL(maxFeaturesChange(int)),             mModel, SLOT(setGfttMaxFeatures(int maxFeatures)));
-  connect(mGftt, SIGNAL(qualityLevelChange(double)),         mModel, SLOT(setGfttQualityLevel(double qlevel)));
-  connect(mGftt, SIGNAL(minDistanceChange(double)),          mModel, SLOT(setGfttMinDistance(double minDistance)));
-  connect(mGftt, SIGNAL(blockSizeChange(int)),               mModel, SLOT(setGfttBlockSize(int blockSize)));
-  connect(mGftt, SIGNAL(harrisDetectorChange(bool)),         mModel, SLOT(setGfttHarrisDetector(bool value)));
-  connect(mGftt, SIGNAL(kChange(double)),                    mModel, SLOT(setGfttK(double k)));
+  connect(mGftt, SIGNAL(maxFeaturesChange(int)),             mModel, SLOT(setGfttMaxFeatures(int)));
+  connect(mGftt, SIGNAL(qualityLevelChange(double)),         mModel, SLOT(setGfttQualityLevel(double)));
+  connect(mGftt, SIGNAL(minDistanceChange(double)),          mModel, SLOT(setGfttMinDistance(double)));
+  connect(mGftt, SIGNAL(blockSizeChange(int)),               mModel, SLOT(setGfttBlockSize(int)));
+  connect(mGftt, SIGNAL(harrisDetectorChange(bool)),         mModel, SLOT(setGfttHarrisDetector(bool)));
+  connect(mGftt, SIGNAL(kChange(double)),                    mModel, SLOT(setGfttK(double)));
 
   /* HOG */
-  connect(mHog, SIGNAL(winSizeChange(QSize)),                mModel, SLOT(setHogWinSize(const QSize &winSize)));
-  connect(mHog, SIGNAL(blockSizeChange(QSize)),              mModel, SLOT(setHogBlockSize(const QSize &blockSize)));
-  connect(mHog, SIGNAL(blockStrideChange(QSize)),            mModel, SLOT(setHogBlockStride(const QSize &blockStride)));
-  connect(mHog, SIGNAL(cellSizeChange(QSize)),               mModel, SLOT(setHogCellSize(const QSize &cellSize)));
-  connect(mHog, SIGNAL(nbinsChange(int)),                    mModel, SLOT(setHogNbins(int nbins)));
-  connect(mHog, SIGNAL(derivApertureChange(int)),            mModel, SLOT(setHogDerivAperture(int derivAperture)));
+  connect(mHog, SIGNAL(winSizeChange(QSize)),                mModel, SLOT(setHogWinSize(QSize)));
+  connect(mHog, SIGNAL(blockSizeChange(QSize)),              mModel, SLOT(setHogBlockSize(QSize)));
+  connect(mHog, SIGNAL(blockStrideChange(QSize)),            mModel, SLOT(setHogBlockStride(QSize)));
+  connect(mHog, SIGNAL(cellSizeChange(QSize)),               mModel, SLOT(setHogCellSize(QSize)));
+  connect(mHog, SIGNAL(nbinsChange(int)),                    mModel, SLOT(setHogNbins(int)));
+  connect(mHog, SIGNAL(derivApertureChange(int)),            mModel, SLOT(setHogDerivAperture(int)));
 
   /* KAZE */
-  connect(mKaze, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setKazeExtendedDescriptor(bool extended)));
-  connect(mKaze, SIGNAL(uprightChange(bool)),                mModel, SLOT(setKazeUpright(bool upright)));
-  connect(mKaze, SIGNAL(thresholdChange(double)),            mModel, SLOT(setKazeThreshold(double threshold)));
-  connect(mKaze, SIGNAL(octavesChange(int)),                 mModel, SLOT(setKazeOctaves(int octaves)));
-  connect(mKaze, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setKazeOctaveLayers(int octaveLayers)));
-  connect(mKaze, SIGNAL(diffusivityChange(QString)),         mModel, SLOT(setKazeDiffusivity(const QString &diffusivity)));
+  connect(mKaze, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setKazeExtendedDescriptor(bool)));
+  connect(mKaze, SIGNAL(uprightChange(bool)),                mModel, SLOT(setKazeUpright(bool)));
+  connect(mKaze, SIGNAL(thresholdChange(double)),            mModel, SLOT(setKazeThreshold(double)));
+  connect(mKaze, SIGNAL(octavesChange(int)),                 mModel, SLOT(setKazeOctaves(int)));
+  connect(mKaze, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setKazeOctaveLayers(int)));
+  connect(mKaze, SIGNAL(diffusivityChange(QString)),         mModel, SLOT(setKazeDiffusivity(QString)));
 
   /* LATCH */
-  connect(mLatch, SIGNAL(bytesChange(QString)),              mModel, SLOT(setLatchBytes(const QString &bytes)));
-  connect(mLatch, SIGNAL(rotationInvarianceChange(bool)),    mModel, SLOT(setLatchRotationInvariance(bool rotationInvariance)));
-  connect(mLatch, SIGNAL(halfSsdSizeChange(int)),            mModel, SLOT(setLatchHalfSsdSize(int halfSsdSize)));
+  connect(mLatch, SIGNAL(bytesChange(QString)),              mModel, SLOT(setLatchBytes(QString)));
+  connect(mLatch, SIGNAL(rotationInvarianceChange(bool)),    mModel, SLOT(setLatchRotationInvariance(bool)));
+  connect(mLatch, SIGNAL(halfSsdSizeChange(int)),            mModel, SLOT(setLatchHalfSsdSize(int)));
 
   /* LUCID */
-  connect(mLucid, SIGNAL(lucidKernelChange(int)),            mModel, SLOT(setLucidKernel(int lucidKernel)));
-  connect(mLucid, SIGNAL(blurKernelChange(int)),             mModel, SLOT(setLucidBlurKernel(int blurKernel)));
+  connect(mLucid, SIGNAL(lucidKernelChange(int)),            mModel, SLOT(setLucidKernel(int)));
+  connect(mLucid, SIGNAL(blurKernelChange(int)),             mModel, SLOT(setLucidBlurKernel(int)));
 
   /* MSD */
-  connect(mMsd, SIGNAL(thresholdSaliencyChange(double)),     mModel, SLOT(setMsdThresholdSaliency(double thresholdSaliency)));
-  connect(mMsd, SIGNAL(pathRadiusChange(int)),               mModel, SLOT(setMsdPathRadius(int pathRadius)));
-  connect(mMsd, SIGNAL(KNNChange(int)),                      mModel, SLOT(setMsdKNN(int knn)));
-  connect(mMsd, SIGNAL(areaRadiusChange(int)),               mModel, SLOT(setMsdAreaRadius(int areaRadius)));
-  connect(mMsd, SIGNAL(scaleFactorChange(double)),           mModel, SLOT(setMsdScaleFactor(double scaleFactor)));
-  connect(mMsd, SIGNAL(NMSRadiusChange(int)),                mModel, SLOT(setMsdNMSRadius(int NMSRadius)));
-  connect(mMsd, SIGNAL(nScalesChange(int)),                  mModel, SLOT(setMsdNScales(int nScales)));
-  connect(mMsd, SIGNAL(NMSScaleRChange(int)),                mModel, SLOT(setMsdNMSScaleR(int NMSScaleR)));
-  connect(mMsd, SIGNAL(computeOrientationsChange(bool)),     mModel, SLOT(setMsdComputeOrientations(bool computeOrientations)));
-  connect(mMsd, SIGNAL(affineMSDChange(bool)),               mModel, SLOT(setMsdAffineMSD(bool affineMSD)));
-  connect(mMsd, SIGNAL(tiltsChange(int)),                    mModel, SLOT(setMsdTilts(int tilts)));
+  connect(mMsd, SIGNAL(thresholdSaliencyChange(double)),     mModel, SLOT(setMsdThresholdSaliency(double)));
+  connect(mMsd, SIGNAL(pathRadiusChange(int)),               mModel, SLOT(setMsdPathRadius(int)));
+  connect(mMsd, SIGNAL(KNNChange(int)),                      mModel, SLOT(setMsdKNN(int)));
+  connect(mMsd, SIGNAL(areaRadiusChange(int)),               mModel, SLOT(setMsdAreaRadius(int)));
+  connect(mMsd, SIGNAL(scaleFactorChange(double)),           mModel, SLOT(setMsdScaleFactor(double)));
+  connect(mMsd, SIGNAL(NMSRadiusChange(int)),                mModel, SLOT(setMsdNMSRadius(int)));
+  connect(mMsd, SIGNAL(nScalesChange(int)),                  mModel, SLOT(setMsdNScales(int)));
+  connect(mMsd, SIGNAL(NMSScaleRChange(int)),                mModel, SLOT(setMsdNMSScaleR(int)));
+  connect(mMsd, SIGNAL(computeOrientationsChange(bool)),     mModel, SLOT(setMsdComputeOrientations(bool)));
+  connect(mMsd, SIGNAL(affineMSDChange(bool)),               mModel, SLOT(setMsdAffineMSD(bool)));
+  connect(mMsd, SIGNAL(tiltsChange(int)),                    mModel, SLOT(setMsdTilts(int)));
 
   /* MSER */
-  connect(mMser, SIGNAL(deltaChange(int)),                   mModel, SLOT(setMserDelta(int delta)));
-  connect(mMser, SIGNAL(minAreaChange(int)),                 mModel, SLOT(setMserMinArea(int minArea)));
-  connect(mMser, SIGNAL(maxAreaChange(int)),                 mModel, SLOT(setMserMaxArea(int maxArea)));
-  connect(mMser, SIGNAL(maxVariationChange(double)),         mModel, SLOT(setMserMaxVariation(double maxVariation)));
-  connect(mMser, SIGNAL(minDiversityChange(double)),         mModel, SLOT(setMserMinDiversity(double minDiversity)));
-  connect(mMser, SIGNAL(maxEvolutionChange(int)),            mModel, SLOT(setMserMaxEvolution(int maxEvolution)));
-  connect(mMser, SIGNAL(areaThresholdChange(double)),        mModel, SLOT(setMserAreaThreshold(double areaThreshold)));
-  connect(mMser, SIGNAL(minMarginChange(double)),            mModel, SLOT(setMserMinMargin(double minMargin)));
-  connect(mMser, SIGNAL(edgeBlurSizeChange(int)),            mModel, SLOT(setMserEdgeBlurSize(int edgeBlurSize)));
+  connect(mMser, SIGNAL(deltaChange(int)),                   mModel, SLOT(setMserDelta(int)));
+  connect(mMser, SIGNAL(minAreaChange(int)),                 mModel, SLOT(setMserMinArea(int)));
+  connect(mMser, SIGNAL(maxAreaChange(int)),                 mModel, SLOT(setMserMaxArea(int)));
+  connect(mMser, SIGNAL(maxVariationChange(double)),         mModel, SLOT(setMserMaxVariation(double)));
+  connect(mMser, SIGNAL(minDiversityChange(double)),         mModel, SLOT(setMserMinDiversity(double)));
+  connect(mMser, SIGNAL(maxEvolutionChange(int)),            mModel, SLOT(setMserMaxEvolution(int)));
+  connect(mMser, SIGNAL(areaThresholdChange(double)),        mModel, SLOT(setMserAreaThreshold(double)));
+  connect(mMser, SIGNAL(minMarginChange(double)),            mModel, SLOT(setMserMinMargin(double)));
+  connect(mMser, SIGNAL(edgeBlurSizeChange(int)),            mModel, SLOT(setMserEdgeBlurSize(int)));
 
   /* ORB */
-  connect(mOrb, SIGNAL(featuresNumberChange(int)),           mModel, SLOT(setOrbScaleFactor(double scaleFactor)));
-  connect(mOrb, SIGNAL(scaleFactorChange(double)),           mModel, SLOT(setOrbFeaturesNumber(int featuresNumber)));
-  connect(mOrb, SIGNAL(levelsNumberChange(int)),             mModel, SLOT(setOrbLevelsNumber(int levelsNumber)));
-  connect(mOrb, SIGNAL(edgeThresholdChange(int)),            mModel, SLOT(setOrbEdgeThreshold(int edgeThreshold)));
-  connect(mOrb, SIGNAL(wta_kChange(int)),                    mModel, SLOT(setOrbWTA_K(int WTA_K)));
-  connect(mOrb, SIGNAL(scoreTypeChange(QString)),            mModel, SLOT(setOrbScoreType(const QString &scoreType)));
-  connect(mOrb, SIGNAL(patchSizeChange(int)),                mModel, SLOT(setOrbPatchSize(int patchSize)));
-  connect(mOrb, SIGNAL(fastThresholdChange(int)),            mModel, SLOT(setOrbFastThreshold(int fastThreshold)));
+  connect(mOrb, SIGNAL(scaleFactorChange(double)),           mModel, SLOT(setOrbScaleFactor(double)));
+  connect(mOrb, SIGNAL(featuresNumberChange(int)),           mModel, SLOT(setOrbFeaturesNumber(int)));
+  connect(mOrb, SIGNAL(levelsNumberChange(int)),             mModel, SLOT(setOrbLevelsNumber(int)));
+  connect(mOrb, SIGNAL(edgeThresholdChange(int)),            mModel, SLOT(setOrbEdgeThreshold(int)));
+  connect(mOrb, SIGNAL(wta_kChange(int)),                    mModel, SLOT(setOrbWTA_K(int)));
+  connect(mOrb, SIGNAL(scoreTypeChange(QString)),            mModel, SLOT(setOrbScoreType(QString)));
+  connect(mOrb, SIGNAL(patchSizeChange(int)),                mModel, SLOT(setOrbPatchSize(int)));
+  connect(mOrb, SIGNAL(fastThresholdChange(int)),            mModel, SLOT(setOrbFastThreshold(int)));
 
   /* SIFT */
   connect(mSift, SIGNAL(featuresNumberChange(int)),          mModel, SLOT(setSiftFeaturesNumber(int)));
@@ -250,11 +256,11 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mSift, SIGNAL(sigmaChange(double)),                mModel, SLOT(setSiftSigma(double)));
 
   /* STAR */
-  connect(mStar, SIGNAL(maxSizeChange(int)),                 mModel, SLOT(setStarMaxSize(int maxSize)));
-  connect(mStar, SIGNAL(responseThresholdChange(int)),       mModel, SLOT(setStarResponseThreshold(int responseThreshold)));
-  connect(mStar, SIGNAL(lineThresholdProjectedChange(int)),  mModel, SLOT(setStarLineThresholdProjected(int lineThresholdProjected)));
-  connect(mStar, SIGNAL(lineThresholdBinarizedChange(int)),  mModel, SLOT(setStarLineThresholdBinarized(int lineThresholdBinarized)));
-  connect(mStar, SIGNAL(suppressNonmaxSizeChange(int)),      mModel, SLOT(setStarSuppressNonmaxSize(int suppressNonmaxSize)));
+  connect(mStar, SIGNAL(maxSizeChange(int)),                 mModel, SLOT(setStarMaxSize(int)));
+  connect(mStar, SIGNAL(responseThresholdChange(int)),       mModel, SLOT(setStarResponseThreshold(int)));
+  connect(mStar, SIGNAL(lineThresholdProjectedChange(int)),  mModel, SLOT(setStarLineThresholdProjected(int)));
+  connect(mStar, SIGNAL(lineThresholdBinarizedChange(int)),  mModel, SLOT(setStarLineThresholdBinarized(int)));
+  connect(mStar, SIGNAL(suppressNonmaxSizeChange(int)),      mModel, SLOT(setStarSuppressNonmaxSize(int)));
 
   /* SURF */
   connect(mSurf, SIGNAL(hessianThresholdChange(double)),     mModel, SLOT(setSurfHessianThreshold(double)));
@@ -266,10 +272,10 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
 SettingsPresenter::~SettingsPresenter()
 {
-//  if (mACEBS){
-//    delete mACEBS;
-//    mACEBS = nullptr;
-//  }
+  if (mACEBSF){
+    delete mACEBSF;
+    mACEBSF = nullptr;
+  }
 
   if (mCLAHE){
     delete mCLAHE;
@@ -437,6 +443,11 @@ void SettingsPresenter::open()
 
   mView->setLanguages(langs);
 
+  mACEBSF->setBlockSize(mModel->acebsfBlockSize());
+  mACEBSF->setL(mModel->acebsfL());
+  mACEBSF->setK1(mModel->acebsfK1());
+  mACEBSF->setK2(mModel->acebsfK2());
+
   mCLAHE->setClipLimit(mModel->claheClipLimit());
   mCLAHE->setTilesGridSize(mModel->claheTilesGridSize());
 
@@ -588,6 +599,7 @@ void SettingsPresenter::open()
 
 void SettingsPresenter::init()
 {
+  mView->addPreprocess(mACEBSF);
   mView->addPreprocess(mCLAHE);
   mView->addPreprocess(mCMBFHE);
   mView->addPreprocess(mDHE);

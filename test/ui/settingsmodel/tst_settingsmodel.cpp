@@ -63,12 +63,18 @@ public:
   ~TestSettingsModel();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_defaultValues();
   void test_language();
   void test_languages();
   void test_history();
+
+  void test_acebsfBlockSize();
+  void test_acebsfL();
+  void test_acebsfK1();
+  void test_acebsfK2();
 
   /* CLAHE */
   void test_claheClipLimit();
@@ -281,6 +287,11 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(10, settingsModel.historyMaxSize());
   QCOMPARE(QStringList(), settingsModel.history());
 
+  QCOMPARE(QSize(8, 8), settingsModel.acebsfBlockSize());
+  QCOMPARE(0.03, settingsModel.acebsfL());
+  QCOMPARE(10., settingsModel.acebsfK1());
+  QCOMPARE(0.5, settingsModel.acebsfK2());
+
   QCOMPARE(40., settingsModel.claheClipLimit());
   QCOMPARE(QSize(8, 8), settingsModel.claheTilesGridSize());
 
@@ -474,6 +485,30 @@ void TestSettingsModel::test_history()
   mSettingsModel->clearHistory();
   h = mSettings->history();
   QCOMPARE(0, h.size());
+}
+
+void TestSettingsModel::test_acebsfBlockSize()
+{
+  mSettingsModel->setAcebsfBlockSize(QSize(20, 20));
+  QCOMPARE(QSize(20, 20), mSettingsModel->acebsfBlockSize());
+}
+
+void TestSettingsModel::test_acebsfL()
+{
+  mSettingsModel->setAcebsfL(0.05);
+  QCOMPARE(0.05, mSettingsModel->acebsfL());
+}
+
+void TestSettingsModel::test_acebsfK1()
+{
+  mSettingsModel->setAcebsfK1(9.);
+  QCOMPARE(9., mSettingsModel->acebsfK1());
+}
+
+void TestSettingsModel::test_acebsfK2()
+{
+  mSettingsModel->setAcebsfK2(0.5);
+  QCOMPARE(0.5, mSettingsModel->acebsfK2());
 }
 
 void TestSettingsModel::test_claheClipLimit()
@@ -1224,6 +1259,10 @@ void TestSettingsModel::test_starSuppressNonmaxSize()
 void TestSettingsModel::test_reset()
 {
   mSettingsModel->setLanguage("es");
+  mSettingsModel->setAcebsfBlockSize(QSize(20, 20));
+  mSettingsModel->setAcebsfL(0.05);
+  mSettingsModel->setAcebsfK1(9.);
+  mSettingsModel->setAcebsfK2(0.5);
   mSettingsModel->setClaheClipLimit(20.);
   mSettingsModel->setClaheTilesGridSize(QSize(4, 4));
   mSettingsModel->setCmbfheBlockSize(QSize(7,7));
@@ -1345,6 +1384,11 @@ void TestSettingsModel::test_reset()
   mSettingsModel->reset();
 
   QCOMPARE("en", mSettingsModel->language());
+
+  QCOMPARE(QSize(8, 8), mSettingsModel->acebsfBlockSize());
+  QCOMPARE(0.03, mSettingsModel->acebsfL());
+  QCOMPARE(10., mSettingsModel->acebsfK1());
+  QCOMPARE(0.5, mSettingsModel->acebsfK2());
 
   QCOMPARE(40., mSettingsModel->claheClipLimit());
   QCOMPARE(QSize(8, 8), mSettingsModel->claheTilesGridSize());

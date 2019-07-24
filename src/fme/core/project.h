@@ -107,7 +107,7 @@ public:
    * \param[in] path Ruta de la imagen a buscar
    * \return Objeto Identificador de la imagen o std::numeric_limits<size_t>().max() si no se encuentra.
    */
-  virtual size_t findImageId(const QString &path) = 0;
+  //virtual size_t findImageId(const QString &path) = 0;
   virtual size_t findImageId(const QString &path) const = 0;
 
 
@@ -313,7 +313,7 @@ public:
   void deleteImage(size_t imgId) override;
   std::shared_ptr<Image> findImage(const QString &path) override;
   const std::shared_ptr<Image> findImage(const QString &path) const override;
-  size_t findImageId(const QString &path) override;
+  //size_t findImageId(const QString &path) override;
   size_t findImageId(const QString &path) const override;
   image_iterator imageBegin() override;
   image_const_iterator imageBegin() const override;

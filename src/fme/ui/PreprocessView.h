@@ -6,6 +6,8 @@
 class QGridLayout;
 class QComboBox;
 class QDialogButtonBox;
+class QSpinBox;
+class QCheckBox;
 
 namespace fme
 {
@@ -24,6 +26,10 @@ public:
   virtual void addPreprocess(QWidget *detector) = 0;
   virtual QString currentPreprocess() const = 0;
   virtual void setCurrentPreprocess(const QString &preprocess) = 0;
+  virtual int maxImageSize() = 0;
+  virtual void setMaxImageSize(int imageSize) = 0;
+  virtual void setFullImageSize(bool fullImageSize) = 0;
+  virtual bool fullImageSize() = 0;
 
 signals:
 
@@ -53,6 +59,14 @@ public:
   void addPreprocess(QWidget *preprocess) override;
   QString currentPreprocess() const override;
   void setCurrentPreprocess(const QString &preprocess) override;
+  int maxImageSize() override;
+  void setMaxImageSize(int imageSize) override;
+  void setFullImageSize(bool fullImageSize) override;
+  bool fullImageSize() override;
+
+protected slots:
+
+  void onCheckBoxFullImageChange();
 
 // IDialogView interface
 
@@ -72,6 +86,8 @@ protected:
 
   QGridLayout *mGridLayoutPreprocess;
   QComboBox *mComboBoxPreprocess;
+  QCheckBox *mCheckBoxFullImage;
+  QSpinBox *mSpinBoxMaxImageSize;
   QDialogButtonBox *mButtonBox;
   QString mCurrentPreprocess;
 };

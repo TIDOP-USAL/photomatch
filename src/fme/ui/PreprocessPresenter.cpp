@@ -20,6 +20,7 @@
 #include "fme/widgets/WallisWidget.h"
 
 #include "fme/process/MultiProcess.h"
+#include "fme/process/ImagePreprocessing/AcebsfProcess.h"
 #include "fme/process/ImagePreprocessing/FaheProcess.h"
 #include "fme/process/ImagePreprocessing/CmbfheProcess.h"
 #include "fme/process/ImagePreprocessing/ClaheProcess.h"
@@ -35,6 +36,7 @@
 #include <QFileInfo>
 #include <QDir>
 
+
 namespace fme
 {
 
@@ -47,7 +49,7 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
     mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
-    mACEBS(new AcebsfWidget),
+    mACEBSF(new AcebsfWidget),
     mCLAHE(new ClaheWidget),
     mCMBFHE(new CmbfheWidget),
     mDHE(new DheWidget),
@@ -68,13 +70,16 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
   connect(mView, SIGNAL(run()), this, SLOT(run()));
   connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
+
+  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError()));
+  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 }
 
 PreprocessPresenter::~PreprocessPresenter()
 {
-  if (mACEBS){
-    delete mACEBS;
-    mACEBS = nullptr;
+  if (mACEBSF){
+    delete mACEBSF;
+    mACEBSF = nullptr;
   }
 
   if (mCLAHE){
@@ -144,6 +149,11 @@ void PreprocessPresenter::help()
 
 void PreprocessPresenter::open()
 {
+  mACEBSF->setBlockSize(mSettingsModel->acebsfBlockSize());
+  mACEBSF->setL(mSettingsModel->acebsfL());
+  mACEBSF->setK1(mSettingsModel->acebsfK1());
+  mACEBSF->setK2(mSettingsModel->acebsfK2());
+
   mCLAHE->setClipLimit(mSettingsModel->claheClipLimit());
   mCLAHE->setTilesGridSize(mSettingsModel->claheTilesGridSize());
 
@@ -181,7 +191,7 @@ void PreprocessPresenter::open()
 
 void PreprocessPresenter::init()
 {
-  mView->addPreprocess(mACEBS);
+  mView->addPreprocess(mACEBSF);
   mView->addPreprocess(mCLAHE);
   mView->addPreprocess(mCMBFHE);
   mView->addPreprocess(mDHE);
@@ -193,7 +203,7 @@ void PreprocessPresenter::init()
   mView->addPreprocess(mPOHE);
   mView->addPreprocess(mRSWHE);
   mView->addPreprocess(mWallis);
-  mView->setCurrentPreprocess(mACEBS->windowTitle());
+  mView->setCurrentPreprocess(mACEBSF->windowTitle());
 }
 
 void PreprocessPresenter::run()
@@ -201,7 +211,7 @@ void PreprocessPresenter::run()
   ///TODO: se crean los procesos
   /// - Se recorren todas las imagenes y se añaden los procesos
 
-  ///
+  mMultiProcess->clearProcessList();  ///TODO: Creo que no se esta liberando memoria
 
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString file_in = (*it)->path();
@@ -215,41 +225,67 @@ void PreprocessPresenter::run()
     }
     file_out.append(fileInfo.fileName());
 
-    if (mView->currentPreprocess().compare("ACEBS") == 0) {
-
-    } else if (mView->currentPreprocess().compare("CLAHE") == 0) {
-      ClaheProcess *clahe_process = new ClaheProcess(file_in, file_out, mCLAHE->clipLimit(), mCLAHE->tileGridSize());
+    QString currentPreprocess = mView->currentPreprocess();
+    if (currentPreprocess.compare("ACEBSF") == 0) {
+      std::shared_ptr<AcebsfProcess> acebsf_process(new AcebsfProcess(file_in, file_out, mACEBSF->blockSize(), mACEBSF->l(), mACEBSF->k1(), mACEBSF->k2()));
+      acebsf_process->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
+      mMultiProcess->appendProcess(acebsf_process);
+      mProjectModel->setPreprocess(acebsf_process);
+    } else if (currentPreprocess.compare("CLAHE") == 0) {
+      std::shared_ptr<ClaheProcess> clahe_process(new ClaheProcess(file_in, file_out, mCLAHE->clipLimit(), mCLAHE->tileGridSize()));
+      clahe_process->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(clahe_process);
-    } else if (mView->currentPreprocess().compare("CMBFHE") == 0) {
-      CmbfheProcess *cmbfhe_process = new CmbfheProcess(file_in, file_out, mCMBFHE->blockSize());
+      mProjectModel->setPreprocess(clahe_process);
+    } else if (currentPreprocess.compare("CMBFHE") == 0) {
+      std::shared_ptr<CmbfheProcess> cmbfhe_process(new CmbfheProcess(file_in, file_out, mCMBFHE->blockSize()));
+      cmbfhe_process->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(cmbfhe_process);
-    } else if (mView->currentPreprocess().compare("DHE") == 0) {
-      DheProcess *dhe_process = new DheProcess(file_in, file_out, mDHE->x());
+      mProjectModel->setPreprocess(cmbfhe_process);
+    } else if (currentPreprocess.compare("DHE") == 0) {
+      std::shared_ptr<DheProcess> dhe_process(new DheProcess(file_in, file_out, mDHE->x()));
+      dhe_process->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(dhe_process);
-    } else if (mView->currentPreprocess().compare("FAHE") == 0) {
-      FaheProcess *fahe_process = new FaheProcess(file_in, file_out, mFAHE->blockSize());
+      mProjectModel->setPreprocess(dhe_process);
+    } else if (currentPreprocess.compare("FAHE") == 0) {
+      std::shared_ptr<FaheProcess> fahe_process(new FaheProcess(file_in, file_out, mFAHE->blockSize()));
+      fahe_process->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(fahe_process);
-    } else if (mView->currentPreprocess().compare("HMCLAHE") == 0) {
-      HmclaheProcess *hmclahe_process = new HmclaheProcess(file_in, file_out, mHMCLAHE->blockSize(), mHMCLAHE->l(), mHMCLAHE->phi());
+      mProjectModel->setPreprocess(fahe_process);
+    } else if (currentPreprocess.compare("HMCLAHE") == 0) {
+      std::shared_ptr<HmclaheProcess> hmclahe_process(new HmclaheProcess(file_in, file_out, mHMCLAHE->blockSize(), mHMCLAHE->l(), mHMCLAHE->phi()));
+      hmclahe_process->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(hmclahe_process);
-    } else if (mView->currentPreprocess().compare("LCEBSESCS") == 0) {
-      LceBsescsProcess *lceBsescsProcess = new LceBsescsProcess(file_in, file_out, mLCEBSESCS->blockSize());
+      mProjectModel->setPreprocess(hmclahe_process);
+    } else if (currentPreprocess.compare("LCE-BSESCS") == 0) {
+      std::shared_ptr<LceBsescsProcess> lceBsescsProcess(new LceBsescsProcess(file_in, file_out, mLCEBSESCS->blockSize()));
+      lceBsescsProcess->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(lceBsescsProcess);
-    } else if (mView->currentPreprocess().compare("MSRCP") == 0) {
-      MsrcpProcess *msrcpProcess = new MsrcpProcess(file_in, file_out, mMSRCP->smallScale(), mMSRCP->midScale(), mMSRCP->largeScale());
+      mProjectModel->setPreprocess(lceBsescsProcess);
+    } else if (currentPreprocess.compare("MSRCP") == 0) {
+      std::shared_ptr<MsrcpProcess> msrcpProcess(new MsrcpProcess(file_in, file_out, mMSRCP->smallScale(), mMSRCP->midScale(), mMSRCP->largeScale()));
+      msrcpProcess->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(msrcpProcess);
-    } else if (mView->currentPreprocess().compare("NOSHP") == 0) {
-      NoshpProcess *noshpProcess = new NoshpProcess(file_in, file_out, mNOSHP->blockSize());
+      mProjectModel->setPreprocess(msrcpProcess);
+    } else if (currentPreprocess.compare("NOSHP") == 0) {
+      std::shared_ptr<NoshpProcess> noshpProcess(new NoshpProcess(file_in, file_out, mNOSHP->blockSize()));
+      noshpProcess->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(noshpProcess);
-    } else if (mView->currentPreprocess().compare("POHE") == 0) {
-      PoheProcess *poheProcess = new PoheProcess(file_in, file_out, mPOHE->blockSize());
+      mProjectModel->setPreprocess(noshpProcess);
+    } else if (currentPreprocess.compare("POHE") == 0) {
+      std::shared_ptr<PoheProcess> poheProcess(new PoheProcess(file_in, file_out, mPOHE->blockSize()));
+      poheProcess->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(poheProcess);
-    } else if (mView->currentPreprocess().compare("RSWHE") == 0) {
-      RswheProcess *rswheProcess = new RswheProcess(file_in, file_out, mRSWHE->histogramDivisions(), static_cast<RswheProcess::HistogramCut>(mRSWHE->histogramCut()));
+      mProjectModel->setPreprocess(poheProcess);
+    } else if (currentPreprocess.compare("RSWHE") == 0) {
+      std::shared_ptr<RswheProcess> rswheProcess(new RswheProcess(file_in, file_out, mRSWHE->histogramDivisions(), static_cast<RswheProcess::HistogramCut>(mRSWHE->histogramCut())));
+      rswheProcess->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(rswheProcess);
-    } else if (mView->currentPreprocess().compare("Wallis") == 0) {
-      WallisProcess *wallisProcess = new WallisProcess(file_in, file_out, mWallis->contrast(), mWallis->brightness(), mWallis->imposedAverage(), mWallis->imposedLocalStdDev(), mWallis->kernelSize());
+      mProjectModel->setPreprocess(rswheProcess);
+    } else if (currentPreprocess.compare("Wallis Filter") == 0) {
+      std::shared_ptr<WallisProcess> wallisProcess(new WallisProcess(file_in, file_out, mWallis->contrast(), mWallis->brightness(), mWallis->imposedAverage(), mWallis->imposedLocalStdDev(), mWallis->kernelSize()));
+      wallisProcess->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
       mMultiProcess->appendProcess(wallisProcess);
+      mProjectModel->setPreprocess(wallisProcess);
     }
   }
 
@@ -259,6 +295,16 @@ void PreprocessPresenter::run()
 void PreprocessPresenter::setCurrentPreprocess(const QString &preprocess)
 {
   mView->setCurrentPreprocess(preprocess);
+}
+
+void PreprocessPresenter::onError(int, QString)
+{
+
+}
+
+void PreprocessPresenter::onFinished()
+{
+  emit preprocessFinished();
 }
 
 } // namespace fme

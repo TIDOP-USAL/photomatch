@@ -37,6 +37,26 @@ int SettingsModel::historyMaxSize() const
   return mSettings->historyMaxSize();
 }
 
+QSize SettingsModel::acebsfBlockSize() const
+{
+  return mSettings->acebsf()->blockSize();
+}
+
+double SettingsModel::acebsfL() const
+{
+  return mSettings->acebsf()->l();
+}
+
+double SettingsModel::acebsfK1() const
+{
+  return mSettings->acebsf()->k1();
+}
+
+double SettingsModel::acebsfK2() const
+{
+  return mSettings->acebsf()->k2();
+}
+
 double SettingsModel::claheClipLimit() const
 {
   return mSettings->clahe()->clipLimit();
@@ -668,6 +688,30 @@ void SettingsModel::setDheX(int x)
 void SettingsModel::setFaheBlockSize(const QSize &size)
 {
   mSettings->fahe()->setBlockSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAcebsfBlockSize(const QSize &blockSize)
+{
+  mSettings->acebsf()->setBlockSize(blockSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAcebsfL(double l)
+{
+  mSettings->acebsf()->setL(l);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAcebsfK1(double k1)
+{
+  mSettings->acebsf()->setK1(k1);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setAcebsfK2(double k2)
+{
+  mSettings->acebsf()->setK2(k2);
   emit unsavedChanges(true);
 }
 

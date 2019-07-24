@@ -70,6 +70,8 @@ public:
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
 
+  virtual IAcebsf *acebsf() = 0;
+  virtual const IAcebsf *acebsf() const = 0;
   virtual IClahe *clahe() = 0;
   virtual const IClahe *clahe() const = 0;
   virtual ICmbfhe *cmbfhe() = 0;
@@ -849,6 +851,48 @@ protected:
 /*----------------------------------------------------------------*/
 
 
+
+
+class FME_EXPORT Acebsf
+  : public IAcebsf
+{
+
+public:
+
+  Acebsf();
+  ~Acebsf() override {}
+
+// IAcebs interface
+
+public:
+
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
+  double l() const override;
+  void setL(double l) override;
+  double k1() const override;
+  void setK1(double k1) override;
+  double k2() const override;
+  void setK2(double k2) override;
+
+// Preprocess interface
+
+public:
+
+  void reset() override;
+
+protected:
+
+  QSize mBlockSize;
+  double mL;
+  double mK1;
+  double mK2;
+};
+
+
+/*----------------------------------------------------------------*/
+
+
 /*!
  * \brief CLAHE image preprocess class
  */
@@ -869,6 +913,10 @@ public:
   void setClipLimit(double clipLimit) override;
   QSize tilesGridSize() const override;
   void setTilesGridSize(const QSize &tilesGridSize) override;
+
+// Preprocess interface
+
+public:
 
   void reset() override;
 
@@ -899,6 +947,10 @@ public:
   QSize blockSize() const override;
   void setBlockSize(const QSize &blockSize) override;
 
+// Preprocess interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -926,6 +978,10 @@ public:
   int x() const override;
   void setX(int x) override;
 
+// Preprocess interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -951,6 +1007,10 @@ public:
 
   QSize blockSize() const override;
   void setBlockSize(const QSize &blockSize) override;
+
+// Preprocess interface
+
+public:
 
   void reset() override;
 
@@ -984,6 +1044,10 @@ public:
   double phi() const override;
   void setPhi(double phi) override;
 
+// Preprocess interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -1012,6 +1076,10 @@ public:
 
   QSize blockSize() const override;
   void setBlockSize(const QSize &blockSize) override;
+
+// Preprocess interface
+
+public:
 
   void reset() override;
 
@@ -1044,6 +1112,10 @@ public:
   double largeScale() const override;
   void setLargeScale(double largeScale) override;
 
+// Preprocess interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -1073,6 +1145,10 @@ public:
   QSize blockSize() const override;
   void setBlockSize(const QSize &blockSize) override;
 
+// Preprocess interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -1100,6 +1176,10 @@ public:
 
   QSize blockSize() const override;
   void setBlockSize(const QSize &blockSize) override;
+
+// Preprocess interface
+
+public:
 
   void reset() override;
 
@@ -1130,6 +1210,10 @@ public:
   void setHistogramDivisions(int histogramDivisions) override;
   HistogramCut histogramCut() const override;
   void setHistogramCut(HistogramCut histogramCut) override;
+
+// Preprocess interface
+
+public:
 
   void reset() override;
 
@@ -1167,6 +1251,10 @@ public:
   void setImposedLocalStdDev(int imposedLocalStdDev) override;
   int kernelSize() const override;
   void setKernelSize(int kernelSize) override;
+
+// Preprocess interface
+
+public:
 
   void reset() override;
 
@@ -1207,6 +1295,8 @@ public:
   int historyMaxSize() const override;
   void setHistoryMaxSize(int maxSize) override;
 
+  IAcebsf *acebsf() override;
+  const IAcebsf *acebsf() const override;
   IClahe *clahe() override;
   const IClahe *clahe() const override;
   ICmbfhe *cmbfhe() override;
@@ -1275,6 +1365,7 @@ protected:
   int mHistoyMaxSize;
   QStringList mHistory;
 
+  IAcebsf *mAcebsf;
   IClahe *mClahe;
   ICmbfhe *mCmbfhe;
   IDhe *mDhe;

@@ -1,8 +1,8 @@
 #include "ClaheProcess.h"
 
-//#include <opencv2/core.hpp>
+#include "fme/core/utils.h"
+
 #include <opencv2/photo.hpp>
-//#include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
 namespace fme
@@ -83,15 +83,35 @@ void ClaheProcess::reset()
 
 void ClaheProcess::run()
 {
-  ///TODO: No hay que leer la imagen a resolución completa si se hace el calculo con un escalado de la imagen
-  ///TODO: Chequeo de los parámetros
   QByteArray ba = mImgInput.toLocal8Bit();
   const char *input_img = ba.data();
-  cv::Mat img = cv::imread(input_img);
+
+  QImageReader imageReader(input_img);
+  QSize size = imageReader.size();
+  double scale = 1.;
+  int w = size.width();
+  int h = size.height();
+  if (w > h){
+    scale = w / static_cast<double>(mMaxSize);
+  } else {
+    scale = h / static_cast<double>(mMaxSize);
+  }
+
+  cv::Mat img;
+  if (scale > 1.) {
+    size /= scale;
+    imageReader.setScaledSize(size);
+    QImage image_scaled = imageReader.read();
+    img = qImageToCvMat(image_scaled);
+
+  } else {
+    img = cv::imread(input_img);
+  }
 
   cv::Mat color_boost;
   if (img.channels() >= 3) {
     cv::decolor(img, img, color_boost);
+    color_boost.release();
   }
 
   mCvClahe->apply(img, img);

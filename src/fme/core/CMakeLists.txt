@@ -1,3 +1,5 @@
+include_directories(${CMAKE_SOURCE_DIR}/third_party)
+
 add_library(libcore ${LIB_TYPE}
             project.cpp
             project.h
@@ -8,7 +10,9 @@ add_library(libcore ${LIB_TYPE}
             session.cpp
             session.h
             features.h
-            preprocess.h)
+            preprocess.h
+            utils.cpp
+            utils.h)
 
 set_property(TARGET libcore PROPERTY FOLDER "lib")
 

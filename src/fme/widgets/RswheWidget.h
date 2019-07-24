@@ -32,7 +32,7 @@ public:
 signals:
 
   void histogramDivisionsChange(int);
-  void histogramCutChange(HistogramCut);
+  void histogramCutChange(int);
 
 public slots:
 

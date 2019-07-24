@@ -44,6 +44,11 @@ public:
    */
   virtual int historyMaxSize() const = 0;
 
+  virtual QSize acebsfBlockSize() const = 0;
+  virtual double acebsfL() const = 0;
+  virtual double acebsfK1() const = 0;
+  virtual double acebsfK2() const = 0;
+
   virtual double claheClipLimit() const = 0;
   virtual QSize claheTilesGridSize() const = 0;
 
@@ -232,6 +237,11 @@ public slots:
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
 
+  virtual void setAcebsfBlockSize(const QSize &blockSize) = 0;
+  virtual void setAcebsfL(double) = 0;
+  virtual void setAcebsfK1(double) = 0;
+  virtual void setAcebsfK2(double) = 0;
+
   virtual void setClaheClipLimit(double clipLimit) = 0;
   virtual void setClaheTilesGridSize (const QSize &tilesGridSize) = 0;
 
@@ -404,6 +414,11 @@ public:
   QStringList history() const override;
   int historyMaxSize() const override;
 
+  QSize acebsfBlockSize() const override;
+  double acebsfL() const override;
+  double acebsfK1() const override;
+  double acebsfK2() const override;
+
   double claheClipLimit() const override;
   QSize claheTilesGridSize() const override;
 
@@ -569,6 +584,11 @@ public slots:
   void setDheX(int x) override;
 
   void setFaheBlockSize(const QSize &size) override;
+
+  void setAcebsfBlockSize(const QSize &blockSize) override;
+  void setAcebsfL(double l) override;
+  void setAcebsfK1(double k1) override;
+  void setAcebsfK2(double k2) override;
 
   void setHmclaheBlockSize(const QSize &size) override;
   void setHmclaheL(double l) override;

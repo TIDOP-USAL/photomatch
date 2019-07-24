@@ -25,11 +25,11 @@ public:
     virtual QByteArray readStdout() override;
     virtual QByteArray readStderr() override;
 
-    void appendProcess(Process *process);
-    void appendProcess(QList<Process*> processList);
+    void appendProcess(const std::shared_ptr<Process> &process);
+    void appendProcess(const QList<std::shared_ptr<Process> > &processList);
     void clearProcessList();
     int count();
-    Process * at(int i);
+    Process *at(int i);
 
     virtual int getSteps() override;
 
@@ -43,7 +43,7 @@ protected:
 
 private:
 
-    QList<Process*> mProcessList;
+    QList<std::shared_ptr<Process>> mProcessList;
     bool mIsSequential;
     int mCurrentProcess;
     int mRunningCount;

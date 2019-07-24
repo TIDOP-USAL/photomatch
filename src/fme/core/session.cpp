@@ -39,6 +39,16 @@ void Session::setDescription(const QString &description)
   mDescription = description;
 }
 
+std::shared_ptr<Preprocess> Session::preprocess()
+{
+  return mPreprocess;
+}
+
+void Session::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
+{
+  mPreprocess = preprocess;
+}
+
 void Session::clear()
 {
   mName.clear();

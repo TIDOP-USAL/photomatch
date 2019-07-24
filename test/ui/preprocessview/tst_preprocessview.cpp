@@ -42,6 +42,8 @@ private slots:
   void test_currentPreprocess_data();
   void test_currentPreprocess();
   void test_setCurrentPreprocess();
+  void test_maxImageSize();
+  void test_isFullImageSize();
 
 private:
 
@@ -225,7 +227,19 @@ void TestPreprocessView::test_currentPreprocess()
 void TestPreprocessView::test_setCurrentPreprocess()
 {
 //  this->setCurrentPreprocess("CLAHE");
-//  QCOMPARE(true, this->mCLAHE->isVisible());
+  //  QCOMPARE(true, this->mCLAHE->isVisible());
+}
+
+void TestPreprocessView::test_maxImageSize()
+{
+  this->setMaxImageSize(3500);
+  QCOMPARE(3500, this->maxImageSize());
+}
+
+void TestPreprocessView::test_isFullImageSize()
+{
+  this->setFullImageSize(true);
+  QCOMPARE(true, this->fullImageSize());
 }
 
 QTEST_MAIN(TestPreprocessView)

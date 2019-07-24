@@ -129,8 +129,8 @@ void AcebsfWidget::init()
   propertiesLayout->addWidget(lbl, 0, 0);
 
   QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
-  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(this);
+  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0, 1, 2);
+  QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
   groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
   propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);
@@ -142,16 +142,18 @@ void AcebsfWidget::init()
   propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1);
 
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("L:")), 2, 0);
-  mL->setRange(0, 100);
+  propertiesLayout->addWidget(new QLabel(tr("L:")), 2, 0);
+  mL->setRange(0, 1);
+  mL->setSingleStep(0.01);
   propertiesLayout->addWidget(mL, 2, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("K1:")), 3, 0);
-  mK1->setRange(0, 100);
+  propertiesLayout->addWidget(new QLabel(tr("K1:")), 3, 0);
+  mK1->setRange(10, 25);
   propertiesLayout->addWidget(mK1, 3, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("K2:")), 4, 0);
-  mK2->setRange(0, 100);
+  propertiesLayout->addWidget(new QLabel(tr("K2:")), 4, 0);
+  mK2->setRange(0, 1);
+  mK2->setSingleStep(0.01);
   propertiesLayout->addWidget(mK2, 4, 1);
 
   reset();

@@ -1,6 +1,7 @@
 MACRO(DEFINE_TEST_PROCESS name srcs)
 
     include_directories(${CMAKE_SOURCE_DIR}/src)
+    include_directories(${CMAKE_SOURCE_DIR}/third_party)
 
     set(test_kind test)
     set(test_KIND TEST)
@@ -12,6 +13,7 @@ MACRO(DEFINE_TEST_PROCESS name srcs)
                           Qt5::Core 
                           Qt5::Widgets 
                           Qt5::Test 
+                          libcore
                           libprocess
                           ${OpenCV_LIBS}
                           ${PIXKIT_LIBRARIES})

@@ -3,26 +3,29 @@
 #include <QDebug>
 
 
-MultiProcess::MultiProcess():
+MultiProcess::MultiProcess()
+  : Process(),
     mIsSequential(true),
     mCurrentProcess(-1),
     mRunningCount(0),
     mWaitForFinished(false)
 {
-    setSteps(0);
+  setSteps(0);
 }
 
-MultiProcess::MultiProcess(bool isSequential):
+MultiProcess::MultiProcess(bool isSequential)
+  : Process(),
     mIsSequential(isSequential),
     mRunningCount(0),
     mWaitForFinished(false)
 {
-    setSteps(0);
+  setSteps(0);
 }
 
-MultiProcess::~MultiProcess(){
-    for (int i=0; i<mProcessList.count(); i++)
-        delete mProcessList.at(i);
+MultiProcess::~MultiProcess()
+{
+//    for (int i=0; i<mProcessList.count(); i++)
+//        delete mProcessList.at(i);
 }
 
 void MultiProcess::start()
@@ -57,44 +60,45 @@ QByteArray MultiProcess::readStderr()
         return "";
 }
 
-void MultiProcess::appendProcess(Process *process)
+void MultiProcess::appendProcess(const std::shared_ptr<Process> &process)
 {
-    mProcessList.append(process);
-    connect(process,SIGNAL(readyReadStandardOutput()),this, SIGNAL(readyReadStandardOutput()));
-    connect(process,SIGNAL(readyReadStandardError()),this, SIGNAL(readyReadStandardError()));
-    connect(process,SIGNAL(newStdData(QString)),this, SIGNAL(newStdData(QString)));
-    connect(process,SIGNAL(newErrorData(QString)),this, SIGNAL(newErrorData(QString)));
-    connect(process,SIGNAL(statusChanged(int,QString)),this, SLOT(OnChildStatusChanged(int,QString)));
-    connect(process,SIGNAL(statusChangedNext()),this, SLOT(OnChildStatusChangedNext()));
-    setSteps(getSteps() + process->getSteps());
+  mProcessList.append(process);
+  connect(process.get(), SIGNAL(readyReadStandardOutput()),  this, SIGNAL(readyReadStandardOutput()));
+  connect(process.get(), SIGNAL(readyReadStandardError()),   this, SIGNAL(readyReadStandardError()));
+  connect(process.get(), SIGNAL(newStdData(QString)),        this, SIGNAL(newStdData(QString)));
+  connect(process.get(), SIGNAL(newErrorData(QString)),      this, SIGNAL(newErrorData(QString)));
+  connect(process.get(), SIGNAL(statusChanged(int,QString)), this, SLOT(OnChildStatusChanged(int,QString)));
+  connect(process.get(), SIGNAL(statusChangedNext()),        this, SLOT(OnChildStatusChangedNext()));
+  setSteps(getSteps() + process->getSteps());
 }
 
-void MultiProcess::appendProcess(QList<Process*> processList){
-    mProcessList.append(processList);
-    for(int i=0; i< processList.count();i++){
-        connect(processList.at(i),SIGNAL(readyReadStandardOutput()),this, SIGNAL(readyReadStandardOutput()));
-        connect(processList.at(i),SIGNAL(readyReadStandardError()),this, SIGNAL(readyReadStandardError()));
-        connect(processList.at(i),SIGNAL(newStdData(QString)),this, SIGNAL(newStdData(QString)));
-        connect(processList.at(i),SIGNAL(newErrorData(QString)),this, SIGNAL(newErrorData(QString)));
-        connect(processList.at(i),SIGNAL(statusChanged(int,QString)),this, SLOT(OnChildStatusChanged(int,QString)));
-        connect(processList.at(i),SIGNAL(statusChangedNext()),this, SLOT(OnChildStatusChangedNext()));
-        setSteps(getSteps() +processList.at(i)->getSteps());
-    }
+void MultiProcess::appendProcess(const QList<std::shared_ptr<Process>> &processList)
+{
+  mProcessList.append(processList);
+  for(int i=0; i< processList.count();i++){
+    connect(processList.at(i).get(), SIGNAL(readyReadStandardOutput()),  this, SIGNAL(readyReadStandardOutput()));
+    connect(processList.at(i).get(), SIGNAL(readyReadStandardError()),   this, SIGNAL(readyReadStandardError()));
+    connect(processList.at(i).get(), SIGNAL(newStdData(QString)),        this, SIGNAL(newStdData(QString)));
+    connect(processList.at(i).get(), SIGNAL(newErrorData(QString)),      this, SIGNAL(newErrorData(QString)));
+    connect(processList.at(i).get(), SIGNAL(statusChanged(int,QString)), this, SLOT(OnChildStatusChanged(int,QString)));
+    connect(processList.at(i).get(), SIGNAL(statusChangedNext()),        this, SLOT(OnChildStatusChangedNext()));
+    setSteps(getSteps() +processList.at(i)->getSteps());
+  }
 }
 
 void MultiProcess::clearProcessList()
 {
-    for(int i=0; i< mProcessList.count();i++){
-        disconnect(mProcessList.at(i),SIGNAL(readyReadStandardOutput()),this, SIGNAL(readyReadStandardOutput()));
-        disconnect(mProcessList.at(i),SIGNAL(readyReadStandardError()),this, SIGNAL(readyReadStandardError()));
-        disconnect(mProcessList.at(i),SIGNAL(newStdData(QString)),this, SIGNAL(newStdData(QString)));
-        disconnect(mProcessList.at(i),SIGNAL(newErrorData(QString)),this, SIGNAL(newErrorData(QString)));
-        disconnect(mProcessList.at(i),SIGNAL(statusChanged(int,QString)),this, SIGNAL(OnChildStatusChanged(int,QString)));
-        disconnect(mProcessList.at(i),SIGNAL(statusChangedNext()),this, SLOT(OnChildStatusChangedNext()));
+  for(int i=0; i< mProcessList.count();i++) {
+    disconnect(mProcessList.at(i).get(), SIGNAL(readyReadStandardOutput()),  this, SIGNAL(readyReadStandardOutput()));
+    disconnect(mProcessList.at(i).get(), SIGNAL(readyReadStandardError()),   this, SIGNAL(readyReadStandardError()));
+    disconnect(mProcessList.at(i).get(), SIGNAL(newStdData(QString)),        this, SIGNAL(newStdData(QString)));
+    disconnect(mProcessList.at(i).get(), SIGNAL(newErrorData(QString)),      this, SIGNAL(newErrorData(QString)));
+    disconnect(mProcessList.at(i).get(), SIGNAL(statusChanged(int,QString)), this, SIGNAL(OnChildStatusChanged(int,QString)));
+    disconnect(mProcessList.at(i).get(), SIGNAL(statusChangedNext()),        this, SLOT(OnChildStatusChangedNext()));
+  }
 
-    }
-    mProcessList.clear();
-    setSteps(0);
+  mProcessList.clear();
+  setSteps(0);
 }
 
 void MultiProcess::run()
@@ -109,8 +113,8 @@ void MultiProcess::run()
     if(!mIsSequential){
         for(int i=0 ; i<initialLaunchs; i++){
             if(!mStopped ){
-                connect(mProcessList.at(i),SIGNAL(error(int,QString)),this,SLOT(onError(int,QString)));
-                connect(mProcessList.at(i),SIGNAL(finished()),this,SLOT(onAProcessFinished()));
+                connect(mProcessList.at(i).get(), SIGNAL(error(int,QString)), this, SLOT(onError(int,QString)));
+                connect(mProcessList.at(i).get(), SIGNAL(finished()),         this, SLOT(onAProcessFinished()));
                 mProcessList.at(i)->start();
                 if(mWaitForFinished && i==initialLaunchs-1)
                     mProcessList.at(i)->setWaitForFinished(true);
@@ -122,40 +126,14 @@ void MultiProcess::run()
     else{
         if(mProcessList.size() > 0){
             mCurrentProcess = 0;
-            connect(mProcessList.at(0),SIGNAL(error(int,QString)),this,SLOT(onError(int,QString)));
-            connect(mProcessList.at(0),SIGNAL(finished()),this,SLOT(onAProcessFinished()));
+            connect(mProcessList.at(0).get(), SIGNAL(error(int,QString)), this, SLOT(onError(int,QString)));
+            connect(mProcessList.at(0).get(), SIGNAL(finished()),         this, SLOT(onAProcessFinished()));
             mProcessList.at(0)->start();
             if(mWaitForFinished && mProcessList.size()==1)
                 mProcessList.at(0)->setWaitForFinished(true);
         }
     }
 }
-
-//void PW::MultiProcess::run()
-//{
-//    mFinishedCount=0;
-//    mCurrentStep=0;
-//    mStopped = false;
-//    mIdealThreadCount = QThread::idealThreadCount();
-//    for(int i=0 ; i<mProcessList.count(); i++){
-//        if(!mStopped){
-//            mCurrentProcess = i;
-////            emit statusChanged(i,mProcessList.at(i)->getStartupMessage());
-//            connect(mProcessList.at(i),SIGNAL(error(int,QString)),this,SLOT(onError(int,QString)));
-//            connect(mProcessList.at(i),SIGNAL(finished()),this,SLOT(onAProcessFinished()));
-//            mProcessList.at(i)->start();
-//            if(mIsSequential)
-//                mProcessList.at(i)->wait();
-//            else{
-//                mRunningCount++;
-//                if(mRunningCount >= mIdealThreadCount || i == (mProcessList.size()-1))
-//                    mProcessList.at(i)->wait();
-//                mCurrentProcess = -1;
-//            }
-//        }
-//    }
-//    while(mFinishedCount<mProcessList.size() && !mStopped);
-//}
 
 int MultiProcess::count()
 {
@@ -164,88 +142,102 @@ int MultiProcess::count()
 
 Process *MultiProcess::at(int i)
 {
-    if(i<mProcessList.count())
-        return mProcessList.at(i);
-    else 
-      return Q_NULLPTR;
+  if(i<mProcessList.count())
+    return mProcessList.at(i).get();
+  else
+    return Q_NULLPTR;
 }
 
 int MultiProcess::getSteps()
 {
-    return Process::getSteps();
+  return Process::getSteps();
 }
 
 void MultiProcess::onError(int code, QString cause)
 {
-    emit error(code, cause);
+  emit error(code, cause);
 }
 
-void MultiProcess::onAProcessFinished(){
-    if(mStopped)
-        return;
-    qDebug() << QString("Process Finished - ") <<
-                QString("Steps: ") <<
-                QString::number(getSteps()) <<
-                QString(" - FinishedCount: ") <<
-                QString::number(mFinishedCount) <<
-                QString(" - CurrentProcess: ") <<
-                QString::number(mCurrentProcess);
-    mFinishedCount++;
-    if(mIsSequential){
-        disconnect(mProcessList.at(mCurrentProcess),SIGNAL(finished()),this,SLOT(onAProcessFinished()));
-        mCurrentProcess++;
-        mRunningCount--;
-        if(mCurrentProcess < mProcessList.size()){
-            connect(mProcessList.at(mCurrentProcess),SIGNAL(error(int,QString)),this,SLOT(onError(int,QString)));
-            connect(mProcessList.at(mCurrentProcess),SIGNAL(finished()),this,SLOT(onAProcessFinished()));
-            mProcessList.at(mCurrentProcess)->start();
-            if(mWaitForFinished && mCurrentProcess == mProcessList.size()-1)
-                 mProcessList.at(mCurrentProcess)->setWaitForFinished(true);
-        }else{
-            qDebug() << QString("Finished Sequential ") << getStartupMessage();
-            emit finished();
-        }
-    }else{
-        mRunningCount--;
-        qDebug() << QString("...........................RunningCount ") << QString::number(mRunningCount);
-        if (mRunningCount < mIdealThreadCount && mCurrentProcess < mProcessList.size()-1){
-            mCurrentProcess++;
-            mRunningCount++;
-            connect(mProcessList.at(mCurrentProcess),SIGNAL(error(int,QString)),this,SLOT(onError(int,QString)));
-            connect(mProcessList.at(mCurrentProcess),SIGNAL(finished()),this,SLOT(onAProcessFinished()));
-            mProcessList.at(mCurrentProcess)->start();
-        }
-        else if (mCurrentProcess+1 >= mProcessList.size() && mRunningCount == 0)
-        {
-            qDebug() << QString("Finished Non Sequential ") << getStartupMessage();
-            emit finished();
-        }
+void MultiProcess::onAProcessFinished()
+{
+  if(mStopped)
+    return;
+  qDebug() << QString("Process Finished - ") <<
+              QString("Steps: ") <<
+              QString::number(getSteps()) <<
+              QString(" - FinishedCount: ") <<
+              QString::number(mFinishedCount) <<
+              QString(" - CurrentProcess: ") <<
+              QString::number(mCurrentProcess);
+  mFinishedCount++;
+
+  if(mIsSequential){
+
+    disconnect(mProcessList.at(mCurrentProcess).get(), SIGNAL(finished()), this, SLOT(onAProcessFinished()));
+    mCurrentProcess++;
+    mRunningCount--;
+
+    if(mCurrentProcess < mProcessList.size()){
+
+      connect(mProcessList.at(mCurrentProcess).get(), SIGNAL(error(int,QString)), this, SLOT(onError(int,QString)));
+      connect(mProcessList.at(mCurrentProcess).get(), SIGNAL(finished()),         this, SLOT(onAProcessFinished()));
+      mProcessList.at(mCurrentProcess)->start();
+
+      if(mWaitForFinished && mCurrentProcess == mProcessList.size()-1)
+        mProcessList.at(mCurrentProcess)->setWaitForFinished(true);
+
+    } else {
+      qDebug() << QString("Finished Sequential ") << getStartupMessage();
+      emit finished();
     }
+
+  } else {
+
+    mRunningCount--;
+    qDebug() << QString("...........................RunningCount ") << QString::number(mRunningCount);
+
+    if (mRunningCount < mIdealThreadCount && mCurrentProcess < mProcessList.size()-1){
+
+      mCurrentProcess++;
+      mRunningCount++;
+      connect(mProcessList.at(mCurrentProcess).get(), SIGNAL(error(int,QString)),this,SLOT(onError(int,QString)));
+      connect(mProcessList.at(mCurrentProcess).get(), SIGNAL(finished()),this,SLOT(onAProcessFinished()));
+      mProcessList.at(mCurrentProcess)->start();
+
+    } else if (mCurrentProcess+1 >= mProcessList.size() && mRunningCount == 0) {
+
+
+      qDebug() << QString("Finished Non Sequential ") << getStartupMessage();
+      emit finished();
+
+    }
+  }
 }
 
 void MultiProcess::OnChildStatusChanged(int step, QString childMessage)
 {
 
-    if(step)
-        mCurrentStep++;
-    QString message = childMessage;
-    if (message.isEmpty())
-        message=getStartupMessage();
-    emit statusChanged(mCurrentStep,message);
+  if(step)
+    mCurrentStep++;
+
+  QString message = childMessage;
+
+  if (message.isEmpty())
+    message=getStartupMessage();
+
+  emit statusChanged(mCurrentStep,message);
 }
 
 void MultiProcess::OnChildStatusChangedNext()
 {
-
-
-    emit statusChangedNext();
+  emit statusChangedNext();
 }
 
 void MultiProcess::stop()
 {
-    Process::stop();
-    for(int i=0 ; i<mProcessList.count(); i++){
-        if(mProcessList.at(i)->isRunning())
-            mProcessList.at(i)->stop();
-    }
+  Process::stop();
+  for(int i=0 ; i<mProcessList.count(); i++){
+    if(mProcessList.at(i)->isRunning())
+      mProcessList.at(i)->stop();
+  }
 }

@@ -1,6 +1,7 @@
 MACRO(DEFINE_TEST_CORE name srcs)
 
     include_directories(${CMAKE_SOURCE_DIR}/src)
+    include_directories(${CMAKE_SOURCE_DIR}/third_party)
 
     set(test_kind test)
     set(test_KIND TEST)

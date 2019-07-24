@@ -5,10 +5,84 @@
 
 #include <QSize>
 
+#include <tidop/core/flags.h>
+
 namespace fme
 {
 
 /*----------------------------------------------------------------*/
+
+
+class FME_EXPORT Preprocess
+{
+
+public:
+
+  enum class Type
+  {
+    acebsf,
+    clahe,
+    cmbfhe,
+    dhe,
+    fahe,
+    hmclahe,
+    lce_bsescs,
+    msrcp,
+    noshp,
+    pohe,
+    rswhe,
+    wallis
+  };
+
+public:
+
+  Preprocess(Type type) : mPreprocessType(type), mMaxSize(-1) {}
+  virtual ~Preprocess() = default;
+
+  /*!
+   * \brief Recover the default values
+   */
+  virtual void reset() = 0;
+
+  Type type() const { return mPreprocessType.flags(); }
+
+  void setMaxImageSize(int size) {mMaxSize = size;}
+
+protected:
+
+  tl::EnumFlags<Type> mPreprocessType;
+  int mMaxSize;
+
+};
+ALLOW_BITWISE_FLAG_OPERATIONS(Preprocess::Type)
+
+
+/*----------------------------------------------------------------*/
+
+
+class FME_EXPORT IAcebsf
+  : public Preprocess
+{
+
+public:
+
+  IAcebsf() : Preprocess(Preprocess::Type::acebsf) {}
+  virtual ~IAcebsf() = default;
+
+  virtual QSize blockSize() const = 0;
+  virtual void setBlockSize(const QSize &blockSize) = 0;
+  virtual double l() const = 0;
+  virtual void setL(double l) = 0;
+  virtual double k1() const  = 0;
+  virtual void setK1(double k1) = 0;
+  virtual double k2() const = 0;
+  virtual void setK2(double k2) = 0;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
 
 /*!
  * \brief Interface for CLAHE (Contrast Limited Adaptive Histogram Equalization)
@@ -16,22 +90,18 @@ namespace fme
  * Adaptive Histogram Equalization.
  */
 class FME_EXPORT IClahe
+  : public Preprocess
 {
 
 public:
 
-  IClahe(){}
+  IClahe() : Preprocess(Preprocess::Type::clahe) {}
   virtual ~IClahe() = default;
 
   virtual double clipLimit() const = 0;
   virtual void setClipLimit(double clipLimit) = 0;
   virtual QSize tilesGridSize() const = 0;
   virtual void setTilesGridSize (const QSize &tilesGridSize) = 0;
-
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -45,20 +115,16 @@ public:
  * histogram equalization," TCE, vol. 52, no. 3, 2006.
  */
 class FME_EXPORT ICmbfhe
+  : public Preprocess
 {
 
 public:
 
-  ICmbfhe() {}
+  ICmbfhe() : Preprocess(Preprocess::Type::cmbfhe) {}
   virtual ~ICmbfhe() = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
-
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -69,20 +135,17 @@ public:
  * dynamic histogram equalization (DHE)
  */
 class FME_EXPORT IDhe
+  : public Preprocess
 {
 
 public:
 
-  IDhe() {}
+  IDhe() : Preprocess(Preprocess::Type::dhe) {}
   virtual ~IDhe() = default;
 
   virtual int x() const = 0;
   virtual void setX(int x) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -95,20 +158,18 @@ public:
  * histogram equalization," in Proc. ICSP, 2006.
  */
 class FME_EXPORT IFahe
+  : public Preprocess
 {
 
 public:
 
-  IFahe() {}
+  IFahe() : Preprocess(Preprocess::Type::fahe) {}
   virtual ~IFahe() = default;
 
+  ///TODO: las dimensiones tienen que ser iguales
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -116,24 +177,21 @@ public:
 
 
 class FME_EXPORT IHmclahe
+  : public Preprocess
 {
 
 public:
 
-  IHmclahe(){}
+  IHmclahe() : Preprocess(Preprocess::Type::hmclahe) {}
   virtual ~IHmclahe() = default;
 
+  ///TODO: las dimensiones tienen que ser iguales
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
   virtual double l() const = 0;
   virtual void setL(double l) = 0;
   virtual double phi() const  = 0;
   virtual void setPhi(double phi) = 0;
-
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -141,20 +199,17 @@ public:
 
 
 class FME_EXPORT ILceBsescs
+  : public Preprocess
 {
 
 public:
 
-  ILceBsescs() {}
+  ILceBsescs() : Preprocess(Preprocess::Type::lce_bsescs) {}
   virtual ~ILceBsescs() {}
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -162,11 +217,12 @@ public:
 
 
 class FME_EXPORT IMsrcp
+  : public Preprocess
 {
 
 public:
 
-  IMsrcp(){}
+  IMsrcp() : Preprocess(Preprocess::Type::msrcp) {}
   virtual ~IMsrcp() = default;
 
   virtual double smallScale() const = 0;
@@ -176,10 +232,6 @@ public:
   virtual double largeScale() const = 0;
   virtual void setLargeScale(double largeScale) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -190,20 +242,17 @@ public:
  * \brief Interface for NOSHP class
  */
 class FME_EXPORT INoshp
+  : public Preprocess
 {
 
 public:
 
-  INoshp() {}
+  INoshp() : Preprocess(Preprocess::Type::noshp) {}
   virtual ~INoshp() {}
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -217,20 +266,17 @@ public:
  * in Proc. IEEE ICASSP, pp. 2444-2448, 26-31 May 2013.
  */
 class FME_EXPORT IPohe
+  : public Preprocess
 {
 
 public:
 
-  IPohe() {}
+  IPohe() : Preprocess(Preprocess::Type::pohe) {}
   virtual ~IPohe() {}
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -238,6 +284,7 @@ public:
 
 
 class FME_EXPORT IRswhe
+  : public Preprocess
 {
 
 public:
@@ -249,7 +296,7 @@ public:
 
 public:
 
-  IRswhe() {}
+  IRswhe() : Preprocess(Preprocess::Type::rswhe) {}
   virtual ~IRswhe() = default;
 
   virtual int histogramDivisions() const = 0;
@@ -257,10 +304,6 @@ public:
   virtual HistogramCut histogramCut() const = 0;
   virtual void setHistogramCut(HistogramCut histogramCut) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -268,10 +311,11 @@ public:
 
 
 class FME_EXPORT IWallis
+  : public Preprocess
 {
 public:
 
-  IWallis() {}
+  IWallis() : Preprocess(Preprocess::Type::wallis) {}
   virtual ~IWallis() = default;
 
   virtual double contrast() const = 0;
@@ -285,10 +329,6 @@ public:
   virtual int kernelSize() const = 0;
   virtual void setKernelSize(int kernelSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 

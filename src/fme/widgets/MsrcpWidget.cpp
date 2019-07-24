@@ -93,7 +93,7 @@ void MsrcpWidget::init()
 
   QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Retinex Scales"), this);
   propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
-  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(this);
+  QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
   groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
   propertiesLayoutBlocksize->addWidget(new QLabel(tr("Small Scale:")), 0, 0);
