@@ -19,6 +19,9 @@ class ISettingsPresenter;
 class INewSessionPresenter;
 class IPreprocessPresenter;
 class IPreprocessModel;
+class IFeatureExtractorModel;
+class IFeatureExtractorPresenter;
+
 
 class MainWindowPresenter
   : public IPresenter
@@ -77,6 +80,7 @@ protected slots:
 
   void loadSession(const QString &session);
   void loadPreprocess();
+  void loadFeatures();
 
 // IPresenter interface
 
@@ -109,6 +113,11 @@ private:
    */
   void initPreprocessDialog();
 
+  /*!
+   * \brief Inicializa la herramienta de extracción de caracteristicas
+   */
+  void initFeatureExtractionDialog();
+
 protected:
 
   MainWindowView *mView;
@@ -130,6 +139,8 @@ protected:
   IPreprocessModel *mPreprocessModel;
   IPreprocessPresenter *mPreprocessPresenter;
 
+  IFeatureExtractorModel *mFeatureExtractorModel;
+  IFeatureExtractorPresenter *mFeatureExtractorPresenter;
 };
 
 } // namespace fme

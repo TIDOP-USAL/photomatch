@@ -1,7 +1,9 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    project \
+    agastdetector \
+    akazedetectordescriptor \
     image \
-    settings \
-    session
+    project \
+    session \
+    settings

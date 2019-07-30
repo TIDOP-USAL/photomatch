@@ -1,5 +1,12 @@
 #include "settings.h"
 
+#include "fme/core/features/agast.h"
+#include "fme/core/features/akaze.h"
+#include "fme/core/features/brief.h"
+#include "fme/core/features/brisk.h"
+#include "fme/core/features/fast.h"
+#include "fme/core/features/kaze.h"
+
 #include <QSettings>
 #include <QLocale>
 
@@ -7,272 +14,10 @@ namespace fme
 {
 
 /*----------------------------------------------------------------*/
-/* Feature Detectors/descriptors                                  */
+/* Feature Detectors/descriptors properties                       */
 /*----------------------------------------------------------------*/
 
-Agast::Agast()
-  : IAgast(),
-    mThreshold(10),
-    mNonmaxSuppression(true),
-    mDetectorType("OAST_9_16")
-{}
-
-Agast::~Agast()
-{
-}
-
-int Agast::threshold() const
-{
-  return mThreshold;
-}
-
-bool Agast::nonmaxSuppression() const
-{
-  return mNonmaxSuppression;
-}
-
-QString Agast::detectorType() const
-{
-  return mDetectorType;
-}
-
-void Agast::setThreshold(int threshold)
-{
-  mThreshold = threshold;
-}
-
-void Agast::setNonmaxSuppression(bool nonmaxSuppression)
-{
-  mNonmaxSuppression = nonmaxSuppression;
-}
-
-void Agast::setDetectorType(const QString &detectorType)
-{
-  if (detectorType.compare("AGAST_5_8") == 0 ||
-      detectorType.compare("AGAST_7_12d") == 0 ||
-      detectorType.compare("AGAST_7_12s") == 0 ||
-      detectorType.compare("OAST_9_16") == 0) {
-    mDetectorType = detectorType;
-  }
-}
-
-void Agast::reset()
-{
-  mThreshold = 10;
-  mNonmaxSuppression = true;
-  mDetectorType = "OAST_9_16";
-}
-
-
-/*----------------------------------------------------------------*/
-
-
-Akaze::Akaze()
-  : IAkaze(),
-    mDescriptorType("MLDB"),
-    mDescriptorSize(0),
-    mDescriptorChannels(3),
-    mThreshold(0.001),
-    mOctaves(4),
-    mOctaveLayers(4),
-    mDiffusivity("DIFF_PM_G2")
-{
-}
-
-Akaze::~Akaze()
-{
-}
-
-QString Akaze::descriptorType() const
-{
-  return mDescriptorType;
-}
-
-int Akaze::descriptorSize() const
-{
-  return mDescriptorSize;
-}
-
-int Akaze::descriptorChannels() const
-{
-  return mDescriptorChannels;
-}
-
-double Akaze::threshold() const
-{
-  return mThreshold;
-}
-
-int Akaze::octaves() const
-{
-  return mOctaves;
-}
-
-int Akaze::octaveLayers() const
-{
-  return mOctaveLayers;
-}
-
-QString Akaze::diffusivity() const
-{
-  return mDiffusivity;
-}
-
-void Akaze::setDescriptorType(const QString &descriptorType)
-{
-  if (descriptorType.compare("KAZE") == 0 ||
-      descriptorType.compare("KAZE_UPRIGHT") == 0 ||
-      descriptorType.compare("MLDB") == 0 ||
-      descriptorType.compare("MLDB_UPRIGHT") == 0){
-    mDescriptorType = descriptorType;
-  }
-}
-
-void Akaze::setDescriptorSize(int descriptorSize)
-{
-  mDescriptorSize = descriptorSize;
-}
-
-void Akaze::setDescriptorChannels(int channels)
-{
-  mDescriptorChannels = channels;
-}
-
-void Akaze::setThreshold(double threshold)
-{
-  mThreshold = threshold;
-}
-
-void Akaze::setOctaves(int octaves)
-{
-  mOctaves = octaves;
-}
-
-void Akaze::setOctaveLayers(int octaveLayers)
-{
-  mOctaveLayers = octaveLayers;
-}
-
-void Akaze::setDiffusivity(const QString &diffusivity)
-{
-  if (diffusivity.compare("DIFF_PM_G1") == 0 ||
-      diffusivity.compare("DIFF_PM_G2") == 0 ||
-      diffusivity.compare("DIFF_WEICKERT") == 0 ||
-      diffusivity.compare("DIFF_CHARBONNIER") == 0){
-    mDiffusivity = diffusivity;
-  }
-}
-
-void Akaze::reset()
-{
-  mDescriptorType = "MLDB";
-  mDescriptorSize = 0;
-  mDescriptorChannels = 3;
-  mThreshold = 0.001;
-  mOctaves = 4;
-  mOctaveLayers = 4;
-  mDiffusivity = "DIFF_PM_G2";
-}
-
-
-/*----------------------------------------------------------------*/
-
-
-Brief::Brief()
-  : IBrief(),
-    mBytes("32"),
-    mUseOrientation(false)
-{
-}
-
-Brief::~Brief()
-{
-
-}
-
-QString Brief::bytes() const
-{
-  return mBytes;
-}
-
-bool Brief::useOrientation() const
-{
-  return mUseOrientation;
-}
-
-void Brief::setBytes(const QString &bytes)
-{
-  mBytes = bytes;
-}
-
-void Brief::setUseOrientation(bool useOrientation)
-{
-  mUseOrientation = useOrientation;
-}
-
-void Brief::reset()
-{
-  mBytes = "32";
-  mUseOrientation = false;
-}
-
-
-/*----------------------------------------------------------------*/
-
-
-Brisk::Brisk()
-  : IBrisk(),
-    mThreshold(30),
-    mOctaves(3),
-    mPatternScale(1.0)
-{}
-
-Brisk::~Brisk()
-{
-
-}
-
-int Brisk::threshold() const
-{
-  return mThreshold;
-}
-
-int Brisk::octaves() const
-{
-  return mOctaves;
-}
-
-double Brisk::patternScale() const
-{
-  return mPatternScale;
-}
-
-void Brisk::setThreshold(int threshold)
-{
-  mThreshold = threshold;
-}
-
-void Brisk::setOctaves(int octaves)
-{
-  mOctaves = octaves;
-}
-
-void Brisk::setPatternScale(double patternScale)
-{
-  mPatternScale = patternScale;
-}
-
-void Brisk::reset()
-{
-  mThreshold = 30;
-  mOctaves = 3;
-  mPatternScale = 1.0;
-}
-
-
-/*----------------------------------------------------------------*/
-
-Daisy::Daisy()
+DaisyProperties::DaisyProperties()
   : IDaisy(),
     mRadius(15.),
     mQRadius(3),
@@ -283,82 +28,82 @@ Daisy::Daisy()
     mUseOrientation(false)
 {}
 
-Daisy::~Daisy()
+DaisyProperties::~DaisyProperties()
 {
 
 }
 
-double Daisy::radius() const
+double DaisyProperties::radius() const
 {
   return mRadius;
 }
 
-int Daisy::qRadius() const
+int DaisyProperties::qRadius() const
 {
   return mQRadius;
 }
 
-int Daisy::qTheta() const
+int DaisyProperties::qTheta() const
 {
   return mQTheta;
 }
 
-int Daisy::qHist() const
+int DaisyProperties::qHist() const
 {
   return mQHist;
 }
 
-QString Daisy::norm() const
+QString DaisyProperties::norm() const
 {
   return mNorm;
 }
 
-bool Daisy::interpolation() const
+bool DaisyProperties::interpolation() const
 {
   return mInterpolation;
 }
 
-bool Daisy::useOrientation() const
+bool DaisyProperties::useOrientation() const
 {
   return mUseOrientation;
 }
 
-void Daisy::setRadius(double radius)
+void DaisyProperties::setRadius(double radius)
 {
   mRadius = radius;
 }
 
-void Daisy::setQRadius(int qRadius)
+void DaisyProperties::setQRadius(int qRadius)
 {
   mQRadius = qRadius;
 }
 
-void Daisy::setQTheta(int qTheta)
+void DaisyProperties::setQTheta(int qTheta)
 {
   mQTheta = qTheta;
 }
 
-void Daisy::setQHist(int qHist)
+void DaisyProperties::setQHist(int qHist)
 {
   mQHist = qHist;
 }
 
-void Daisy::setNorm(const QString &norm)
+void DaisyProperties::setNorm(const QString &norm)
 {
   mNorm = norm;
 }
 
-void Daisy::setInterpolation(bool interpolation)
+void DaisyProperties::setInterpolation(bool interpolation)
 {
   mInterpolation = interpolation;
 }
 
-void Daisy::setUseOrientation(bool useOrientation)
+void DaisyProperties::setUseOrientation(bool useOrientation)
 {
   mUseOrientation = useOrientation;
 }
 
-void Daisy::reset()
+void DaisyProperties::reset()
 {
   mRadius = 15.;
   mQRadius = 3;
@@ -371,59 +116,7 @@ void Daisy::reset()
 
 /*----------------------------------------------------------------*/
 
-Fast::Fast()
-  : IFast(),
-    mThreshold(10),
-    mNonmaxSuppression(true),
-    mDetectorType("TYPE_9_16")
-{
-
-}
-
-Fast::~Fast()
-{
-}
-
-int Fast::threshold() const
-{
-  return mThreshold;
-}
-
-bool Fast::nonmaxSuppression() const
-{
-  return mNonmaxSuppression;
-}
-
-QString Fast::detectorType() const
-{
-  return mDetectorType;
-}
-
-void Fast::setThreshold(int threshold)
-{
-  mThreshold = threshold;
-}
-
-void Fast::setNonmaxSuppression(bool nonmaxSuppression)
-{
-  mNonmaxSuppression = nonmaxSuppression;
-}
-
-void Fast::setDetectorType(QString detectorType)
-{
-  mDetectorType = detectorType;
-}
-
-void Fast::reset()
-{
-  mThreshold = 10;
-  mNonmaxSuppression = true;
-  mDetectorType = "TYPE_9_16";
-}
-
-/*----------------------------------------------------------------*/
-
-Freak::Freak()
+FreakProperties::FreakProperties()
   : IFreak(),
     mOrientationNormalized(true),
     mScaleNormalized(true),
@@ -431,52 +124,52 @@ Freak::Freak()
     mOctaves(4)
 {}
 
-Freak::~Freak()
+FreakProperties::~FreakProperties()
 {
 
 }
 
-bool Freak::orientationNormalized() const
+bool FreakProperties::orientationNormalized() const
 {
   return mOrientationNormalized;
 }
 
-bool Freak::scaleNormalized() const
+bool FreakProperties::scaleNormalized() const
 {
   return mScaleNormalized;
 }
 
-double Freak::patternScale() const
+double FreakProperties::patternScale() const
 {
   return mPatternScale;
 }
 
-int Freak::octaves() const
+int FreakProperties::octaves() const
 {
   return mOctaves;
 }
 
-void Freak::setOrientationNormalized(bool orientationNormalized)
+void FreakProperties::setOrientationNormalized(bool orientationNormalized)
 {
   mOrientationNormalized = orientationNormalized;
 }
 
-void Freak::setScaleNormalized(bool scaleNormalized)
+void FreakProperties::setScaleNormalized(bool scaleNormalized)
 {
   mScaleNormalized = scaleNormalized;
 }
 
-void Freak::setPatternScale(double patternScale)
+void FreakProperties::setPatternScale(double patternScale)
 {
   mPatternScale = patternScale;
 }
 
-void Freak::setOctaves(int octaves)
+void FreakProperties::setOctaves(int octaves)
 {
   mOctaves = octaves;
 }
 
-void Freak::reset()
+void FreakProperties::reset()
 {
   mOrientationNormalized = true;
   mScaleNormalized = true;
@@ -488,7 +181,7 @@ void Freak::reset()
 /*----------------------------------------------------------------*/
 
 
-Gftt::Gftt()
+GfttProperties::GfttProperties()
   : IGftt(),
     mMaxFeatures(1000),
     mQualityLevel(0.01),
@@ -500,72 +193,72 @@ Gftt::Gftt()
 
 }
 
-Gftt::~Gftt()
+GfttProperties::~GfttProperties()
 {
 
 }
 
-int Gftt::maxFeatures() const
+int GfttProperties::maxFeatures() const
 {
   return mMaxFeatures;
 }
 
-double Gftt::qualityLevel() const
+double GfttProperties::qualityLevel() const
 {
   return mQualityLevel;
 }
 
-double Gftt::minDistance() const
+double GfttProperties::minDistance() const
 {
   return mMinDistance;
 }
 
-int Gftt::blockSize() const
+int GfttProperties::blockSize() const
 {
   return mBlockSize;
 }
 
-bool Gftt::harrisDetector() const
+bool GfttProperties::harrisDetector() const
 {
   return mHarrisDetector;
 }
 
-double Gftt::k() const
+double GfttProperties::k() const
 {
   return mK;
 }
 
-void Gftt::setMaxFeatures(int maxFeatures)
+void GfttProperties::setMaxFeatures(int maxFeatures)
 {
   mMaxFeatures = maxFeatures;
 }
 
-void Gftt::setQualityLevel(double qlevel)
+void GfttProperties::setQualityLevel(double qlevel)
 {
   mQualityLevel = qlevel;
 }
 
-void Gftt::setMinDistance(double minDistance)
+void GfttProperties::setMinDistance(double minDistance)
 {
   mMinDistance = minDistance;
 }
 
-void Gftt::setBlockSize(int blockSize)
+void GfttProperties::setBlockSize(int blockSize)
 {
   mBlockSize = blockSize;
 }
 
-void Gftt::setHarrisDetector(bool value)
+void GfttProperties::setHarrisDetector(bool value)
 {
   mHarrisDetector = value;
 }
 
-void Gftt::setK(double k)
+void GfttProperties::setK(double k)
 {
   mK = k;
 }
 
-void Gftt::reset()
+void GfttProperties::reset()
 {
   mMaxFeatures = 1000;
   mQualityLevel = 0.01;
@@ -578,7 +271,7 @@ void Gftt::reset()
 /*----------------------------------------------------------------*/
 
 
-Hog::Hog()
+HogProperties::HogProperties()
   : IHog(),
     mWinSize(128,64),
     mBlockSize(16,16),
@@ -588,72 +281,72 @@ Hog::Hog()
     mDerivAperture(1)
 {}
 
-Hog::~Hog()
+HogProperties::~HogProperties()
 {
 
 }
 
-QSize Hog::winSize() const
+QSize HogProperties::winSize() const
 {
   return mWinSize;
 }
 
-QSize Hog::blockSize() const
+QSize HogProperties::blockSize() const
 {
   return mBlockSize;
 }
 
-QSize Hog::blockStride() const
+QSize HogProperties::blockStride() const
 {
   return mBlockStride;
 }
 
-QSize Hog::cellSize() const
+QSize HogProperties::cellSize() const
 {
   return mCellSize;
 }
 
-int Hog::nbins() const
+int HogProperties::nbins() const
 {
   return mNbins;
 }
 
-int Hog::derivAperture() const
+int HogProperties::derivAperture() const
 {
   return mDerivAperture;
 }
 
-void Hog::setWinSize(const QSize &winSize)
+void HogProperties::setWinSize(const QSize &winSize)
 {
   mWinSize = winSize;
 }
 
-void Hog::setBlockSize(const QSize &blockSize)
+void HogProperties::setBlockSize(const QSize &blockSize)
 {
   mBlockSize = blockSize;
 }
 
-void Hog::setBlockStride(const QSize &blockStride)
+void HogProperties::setBlockStride(const QSize &blockStride)
 {
   mBlockStride = blockStride;
 }
 
-void Hog::setCellSize(const QSize &cellSize)
+void HogProperties::setCellSize(const QSize &cellSize)
 {
   mCellSize = cellSize;
 }
 
-void Hog::setNbins(int nbins)
+void HogProperties::setNbins(int nbins)
 {
   mNbins = nbins;
 }
 
-void Hog::setDerivAperture(int derivAperture)
+void HogProperties::setDerivAperture(int derivAperture)
 {
   mDerivAperture = derivAperture;
 }
 
-void Hog::reset()
+void HogProperties::reset()
 {
   mWinSize = QSize(128,64);
   mBlockSize = QSize(16,16);
@@ -663,140 +356,50 @@ void Hog::reset()
   mDerivAperture = 1;
 }
 
-/*----------------------------------------------------------------*/
 
-
-Kaze::Kaze()
-  : IKaze(),
-    mExtended(false),
-    mUpright(false),
-    mThreshold(0.001),
-    mOctaves(4),
-    mOctaveLayers(4),
-    mDiffusivity("DIFF_PM_G2")
-{}
-
-Kaze::~Kaze()
-{
-
-}
-
-bool Kaze::extendedDescriptor() const
-{
-  return mExtended;
-}
-
-bool Kaze::upright() const
-{
-  return mUpright;
-}
-
-double Kaze::threshold() const
-{
-  return mThreshold;
-}
-
-int Kaze::octaves() const
-{
-  return mOctaves;
-}
-
-int Kaze::octaveLayers() const
-{
-  return mOctaveLayers;
-}
-
-QString Kaze::diffusivity() const
-{
-  return mDiffusivity;
-}
-
-void Kaze::setExtendedDescriptor(bool extended)
-{
-  mExtended = extended;
-}
-
-void Kaze::setUpright(bool upright)
-{
-  mUpright = upright;
-}
-
-void Kaze::setThreshold(double threshold)
-{
-  mThreshold = threshold;
-}
-
-void Kaze::setOctaves(int octaves)
-{
-  mOctaves = octaves;
-}
-
-void Kaze::setOctaveLayers(int octaveLayers)
-{
-  mOctaveLayers = octaveLayers;
-}
-
-void Kaze::setDiffusivity(const QString &diffusivity)
-{
-  mDiffusivity = diffusivity;
-}
-
-void Kaze::reset()
-{
-  mExtended = false;
-  mUpright = false;
-  mThreshold = 0.001;
-  mOctaves = 4;
-  mOctaveLayers = 4;
-  mDiffusivity = "DIFF_PM_G2";
-}
-
-/*----------------------------------------------------------------*/
-
-
-Latch::Latch()
+LatchProperties::LatchProperties()
   : ILatch(),
     mBytes("32"),
     mRotationInvariance(true),
     mHalfSsdSize(3)
 {}
 
-Latch::~Latch()
+LatchProperties::~LatchProperties()
 {
 
 }
 
-QString Latch::bytes() const
+QString LatchProperties::bytes() const
 {
   return mBytes;
 }
 
-bool Latch::rotationInvariance() const
+bool LatchProperties::rotationInvariance() const
 {
   return mRotationInvariance;
 }
 
-int Latch::halfSsdSize() const
+int LatchProperties::halfSsdSize() const
 {
   return mHalfSsdSize;
 }
 
-void Latch::setBytes(const QString &bytes)
+void LatchProperties::setBytes(const QString &bytes)
 {
   mBytes = bytes;
 }
 
-void Latch::setRotationInvariance(bool rotationInvariance)
+void LatchProperties::setRotationInvariance(bool rotationInvariance)
 {
   mRotationInvariance = rotationInvariance;
 }
 
-void Latch::setHalfSsdSize(int halfSsdSize)
+void LatchProperties::setHalfSsdSize(int halfSsdSize)
 {
   mHalfSsdSize = halfSsdSize;
 }
 
-void Latch::reset()
+void LatchProperties::reset()
 {
   mBytes = "32";
   mRotationInvariance = true;
@@ -806,38 +409,38 @@ void Latch::reset()
 /*----------------------------------------------------------------*/
 
 
-Lucid::Lucid()
+LucidProperties::LucidProperties()
   : ILucid(),
     mLucidKernel(1),
     mBlurKernel(2)
 {}
 
-Lucid::~Lucid()
+LucidProperties::~LucidProperties()
 {
 
 }
 
-int Lucid::lucidKernel() const
+int LucidProperties::lucidKernel() const
 {
   return mLucidKernel;
 }
 
-int Lucid::blurKernel() const
+int LucidProperties::blurKernel() const
 {
   return mBlurKernel;
 }
 
-void Lucid::setLucidKernel(int lucidKernel)
+void LucidProperties::setLucidKernel(int lucidKernel)
 {
   mLucidKernel = lucidKernel;
 }
 
-void Lucid::setBlurKernel(int blurKernel)
+void LucidProperties::setBlurKernel(int blurKernel)
 {
   mBlurKernel = blurKernel;
 }
 
-void Lucid::reset()
+void LucidProperties::reset()
 {
   mLucidKernel = 1;
   mBlurKernel = 2;
@@ -846,7 +449,7 @@ void Lucid::reset()
 /*----------------------------------------------------------------*/
 
 
-Msd::Msd()
+MsdProperties::MsdProperties()
   : IMsd(),
     mThresholdSaliency(250),
     mPathRadius(3),
@@ -861,122 +464,122 @@ Msd::Msd()
     mTilts(3)
 {}
 
-Msd::~Msd()
+MsdProperties::~MsdProperties()
 {
 
 }
 
-double Msd::thresholdSaliency() const
+double MsdProperties::thresholdSaliency() const
 {
   return mThresholdSaliency;
 }
 
-int Msd::pathRadius() const
+int MsdProperties::pathRadius() const
 {
   return mPathRadius;
 }
 
-int Msd::knn() const
+int MsdProperties::knn() const
 {
   return mKNN;
 }
 
-int Msd::areaRadius() const
+int MsdProperties::areaRadius() const
 {
   return mAreaRadius;
 }
 
-double Msd::scaleFactor() const
+double MsdProperties::scaleFactor() const
 {
   return mScaleFactor;
 }
 
-int Msd::NMSRadius() const
+int MsdProperties::NMSRadius() const
 {
   return mNMSRadius;
 }
 
-int Msd::nScales() const
+int MsdProperties::nScales() const
 {
   return mNScales;
 }
 
-int Msd::NMSScaleR() const
+int MsdProperties::NMSScaleR() const
 {
   return mNMSScaleR;
 }
 
-bool Msd::computeOrientations() const
+bool MsdProperties::computeOrientations() const
 {
   return mComputeOrientations;
 }
 
-bool Msd::affineMSD() const
+bool MsdProperties::affineMSD() const
 {
   return mAffineMSD;
 }
 
-int Msd::tilts() const
+int MsdProperties::tilts() const
 {
   return mTilts;
 }
 
-void Msd::setThresholdSaliency(double thresholdSaliency)
+void MsdProperties::setThresholdSaliency(double thresholdSaliency)
 {
   mThresholdSaliency = thresholdSaliency;
 }
 
-void Msd::setPathRadius(int pathRadius)
+void MsdProperties::setPathRadius(int pathRadius)
 {
   mPathRadius = pathRadius;
 }
 
-void Msd::setKNN(int knn)
+void MsdProperties::setKNN(int knn)
 {
   mKNN = knn;
 }
 
-void Msd::setAreaRadius(int areaRadius)
+void MsdProperties::setAreaRadius(int areaRadius)
 {
   mAreaRadius = areaRadius;
 }
 
-void Msd::setScaleFactor(double scaleFactor)
+void MsdProperties::setScaleFactor(double scaleFactor)
 {
   mScaleFactor = scaleFactor;
 }
 
-void Msd::setNMSRadius(int NMSRadius)
+void MsdProperties::setNMSRadius(int NMSRadius)
 {
   mNMSRadius = NMSRadius;
 }
 
-void Msd::setNScales(int nScales)
+void MsdProperties::setNScales(int nScales)
 {
   mNScales = nScales;
 }
 
-void Msd::setNMSScaleR(int NMSScaleR)
+void MsdProperties::setNMSScaleR(int NMSScaleR)
 {
   mNMSScaleR = NMSScaleR;
 }
 
-void Msd::setComputeOrientations(bool computeOrientations)
+void MsdProperties::setComputeOrientations(bool computeOrientations)
 {
   mComputeOrientations = computeOrientations;
 }
 
-void Msd::setAffineMSD(bool affineMSD)
+void MsdProperties::setAffineMSD(bool affineMSD)
 {
   mAffineMSD = affineMSD;
 }
 
-void Msd::setTilts(int tilts)
+void MsdProperties::setTilts(int tilts)
 {
   mTilts = tilts;
 }
 
-void Msd::reset()
+void MsdProperties::reset()
 {
   mThresholdSaliency = 250;
   mPathRadius = 3;
@@ -993,7 +596,7 @@ void Msd::reset()
 
 /*----------------------------------------------------------------*/
 
-Mser::Mser()
+MserProperties::MserProperties()
   : IMser(),
     mDelta(5),
     mMinArea(60),
@@ -1006,102 +609,102 @@ Mser::Mser()
     mEdgeBlurSize(5)
 {}
 
-Mser::~Mser()
+MserProperties::~MserProperties()
 {
 
 }
 
-int Mser::delta() const
+int MserProperties::delta() const
 {
   return mDelta;
 }
 
-int Mser::minArea() const
+int MserProperties::minArea() const
 {
   return mMinArea;
 }
 
-int Mser::maxArea() const
+int MserProperties::maxArea() const
 {
   return mMaxArea;
 }
 
-double Mser::maxVariation() const
+double MserProperties::maxVariation() const
 {
   return mMaxVariation;
 }
 
-double Mser::minDiversity() const
+double MserProperties::minDiversity() const
 {
   return mMinDiversity;
 }
 
-int Mser::maxEvolution() const
+int MserProperties::maxEvolution() const
 {
   return mMaxEvolution;
 }
 
-double Mser::areaThreshold() const
+double MserProperties::areaThreshold() const
 {
   return mAreaThreshold;
 }
 
-double Mser::minMargin() const
+double MserProperties::minMargin() const
 {
   return mMinMargin;
 }
 
-int Mser::edgeBlurSize() const
+int MserProperties::edgeBlurSize() const
 {
   return mEdgeBlurSize;
 }
 
-void Mser::setDelta(int delta)
+void MserProperties::setDelta(int delta)
 {
   mDelta = delta;
 }
 
-void Mser::setMinArea(int minArea)
+void MserProperties::setMinArea(int minArea)
 {
   mMinArea = minArea;
 }
 
-void Mser::setMaxArea(int maxArea)
+void MserProperties::setMaxArea(int maxArea)
 {
   mMaxArea = maxArea;
 }
 
-void Mser::setMaxVariation(double maxVariation)
+void MserProperties::setMaxVariation(double maxVariation)
 {
   mMaxVariation = maxVariation;
 }
 
-void Mser::setMinDiversity(double minDiversity)
+void MserProperties::setMinDiversity(double minDiversity)
 {
   mMinDiversity = minDiversity;
 }
 
-void Mser::setMaxEvolution(int maxEvolution)
+void MserProperties::setMaxEvolution(int maxEvolution)
 {
   mMaxEvolution = maxEvolution;
 }
 
-void Mser::setAreaThreshold(double areaThreshold)
+void MserProperties::setAreaThreshold(double areaThreshold)
 {
   mAreaThreshold = areaThreshold;
 }
 
-void Mser::setMinMargin(double minMargin)
+void MserProperties::setMinMargin(double minMargin)
 {
   mMinMargin = minMargin;
 }
 
-void Mser::setEdgeBlurSize(int edgeBlurSize)
+void MserProperties::setEdgeBlurSize(int edgeBlurSize)
 {
   mEdgeBlurSize = edgeBlurSize;
 }
 
-void Mser::reset()
+void MserProperties::reset()
 {
   mDelta = 5;
   mMinArea = 60;
@@ -1118,7 +721,7 @@ void Mser::reset()
 /*----------------------------------------------------------------*/
 
 
-Orb::Orb()
+OrbProperties::OrbProperties()
   : IOrb(),
     mFeaturesNumber(5000),
     mScaleFactor(1.2),
@@ -1130,92 +733,92 @@ Orb::Orb()
     mFastThreshold(20)
 {}
 
-Orb::~Orb()
+OrbProperties::~OrbProperties()
 {
 
 }
 
-int Orb::featuresNumber() const
+int OrbProperties::featuresNumber() const
 {
   return mFeaturesNumber;
 }
 
-double Orb::scaleFactor() const
+double OrbProperties::scaleFactor() const
 {
   return mScaleFactor;
 }
 
-int Orb::levelsNumber() const
+int OrbProperties::levelsNumber() const
 {
   return mLevelsNumber;
 }
 
-int Orb::edgeThreshold() const
+int OrbProperties::edgeThreshold() const
 {
   return mEdgeThreshold;
 }
 
-int Orb::wta_k() const
+int OrbProperties::wta_k() const
 {
   return mWTA_K;
 }
 
-QString Orb::scoreType() const
+QString OrbProperties::scoreType() const
 {
   return mScoreType;
 }
 
-int Orb::patchSize() const
+int OrbProperties::patchSize() const
 {
   return mPatchSize;
 }
 
-int Orb::fastThreshold() const
+int OrbProperties::fastThreshold() const
 {
   return mFastThreshold;
 }
 
-void Orb::setScaleFactor(double scaleFactor)
+void OrbProperties::setScaleFactor(double scaleFactor)
 {
   mScaleFactor = scaleFactor;
 }
 
-void Orb::setFeaturesNumber(int featuresNumber)
+void OrbProperties::setFeaturesNumber(int featuresNumber)
 {
   mFeaturesNumber = featuresNumber;
 }
 
-void Orb::setLevelsNumber(int levelsNumber)
+void OrbProperties::setLevelsNumber(int levelsNumber)
 {
   mLevelsNumber = levelsNumber;
 }
 
-void Orb::setEdgeThreshold(int edgeThreshold)
+void OrbProperties::setEdgeThreshold(int edgeThreshold)
 {
   mEdgeThreshold = edgeThreshold;
 }
 
-void Orb::setWTA_K(int WTA_K)
+void OrbProperties::setWTA_K(int WTA_K)
 {
   mWTA_K = WTA_K;
 }
 
-void Orb::setScoreType(const QString &scoreType)
+void OrbProperties::setScoreType(const QString &scoreType)
 {
   mScoreType = scoreType;
 }
 
-void Orb::setPatchSize(int patchSize)
+void OrbProperties::setPatchSize(int patchSize)
 {
   mPatchSize = patchSize;
 }
 
-void Orb::setFastThreshold(int fastThreshold)
+void OrbProperties::setFastThreshold(int fastThreshold)
 {
   mFastThreshold = fastThreshold;
 }
 
-void Orb::reset()
+void OrbProperties::reset()
 {
   mFeaturesNumber = 5000;
   mScaleFactor = 1.2;
@@ -1230,7 +833,7 @@ void Orb::reset()
 /*----------------------------------------------------------------*/
 
 
-Star::Star()
+StarProperties::StarProperties()
   : IStar(),
     mMaxSize(45),
     mResponseThreshold(30),
@@ -1239,62 +842,62 @@ Star::Star()
     mSuppressNonmaxSize(5)
 {}
 
-Star::~Star()
+StarProperties::~StarProperties()
 {
 
 }
 
-int Star::maxSize() const
+int StarProperties::maxSize() const
 {
   return mMaxSize;
 }
 
-int Star::responseThreshold() const
+int StarProperties::responseThreshold() const
 {
   return mResponseThreshold;
 }
 
-int Star::lineThresholdProjected() const
+int StarProperties::lineThresholdProjected() const
 {
   return mLineThresholdProjected;
 }
 
-int Star::lineThresholdBinarized() const
+int StarProperties::lineThresholdBinarized() const
 {
   return mLineThresholdBinarized;
 }
 
-int Star::suppressNonmaxSize() const
+int StarProperties::suppressNonmaxSize() const
 {
   return mSuppressNonmaxSize;
 }
 
-void Star::setMaxSize(int maxSize)
+void StarProperties::setMaxSize(int maxSize)
 {
   mMaxSize = maxSize;
 }
 
-void Star::setResponseThreshold(int responseThreshold)
+void StarProperties::setResponseThreshold(int responseThreshold)
 {
   mResponseThreshold = responseThreshold;
 }
 
-void Star::setLineThresholdProjected(int lineThresholdProjected)
+void StarProperties::setLineThresholdProjected(int lineThresholdProjected)
 {
   mLineThresholdProjected = lineThresholdProjected;
 }
 
-void Star::setLineThresholdBinarized(int lineThresholdBinarized)
+void StarProperties::setLineThresholdBinarized(int lineThresholdBinarized)
 {
   mLineThresholdBinarized = lineThresholdBinarized;
 }
 
-void Star::setSuppressNonmaxSize(int suppressNonmaxSize)
+void StarProperties::setSuppressNonmaxSize(int suppressNonmaxSize)
 {
   mSuppressNonmaxSize = suppressNonmaxSize;
 }
 
-void Star::reset()
+void StarProperties::reset()
 {
   mMaxSize = 45;
   mResponseThreshold = 30;
@@ -1305,7 +908,7 @@ void Star::reset()
 
 /*----------------------------------------------------------------*/
 
-Surf::Surf()
+SurfProperties::SurfProperties()
   : ISurf(),
     mHessianThreshold(100),
     mOctaves(4),
@@ -1315,61 +918,61 @@ Surf::Surf()
 {
 }
 
-Surf::~Surf()
+SurfProperties::~SurfProperties()
 {
 }
 
-double Surf::hessianThreshold() const
+double SurfProperties::hessianThreshold() const
 {
   return mHessianThreshold;
 }
 
-void Surf::setHessianThreshold(double hessianThreshold)
+void SurfProperties::setHessianThreshold(double hessianThreshold)
 {
   mHessianThreshold = hessianThreshold;
 }
 
-int Surf::octaves() const
+int SurfProperties::octaves() const
 {
   return mOctaves;
 }
 
-void Surf::setOctaves(int octaves)
+void SurfProperties::setOctaves(int octaves)
 {
   mOctaves = octaves;
 }
 
-int Surf::octaveLayers() const
+int SurfProperties::octaveLayers() const
 {
   return mOctaveLayers;
 }
 
-void Surf::setOctaveLayers(int octaveLayers)
+void SurfProperties::setOctaveLayers(int octaveLayers)
 {
   mOctaveLayers = octaveLayers;
 }
 
-bool Surf::extendedDescriptor() const
+bool SurfProperties::extendedDescriptor() const
 {
   return mExtendedDescriptor;
 }
 
-void Surf::setExtendedDescriptor(bool extendedDescriptor)
+void SurfProperties::setExtendedDescriptor(bool extendedDescriptor)
 {
   mExtendedDescriptor = extendedDescriptor;
 }
 
-bool Surf::rotatedFeatures() const
+bool SurfProperties::rotatedFeatures() const
 {
   return mRotatedFeatures;
 }
 
-void Surf::setRotatedFeatures(bool rotatedFeatures)
+void SurfProperties::setRotatedFeatures(bool rotatedFeatures)
 {
   mRotatedFeatures = rotatedFeatures;
 }
 
-void Surf::reset()
+void SurfProperties::reset()
 {
   mHessianThreshold = 100;
   mOctaves = 4;
@@ -1382,7 +985,7 @@ void Surf::reset()
 /*----------------------------------------------------------------*/
 
 
-Sift::Sift()
+SiftProperties::SiftProperties()
   : ISift(),
     mFeaturesNumber(5000),
     mOctaveLayers(3),
@@ -1391,59 +994,59 @@ Sift::Sift()
     mSigma(1.6)
 {}
 
-Sift::~Sift() {}
+SiftProperties::~SiftProperties() {}
 
-int Sift::featuresNumber() const
+int SiftProperties::featuresNumber() const
 {
   return mFeaturesNumber;
 }
 
-int Sift::octaveLayers() const
+int SiftProperties::octaveLayers() const
 {
   return mOctaveLayers;
 }
 
-double Sift::contrastThreshold() const
+double SiftProperties::contrastThreshold() const
 {
   return mContrastThreshold;
 }
 
-double Sift::edgeThreshold() const
+double SiftProperties::edgeThreshold() const
 {
   return mEdgeThreshold;
 }
 
-double Sift::sigma() const
+double SiftProperties::sigma() const
 {
   return mSigma;
 }
 
-void Sift::setFeaturesNumber(int featuresNumber)
+void SiftProperties::setFeaturesNumber(int featuresNumber)
 {
   mFeaturesNumber = featuresNumber;
 }
 
-void Sift::setOctaveLayers(int octaveLayers)
+void SiftProperties::setOctaveLayers(int octaveLayers)
 {
   mOctaveLayers = octaveLayers;
 }
 
-void Sift::setContrastThreshold(double contrastThreshold)
+void SiftProperties::setContrastThreshold(double contrastThreshold)
 {
   mContrastThreshold = contrastThreshold;
 }
 
-void Sift::setEdgeThreshold(double edgeThreshold)
+void SiftProperties::setEdgeThreshold(double edgeThreshold)
 {
   mEdgeThreshold = edgeThreshold;
 }
 
-void Sift::setSigma(double sigma)
+void SiftProperties::setSigma(double sigma)
 {
   mSigma = sigma;
 }
 
-void Sift::reset()
+void SiftProperties::reset()
 {
   mFeaturesNumber = 5000;
   mOctaveLayers = 3;
@@ -1958,24 +1561,24 @@ Settings::Settings()
     mPohe(new Pohe),
     mRswhe(new Rswhe),
     mWallis(new Wallis),
-    mAgast(new Agast),
-    mAkaze(new Akaze),
-    mBrief(new Brief),
-    mBrisk(new Brisk),
-    mDaisy(new Daisy),
-    mFast(new Fast),
-    mFreak(new Freak),
-    mGftt(new Gftt),
-    mHog(new Hog),
-    mKaze(new Kaze),
-    mLatch(new Latch),
-    mLucid(new Lucid),
-    mMsd(new Msd),
-    mMser(new Mser),
-    mOrb(new Orb),
-    mSift(new Sift),
-    mStar(new Star),
-    mSurf(new Surf)
+    mAgast(new AgastProperties),
+    mAkaze(new AkazeProperties),
+    mBrief(new BriefProperties),
+    mBrisk(new BriskProperties),
+    mDaisy(new DaisyProperties),
+    mFast(new FastProperties),
+    mFreak(new FreakProperties),
+    mGftt(new GfttProperties),
+    mHog(new HogProperties),
+    mKaze(new KazeProperties),
+    mLatch(new LatchProperties),
+    mLucid(new LucidProperties),
+    mMsd(new MsdProperties),
+    mMser(new MserProperties),
+    mOrb(new OrbProperties),
+    mSift(new SiftProperties),
+    mStar(new StarProperties),
+    mSurf(new SurfProperties)
 {
   reset();
 }

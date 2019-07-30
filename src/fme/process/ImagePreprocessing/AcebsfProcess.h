@@ -21,6 +21,12 @@ public:
                 double l, double k1, double k2);
   ~AcebsfProcess() override;
 
+  QString imgInput() const;
+  void setImgInput(const QString &imgInput);
+
+  QString imgOutput() const;
+  void setImgOutput(const QString &imgOutput);
+
 // IAcebsf interface
 
 public:

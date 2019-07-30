@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QSize>
 
-#include "fme/core/features.h"
+#include "fme/core/features/features.h"
 #include "fme/core/preprocess.h"
 
 
@@ -176,151 +176,13 @@ public:
 /*----------------------------------------------------------------*/
 
 
-/*!
- * \brief AGAST detector properties class
- */
-class FME_EXPORT Agast
-  : public IAgast
-{
-
-public:
-
-  Agast();
-  ~Agast() override;
-
-// IAgast interface
-
-public:
-
-  int threshold() const override;
-  bool nonmaxSuppression() const override;
-  QString detectorType() const override;
-  void setThreshold(int threshold) override;
-  void setNonmaxSuppression(bool nonmaxSuppression) override;
-  void setDetectorType(const QString &detectorType) override;
-  void reset() override;
-
-protected:
-
-  int mThreshold;
-  bool mNonmaxSuppression;
-  QString mDetectorType;
-
-};
-
-
-/*----------------------------------------------------------------*/
-
-
-/*!
- * \brief AKAZE detector/descriptor properties class
- */
-class FME_EXPORT Akaze
-  : public IAkaze
-{
-
-public:
-
-  Akaze();
-  ~Akaze() override;
-
-// IAkaze interface
-
-public:
-
-  QString descriptorType() const override;
-  int descriptorSize() const override;
-  int descriptorChannels() const override;
-  double threshold() const override;
-  int octaves() const override;
-  int octaveLayers() const override;
-  QString diffusivity() const override;
-  void setDescriptorType(const QString &descriptorType) override;
-  void setDescriptorSize(int descriptorSize) override;
-  void setDescriptorChannels(int channels) override;
-  void setThreshold(double threshold) override;
-  void setOctaves(int octaves) override;
-  void setOctaveLayers(int octaveLayers) override;
-  void setDiffusivity(const QString &diffusivity) override;
-  void reset() override;
-
-protected:
-
-  QString mDescriptorType;
-  int mDescriptorSize;
-  int mDescriptorChannels;
-  double mThreshold;
-  int mOctaves;
-  int mOctaveLayers;
-  QString mDiffusivity;
-
-};
-
-
-/*----------------------------------------------------------------*/
-
-
-class FME_EXPORT Brief
-  : public IBrief
-{
-public:
-
-  Brief();
-  ~Brief() override;
-
-// IBrief interface
-
-public:
-
-  QString bytes() const override;
-  bool useOrientation() const override;
-  void setBytes(const QString &bytes) override;
-  void setUseOrientation(bool useOrientation) override;
-  void reset() override;
-
-protected:
-
-  QString mBytes;
-  bool mUseOrientation;
-};
-
-
-/*----------------------------------------------------------------*/
-
-class FME_EXPORT Brisk
-  : public IBrisk
-{
-public:
-
-  Brisk();
-  ~Brisk() override;
-
-  // IBrisk interface
-public:
-  int threshold() const override;
-  int octaves() const override;
-  double patternScale() const override;
-  void setThreshold(int threshold) override;
-  void setOctaves(int octaves) override;
-  void setPatternScale(double patternScale) override;
-  void reset() override;
-
-protected:
-
-  int mThreshold;
-  int mOctaves;
-  double mPatternScale;
-};
-
-/*----------------------------------------------------------------*/
-
-class FME_EXPORT Daisy
+class FME_EXPORT DaisyProperties
   : public IDaisy
 {
 public:
 
-  Daisy();
-  ~Daisy() override;
+  DaisyProperties();
+  ~DaisyProperties() override;
 
 // IDaisy interface
 
@@ -340,6 +202,11 @@ public:
   void setNorm(const QString &norm) override;
   void setInterpolation(bool interpolation) override;
   void setUseOrientation(bool useOrientation) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -355,43 +222,17 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Fast
-  : public IFast
-{
-public:
-
-  Fast();
-  ~Fast() override;
-
-// IFast interface
-
-public:
-
-  int threshold() const override;
-  bool nonmaxSuppression() const override;
-  QString detectorType() const override;
-  void setThreshold(int threshold) override;
-  void setNonmaxSuppression(bool nonmaxSuppression) override;
-  void setDetectorType(QString detectorType) override;
-  void reset() override;
-
-protected:
-
-  int mThreshold;
-  bool mNonmaxSuppression;
-  QString mDetectorType;
-};
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Freak
+class FME_EXPORT FreakProperties
   : public IFreak
 {
 
 public:
 
-  Freak();
-  ~Freak() override;
+  FreakProperties();
+  ~FreakProperties() override;
 
   // IFreak interface
 public:
@@ -403,6 +244,11 @@ public:
   void setScaleNormalized(bool scaleNormalized) override;
   void setPatternScale(double patternScale) override;
   void setOctaves(int octaves) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -415,13 +261,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Gftt
+class FME_EXPORT GfttProperties
   : public IGftt
 {
 public:
 
-  Gftt();
-  ~Gftt() override;
+  GfttProperties();
+  ~GfttProperties() override;
 
   // IGftt interface
 public:
@@ -437,6 +283,11 @@ public:
   void setBlockSize(int blockSize) override;
   void setHarrisDetector(bool value) override;
   void setK(double k) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -453,13 +304,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Hog
+class FME_EXPORT HogProperties
   : public IHog
 {
 public:
 
-  Hog();
-  ~Hog() override;
+  HogProperties();
+  ~HogProperties() override;
 
 // IHog interface
 
@@ -477,7 +328,12 @@ public:
   void setCellSize(const QSize &cellSize) override;
   void setNbins(int nbins) override;
   void setDerivAperture(int derivAperture) override;
-  void reset() override;
+
+ // Feature interface
+
+ public:
+
+   void reset() override;
 
 protected:
 
@@ -491,53 +347,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Kaze
-  : public IKaze
-{
-public:
-
-  Kaze();
-  ~Kaze() override;
-
-// IKaze interface
-
-public:
-
-  bool extendedDescriptor() const override;
-  bool upright() const override;
-  double threshold() const override;
-  int octaves() const override;
-  int octaveLayers() const override;
-  QString diffusivity() const override;
-  void setExtendedDescriptor(bool extended) override;
-  void setUpright(bool upright) override;
-  void setThreshold(double threshold) override;
-  void setOctaves(int octaves) override;
-  void setOctaveLayers(int octaveLayers) override;
-  void setDiffusivity(const QString &diffusivity) override;
-  void reset() override;
-
-protected:
-
-  bool mExtended;
-  bool mUpright;
-  double mThreshold;
-  int mOctaves;
-  int mOctaveLayers;
-  QString mDiffusivity;
-
-};
-
-
-/*----------------------------------------------------------------*/
-
-class FME_EXPORT Latch
+class FME_EXPORT LatchProperties
   : public ILatch
 {
 public:
 
-  Latch();
-  ~Latch() override;
+  LatchProperties();
+  ~LatchProperties() override;
 
 // ILatch interface
 
@@ -549,6 +365,11 @@ public:
   void setBytes(const QString &bytes) override;
   void setRotationInvariance(bool rotationInvariance) override;
   void setHalfSsdSize(int halfSsdSize) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -560,13 +381,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Lucid
+class FME_EXPORT LucidProperties
   : public ILucid
 {
 public:
 
-  Lucid();
-  ~Lucid() override;
+  LucidProperties();
+  ~LucidProperties() override;
 
 // ILucid interface
 
@@ -576,6 +397,11 @@ public:
   int blurKernel() const override;
   void setLucidKernel(int lucidKernel) override;
   void setBlurKernel(int blurKernel) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -587,13 +413,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Msd
+class FME_EXPORT MsdProperties
   : public IMsd
 {
 public:
 
-  Msd();
-  ~Msd() override;
+  MsdProperties();
+  ~MsdProperties() override;
 
 // IMsd interface
 public:
@@ -620,6 +446,11 @@ public:
   void setComputeOrientations(bool computeOrientations) override;
   void setAffineMSD(bool affineMSD) override;
   void setTilts(int tilts) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -639,13 +470,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Mser
+class FME_EXPORT MserProperties
   : public IMser
 {
 public:
 
-  Mser();
-   ~Mser() override;
+  MserProperties();
+   ~MserProperties() override;
 
 // IMser interface
 
@@ -669,6 +500,11 @@ public:
   void setAreaThreshold(double areaThreshold) override;
   void setMinMargin(double minMargin) override;
   void setEdgeBlurSize(int edgeBlurSize) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -686,13 +522,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Orb
+class FME_EXPORT OrbProperties
   : public IOrb
 {
 public:
 
-  Orb();
-   ~Orb() override;
+  OrbProperties();
+   ~OrbProperties() override;
 
 // IOrb interface
 
@@ -714,6 +550,11 @@ public:
   void setScoreType(const QString &scoreType) override;
   void setPatchSize(int patchSize) override;
   void setFastThreshold(int fastThreshold) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -735,14 +576,14 @@ protected:
 /*!
  * \brief SIFT detector/descriptor properties class
  */
-class FME_EXPORT Sift
+class FME_EXPORT SiftProperties
   : public ISift
 {
 
 public:
 
-  Sift();
-  ~Sift() override;
+  SiftProperties();
+  ~SiftProperties() override;
 
 // ISift interface
 
@@ -758,6 +599,11 @@ public:
   void setContrastThreshold(double contrastThreshold) override;
   void setEdgeThreshold(double edgeThreshold) override;
   void setSigma(double sigma) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -772,13 +618,13 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT Star
+class FME_EXPORT StarProperties
   : public IStar
 {
 public:
 
-  Star();
-  ~Star() override;
+  StarProperties();
+  ~StarProperties() override;
 
 // IStar interface
 
@@ -794,6 +640,11 @@ public:
   void setLineThresholdProjected(int lineThresholdProjected) override;
   void setLineThresholdBinarized(int lineThresholdBinarized) override;
   void setSuppressNonmaxSize(int suppressNonmaxSize) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:
@@ -811,14 +662,14 @@ protected:
 /*!
  * \brief SURF detector/descriptor properties class
  */
-class FME_EXPORT Surf
+class FME_EXPORT SurfProperties
   : public ISurf
 {
 
 public:
 
-  Surf();
-  ~Surf() override;
+  SurfProperties();
+  ~SurfProperties() override;
 
   // ISurf interface
 
@@ -834,6 +685,11 @@ public:
   void setExtendedDescriptor(bool extendedDescriptor) override;
   bool rotatedFeatures() const override;
   void setRotatedFeatures(bool rotatedFeatures) override;
+
+// Feature interface
+
+public:
+
   void reset() override;
 
 protected:

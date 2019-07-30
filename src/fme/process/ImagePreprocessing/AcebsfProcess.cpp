@@ -43,6 +43,26 @@ AcebsfProcess::~AcebsfProcess()
 
 }
 
+QString AcebsfProcess::imgOutput() const
+{
+  return mImgOutput;
+}
+
+void AcebsfProcess::setImgOutput(const QString &imgOutput)
+{
+  mImgOutput = imgOutput;
+}
+
+QString AcebsfProcess::imgInput() const
+{
+  return mImgInput;
+}
+
+void AcebsfProcess::setImgInput(const QString &imgInput)
+{
+  mImgInput = imgInput;
+}
+
 QSize AcebsfProcess::blockSize() const
 {
   return mBlockSize;

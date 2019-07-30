@@ -15,7 +15,13 @@ add_executable(${the_target}
     ${CMAKE_SOURCE_DIR}/src/fme/ui/mvp.h
     )
 
-target_link_libraries(${the_target} PRIVATE libcore Qt5::Core Qt5::Widgets Qt5::Test)
+target_link_libraries(${the_target} PRIVATE
+                      Qt5::Core
+                      Qt5::Widgets
+                      Qt5::Test
+                      libcore
+                      ${OpenCV_LIBS}
+                      )
 
 set_property(TARGET ${the_target} PROPERTY FOLDER "test/settings_model")
 

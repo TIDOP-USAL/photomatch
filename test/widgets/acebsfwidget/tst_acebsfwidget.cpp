@@ -87,10 +87,10 @@ void TestAcebsfWidget::test_l_data()
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
 
-  QTest::newRow("5.0") << 5.0 << 5.0;
-  QTest::newRow("10.0") << 10.0 << 10.0;
-  QTest::newRow("20.0") << 20.0 << 20.0;
-  QTest::newRow("Out of range value") << 101. << 100.;
+  QTest::newRow("0.5") << 0.5 << 0.5;
+  QTest::newRow("0.1") << .1 << .1;
+  QTest::newRow("0.2") << .2 << .2;
+  QTest::newRow("Out of range value") << 1.1 << 1.;
 }
 
 void TestAcebsfWidget::test_l()
@@ -107,10 +107,9 @@ void TestAcebsfWidget::test_k1_data()
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
 
-  QTest::newRow("5.0") << 5.0 << 5.0;
   QTest::newRow("10.0") << 10.0 << 10.0;
   QTest::newRow("20.0") << 20.0 << 20.0;
-  QTest::newRow("Out of range value") << 101. << 100.;
+  QTest::newRow("Out of range value") << 26. << 25.;
 }
 
 void TestAcebsfWidget::test_k1()
@@ -127,10 +126,10 @@ void TestAcebsfWidget::test_k2_data()
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
 
-  QTest::newRow("5.0") << 5.0 << 5.0;
-  QTest::newRow("10.0") << 10.0 << 10.0;
-  QTest::newRow("20.0") << 20.0 << 20.0;
-  QTest::newRow("Out of range value") << 101. << 100.;
+  QTest::newRow("0.5") << 0.5 << 0.5;
+  QTest::newRow("0.1") << .1 << .1;
+  QTest::newRow("0.2") << .2 << .2;
+  QTest::newRow("Out of range value") << 1.1 << 1.;
 }
 
 void TestAcebsfWidget::test_k2()

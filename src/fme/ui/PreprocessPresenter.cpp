@@ -203,6 +203,7 @@ void PreprocessPresenter::init()
   mView->addPreprocess(mPOHE);
   mView->addPreprocess(mRSWHE);
   mView->addPreprocess(mWallis);
+
   mView->setCurrentPreprocess(mACEBSF->windowTitle());
 }
 
@@ -211,7 +212,7 @@ void PreprocessPresenter::run()
   ///TODO: se crean los procesos
   /// - Se recorren todas las imagenes y se añaden los procesos
 
-  mMultiProcess->clearProcessList();  ///TODO: Creo que no se esta liberando memoria
+  mMultiProcess->clearProcessList();
 
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString file_in = (*it)->path();

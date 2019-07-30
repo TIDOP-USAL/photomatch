@@ -9,7 +9,20 @@ add_library(libcore ${LIB_TYPE}
             settings.h
             session.cpp
             session.h
-            features.h
+            features/features.h
+            features/features.cpp
+            features/agast.h
+            features/agast.cpp
+            features/akaze.h
+            features/akaze.cpp
+            features/brief.h
+            features/brief.cpp
+            features/brisk.h
+            features/brisk.cpp
+            features/fast.h
+            features/fast.cpp
+            features/kaze.h
+            features/kaze.cpp
             preprocess.h
             utils.cpp
             utils.h)

@@ -18,6 +18,9 @@
 #include "fme/ui/PreprocessPresenter.h"
 #include "fme/ui/PreprocessModel.h"
 #include "fme/ui/PreprocessView.h"
+#include "fme/ui/FeatureExtractorPresenter.h"
+#include "fme/ui/FeatureExtractorModel.h"
+#include "fme/ui/FeatureExtractorView.h"
 
 #include "fme/core/project.h"
 
@@ -42,7 +45,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mSettingsModel(nullptr),
     mSettingsPresenter(nullptr),
     mPreprocessModel(nullptr),
-    mPreprocessPresenter(nullptr)
+    mPreprocessPresenter(nullptr),
+    mFeatureExtractorModel(nullptr),
+    mFeatureExtractorPresenter(nullptr)
 {
   init();
 
@@ -134,6 +139,16 @@ MainWindowPresenter::~MainWindowPresenter()
   if(mPreprocessPresenter){
     delete mPreprocessPresenter;
     mPreprocessPresenter = nullptr;
+  }
+
+  if(mFeatureExtractorModel){
+    delete mFeatureExtractorModel;
+    mFeatureExtractorModel = nullptr;
+  }
+
+  if(mFeatureExtractorPresenter){
+    delete mFeatureExtractorPresenter;
+    mFeatureExtractorPresenter = nullptr;
   }
 }
 
@@ -343,7 +358,8 @@ void MainWindowPresenter::openPreprocess()
 
 void MainWindowPresenter::openFeatureExtraction()
 {
-
+  initFeatureExtractionDialog();
+  mFeatureExtractorPresenter->open();
 }
 
 void MainWindowPresenter::openFeatureMatching()
@@ -456,6 +472,11 @@ void MainWindowPresenter::loadPreprocess()
   }
 }
 
+void MainWindowPresenter::loadFeatures()
+{
+
+}
+
 void MainWindowPresenter::help()
 {
 }
@@ -507,14 +528,23 @@ void MainWindowPresenter::initSettingsDialog()
 
 void MainWindowPresenter::initPreprocessDialog()
 {
-  ///TODO: Hay que pasar mSettingsModel y mProjectModel para leer los valores
-  /// por defecto de los preprocesos y las imágenes del proyecto
   if (mPreprocessPresenter == nullptr){
     mPreprocessModel = new PreprocessModel;
     IPreprocessView *preprocessView = new PreprocessView(mView);
     mPreprocessPresenter = new PreprocessPresenter(preprocessView, mPreprocessModel, mProjectModel, mSettingsModel);
 
     connect(mPreprocessPresenter, SIGNAL(preprocessFinished()), this, SLOT(loadPreprocess()));
+  }
+}
+
+void MainWindowPresenter::initFeatureExtractionDialog()
+{
+  if (mFeatureExtractorPresenter == nullptr){
+    mFeatureExtractorModel = new FeatureExtractorModel;
+    IFeatureExtractorView *featureExtractorView = new FeatureExtractorView(mView);
+    mFeatureExtractorPresenter = new FeatureExtractorPresenter(featureExtractorView, mFeatureExtractorModel, mProjectModel, mSettingsModel);
+
+    connect(mFeatureExtractorPresenter, SIGNAL(featureExtractorFinished()), this, SLOT(loadFeatures()));
   }
 }
 

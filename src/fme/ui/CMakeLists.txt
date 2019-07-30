@@ -36,6 +36,9 @@ set(FME_SOURCES
     PreprocessView.cpp
     PreprocessModel.cpp
     PreprocessPresenter.cpp
+    FeatureExtractorView.cpp
+    FeatureExtractorModel.cpp
+    FeatureExtractorPresenter.cpp
 )  
 
 set(FME_HEADERS
@@ -54,6 +57,9 @@ set(FME_HEADERS
     PreprocessView.h
     PreprocessModel.h
     PreprocessPresenter.h
+    FeatureExtractorView.h
+    FeatureExtractorModel.h
+    FeatureExtractorPresenter.h
 )
 
 if(MSVC)

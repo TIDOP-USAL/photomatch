@@ -97,6 +97,8 @@ add_library(libprocess ${LIB_TYPE}
             ImagePreprocessing/CelikTjahjadi2012_Process.h
             ImagePreprocessing/YuBajaj2004_Process.cpp
             ImagePreprocessing/YuBajaj2004_Process.h
+            features/FeatureExtractorProcess.cpp
+            features/FeatureExtractorProcess.h
             Matching/BFMatcherProcess.cpp
             Matching/BFMatcherProcess.h
             Matching/RobustMatcherRefinementProcess.cpp

@@ -9,7 +9,11 @@ MACRO(DEFINE_TEST_CORE name srcs)
     set(the_target "${test_kind}_${name}")
     add_executable(${the_target} ${srcs})
 
-    target_link_libraries(${the_target} PRIVATE Qt5::Core Qt5::Test libcore)
+    target_link_libraries(${the_target} PRIVATE
+                          Qt5::Core
+                          Qt5::Test
+                          libcore
+                          ${OpenCV_LIBS})
 
     set_property(TARGET ${the_target} PROPERTY FOLDER "test/core")
 
@@ -40,7 +44,13 @@ MACRO(DEFINE_TEST_CORE name srcs)
 
 ENDMACRO()
 
+add_subdirectory(agastdetector)
+add_subdirectory(akazedetectordescriptor)
+add_subdirectory(briskdetectordescriptor)
+add_subdirectory(briefdescriptor)
+add_subdirectory(fastdetector)
 add_subdirectory(image)
+add_subdirectory(kazedetectordescriptor)
 add_subdirectory(project)
-add_subdirectory(settings)
 add_subdirectory(session)
+add_subdirectory(settings)

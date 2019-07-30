@@ -5,18 +5,112 @@
 
 #include <QSize>
 
+#include <opencv2/features2d.hpp>
+
+#include <tidop/core/flags.h>
+
 namespace fme
 {
 
 /*----------------------------------------------------------------*/
 
 
-class FME_EXPORT IAgast
+class FME_EXPORT Feature
 {
 
 public:
 
-  IAgast() {}
+  enum class Type
+  {
+    agast,
+    akaze,
+    brief,
+    brisk,
+    daisy,
+    fast,
+    freak,
+    gftt,
+    hog,
+    kaze,
+    latch,
+    lucid,
+    msd,
+    mser,
+    orb,
+    sift,
+    star,
+    surf
+  };
+
+public:
+
+  Feature(Type type) : mFeatType(type) {}
+  virtual ~Feature() = default;
+
+  /*!
+   * \brief Recover the default values
+   */
+  virtual void reset() = 0;
+
+  Type type() const { return mFeatType.flags(); }
+
+protected:
+
+  tl::EnumFlags<Type> mFeatType;
+
+};
+ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
+
+/*----------------------------------------------------------------*/
+
+class FME_EXPORT KeypointDetector
+{
+
+public:
+
+  KeypointDetector() {}
+  virtual ~KeypointDetector() = default;
+
+  /*!
+   * \brief Detecta los puntos de interes de una imagen
+   * \param[in] img Imagen
+   * \param[in] mask Mascara opcional
+   * \return Número de Key points detectados
+   */
+  virtual std::vector<cv::KeyPoint> detect(const cv::Mat &img, cv::InputArray &mask = cv::noArray()) = 0;
+
+};
+
+/*----------------------------------------------------------------*/
+
+class FME_EXPORT DescriptorExtractor
+{
+
+public:
+
+  DescriptorExtractor() {}
+  virtual ~DescriptorExtractor() = default;
+
+  /*!
+   * \brief Calcula los Descriptores
+   * \param[in] img Imagen
+   * \param[in] keyPoints Puntos de interés
+   * \return Descriptores
+   */
+  virtual cv::Mat extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints) = 0;
+
+};
+
+/*----------------------------------------------------------------*/
+
+
+class FME_EXPORT IAgast
+  : public Feature
+{
+
+public:
+
+  IAgast() : Feature(Feature::Type::agast) {}
   virtual ~IAgast() = default;
 
   /*!
@@ -72,10 +166,6 @@ public:
    */
   virtual void setDetectorType(const QString &detectorType) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -83,11 +173,12 @@ public:
 
 
 class FME_EXPORT IAkaze
+  : public Feature
 {
 
 public:
 
-  IAkaze(){}
+  IAkaze() : Feature(Feature::Type::akaze) {}
   virtual ~IAkaze() = default;
 
   /*!
@@ -174,10 +265,6 @@ public:
    */
   virtual void setDiffusivity(const QString &diffusivity) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -193,11 +280,12 @@ public:
  * https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
  */
 class FME_EXPORT IBrief
+  : public Feature
 {
 
 public:
 
-  IBrief() {}
+  IBrief() : Feature(Feature::Type::brief) {}
   virtual ~IBrief() = default;
 
   /*!
@@ -225,10 +313,6 @@ public:
    */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -244,11 +328,12 @@ public:
  * http://margaritachli.com/papers/ICCV2011paper.pdf
  */
 class FME_EXPORT IBrisk
+  : public Feature
 {
 
 public:
 
-  IBrisk(){}
+  IBrisk() : Feature(Feature::Type::brisk) {}
   virtual ~IBrisk() = default;
 
   /*!
@@ -287,10 +372,6 @@ public:
    */
   virtual void setPatternScale(double patternScale) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -305,11 +386,12 @@ public:
  * Intelligence, 32(5):815–830, May 2010.
  */
 class FME_EXPORT IDaisy
+  : public Feature
 {
 
 public:
 
-  IDaisy(){}
+  IDaisy() : Feature(Feature::Type::daisy) {}
   virtual ~IDaisy() = default;
 
   /*!
@@ -408,11 +490,6 @@ public:
    */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
-
 };
 
 
@@ -424,11 +501,12 @@ public:
  *
  */
 class FME_EXPORT IFast
+  : public Feature
 {
 
 public:
 
-  IFast(){}
+  IFast() : Feature(Feature::Type::fast) {}
   virtual ~IFast() = default;
 
   /*!
@@ -475,10 +553,6 @@ public:
    */
   virtual void setDetectorType(QString detectorType) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -492,11 +566,12 @@ public:
  * Recognition (CVPR), 2012 IEEE Conference on, pages 510–517. Ieee, 2012.
  */
 class FME_EXPORT IFreak
+  : public Feature
 {
 
 public:
 
-  IFreak(){}
+  IFreak() : Feature(Feature::Type::freak) {}
   virtual ~IFreak() = default;
 
   /*!
@@ -547,11 +622,6 @@ public:
    */
   virtual void setOctaves(int octaves) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
-
 };
 
 
@@ -559,11 +629,12 @@ public:
 
 
 class FME_EXPORT IGftt
+  : public Feature
 {
 
 public:
 
-  IGftt() {}
+  IGftt() : Feature(Feature::Type::gftt) {}
   virtual ~IGftt() = default;
 
   virtual int maxFeatures() const = 0;
@@ -580,10 +651,6 @@ public:
   virtual void setHarrisDetector(bool value) = 0;
   virtual void setK(double k) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -595,11 +662,12 @@ public:
  * Navneet Dalal and Bill Triggs @cite Dalal2005
  */
 class FME_EXPORT IHog
+  : public Feature
 {
 
 public:
 
-  IHog(){}
+  IHog() : Feature(Feature::Type::hog) {}
   virtual ~IHog() = default;
 
   virtual QSize winSize() const = 0;
@@ -630,10 +698,6 @@ public:
 //  virtual void setNlevels(int nlevels) = 0;
 //  virtual void setSignedGradient(bool signedGradient) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -653,11 +717,12 @@ public:
  * https://www.doc.ic.ac.uk/~ajd/Publications/alcantarilla_etal_eccv2012.pdf
  */
 class FME_EXPORT IKaze
+  : public Feature
 {
 
 public:
 
-  IKaze(){}
+  IKaze() : Feature(Feature::Type::kaze) {}
   virtual ~IKaze() = default;
 
   /*!
@@ -732,10 +797,6 @@ public:
    */
   virtual void setDiffusivity(const QString &diffusivity) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -743,11 +804,12 @@ public:
 
 
 class FME_EXPORT ILatch
+  : public Feature
 {
 
 public:
 
-  ILatch(){}
+  ILatch() : Feature(Feature::Type::latch) {}
   virtual ~ILatch() = default;
 
   virtual QString bytes() const = 0;
@@ -758,10 +820,6 @@ public:
   virtual void setRotationInvariance(bool rotationInvariance) = 0;
   virtual void setHalfSsdSize(int halfSsdSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -774,10 +832,11 @@ public:
  * Locally uniform comparison image descriptor
  */
 class FME_EXPORT ILucid
+  : public Feature
 {
 public:
 
-  ILucid(){}
+  ILucid() : Feature(Feature::Type::lucid) {}
   virtual ~ILucid() = default;
 
   /*!
@@ -806,10 +865,6 @@ public:
    */
   virtual void setBlurKernel(int blurKernel) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -817,11 +872,12 @@ public:
 
 
 class FME_EXPORT IMsd
+  : public Feature
 {
 
 public:
 
-  IMsd(){}
+  IMsd() : Feature(Feature::Type::msd) {}
   virtual ~IMsd() = default;
 
   virtual double thresholdSaliency() const = 0;
@@ -848,10 +904,6 @@ public:
   virtual void setAffineMSD(bool affineMSD) = 0;
   virtual void setTilts(int tilts) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -859,11 +911,12 @@ public:
 
 
 class FME_EXPORT IMser
+  : public Feature
 {
 
 public:
 
-  IMser(){}
+  IMser() : Feature(Feature::Type::mser) {}
   virtual ~IMser() = default;
 
   virtual int delta() const = 0;
@@ -886,10 +939,6 @@ public:
   virtual void setMinMargin(double minMargin) = 0;
   virtual void setEdgeBlurSize(int edgeBlurSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -900,11 +949,12 @@ public:
  * \brief Interface ORB
  */
 class FME_EXPORT IOrb
+  : public Feature
 {
 
 public:
 
-  IOrb(){}
+  IOrb() : Feature(Feature::Type::orb)  {}
   virtual ~IOrb() = default;
 
   virtual int featuresNumber() const = 0;
@@ -925,10 +975,6 @@ public:
   virtual void setPatchSize(int patchSize) = 0;
   virtual void setFastThreshold(int fastThreshold) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -936,9 +982,10 @@ public:
 
 
 class FME_EXPORT ISift
+  : public Feature
 {
 public:
-  ISift() {}
+  ISift() : Feature(Feature::Type::sift)  {}
   virtual ~ISift() = default;
 
   /*!
@@ -1001,10 +1048,6 @@ public:
    */
   virtual void setSigma(double sigma) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -1012,11 +1055,12 @@ public:
 
 
 class FME_EXPORT IStar
+  : public Feature
 {
 
 public:
 
-  IStar(){}
+  IStar() : Feature(Feature::Type::star) {}
   virtual ~IStar() = default;
 
   virtual int maxSize() const  = 0;
@@ -1031,10 +1075,6 @@ public:
   virtual void setLineThresholdBinarized(int lineThresholdBinarized) = 0;
   virtual void setSuppressNonmaxSize(int suppressNonmaxSize) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
 
 
@@ -1042,10 +1082,11 @@ public:
 
 
 class FME_EXPORT ISurf
+  : public Feature
 {
 public:
 
-  ISurf() {}
+  ISurf() : Feature(Feature::Type::surf) {}
   virtual ~ISurf() = default;
 
   /*!
@@ -1108,11 +1149,16 @@ public:
    */
   virtual void setRotatedFeatures(bool rotatedFeatures) = 0;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 };
+
+
+/*----------------------------------------------------------------*/
+
+FME_EXPORT void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoints, const cv::Mat &descriptors);
+FME_EXPORT void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors);
+
+/*----------------------------------------------------------------*/
+
 
 } // namespace fme
 
