@@ -429,7 +429,7 @@ double SettingsModel::msdThresholdSaliency() const
 
 int SettingsModel::msdPathRadius() const
 {
-  return mSettings->msd()->pathRadius();
+  return mSettings->msd()->patchRadius();
 }
 
 int SettingsModel::msdKnn() const
@@ -439,7 +439,7 @@ int SettingsModel::msdKnn() const
 
 int SettingsModel::msdAreaRadius() const
 {
-  return mSettings->msd()->areaRadius();
+  return mSettings->msd()->searchAreaRadius();
 }
 
 double SettingsModel::msdScaleFactor() const
@@ -459,12 +459,12 @@ int SettingsModel::msdNScales() const
 
 int SettingsModel::msdNMSScaleR() const
 {
-  return mSettings->msd()->NMSScaleR();
+  return mSettings->msd()->NMSScaleRadius();
 }
 
 bool SettingsModel::msdComputeOrientations() const
 {
-  return mSettings->msd()->computeOrientations();
+  return mSettings->msd()->computeOrientation();
 }
 
 bool SettingsModel::msdAffineMSD() const
@@ -474,7 +474,7 @@ bool SettingsModel::msdAffineMSD() const
 
 int SettingsModel::msdTilts() const
 {
-  return mSettings->msd()->tilts();
+  return mSettings->msd()->affineTilts();
 }
 
 int SettingsModel::mserDelta() const
@@ -1131,7 +1131,7 @@ void SettingsModel::setMsdThresholdSaliency(double thresholdSaliency)
 
 void SettingsModel::setMsdPathRadius(int pathRadius)
 {
-  mSettings->msd()->setPathRadius(pathRadius);
+  mSettings->msd()->setPatchRadius(pathRadius);
   emit unsavedChanges(true);
 }
 
@@ -1143,7 +1143,7 @@ void SettingsModel::setMsdKNN(int knn)
 
 void SettingsModel::setMsdAreaRadius(int areaRadius)
 {
-  mSettings->msd()->setAreaRadius(areaRadius);
+  mSettings->msd()->setSearchAreaRadius(areaRadius);
   emit unsavedChanges(true);
 }
 
@@ -1167,13 +1167,13 @@ void SettingsModel::setMsdNScales(int nScales)
 
 void SettingsModel::setMsdNMSScaleR(int NMSScaleR)
 {
-  mSettings->msd()->setNMSScaleR(NMSScaleR);
+  mSettings->msd()->setNMSScaleRadius(NMSScaleR);
   emit unsavedChanges(true);
 }
 
 void SettingsModel::setMsdComputeOrientations(bool computeOrientations)
 {
-  mSettings->msd()->setComputeOrientations(computeOrientations);
+  mSettings->msd()->setComputeOrientation(computeOrientations);
   emit unsavedChanges(true);
 }
 
@@ -1185,7 +1185,7 @@ void SettingsModel::setMsdAffineMSD(bool affineMSD)
 
 void SettingsModel::setMsdTilts(int tilts)
 {
-  mSettings->msd()->setTilts(tilts);
+  mSettings->msd()->setAffineTilts(tilts);
   emit unsavedChanges(true);
 }
 

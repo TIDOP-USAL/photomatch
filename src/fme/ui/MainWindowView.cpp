@@ -2,6 +2,7 @@
 #include "ui_MainWindowView.h"
 
 #include "fme/widgets/ThumbnailsWidget.h"
+#include "fme/widgets/LogWidget.h"
 
 #include <QTreeWidgetItem>
 #include <QFileInfo>
@@ -529,6 +530,14 @@ void MainWindowView::init()
   mThumbnailsWidget = new ThumbnailsWidget(ui->dockWidgetThumbContents);
   gridLayoutThumb->addWidget(mThumbnailsWidget, 0, 0, 1, 1);
 
+  /* Log */
+  QGridLayout *gridLayoutConsole = new QGridLayout(ui->dockWidgetContentsConsole);
+  gridLayoutConsole->setSpacing(6);
+  gridLayoutConsole->setContentsMargins(11, 11, 11, 11);
+  gridLayoutConsole->setContentsMargins(0, 0, 0, 0);
+  mLogWidget = new LogWidget(ui->dockWidgetThumbContents);
+  gridLayoutConsole->addWidget(mLogWidget, 0, 0, 1, 1);
+
   /* Menu file */
 
   ui->menuFile->addAction(mActionNewProject);
@@ -607,6 +616,10 @@ void MainWindowView::init()
   ui->toolBarTools->addAction(mActionPreprocess);
   ui->toolBarTools->addAction(mActionFeatureExtraction);
   ui->toolBarTools->addAction(mActionFeatureMatching);
+
+  // Configuración de mensajes
+  tl::MessageManager &msg_h = tl::MessageManager::instance();
+  msg_h.addListener(mLogWidget);
 
   update();
 }

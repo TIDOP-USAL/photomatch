@@ -5,7 +5,7 @@
 
 using namespace fme;
 
-class TestAgastDetector : public QObject
+class TestAgastDetector : public QObject, public AgastDetector
 {
   Q_OBJECT
 
@@ -26,25 +26,21 @@ private slots:
   void testNonmaxSuppression();
   void testDetectorType_data();
   void testDetectorType();
+  void testDetectorType2_data();
+  void testDetectorType2();
   void testReset();
 
-private:
-
-  AgastDetector *mAgastDetector;
 };
 
 TestAgastDetector::TestAgastDetector()
-  : mAgastDetector(new AgastDetector)
+  : AgastDetector()
 {
 
 }
 
 TestAgastDetector::~TestAgastDetector()
 {
-  if (mAgastDetector){
-    delete mAgastDetector;
-    mAgastDetector = nullptr;
-  }
+
 }
 
 void TestAgastDetector::initTestCase()
@@ -68,7 +64,7 @@ void TestAgastDetector::testDefaultConstructor()
 
 void TestAgastDetector::test_type()
 {
-  QCOMPARE(AgastDetector::Type::agast, mAgastDetector->type());
+  QCOMPARE(AgastDetector::Type::agast, this->type());
 }
 
 void TestAgastDetector::testThreshold_data()
@@ -87,8 +83,9 @@ void TestAgastDetector::testThreshold()
   QFETCH(int, value);
   QFETCH(int, result);
 
-  mAgastDetector->setThreshold(value);
-  QCOMPARE(result, mAgastDetector->threshold());
+  this->setThreshold(value);
+  QCOMPARE(result, this->threshold());
+  QCOMPARE(result, this->mAgast->getThreshold());
 }
 
 void TestAgastDetector::testNonmaxSuppression_data()
@@ -105,8 +102,9 @@ void TestAgastDetector::testNonmaxSuppression()
   QFETCH(bool, value);
   QFETCH(bool, result);
 
-  mAgastDetector->setNonmaxSuppression(value);
-  QCOMPARE(result, mAgastDetector->nonmaxSuppression());
+  this->setNonmaxSuppression(value);
+  QCOMPARE(result, this->nonmaxSuppression());
+  QCOMPARE(result, this->mAgast->getNonmaxSuppression());
 }
 
 void TestAgastDetector::testDetectorType_data()
@@ -126,21 +124,44 @@ void TestAgastDetector::testDetectorType()
   QFETCH(QString, value);
   QFETCH(QString, result);
 
-  mAgastDetector->setDetectorType(value);
-  QCOMPARE(result, mAgastDetector->detectorType());
+  this->setDetectorType(value);
+  QCOMPARE(result, this->detectorType());
+
 }
 
+void TestAgastDetector::testDetectorType2_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<int>("result");
+
+  QTest::newRow("AGAST_5_8") << "AGAST_5_8" << 0;
+  QTest::newRow("AGAST_7_12d") << "AGAST_7_12d" << 1;
+  QTest::newRow("AGAST_7_12s") << "AGAST_7_12s" << 2;
+  QTest::newRow("OAST_9_16") << "OAST_9_16" << 3;
+}
+
+void TestAgastDetector::testDetectorType2()
+{
+  QFETCH(QString, value);
+  QFETCH(int, result);
+
+  this->setDetectorType(value);
+  QCOMPARE(result, this->mAgast->getType());
+}
 void TestAgastDetector::testReset()
 {
-  mAgastDetector->setThreshold(3);
-  mAgastDetector->setDetectorType("AGAST_7_12s");
-  mAgastDetector->setNonmaxSuppression(false);
+  this->setThreshold(3);
+  this->setDetectorType("AGAST_7_12s");
+  this->setNonmaxSuppression(false);
 
-  mAgastDetector->reset();
+  this->reset();
 
-  QCOMPARE(10, mAgastDetector->threshold());
-  QCOMPARE("OAST_9_16", mAgastDetector->detectorType());
-  QCOMPARE(true, mAgastDetector->nonmaxSuppression());
+  QCOMPARE(10, this->threshold());
+  QCOMPARE(10, this->mAgast->getThreshold());
+  QCOMPARE("OAST_9_16", this->detectorType());
+  QCOMPARE(3, this->mAgast->getType());
+  QCOMPARE(true, this->nonmaxSuppression());
+  QCOMPARE(true, this->mAgast->getNonmaxSuppression());
 }
 
 QTEST_APPLESS_MAIN(TestAgastDetector)

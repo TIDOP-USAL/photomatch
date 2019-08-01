@@ -1,0 +1,54 @@
+#ifndef TL_CONFIG_H
+#define TL_CONFIG_H
+
+/* Cabecera para configuración */
+
+// Manejo de errores como log y/o mensajes de consola
+
+#cmakedefine TL_MESSAGE_HANDLER
+
+/// Mensajes por consola
+#cmakedefine TL_ENABLE_CONSOLE
+
+//#if defined(TL_MESSAGE_HANDLER) && defined(TL_ENABLE_CONSOLE)
+
+//#endif
+
+/* Muestra las clases y funciones marcados como deprecados */
+#cmakedefine TL_ENABLE_DEPRECATED_METHODS
+
+
+#cmakedefine HAVE_OPENCV
+
+
+// Activa GDAL
+#cmakedefine HAVE_GDAL
+
+// libraw: Lectura de formato raw
+#cmakedefine HAVE_LIBRAW
+#cmakedefine HAVE_EDSDK
+
+// Eigen Lib: Se utiliza para la resolución de sistemas de ecuaciones lineales
+// Es mucho mas rapida que OpenCV
+#cmakedefine HAVE_EIGEN
+
+// OpenMP
+#cmakedefine HAVE_OMP // De momento no se usa
+
+// Parallel Patterns Library
+// https://msdn.microsoft.com/es-es/library/dd492418.aspx
+#cmakedefine HAVE_PPL
+
+// Visual Leak Detector
+#cmakedefine HAVE_VLD
+
+// minizip
+#cmakedefine HAVE_MINIZIP
+
+// boost
+#cmakedefine HAVE_BOOST
+
+// Google Test
+#cmakedefine HAVE_GTEST
+
+#endif // TL_CONFIG_H

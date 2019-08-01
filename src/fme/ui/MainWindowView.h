@@ -15,6 +15,7 @@ namespace fme
 {
 
 class ThumbnailsWidget;
+class LogWidget;
 
 class MainWindowView
   : public QMainWindow
@@ -156,6 +157,7 @@ protected:
   QAction *mActionClearHistory;
   QMenu *mMenuRecentProjects;
   ThumbnailsWidget *mThumbnailsWidget;
+  LogWidget *mLogWidget;
 
   tl::EnumFlags<Flag> mFlags;
   std::vector<QAction*> mHistory;

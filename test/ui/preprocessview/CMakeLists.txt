@@ -15,12 +15,17 @@ add_executable(${the_target}
     )
 
 target_link_libraries(${the_target} PRIVATE
+                      tl_core
                       libcore
                       libwidgets
                       Qt5::Core
                       Qt5::Widgets
                       Qt5::Test
-                      Qt5::Concurrent)
+                      Qt5::Concurrent
+                      ${OpenCV_LIBS})
+
+target_link_libraries(${the_target} PRIVATE ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+
 
 set_property(TARGET ${the_target} PROPERTY FOLDER "test/preprocess_view")
 

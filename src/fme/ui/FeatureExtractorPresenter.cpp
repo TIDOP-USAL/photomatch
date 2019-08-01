@@ -5,8 +5,12 @@
 #include "fme/core/features/akaze.h"
 #include "fme/core/features/brief.h"
 #include "fme/core/features/brisk.h"
+#include "fme/core/features/daisy.h"
 #include "fme/core/features/fast.h"
 #include "fme/core/features/kaze.h"
+#include "fme/core/features/orb.h"
+#include "fme/core/features/sift.h"
+#include "fme/core/features/surf.h"
 
 #include "fme/ui/FeatureExtractorModel.h"
 #include "fme/ui/FeatureExtractorView.h"
@@ -401,8 +405,6 @@ void FeatureExtractorPresenter::init()
   mView->addDescriptorExtractor(mSiftDescriptor);
   mView->addDescriptorExtractor(mSurfDescriptor);
 
-  //mView->setCurrentKeypointDetector(mSiftDescriptor->windowTitle());
-  //mView->setCurrentDescriptorExtractor(mSiftDescriptor->windowTitle());
   setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
 }
 
@@ -451,13 +453,28 @@ void FeatureExtractorPresenter::run()
   } else if (currentKeypointDetector.compare("MSER") == 0){
 
   } else if (currentKeypointDetector.compare("ORB") == 0){
-
+    keypointDetector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
+                                                               mOrbDetector->scaleFactor(),
+                                                               mOrbDetector->levelsNumber(),
+                                                               mOrbDetector->edgeThreshold(),
+                                                               mOrbDetector->wta_k(),
+                                                               mOrbDetector->scoreType(),
+                                                               mOrbDetector->patchSize(),
+                                                               mOrbDetector->fastThreshold());
   } else if (currentKeypointDetector.compare("SIFT") == 0){
-
+    keypointDetector = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
+                                                                mSiftDetector->octaveLayers(),
+                                                                mSiftDetector->contrastThreshold(),
+                                                                mSiftDetector->edgeThreshold(),
+                                                                mSiftDetector->sigma());
   } else if (currentKeypointDetector.compare("STAR") == 0){
 
   } else if (currentKeypointDetector.compare("SURF") == 0){
-
+    keypointDetector = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+                                                                mSurfDetector->octaves(),
+                                                                mSurfDetector->octaveLayers(),
+                                                                mSurfDetector->extendedDescriptor(),
+                                                                mSurfDetector->rotatedFeatures());
   }
 
   if (currentDescriptorExtractor.compare("AKAZE") == 0){
@@ -486,28 +503,85 @@ void FeatureExtractorPresenter::run()
                                                                     mBriskDescriptor->octaves(),
                                                                     mBriskDescriptor->patternScale());
   } else if (currentDescriptorExtractor.compare("DAISY") == 0){
-
+    descriptorExtractor = std::make_shared<DaisyDescriptor>(mDaisyDescriptor->radius(),
+                                                            mDaisyDescriptor->qRadius(),
+                                                            mDaisyDescriptor->qTheta(),
+                                                            mDaisyDescriptor->qHist(),
+                                                            mDaisyDescriptor->norm(),
+                                                            mDaisyDescriptor->interpolation(),
+                                                            mDaisyDescriptor->useOrientation());
   } else if (currentDescriptorExtractor.compare("FREAK") == 0){
 
   } else if (currentDescriptorExtractor.compare("HOG") == 0){
 
   } else if (currentDescriptorExtractor.compare("KAZE") == 0){
-    keypointDetector = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
-                                                                mKazeDescriptor->upright(),
-                                                                mKazeDescriptor->threshold(),
-                                                                mKazeDescriptor->octaves(),
-                                                                mKazeDescriptor->octaveLayers(),
-                                                                mKazeDescriptor->diffusivity());
+    if (currentKeypointDetector.compare("KAZE") == 0){
+      descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
+                                                                     mKazeDetector->upright(),
+                                                                     mKazeDetector->threshold(),
+                                                                     mKazeDetector->octaves(),
+                                                                     mKazeDetector->octaveLayers(),
+                                                                     mKazeDetector->diffusivity());
+    } else {
+      descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
+                                                                     mKazeDescriptor->upright(),
+                                                                     mKazeDescriptor->threshold(),
+                                                                     mKazeDescriptor->octaves(),
+                                                                     mKazeDescriptor->octaveLayers(),
+                                                                     mKazeDescriptor->diffusivity());
+    }
   } else if (currentDescriptorExtractor.compare("LATCH") == 0){
 
   } else if (currentDescriptorExtractor.compare("LUCID") == 0){
 
   } else if (currentDescriptorExtractor.compare("ORB") == 0){
-
+    if (currentKeypointDetector.compare("ORB") == 0){
+      descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
+                                                                    mOrbDetector->scaleFactor(),
+                                                                    mOrbDetector->levelsNumber(),
+                                                                    mOrbDetector->edgeThreshold(),
+                                                                    mOrbDetector->wta_k(),
+                                                                    mOrbDetector->scoreType(),
+                                                                    mOrbDetector->patchSize(),
+                                                                    mOrbDetector->fastThreshold());
+    } else {
+      descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
+                                                                    mOrbDescriptor->scaleFactor(),
+                                                                    mOrbDescriptor->levelsNumber(),
+                                                                    mOrbDescriptor->edgeThreshold(),
+                                                                    mOrbDescriptor->wta_k(),
+                                                                    mOrbDescriptor->scoreType(),
+                                                                    mOrbDescriptor->patchSize(),
+                                                                    mOrbDescriptor->fastThreshold());
+    }
   } else if (currentDescriptorExtractor.compare("SIFT") == 0){
-
+    if (currentKeypointDetector.compare("SIFT") == 0){
+      descriptorExtractor = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
+                                                                  mSiftDetector->octaveLayers(),
+                                                                  mSiftDetector->contrastThreshold(),
+                                                                  mSiftDetector->edgeThreshold(),
+                                                                  mSiftDetector->sigma());
+    } else {
+      descriptorExtractor = std::make_shared<SiftDetectorDescriptor>(mSiftDescriptor->featuresNumber(),
+                                                                     mSiftDescriptor->octaveLayers(),
+                                                                     mSiftDescriptor->contrastThreshold(),
+                                                                     mSiftDescriptor->edgeThreshold(),
+                                                                     mSiftDescriptor->sigma());
+    }
   } else if (currentDescriptorExtractor.compare("SURF") == 0){
-
+    if (currentKeypointDetector.compare("SIFT") == 0){
+      descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+                                                                     mSurfDetector->octaves(),
+                                                                     mSurfDetector->octaveLayers(),
+                                                                     mSurfDetector->extendedDescriptor(),
+                                                                     mSurfDetector->rotatedFeatures());
+    } else {
+      descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
+                                                                     mSurfDescriptor->octaves(),
+                                                                     mSurfDescriptor->octaveLayers(),
+                                                                     mSurfDescriptor->extendedDescriptor(),
+                                                                     mSurfDescriptor->rotatedFeatures());
+    }
   }
 
   /// Hay que recuperar las imagenes de la carpeta de preprocesos

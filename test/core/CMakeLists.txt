@@ -15,6 +15,13 @@ MACRO(DEFINE_TEST_CORE name srcs)
                           libcore
                           ${OpenCV_LIBS})
 
+    target_link_libraries(${the_target} PRIVATE
+                          ${Boost_FILESYSTEM_LIBRARY}
+                          ${Boost_SYSTEM_LIBRARY}
+                          ${Boost_THREAD_LIBRARY}
+                          ${Boost_DATE_TIME_LIBRARY}
+                          ${Boost_CHRONO_LIBRARY})
+
     set_property(TARGET ${the_target} PROPERTY FOLDER "test/core")
 
     set_target_properties(${the_target} PROPERTIES
@@ -48,9 +55,15 @@ add_subdirectory(agastdetector)
 add_subdirectory(akazedetectordescriptor)
 add_subdirectory(briskdetectordescriptor)
 add_subdirectory(briefdescriptor)
+add_subdirectory(daisydescriptor)
 add_subdirectory(fastdetector)
+add_subdirectory(gfttdetector)
 add_subdirectory(image)
+#add_subdirectory(msddetector)
 add_subdirectory(kazedetectordescriptor)
+add_subdirectory(orbdetectordescriptor)
 add_subdirectory(project)
 add_subdirectory(session)
 add_subdirectory(settings)
+add_subdirectory(siftdetectordescriptor)
+add_subdirectory(surfdetectordescriptor)

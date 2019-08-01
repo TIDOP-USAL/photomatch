@@ -4,8 +4,14 @@
 #include "fme/core/features/akaze.h"
 #include "fme/core/features/brief.h"
 #include "fme/core/features/brisk.h"
+#include "fme/core/features/daisy.h"
 #include "fme/core/features/fast.h"
+#include "fme/core/features/gftt.h"
+#include "fme/core/features/msd.h"
 #include "fme/core/features/kaze.h"
+#include "fme/core/features/orb.h"
+#include "fme/core/features/sift.h"
+#include "fme/core/features/surf.h"
 
 #include <QSettings>
 #include <QLocale>
@@ -17,102 +23,6 @@ namespace fme
 /* Feature Detectors/descriptors properties                       */
 /*----------------------------------------------------------------*/
 
-DaisyProperties::DaisyProperties()
-  : IDaisy(),
-    mRadius(15.),
-    mQRadius(3),
-    mQTheta(8),
-    mQHist(8),
-    mNorm("NRM_NONE"),
-    mInterpolation(true),
-    mUseOrientation(false)
-{}
-
-DaisyProperties::~DaisyProperties()
-{
-
-}
-
-double DaisyProperties::radius() const
-{
-  return mRadius;
-}
-
-int DaisyProperties::qRadius() const
-{
-  return mQRadius;
-}
-
-int DaisyProperties::qTheta() const
-{
-  return mQTheta;
-}
-
-int DaisyProperties::qHist() const
-{
-  return mQHist;
-}
-
-QString DaisyProperties::norm() const
-{
-  return mNorm;
-}
-
-bool DaisyProperties::interpolation() const
-{
-  return mInterpolation;
-}
-
-bool DaisyProperties::useOrientation() const
-{
-  return mUseOrientation;
-}
-
-void DaisyProperties::setRadius(double radius)
-{
-  mRadius = radius;
-}
-
-void DaisyProperties::setQRadius(int qRadius)
-{
-  mQRadius = qRadius;
-}
-
-void DaisyProperties::setQTheta(int qTheta)
-{
-  mQTheta = qTheta;
-}
-
-void DaisyProperties::setQHist(int qHist)
-{
-  mQHist = qHist;
-}
-
-void DaisyProperties::setNorm(const QString &norm)
-{
-  mNorm = norm;
-}
-
-void DaisyProperties::setInterpolation(bool interpolation)
-{
-  mInterpolation = interpolation;
-}
-
-void DaisyProperties::setUseOrientation(bool useOrientation)
-{
-  mUseOrientation = useOrientation;
-}
-
-void DaisyProperties::reset()
-{
-  mRadius = 15.;
-  mQRadius = 3;
-  mQTheta = 8;
-  mQHist = 8;
-  mNorm = "NRM_NONE";
-  mInterpolation = true;
-  mUseOrientation = false;
-}
 
 /*----------------------------------------------------------------*/
 
@@ -181,92 +91,7 @@ void FreakProperties::reset()
 /*----------------------------------------------------------------*/
 
 
-GfttProperties::GfttProperties()
-  : IGftt(),
-    mMaxFeatures(1000),
-    mQualityLevel(0.01),
-    mMinDistance(1),
-    mBlockSize(3),
-    mHarrisDetector(false),
-    mK(0.04)
-{
 
-}
-
-GfttProperties::~GfttProperties()
-{
-
-}
-
-int GfttProperties::maxFeatures() const
-{
-  return mMaxFeatures;
-}
-
-double GfttProperties::qualityLevel() const
-{
-  return mQualityLevel;
-}
-
-double GfttProperties::minDistance() const
-{
-  return mMinDistance;
-}
-
-int GfttProperties::blockSize() const
-{
-  return mBlockSize;
-}
-
-bool GfttProperties::harrisDetector() const
-{
-  return mHarrisDetector;
-}
-
-double GfttProperties::k() const
-{
-  return mK;
-}
-
-void GfttProperties::setMaxFeatures(int maxFeatures)
-{
-  mMaxFeatures = maxFeatures;
-}
-
-void GfttProperties::setQualityLevel(double qlevel)
-{
-  mQualityLevel = qlevel;
-}
-
-void GfttProperties::setMinDistance(double minDistance)
-{
-  mMinDistance = minDistance;
-}
-
-void GfttProperties::setBlockSize(int blockSize)
-{
-  mBlockSize = blockSize;
-}
-
-void GfttProperties::setHarrisDetector(bool value)
-{
-  mHarrisDetector = value;
-}
-
-void GfttProperties::setK(double k)
-{
-  mK = k;
-}
-
-void GfttProperties::reset()
-{
-  mMaxFeatures = 1000;
-  mQualityLevel = 0.01;
-  mMinDistance = 1;
-  mBlockSize = 3;
-  mHarrisDetector = false;
-  mK = 0.04;
-}
 
 /*----------------------------------------------------------------*/
 
@@ -448,154 +273,6 @@ void LucidProperties::reset()
 
 /*----------------------------------------------------------------*/
 
-
-MsdProperties::MsdProperties()
-  : IMsd(),
-    mThresholdSaliency(250),
-    mPathRadius(3),
-    mKNN(4),
-    mAreaRadius(5),
-    mScaleFactor(1.25),
-    mNMSRadius(5),
-    mNScales(-1),
-    mNMSScaleR(0),
-    mComputeOrientations(false),
-    mAffineMSD(false),
-    mTilts(3)
-{}
-
-MsdProperties::~MsdProperties()
-{
-
-}
-
-double MsdProperties::thresholdSaliency() const
-{
-  return mThresholdSaliency;
-}
-
-int MsdProperties::pathRadius() const
-{
-  return mPathRadius;
-}
-
-int MsdProperties::knn() const
-{
-  return mKNN;
-}
-
-int MsdProperties::areaRadius() const
-{
-  return mAreaRadius;
-}
-
-double MsdProperties::scaleFactor() const
-{
-  return mScaleFactor;
-}
-
-int MsdProperties::NMSRadius() const
-{
-  return mNMSRadius;
-}
-
-int MsdProperties::nScales() const
-{
-  return mNScales;
-}
-
-int MsdProperties::NMSScaleR() const
-{
-  return mNMSScaleR;
-}
-
-bool MsdProperties::computeOrientations() const
-{
-  return mComputeOrientations;
-}
-
-bool MsdProperties::affineMSD() const
-{
-  return mAffineMSD;
-}
-
-int MsdProperties::tilts() const
-{
-  return mTilts;
-}
-
-void MsdProperties::setThresholdSaliency(double thresholdSaliency)
-{
-  mThresholdSaliency = thresholdSaliency;
-}
-
-void MsdProperties::setPathRadius(int pathRadius)
-{
-  mPathRadius = pathRadius;
-}
-
-void MsdProperties::setKNN(int knn)
-{
-  mKNN = knn;
-}
-
-void MsdProperties::setAreaRadius(int areaRadius)
-{
-  mAreaRadius = areaRadius;
-}
-
-void MsdProperties::setScaleFactor(double scaleFactor)
-{
-  mScaleFactor = scaleFactor;
-}
-
-void MsdProperties::setNMSRadius(int NMSRadius)
-{
-  mNMSRadius = NMSRadius;
-}
-
-void MsdProperties::setNScales(int nScales)
-{
-  mNScales = nScales;
-}
-
-void MsdProperties::setNMSScaleR(int NMSScaleR)
-{
-  mNMSScaleR = NMSScaleR;
-}
-
-void MsdProperties::setComputeOrientations(bool computeOrientations)
-{
-  mComputeOrientations = computeOrientations;
-}
-
-void MsdProperties::setAffineMSD(bool affineMSD)
-{
-  mAffineMSD = affineMSD;
-}
-
-void MsdProperties::setTilts(int tilts)
-{
-  mTilts = tilts;
-}
-
-void MsdProperties::reset()
-{
-  mThresholdSaliency = 250;
-  mPathRadius = 3;
-  mKNN = 4;
-  mAreaRadius = 5;
-  mScaleFactor = 1.25;
-  mNMSRadius = 5;
-  mNScales = -1;
-  mNMSScaleR = 0;
-  mComputeOrientations = false;
-  mAffineMSD = false;
-  mTilts = 3;
-}
-
-/*----------------------------------------------------------------*/
-
 MserProperties::MserProperties()
   : IMser(),
     mDelta(5),
@@ -720,119 +397,6 @@ void MserProperties::reset()
 
 /*----------------------------------------------------------------*/
 
-
-OrbProperties::OrbProperties()
-  : IOrb(),
-    mFeaturesNumber(5000),
-    mScaleFactor(1.2),
-    mLevelsNumber(8),
-    mEdgeThreshold(31),
-    mWTA_K(2),
-    mScoreType("Harris"),
-    mPatchSize(31),
-    mFastThreshold(20)
-{}
-
-OrbProperties::~OrbProperties()
-{
-
-}
-
-int OrbProperties::featuresNumber() const
-{
-  return mFeaturesNumber;
-}
-
-double OrbProperties::scaleFactor() const
-{
-  return mScaleFactor;
-}
-
-int OrbProperties::levelsNumber() const
-{
-  return mLevelsNumber;
-}
-
-int OrbProperties::edgeThreshold() const
-{
-  return mEdgeThreshold;
-}
-
-int OrbProperties::wta_k() const
-{
-  return mWTA_K;
-}
-
-QString OrbProperties::scoreType() const
-{
-  return mScoreType;
-}
-
-int OrbProperties::patchSize() const
-{
-  return mPatchSize;
-}
-
-int OrbProperties::fastThreshold() const
-{
-  return mFastThreshold;
-}
-
-void OrbProperties::setScaleFactor(double scaleFactor)
-{
-  mScaleFactor = scaleFactor;
-}
-
-void OrbProperties::setFeaturesNumber(int featuresNumber)
-{
-  mFeaturesNumber = featuresNumber;
-}
-
-void OrbProperties::setLevelsNumber(int levelsNumber)
-{
-  mLevelsNumber = levelsNumber;
-}
-
-void OrbProperties::setEdgeThreshold(int edgeThreshold)
-{
-  mEdgeThreshold = edgeThreshold;
-}
-
-void OrbProperties::setWTA_K(int WTA_K)
-{
-  mWTA_K = WTA_K;
-}
-
-void OrbProperties::setScoreType(const QString &scoreType)
-{
-  mScoreType = scoreType;
-}
-
-void OrbProperties::setPatchSize(int patchSize)
-{
-  mPatchSize = patchSize;
-}
-
-void OrbProperties::setFastThreshold(int fastThreshold)
-{
-  mFastThreshold = fastThreshold;
-}
-
-void OrbProperties::reset()
-{
-  mFeaturesNumber = 5000;
-  mScaleFactor = 1.2;
-  mLevelsNumber = 8;
-  mEdgeThreshold = 31;
-  mWTA_K = 2;
-  mScoreType = "Harris";
-  mPatchSize = 31;
-  mFastThreshold = 20;
-}
-
-/*----------------------------------------------------------------*/
-
-
 StarProperties::StarProperties()
   : IStar(),
     mMaxSize(45),
@@ -907,155 +471,6 @@ void StarProperties::reset()
 }
 
 /*----------------------------------------------------------------*/
-
-SurfProperties::SurfProperties()
-  : ISurf(),
-    mHessianThreshold(100),
-    mOctaves(4),
-    mOctaveLayers(3),
-    mExtendedDescriptor(false),
-    mRotatedFeatures(false)
-{
-}
-
-SurfProperties::~SurfProperties()
-{
-}
-
-double SurfProperties::hessianThreshold() const
-{
-  return mHessianThreshold;
-}
-
-void SurfProperties::setHessianThreshold(double hessianThreshold)
-{
-  mHessianThreshold = hessianThreshold;
-}
-
-int SurfProperties::octaves() const
-{
-  return mOctaves;
-}
-
-void SurfProperties::setOctaves(int octaves)
-{
-  mOctaves = octaves;
-}
-
-int SurfProperties::octaveLayers() const
-{
-  return mOctaveLayers;
-}
-
-void SurfProperties::setOctaveLayers(int octaveLayers)
-{
-  mOctaveLayers = octaveLayers;
-}
-
-bool SurfProperties::extendedDescriptor() const
-{
-  return mExtendedDescriptor;
-}
-
-void SurfProperties::setExtendedDescriptor(bool extendedDescriptor)
-{
-  mExtendedDescriptor = extendedDescriptor;
-}
-
-bool SurfProperties::rotatedFeatures() const
-{
-  return mRotatedFeatures;
-}
-
-void SurfProperties::setRotatedFeatures(bool rotatedFeatures)
-{
-  mRotatedFeatures = rotatedFeatures;
-}
-
-void SurfProperties::reset()
-{
-  mHessianThreshold = 100;
-  mOctaves = 4;
-  mOctaveLayers = 3;
-  mExtendedDescriptor = false;
-  mRotatedFeatures = false;
-}
-
-
-/*----------------------------------------------------------------*/
-
-
-SiftProperties::SiftProperties()
-  : ISift(),
-    mFeaturesNumber(5000),
-    mOctaveLayers(3),
-    mContrastThreshold(0.04),
-    mEdgeThreshold(10.),
-    mSigma(1.6)
-{}
-
-SiftProperties::~SiftProperties() {}
-
-int SiftProperties::featuresNumber() const
-{
-  return mFeaturesNumber;
-}
-
-int SiftProperties::octaveLayers() const
-{
-  return mOctaveLayers;
-}
-
-double SiftProperties::contrastThreshold() const
-{
-  return mContrastThreshold;
-}
-
-double SiftProperties::edgeThreshold() const
-{
-  return mEdgeThreshold;
-}
-
-double SiftProperties::sigma() const
-{
-  return mSigma;
-}
-
-void SiftProperties::setFeaturesNumber(int featuresNumber)
-{
-  mFeaturesNumber = featuresNumber;
-}
-
-void SiftProperties::setOctaveLayers(int octaveLayers)
-{
-  mOctaveLayers = octaveLayers;
-}
-
-void SiftProperties::setContrastThreshold(double contrastThreshold)
-{
-  mContrastThreshold = contrastThreshold;
-}
-
-void SiftProperties::setEdgeThreshold(double edgeThreshold)
-{
-  mEdgeThreshold = edgeThreshold;
-}
-
-void SiftProperties::setSigma(double sigma)
-{
-  mSigma = sigma;
-}
-
-void SiftProperties::reset()
-{
-  mFeaturesNumber = 5000;
-  mOctaveLayers = 3;
-  mContrastThreshold = 0.04;
-  mEdgeThreshold = 10.;
-  mSigma = 1.6;
-}
-
-
 
 /*----------------------------------------------------------------*/
 /* Image preprocessing                                            */
@@ -2271,16 +1686,16 @@ void SettingsRW::read(ISettings &settings)
 
   /* MSD */
   settings.msd()->setKNN(mSettingsRW->value("MSD/KNN", settings.msd()->knn()).toInt());
-  settings.msd()->setTilts(mSettingsRW->value("MSD/Tilts", settings.msd()->tilts()).toInt());
+  settings.msd()->setAffineTilts(mSettingsRW->value("MSD/AffineTilts", settings.msd()->affineTilts()).toInt());
   settings.msd()->setNScales(mSettingsRW->value("MSD/NScales", settings.msd()->nScales()).toInt());
   settings.msd()->setAffineMSD(mSettingsRW->value("MSD/AffineMSD", settings.msd()->affineMSD()).toBool());
   settings.msd()->setNMSRadius(mSettingsRW->value("MSD/NMSRadius", settings.msd()->NMSRadius()).toInt());
-  settings.msd()->setNMSScaleR(mSettingsRW->value("MSD/NMSScaleR", settings.msd()->NMSScaleR()).toInt());
-  settings.msd()->setAreaRadius(mSettingsRW->value("MSD/AreaRadius", settings.msd()->areaRadius()).toInt());
-  settings.msd()->setPathRadius(mSettingsRW->value("MSD/PathRadius", settings.msd()->pathRadius()).toInt());
+  settings.msd()->setNMSScaleRadius(mSettingsRW->value("MSD/NMSScaleRadius", settings.msd()->NMSScaleRadius()).toInt());
+  settings.msd()->setSearchAreaRadius(mSettingsRW->value("MSD/AreaRadius", settings.msd()->searchAreaRadius()).toInt());
+  settings.msd()->setPatchRadius(mSettingsRW->value("MSD/PathRadius", settings.msd()->patchRadius()).toInt());
   settings.msd()->setScaleFactor(mSettingsRW->value("MSD/ScaleFactor", settings.msd()->scaleFactor()).toDouble());
   settings.msd()->setThresholdSaliency(mSettingsRW->value("MSD/ThresholdSaliency", settings.msd()->thresholdSaliency()).toDouble());
-  settings.msd()->setComputeOrientations(mSettingsRW->value("MSD/ComputeOrientations", settings.msd()->computeOrientations()).toBool());
+  settings.msd()->setComputeOrientation(mSettingsRW->value("MSD/ComputeOrientations", settings.msd()->computeOrientation()).toBool());
 
   /* MSER */
   settings.mser()->setDelta(mSettingsRW->value("MSER/Delta", settings.mser()->delta()).toInt());
@@ -2454,16 +1869,16 @@ void SettingsRW::write(const ISettings &settings)
 
   /* MSD */
   mSettingsRW->setValue("MSD/KNN", settings.msd()->knn());
-  mSettingsRW->setValue("MSD/Tilts", settings.msd()->tilts());
+  mSettingsRW->setValue("MSD/AfineTilts", settings.msd()->affineTilts());
   mSettingsRW->setValue("MSD/NScales", settings.msd()->nScales());
   mSettingsRW->setValue("MSD/AffineMSD", settings.msd()->affineMSD());
   mSettingsRW->setValue("MSD/NMSRadius", settings.msd()->NMSRadius());
-  mSettingsRW->setValue("MSD/NMSScaleR", settings.msd()->NMSScaleR());
-  mSettingsRW->setValue("MSD/AreaRadius", settings.msd()->areaRadius());
-  mSettingsRW->setValue("MSD/PathRadius", settings.msd()->pathRadius());
+  mSettingsRW->setValue("MSD/NMSScaleRadius", settings.msd()->NMSScaleRadius());
+  mSettingsRW->setValue("MSD/AreaRadius", settings.msd()->searchAreaRadius());
+  mSettingsRW->setValue("MSD/PathRadius", settings.msd()->patchRadius());
   mSettingsRW->setValue("MSD/ScaleFactor", settings.msd()->scaleFactor());
   mSettingsRW->setValue("MSD/ThresholdSaliency", settings.msd()->thresholdSaliency());
-  mSettingsRW->setValue("MSD/ComputeOrientations", settings.msd()->computeOrientations());
+  mSettingsRW->setValue("MSD/ComputeOrientations", settings.msd()->computeOrientation());
 
   /* MSER */
   mSettingsRW->setValue("MSER/Delta", settings.mser()->delta());

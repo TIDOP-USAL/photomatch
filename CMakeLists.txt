@@ -130,6 +130,7 @@ if(WITH_BOOST)
                  COMPONENTS
                      thread
                      chrono
+                     filesystem
                      system
                      date_time
                      atomic)
@@ -208,6 +209,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 # resources
 set(FME_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/res.qrc)
 
+add_subdirectory(third_party)
 add_subdirectory(src)
 
 

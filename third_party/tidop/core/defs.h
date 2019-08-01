@@ -17,7 +17,7 @@
 #ifndef TL_CORE_DEFS_H
 #define TL_CORE_DEFS_H
 
-//#include "config_tl.h"
+#include "config_tl.h"
 
 #include <limits>
 #include <cstdlib>

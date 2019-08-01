@@ -880,30 +880,30 @@ public:
   IMsd() : Feature(Feature::Type::msd) {}
   virtual ~IMsd() = default;
 
-  virtual double thresholdSaliency() const = 0;
-  virtual int pathRadius() const = 0;
-  virtual int knn() const = 0;
-  virtual int areaRadius() const = 0;
-  virtual double scaleFactor() const = 0;
-  virtual int NMSRadius() const = 0;
-  virtual int nScales() const = 0;
-  virtual int NMSScaleR() const = 0;
-  virtual bool computeOrientations() const = 0;
+  virtual double thresholdSaliency() const = 0;//
+  virtual int patchRadius() const = 0;//
+  virtual int knn() const = 0;//
+  virtual int searchAreaRadius() const = 0;//
+  virtual double scaleFactor() const = 0;//
+  virtual int NMSRadius() const = 0;//
+  virtual int nScales() const = 0;//
+  virtual int NMSScaleRadius() const = 0;//
+  virtual bool computeOrientation() const = 0;//
   virtual bool affineMSD() const = 0;
-  virtual int tilts() const = 0;
+  //virtual int tilts() const = 0;
+  virtual int affineTilts() const = 0;
 
   virtual void setThresholdSaliency(double thresholdSaliency) = 0;
-  virtual void setPathRadius(int pathRadius) = 0;
+  virtual void setPatchRadius(int patchRadius) = 0;
   virtual void setKNN(int knn) = 0;
-  virtual void setAreaRadius(int areaRadius) = 0;
+  virtual void setSearchAreaRadius(int searchAreaRadius) = 0;
   virtual void setScaleFactor(double scaleFactor) = 0;
   virtual void setNMSRadius(int NMSRadius) = 0;
   virtual void setNScales(int nScales) = 0;
-  virtual void setNMSScaleR(int NMSScaleR) = 0;
-  virtual void setComputeOrientations(bool computeOrientations) = 0;
+  virtual void setNMSScaleRadius(int NMSScaleR) = 0;
+  virtual void setComputeOrientation(bool computeOrientation) = 0;
   virtual void setAffineMSD(bool affineMSD) = 0;
-  virtual void setTilts(int tilts) = 0;
-
+  virtual void setAffineTilts(int affineTilts) = 0;
 };
 
 

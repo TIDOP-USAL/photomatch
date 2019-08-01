@@ -15,7 +15,7 @@
 #ifndef TL_CORE_FLAGS_H
 #define TL_CORE_FLAGS_H
 
-//#include "config_tl.h"
+#include "config_tl.h"
 
 #include "tidop/core/defs.h"
 
@@ -105,7 +105,7 @@ public:
    * \brief Constructora de movimiento
    * \param[in] flag
    */
-  EnumFlags(EnumFlags<T> &&flag);
+  EnumFlags(EnumFlags<T> &&flag) TL_NOEXCEPT;
 
   /*!
    * \brief Constructora
@@ -130,7 +130,7 @@ public:
    * \param[in] flag Objeto EnumFlags
    * \return Referencia al objeto EnumFlags
    */
-  EnumFlags<T> &operator = (EnumFlags<T> &&flag);
+  EnumFlags<T> &operator = (EnumFlags<T> &&flag) TL_NOEXCEPT;
 
   /*!
    * \brief Operador asignación enumeración
@@ -182,7 +182,7 @@ public:
    * \return
    * \deprecated Use 'flags()' en su lugar 
    */
-  TL_DEPRECATED("EnumFlags::flags")
+  TL_DEPRECATED("EnumFlags::flags", "2.0")
   T getFlags() const;
 #endif // TL_ENABLE_DEPRECATED_METHODS
    
@@ -207,7 +207,7 @@ EnumFlags<T>::EnumFlags(const EnumFlags<T> &flag)
 }
 
 template<typename T> inline
-EnumFlags<T>::EnumFlags(EnumFlags<T> &&flag)
+EnumFlags<T>::EnumFlags(EnumFlags<T> &&flag) TL_NOEXCEPT
   : mFlag(std::move(flag.mFlag)) 
 {
 
@@ -235,7 +235,7 @@ EnumFlags<T> &EnumFlags<T>::operator = (const EnumFlags<T> &flag)
 }
 
 template<typename T> inline
-EnumFlags<T> &EnumFlags<T>::operator = (EnumFlags<T> &&flag)
+EnumFlags<T> &EnumFlags<T>::operator = (EnumFlags<T> &&flag) TL_NOEXCEPT
 {
   if (this != &flag) {
     this->mFlag = std::move(flag.mFlag);
@@ -325,7 +325,7 @@ T EnumFlags<T>::flags() const
  * \endcode
  */
 #define ALLOW_BITWISE_FLAG_OPERATIONS(T_FLAG)                       \
-inline T_FLAG operator | (T_FLAG flag1, T_FLAG flag2)   \
+inline T_FLAG operator | (T_FLAG flag1, T_FLAG flag2)               \
 {                                                                   \
   return static_cast<T_FLAG> (                                      \
     static_cast<std::underlying_type<T_FLAG>::type>(flag1) |        \
@@ -333,7 +333,7 @@ inline T_FLAG operator | (T_FLAG flag1, T_FLAG flag2)   \
   );                                                                \
 }                                                                   \
                                                                     \
-inline T_FLAG operator & (T_FLAG flag1, T_FLAG flag2)   \
+inline T_FLAG operator & (T_FLAG flag1, T_FLAG flag2)               \
 {                                                                   \
   return static_cast<T_FLAG> (                                      \
     static_cast<std::underlying_type<T_FLAG>::type>(flag1) &        \
@@ -341,7 +341,7 @@ inline T_FLAG operator & (T_FLAG flag1, T_FLAG flag2)   \
   );                                                                \
 }                                                                   \
                                                                     \
-inline T_FLAG operator ^ (T_FLAG flag1, T_FLAG flag2)   \
+inline T_FLAG operator ^ (T_FLAG flag1, T_FLAG flag2)               \
 {                                                                   \
   return static_cast<T_FLAG> (                                      \
     static_cast<std::underlying_type<T_FLAG>::type>(flag1) ^        \
@@ -349,7 +349,7 @@ inline T_FLAG operator ^ (T_FLAG flag1, T_FLAG flag2)   \
   );                                                                \
 }                                                                   \
                                                                     \
-inline T_FLAG operator ~ (T_FLAG flag)                        \
+inline T_FLAG operator ~ (T_FLAG flag)                              \
 {                                                                   \
   return static_cast<T_FLAG> (                                      \
     ~static_cast<std::underlying_type<T_FLAG>::type>(flag)          \
@@ -441,7 +441,7 @@ public:
    * \return
    * \deprecated Use 'flags()' en su lugar 
    */
-  TL_DEPRECATED("Flags::flags")
+  TL_DEPRECATED("Flags::flags", "2.0")
   T getFlags() const;
 #endif // TL_ENABLE_DEPRECATED_METHODS
    

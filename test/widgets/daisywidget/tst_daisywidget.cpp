@@ -19,21 +19,21 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_windowTitle();
-  void testRadius_data();
-  void testRadius();
-  void testQRadius_data();
-  void testQRadius();
-  void testQTheta_data();
-  void testQTheta();
-  void testQHist_data();
-  void testQHist();
-  void testNorm_data();
-  void testNorm();
-  void testInterpolation_data();
-  void testInterpolation();
-  void testUseOrientation_data();
-  void testUseOrientation();
-  void testReset();
+  void test_radius_data();
+  void test_radius();
+  void test_qRadius_data();
+  void test_qRadius();
+  void test_qTheta_data();
+  void test_qTheta();
+  void test_qHist_data();
+  void test_qHist();
+  void test_norm_data();
+  void test_norm();
+  void test_interpolation_data();
+  void test_interpolation();
+  void test_useOrientation_data();
+  void test_useOrientation();
+  void test_reset();
 
 private:
 
@@ -81,7 +81,7 @@ void TestDaisyWidget::test_windowTitle()
   QCOMPARE("DAISY", mDaisyWidget->windowTitle());
 }
 
-void TestDaisyWidget::testRadius_data()
+void TestDaisyWidget::test_radius_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -92,7 +92,7 @@ void TestDaisyWidget::testRadius_data()
   QTest::newRow("Out of range value") << 101. << 100.;
 }
 
-void TestDaisyWidget::testRadius()
+void TestDaisyWidget::test_radius()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -101,7 +101,7 @@ void TestDaisyWidget::testRadius()
   QCOMPARE(result, mDaisyWidget->radius());
 }
 
-void TestDaisyWidget::testQRadius_data()
+void TestDaisyWidget::test_qRadius_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -111,7 +111,7 @@ void TestDaisyWidget::testQRadius_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestDaisyWidget::testQRadius()
+void TestDaisyWidget::test_qRadius()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -120,7 +120,7 @@ void TestDaisyWidget::testQRadius()
   QCOMPARE(result, mDaisyWidget->qRadius());
 }
 
-void TestDaisyWidget::testQTheta_data()
+void TestDaisyWidget::test_qTheta_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -130,7 +130,7 @@ void TestDaisyWidget::testQTheta_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestDaisyWidget::testQTheta()
+void TestDaisyWidget::test_qTheta()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -139,7 +139,7 @@ void TestDaisyWidget::testQTheta()
   QCOMPARE(result, mDaisyWidget->qTheta());
 }
 
-void TestDaisyWidget::testQHist_data()
+void TestDaisyWidget::test_qHist_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -149,7 +149,7 @@ void TestDaisyWidget::testQHist_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestDaisyWidget::testQHist()
+void TestDaisyWidget::test_qHist()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -158,7 +158,7 @@ void TestDaisyWidget::testQHist()
   QCOMPARE(result, mDaisyWidget->qHist());
 }
 
-void TestDaisyWidget::testNorm_data()
+void TestDaisyWidget::test_norm_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -170,7 +170,7 @@ void TestDaisyWidget::testNorm_data()
   QTest::newRow("BAD_VALUE") << "BAD_VALUE" << "NRM_SIFT";
 }
 
-void TestDaisyWidget::testNorm()
+void TestDaisyWidget::test_norm()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -179,7 +179,7 @@ void TestDaisyWidget::testNorm()
   QCOMPARE(result, mDaisyWidget->norm());
 }
 
-void TestDaisyWidget::testInterpolation_data()
+void TestDaisyWidget::test_interpolation_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -188,7 +188,7 @@ void TestDaisyWidget::testInterpolation_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestDaisyWidget::testInterpolation()
+void TestDaisyWidget::test_interpolation()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -197,7 +197,7 @@ void TestDaisyWidget::testInterpolation()
   QCOMPARE(result, mDaisyWidget->interpolation());
 }
 
-void TestDaisyWidget::testUseOrientation_data()
+void TestDaisyWidget::test_useOrientation_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -206,7 +206,7 @@ void TestDaisyWidget::testUseOrientation_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestDaisyWidget::testUseOrientation()
+void TestDaisyWidget::test_useOrientation()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -215,7 +215,7 @@ void TestDaisyWidget::testUseOrientation()
   QCOMPARE(result, mDaisyWidget->useOrientation());
 }
 
-void TestDaisyWidget::testReset()
+void TestDaisyWidget::test_reset()
 {
   mDaisyWidget->setRadius(30.);
   mDaisyWidget->setQRadius(5);

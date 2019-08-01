@@ -9,11 +9,15 @@ MACRO(DEFINE_TEST_WIDGETS name srcs)
     add_executable(${the_target} ${srcs})
 
     target_link_libraries(${the_target} PRIVATE
+                          tl_core
+                          libwidgets
                           Qt5::Core
                           Qt5::Widgets
                           Qt5::Test
                           Qt5::Concurrent
-                          libwidgets)
+                          ${OpenCV_LIBS})
+
+    target_link_libraries(${the_target} PRIVATE ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
 
     set_property(TARGET ${the_target} PROPERTY FOLDER "test/widgets")
 

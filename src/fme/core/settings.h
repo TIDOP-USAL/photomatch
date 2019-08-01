@@ -175,54 +175,6 @@ public:
 /* Feature Detectors/descriptors                                  */
 /*----------------------------------------------------------------*/
 
-
-class FME_EXPORT DaisyProperties
-  : public IDaisy
-{
-public:
-
-  DaisyProperties();
-  ~DaisyProperties() override;
-
-// IDaisy interface
-
-public:
-
-  double radius() const override;
-  int qRadius() const override;
-  int qTheta() const override;
-  int qHist() const override;
-  QString norm() const override;
-  bool interpolation() const override;
-  bool useOrientation() const override;
-  void setRadius(double radius) override;
-  void setQRadius(int qRadius) override;
-  void setQTheta(int qTheta) override;
-  void setQHist(int qHist) override;
-  void setNorm(const QString &norm) override;
-  void setInterpolation(bool interpolation) override;
-  void setUseOrientation(bool useOrientation) override;
-
-// Feature interface
-
-public:
-
-  void reset() override;
-
-protected:
-
-  double mRadius;
-  int mQRadius;
-  int mQTheta;
-  int mQHist;
-  QString mNorm;
-  bool mInterpolation;
-  bool mUseOrientation;
-};
-
-/*----------------------------------------------------------------*/
-
-
 /*----------------------------------------------------------------*/
 
 class FME_EXPORT FreakProperties
@@ -261,45 +213,6 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT GfttProperties
-  : public IGftt
-{
-public:
-
-  GfttProperties();
-  ~GfttProperties() override;
-
-  // IGftt interface
-public:
-  int maxFeatures() const override;
-  double qualityLevel() const override;
-  double minDistance() const override;
-  int blockSize() const override;
-  bool harrisDetector() const override;
-  double k() const override;
-  void setMaxFeatures(int maxFeatures) override;
-  void setQualityLevel(double qlevel) override;
-  void setMinDistance(double minDistance) override;
-  void setBlockSize(int blockSize) override;
-  void setHarrisDetector(bool value) override;
-  void setK(double k) override;
-
-// Feature interface
-
-public:
-
-  void reset() override;
-
-protected:
-
-  int mMaxFeatures;
-  double mQualityLevel;
-  double mMinDistance;
-  int mBlockSize;
-  bool mHarrisDetector;
-  double mK;
-
-};
 
 
 /*----------------------------------------------------------------*/
@@ -410,64 +323,6 @@ protected:
   int mBlurKernel;
 };
 
-
-/*----------------------------------------------------------------*/
-
-class FME_EXPORT MsdProperties
-  : public IMsd
-{
-public:
-
-  MsdProperties();
-  ~MsdProperties() override;
-
-// IMsd interface
-public:
-
-  double thresholdSaliency() const override;
-  int pathRadius() const override;
-  int knn() const override;
-  int areaRadius() const override;
-  double scaleFactor() const override;
-  int NMSRadius() const override;
-  int nScales() const override;
-  int NMSScaleR() const override;
-  bool computeOrientations() const override;
-  bool affineMSD() const override;
-  int tilts() const override;
-  void setThresholdSaliency(double thresholdSaliency) override;
-  void setPathRadius(int pathRadius) override;
-  void setKNN(int knn) override;
-  void setAreaRadius(int areaRadius) override;
-  void setScaleFactor(double scaleFactor) override;
-  void setNMSRadius(int NMSRadius) override;
-  void setNScales(int nScales) override;
-  void setNMSScaleR(int NMSScaleR) override;
-  void setComputeOrientations(bool computeOrientations) override;
-  void setAffineMSD(bool affineMSD) override;
-  void setTilts(int tilts) override;
-
-// Feature interface
-
-public:
-
-  void reset() override;
-
-protected:
-
-  double mThresholdSaliency;
-  int mPathRadius;
-  int mKNN;
-  int mAreaRadius;
-  double mScaleFactor;
-  int mNMSRadius;
-  int mNScales;
-  int mNMSScaleR;
-  bool mComputeOrientations;
-  bool mAffineMSD;
-  int mTilts;
-};
-
 /*----------------------------------------------------------------*/
 
 class FME_EXPORT MserProperties
@@ -522,98 +377,6 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-class FME_EXPORT OrbProperties
-  : public IOrb
-{
-public:
-
-  OrbProperties();
-   ~OrbProperties() override;
-
-// IOrb interface
-
-public:
-
-  int featuresNumber() const override;
-  double scaleFactor() const override;
-  int levelsNumber() const override;
-  int edgeThreshold() const override;
-  int wta_k() const override;
-  QString scoreType() const override;
-  int patchSize() const override;
-  int fastThreshold() const override;
-  void setScaleFactor(double scaleFactor) override;
-  void setFeaturesNumber(int featuresNumber) override;
-  void setLevelsNumber(int levelsNumber) override;
-  void setEdgeThreshold(int edgeThreshold) override;
-  void setWTA_K(int WTA_K) override;
-  void setScoreType(const QString &scoreType) override;
-  void setPatchSize(int patchSize) override;
-  void setFastThreshold(int fastThreshold) override;
-
-// Feature interface
-
-public:
-
-  void reset() override;
-
-protected:
-
-  int mFeaturesNumber;
-  double mScaleFactor;
-  int mLevelsNumber;
-  int mEdgeThreshold;
-  int mWTA_K;
-  QString mScoreType;
-  int mPatchSize;
-  int mFastThreshold;
-};
-
-
-/*----------------------------------------------------------------*/
-
-
-/*!
- * \brief SIFT detector/descriptor properties class
- */
-class FME_EXPORT SiftProperties
-  : public ISift
-{
-
-public:
-
-  SiftProperties();
-  ~SiftProperties() override;
-
-// ISift interface
-
-public:
-
-  int featuresNumber() const override;
-  int octaveLayers() const override;
-  double contrastThreshold() const override;
-  double edgeThreshold() const override;
-  double sigma() const override;
-  void setFeaturesNumber(int featuresNumber) override;
-  void setOctaveLayers(int octaveLayers) override;
-  void setContrastThreshold(double contrastThreshold) override;
-  void setEdgeThreshold(double edgeThreshold) override;
-  void setSigma(double sigma) override;
-
-// Feature interface
-
-public:
-
-  void reset() override;
-
-protected:
-
-  int mFeaturesNumber;
-  int mOctaveLayers;
-  double mContrastThreshold;
-  double mEdgeThreshold;
-  double mSigma;
-};
 
 
 /*----------------------------------------------------------------*/
@@ -659,47 +422,7 @@ protected:
 /*----------------------------------------------------------------*/
 
 
-/*!
- * \brief SURF detector/descriptor properties class
- */
-class FME_EXPORT SurfProperties
-  : public ISurf
-{
 
-public:
-
-  SurfProperties();
-  ~SurfProperties() override;
-
-  // ISurf interface
-
-public:
-
-  double hessianThreshold() const override;
-  void setHessianThreshold(double hessianThreshold) override;
-  int octaves() const override;
-  void setOctaves(int octaves) override;
-  int octaveLayers() const override;
-  void setOctaveLayers(int octaveLayers) override;
-  bool extendedDescriptor() const override;
-  void setExtendedDescriptor(bool extendedDescriptor) override;
-  bool rotatedFeatures() const override;
-  void setRotatedFeatures(bool rotatedFeatures) override;
-
-// Feature interface
-
-public:
-
-  void reset() override;
-
-protected:
-
-  double mHessianThreshold;
-  int mOctaves;
-  int mOctaveLayers;
-  bool mExtendedDescriptor;
-  bool mRotatedFeatures;
-};
 
 
 /*----------------------------------------------------------------*/

@@ -1,3 +1,5 @@
+include_directories(${CMAKE_SOURCE_DIR}/third_party)
+
 add_library(libwidgets ${LIB_TYPE}
             AcebsfWidget.cpp
             AcebsfWidget.h
@@ -63,7 +65,9 @@ add_library(libwidgets ${LIB_TYPE}
             WallisWidget.cpp
             WallisWidget.h
             ThumbnailsWidget.cpp
-            ThumbnailsWidget.h)
+            ThumbnailsWidget.h
+            LogWidget.cpp
+            LogWidget.h)
 
 set_property(TARGET libwidgets PROPERTY FOLDER "lib")
 

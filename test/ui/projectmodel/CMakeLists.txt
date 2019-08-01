@@ -22,6 +22,13 @@ target_link_libraries(${the_target} PRIVATE
                       ${OpenCV_LIBS}
                       )
 
+target_link_libraries(${the_target} PRIVATE
+                      ${Boost_FILESYSTEM_LIBRARY}
+                      ${Boost_SYSTEM_LIBRARY}
+                      ${Boost_THREAD_LIBRARY}
+                      ${Boost_DATE_TIME_LIBRARY}
+                      ${Boost_CHRONO_LIBRARY})
+
 set_property(TARGET ${the_target} PROPERTY FOLDER "test/project_model")
 
 set_target_properties(${the_target} PROPERTIES

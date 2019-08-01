@@ -9,20 +9,20 @@ add_library(libprocess ${LIB_TYPE}
             ExternalProcess.h
             ProcessConcurrent.cpp
             ProcessConcurrent.h
-            brief/BRIEF_KPDescProcess.cpp
-            brief/BRIEF_KPDescProcess.h
-            brisk/BRISK_KPDescProcess.cpp
-            brisk/BRISK_KPDescProcess.h
-            brisk/BRISK_KPDetProcess.cpp
-            brisk/BRISK_KPDetProcess.h
-            daisy/DAISY_KPDescProcess.cpp
-            daisy/DAISY_KPDescProcess.h
-            fast/FAST_KPDetProcess.cpp
-            fast/FAST_KPDetProcess.h
+            #brief/BRIEF_KPDescProcess.cpp
+            #brief/BRIEF_KPDescProcess.h
+            #brisk/BRISK_KPDescProcess.cpp
+            #brisk/BRISK_KPDescProcess.h
+            #brisk/BRISK_KPDetProcess.cpp
+            #brisk/BRISK_KPDetProcess.h
+            #daisy/DAISY_KPDescProcess.cpp
+            #daisy/DAISY_KPDescProcess.h
+            #fast/FAST_KPDetProcess.cpp
+            #fast/FAST_KPDetProcess.h
             freak/FREAK_KPDescProcess.cpp
             freak/FREAK_KPDescProcess.h
-            gftt/GFTT_KPDetProcess.cpp
-            gftt/GFTT_KPDetProcess.h
+            #gftt/GFTT_KPDetProcess.cpp
+            #gftt/GFTT_KPDetProcess.h
             hog/HOG_KPDescProcess.cpp
             hog/HOG_KPDescProcess.h
             latch/LATCH_KPDescProcess.cpp
@@ -33,12 +33,12 @@ add_library(libprocess ${LIB_TYPE}
             lss/lss.h
             lucid/LUCID_KPDescProcess.cpp
             lucid/LUCID_KPDescProcess.h
-            msd/MSD_KPDetProcess.cpp
-            msd/MSD_KPDetProcess.h
-            msd/MSD.cpp
-            msd/MSD.h
-            msd/MSDImgPyramid.cpp
-            msd/MSDImgPyramid.h
+            #msd/MSD_KPDetProcess.cpp
+            #msd/MSD_KPDetProcess.h
+            #msd/MSD.cpp
+            #msd/MSD.h
+            #msd/MSDImgPyramid.cpp
+            #msd/MSDImgPyramid.h
             mser/MSER_KPDetProcess.cpp
             mser/MSER_KPDetProcess.h
             mtm/mtm.cpp
@@ -47,18 +47,18 @@ add_library(libprocess ${LIB_TYPE}
             mtm/MTM_KPDescProcess.h
             mutualinformation/MutualInformation_KPDescProcess.cpp
             mutualinformation/MutualInformation_KPDescProcess.h
-            orb/ORB_KPDetProcess.cpp
-            orb/ORB_KPDetProcess.h
-            orb/ORB_KPDescProcess.cpp
-            orb/ORB_KPDescProcess.h
-            sift/SIFT_KPDescProcess.cpp
-            sift/SIFT_KPDescProcess.h
-            sift/SIFT_KPDetProcess.cpp
-            sift/SIFT_KPDetProcess.h
-            surf/SURF_KPDetProcess.cpp
-            surf/SURF_KPDetProcess.h
-            surf/SUFT_KPDescProcess.cpp
-            surf/SUFT_KPDescProcess.h
+            #orb/ORB_KPDetProcess.cpp
+            #orb/ORB_KPDetProcess.h
+            #orb/ORB_KPDescProcess.cpp
+            #orb/ORB_KPDescProcess.h
+            #sift/SIFT_KPDescProcess.cpp
+            #sift/SIFT_KPDescProcess.h
+            #sift/SIFT_KPDetProcess.cpp
+            #sift/SIFT_KPDetProcess.h
+            #surf/SURF_KPDetProcess.cpp
+            #surf/SURF_KPDetProcess.h
+            #surf/SUFT_KPDescProcess.cpp
+            #surf/SUFT_KPDescProcess.h
             ImagePreprocessing/AcebsfProcess.cpp
             ImagePreprocessing/AcebsfProcess.h
             ImagePreprocessing/ClaheProcess.cpp

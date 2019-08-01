@@ -18,17 +18,17 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_windowTitle();
-  void testHessianThreshold_data();
-  void testHessianThreshold();
-  void testOctaves_data();
-  void testOctaves();
-  void testOctaveLayers_data();
-  void testOctaveLayers();
-  void testExtendedDescriptor_data();
-  void testExtendedDescriptor();
-  void testRotatedFeatures_data();
-  void testRotatedFeatures();
-  void testReset();
+  void test_hessianThreshold_data();
+  void test_hessianThreshold();
+  void test_octaves_data();
+  void test_octaves();
+  void test_octaveLayers_data();
+  void test_octaveLayers();
+  void test_extendedDescriptor_data();
+  void test_extendedDescriptor();
+  void test_rotatedFeatures_data();
+  void test_rotatedFeatures();
+  void test_reset();
 
 private:
 
@@ -74,7 +74,7 @@ void TestSurfWidget::test_windowTitle()
   QCOMPARE("SURF", mSurfWidget->windowTitle());
 }
 
-void TestSurfWidget::testHessianThreshold_data()
+void TestSurfWidget::test_hessianThreshold_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -85,7 +85,7 @@ void TestSurfWidget::testHessianThreshold_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestSurfWidget::testHessianThreshold()
+void TestSurfWidget::test_hessianThreshold()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -94,7 +94,7 @@ void TestSurfWidget::testHessianThreshold()
   QCOMPARE(result, mSurfWidget->hessianThreshold());
 }
 
-void TestSurfWidget::testOctaves_data()
+void TestSurfWidget::test_octaves_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -104,7 +104,7 @@ void TestSurfWidget::testOctaves_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestSurfWidget::testOctaves()
+void TestSurfWidget::test_octaves()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -113,7 +113,7 @@ void TestSurfWidget::testOctaves()
   QCOMPARE(result, mSurfWidget->octaves());
 }
 
-void TestSurfWidget::testOctaveLayers_data()
+void TestSurfWidget::test_octaveLayers_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -123,7 +123,7 @@ void TestSurfWidget::testOctaveLayers_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestSurfWidget::testOctaveLayers()
+void TestSurfWidget::test_octaveLayers()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -132,7 +132,7 @@ void TestSurfWidget::testOctaveLayers()
   QCOMPARE(result, mSurfWidget->octaveLayers());
 }
 
-void TestSurfWidget::testExtendedDescriptor_data()
+void TestSurfWidget::test_extendedDescriptor_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -141,7 +141,7 @@ void TestSurfWidget::testExtendedDescriptor_data()
   QTest::newRow("true") << true << true;
 }
 
-void TestSurfWidget::testExtendedDescriptor()
+void TestSurfWidget::test_extendedDescriptor()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -150,7 +150,7 @@ void TestSurfWidget::testExtendedDescriptor()
   QCOMPARE(result, mSurfWidget->extendedDescriptor());
 }
 
-void TestSurfWidget::testRotatedFeatures_data()
+void TestSurfWidget::test_rotatedFeatures_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -159,7 +159,7 @@ void TestSurfWidget::testRotatedFeatures_data()
   QTest::newRow("true") << true << true;
 }
 
-void TestSurfWidget::testRotatedFeatures()
+void TestSurfWidget::test_rotatedFeatures()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -168,7 +168,7 @@ void TestSurfWidget::testRotatedFeatures()
   QCOMPARE(result, mSurfWidget->rotatedFeatures());
 }
 
-void TestSurfWidget::testReset()
+void TestSurfWidget::test_reset()
 {
   mSurfWidget->setHessianThreshold(50.);
   mSurfWidget->setOctaves(2);

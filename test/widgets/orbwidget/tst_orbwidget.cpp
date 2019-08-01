@@ -20,16 +20,16 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_windowTitle();
-  void testFeaturesNumber_data();
-  void testFeaturesNumber();
-  void testScaleFactor();
-  void testLevelsNumber();
-  void testEdgeThreshold();
-  void testWTA_K();
-  void testScoreType();
-  void testPatchSize();
-  void testFastThreshold();
-  void testReset();
+  void test_featuresNumber_data();
+  void test_featuresNumber();
+  void test_scaleFactor();
+  void test_levelsNumber();
+  void test_edgeThreshold();
+  void test_wTA_K();
+  void test_scoreType();
+  void test_patchSize();
+  void test_fastThreshold();
+  void test_reset();
 
 private:
 
@@ -77,7 +77,7 @@ void TestOrbWidget::test_windowTitle()
   QCOMPARE("ORB", mOrbWidget->windowTitle());
 }
 
-void TestOrbWidget::testFeaturesNumber_data()
+void TestOrbWidget::test_featuresNumber_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -88,7 +88,7 @@ void TestOrbWidget::testFeaturesNumber_data()
   QTest::newRow("Out of range value") << 50001 << 50000;
 }
 
-void TestOrbWidget::testFeaturesNumber()
+void TestOrbWidget::test_featuresNumber()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -97,7 +97,7 @@ void TestOrbWidget::testFeaturesNumber()
   QCOMPARE(result, mOrbWidget->featuresNumber());
 }
 
-void TestOrbWidget::testScaleFactor()
+void TestOrbWidget::test_scaleFactor()
 {
   mOrbWidget->setScaleFactor(1.5);
   QCOMPARE(1.5, mOrbWidget->scaleFactor());
@@ -110,7 +110,7 @@ void TestOrbWidget::testScaleFactor()
   QCOMPARE(1., mOrbWidget->scaleFactor());
 }
 
-void TestOrbWidget::testLevelsNumber()
+void TestOrbWidget::test_levelsNumber()
 {
   mOrbWidget->setLevelsNumber(4);
   QCOMPARE(4, mOrbWidget->levelsNumber());
@@ -120,7 +120,7 @@ void TestOrbWidget::testLevelsNumber()
   QCOMPARE(100, mOrbWidget->levelsNumber());
 }
 
-void TestOrbWidget::testEdgeThreshold()
+void TestOrbWidget::test_edgeThreshold()
 {
   mOrbWidget->setEdgeThreshold(11);
   QCOMPARE(11, mOrbWidget->edgeThreshold());
@@ -130,7 +130,7 @@ void TestOrbWidget::testEdgeThreshold()
   QCOMPARE(100, mOrbWidget->edgeThreshold());
 }
 
-void TestOrbWidget::testWTA_K()
+void TestOrbWidget::test_wTA_K()
 {
   mOrbWidget->setWTA_K(3);
   QCOMPARE(3, mOrbWidget->wta_k());
@@ -143,7 +143,7 @@ void TestOrbWidget::testWTA_K()
   QCOMPARE(4, mOrbWidget->wta_k());
 }
 
-void TestOrbWidget::testScoreType()
+void TestOrbWidget::test_scoreType()
 {
   mOrbWidget->setScoreType("FAST");
   QCOMPARE("FAST", mOrbWidget->scoreType());
@@ -154,7 +154,7 @@ void TestOrbWidget::testScoreType()
 
 }
 
-void TestOrbWidget::testPatchSize()
+void TestOrbWidget::test_patchSize()
 {
   mOrbWidget->setPatchSize(3);
   QCOMPARE(3, mOrbWidget->patchSize());
@@ -164,7 +164,7 @@ void TestOrbWidget::testPatchSize()
   QCOMPARE(100, mOrbWidget->patchSize());
 }
 
-void TestOrbWidget::testFastThreshold()
+void TestOrbWidget::test_fastThreshold()
 {
   mOrbWidget->setFastThreshold(3);
   QCOMPARE(3, mOrbWidget->fastThreshold());
@@ -174,7 +174,7 @@ void TestOrbWidget::testFastThreshold()
   QCOMPARE(100, mOrbWidget->fastThreshold());
 }
 
-void TestOrbWidget::testReset()
+void TestOrbWidget::test_reset()
 {
   mOrbWidget->setFeaturesNumber(10000);
   mOrbWidget->setScaleFactor(1.5);

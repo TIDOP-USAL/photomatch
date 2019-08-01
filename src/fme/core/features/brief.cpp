@@ -88,18 +88,18 @@ cv::Mat BriefDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &
 void BriefDescriptor::setBytes(const QString &bytes)
 {
   BriefProperties::setBytes(bytes);
+  update();
 }
 
 void BriefDescriptor::setUseOrientation(bool useOrientation)
 {
   BriefProperties::setUseOrientation(useOrientation);
+  update();
 }
 
 void BriefDescriptor::reset()
 {
   BriefProperties::reset();
-  BriefProperties::bytes();
-  BriefProperties::useOrientation();
   update();
 }
 

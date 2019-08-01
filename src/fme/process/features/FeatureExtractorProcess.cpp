@@ -57,8 +57,10 @@ void FeatureExtractor::run()
 
   if (img.empty()) return;
 
+  if (mKeypointDetector == nullptr) return;
   std::vector<cv::KeyPoint> key_points = mKeypointDetector->detect(img);
 
+  if (mDescriptorExtractor == nullptr) return;
   cv::Mat descriptors = mDescriptorExtractor->extract(img, key_points);
 
   featuresWrite(mFeatures, key_points, descriptors);

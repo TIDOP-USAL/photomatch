@@ -39,7 +39,7 @@ public:
 
   virtual void reset() override;
 
-protected:
+private:
 
   QString mBytes;
   bool mUseOrientation;

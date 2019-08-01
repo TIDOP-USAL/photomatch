@@ -96,6 +96,7 @@ source_group("Resource Files"  FILES ${FME_RESOURCES})
 
 # Lincado de librerias
 target_link_libraries(${PROJECT_NAME}
+                      tl_core
                       Qt5::Core
                       Qt5::Widgets
                       Qt5::Help
@@ -104,13 +105,16 @@ target_link_libraries(${PROJECT_NAME}
                       libwidgets
                       libprocess
                       ${OpenCV_LIBS}
-#                      ${Boost_SYSTEM_LIBRARY}
-#                      ${Boost_THREAD_LIBRARY}
-#                      ${Boost_CHRONO_LIBRARY}
-#                      ${Boost_DATE_TIME_LIBRARY}
 #                      ${Boost_ATOMIC_LIBRARY}
                       ${PIXKIT_LIBRARIES}
 )
+
+target_link_libraries(${PROJECT_NAME}
+                      ${Boost_FILESYSTEM_LIBRARY}
+                      ${Boost_SYSTEM_LIBRARY}
+                      ${Boost_THREAD_LIBRARY}
+                      ${Boost_DATE_TIME_LIBRARY}
+                      ${Boost_CHRONO_LIBRARY})
 
 if(ENABLE_SOLUTION_FOLDERS)
   set_target_properties(${PROJECT_NAME}  PROPERTIES FOLDER "fme")

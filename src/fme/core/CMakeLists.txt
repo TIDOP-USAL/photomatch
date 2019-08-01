@@ -19,10 +19,26 @@ add_library(libcore ${LIB_TYPE}
             features/brief.cpp
             features/brisk.h
             features/brisk.cpp
+            features/daisy.h
+            features/daisy.cpp
             features/fast.h
             features/fast.cpp
+            features/gftt.h
+            features/gftt.cpp
             features/kaze.h
             features/kaze.cpp
+            features/msd.h
+            features/msd.cpp
+            ${CMAKE_SOURCE_DIR}/third_party/msd/MSD.h
+            ${CMAKE_SOURCE_DIR}/third_party/msd/MSD.cpp
+            ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.h
+            ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.cpp
+            features/sift.h
+            features/sift.cpp
+            features/surf.h
+            features/surf.cpp
+            features/orb.h
+            features/orb.cpp
             preprocess.h
             utils.cpp
             utils.h)
