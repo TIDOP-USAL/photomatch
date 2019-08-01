@@ -1,5 +1,7 @@
 #include "FeatureExtractorProcess.h"
 
+#include <tidop/core/messages.h>
+
 #include <opencv2/core.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -57,13 +59,19 @@ void FeatureExtractor::run()
 
   if (img.empty()) return;
 
+  msgInfo("Keypoint Detector: %s", img_file);
   if (mKeypointDetector == nullptr) return;
   std::vector<cv::KeyPoint> key_points = mKeypointDetector->detect(img);
+  msgInfo("Keypoint detected: %i", key_points.size());
 
+  msgInfo("Descriptor Extractor: %s", img_file);
   if (mDescriptorExtractor == nullptr) return;
   cv::Mat descriptors = mDescriptorExtractor->extract(img, key_points);
 
   featuresWrite(mFeatures, key_points, descriptors);
+  ba = mFeatures.toLocal8Bit();
+  const char *cfeat = ba.data();
+  msgInfo("Write features at: %s", cfeat);
 }
 
 } // namespace fme

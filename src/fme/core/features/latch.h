@@ -1,5 +1,5 @@
-#ifndef FME_BRIEF_DESCRIPTOR_H
-#define FME_BRIEF_DESCRIPTOR_H
+#ifndef FME_LATCH_DESCRIPTOR_H
+#define FME_LATCH_DESCRIPTOR_H
 
 #include "fme/fme_global.h"
 
@@ -16,22 +16,24 @@ namespace fme
 /*----------------------------------------------------------------*/
 
 
-class FME_EXPORT BriefProperties
-  : public IBrief
+class FME_EXPORT LatchProperties
+  : public ILatch
 {
 public:
 
-  BriefProperties();
-  ~BriefProperties() override;
+  LatchProperties();
+  ~LatchProperties() override;
 
-// IBrief interface
+// ILatch interface
 
 public:
 
   virtual QString bytes() const override;
-  virtual bool useOrientation() const override;
+  virtual bool rotationInvariance() const override;
+  virtual int halfSsdSize() const override;
   virtual void setBytes(const QString &bytes) override;
-  virtual void setUseOrientation(bool useOrientation) override;
+  virtual void setRotationInvariance(bool rotationInvariance) override;
+  virtual void setHalfSsdSize(int halfSsdSize) override;
 
 // Feature interface
 
@@ -42,25 +44,26 @@ public:
 private:
 
   QString mBytes;
-  bool mUseOrientation;
+  bool mRotationInvariance;
+  int mHalfSsdSize;
 };
-
 
 /*----------------------------------------------------------------*/
 
 
-class FME_EXPORT BriefDescriptor
-    : public BriefProperties,
+class FME_EXPORT LatchDescriptor
+    : public LatchProperties,
       public DescriptorExtractor
 {
 
 public:
 
-  BriefDescriptor();
-  BriefDescriptor(QString bytes,
-                  bool useOrientation);
+  LatchDescriptor();
+  LatchDescriptor(QString bytes,
+                  bool rotationInvariance,
+                  int halfSsdSize);
 
-  ~BriefDescriptor() override;
+  ~LatchDescriptor() override;
 
 private:
 
@@ -78,7 +81,8 @@ public:
 public:
 
   void setBytes(const QString &bytes) override;
-  void setUseOrientation(bool useOrientation) override;
+  void setRotationInvariance(bool rotationInvariance) override;
+  void setHalfSsdSize(int halfSsdSize) override;
 
 // Feature interface
 
@@ -88,7 +92,7 @@ public:
 
 protected:
 
-  cv::Ptr<cv::xfeatures2d::BriefDescriptorExtractor> mBrief;
+  cv::Ptr<cv::xfeatures2d::LATCH> mLATCH;
 };
 
 
@@ -97,4 +101,4 @@ protected:
 
 } // namespace fme
 
-#endif // FME_BRIEF_DESCRIPTOR_H
+#endif // FME_LATCH_DESCRIPTOR_H

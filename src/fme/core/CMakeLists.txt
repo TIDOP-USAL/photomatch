@@ -23,8 +23,16 @@ add_library(libcore ${LIB_TYPE}
             features/daisy.cpp
             features/fast.h
             features/fast.cpp
+            features/freak.h
+            features/freak.cpp
             features/gftt.h
             features/gftt.cpp
+            features/hog.h
+            features/hog.cpp
+            features/latch.h
+            features/latch.cpp
+            features/lucid.h
+            features/lucid.cpp
             features/kaze.h
             features/kaze.cpp
             features/msd.h
@@ -33,8 +41,12 @@ add_library(libcore ${LIB_TYPE}
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSD.cpp
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.h
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.cpp
+            features/mser.h
+            features/mser.cpp
             features/sift.h
             features/sift.cpp
+            features/star.h
+            features/star.cpp            
             features/surf.h
             features/surf.cpp
             features/orb.h

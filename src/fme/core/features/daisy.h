@@ -1,5 +1,5 @@
-#ifndef FME_DAISY_DETECTOR_DESCRIPTOR_H
-#define FME_DAISY_DETECTOR_DESCRIPTOR_H
+#ifndef FME_DAISY_DESCRIPTOR_H
+#define FME_DAISY_DESCRIPTOR_H
 
 #include "fme/fme_global.h"
 
@@ -118,4 +118,4 @@ protected:
 
 } // namespace fme
 
-#endif // FME_DAISY_DETECTOR_DESCRIPTOR_H
+#endif // FME_DAISY_DESCRIPTOR_H

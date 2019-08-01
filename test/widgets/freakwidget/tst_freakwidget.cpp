@@ -10,10 +10,12 @@ class TestFreakWidget : public QObject
   Q_OBJECT
 
 public:
+
   TestFreakWidget();
   ~TestFreakWidget();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void testDefaultConstructor();
@@ -26,7 +28,7 @@ private slots:
   void test_patternScale();
   void test_octaves_data();
   void test_octaves();
-  void testReset();
+  void test_reset();
 
 protected:
 
@@ -146,7 +148,7 @@ void TestFreakWidget::test_octaves()
   QCOMPARE(result, mFreakWidget->octaves());
 }
 
-void TestFreakWidget::testReset()
+void TestFreakWidget::test_reset()
 {
   mFreakWidget->setOrientationNormalized(false);
   mFreakWidget->setScaleNormalized(false);

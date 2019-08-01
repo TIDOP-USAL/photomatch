@@ -7,9 +7,16 @@
 #include "fme/core/features/brisk.h"
 #include "fme/core/features/daisy.h"
 #include "fme/core/features/fast.h"
+#include "fme/core/features/freak.h"
+#include "fme/core/features/gftt.h"
+#include "fme/core/features/latch.h"
+#include "fme/core/features/lucid.h"
+#include "fme/core/features/msd.h"
+#include "fme/core/features/mser.h"
 #include "fme/core/features/kaze.h"
 #include "fme/core/features/orb.h"
 #include "fme/core/features/sift.h"
+#include "fme/core/features/star.h"
 #include "fme/core/features/surf.h"
 
 #include "fme/ui/FeatureExtractorModel.h"
@@ -440,7 +447,12 @@ void FeatureExtractorPresenter::run()
                                                       mFastDetector->nonmaxSuppression(),
                                                       mFastDetector->detectorType());
   } else if (currentKeypointDetector.compare("GFTT") == 0){
-
+    keypointDetector = std::make_shared<GfttDetector>(mGfttDetector->maxFeatures(),
+                                                      mGfttDetector->qualityLevel(),
+                                                      mGfttDetector->minDistance(),
+                                                      mGfttDetector->blockSize(),
+                                                      mGfttDetector->harrisDetector(),
+                                                      mGfttDetector->k());
   } else if (currentKeypointDetector.compare("KAZE") == 0){
     keypointDetector = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
                                                                 mKazeDetector->upright(),
@@ -449,9 +461,27 @@ void FeatureExtractorPresenter::run()
                                                                 mKazeDetector->octaveLayers(),
                                                                 mKazeDetector->diffusivity());
   } else if (currentKeypointDetector.compare("MSD") == 0){
-
+    keypointDetector = std::make_shared<MsdDetector>(mMsdDetector->thresholdSaliency(),
+                                                     mMsdDetector->pathRadius(),
+                                                     mMsdDetector->knn(),
+                                                     mMsdDetector->areaRadius(),
+                                                     mMsdDetector->scaleFactor(),
+                                                     mMsdDetector->NMSRadius(),
+                                                     mMsdDetector->nScales(),
+                                                     mMsdDetector->NMSScaleR(),
+                                                     mMsdDetector->computeOrientations(),
+                                                     mMsdDetector->affineMSD(),
+                                                     mMsdDetector->tilts());
   } else if (currentKeypointDetector.compare("MSER") == 0){
-
+    keypointDetector = std::make_shared<MserDetector>(mMserDetector->delta(),
+                                                      mMserDetector->minArea(),
+                                                      mMserDetector->maxArea(),
+                                                      mMserDetector->maxVariation(),
+                                                      mMserDetector->minDiversity(),
+                                                      mMserDetector->maxEvolution(),
+                                                      mMserDetector->areaThreshold(),
+                                                      mMserDetector->minMargin(),
+                                                      mMserDetector->edgeBlurSize());
   } else if (currentKeypointDetector.compare("ORB") == 0){
     keypointDetector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
                                                                mOrbDetector->scaleFactor(),
@@ -468,7 +498,11 @@ void FeatureExtractorPresenter::run()
                                                                 mSiftDetector->edgeThreshold(),
                                                                 mSiftDetector->sigma());
   } else if (currentKeypointDetector.compare("STAR") == 0){
-
+    keypointDetector = std::make_shared<StarDetector>(mStarDetector->maxSize(),
+                                                      mStarDetector->responseThreshold(),
+                                                      mStarDetector->lineThresholdProjected(),
+                                                      mStarDetector->lineThresholdBinarized(),
+                                                      mStarDetector->suppressNonmaxSize());
   } else if (currentKeypointDetector.compare("SURF") == 0){
     keypointDetector = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                 mSurfDetector->octaves(),
@@ -511,7 +545,10 @@ void FeatureExtractorPresenter::run()
                                                             mDaisyDescriptor->interpolation(),
                                                             mDaisyDescriptor->useOrientation());
   } else if (currentDescriptorExtractor.compare("FREAK") == 0){
-
+    descriptorExtractor = std::make_shared<FreakDescriptor>(mFreakDescriptor->orientationNormalized(),
+                                                            mFreakDescriptor->scaleNormalized(),
+                                                            mFreakDescriptor->patternScale(),
+                                                            mFreakDescriptor->octaves());
   } else if (currentDescriptorExtractor.compare("HOG") == 0){
 
   } else if (currentDescriptorExtractor.compare("KAZE") == 0){
@@ -531,9 +568,12 @@ void FeatureExtractorPresenter::run()
                                                                      mKazeDescriptor->diffusivity());
     }
   } else if (currentDescriptorExtractor.compare("LATCH") == 0){
-
+    descriptorExtractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
+                                                            mLatchDescriptor->rotationInvariance(),
+                                                            mLatchDescriptor->halfSsdSize());
   } else if (currentDescriptorExtractor.compare("LUCID") == 0){
-
+    descriptorExtractor = std::make_shared<LucidDescriptor>(mLucidDescriptor->lucidKernel(),
+                                                            mLucidDescriptor->blurKernel());
   } else if (currentDescriptorExtractor.compare("ORB") == 0){
     if (currentKeypointDetector.compare("ORB") == 0){
       descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),

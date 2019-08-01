@@ -19,34 +19,34 @@ add_library(libprocess ${LIB_TYPE}
             #daisy/DAISY_KPDescProcess.h
             #fast/FAST_KPDetProcess.cpp
             #fast/FAST_KPDetProcess.h
-            freak/FREAK_KPDescProcess.cpp
-            freak/FREAK_KPDescProcess.h
+            #freak/FREAK_KPDescProcess.cpp
+            #freak/FREAK_KPDescProcess.h
             #gftt/GFTT_KPDetProcess.cpp
             #gftt/GFTT_KPDetProcess.h
             hog/HOG_KPDescProcess.cpp
             hog/HOG_KPDescProcess.h
-            latch/LATCH_KPDescProcess.cpp
-            latch/LATCH_KPDescProcess.h
+            #latch/LATCH_KPDescProcess.cpp
+            #latch/LATCH_KPDescProcess.h
             lss/LSS_KPDescProcess.cpp
             lss/LSS_KPDescProcess.h
             lss/lss.cpp
             lss/lss.h
-            lucid/LUCID_KPDescProcess.cpp
-            lucid/LUCID_KPDescProcess.h
+            #lucid/LUCID_KPDescProcess.cpp
+            #lucid/LUCID_KPDescProcess.h
             #msd/MSD_KPDetProcess.cpp
             #msd/MSD_KPDetProcess.h
             #msd/MSD.cpp
             #msd/MSD.h
             #msd/MSDImgPyramid.cpp
             #msd/MSDImgPyramid.h
-            mser/MSER_KPDetProcess.cpp
-            mser/MSER_KPDetProcess.h
+            #mser/MSER_KPDetProcess.cpp
+            #mser/MSER_KPDetProcess.h
             mtm/mtm.cpp
             mtm/mtm.h
             mtm/MTM_KPDescProcess.cpp
             mtm/MTM_KPDescProcess.h
-            mutualinformation/MutualInformation_KPDescProcess.cpp
-            mutualinformation/MutualInformation_KPDescProcess.h
+            #mutualinformation/MutualInformation_KPDescProcess.cpp
+            #mutualinformation/MutualInformation_KPDescProcess.h
             #orb/ORB_KPDetProcess.cpp
             #orb/ORB_KPDetProcess.h
             #orb/ORB_KPDescProcess.cpp

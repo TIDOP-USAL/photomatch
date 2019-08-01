@@ -1,5 +1,7 @@
 #include "features.h"
 
+#include <tidop/core/messages.h>
+
 #include <QFileInfo>
 
 namespace fme
@@ -22,7 +24,9 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
   } else if (ext.compare("bin") == 0) {
 
   } else {
-    //msgError("Extensión de archivo '%s' no valida", ext.c_str());
+    ba = ext.toLocal8Bit();
+    const char *cext = ba.data();
+    msgError("file extension '%s' not valid", cext);
     return;
   }
   if (ext.compare("bin") == 0) {
