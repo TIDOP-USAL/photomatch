@@ -55,6 +55,12 @@ public:
   void setActiveImages(const QStringList &images);
   void addSession(const QString &sessionName, const QString &sessionDescription);
 
+  /*!
+   * \brief Añade un mensaje temporal en la barra de herramientas
+   * \param msg Mensaje
+   */
+  void setStatusBarMsg(const QString &msg);
+
 public slots:
 
   /*!

@@ -254,6 +254,11 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
   }
 }
 
+void MainWindowView::setStatusBarMsg(const QString &msg)
+{
+  ui->statusBar->showMessage(msg, 2000);
+}
+
 void MainWindowView::updateHistory(const QStringList &history)
 {
   int n = history.size();

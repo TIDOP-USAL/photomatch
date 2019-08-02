@@ -33,6 +33,8 @@ add_library(libcore ${LIB_TYPE}
             features/latch.cpp
             features/lucid.h
             features/lucid.cpp
+            #features/lss.h
+            #features/lss.cpp
             features/kaze.h
             features/kaze.cpp
             features/msd.h

@@ -24,6 +24,9 @@
 
 #include "fme/core/project.h"
 
+/* TidopLib */
+#include <tidop/core/messages.h>
+
 /* Qt */
 #include <QFileDialog>
 #include <QMessageBox>
@@ -251,7 +254,9 @@ void MainWindowPresenter::openFromHistory(const QString &file)
     loadProject();
 
   } else {
-    // Mensaje indicando que el fichero ha sido borrado o movido
+    QByteArray ba = file.toLocal8Bit();
+    const char *cfile = ba.data();
+    msgWarning("Project file not found: %s", cfile);
   }
 }
 
@@ -328,10 +333,12 @@ void MainWindowPresenter::loadImages()
                                                         mProjectModel->projectFolder(),
                                                         tr("Image files (*.tif *.jpg *.png);;TIFF (*.tif);;png (*.png);;JPEG (*.jpg)"));
   if (fileNames.size() > 0) {
-    //msgInfo("Loading photos...");
+
     mProjectModel->addImages(fileNames);
 
     mView->addImages(fileNames);
+
+    msgInfo("Load images");
 
     mView->setFlag(MainWindowView::Flag::project_modified, true);
     mView->setFlag(MainWindowView::Flag::images_added, true);
@@ -391,9 +398,11 @@ void MainWindowPresenter::loadProject()
 
   mView->setProjectTitle(mProjectModel->name());
   mView->setFlag(MainWindowView::Flag::project_exists, true);
-//  QString msg = tr("Load project: ").append(prjFile);
-//  mView->setStatusBarMsg(msg);
-//  msgInfo(msg.toStdString().c_str());
+  QString msg = tr("Load project: ").append(prjFile);
+  mView->setStatusBarMsg(msg);
+  QByteArray ba = prjFile.toLocal8Bit();
+  const char *cfile = ba.data();
+  msgInfo("Load project: %s", cfile);
 
   QStringList images;
   TL_TODO("Los iteradores sobre las imagenes deberian ser constantes unicamente para evitar que se modifiquen las imagenes. El problema es que no se notificaria al proyecto que ha cambiado")

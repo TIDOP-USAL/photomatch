@@ -34,6 +34,7 @@ public:
     kaze,
     latch,
     lucid,
+    lss,
     msd,
     mser,
     orb,
@@ -864,6 +865,21 @@ public:
    * \param[in] blurKernel kernel for descriptor construction
    */
   virtual void setBlurKernel(int blurKernel) = 0;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class FME_EXPORT ILss
+  : public Feature
+{
+
+public:
+
+  ILss() : Feature(Feature::Type::lss) {}
+  virtual ~ILss() = default;
 
 };
 

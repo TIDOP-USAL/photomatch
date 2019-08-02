@@ -3,9 +3,13 @@
 
 #include "fme/fme_global.h"
 
-#include "fme/core/features/features.h"
+#include <memory>
 
 #include <QString>
+
+#include <opencv2/objdetect.hpp>
+
+#include "fme/core/features/features.h"
 
 namespace fme
 {
@@ -76,6 +80,7 @@ public:
 private:
 
   void update();
+  void normalizepatch(const cv::Mat &gray, const cv::KeyPoint &keypoint, cv::Mat &output);
 
 // DescriptorExtractor interface
 
@@ -99,6 +104,10 @@ public:
 public:
 
   void reset() override;
+
+protected:
+
+  std::shared_ptr<cv::HOGDescriptor> mHOG;
 };
 
 
