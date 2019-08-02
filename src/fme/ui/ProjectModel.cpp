@@ -213,6 +213,18 @@ void ProjectModel::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
   bUnsavedChanges = true;
 }
 
+void ProjectModel::setDetector(const std::shared_ptr<Feature> &detector)
+{
+  this->currentSession()->setDetector(detector);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::setDescriptor(const std::shared_ptr<Feature> &descriptor)
+{
+  this->currentSession()->setDescriptor(descriptor);
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::clear()
 {
   mProject->clear();

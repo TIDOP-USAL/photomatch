@@ -11,6 +11,10 @@
 
 #include "fme/core/image.h"
 #include "fme/core/session.h"
+#include "fme/core/preprocess.h"
+
+class QXmlStreamWriter;
+class QXmlStreamReader;
 
 namespace fme
 {
@@ -368,6 +372,70 @@ public:
   bool write(const QString &file, const IProject &prj) const override;
   bool checkOldVersion(const QString &file) const override;
   void oldVersionBak(const QString &file) const override;
+
+private:
+
+  void readCLAHE(QXmlStreamReader *stream, IClahe *clahe) const;
+  void readCMBFHE(QXmlStreamReader *stream, ICmbfhe *cmbfhe) const;
+  void readDHE(QXmlStreamReader *stream, IDhe *dhe) const;
+  void readFAHE(QXmlStreamReader *stream, IFahe *fahe) const;
+  void readHMCLAHE(QXmlStreamReader *stream, IHmclahe *hmclahe) const;
+  void readLCEBSESCS(QXmlStreamReader *stream, ILceBsescs *lceBsescs) const;
+  void readMSRCP(QXmlStreamReader *stream, IMsrcp *msrcp) const;
+  void readNOSHP(QXmlStreamReader *stream, INoshp *noshp) const;
+  void readPOHE(QXmlStreamReader *stream, IPohe *pohe) const;
+  void readRSWHE(QXmlStreamReader *stream, IRswhe *rswhe) const;
+  void readWALLIS(QXmlStreamReader *stream, IWallis *wallis) const;
+
+  void readAGAST(QXmlStreamReader *stream, IAgast *agast) const;
+  void readAKAZE(QXmlStreamReader *stream, IAkaze *akaze) const;
+  void readBRIEF(QXmlStreamReader *stream, IBrief *brief) const;
+  void readBRISK(QXmlStreamReader *stream, IBrisk *brisk) const;
+  void readDAISY(QXmlStreamReader *stream, IDaisy *daisy) const;
+  void readFAST(QXmlStreamReader *stream, IFast *fast) const;
+  void readFREAK(QXmlStreamReader *stream, IFreak *freak) const;
+  void readGFTT(QXmlStreamReader *stream, IGftt *gftt) const;
+  void readHOG(QXmlStreamReader *stream, IHog *hog) const;
+  void readKAZE(QXmlStreamReader *stream, IKaze *kaze) const;
+  void readLATCH(QXmlStreamReader *stream, ILatch *latch) const;
+  void readLUCID(QXmlStreamReader *stream, ILucid *lucid) const;
+  void readMSD(QXmlStreamReader *stream, IMsd *msd) const;
+  void readMSER(QXmlStreamReader *stream, IMser *mser) const;
+  void readORB(QXmlStreamReader *stream, IOrb *orb) const;
+  void readSIFT(QXmlStreamReader *stream, ISift *sift) const;
+  void readSTAR(QXmlStreamReader *stream, IStar *star) const;
+  void readSURF(QXmlStreamReader *stream, ISurf *surf) const;
+
+  void writeCLAHE(QXmlStreamWriter *stream, IClahe *clahe) const;
+  void writeCMBFHE(QXmlStreamWriter *stream, ICmbfhe *cmbfhe) const;
+  void writeDHE(QXmlStreamWriter *stream, IDhe *dhe) const;
+  void writeFAHE(QXmlStreamWriter *stream, IFahe *fahe) const;
+  void writeHMCLAHE(QXmlStreamWriter *stream, IHmclahe *hmclahe) const;
+  void writeLCEBSESCS(QXmlStreamWriter *stream, ILceBsescs *lceBsescs) const;
+  void writeMSRCP(QXmlStreamWriter *stream, IMsrcp *msrcp) const;
+  void writeNOSHP(QXmlStreamWriter *stream, INoshp *noshp) const;
+  void writePOHE(QXmlStreamWriter *stream, IPohe *pohe) const;
+  void writeRSWHE(QXmlStreamWriter *stream, IRswhe *rswhe) const;
+  void writeWALLIS(QXmlStreamWriter *stream, IWallis *wallis) const;
+
+  void writeAGAST(QXmlStreamWriter *stream, IAgast *agast) const;
+  void writeAKAZE(QXmlStreamWriter *stream, IAkaze *akaze) const;
+  void writeBRIEF(QXmlStreamWriter *stream, IBrief *brief) const;
+  void writeBRISK(QXmlStreamWriter *stream, IBrisk *brisk) const;
+  void writeDAISY(QXmlStreamWriter *stream, IDaisy *daisy) const;
+  void writeFAST(QXmlStreamWriter *stream, IFast *fast) const;
+  void writeFREAK(QXmlStreamWriter *stream, IFreak *freak) const;
+  void writeGFTT(QXmlStreamWriter *stream, IGftt *gftt) const;
+  void writeHOG(QXmlStreamWriter *stream, IHog *hog) const;
+  void writeKAZE(QXmlStreamWriter *stream, IKaze *kaze) const;
+  void writeLATCH(QXmlStreamWriter *stream, ILatch *latch) const;
+  void writeLUCID(QXmlStreamWriter *stream, ILucid *lucid) const;
+  void writeMSD(QXmlStreamWriter *stream, IMsd *msd) const;
+  void writeMSER(QXmlStreamWriter *stream, IMser *mser) const;
+  void writeORB(QXmlStreamWriter *stream, IOrb *orb) const;
+  void writeSIFT(QXmlStreamWriter *stream, ISift *sift) const;
+  void writeSTAR(QXmlStreamWriter *stream, IStar *star) const;
+  void writeSURF(QXmlStreamWriter *stream, ISurf *surf) const;
 
 protected:
 

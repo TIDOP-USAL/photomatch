@@ -49,6 +49,26 @@ void Session::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
   mPreprocess = preprocess;
 }
 
+std::shared_ptr<Feature> Session::detector()
+{
+  return mFeatureDetector;
+}
+
+void Session::setDetector(const std::shared_ptr<Feature> &detector)
+{
+  mFeatureDetector = detector;
+}
+
+std::shared_ptr<Feature> Session::descriptor()
+{
+  return mFeatureDescriptor;
+}
+
+void Session::setDescriptor(const std::shared_ptr<Feature> &descriptor)
+{
+  mFeatureDescriptor = descriptor;
+}
+
 void Session::clear()
 {
   mName.clear();

@@ -236,6 +236,8 @@ public:
   virtual void setCurrentSession(const QString &sessionName) = 0;
 
   virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
+  virtual void setDetector(const std::shared_ptr<Feature> &detector) = 0;
+  virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
 
   /*!
    * \brief Limpia el proyecto
@@ -309,6 +311,8 @@ public:
   const std::shared_ptr<Session> currentSession() const override;
   void setCurrentSession(const QString &sessionName) override;
   void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) override;
+  void setDetector(const std::shared_ptr<Feature> &detector) override;
+  void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
   void clear() override;
 
 // IProjectModel interface
