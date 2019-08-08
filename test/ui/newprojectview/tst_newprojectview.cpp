@@ -151,6 +151,7 @@ void TestNewProjectView::test_dialogButtonBox()
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
+  mButtonBox->button(QDialogButtonBox::Save)->setEnabled(true);
   QSignalSpy spy_accepted(this, &NewProjectView::accepted);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Save), Qt::LeftButton);
   QCOMPARE(spy_accepted.count(), 1);

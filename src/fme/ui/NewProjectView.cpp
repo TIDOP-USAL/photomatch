@@ -148,6 +148,15 @@ void NewProjectView::update()
     !mLineEditProjectPath->text().isEmpty();
   mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave);
 
+  if (bSave){
+    QString file(mLineEditProjectPath->text());
+    if (mCheckBoxProjectFolder->isChecked()){
+      file.append(QDir::separator()).append(mLineEditProjectName->text());
+    }
+    file.append(QDir::separator()).append(mLineEditProjectName->text()).append(".xml");
+    mLineEditProjectFile->setText(QDir::cleanPath(file));
+  } else 
+	  mLineEditProjectFile->setText("");
 }
 
 } // namespace fme
