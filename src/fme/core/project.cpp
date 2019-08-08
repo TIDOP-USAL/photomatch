@@ -1,8 +1,25 @@
 #include "project.h"
 
-#include "preprocess.h"
-
 #include "fme/core/settings.h"
+
+#include "fme/core/features/agast.h"
+#include "fme/core/features/akaze.h"
+#include "fme/core/features/brief.h"
+#include "fme/core/features/brisk.h"
+#include "fme/core/features/daisy.h"
+#include "fme/core/features/fast.h"
+#include "fme/core/features/freak.h"
+#include "fme/core/features/gftt.h"
+#include "fme/core/features/hog.h"
+#include "fme/core/features/latch.h"
+#include "fme/core/features/lucid.h"
+#include "fme/core/features/msd.h"
+#include "fme/core/features/mser.h"
+#include "fme/core/features/kaze.h"
+#include "fme/core/features/orb.h"
+#include "fme/core/features/sift.h"
+#include "fme/core/features/star.h"
+#include "fme/core/features/surf.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -298,54 +315,54 @@ bool ProjectRW::read(const QString &file, IProject &prj)
 
   QFile input(file);
   if (input.open(QIODevice::ReadOnly)) {
-    QXmlStreamReader xmlReader;
-    xmlReader.setDevice(&input);
+    QXmlStreamReader stream;
+    stream.setDevice(&input);
 
-    if (xmlReader.readNextStartElement()) {
-      if (xmlReader.name() == "FME") {
-        while (xmlReader.readNextStartElement()) {
-          if (xmlReader.name() == "General") {
-            while (xmlReader.readNextStartElement()) {
-              if (xmlReader.name() == "Name") {
-                prj.setName(xmlReader.readElementText());
-              } else if (xmlReader.name() == "ProjectFolder") {
-                prj.setProjectFolder(xmlReader.readElementText());
-              } else if (xmlReader.name() == "Description") {
-                prj.setDescription(xmlReader.readElementText());
+    if (stream.readNextStartElement()) {
+      if (stream.name() == "FME") {
+        while (stream.readNextStartElement()) {
+          if (stream.name() == "General") {
+            while (stream.readNextStartElement()) {
+              if (stream.name() == "Name") {
+                prj.setName(stream.readElementText());
+              } else if (stream.name() == "ProjectFolder") {
+                prj.setProjectFolder(stream.readElementText());
+              } else if (stream.name() == "Description") {
+                prj.setDescription(stream.readElementText());
               } else
-                xmlReader.skipCurrentElement();
+                stream.skipCurrentElement();
             }
-          } else if (xmlReader.name() == "Images") {
+          } else if (stream.name() == "Images") {
 
-            while (xmlReader.readNextStartElement()) {
+            while (stream.readNextStartElement()) {
 
-              if (xmlReader.name() == "Image") {
+              if (stream.name() == "Image") {
                 std::shared_ptr<Image> photo(new Image);
-                while (xmlReader.readNextStartElement()) {
-                  if (xmlReader.name() == "File") {
-                    photo->setPath(xmlReader.readElementText());
-                  } else if (xmlReader.name() == "LongitudeExif") {
-                    photo->setLongitudeExif(xmlReader.readElementText().toDouble());
-                  } else if (xmlReader.name() == "LatitudeExif") {
-                    photo->setLatitudeExif(xmlReader.readElementText().toDouble());
-                  } else if (xmlReader.name() == "AltitudeExif") {
-                    photo->setAltitudeExif(xmlReader.readElementText().toDouble());
+                while (stream.readNextStartElement()) {
+                  if (stream.name() == "File") {
+                    photo->setPath(stream.readElementText());
+                  } else if (stream.name() == "LongitudeExif") {
+                    photo->setLongitudeExif(stream.readElementText().toDouble());
+                  } else if (stream.name() == "LatitudeExif") {
+                    photo->setLatitudeExif(stream.readElementText().toDouble());
+                  } else if (stream.name() == "AltitudeExif") {
+                    photo->setAltitudeExif(stream.readElementText().toDouble());
                   } else
-                    xmlReader.skipCurrentElement();
+                    stream.skipCurrentElement();
                 }
                 prj.addImage(photo);
               } else
-                xmlReader.skipCurrentElement();
+                stream.skipCurrentElement();
             }
-          } else if (xmlReader.name() == "Sessions") {
-            while (xmlReader.readNextStartElement()) {
+          } else if (stream.name() == "Sessions") {
+            while (stream.readNextStartElement()) {
 
-              if (xmlReader.name() == "Session") {
+              if (stream.name() == "Session") {
 
                 std::shared_ptr<Session> session(new Session);
 
                 bool bActive = false;
-                for (auto &attr : xmlReader.attributes()) {
+                for (auto &attr : stream.attributes()) {
                   if (attr.name().compare(QString("active")) == 0) {
                     QString value = attr.value().toString();
                     if (value.compare("1") == 0 || value.compare("true") == 0){
@@ -355,223 +372,119 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                   }
                 }
 
-                while (xmlReader.readNextStartElement()) {
-                  if (xmlReader.name() == "Name") {
-                    session->setName(xmlReader.readElementText());
-                  } else if (xmlReader.name() == "Description") {
-                    session->setDescription(xmlReader.readElementText());
-                  } else if (xmlReader.name() == "Preprocess") {
-                    while (xmlReader.readNextStartElement()) {
+                while (stream.readNextStartElement()) {
+                  if (stream.name() == "Name") {
+                    session->setName(stream.readElementText());
+                  } else if (stream.name() == "Description") {
+                    session->setDescription(stream.readElementText());
+                  } else if (stream.name() == "Preprocess") {
+                    while (stream.readNextStartElement()) {
 
-                      if (xmlReader.name() == "Clahe") {
-
+                      if (stream.name() == "Clahe") {
                         std::shared_ptr<Clahe> clahe = std::make_shared<Clahe>();
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "ClipLimit") {
-                            clahe->setClipLimit(xmlReader.readElementText().toDouble());
-                          } else if (xmlReader.name() == "GridSize") {
-                            QSize gridSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                gridSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                gridSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            clahe->setTilesGridSize(gridSize);
-                          } else
-                            xmlReader.skipCurrentElement();
-
-                        }
+                        readCLAHE(&stream, clahe.get());
                         session->setPreprocess(clahe);
-
-                      } else if (xmlReader.name() == "Cmbfhe") {
-
+                      } else if (stream.name() == "Cmbfhe") {
                         std::shared_ptr<Cmbfhe> cmbfhe(new Cmbfhe);
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "BlockSize") {
-                            QSize blockSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                blockSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                blockSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            cmbfhe->setBlockSize(blockSize);
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readCMBFHE(&stream, cmbfhe.get());
                         session->setPreprocess(cmbfhe);
-
-                      } else if (xmlReader.name() == "Dhe") {
-
+                      } else if (stream.name() == "Dhe") {
                         std::shared_ptr<Dhe> dhe = std::make_shared<Dhe>();
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "X") {
-                            dhe->setX(xmlReader.readElementText().toInt());
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readDHE(&stream, dhe.get());
                         session->setPreprocess(dhe);
-
-                      } else if (xmlReader.name() == "Fahe") {
-
+                      } else if (stream.name() == "Fahe") {
                         std::shared_ptr<Fahe> fahe(new Fahe);
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "BlockSize") {
-                            QSize blockSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                blockSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                blockSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            fahe->setBlockSize(blockSize);
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readFAHE(&stream, fahe.get());
                         session->setPreprocess(fahe);
-
-                      } else if (xmlReader.name() == "Hmclahe") {
-
+                      } else if (stream.name() == "Hmclahe") {
                         std::shared_ptr<Hmclahe> hmclahe(new Hmclahe);
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "BlockSize") {
-                            QSize blockSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                blockSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                blockSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            hmclahe->setBlockSize(blockSize);
-                          } else if (xmlReader.name() == "L") {
-                            hmclahe->setL(xmlReader.readElementText().toDouble());
-                          } else if (xmlReader.name() == "Phi") {
-                            hmclahe->setPhi(xmlReader.readElementText().toDouble());
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readHMCLAHE(&stream, hmclahe.get());
                         session->setPreprocess(hmclahe);
-
-                      } else if (xmlReader.name() == "LceBsescs") {
-
+                      } else if (stream.name() == "LceBsescs") {
                         std::shared_ptr<LceBsescs> lceBsescs(new LceBsescs);
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "BlockSize") {
-                            QSize blockSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                blockSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                blockSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            lceBsescs->setBlockSize(blockSize);
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readLCEBSESCS(&stream, lceBsescs.get());
                         session->setPreprocess(lceBsescs);
-
-                      } else if (xmlReader.name() == "Msrcp") {
-
+                      } else if (stream.name() == "Msrcp") {
                         std::shared_ptr<Msrcp> msrcp = std::make_shared<Msrcp>();
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "SmallScale") {
-                            msrcp->setSmallScale(xmlReader.readElementText().toInt());
-                          } else if (xmlReader.name() == "MidScale") {
-                            msrcp->setMidScale(xmlReader.readElementText().toInt());
-                          } else if (xmlReader.name() == "LargeScale") {
-                            msrcp->setLargeScale(xmlReader.readElementText().toInt());
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readMSRCP(&stream, msrcp.get());
                         session->setPreprocess(msrcp);
-
-                      } else if (xmlReader.name() == "Noshp") {
-
+                      } else if (stream.name() == "Noshp") {
                         std::shared_ptr<Noshp> noshp(new Noshp);
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "BlockSize") {
-                            QSize blockSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                blockSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                blockSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            noshp->setBlockSize(blockSize);
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readNOSHP(&stream, noshp.get());
                         session->setPreprocess(noshp);
-                      } else if (xmlReader.name() == "Pohe") {
-
+                      } else if (stream.name() == "Pohe") {
                         std::shared_ptr<Pohe> pohe(new Pohe);
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "BlockSize") {
-                            QSize blockSize;
-                            while (xmlReader.readNextStartElement()) {
-                              if (xmlReader.name() == "Width") {
-                                blockSize.setWidth(xmlReader.readElementText().toInt());
-                              } else if (xmlReader.name() == "Height") {
-                                blockSize.setHeight(xmlReader.readElementText().toInt());
-                              } else
-                                xmlReader.skipCurrentElement();
-                            }
-                            pohe->setBlockSize(blockSize);
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readPOHE(&stream, pohe.get());
                         session->setPreprocess(pohe);
-
-                      } else if (xmlReader.name() == "Rswhe") {
-
+                      } else if (stream.name() == "Rswhe") {
                         std::shared_ptr<Rswhe> rswhe = std::make_shared<Rswhe>();
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "HistogramDivisions") {
-                            rswhe->setHistogramDivisions(xmlReader.readElementText().toInt());
-                          } else if (xmlReader.name() == "HistogramCut") {
-                            rswhe->setHistogramCut(static_cast<IRswhe::HistogramCut>(xmlReader.readElementText().toInt()));
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readRSWHE(&stream, rswhe.get());
                         session->setPreprocess(rswhe);
-
-                      } else if (xmlReader.name() == "Wallis") {
-
+                      } else if (stream.name() == "Wallis") {
                         std::shared_ptr<Wallis> wallis = std::make_shared<Wallis>();
-                        while (xmlReader.readNextStartElement()) {
-                          if (xmlReader.name() == "Contrast") {
-                            wallis->setContrast(xmlReader.readElementText().toDouble());
-                          } else if (xmlReader.name() == "Brightness") {
-                            wallis->setBrightness(xmlReader.readElementText().toDouble());
-                          } else if (xmlReader.name() == "ImposedAverage") {
-                            wallis->setImposedAverage(xmlReader.readElementText().toInt());
-                          } else if (xmlReader.name() == "ImposedLocalStdDev") {
-                            wallis->setImposedLocalStdDev(xmlReader.readElementText().toInt());
-                          } else if (xmlReader.name() == "KernelSize") {
-                            wallis->setKernelSize(xmlReader.readElementText().toInt());
-                          } else
-                            xmlReader.skipCurrentElement();
-                        }
+                        readWALLIS(&stream, wallis.get());
                         session->setPreprocess(wallis);
-
                       } else
-                        xmlReader.skipCurrentElement();
+                        stream.skipCurrentElement();
+                    }
+                  } else if (stream.name() == "FeatureDetector") {
+                    while (stream.readNextStartElement()){
+                      if (stream.name() == "AGAST") {
+                        std::shared_ptr<IAgast> agast = std::make_shared<AgastProperties>();
+                        readAGAST(&stream, agast.get());
+                        session->setDetector(agast);
+                      } else if (stream.name() == "AKAZE") {
+                        std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
+                        readAKAZE(&stream, akaze.get());
+                        session->setDetector(akaze);
+                      } else if (stream.name() == "BRISK") {
+                        std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
+                        readBRISK(&stream, brisk.get());
+                        session->setDetector(brisk);
+                      } else if (stream.name() == "FAST") {
+                        std::shared_ptr<IFast> fast = std::make_shared<FastProperties>();
+                        readFAST(&stream, fast.get());
+                        session->setDetector(fast);
+                      } else if (stream.name() == "GFTT") {
+                        std::shared_ptr<IGftt> gftt = std::make_shared<GfttProperties>();
+                        readGFTT(&stream, gftt.get());
+                        session->setDetector(gftt);
+                      } else if (stream.name() == "KAZE") {
+                        std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
+                        readKAZE(&stream, kaze.get());
+                        session->setDetector(kaze);
+                      } else if (stream.name() == "MSD") {
+                        std::shared_ptr<IMsd> msd = std::make_shared<MsdProperties>();
+                        readMSD(&stream, msd.get());
+                        session->setDetector(msd);
+                      } else if (stream.name() == "MSER") {
+                        std::shared_ptr<IMser> mser = std::make_shared<MserProperties>();
+                        readMSER(&stream, mser.get());
+                        session->setDetector(mser);
+                      } else if (stream.name() == "ORB") {
+                        std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
+                        readORB(&stream, orb.get());
+                        session->setDetector(orb);
+                      } else if (stream.name() == "SIFT") {
+                        std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
+                        readSIFT(&stream, sift.get());
+                        session->setDetector(sift);
+                      } else if (stream.name() == "STAR") {
+                        std::shared_ptr<IStar> star = std::make_shared<StarProperties>();
+                        readSTAR(&stream, star.get());
+                        session->setDetector(star);
+                      } else if (stream.name() == "SURF") {
+                        std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
+                        readSURF(&stream, surf.get());
+                        session->setDetector(surf);
+                      }
+                    }
+                  } else if (stream.name() == "FeatureDescriptor") {
+                    while (stream.readNextStartElement()){
+
                     }
                   } else
-                    xmlReader.skipCurrentElement();
+                    stream.skipCurrentElement();
                 }
 
                 prj.addSession(session);
@@ -580,12 +493,12 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                   prj.setCurrentSession(session->name());
 
               } else
-                xmlReader.skipCurrentElement();
+                stream.skipCurrentElement();
             }
           }
         }
       } else {
-        xmlReader.raiseError(QObject::tr("Incorrect project file"));
+        stream.raiseError(QObject::tr("Incorrect project file"));
         return true;
       }
     }
@@ -661,138 +574,120 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
             stream.writeStartElement("Preprocess");
 
             if (preprocess->type() == Preprocess::Type::clahe){
-
-              IClahe *clahe = dynamic_cast<IClahe *>(preprocess);
-              stream.writeStartElement("Clahe");
-              {
-                stream.writeTextElement("ClipLimit", QString::number(clahe->clipLimit()));
-                stream.writeStartElement("GridSize");
-                stream.writeTextElement("Width", QString::number(clahe->tilesGridSize().width()));
-                stream.writeTextElement("Height", QString::number(clahe->tilesGridSize().height()));
-                stream.writeEndElement(); // GridSize
-              }
-              stream.writeEndElement(); // Clahe
-
+              writeCLAHE(&stream, dynamic_cast<IClahe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::cmbfhe){
-
-              ICmbfhe *cmbfhe = dynamic_cast<ICmbfhe *>(preprocess);
-              stream.writeStartElement("Cmbfhe");
-              {
-                stream.writeStartElement("blockSize");
-                stream.writeTextElement("Width", QString::number(cmbfhe->blockSize().width()));
-                stream.writeTextElement("Height", QString::number(cmbfhe->blockSize().height()));
-                stream.writeEndElement(); // BlockSize
-              }
-              stream.writeEndElement(); // Cmbfhe
-
+              writeCMBFHE(&stream, dynamic_cast<ICmbfhe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::dhe){
-
-              IDhe *dhe = dynamic_cast<IDhe *>(preprocess);
-              stream.writeStartElement("Dhe");
-              {
-                stream.writeTextElement("X", QString::number(dhe->x()));
-              }
-              stream.writeEndElement(); // Dhe
-
+              writeDHE(&stream, dynamic_cast<IDhe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::fahe){
-
-              IFahe *fahe = dynamic_cast<IFahe *>(preprocess);
-              stream.writeStartElement("Fahe");
-              {
-                stream.writeStartElement("BlockSize");
-                stream.writeTextElement("Width", QString::number(fahe->blockSize().width()));
-                stream.writeTextElement("Height", QString::number(fahe->blockSize().height()));
-                stream.writeEndElement(); // BlockSize
-              }
-              stream.writeEndElement(); // Fahe
-
+              writeFAHE(&stream, dynamic_cast<IFahe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::hmclahe){
-
-              IHmclahe *hmclahe = dynamic_cast<IHmclahe *>(preprocess);
-              stream.writeStartElement("Hmclahe");
-              {
-                stream.writeStartElement("blockSize");
-                stream.writeTextElement("Width", QString::number(hmclahe->blockSize().width()));
-                stream.writeTextElement("Height", QString::number(hmclahe->blockSize().height()));
-                stream.writeEndElement(); // BlockSize
-                stream.writeTextElement("L", QString::number(hmclahe->l()));
-                stream.writeTextElement("Phi", QString::number(hmclahe->phi()));
-              }
-              stream.writeEndElement(); // Hmclahe
-
+              writeHMCLAHE(&stream, dynamic_cast<IHmclahe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
-
-              ILceBsescs *lceBsescs = dynamic_cast<ILceBsescs *>(preprocess);
-              stream.writeStartElement("LceBsescs");
-              {
-                stream.writeStartElement("blockSize");
-                stream.writeTextElement("Width", QString::number(lceBsescs->blockSize().width()));
-                stream.writeTextElement("Height", QString::number(lceBsescs->blockSize().height()));
-                stream.writeEndElement(); // BlockSize
-              }
-              stream.writeEndElement(); // LceBsescs
-
+              writeLCEBSESCS(&stream, dynamic_cast<ILceBsescs *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::msrcp){
-
-              IMsrcp *msrcp = dynamic_cast<IMsrcp *>(preprocess);
-              stream.writeStartElement("Msrcp");
-              {
-                stream.writeTextElement("SmallScale", QString::number(msrcp->smallScale()));
-                stream.writeTextElement("MidScale", QString::number(msrcp->midScale()));
-                stream.writeTextElement("LargeScale", QString::number(msrcp->largeScale()));
-              }
-              stream.writeEndElement(); // Msrcp
-
+              writeMSRCP(&stream, dynamic_cast<IMsrcp *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::noshp){
-
-              INoshp *noshp = dynamic_cast<INoshp *>(preprocess);
-              stream.writeStartElement("Noshp");
-              {
-                stream.writeStartElement("blockSize");
-                stream.writeTextElement("Width", QString::number(noshp->blockSize().width()));
-                stream.writeTextElement("Height", QString::number(noshp->blockSize().height()));
-                stream.writeEndElement(); // BlockSize
-              }
-              stream.writeEndElement(); // Noshp
-
+              writeNOSHP(&stream, dynamic_cast<INoshp *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::pohe){
-
-              IPohe *pohe = dynamic_cast<IPohe *>(preprocess);
-              stream.writeStartElement("Pohe");
-              {
-                stream.writeStartElement("blockSize");
-                stream.writeTextElement("Width", QString::number(pohe->blockSize().width()));
-                stream.writeTextElement("Height", QString::number(pohe->blockSize().height()));
-                stream.writeEndElement(); // BlockSize
-              }
-              stream.writeEndElement(); // Pohe
-
+              writePOHE(&stream, dynamic_cast<IPohe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::rswhe){
-
-              IRswhe *rswhe = dynamic_cast<IRswhe *>(preprocess);
-              stream.writeStartElement("Rswhe");
-              {
-                stream.writeTextElement("HistogramDivisions", QString::number(rswhe->histogramDivisions()));
-                stream.writeTextElement("HistogramCut", QString::number(static_cast<int>(rswhe->histogramCut())));
-              }
-              stream.writeEndElement(); // Rswhe
-
+              writeRSWHE(&stream, dynamic_cast<IRswhe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::wallis){
-
-              IWallis *wallis = dynamic_cast<IWallis *>(preprocess);
-              stream.writeStartElement("Wallis");
-              {
-                stream.writeTextElement("Contrast", QString::number(wallis->contrast()));
-                stream.writeTextElement("Brightness", QString::number(wallis->brightness()));
-                stream.writeTextElement("ImposedAverage", QString::number(wallis->imposedAverage()));
-                stream.writeTextElement("ImposedLocalStdDev", QString::number(wallis->imposedLocalStdDev()));
-                stream.writeTextElement("KernelSize", QString::number(wallis->kernelSize()));
-              }
-              stream.writeEndElement(); // Wallis
-
+              writeWALLIS(&stream, dynamic_cast<IWallis *>(preprocess));
             }
 
             stream.writeEndElement(); // Preprocess
+          }
+
+
+          if (Feature *detector = (*it)->detector().get()){
+            stream.writeStartElement("FeatureDetector");
+
+            if (detector->type() == Feature::Type::agast){
+              writeAGAST(&stream, dynamic_cast<IAgast *>(detector));
+            } else if (detector->type() == Feature::Type::akaze){
+              IAkaze *akaze = dynamic_cast<IAkaze *>(detector);
+              writeAKAZE(&stream, akaze);
+            } else if (detector->type() == Feature::Type::brisk){
+              IBrisk *brisk = dynamic_cast<IBrisk *>(detector);
+              writeBRISK(&stream, brisk);
+            } else if (detector->type() == Feature::Type::fast){
+              IFast *fast = dynamic_cast<IFast *>(detector);
+              writeFAST(&stream, fast);
+            } else if (detector->type() == Feature::Type::gftt){
+              IGftt *gftt = dynamic_cast<IGftt *>(detector);
+              writeGFTT(&stream, gftt);
+            } else if (detector->type() == Feature::Type::kaze){
+              IKaze *kaze = dynamic_cast<IKaze *>(detector);
+              writeKAZE(&stream, kaze);
+            } else if (detector->type() == Feature::Type::msd){
+              IMsd *msd = dynamic_cast<IMsd *>(detector);
+              writeMSD(&stream, msd);
+            } else if (detector->type() == Feature::Type::mser){
+              IMser *mser = dynamic_cast<IMser *>(detector);
+              writeMSER(&stream, mser);
+            } else if (detector->type() == Feature::Type::orb){
+              IOrb *orb = dynamic_cast<IOrb *>(detector);
+              writeORB(&stream, orb);
+            } else if (detector->type() == Feature::Type::sift){
+              ISift *sift = dynamic_cast<ISift *>(detector);
+              writeSIFT(&stream, sift);
+            } else if (detector->type() == Feature::Type::star){
+              IStar *star = dynamic_cast<IStar *>(detector);
+              writeSTAR(&stream, star);
+            } else if (detector->type() == Feature::Type::surf){
+              ISurf *surf = dynamic_cast<ISurf *>(detector);
+              writeSURF(&stream, surf);
+
+            }
+
+            stream.writeEndElement(); // FeatureDetector
+          }
+
+
+          if (Feature *descriptor = (*it)->descriptor().get()){
+            stream.writeStartElement("FeatureDescriptor");
+
+            if (descriptor->type() == Feature::Type::akaze){
+              IAkaze *akaze = dynamic_cast<IAkaze *>(descriptor);
+              writeAKAZE(&stream, akaze);
+            } else if (descriptor->type() == Feature::Type::brief){
+              IBrief *brief = dynamic_cast<IBrief *>(descriptor);
+              writeBRIEF(&stream, brief);
+            } else if (descriptor->type() == Feature::Type::brisk){
+              IBrisk *brisk = dynamic_cast<IBrisk *>(descriptor);
+              writeBRISK(&stream, brisk);
+            } else if (descriptor->type() == Feature::Type::daisy){
+              IDaisy *daisy = dynamic_cast<IDaisy *>(descriptor);
+              writeDAISY(&stream, daisy);
+            } else if (descriptor->type() == Feature::Type::freak){
+              IFreak *freak = dynamic_cast<IFreak *>(descriptor);
+              writeFREAK(&stream, freak);
+            } else if (descriptor->type() == Feature::Type::hog){
+              IHog *hog = dynamic_cast<IHog *>(descriptor);
+              writeHOG(&stream, hog);
+            } else if (descriptor->type() == Feature::Type::kaze){
+              IKaze *kaze = dynamic_cast<IKaze *>(descriptor);
+              writeKAZE(&stream, kaze);
+            } else if (descriptor->type() == Feature::Type::latch){
+              ILatch *latch = dynamic_cast<ILatch *>(descriptor);
+              writeLATCH(&stream, latch);
+            } else if (descriptor->type() == Feature::Type::lucid){
+              ILucid *lucid = dynamic_cast<ILucid *>(descriptor);
+              writeLUCID(&stream, lucid);
+            } else if (descriptor->type() == Feature::Type::orb){
+              IOrb *orb = dynamic_cast<IOrb *>(descriptor);
+              writeORB(&stream, orb);
+            } else if (descriptor->type() == Feature::Type::sift){
+              ISift *sift = dynamic_cast<ISift *>(descriptor);
+              writeSIFT(&stream, sift);
+            } else if (descriptor->type() == Feature::Type::surf){
+              ISurf *surf = dynamic_cast<ISurf *>(descriptor);
+              writeSURF(&stream, surf);
+            }
+
+            stream.writeEndElement(); // FeatureDescriptor
           }
 
         }
@@ -819,13 +714,13 @@ bool ProjectRW::checkOldVersion(const QString &file) const
   bool bUpdateVersion = false;
   QFile input(file);
   if (input.open(QIODevice::ReadOnly)) {
-    QXmlStreamReader xmlReader;
-    xmlReader.setDevice(&input);
+    QXmlStreamReader stream;
+    stream.setDevice(&input);
 
-    if (xmlReader.readNextStartElement()) {
-      if (xmlReader.name() == "FME") {
+    if (stream.readNextStartElement()) {
+      if (stream.name() == "FME") {
         QString version = "0";
-        for (auto &attr : xmlReader.attributes()) {
+        for (auto &attr : stream.attributes()) {
           if (attr.name().compare(QString("version")) == 0) {
             version = attr.value().toString();
             break;
@@ -836,7 +731,7 @@ bool ProjectRW::checkOldVersion(const QString &file) const
           bUpdateVersion = true;
         }
       } else
-        xmlReader.raiseError(QObject::tr("Incorrect file"));
+        stream.raiseError(QObject::tr("Incorrect file"));
     }
   }
   return bUpdateVersion;
@@ -848,12 +743,12 @@ void ProjectRW::oldVersionBak(const QString &file) const
   QString version = "0";
   QFile input(file);
   if (input.open(QIODevice::ReadOnly)) {
-    QXmlStreamReader xmlReader;
-    xmlReader.setDevice(&input);
+    QXmlStreamReader stream;
+    stream.setDevice(&input);
 
-    if (xmlReader.readNextStartElement()) {
-      if (xmlReader.name() == "FME") {
-        for (auto &attr : xmlReader.attributes()) {
+    if (stream.readNextStartElement()) {
+      if (stream.name() == "FME") {
+        for (auto &attr : stream.attributes()) {
           if (attr.name().compare(QString("version")) == 0) {
             version = attr.value().toString();
             break;
@@ -870,6 +765,703 @@ void ProjectRW::oldVersionBak(const QString &file) const
   dst << src.rdbuf();
   src.close();
   dst.close();
+}
+
+void ProjectRW::readCLAHE(QXmlStreamReader *stream, IClahe *clahe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "ClipLimit") {
+      clahe->setClipLimit(stream->readElementText().toDouble());
+    } else if (stream->name() == "GridSize") {
+      QSize gridSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          gridSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          gridSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      clahe->setTilesGridSize(gridSize);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readCMBFHE(QXmlStreamReader *stream, ICmbfhe *cmbfhe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      cmbfhe->setBlockSize(blockSize);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readDHE(QXmlStreamReader *stream, IDhe *dhe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "X") {
+      dhe->setX(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readFAHE(QXmlStreamReader *stream, IFahe *fahe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      fahe->setBlockSize(blockSize);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readHMCLAHE(QXmlStreamReader *stream, IHmclahe *hmclahe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      hmclahe->setBlockSize(blockSize);
+    } else if (stream->name() == "L") {
+      hmclahe->setL(stream->readElementText().toDouble());
+    } else if (stream->name() == "Phi") {
+      hmclahe->setPhi(stream->readElementText().toDouble());
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readLCEBSESCS(QXmlStreamReader *stream, ILceBsescs *lceBsescs) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      lceBsescs->setBlockSize(blockSize);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readMSRCP(QXmlStreamReader *stream, IMsrcp *msrcp) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "SmallScale") {
+      msrcp->setSmallScale(stream->readElementText().toInt());
+    } else if (stream->name() == "MidScale") {
+      msrcp->setMidScale(stream->readElementText().toInt());
+    } else if (stream->name() == "LargeScale") {
+      msrcp->setLargeScale(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readNOSHP(QXmlStreamReader *stream, INoshp *noshp) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      noshp->setBlockSize(blockSize);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readPOHE(QXmlStreamReader *stream, IPohe *pohe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      pohe->setBlockSize(blockSize);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readRSWHE(QXmlStreamReader *stream, IRswhe *rswhe) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "HistogramDivisions") {
+      rswhe->setHistogramDivisions(stream->readElementText().toInt());
+    } else if (stream->name() == "HistogramCut") {
+      rswhe->setHistogramCut(static_cast<IRswhe::HistogramCut>(stream->readElementText().toInt()));
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readWALLIS(QXmlStreamReader *stream, IWallis *wallis) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Contrast") {
+      wallis->setContrast(stream->readElementText().toDouble());
+    } else if (stream->name() == "Brightness") {
+      wallis->setBrightness(stream->readElementText().toDouble());
+    } else if (stream->name() == "ImposedAverage") {
+      wallis->setImposedAverage(stream->readElementText().toInt());
+    } else if (stream->name() == "ImposedLocalStdDev") {
+      wallis->setImposedLocalStdDev(stream->readElementText().toInt());
+    } else if (stream->name() == "KernelSize") {
+      wallis->setKernelSize(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readAGAST(QXmlStreamReader *stream, IAgast *agast) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Threshold") {
+      agast->setThreshold(stream->readElementText().toInt());
+    } else if (stream->name() == "Brightness") {
+      agast->setNonmaxSuppression(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "ImposedAverage") {
+      agast->setDetectorType(stream->readElementText());
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readAKAZE(QXmlStreamReader *stream, IAkaze *akaze) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "DescriptorType") {
+      akaze->setDescriptorType(stream->readElementText());
+    } else if (stream->name() == "DescriptorSize") {
+      akaze->setDescriptorSize(stream->readElementText().toInt());
+    } else if (stream->name() == "DescriptorChannels") {
+      akaze->setDescriptorChannels(stream->readElementText().toInt());
+    } else if (stream->name() == "Threshold") {
+      akaze->setThreshold(stream->readElementText().toDouble());
+    } else if (stream->name() == "Octaves") {
+      akaze->setOctaves(stream->readElementText().toInt());
+    } else if (stream->name() == "OctaveLayers") {
+      akaze->setOctaveLayers(stream->readElementText().toInt());
+    } else if (stream->name() == "Diffusivity") {
+      akaze->setDiffusivity(stream->readElementText());
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readBRIEF(QXmlStreamReader *stream, IBrief *brief) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Bytes") {
+      brief->setBytes(stream->readElementText());
+    } else if (stream->name() == "UseOrientation") {
+      brief->setUseOrientation(stream->readElementText().compare("true") == 0 ? true : false);
+    } else
+      stream->skipCurrentElement();
+  }
+}
+
+void ProjectRW::readBRISK(QXmlStreamReader *stream, IBrisk *brisk) const
+{
+
+}
+
+void ProjectRW::readDAISY(QXmlStreamReader *stream, IDaisy *daisy) const
+{
+
+}
+
+void ProjectRW::readFAST(QXmlStreamReader *stream, IFast *fast) const
+{
+
+}
+
+void ProjectRW::readFREAK(QXmlStreamReader *stream, IFreak *freak) const
+{
+
+}
+
+void ProjectRW::readGFTT(QXmlStreamReader *stream, IGftt *gftt) const
+{
+
+}
+
+void ProjectRW::readHOG(QXmlStreamReader *stream, IHog *hog) const
+{
+
+}
+
+void ProjectRW::readKAZE(QXmlStreamReader *stream, IKaze *kaze) const
+{
+
+}
+
+void ProjectRW::readLATCH(QXmlStreamReader *stream, ILatch *latch) const
+{
+
+}
+
+void ProjectRW::readLUCID(QXmlStreamReader *stream, ILucid *lucid) const
+{
+
+}
+
+void ProjectRW::readMSD(QXmlStreamReader *stream, IMsd *msd) const
+{
+
+}
+
+void ProjectRW::readMSER(QXmlStreamReader *stream, IMser *mser) const
+{
+
+}
+
+void ProjectRW::readORB(QXmlStreamReader *stream, IOrb *orb) const
+{
+
+}
+
+void ProjectRW::readSIFT(QXmlStreamReader *stream, ISift *sift) const
+{
+
+}
+
+void ProjectRW::readSTAR(QXmlStreamReader *stream, IStar *star) const
+{
+
+}
+
+void ProjectRW::readSURF(QXmlStreamReader *stream, ISurf *surf) const
+{
+
+}
+
+void ProjectRW::writeCLAHE(QXmlStreamWriter *stream, IClahe *clahe) const
+{
+  stream->writeStartElement("Clahe");
+  {
+    stream->writeTextElement("ClipLimit", QString::number(clahe->clipLimit()));
+    stream->writeStartElement("GridSize");
+    stream->writeTextElement("Width", QString::number(clahe->tilesGridSize().width()));
+    stream->writeTextElement("Height", QString::number(clahe->tilesGridSize().height()));
+    stream->writeEndElement(); // GridSize
+  }
+  stream->writeEndElement(); // Clahe
+}
+
+void ProjectRW::writeCMBFHE(QXmlStreamWriter *stream, ICmbfhe *cmbfhe) const
+{
+  stream->writeStartElement("Cmbfhe");
+  {
+    stream->writeStartElement("blockSize");
+    stream->writeTextElement("Width", QString::number(cmbfhe->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(cmbfhe->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+  }
+  stream->writeEndElement(); // Cmbfhe
+}
+
+void ProjectRW::writeDHE(QXmlStreamWriter *stream, IDhe *dhe) const
+{
+  stream->writeStartElement("Dhe");
+  {
+    stream->writeTextElement("X", QString::number(dhe->x()));
+  }
+  stream->writeEndElement(); // Dhe
+}
+
+void ProjectRW::writeFAHE(QXmlStreamWriter *stream, IFahe *fahe) const
+{
+  stream->writeStartElement("Fahe");
+  {
+    stream->writeStartElement("BlockSize");
+    stream->writeTextElement("Width", QString::number(fahe->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(fahe->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+  }
+  stream->writeEndElement(); // Fahe
+}
+
+void ProjectRW::writeHMCLAHE(QXmlStreamWriter *stream, IHmclahe *hmclahe) const
+{
+  stream->writeStartElement("Hmclahe");
+  {
+    stream->writeStartElement("blockSize");
+    stream->writeTextElement("Width", QString::number(hmclahe->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(hmclahe->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+    stream->writeTextElement("L", QString::number(hmclahe->l()));
+    stream->writeTextElement("Phi", QString::number(hmclahe->phi()));
+  }
+  stream->writeEndElement(); // Hmclahe
+}
+
+void ProjectRW::writeLCEBSESCS(QXmlStreamWriter *stream, ILceBsescs *lceBsescs) const
+{
+  stream->writeStartElement("LceBsescs");
+  {
+    stream->writeStartElement("blockSize");
+    stream->writeTextElement("Width", QString::number(lceBsescs->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(lceBsescs->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+  }
+  stream->writeEndElement(); // LceBsescs
+}
+
+void ProjectRW::writeMSRCP(QXmlStreamWriter *stream, IMsrcp *msrcp) const
+{
+  stream->writeStartElement("Msrcp");
+  {
+    stream->writeTextElement("SmallScale", QString::number(msrcp->smallScale()));
+    stream->writeTextElement("MidScale", QString::number(msrcp->midScale()));
+    stream->writeTextElement("LargeScale", QString::number(msrcp->largeScale()));
+  }
+  stream->writeEndElement(); // Msrcp
+}
+
+void ProjectRW::writeNOSHP(QXmlStreamWriter *stream, INoshp *noshp) const
+{
+  stream->writeStartElement("Noshp");
+  {
+    stream->writeStartElement("blockSize");
+    stream->writeTextElement("Width", QString::number(noshp->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(noshp->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+  }
+  stream->writeEndElement(); // Noshp
+}
+
+void ProjectRW::writePOHE(QXmlStreamWriter *stream, IPohe *pohe) const
+{
+  stream->writeStartElement("Pohe");
+  {
+    stream->writeStartElement("blockSize");
+    stream->writeTextElement("Width", QString::number(pohe->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(pohe->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+  }
+  stream->writeEndElement(); // Pohe
+}
+
+void ProjectRW::writeRSWHE(QXmlStreamWriter *stream, IRswhe *rswhe) const
+{
+  stream->writeStartElement("Rswhe");
+  {
+    stream->writeTextElement("HistogramDivisions", QString::number(rswhe->histogramDivisions()));
+    stream->writeTextElement("HistogramCut", QString::number(static_cast<int>(rswhe->histogramCut())));
+  }
+  stream->writeEndElement(); // Rswhe
+}
+
+void ProjectRW::writeWALLIS(QXmlStreamWriter *stream, IWallis *wallis) const
+{
+  stream->writeStartElement("Wallis");
+  {
+    stream->writeTextElement("Contrast", QString::number(wallis->contrast()));
+    stream->writeTextElement("Brightness", QString::number(wallis->brightness()));
+    stream->writeTextElement("ImposedAverage", QString::number(wallis->imposedAverage()));
+    stream->writeTextElement("ImposedLocalStdDev", QString::number(wallis->imposedLocalStdDev()));
+    stream->writeTextElement("KernelSize", QString::number(wallis->kernelSize()));
+  }
+  stream->writeEndElement(); // Wallis
+}
+
+void ProjectRW::writeAGAST(QXmlStreamWriter *stream, IAgast *agast) const
+{
+  stream->writeStartElement("AGAST");
+  {
+    stream->writeTextElement("Threshold", QString::number(agast->threshold()));
+    stream->writeTextElement("NonmaxSuppression", agast->nonmaxSuppression() ? "true" : "false");
+    stream->writeTextElement("DetectorType", agast->detectorType());
+  }
+  stream->writeEndElement(); // AGAST
+}
+
+void ProjectRW::writeAKAZE(QXmlStreamWriter *stream, IAkaze *akaze) const
+{
+  stream->writeStartElement("AKAZE");
+  {
+    stream->writeTextElement("DescriptorType", akaze->descriptorType());
+    stream->writeTextElement("DescriptorSize", QString::number(akaze->descriptorSize()));
+    stream->writeTextElement("DescriptorChannels", QString::number(akaze->descriptorChannels()));
+    stream->writeTextElement("Threshold", QString::number(akaze->threshold()));
+    stream->writeTextElement("Octaves", QString::number(akaze->octaves()));
+    stream->writeTextElement("OctaveLayers", QString::number(akaze->octaveLayers()));
+    stream->writeTextElement("Diffusivity", akaze->diffusivity());
+  }
+  stream->writeEndElement(); // AKAZE
+}
+
+void ProjectRW::writeBRIEF(QXmlStreamWriter *stream, IBrief *brief) const
+{
+  stream->writeStartElement("BRIEF");
+  {
+    stream->writeTextElement("Bytes", brief->bytes());
+    stream->writeTextElement("UseOrientation", brief->useOrientation() ? "true" : "false");
+  }
+  stream->writeEndElement(); // BRIEF
+}
+
+void ProjectRW::writeBRISK(QXmlStreamWriter *stream, IBrisk *brisk) const
+{
+  stream->writeStartElement("BRISK");
+  {
+    stream->writeTextElement("Threshold", QString::number(brisk->threshold()));
+    stream->writeTextElement("Octaves", QString::number(brisk->octaves()));
+    stream->writeTextElement("PatternScale", QString::number(brisk->patternScale()));
+  }
+  stream->writeEndElement(); // BRISK
+}
+
+void ProjectRW::writeDAISY(QXmlStreamWriter *stream, IDaisy *daisy) const
+{
+  stream->writeStartElement("DAISY");
+  {
+    stream->writeTextElement("Radius", QString::number(daisy->radius()));
+    stream->writeTextElement("QRadius", QString::number(daisy->qRadius()));
+    stream->writeTextElement("QTheta", QString::number(daisy->qTheta()));
+    stream->writeTextElement("QHist", QString::number(daisy->qHist()));
+    stream->writeTextElement("Norm", daisy->norm());
+    stream->writeTextElement("Interpolation", daisy->interpolation() ? "true" : "false");
+    stream->writeTextElement("UseOrientation", daisy->useOrientation() ? "true" : "false");
+  }
+  stream->writeEndElement(); // DAISY
+}
+
+void ProjectRW::writeFAST(QXmlStreamWriter *stream, IFast *fast) const
+{
+  stream->writeStartElement("FAST");
+  {
+    stream->writeTextElement("Threshold", QString::number(fast->threshold()));
+    stream->writeTextElement("NonmaxSuppression", fast->nonmaxSuppression() ? "true" : "false");
+    stream->writeTextElement("DetectorType", fast->detectorType());
+  }
+  stream->writeEndElement(); // FAST
+}
+
+void ProjectRW::writeFREAK(QXmlStreamWriter *stream, IFreak *freak) const
+{
+  stream->writeStartElement("FREAK");
+  {
+    stream->writeTextElement("OrientationNormalized", freak->orientationNormalized() ? "true" : "false");
+    stream->writeTextElement("ScaleNormalized", freak->scaleNormalized() ? "true" : "false");
+    stream->writeTextElement("PatternScale", QString::number(freak->patternScale()));
+    stream->writeTextElement("Octaves", QString::number(freak->octaves()));
+  }
+  stream->writeEndElement(); // FREAK
+}
+
+void ProjectRW::writeGFTT(QXmlStreamWriter *stream, IGftt *gftt) const
+{
+  stream->writeStartElement("GFTT");
+  {
+    stream->writeTextElement("MaxFeatures", QString::number(gftt->maxFeatures()));
+    stream->writeTextElement("QualityLevel", QString::number(gftt->qualityLevel()));
+    stream->writeTextElement("MinDistance", QString::number(gftt->minDistance()));
+    stream->writeTextElement("BlockSize", QString::number(gftt->blockSize()));
+    stream->writeTextElement("HarrisDetector", gftt->harrisDetector() ? "true" : "false");
+    stream->writeTextElement("K", QString::number(gftt->k()));
+  }
+  stream->writeEndElement(); // GFTT
+}
+
+void ProjectRW::writeHOG(QXmlStreamWriter *stream, IHog *hog) const
+{
+  stream->writeStartElement("HOG");
+  {
+    stream->writeStartElement("WinSize");
+    stream->writeTextElement("Width", QString::number(hog->winSize().width()));
+    stream->writeTextElement("Height", QString::number(hog->winSize().height()));
+    stream->writeEndElement(); // WinSize
+    stream->writeStartElement("BlockSize");
+    stream->writeTextElement("Width", QString::number(hog->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(hog->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+    stream->writeStartElement("BlockStride");
+    stream->writeTextElement("Width", QString::number(hog->blockStride().width()));
+    stream->writeTextElement("Height", QString::number(hog->blockStride().height()));
+    stream->writeEndElement(); // BlockStride
+    stream->writeStartElement("CellSize");
+    stream->writeTextElement("Width", QString::number(hog->cellSize().width()));
+    stream->writeTextElement("Height", QString::number(hog->cellSize().height()));
+    stream->writeEndElement(); // CellSize
+    stream->writeTextElement("Nbins", QString::number(hog->nbins()));
+    stream->writeTextElement("DerivAperture", QString::number(hog->derivAperture()));
+  }
+  stream->writeEndElement(); // HOG
+}
+
+void ProjectRW::writeKAZE(QXmlStreamWriter *stream, IKaze *kaze) const
+{
+  stream->writeStartElement("KAZE");
+  {
+    stream->writeTextElement("ExtendedDescriptor", kaze->extendedDescriptor() ? "true" : "false");
+    stream->writeTextElement("Upright", kaze->upright() ? "true" : "false");
+    stream->writeTextElement("Threshold", QString::number(kaze->threshold()));
+    stream->writeTextElement("Octaves", QString::number(kaze->octaves()));
+    stream->writeTextElement("OctaveLayers", QString::number(kaze->octaveLayers()));
+    stream->writeTextElement("Diffusivity", kaze->diffusivity());
+  }
+  stream->writeEndElement(); // KAZE
+}
+
+void ProjectRW::writeLATCH(QXmlStreamWriter *stream, ILatch *latch) const
+{
+  stream->writeStartElement("LATCH");
+  {
+    stream->writeTextElement("Bytes", latch->bytes());
+    stream->writeTextElement("RotationInvariance", latch->rotationInvariance() ? "true" : "false");
+    stream->writeTextElement("HalfSsdSize", QString::number(latch->halfSsdSize()));
+  }
+  stream->writeEndElement(); // LATCH
+}
+
+void ProjectRW::writeLUCID(QXmlStreamWriter *stream, ILucid *lucid) const
+{
+  stream->writeStartElement("LUCID");
+  {
+    stream->writeTextElement("LucidKernel", QString::number(lucid->lucidKernel()));
+    stream->writeTextElement("BlurKernel", QString::number(lucid->blurKernel()));
+  }
+  stream->writeEndElement(); // LUCID
+}
+
+void ProjectRW::writeMSD(QXmlStreamWriter *stream, IMsd *msd) const
+{
+  stream->writeStartElement("MSD");
+  {
+    stream->writeTextElement("ThresholdSaliency", QString::number(msd->thresholdSaliency()));
+    stream->writeTextElement("PatchRadius", QString::number(msd->patchRadius()));
+    stream->writeTextElement("Knn", QString::number(msd->knn()));
+    stream->writeTextElement("SearchAreaRadius", QString::number(msd->searchAreaRadius()));
+    stream->writeTextElement("ScaleFactor", QString::number(msd->scaleFactor()));
+    stream->writeTextElement("NMSRadius", QString::number(msd->NMSRadius()));
+    stream->writeTextElement("NScales", QString::number(msd->nScales()));
+    stream->writeTextElement("NMSScaleRadius", QString::number(msd->NMSScaleRadius()));
+    stream->writeTextElement("ComputeOrientation", msd->computeOrientation() ? "true" : "false");
+    stream->writeTextElement("AffineMSD", msd->affineMSD() ? "true" : "false");
+    stream->writeTextElement("AffineTilts", QString::number(msd->affineTilts()));
+  }
+  stream->writeEndElement(); // MSD
+}
+
+void ProjectRW::writeMSER(QXmlStreamWriter *stream, IMser *mser) const
+{
+  stream->writeStartElement("MSER");
+  {
+    stream->writeTextElement("Delta", QString::number(mser->delta()));
+    stream->writeTextElement("MinArea", QString::number(mser->minArea()));
+    stream->writeTextElement("MaxArea", QString::number(mser->maxArea()));
+    stream->writeTextElement("MaxVariation", QString::number(mser->maxVariation()));
+    stream->writeTextElement("MinDiversity", QString::number(mser->minDiversity()));
+    stream->writeTextElement("MaxEvolution", QString::number(mser->maxEvolution()));
+    stream->writeTextElement("AreaThreshold", QString::number(mser->areaThreshold()));
+    stream->writeTextElement("MinMargin", QString::number(mser->minMargin()));
+    stream->writeTextElement("EdgeBlurSize", QString::number(mser->edgeBlurSize()));
+  }
+  stream->writeEndElement(); // MSER
+}
+
+void ProjectRW::writeORB(QXmlStreamWriter *stream, IOrb *orb) const
+{
+  stream->writeStartElement("ORB");
+  {
+    stream->writeTextElement("FeaturesNumber", QString::number(orb->featuresNumber()));
+    stream->writeTextElement("ScaleFactor", QString::number(orb->scaleFactor()));
+    stream->writeTextElement("LevelsNumber", QString::number(orb->levelsNumber()));
+    stream->writeTextElement("EdgeThreshold", QString::number(orb->edgeThreshold()));
+    stream->writeTextElement("Wta_k", QString::number(orb->wta_k()));
+    stream->writeTextElement("ScoreType", orb->scoreType());
+    stream->writeTextElement("PatchSize", QString::number(orb->patchSize()));
+    stream->writeTextElement("FastThreshold", QString::number(orb->fastThreshold()));
+  }
+  stream->writeEndElement(); // ORB
+}
+
+void ProjectRW::writeSIFT(QXmlStreamWriter *stream, ISift *sift) const
+{
+  stream->writeStartElement("SIFT");
+  {
+    stream->writeTextElement("FeaturesNumber", QString::number(sift->featuresNumber()));
+    stream->writeTextElement("OctaveLayers", QString::number(sift->octaveLayers()));
+    stream->writeTextElement("ContrastThreshold", QString::number(sift->contrastThreshold()));
+    stream->writeTextElement("EdgeThreshold", QString::number(sift->edgeThreshold()));
+    stream->writeTextElement("Sigma", QString::number(sift->sigma()));
+  }
+  stream->writeEndElement(); // SIFT
+}
+
+void ProjectRW::writeSTAR(QXmlStreamWriter *stream, IStar *star) const
+{
+  stream->writeStartElement("STAR");
+  {
+    stream->writeTextElement("MaxSize", QString::number(star->maxSize()));
+    stream->writeTextElement("ResponseThreshold", QString::number(star->responseThreshold()));
+    stream->writeTextElement("LineThresholdProjected", QString::number(star->lineThresholdProjected()));
+    stream->writeTextElement("LineThresholdBinarized", QString::number(star->lineThresholdBinarized()));
+    stream->writeTextElement("SuppressNonmaxSize", QString::number(star->suppressNonmaxSize()));
+  }
+  stream->writeEndElement(); // STAR
+}
+
+void ProjectRW::writeSURF(QXmlStreamWriter *stream, ISurf *surf) const
+{
+  stream->writeStartElement("SURF");
+  {
+    stream->writeTextElement("HessianThreshold", QString::number(surf->hessianThreshold()));
+    stream->writeTextElement("Octaves", QString::number(surf->octaves()));
+    stream->writeTextElement("OctaveLayers", QString::number(surf->octaveLayers()));
+    stream->writeTextElement("ExtendedDescriptor", surf->extendedDescriptor() ? "true" : "false");
+    stream->writeTextElement("RotatedFeatures", surf->rotatedFeatures() ? "true" : "false");
+  }
+  stream->writeEndElement(); // SURF
 }
 
 } // namespace fme

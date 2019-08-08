@@ -7,6 +7,8 @@
 
 #include <QString>
 
+#include "fme/core/features/features.h"
+
 namespace fme
 {
 
@@ -48,6 +50,12 @@ public:
 
   virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
 
+  virtual std::shared_ptr<Feature> detector() = 0;
+  virtual void setDetector(const std::shared_ptr<Feature> &detector) = 0;
+
+  virtual std::shared_ptr<Feature> descriptor() = 0;
+  virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
+
   /*!
    * \brief Limpia la sesión
    */
@@ -76,6 +84,11 @@ public:
   void setDescription(const QString &description) override;
   std::shared_ptr<Preprocess> preprocess() override;
   void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) override;
+  std::shared_ptr<Feature> detector() override;
+  void setDetector(const std::shared_ptr<Feature> &detector) override;
+  std::shared_ptr<Feature> descriptor() override;
+  void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
+
   void clear() override;
 
 protected:
@@ -83,7 +96,8 @@ protected:
   QString mName;
   QString mDescription;
   std::shared_ptr<Preprocess> mPreprocess;
-
+  std::shared_ptr<Feature> mFeatureDetector;
+  std::shared_ptr<Feature> mFeatureDescriptor;
 };
 
 } // namespace fme

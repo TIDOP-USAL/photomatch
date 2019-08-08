@@ -9,6 +9,7 @@
 #include "fme/core/features/fast.h"
 #include "fme/core/features/freak.h"
 #include "fme/core/features/gftt.h"
+#include "fme/core/features/hog.h"
 #include "fme/core/features/latch.h"
 #include "fme/core/features/lucid.h"
 #include "fme/core/features/msd.h"
@@ -511,6 +512,7 @@ void FeatureExtractorPresenter::run()
                                                                 mSurfDetector->rotatedFeatures());
   }
 
+
   if (currentDescriptorExtractor.compare("AKAZE") == 0){
     if (currentKeypointDetector.compare("AKAZE") == 0){
       descriptorExtractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
@@ -550,7 +552,12 @@ void FeatureExtractorPresenter::run()
                                                             mFreakDescriptor->patternScale(),
                                                             mFreakDescriptor->octaves());
   } else if (currentDescriptorExtractor.compare("HOG") == 0){
-
+    descriptorExtractor = std::make_shared<HogDescriptor>(mHogDescriptor->winSize(),
+                                                          mHogDescriptor->blockSize(),
+                                                          mHogDescriptor->blockStride(),
+                                                          mHogDescriptor->cellSize(),
+                                                          mHogDescriptor->nbins(),
+                                                          mHogDescriptor->derivAperture());
   } else if (currentDescriptorExtractor.compare("KAZE") == 0){
     if (currentKeypointDetector.compare("KAZE") == 0){
       descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
@@ -623,6 +630,9 @@ void FeatureExtractorPresenter::run()
                                                                      mSurfDescriptor->rotatedFeatures());
     }
   }
+
+  mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
+  mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
 
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
