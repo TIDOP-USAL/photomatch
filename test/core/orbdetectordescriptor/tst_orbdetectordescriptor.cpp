@@ -5,7 +5,9 @@
 
 using namespace fme;
 
-class TestOrbDetectorDescriptor : public QObject, public OrbDetectorDescriptor
+class TestOrbDetectorDescriptor
+  : public QObject,
+    public OrbDetectorDescriptor
 {
   Q_OBJECT
 

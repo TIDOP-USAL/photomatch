@@ -5,7 +5,9 @@
 
 using namespace fme;
 
-class TestFastDetector : public QObject, public FastDetector
+class TestFastDetector
+  : public QObject,
+    public FastDetector
 {
   Q_OBJECT
 

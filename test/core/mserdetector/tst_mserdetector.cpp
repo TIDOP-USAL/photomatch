@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestMserDetector : public QObject
+class TestMserDetector
+  : public QObject
 {
   Q_OBJECT
 

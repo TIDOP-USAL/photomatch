@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestKazeDetectorDescriptor : public QObject
+class TestKazeDetectorDescriptor
+  : public QObject
 {
   Q_OBJECT
 

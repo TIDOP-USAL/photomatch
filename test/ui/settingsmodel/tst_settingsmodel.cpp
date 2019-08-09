@@ -371,10 +371,10 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(false, settingsModel.gfttHarrisDetector());
   QCOMPARE(0.04, settingsModel.gfttK());
 
-  QCOMPARE(QSize(128,64), settingsModel.hogWinSize());
-  QCOMPARE(QSize(16,16), settingsModel.hogBlockSize());
-  QCOMPARE(QSize(8,8), settingsModel.hogBlockStride());
-  QCOMPARE(QSize(8,8), settingsModel.hogCellSize());
+  QCOMPARE(QSize(16,16), settingsModel.hogWinSize());
+  QCOMPARE(QSize(4,4), settingsModel.hogBlockSize());
+  QCOMPARE(QSize(2,2), settingsModel.hogBlockStride());
+  QCOMPARE(QSize(2,2), settingsModel.hogCellSize());
   QCOMPARE(9, settingsModel.hogNbins());
   QCOMPARE(1, settingsModel.hogDerivAperture());
 
@@ -1465,10 +1465,10 @@ void TestSettingsModel::test_reset()
   QCOMPARE(false, mSettingsModel->gfttHarrisDetector());
   QCOMPARE(0.04, mSettingsModel->gfttK());
 
-  QCOMPARE(QSize(128,64), mSettingsModel->hogWinSize());
-  QCOMPARE(QSize(16,16), mSettingsModel->hogBlockSize());
-  QCOMPARE(QSize(8,8), mSettingsModel->hogBlockStride());
-  QCOMPARE(QSize(8,8), mSettingsModel->hogCellSize());
+  QCOMPARE(QSize(16,16), mSettingsModel->hogWinSize());
+  QCOMPARE(QSize(4,4), mSettingsModel->hogBlockSize());
+  QCOMPARE(QSize(2,2), mSettingsModel->hogBlockStride());
+  QCOMPARE(QSize(2,2), mSettingsModel->hogCellSize());
   QCOMPARE(9, mSettingsModel->hogNbins());
   QCOMPARE(1, mSettingsModel->hogDerivAperture());
 

@@ -162,6 +162,7 @@ MsdDetector::MsdDetector()
   : MsdProperties(),
     KeypointDetector()
 {
+  mMSD = std::make_shared<::MsdDetector>();
   mMSD->setThSaliency(static_cast<float>(MsdProperties::thresholdSaliency()));
   mMSD->setPatchRadius(MsdProperties::patchRadius());
   mMSD->setKNN(MsdProperties::knn());
@@ -188,6 +189,7 @@ MsdDetector::MsdDetector(double thresholdSaliency,
   : MsdProperties(),
     KeypointDetector()
 {
+  mMSD = std::make_shared<::MsdDetector>();
   MsdProperties::setThresholdSaliency(thresholdSaliency);
   MsdProperties::setPatchRadius(pathRadius);
   MsdProperties::setKNN(knn);

@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestBriskDetectorDescriptor : public QObject
+class TestBriskDetectorDescriptor
+  : public QObject
 {
     Q_OBJECT
 

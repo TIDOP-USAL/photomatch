@@ -4,7 +4,8 @@
 
 using namespace fme;
 
-class TestImage : public QObject
+class TestImage
+  : public QObject
 {
   Q_OBJECT
 

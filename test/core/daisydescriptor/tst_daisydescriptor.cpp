@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestDaisyDescriptor : public QObject
+class TestDaisyDescriptor
+  : public QObject
 {
   Q_OBJECT
 

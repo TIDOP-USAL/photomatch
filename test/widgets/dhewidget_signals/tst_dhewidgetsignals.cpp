@@ -13,6 +13,7 @@ class TestDheWidgetSignals : public DheWidget
   Q_OBJECT
 
 public:
+
   TestDheWidgetSignals();
   ~TestDheWidgetSignals();
 

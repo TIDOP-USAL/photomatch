@@ -375,6 +375,7 @@ public:
 
 private:
 
+  void readACEBSF(QXmlStreamReader *stream, IAcebsf *acebsf) const;
   void readCLAHE(QXmlStreamReader *stream, IClahe *clahe) const;
   void readCMBFHE(QXmlStreamReader *stream, ICmbfhe *cmbfhe) const;
   void readDHE(QXmlStreamReader *stream, IDhe *dhe) const;
@@ -406,6 +407,7 @@ private:
   void readSTAR(QXmlStreamReader *stream, IStar *star) const;
   void readSURF(QXmlStreamReader *stream, ISurf *surf) const;
 
+  void writeACEBSF(QXmlStreamWriter *stream, IAcebsf *acebsf) const;
   void writeCLAHE(QXmlStreamWriter *stream, IClahe *clahe) const;
   void writeCMBFHE(QXmlStreamWriter *stream, ICmbfhe *cmbfhe) const;
   void writeDHE(QXmlStreamWriter *stream, IDhe *dhe) const;

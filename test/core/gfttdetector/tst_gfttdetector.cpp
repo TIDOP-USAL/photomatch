@@ -5,7 +5,9 @@
 
 using namespace fme;
 
-class TestGfttDetector : public QObject, public GfttDetector
+class TestGfttDetector
+  : public QObject,
+    public GfttDetector
 {
   Q_OBJECT
 

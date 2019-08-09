@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestLatchDescriptor : public QObject
+class TestLatchDescriptor
+  : public QObject
 {
   Q_OBJECT
 

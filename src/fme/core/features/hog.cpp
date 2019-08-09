@@ -8,10 +8,10 @@ namespace fme
 
 HogProperties::HogProperties()
   : IHog(),
-    mWinSize(128,64),
-    mBlockSize(16,16),
-    mBlockStride(8,8),
-    mCellSize(8,8),
+    mWinSize(16, 16),
+    mBlockSize(4, 4),
+    mBlockStride(2, 2),
+    mCellSize(2, 2),
     mNbins(9),
     mDerivAperture(1)
 {}
@@ -83,7 +83,7 @@ void HogProperties::setDerivAperture(int derivAperture)
 
 void HogProperties::reset()
 {
-  mWinSize = QSize(128,64);
+  mWinSize = QSize(16, 16);
   mBlockSize = QSize(4, 4); //QSize(16,16);
   mBlockStride = QSize(2, 2); //QSize(8,8);
   mCellSize = QSize(2, 2);  //QSize(8,8);

@@ -5,7 +5,9 @@
 
 using namespace fme;
 
-class TestAgastDetector : public QObject, public AgastDetector
+class TestAgastDetector
+  : public QObject,
+    public AgastDetector
 {
   Q_OBJECT
 

@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestBriefDescriptor : public QObject
+class TestBriefDescriptor
+  : public QObject
 {
   Q_OBJECT
 

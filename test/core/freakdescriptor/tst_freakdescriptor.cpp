@@ -5,7 +5,8 @@
 
 using namespace fme;
 
-class TestFreakDescriptor : public QObject
+class TestFreakDescriptor
+  : public QObject
 {
   Q_OBJECT
 

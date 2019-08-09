@@ -381,6 +381,10 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                     while (stream.readNextStartElement()) {
 
                       if (stream.name() == "Clahe") {
+                        std::shared_ptr<Acebsf> acebsf = std::make_shared<Acebsf>();
+                        readACEBSF(&stream, acebsf.get());
+                        session->setPreprocess(acebsf);
+                      } else if (stream.name() == "Clahe") {
                         std::shared_ptr<Clahe> clahe = std::make_shared<Clahe>();
                         readCLAHE(&stream, clahe.get());
                         session->setPreprocess(clahe);
@@ -573,7 +577,9 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
           if (preprocess){
             stream.writeStartElement("Preprocess");
 
-            if (preprocess->type() == Preprocess::Type::clahe){
+            if (preprocess->type() == Preprocess::Type::acebsf){
+              writeACEBSF(&stream, dynamic_cast<IAcebsf *>(preprocess));
+            } else if (preprocess->type() == Preprocess::Type::clahe){
               writeCLAHE(&stream, dynamic_cast<IClahe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::cmbfhe){
               writeCMBFHE(&stream, dynamic_cast<ICmbfhe *>(preprocess));
@@ -765,6 +771,31 @@ void ProjectRW::oldVersionBak(const QString &file) const
   dst << src.rdbuf();
   src.close();
   dst.close();
+}
+
+void ProjectRW::readACEBSF(QXmlStreamReader *stream, IAcebsf *acebsf) const
+{
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      acebsf->setBlockSize(blockSize);
+    } else if (stream->name() == "L") {
+      acebsf->setL(stream->readElementText().toDouble());
+    } else if (stream->name() == "K1") {
+      acebsf->setK1(stream->readElementText().toDouble());
+    } else if (stream->name() == "K2") {
+      acebsf->setK2(stream->readElementText().toDouble());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readCLAHE(QXmlStreamReader *stream, IClahe *clahe) const
@@ -1010,77 +1041,340 @@ void ProjectRW::readBRIEF(QXmlStreamReader *stream, IBrief *brief) const
 
 void ProjectRW::readBRISK(QXmlStreamReader *stream, IBrisk *brisk) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Threshold") {
+      brisk->setThreshold(stream->readElementText().toInt());
+    } else if (stream->name() == "Octaves") {
+      brisk->setOctaves(stream->readElementText().toInt());
+    } else if (stream->name() == "PatternScale") {
+      brisk->setPatternScale(stream->readElementText().toDouble());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readDAISY(QXmlStreamReader *stream, IDaisy *daisy) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Radius") {
+      daisy->setRadius(stream->readElementText().toDouble());
+    } else if (stream->name() == "QRadius") {
+      daisy->setQRadius(stream->readElementText().toInt());
+    } else if (stream->name() == "QTheta") {
+      daisy->setQTheta(stream->readElementText().toInt());
+    } else if (stream->name() == "QHist") {
+      daisy->setQHist(stream->readElementText().toInt());
+    } else if (stream->name() == "Norm") {
+      daisy->setNorm(stream->readElementText());
+    } else if (stream->name() == "Interpolation") {
+      daisy->setInterpolation(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "UseOrientation") {
+      daisy->setUseOrientation(stream->readElementText().compare("true") == 0 ? true : false);
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readFAST(QXmlStreamReader *stream, IFast *fast) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Threshold") {
+      fast->setThreshold(stream->readElementText().toInt());
+    } else if (stream->name() == "NonmaxSuppression") {
+      fast->setNonmaxSuppression(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "DetectorType") {
+      fast->setDetectorType(stream->readElementText());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readFREAK(QXmlStreamReader *stream, IFreak *freak) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "OrientationNormalized") {
+      freak->setOrientationNormalized(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "ScaleNormalized") {
+      freak->setScaleNormalized(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "PatternScale") {
+      freak->setPatternScale(stream->readElementText().toDouble());
+    } else if (stream->name() == "Octaves") {
+      freak->setOctaves(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readGFTT(QXmlStreamReader *stream, IGftt *gftt) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "MaxFeatures") {
+      gftt->setMaxFeatures(stream->readElementText().toInt());
+    } else if (stream->name() == "QualityLevel") {
+      gftt->setQualityLevel(stream->readElementText().toDouble());
+    } else if (stream->name() == "Threshold") {
+      gftt->setMinDistance(stream->readElementText().toDouble());
+    } else if (stream->name() == "BlockSize") {
+      gftt->setBlockSize(stream->readElementText().toInt());
+    } else if (stream->name() == "HarrisDetector") {
+      gftt->setHarrisDetector(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "K") {
+      gftt->setK(stream->readElementText().toDouble());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readHOG(QXmlStreamReader *stream, IHog *hog) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "WinSize") {
+      QSize winSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          winSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          winSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      hog->setWinSize(winSize);
+    } else if (stream->name() == "BlockSize") {
+      QSize blockSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      hog->setBlockSize(blockSize);
+    } else if (stream->name() == "BlockStride") {
+      QSize blockStride;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          blockStride.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          blockStride.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      hog->setBlockStride(blockStride);
+    } else if (stream->name() == "CellSize") {
+      QSize cellSize;
+      while (stream->readNextStartElement()) {
+        if (stream->name() == "Width") {
+          cellSize.setWidth(stream->readElementText().toInt());
+        } else if (stream->name() == "Height") {
+          cellSize.setHeight(stream->readElementText().toInt());
+        } else
+          stream->skipCurrentElement();
+      }
+      hog->setCellSize(cellSize);
+    } else if (stream->name() == "Nbins") {
+      hog->setNbins(stream->readElementText().toInt());
+    } else if (stream->name() == "DerivAperture") {
+      hog->setDerivAperture(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readKAZE(QXmlStreamReader *stream, IKaze *kaze) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "ExtendedDescriptor") {
+      kaze->setExtendedDescriptor(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "Upright") {
+      kaze->setUpright(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "Threshold") {
+      kaze->setThreshold(stream->readElementText().toDouble());
+    } else if (stream->name() == "Octaves") {
+      kaze->setOctaves(stream->readElementText().toInt());
+    } else if (stream->name() == "OctaveLayers") {
+      kaze->setOctaveLayers(stream->readElementText().toInt());
+    } else if (stream->name() == "Diffusivity") {
+      kaze->setDiffusivity(stream->readElementText());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readLATCH(QXmlStreamReader *stream, ILatch *latch) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Bytes") {
+      latch->setBytes(stream->readElementText());
+    } else if (stream->name() == "RotationInvariance") {
+      latch->setRotationInvariance(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "HalfSsdSize") {
+      latch->setHalfSsdSize(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readLUCID(QXmlStreamReader *stream, ILucid *lucid) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "LucidKernel") {
+      lucid->setLucidKernel(stream->readElementText().toInt());
+    } else if (stream->name() == "BlurKernel") {
+      lucid->setBlurKernel(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readMSD(QXmlStreamReader *stream, IMsd *msd) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "ThresholdSaliency") {
+      msd->setThresholdSaliency(stream->readElementText().toDouble());
+    } else if (stream->name() == "PatchRadius") {
+      msd->setPatchRadius(stream->readElementText().toInt());
+    } else if (stream->name() == "Knn") {
+      msd->setKNN(stream->readElementText().toInt());
+    } else if (stream->name() == "SearchAreaRadius") {
+      msd->setSearchAreaRadius(stream->readElementText().toInt());
+    } else if (stream->name() == "ScaleFactor") {
+      msd->setScaleFactor(stream->readElementText().toDouble());
+    } else if (stream->name() == "NMSRadius") {
+      msd->setNMSRadius(stream->readElementText().toInt());
+    } else if (stream->name() == "NScales") {
+      msd->setNScales(stream->readElementText().toInt());
+    } else if (stream->name() == "NMSScaleRadius") {
+      msd->setNMSScaleRadius(stream->readElementText().toInt());
+    } else if (stream->name() == "ComputeOrientation") {
+      msd->setComputeOrientation(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "AffineMSD") {
+      msd->setAffineMSD(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "AffineTilts") {
+      msd->setAffineTilts(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readMSER(QXmlStreamReader *stream, IMser *mser) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "Delta") {
+      mser->setDelta(stream->readElementText().toInt());
+    } else if (stream->name() == "MinArea") {
+      mser->setMinArea(stream->readElementText().toInt());
+    } else if (stream->name() == "MaxArea") {
+      mser->setMaxArea(stream->readElementText().toInt());
+    } else if (stream->name() == "MaxVariation") {
+      mser->setMaxVariation(stream->readElementText().toDouble());
+    } else if (stream->name() == "MinDiversity") {
+      mser->setMinDiversity(stream->readElementText().toDouble());
+    } else if (stream->name() == "MaxEvolution") {
+      mser->setMaxEvolution(stream->readElementText().toInt());
+    } else if (stream->name() == "AreaThreshold") {
+      mser->setAreaThreshold(stream->readElementText().toInt());
+    } else if (stream->name() == "MinMargin") {
+      mser->setMinMargin(stream->readElementText().toDouble());
+    } else if (stream->name() == "EdgeBlurSize") {
+      mser->setEdgeBlurSize(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readORB(QXmlStreamReader *stream, IOrb *orb) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "FeaturesNumber") {
+      orb->setFeaturesNumber(stream->readElementText().toInt());
+    } else if (stream->name() == "ScaleFactor") {
+      orb->setScaleFactor(stream->readElementText().toDouble());
+    } else if (stream->name() == "LevelsNumber") {
+      orb->setLevelsNumber(stream->readElementText().toInt());
+    } else if (stream->name() == "EdgeThreshold") {
+      orb->setEdgeThreshold(stream->readElementText().toInt());
+    } else if (stream->name() == "Wta_k") {
+      orb->setWTA_K(stream->readElementText().toInt());
+    } else if (stream->name() == "ScoreType") {
+      orb->setScoreType(stream->readElementText());
+    } else if (stream->name() == "PatchSize") {
+      orb->setPatchSize(stream->readElementText().toInt());
+    } else if (stream->name() == "FastThreshold") {
+      orb->setFastThreshold(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readSIFT(QXmlStreamReader *stream, ISift *sift) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "FeaturesNumber") {
+      sift->setFeaturesNumber(stream->readElementText().toInt());
+    } else if (stream->name() == "OctaveLayers") {
+      sift->setOctaveLayers(stream->readElementText().toInt());
+    } else if (stream->name() == "ContrastThreshold") {
+      sift->setContrastThreshold(stream->readElementText().toDouble());
+    } else if (stream->name() == "EdgeThreshold") {
+      sift->setEdgeThreshold(stream->readElementText().toDouble());
+    } else if (stream->name() == "Sigma") {
+      sift->setSigma(stream->readElementText().toDouble());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readSTAR(QXmlStreamReader *stream, IStar *star) const
 {
-
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "MaxSize") {
+      star->setMaxSize(stream->readElementText().toInt());
+    } else if (stream->name() == "ResponseThreshold") {
+      star->setResponseThreshold(stream->readElementText().toInt());
+    } else if (stream->name() == "LineThresholdProjected") {
+      star->setLineThresholdProjected(stream->readElementText().toInt());
+    } else if (stream->name() == "LineThresholdBinarized") {
+      star->setLineThresholdBinarized(stream->readElementText().toInt());
+    } else if (stream->name() == "SuppressNonmaxSize") {
+      star->setSuppressNonmaxSize(stream->readElementText().toInt());
+    } else
+      stream->skipCurrentElement();
+  }
 }
 
 void ProjectRW::readSURF(QXmlStreamReader *stream, ISurf *surf) const
 {
+  while (stream->readNextStartElement()) {
+    if (stream->name() == "HessianThreshold") {
+      surf->setHessianThreshold(stream->readElementText().toDouble());
+    } else if (stream->name() == "Octaves") {
+      surf->setOctaves(stream->readElementText().toInt());
+    } else if (stream->name() == "OctaveLayers") {
+      surf->setOctaveLayers(stream->readElementText().toInt());
+    } else if (stream->name() == "ExtendedDescriptor") {
+      surf->setExtendedDescriptor(stream->readElementText().compare("true") == 0 ? true : false);
+    } else if (stream->name() == "RotatedFeatures") {
+      surf->setRotatedFeatures(stream->readElementText().compare("true") == 0 ? true : false);
+    } else
+      stream->skipCurrentElement();
+  }
+}
 
+void ProjectRW::writeACEBSF(QXmlStreamWriter *stream, IAcebsf *acebsf) const
+{
+  stream->writeStartElement("Acebsf");
+  {
+    stream->writeStartElement("BlockSize");
+    stream->writeTextElement("Width", QString::number(acebsf->blockSize().width()));
+    stream->writeTextElement("Height", QString::number(acebsf->blockSize().height()));
+    stream->writeEndElement(); // BlockSize
+    stream->writeTextElement("L", QString::number(acebsf->l()));
+    stream->writeTextElement("K1", QString::number(acebsf->k1()));
+    stream->writeTextElement("K2", QString::number(acebsf->k2()));
+
+  }
+  stream->writeEndElement(); // Acebsf
 }
 
 void ProjectRW::writeCLAHE(QXmlStreamWriter *stream, IClahe *clahe) const
