@@ -4,7 +4,7 @@
 #include <opencv2/photo.hpp>
 
 #include "fme/process/ProcessConcurrent.h"
-#include "fme/core/preprocess.h"
+#include "fme/core/preprocess/preprocess.h"
 
 namespace fme
 {

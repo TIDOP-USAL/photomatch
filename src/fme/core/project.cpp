@@ -21,6 +21,19 @@
 #include "fme/core/features/star.h"
 #include "fme/core/features/surf.h"
 
+#include "fme/core/preprocess/acebsf.h"
+#include "fme/core/preprocess/clahe.h"
+#include "fme/core/preprocess/cmbfhe.h"
+#include "fme/core/preprocess/dhe.h"
+#include "fme/core/preprocess/fahe.h"
+#include "fme/core/preprocess/hmclahe.h"
+#include "fme/core/preprocess/lce_bsescs.h"
+#include "fme/core/preprocess/msrcp.h"
+#include "fme/core/preprocess/noshp.h"
+#include "fme/core/preprocess/pohe.h"
+#include "fme/core/preprocess/rswhe.h"
+#include "fme/core/preprocess/wallis.h"
+
 #include <QFile>
 #include <QFileInfo>
 #include <QXmlStreamWriter>
@@ -381,51 +394,51 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                     while (stream.readNextStartElement()) {
 
                       if (stream.name() == "Clahe") {
-                        std::shared_ptr<Acebsf> acebsf = std::make_shared<Acebsf>();
+                        std::shared_ptr<IAcebsf> acebsf = std::make_shared<AcebsfProperties>();
                         readACEBSF(&stream, acebsf.get());
                         session->setPreprocess(acebsf);
                       } else if (stream.name() == "Clahe") {
-                        std::shared_ptr<Clahe> clahe = std::make_shared<Clahe>();
+                        std::shared_ptr<IClahe> clahe = std::make_shared<ClaheProperties>();
                         readCLAHE(&stream, clahe.get());
                         session->setPreprocess(clahe);
                       } else if (stream.name() == "Cmbfhe") {
-                        std::shared_ptr<Cmbfhe> cmbfhe(new Cmbfhe);
+                        std::shared_ptr<ICmbfhe> cmbfhe(new CmbfheProperties);
                         readCMBFHE(&stream, cmbfhe.get());
                         session->setPreprocess(cmbfhe);
                       } else if (stream.name() == "Dhe") {
-                        std::shared_ptr<Dhe> dhe = std::make_shared<Dhe>();
+                        std::shared_ptr<IDhe> dhe = std::make_shared<DheProperties>();
                         readDHE(&stream, dhe.get());
                         session->setPreprocess(dhe);
                       } else if (stream.name() == "Fahe") {
-                        std::shared_ptr<Fahe> fahe(new Fahe);
+                        std::shared_ptr<IFahe> fahe(new FaheProperties);
                         readFAHE(&stream, fahe.get());
                         session->setPreprocess(fahe);
                       } else if (stream.name() == "Hmclahe") {
-                        std::shared_ptr<Hmclahe> hmclahe(new Hmclahe);
+                        std::shared_ptr<IHmclahe> hmclahe(new HmclaheProperties);
                         readHMCLAHE(&stream, hmclahe.get());
                         session->setPreprocess(hmclahe);
                       } else if (stream.name() == "LceBsescs") {
-                        std::shared_ptr<LceBsescs> lceBsescs(new LceBsescs);
+                        std::shared_ptr<ILceBsescs> lceBsescs(new LceBsescsProperties);
                         readLCEBSESCS(&stream, lceBsescs.get());
                         session->setPreprocess(lceBsescs);
                       } else if (stream.name() == "Msrcp") {
-                        std::shared_ptr<Msrcp> msrcp = std::make_shared<Msrcp>();
+                        std::shared_ptr<IMsrcp> msrcp = std::make_shared<MsrcpProperties>();
                         readMSRCP(&stream, msrcp.get());
                         session->setPreprocess(msrcp);
                       } else if (stream.name() == "Noshp") {
-                        std::shared_ptr<Noshp> noshp(new Noshp);
+                        std::shared_ptr<INoshp> noshp(new NoshpProperties);
                         readNOSHP(&stream, noshp.get());
                         session->setPreprocess(noshp);
                       } else if (stream.name() == "Pohe") {
-                        std::shared_ptr<Pohe> pohe(new Pohe);
+                        std::shared_ptr<IPohe> pohe(new PoheProperties);
                         readPOHE(&stream, pohe.get());
                         session->setPreprocess(pohe);
                       } else if (stream.name() == "Rswhe") {
-                        std::shared_ptr<Rswhe> rswhe = std::make_shared<Rswhe>();
+                        std::shared_ptr<IRswhe> rswhe = std::make_shared<RswheProperties>();
                         readRSWHE(&stream, rswhe.get());
                         session->setPreprocess(rswhe);
                       } else if (stream.name() == "Wallis") {
-                        std::shared_ptr<Wallis> wallis = std::make_shared<Wallis>();
+                        std::shared_ptr<IWallis> wallis = std::make_shared<WallisProperties>();
                         readWALLIS(&stream, wallis.get());
                         session->setPreprocess(wallis);
                       } else

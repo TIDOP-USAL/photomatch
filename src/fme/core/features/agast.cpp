@@ -4,9 +4,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 AgastProperties::AgastProperties()
   : IAgast(),
     mThreshold(10),
@@ -140,9 +137,6 @@ void AgastDetector::reset()
   mAgast->setNonmaxSuppression(AgastProperties::nonmaxSuppression());
   setDetectorType(AgastProperties::detectorType());
 }
-
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

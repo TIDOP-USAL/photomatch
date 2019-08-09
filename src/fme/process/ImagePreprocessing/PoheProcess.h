@@ -6,7 +6,7 @@
 #include <QDir>
 
 #include "fme/process/ProcessConcurrent.h"
-#include "fme/core/preprocess.h"
+#include "fme/core/preprocess/preprocess.h"
 
 namespace fme
 {

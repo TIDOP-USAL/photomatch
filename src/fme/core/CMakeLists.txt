@@ -53,7 +53,33 @@ add_library(libcore ${LIB_TYPE}
             features/surf.cpp
             features/orb.h
             features/orb.cpp
-            preprocess.h
+            preprocess/preprocess.h
+            #preprocess/downsample.cpp
+            #preprocess/downsample.h
+            preprocess/acebsf.cpp
+            preprocess/acebsf.h
+            preprocess/clahe.cpp
+            preprocess/clahe.h
+            preprocess/cmbfhe.cpp
+            preprocess/cmbfhe.h
+            preprocess/dhe.cpp
+            preprocess/dhe.h
+            preprocess/fahe.cpp
+            preprocess/fahe.h
+            preprocess/hmclahe.cpp
+            preprocess/hmclahe.h
+            preprocess/lce_bsescs.cpp
+            preprocess/lce_bsescs.h
+            preprocess/msrcp.cpp
+            preprocess/msrcp.h
+            preprocess/noshp.cpp
+            preprocess/noshp.h
+            preprocess/pohe.cpp
+            preprocess/pohe.h
+            preprocess/rswhe.cpp
+            preprocess/rswhe.h
+            preprocess/wallis.cpp
+            preprocess/wallis.h
             utils.cpp
             utils.h)
 

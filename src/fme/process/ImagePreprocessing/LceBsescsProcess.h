@@ -2,7 +2,7 @@
 #define FME_LCE_BSESCS_PROCESS_H
 
 #include "fme/process/ProcessConcurrent.h"
-#include "fme/core/preprocess.h"
+#include "fme/core/preprocess/preprocess.h"
 
 namespace fme
 {

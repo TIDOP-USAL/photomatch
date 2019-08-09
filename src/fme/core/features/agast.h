@@ -11,8 +11,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
 /*!
  * \brief AGAST detector properties class
  */
@@ -53,6 +51,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
+
 class FME_EXPORT AgastDetector
   : public AgastProperties,
     public KeypointDetector
@@ -90,7 +89,6 @@ protected:
 
 };
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme
 

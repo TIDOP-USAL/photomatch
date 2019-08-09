@@ -5,6 +5,8 @@
 
 #include <QSize>
 
+#include <opencv2/features2d.hpp>
+
 #include <tidop/core/flags.h>
 
 namespace fme
@@ -20,6 +22,7 @@ public:
 
   enum class Type
   {
+    downsample,
     acebsf,
     clahe,
     cmbfhe,
@@ -36,7 +39,7 @@ public:
 
 public:
 
-  Preprocess(Type type) : mPreprocessType(type), mMaxSize(-1) {}
+  Preprocess(Type type) : mPreprocessType(type) {}
   virtual ~Preprocess() = default;
 
   /*!
@@ -46,15 +49,49 @@ public:
 
   Type type() const { return mPreprocessType.flags(); }
 
-  void setMaxImageSize(int size) {mMaxSize = size;}
-
 protected:
 
   tl::EnumFlags<Type> mPreprocessType;
-  int mMaxSize;
 
 };
 ALLOW_BITWISE_FLAG_OPERATIONS(Preprocess::Type)
+
+/*----------------------------------------------------------------*/
+
+
+class FME_EXPORT ImageProcess
+{
+
+public:
+
+  ImageProcess() {}
+  virtual ~ImageProcess() = default;
+
+  /*!
+   * \brief procesa una imagen
+   * \param[in] img Imagen
+   * \return Descriptores
+   */
+  virtual cv::Mat process(const cv::Mat &img) = 0;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class FME_EXPORT IDownsample
+  : public Preprocess
+{
+
+public:
+
+  IDownsample() : Preprocess(Preprocess::Type::downsample) {}
+  virtual ~IDownsample() = default;
+
+  virtual int maxImageSize() const = 0;
+  virtual void setMaxImageSize(int size) = 0;
+};
 
 
 /*----------------------------------------------------------------*/

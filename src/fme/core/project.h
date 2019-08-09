@@ -11,7 +11,7 @@
 
 #include "fme/core/image.h"
 #include "fme/core/session.h"
-#include "fme/core/preprocess.h"
+#include "fme/core/preprocess/preprocess.h"
 
 class QXmlStreamWriter;
 class QXmlStreamReader;
