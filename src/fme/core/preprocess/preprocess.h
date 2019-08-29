@@ -4,6 +4,7 @@
 #include "fme/fme_global.h"
 
 #include <QSize>
+#include <QObject>
 
 #include <opencv2/features2d.hpp>
 
@@ -343,7 +344,6 @@ public:
 
 };
 
-
 /*----------------------------------------------------------------*/
 
 
@@ -370,5 +370,7 @@ public:
 
 
 } // namespace fme
+
+Q_DECLARE_METATYPE(fme::IRswhe::HistogramCut)
 
 #endif // FME_PREPROCESS_H

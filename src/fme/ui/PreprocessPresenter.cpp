@@ -33,18 +33,6 @@
 #include "fme/widgets/WallisWidget.h"
 
 #include "fme/process/MultiProcess.h"
-//#include "fme/process/ImagePreprocessing/AcebsfProcess.h"
-//#include "fme/process/ImagePreprocessing/FaheProcess.h"
-//#include "fme/process/ImagePreprocessing/CmbfheProcess.h"
-//#include "fme/process/ImagePreprocessing/ClaheProcess.h"
-//#include "fme/process/ImagePreprocessing/DheProcess.h"
-//#include "fme/process/ImagePreprocessing/HmclaheProcess.h"
-//#include "fme/process/ImagePreprocessing/LceBsescsProcess.h"
-//#include "fme/process/ImagePreprocessing/MsrcpProcess.h"
-//#include "fme/process/ImagePreprocessing/NoshpProcess.h"
-//#include "fme/process/ImagePreprocessing/PoheProcess.h"
-//#include "fme/process/ImagePreprocessing/RswheProcess.h"
-//#include "fme/process/ImagePreprocessing/WallisProcess.h"
 #include "fme/process/preprocess/imagePreprocess.h"
 
 #include <QFileInfo>

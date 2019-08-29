@@ -30,7 +30,9 @@ private slots:
   void test_clear();
   void test_updateHistory();
   void test_deleteHistory();
-  void test_imageActive();
+
+  ///TODO: addSession
+  void test_addSession();
 
 // signals:
 
@@ -95,7 +97,10 @@ void TestMainWindowView::initTestCase()
   QStringList images {"C:\\img01.jpg", "C:\\img02.jpg"};
   addImages(images);
 
-  setActiveImage("C:\\img01.jpg");
+  //setActiveImage("C:\\img01.jpg");
+
+  addSession("session01", "Session 1", true);
+
 }
 
 void TestMainWindowView::cleanupTestCase()
@@ -212,9 +217,28 @@ void TestMainWindowView::test_deleteHistory()
 
 }
 
-void TestMainWindowView::test_imageActive()
+void TestMainWindowView::test_addSession()
 {
+  bool add_session = false;
+  if (QTreeWidgetItem *itemProject = this->mTreeWidgetProject->topLevelItem(0)) {
 
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      QTreeWidgetItem *temp = itemProject->child(i);
+      if (temp->text(0).compare(tr("Sessions")) == 0) {
+        itemSessions = itemProject->child(i);
+        break;
+      }
+    }
+
+    if (itemSessions != nullptr) {
+      QTreeWidgetItem *temp = itemSessions->child(0);
+      QCOMPARE("Session 1", temp->toolTip(0));
+      QCOMPARE("session01", temp->text(0));
+      QCOMPARE(true, temp->font(0).bold());
+    }
+
+  }
 }
 
 void TestMainWindowView::test_openNew()

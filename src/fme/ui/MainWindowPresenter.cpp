@@ -21,6 +21,9 @@
 #include "fme/ui/FeatureExtractorPresenter.h"
 #include "fme/ui/FeatureExtractorModel.h"
 #include "fme/ui/FeatureExtractorView.h"
+#include "fme/ui/DescriptorMatcherPresenter.h"
+#include "fme/ui/DescriptorMatcherModel.h"  ///TODO: por ahora no tiene ninguna utilidad
+#include "fme/ui/DescriptorMatcherView.h"
 
 #include "fme/core/project.h"
 
@@ -50,7 +53,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mPreprocessModel(nullptr),
     mPreprocessPresenter(nullptr),
     mFeatureExtractorModel(nullptr),
-    mFeatureExtractorPresenter(nullptr)
+    mFeatureExtractorPresenter(nullptr),
+    mDescriptorMatcherModel(nullptr),
+    mDescriptorMatcherPresenter(nullptr)
 {
   init();
 
@@ -88,6 +93,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(selectImage(QString)),        this, SLOT(activeImage(QString)));
   connect(mView, SIGNAL(selectImages(QStringList)),   this, SLOT(activeImages(QStringList)));
   connect(mView, SIGNAL(deleteImages(QStringList)),   this, SLOT(deleteImages(QStringList)));
+  connect(mView, SIGNAL(selectSession(QString)),      this, SLOT(selectSession(QString)));
 
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
 }
@@ -119,12 +125,12 @@ MainWindowPresenter::~MainWindowPresenter()
     mNewSessionPresenter = nullptr;
   }
 
-  if(mSettings){
+  if (mSettings){
     delete mSettings;
     mSettings = nullptr;
   }
 
-  if(mSettingsRW){
+  if (mSettingsRW){
     delete mSettingsRW;
     mSettingsRW = nullptr;
   }
@@ -134,24 +140,34 @@ MainWindowPresenter::~MainWindowPresenter()
     mSettingsModel = nullptr;
   }
 
-  if(mPreprocessModel){
+  if (mPreprocessModel){
     delete mPreprocessModel;
     mPreprocessModel = nullptr;
   }
 
-  if(mPreprocessPresenter){
+  if (mPreprocessPresenter){
     delete mPreprocessPresenter;
     mPreprocessPresenter = nullptr;
   }
 
-  if(mFeatureExtractorModel){
+  if (mFeatureExtractorModel){
     delete mFeatureExtractorModel;
     mFeatureExtractorModel = nullptr;
   }
 
-  if(mFeatureExtractorPresenter){
+  if (mFeatureExtractorPresenter){
     delete mFeatureExtractorPresenter;
     mFeatureExtractorPresenter = nullptr;
+  }
+
+  if (mDescriptorMatcherModel){
+    delete mDescriptorMatcherModel;
+    mDescriptorMatcherModel = nullptr;
+  }
+
+  if (mDescriptorMatcherPresenter){
+    delete mDescriptorMatcherPresenter;
+    mDescriptorMatcherPresenter = nullptr;
   }
 }
 
@@ -262,9 +278,8 @@ void MainWindowPresenter::openFromHistory(const QString &file)
 
 void MainWindowPresenter::deleteHistory()
 {
-  TL_TODO("mModel->deleteHistory();")
-  TL_TODO("mover deleteHistory a una clase SettingsModel")
-  TL_TODO("mView->deleteHistory();")
+  mSettingsModel->clearHistory();
+  mView->deleteHistory();
 }
 
 void MainWindowPresenter::saveProject()
@@ -371,7 +386,8 @@ void MainWindowPresenter::openFeatureExtraction()
 
 void MainWindowPresenter::openFeatureMatching()
 {
-
+  initFeatureMatching();
+  mDescriptorMatcherPresenter->open();
 }
 
 void MainWindowPresenter::openSettings()
@@ -416,17 +432,116 @@ void MainWindowPresenter::loadProject()
   }
 
   TL_TODO("Lo mismo que para las imagenes... ")
-  for(auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
-    //loadSession((*it)->name());
-    mView->addSession((*it)->name(), (*it)->description());
-    mView->setFlag(MainWindowView::Flag::session_created, true);
+  if (mProjectModel->currentSession()){
+    QString currentSession = mProjectModel->currentSession()->name();
+    for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
+      //loadSession((*it)->name());
+      //(currentSession.compare((*it)->name()) == 0)
+      mView->addSession((*it)->name(), (*it)->description());
+      mView->setFlag(MainWindowView::Flag::session_created, true);
 
-    std::shared_ptr<Preprocess> preprocess = (*it)->preprocess();
-    if (preprocess){
-      mView->setFlag(MainWindowView::Flag::preprocess, true);
+      std::shared_ptr<Preprocess> preprocess = (*it)->preprocess();
+      if (preprocess){
+        mView->setFlag(MainWindowView::Flag::preprocess, true);
+
+        std::shared_ptr<Feature> detector = (*it)->detector();
+        std::shared_ptr<Feature> descriptor = (*it)->descriptor();
+        if (detector && descriptor){
+          mView->setFlag(MainWindowView::Flag::feature_extraction, true);
+
+          /// Preprocess
+          QString preprocess_name;
+          if (preprocess->type() == Preprocess::Type::acebsf){
+            preprocess_name = "ACEBSF";
+          } else if (preprocess->type() == Preprocess::Type::clahe){
+            preprocess_name = "CLAHE";
+          } else if (preprocess->type() == Preprocess::Type::cmbfhe){
+            preprocess_name = "CMBFHE";
+          } else if (preprocess->type() == Preprocess::Type::dhe){
+            preprocess_name = "DHE";
+          } else if (preprocess->type() == Preprocess::Type::fahe){
+            preprocess_name = "FAHE";
+          } else if (preprocess->type() == Preprocess::Type::hmclahe){
+            preprocess_name = "HMCLAHE";
+          } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
+            preprocess_name = "LCE_BSESCS";
+          } else if (preprocess->type() == Preprocess::Type::msrcp){
+            preprocess_name = "MSRCP";
+          } else if (preprocess->type() == Preprocess::Type::noshp){
+            preprocess_name = "NOSHP";
+          } else if (preprocess->type() == Preprocess::Type::pohe){
+            preprocess_name = "POHE";
+          } else if (preprocess->type() == Preprocess::Type::rswhe){
+            preprocess_name = "RSWHE";
+          } else if (preprocess->type() == Preprocess::Type::wallis){
+            preprocess_name = "WALLIS";
+          }
+          mView->addPreprocess((*it)->name(), preprocess_name);
+
+          /// Detector
+          QString detector_name;
+          if (detector->type() == Feature::Type::agast){
+            detector_name = "AGAST";
+          } else if (detector->type() == Feature::Type::akaze){
+            detector_name = "AKAZE";
+          } else if (detector->type() == Feature::Type::brisk){
+            detector_name = "BRISK";
+          } else if (detector->type() == Feature::Type::fast){
+            detector_name = "FAST";
+          } else if (detector->type() == Feature::Type::gftt){
+            detector_name = "GFTT";
+          } else if (detector->type() == Feature::Type::kaze){
+            detector_name = "KAZE";
+          } else if (detector->type() == Feature::Type::msd){
+            detector_name = "MSD";
+          } else if (detector->type() == Feature::Type::mser){
+            detector_name = "MSER";
+          } else if (detector->type() == Feature::Type::orb){
+            detector_name = "ORB";
+          } else if (detector->type() == Feature::Type::sift){
+            detector_name = "SIFT";
+          } else if (detector->type() == Feature::Type::star){
+            detector_name = "STAR";
+          } else if (detector->type() == Feature::Type::surf){
+            detector_name = "SURF";
+          }
+
+          mView->addDetector((*it)->name(), detector_name);
+
+          /// Descriptor
+          QString descriptor_name;
+          if (descriptor->type() == Feature::Type::akaze){
+            descriptor_name = "AKAZE";
+          } else if (descriptor->type() == Feature::Type::brief){
+            descriptor_name = "BRIEF";
+          } else if (descriptor->type() == Feature::Type::brisk){
+            descriptor_name = "BRISK";
+          } else if (descriptor->type() == Feature::Type::daisy){
+            descriptor_name = "DAISY";
+          } else if (descriptor->type() == Feature::Type::freak){
+            descriptor_name = "FREAK";
+          } else if (descriptor->type() == Feature::Type::hog){
+            descriptor_name = "HOG";
+          } else if (descriptor->type() == Feature::Type::kaze){
+            descriptor_name = "KAZE";
+          } else if (descriptor->type() == Feature::Type::latch){
+            descriptor_name = "LATCH";
+          } else if (descriptor->type() == Feature::Type::lucid){
+            descriptor_name = "LUCID";
+          } else if (descriptor->type() == Feature::Type::orb){
+            descriptor_name = "ORB";
+          } else if (descriptor->type() == Feature::Type::sift){
+            descriptor_name = "SIFT";
+          } else if (descriptor->type() == Feature::Type::surf){
+            descriptor_name = "SURF";
+          }
+          mView->addDescriptor((*it)->name(), descriptor_name);
+
+        }
+      }
     }
-
   }
+
 }
 
 void MainWindowPresenter::updateProject()
@@ -436,11 +551,13 @@ void MainWindowPresenter::updateProject()
 
 void MainWindowPresenter::openImage(const QString &image)
 {
-  //mView->showImage(image);
+  mView->showImage(image);
 }
 
 void MainWindowPresenter::activeImage(const QString &image)
 {
+  std::list<std::pair<QString, QString>> properties = mModel->exif(image);
+  mView->setProperties(properties);
   mView->setActiveImage(image);
 }
 
@@ -470,6 +587,11 @@ void MainWindowPresenter::loadSession(const QString &session)
   mView->setFlag(MainWindowView::Flag::project_modified, true);
 }
 
+void MainWindowPresenter::selectSession(const QString &session)
+{
+  ///TODO: recuperar información de la sesión y mostrarla en la ventana de propiedades
+}
+
 void MainWindowPresenter::loadPreprocess()
 {
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
@@ -483,7 +605,13 @@ void MainWindowPresenter::loadPreprocess()
 
 void MainWindowPresenter::loadFeatures()
 {
-
+  std::shared_ptr<Session> _session = mProjectModel->currentSession();
+  std::shared_ptr<Feature> detector = _session->detector();
+  std::shared_ptr<Feature> descriptor = _session->descriptor();
+  if (detector && descriptor){
+    mView->setFlag(MainWindowView::Flag::feature_extraction, true);
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+  }
 }
 
 void MainWindowPresenter::help()
@@ -554,6 +682,15 @@ void MainWindowPresenter::initFeatureExtractionDialog()
     mFeatureExtractorPresenter = new FeatureExtractorPresenter(featureExtractorView, mFeatureExtractorModel, mProjectModel, mSettingsModel);
 
     connect(mFeatureExtractorPresenter, SIGNAL(featureExtractorFinished()), this, SLOT(loadFeatures()));
+  }
+}
+
+void MainWindowPresenter::initFeatureMatching()
+{
+  if (mDescriptorMatcherPresenter == nullptr){
+    mDescriptorMatcherModel = new DescriptorMatcherModel;
+    IDescriptorMatcherView *descriptorMatcherView = new DescriptorMatcherView(mView);
+    mDescriptorMatcherPresenter = new DescriptorMatcherPresenter(descriptorMatcherView, mDescriptorMatcherModel, mProjectModel, mSettingsModel);
   }
 }
 

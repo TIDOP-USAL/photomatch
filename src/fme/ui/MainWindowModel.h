@@ -21,6 +21,8 @@ public:
    */
   QString defaultPath() const;
 
+  std::list<std::pair<QString, QString>> exif(const QString &image) const;
+
 signals:
 
 public slots:

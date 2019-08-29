@@ -53,6 +53,8 @@ add_library(libcore ${LIB_TYPE}
             features/surf.cpp
             features/orb.h
             features/orb.cpp
+            features/matcher.cpp
+            features/matcher.h
             preprocess/preprocess.h
             #preprocess/downsample.cpp
             #preprocess/downsample.h

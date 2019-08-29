@@ -132,5 +132,5 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
 
 /*----------------------------------------------------------------*/
 
-} // namespace fme
 
+} // namespace fme

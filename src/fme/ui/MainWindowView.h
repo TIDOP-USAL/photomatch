@@ -10,12 +10,14 @@ class MainWindowView;
 }
 
 class QTreeWidget;
+class QTreeWidgetItem;
 
 namespace fme
 {
 
 class ThumbnailsWidget;
 class LogWidget;
+class GraphicViewer;
 
 class MainWindowView
   : public QMainWindow
@@ -53,13 +55,21 @@ public:
   void addImages(const QStringList &images);
   void setActiveImage(const QString &image);
   void setActiveImages(const QStringList &images);
-  void addSession(const QString &sessionName, const QString &sessionDescription);
+  void addSession(const QString &sessionName, const QString &sessionDescription, bool activeSession = false);
+  void addPreprocess(const QString &sessionName, const QString &preprocess);
+  void addDetector(const QString &sessionName, const QString &detector);
+  void addDescriptor(const QString &sessionName, const QString &descriptor);
 
   /*!
    * \brief Añade un mensaje temporal en la barra de herramientas
    * \param msg Mensaje
    */
   void setStatusBarMsg(const QString &msg);
+
+  /*!
+   * \brief Establece las propiedades del elemento seleccionado en el árbol de proyecto
+   */
+  void setProperties(const std::list<std::pair<QString, QString> > &properties);
 
 public slots:
 
@@ -79,6 +89,12 @@ public slots:
    * \param[in] file
    */
   void deleteImage(const QString &file);
+
+  /*!
+   * \brief Abre una imagen
+   * \param[in] file
+   */
+  void showImage(const QString &file);
 
 signals:
 
@@ -114,6 +130,7 @@ signals:
   void selectImage(QString);
   void selectImages(QStringList);
   void deleteImages(QStringList);
+  void selectSession(QString);
 
 protected:
 
@@ -124,6 +141,11 @@ private slots:
   void update();
   void openFromHistory();
   void onSelectionChanged();
+  void hideTab(int id);
+  void tabChanged(int id);
+  void onItemDoubleClicked(QTreeWidgetItem *item, int column);
+  void openStartPage();
+  void onCommandLinkButtonGitHubClicked();
 
 private:
 
@@ -145,6 +167,7 @@ protected:
   QAction *mActionSaveProjectAs;
   QAction *mActionCloseProject;
   QAction *mActionExit;
+  QAction *mActionStartPage;
   QAction *mActionLoadImages;
   QAction *mActionNewSession;
   QAction *mActionAssistant;
@@ -161,9 +184,15 @@ protected:
   QAction *mActionRecall;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
+  QAction *mActionZoomIn;
+  QAction *mActionZoomOut;
+  QAction *mActionZoomExtend;
+  QAction *mActionZoom11;
   QMenu *mMenuRecentProjects;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
+  GraphicViewer *mGraphicViewer;
+  QWidget *mStartPageWidget;
 
   tl::EnumFlags<Flag> mFlags;
   std::vector<QAction*> mHistory;

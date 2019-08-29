@@ -21,7 +21,7 @@ target_link_libraries(${the_target} PRIVATE
                       Qt5::Test
                       libcore
                       ${OpenCV_LIBS}
-                      )
+                      ${PIXKIT_LIBRARIES})
 
 target_link_libraries(${the_target} PRIVATE
                       ${Boost_FILESYSTEM_LIBRARY}

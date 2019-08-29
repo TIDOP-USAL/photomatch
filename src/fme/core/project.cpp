@@ -283,8 +283,12 @@ size_t Project::sessionCount() const
 
 std::shared_ptr<Session> Project::currentSession()
 {
-  session_iterator it = mSessions.begin() + mCurrentSession;
-  return (*it);
+  if (mCurrentSession < 0){
+    return nullptr;
+  } else {
+    session_iterator it = mSessions.begin() + mCurrentSession;
+    return (*it);
+  }
 }
 
 const std::shared_ptr<Session> Project::currentSession() const
@@ -393,7 +397,7 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                   } else if (stream.name() == "Preprocess") {
                     while (stream.readNextStartElement()) {
 
-                      if (stream.name() == "Clahe") {
+                      if (stream.name() == "Acebsf") {
                         std::shared_ptr<IAcebsf> acebsf = std::make_shared<AcebsfProperties>();
                         readACEBSF(&stream, acebsf.get());
                         session->setPreprocess(acebsf);
@@ -498,7 +502,55 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                     }
                   } else if (stream.name() == "FeatureDescriptor") {
                     while (stream.readNextStartElement()){
-
+                      if (stream.name() == "AKAZE") {
+                        std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
+                        readAKAZE(&stream, akaze.get());
+                        session->setDescriptor(akaze);
+                      } else if (stream.name() == "BRIEF") {
+                        std::shared_ptr<IBrief> brief = std::make_shared<BriefProperties>();
+                        readBRIEF(&stream, brief.get());
+                        session->setDescriptor(brief);
+                      } else if (stream.name() == "BRISK") {
+                        std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
+                        readBRISK(&stream, brisk.get());
+                        session->setDescriptor(brisk);
+                      } else if (stream.name() == "DAISY") {
+                        std::shared_ptr<IDaisy> daisy = std::make_shared<DaisyProperties>();
+                        readDAISY(&stream, daisy.get());
+                        session->setDescriptor(daisy);
+                      } else if (stream.name() == "FREAK") {
+                        std::shared_ptr<IFreak> freak = std::make_shared<FreakProperties>();
+                        readFREAK(&stream, freak.get());
+                        session->setDescriptor(freak);
+                      } else if (stream.name() == "HOG") {
+                        std::shared_ptr<IHog> hog = std::make_shared<HogProperties>();
+                        readHOG(&stream, hog.get());
+                        session->setDescriptor(hog);
+                      } else if (stream.name() == "KAZE") {
+                        std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
+                        readKAZE(&stream, kaze.get());
+                        session->setDescriptor(kaze);
+                      } else if (stream.name() == "LATCH") {
+                        std::shared_ptr<ILatch> latch = std::make_shared<LatchProperties>();
+                        readLATCH(&stream, latch.get());
+                        session->setDescriptor(latch);
+                      } else if (stream.name() == "LUCID") {
+                        std::shared_ptr<ILucid> lucid = std::make_shared<LucidProperties>();
+                        readLUCID(&stream, lucid.get());
+                        session->setDescriptor(lucid);
+                      } else if (stream.name() == "ORB") {
+                        std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
+                        readORB(&stream, orb.get());
+                        session->setDescriptor(orb);
+                      } else if (stream.name() == "SIFT") {
+                        std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
+                        readSIFT(&stream, sift.get());
+                        session->setDescriptor(sift);
+                      } else if (stream.name() == "SURF") {
+                        std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
+                        readSURF(&stream, surf.get());
+                        session->setDescriptor(surf);
+                      }
                     }
                   } else
                     stream.skipCurrentElement();
@@ -626,39 +678,27 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
             if (detector->type() == Feature::Type::agast){
               writeAGAST(&stream, dynamic_cast<IAgast *>(detector));
             } else if (detector->type() == Feature::Type::akaze){
-              IAkaze *akaze = dynamic_cast<IAkaze *>(detector);
-              writeAKAZE(&stream, akaze);
+              writeAKAZE(&stream, dynamic_cast<IAkaze *>(detector));
             } else if (detector->type() == Feature::Type::brisk){
-              IBrisk *brisk = dynamic_cast<IBrisk *>(detector);
-              writeBRISK(&stream, brisk);
+              writeBRISK(&stream, dynamic_cast<IBrisk *>(detector));
             } else if (detector->type() == Feature::Type::fast){
-              IFast *fast = dynamic_cast<IFast *>(detector);
-              writeFAST(&stream, fast);
+              writeFAST(&stream, dynamic_cast<IFast *>(detector));
             } else if (detector->type() == Feature::Type::gftt){
-              IGftt *gftt = dynamic_cast<IGftt *>(detector);
-              writeGFTT(&stream, gftt);
+              writeGFTT(&stream, dynamic_cast<IGftt *>(detector));
             } else if (detector->type() == Feature::Type::kaze){
-              IKaze *kaze = dynamic_cast<IKaze *>(detector);
-              writeKAZE(&stream, kaze);
+              writeKAZE(&stream, dynamic_cast<IKaze *>(detector));
             } else if (detector->type() == Feature::Type::msd){
-              IMsd *msd = dynamic_cast<IMsd *>(detector);
-              writeMSD(&stream, msd);
+              writeMSD(&stream, dynamic_cast<IMsd *>(detector));
             } else if (detector->type() == Feature::Type::mser){
-              IMser *mser = dynamic_cast<IMser *>(detector);
-              writeMSER(&stream, mser);
+              writeMSER(&stream, dynamic_cast<IMser *>(detector));
             } else if (detector->type() == Feature::Type::orb){
-              IOrb *orb = dynamic_cast<IOrb *>(detector);
-              writeORB(&stream, orb);
+              writeORB(&stream, dynamic_cast<IOrb *>(detector));
             } else if (detector->type() == Feature::Type::sift){
-              ISift *sift = dynamic_cast<ISift *>(detector);
-              writeSIFT(&stream, sift);
+              writeSIFT(&stream, dynamic_cast<ISift *>(detector));
             } else if (detector->type() == Feature::Type::star){
-              IStar *star = dynamic_cast<IStar *>(detector);
-              writeSTAR(&stream, star);
+              writeSTAR(&stream, dynamic_cast<IStar *>(detector));
             } else if (detector->type() == Feature::Type::surf){
-              ISurf *surf = dynamic_cast<ISurf *>(detector);
-              writeSURF(&stream, surf);
-
+              writeSURF(&stream, dynamic_cast<ISurf *>(detector));
             }
 
             stream.writeEndElement(); // FeatureDetector
@@ -669,41 +709,29 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
             stream.writeStartElement("FeatureDescriptor");
 
             if (descriptor->type() == Feature::Type::akaze){
-              IAkaze *akaze = dynamic_cast<IAkaze *>(descriptor);
-              writeAKAZE(&stream, akaze);
+              writeAKAZE(&stream, dynamic_cast<IAkaze *>(descriptor));
             } else if (descriptor->type() == Feature::Type::brief){
-              IBrief *brief = dynamic_cast<IBrief *>(descriptor);
-              writeBRIEF(&stream, brief);
+              writeBRIEF(&stream, dynamic_cast<IBrief *>(descriptor));
             } else if (descriptor->type() == Feature::Type::brisk){
-              IBrisk *brisk = dynamic_cast<IBrisk *>(descriptor);
-              writeBRISK(&stream, brisk);
+              writeBRISK(&stream, dynamic_cast<IBrisk *>(descriptor));
             } else if (descriptor->type() == Feature::Type::daisy){
-              IDaisy *daisy = dynamic_cast<IDaisy *>(descriptor);
-              writeDAISY(&stream, daisy);
+              writeDAISY(&stream, dynamic_cast<IDaisy *>(descriptor));
             } else if (descriptor->type() == Feature::Type::freak){
-              IFreak *freak = dynamic_cast<IFreak *>(descriptor);
-              writeFREAK(&stream, freak);
+              writeFREAK(&stream, dynamic_cast<IFreak *>(descriptor));
             } else if (descriptor->type() == Feature::Type::hog){
-              IHog *hog = dynamic_cast<IHog *>(descriptor);
-              writeHOG(&stream, hog);
+              writeHOG(&stream, dynamic_cast<IHog *>(descriptor));
             } else if (descriptor->type() == Feature::Type::kaze){
-              IKaze *kaze = dynamic_cast<IKaze *>(descriptor);
-              writeKAZE(&stream, kaze);
+              writeKAZE(&stream, dynamic_cast<IKaze *>(descriptor));
             } else if (descriptor->type() == Feature::Type::latch){
-              ILatch *latch = dynamic_cast<ILatch *>(descriptor);
-              writeLATCH(&stream, latch);
+              writeLATCH(&stream, dynamic_cast<ILatch *>(descriptor));
             } else if (descriptor->type() == Feature::Type::lucid){
-              ILucid *lucid = dynamic_cast<ILucid *>(descriptor);
-              writeLUCID(&stream, lucid);
+              writeLUCID(&stream, dynamic_cast<ILucid *>(descriptor));
             } else if (descriptor->type() == Feature::Type::orb){
-              IOrb *orb = dynamic_cast<IOrb *>(descriptor);
-              writeORB(&stream, orb);
+              writeORB(&stream, dynamic_cast<IOrb *>(descriptor));
             } else if (descriptor->type() == Feature::Type::sift){
-              ISift *sift = dynamic_cast<ISift *>(descriptor);
-              writeSIFT(&stream, sift);
+              writeSIFT(&stream, dynamic_cast<ISift *>(descriptor));
             } else if (descriptor->type() == Feature::Type::surf){
-              ISurf *surf = dynamic_cast<ISurf *>(descriptor);
-              writeSURF(&stream, surf);
+              writeSURF(&stream, dynamic_cast<ISurf *>(descriptor));
             }
 
             stream.writeEndElement(); // FeatureDescriptor

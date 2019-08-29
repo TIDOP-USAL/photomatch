@@ -13,7 +13,8 @@ MACRO(DEFINE_TEST_CORE name srcs)
                           Qt5::Core
                           Qt5::Test
                           libcore
-                          ${OpenCV_LIBS})
+                          ${OpenCV_LIBS}
+                          ${PIXKIT_LIBRARIES})
 
     target_link_libraries(${the_target} PRIVATE
                           ${Boost_FILESYSTEM_LIBRARY}
@@ -73,3 +74,4 @@ add_subdirectory(settings)
 add_subdirectory(siftdetectordescriptor)
 add_subdirectory(stardetector)
 add_subdirectory(surfdetectordescriptor)
+add_subdirectory(preprocess)

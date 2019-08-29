@@ -9,7 +9,7 @@
 
 #include "fme/core/features/features.h"
 #include "fme/core/preprocess/preprocess.h"
-
+#include "fme/core/features/matcher.h"
 
 class QSettings;
 
@@ -95,7 +95,6 @@ public:
   virtual IWallis *wallis() = 0;
   virtual const IWallis *wallis() const = 0;
 
-
   virtual IAgast *agast() = 0;
   virtual const IAgast *agast() const = 0;
   virtual IAkaze *akaze() = 0;
@@ -132,6 +131,9 @@ public:
   virtual const IStar *star() const = 0;
   virtual ISurf *surf() = 0;
   virtual const ISurf *surf() const = 0;
+
+  virtual IDescriptorMatcher *descriptorMatcher() = 0;
+  virtual const IDescriptorMatcher *descriptorMatcher() const = 0;
 
   /*!
    * \brief Recupera la configuración por defecto
@@ -262,6 +264,9 @@ public:
   ISurf *surf() override;
   const ISurf *surf() const override;
 
+  IDescriptorMatcher *descriptorMatcher() override;
+  const IDescriptorMatcher *descriptorMatcher() const override;
+
   void reset() override;
 
 protected:
@@ -301,6 +306,8 @@ protected:
   ISift *mSift;
   IStar *mStar;
   ISurf *mSurf;
+
+  IDescriptorMatcher *mDescriptorMatcher;
 };
 
 

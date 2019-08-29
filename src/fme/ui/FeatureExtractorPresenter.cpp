@@ -635,7 +635,7 @@ void FeatureExtractorPresenter::run()
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
 
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
-  for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+  for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString file_in = (*it)->path();
     QFileInfo fileInfo(file_in);
     QString preprocessed_image = fileInfo.path();

@@ -32,9 +32,9 @@ MACRO(DEFINE_TEST_PROCESS name srcs)
 	
 ENDMACRO()
 
-add_subdirectory(claheprocess)
-add_subdirectory(cmbfheprocess)
-add_subdirectory(dheprocess)
-add_subdirectory(faheprocess)
-add_subdirectory(hmclaheprocess)
+#add_subdirectory(claheprocess)
+#add_subdirectory(cmbfheprocess)
+#add_subdirectory(dheprocess)
+#add_subdirectory(faheprocess)
+#add_subdirectory(hmclaheprocess)
 

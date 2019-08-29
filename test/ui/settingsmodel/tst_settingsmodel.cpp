@@ -231,6 +231,13 @@ private slots:
   void test_starLineThresholdBinarized();
   void test_starSuppressNonmaxSize();
 
+  void test_matchMatchingMethod();
+  void test_matchNormType();
+  void test_matchRatio();
+  void test_matchDistance();
+  void test_matchConfidence();
+  void test_matchCrossMatching();
+
   void test_reset();
 
 protected:
@@ -1254,6 +1261,42 @@ void TestSettingsModel::test_starSuppressNonmaxSize()
 {
   mSettingsModel->setStarSuppressNonmaxSize(10);
   QCOMPARE(10, mSettingsModel->starSuppressNonmaxSize());
+}
+
+void TestSettingsModel::test_matchMatchingMethod()
+{
+  mSettingsModel->setMatchMatchingMethod("Brute-Force");
+  QCOMPARE("Brute-Force", mSettingsModel->matchMatchingMethod());
+}
+
+void TestSettingsModel::test_matchNormType()
+{
+  mSettingsModel->setMatchNormType("NORM_L1");
+  QCOMPARE("NORM_L1", mSettingsModel->matchNormType());
+}
+
+void TestSettingsModel::test_matchRatio()
+{
+  mSettingsModel->setMatchRatio(0.5);
+  QCOMPARE(0.5, mSettingsModel->matchRatio());
+}
+
+void TestSettingsModel::test_matchDistance()
+{
+  mSettingsModel->setMatchDistance(0.8);
+  QCOMPARE(0.8, mSettingsModel->matchDistance());
+}
+
+void TestSettingsModel::test_matchConfidence()
+{
+  mSettingsModel->setMatchConfidence(0.95);
+  QCOMPARE(0.95, mSettingsModel->matchConfidence());
+}
+
+void TestSettingsModel::test_matchCrossMatching()
+{
+  mSettingsModel->setMatchCrossMatching(false);
+  QCOMPARE(false, mSettingsModel->matchCrossMatching());
 }
 
 void TestSettingsModel::test_reset()

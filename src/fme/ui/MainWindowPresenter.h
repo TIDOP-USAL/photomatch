@@ -21,7 +21,8 @@ class IPreprocessPresenter;
 class IPreprocessModel;
 class IFeatureExtractorModel;
 class IFeatureExtractorPresenter;
-
+class IDescriptorMatcherModel;
+class IDescriptorMatcherPresenter;
 
 class MainWindowPresenter
   : public IPresenter
@@ -79,6 +80,8 @@ protected slots:
   void deleteImages(const QStringList &images);
 
   void loadSession(const QString &session);
+  void selectSession(const QString &session);
+
   void loadPreprocess();
   void loadFeatures();
 
@@ -118,6 +121,8 @@ private:
    */
   void initFeatureExtractionDialog();
 
+  void initFeatureMatching();
+
 protected:
 
   MainWindowView *mView;
@@ -141,6 +146,9 @@ protected:
 
   IFeatureExtractorModel *mFeatureExtractorModel;
   IFeatureExtractorPresenter *mFeatureExtractorPresenter;
+
+  IDescriptorMatcherModel *mDescriptorMatcherModel;
+  IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
 };
 
 } // namespace fme

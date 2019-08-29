@@ -39,6 +39,11 @@ set(FME_SOURCES
     FeatureExtractorView.cpp
     FeatureExtractorModel.cpp
     FeatureExtractorPresenter.cpp
+    DescriptorMatcherView.cpp
+    DescriptorMatcherModel.cpp
+    DescriptorMatcherPresenter.cpp
+    utils/GraphicViewer.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
 )  
 
 set(FME_HEADERS
@@ -60,6 +65,11 @@ set(FME_HEADERS
     FeatureExtractorView.h
     FeatureExtractorModel.h
     FeatureExtractorPresenter.h
+    DescriptorMatcherView.h
+    DescriptorMatcherModel.h
+    DescriptorMatcherPresenter.h
+    utils/GraphicViewer.h
+    ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h
 )
 
 if(MSVC)

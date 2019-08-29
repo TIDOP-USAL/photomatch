@@ -637,6 +637,36 @@ bool SettingsModel::surfRotatedFeatures() const
   return mSettings->surf()->rotatedFeatures();
 }
 
+QString SettingsModel::matchMatchingMethod() const
+{
+  return mSettings->descriptorMatcher()->matchingMethod();
+}
+
+QString SettingsModel::matchNormType() const
+{
+  return mSettings->descriptorMatcher()->normType();
+}
+
+double SettingsModel::matchRatio() const
+{
+  return mSettings->descriptorMatcher()->ratio();
+}
+
+double SettingsModel::matchDistance() const
+{
+  return mSettings->descriptorMatcher()->distance();
+}
+
+double SettingsModel::matchConfidence() const
+{
+  return mSettings->descriptorMatcher()->confidence();
+}
+
+bool SettingsModel::matchCrossMatching() const
+{
+  return mSettings->descriptorMatcher()->crossMatching();
+}
+
 void SettingsModel::setLanguage(const QString &language)
 {
   mSettings->setLanguage(language);
@@ -1379,6 +1409,36 @@ void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
 {
   mSettings->surf()->setRotatedFeatures(rotatedFeatures);
   emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchMatchingMethod(const QString &matchingMethod)
+{
+  mSettings->descriptorMatcher()->setMatchingMethod(matchingMethod);
+}
+
+void SettingsModel::setMatchNormType(const QString &normType)
+{
+  mSettings->descriptorMatcher()->setNormType(normType);
+}
+
+void SettingsModel::setMatchRatio(double ratio)
+{
+  mSettings->descriptorMatcher()->setRatio(ratio);
+}
+
+void SettingsModel::setMatchDistance(double distance)
+{
+  mSettings->descriptorMatcher()->setDistance(distance);
+}
+
+void SettingsModel::setMatchConfidence(double confidence)
+{
+  mSettings->descriptorMatcher()->setConfidence(confidence);
+}
+
+void SettingsModel::setMatchCrossMatching(bool crossMatching)
+{
+  mSettings->descriptorMatcher()->setCrossMatching(crossMatching);
 }
 
 void SettingsModel::reset()
