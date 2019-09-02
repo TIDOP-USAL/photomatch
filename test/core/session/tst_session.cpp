@@ -23,6 +23,9 @@ private slots:
   void test_name();
   void test_description_data();
   void test_description();
+  void test_maxImageSize_data();
+  void test_maxImageSize();
+  void test_fullImageSize();
   void test_clear();
 
 protected:
@@ -95,6 +98,33 @@ void TestSession::test_description()
 
   mSession->setDescription(value);
   QCOMPARE(result, mSession->description());
+}
+
+void TestSession::test_maxImageSize_data()
+{
+  QTest::addColumn<int>("value");
+  QTest::addColumn<int>("result");
+
+  QTest::newRow("2000") << 2000 << 2000;
+  QTest::newRow("2500") << 2500 << 2500;
+  QTest::newRow("3000") << 3000 << 3000;
+}
+
+void TestSession::test_maxImageSize()
+{
+  QFETCH(int, value);
+  QFETCH(int, result);
+
+  mSession->setMaxImageSize(value);
+  QCOMPARE(result, mSession->maxImageSize());
+}
+
+void TestSession::test_fullImageSize()
+{
+  mSession->setFullImageSize(true);
+  QCOMPARE(true, mSession->fullImageSize());
+  mSession->setFullImageSize(false);
+  QCOMPARE(false, mSession->fullImageSize());
 }
 
 void TestSession::test_clear()

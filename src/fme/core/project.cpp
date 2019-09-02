@@ -394,6 +394,8 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                     session->setName(stream.readElementText());
                   } else if (stream.name() == "Description") {
                     session->setDescription(stream.readElementText());
+                  } else if (stream.name() == "MaxImageSize") {
+                    session->setMaxImageSize(stream.readElementText().toInt());
                   } else if (stream.name() == "Preprocess") {
                     while (stream.readNextStartElement()) {
 
@@ -637,6 +639,7 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
 
           stream.writeTextElement("Name", (*it)->name());
           stream.writeTextElement("Description", (*it)->description());
+          stream.writeTextElement("Description", QString::number((*it)->maxImageSize()));
 
           Preprocess *preprocess = (*it)->preprocess().get();
           if (preprocess){

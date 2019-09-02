@@ -23,6 +23,8 @@ enum
   sessions,
   session,
   preprocess,
+  preprocess_images,
+  preprocess_image,
   detector,
   descriptor
 };
@@ -56,6 +58,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionZoomOut(new QAction(this)),
     mActionZoomExtend(new QAction(this)),
     mActionZoom11(new QAction(this)),
+    mActionShowKeyPoints(new QAction(this)),
     mGraphicViewer(nullptr),
     ui(new Ui::MainWindowView)
 {
@@ -102,6 +105,8 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(hideTab(int)));
   connect(ui->tabWidget, SIGNAL(currentChanged(int)),    this, SLOT(tabChanged(int)));
 
+  connect(mActionShowKeyPoints, SIGNAL(toggled(bool)), this, SLOT(onShowKeyPoints(bool)));
+
   /* Start Page */
   connect(ui->commandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
   connect(ui->commandLinkButtonOpenProject,  SIGNAL(clicked()),  this, SIGNAL(openProject()));
@@ -142,7 +147,7 @@ void MainWindowView::setProjectTitle(const QString &title)
   QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0);
   if (itemProject == nullptr) {
     itemProject = new QTreeWidgetItem();
-    //itemProject->setIcon(0, QIcon(":/ico/img/48x48/project.png"));
+    //itemProject->setIcon(0, QIcon(":/ico/img/48x48/icons8_file_48px.png"));
     mTreeWidgetProject->addTopLevelItem(itemProject);
     itemProject->setExpanded(true);
     itemProject->setData(0, Qt::UserRole, fme::project);
@@ -177,7 +182,7 @@ void MainWindowView::addImages(const QStringList &images)
         if (itemImages == nullptr) {
           itemImages = new QTreeWidgetItem();
           itemImages->setText(0, tr("Images"));
-          itemImages->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-pictures-folder.png"));
+          itemImages->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_documents_folder_48px.png"));
           itemImages->setFlags(itemImages->flags() | Qt::ItemIsTristate);
           itemImages->setData(0, Qt::UserRole, fme::images);
           itemProject->addChild(itemImages);
@@ -189,7 +194,7 @@ void MainWindowView::addImages(const QStringList &images)
         //itemPhotogram->setExpanded(true);
         //itemPhotogram->setCheckState(0, Qt::CheckState::Checked);
         itemPhotogram->setText(0, QFileInfo(image).baseName());
-        itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-image-file.png"));
+        itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_image_48px.png"));
         itemPhotogram->setToolTip(0, image);
         itemPhotogram->setData(0, Qt::UserRole, fme::image);
         itemImages->addChild(itemPhotogram);
@@ -284,7 +289,7 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
     if (itemSessions == nullptr) {
       itemSessions = new QTreeWidgetItem();
       itemSessions->setText(0, tr("Sessions"));
-      itemSessions->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-add-list.png"));
+      itemSessions->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_add_list_48px.png"));
       itemSessions->setFlags(itemSessions->flags() | Qt::ItemIsTristate);
       itemProject->addChild(itemSessions);
       itemSessions->setExpanded(true);
@@ -293,7 +298,7 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
 
     QTreeWidgetItem *itemSession = new QTreeWidgetItem();
     itemSession->setText(0, sessionName);
-    itemSession->setIcon(0, QIcon(":/ico/48/img/material/48/icons8-list.png"));
+    itemSession->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_list_48px.png"));
     itemSession->setToolTip(0, sessionDescription);
     itemSessions->addChild(itemSession);
     QFont font;
@@ -305,9 +310,8 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
   }
 }
 
-void MainWindowView::addPreprocess(const QString &sessionName, const QString &preprocess)
+void MainWindowView::addPreprocess(const QString &sessionName, const QString &preprocess, const QStringList &preprocessImages)
 {
-  TL_TODO("Añadir imagenes preprocesadas")
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
     /* Sessions */
@@ -323,11 +327,12 @@ void MainWindowView::addPreprocess(const QString &sessionName, const QString &pr
 
     if (itemSessions != nullptr) {
 
+      QTreeWidgetItem *itemPreprocess = nullptr;
       for (int i = 0; i < itemSessions->childCount(); i++) {
         QTreeWidgetItem *itemSession = itemSessions->child(i);
         if (itemSession){
           if (itemSession->text(0).compare(sessionName) == 0){
-            QTreeWidgetItem *itemPreprocess = new QTreeWidgetItem();
+            itemPreprocess = new QTreeWidgetItem();
             itemPreprocess->setText(0, QString("Preprocess: ").append(preprocess));
             itemPreprocess->setData(0, Qt::UserRole, fme::preprocess);
             itemSession->addChild(itemPreprocess);
@@ -336,6 +341,39 @@ void MainWindowView::addPreprocess(const QString &sessionName, const QString &pr
           }
         }
       }
+
+      if (itemPreprocess != nullptr){
+
+        QTreeWidgetItem *itemImages = nullptr;
+        for (int i = 0; i < itemPreprocess->childCount(); i++) {
+          QTreeWidgetItem *temp = itemPreprocess->child(i);
+          if (temp->text(0).compare(tr("Images")) == 0) {
+            itemImages = itemPreprocess->child(i);
+            break;
+          }
+        }
+
+        if (itemImages == nullptr) {
+          itemImages = new QTreeWidgetItem();
+          itemImages->setText(0, tr("Images"));
+          itemImages->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_documents_folder_48px.png"));
+          itemImages->setFlags(itemImages->flags() | Qt::ItemIsTristate);
+          itemImages->setData(0, Qt::UserRole, fme::preprocess_images);
+          itemPreprocess->addChild(itemImages);
+          itemImages->setExpanded(true);
+        }
+
+        for (auto image : preprocessImages){
+          QTreeWidgetItem *itemPhotogram = new QTreeWidgetItem();
+          itemPhotogram->setText(0, QFileInfo(image).baseName());
+          itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_image_48px.png"));
+          itemPhotogram->setToolTip(0, image);
+          itemPhotogram->setData(0, Qt::UserRole, fme::preprocess_image);
+          itemImages->addChild(itemPhotogram);
+        }
+
+      }
+
     }
   }
 }
@@ -396,7 +434,7 @@ void MainWindowView::addDescriptor(const QString &sessionName, const QString &de
         if (itemSession){
           if (itemSession->text(0).compare(sessionName) == 0){
             QTreeWidgetItem *itemDescriptor = new QTreeWidgetItem();
-            itemDescriptor->setText(0, QString("Descriptor").append(descriptor));
+            itemDescriptor->setText(0, QString("Descriptor: ").append(descriptor));
             itemDescriptor->setData(0, Qt::UserRole, fme::descriptor);
             itemSession->addChild(itemDescriptor);
             update();
@@ -544,8 +582,8 @@ void MainWindowView::showImage(const QString &file)
     contextMenu->addAction(mActionZoomOut);
     contextMenu->addAction(mActionZoomExtend);
     contextMenu->addAction(mActionZoom11);
-    //contextMenu->addSeparator();
-    //contextMenu->addAction(ui->actionShowKeyPoints);
+    contextMenu->addSeparator();
+    contextMenu->addAction(mActionShowKeyPoints);
     mGraphicViewer->setContextMenu(contextMenu);
   }
 
@@ -559,6 +597,52 @@ void MainWindowView::showImage(const QString &file)
   emit selectImage(file);
 
   update();
+}
+
+bool MainWindowView::showKeyPoints() const
+{
+  return mActionShowKeyPoints->isChecked();
+}
+
+void MainWindowView::setKeyPoints(const std::vector<QPointF> &keyPoints)
+{
+//  /////////////////////////////////////////////////////////////////////////
+//  /// No esta bien aqui...
+//  Settings &settings = Settings::instance();
+//  QColor color;
+//  color.setNamedColor(settings.keyPointsColor());
+//  QPen pen(color, 1.);
+//  QBrush brush;
+//  if (settings.keyPointsBgColor().compare("-") == 0){
+//    brush = QBrush(Qt::NoBrush);
+//  } else {
+//    brush.setColor(QColor(settings.keyPointsBgColor()));
+//    brush.setStyle(Qt::SolidPattern);
+//  }
+
+//  int symbol = settings.symbol();
+//  double symbol_size = settings.symbolSize();
+//  double r = symbol_size / 2.;
+
+//  /////////////////////////////////////////////////////////////////////////
+
+  QColor color;
+  color.setNamedColor(QString("#00FF00"));
+  QPen pen(color, 1.);
+  QBrush brush;
+  brush = QBrush(Qt::NoBrush);
+  double symbol_size = 10.;
+  double r = symbol_size / 2.;
+
+  for (size_t i = 0; i < keyPoints.size(); i++){
+    QGraphicsEllipseItem *ellipse = mGraphicViewer->scene()->addEllipse(keyPoints[i].x() - r,
+                                                                        keyPoints[i].y() - r,
+                                                                        r * 2, r * 2, pen, brush);
+    ///e->setToolTip("ID punto...");
+    ellipse->setFlag(QGraphicsItem::ItemIsSelectable, true);
+    //ellipse->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+    //ellipse->setToolTip(QString::number(static_cast<int>(i)));
+  }
 }
 
 void MainWindowView::changeEvent(QEvent *e)
@@ -598,6 +682,13 @@ void MainWindowView::update()
   mActionNotRecentProjects->setVisible(mHistory.size() == 0);
   mActionClearHistory->setEnabled(mHistory.size() > 0);
 
+  // toolbar viewer
+  mActionZoomIn->setEnabled(bImageOpen);
+  mActionZoomOut->setEnabled(bImageOpen);
+  mActionZoomExtend->setEnabled(bImageOpen);
+  mActionZoom11->setEnabled(bImageOpen);
+  mActionShowKeyPoints->setEnabled(bImageOpen && mFlags.isActive(Flag::feature_extraction));
+
 }
 
 void MainWindowView::openFromHistory()
@@ -614,7 +705,8 @@ void MainWindowView::onSelectionChanged()
   if (item[0]->data(0, Qt::UserRole) == fme::project){
 
   } else if (item[0]->data(0, Qt::UserRole) == fme::images){
-  } else if (item[0]->data(0, Qt::UserRole) == fme::image){
+  } else if (item[0]->data(0, Qt::UserRole) == fme::image ||
+             item[0]->data(0, Qt::UserRole) == fme::preprocess_image){
     int size = item.size();
     if(size > 0){
       if (size == 1) {
@@ -706,7 +798,8 @@ void MainWindowView::tabChanged(int id)
 
 void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
 {
-  if (item->data(0, Qt::UserRole) == fme::image){
+  if (item->data(0, Qt::UserRole) == fme::image ||
+      item->data(0, Qt::UserRole) == fme::preprocess_image){
     emit openImage(item->toolTip(column));
   }
 }
@@ -738,6 +831,28 @@ void MainWindowView::onCommandLinkButtonGitHubClicked()
   QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
 }
 
+void MainWindowView::onShowKeyPoints(bool show)
+{
+  if (show){
+    // emitir señal con la imagen activa.
+    if (ui->tabWidget->count() > 0){
+      GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(ui->tabWidget->currentWidget());
+
+      if (graphicViewer){
+        QString file_name = ui->tabWidget->tabToolTip(ui->tabWidget->currentIndex());
+        emit loadKeyPoints(file_name);
+      }
+    }
+  } else {
+    for (auto &item : mGraphicViewer->scene()->items()) {
+      QGraphicsEllipseItem *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
+      if (ellipse){
+        mGraphicViewer->scene()->removeItem(item);
+      }
+    }
+  }
+}
+
 void MainWindowView::init()
 {
   setWindowTitle(QString("FME"));
@@ -746,42 +861,37 @@ void MainWindowView::init()
 #ifndef QT_NO_SHORTCUT
   mActionNewProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+N", nullptr));
 #endif // QT_NO_SHORTCUT
-  mActionNewProject->setObjectName(QStringLiteral("actionNewProject"));
-  QIcon icon;
-  icon.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-empty-document.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionNewProject->setIcon(icon);
+  QIcon iconNewProject;
+  iconNewProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionNewProject->setIcon(iconNewProject);
 
   mActionOpenProject->setText(QApplication::translate("MainWindowView", "Open Project", nullptr));
 #ifndef QT_NO_SHORTCUT
   mActionOpenProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+O", nullptr));
 #endif // QT_NO_SHORTCUT
-  mActionOpenProject->setObjectName(QStringLiteral("actionOpenProject"));
-  QIcon icon1;
-  icon1.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-open.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionOpenProject->setIcon(icon1);
+  QIcon iconOpenProject;
+  iconOpenProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_opened_folder_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionOpenProject->setIcon(iconOpenProject);
 
   mActionSaveProject->setText(QApplication::translate("MainWindowView", "Save Project", nullptr));
   #ifndef QT_NO_SHORTCUT
     mActionSaveProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+S", nullptr));
   #endif // QT_NO_SHORTCUT
-  mActionSaveProject->setObjectName(QStringLiteral("actionSaveProject"));
-  QIcon icon2;
-  icon2.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-save.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionSaveProject->setIcon(icon2);
+  QIcon iconSaveProject;
+  iconSaveProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_save_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionSaveProject->setIcon(iconSaveProject);
 
   mActionSaveProjectAs->setText(QApplication::translate("MainWindowView", "Save Project As...", nullptr));
   #ifndef QT_NO_SHORTCUT
     mActionSaveProjectAs->setShortcut(QApplication::translate("MainWindowView", "Ctrl+Shift+S", nullptr));
   #endif // QT_NO_SHORTCUT
-  mActionSaveProjectAs->setObjectName(QStringLiteral("actionSaveProjectAs"));
-  QIcon icon3;
-  icon3.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-save-as.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionSaveProjectAs->setIcon(icon3);
+  QIcon iconSaveProjectAs;
+  iconSaveProjectAs.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_save_as_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionSaveProjectAs->setIcon(iconSaveProjectAs);
 
   mActionCloseProject->setText(QApplication::translate("MainWindowView", "Close Project", nullptr));
-  mActionCloseProject->setObjectName(QStringLiteral("actionCloseProject"));
   QIcon icon4;
-  icon4.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-close-button.png"), QSize(), QIcon::Normal, QIcon::Off);
+  icon4.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_delete_sign_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionCloseProject->setIcon(icon4);
 
   mActionExit->setText(QApplication::translate("MainWindowView", "Exit", nullptr));
@@ -789,112 +899,102 @@ void MainWindowView::init()
     mActionExit->setShortcut(QApplication::translate("MainWindowView", "Ctrl+F4", nullptr));
   #endif // QT_NO_SHORTCUT
   mActionExit->setObjectName(QStringLiteral("actionExit"));
-  QIcon icon5;
-  icon5.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-switch-power-off.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionExit->setIcon(icon5);
+  QIcon iconExit;
+  iconExit.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_shutdown_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionExit->setIcon(iconExit);
 
   mActionStartPage->setText(QApplication::translate("MainWindowView", "Start Page", nullptr));
-  mActionStartPage->setObjectName(QStringLiteral("actionStartPage"));
   QIcon iconStartPage;
-  iconStartPage.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-home-page.png"), QSize(), QIcon::Normal, QIcon::Off);
+  iconStartPage.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_home_page_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionStartPage->setIcon(iconStartPage);
 
   mActionLoadImages->setText(QApplication::translate("MainWindowView", "Load Images", nullptr));
-  mActionLoadImages->setObjectName(QStringLiteral("actionLoadImages"));
-  QIcon icon6;
-  icon6.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-pictures-folder.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionLoadImages->setIcon(icon6);
+  QIcon iconLoadImages;
+  iconLoadImages.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_images_folder_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionLoadImages->setIcon(iconLoadImages);
 
   mActionNewSession->setText(QApplication::translate("MainWindowView", "New Processing", nullptr));
-  mActionNewSession->setObjectName(QStringLiteral("actionNewProcessing"));
-  QIcon icon7;
-  icon7.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-add-list.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionNewSession->setIcon(icon7);
+  QIcon iconNewSession;
+  iconNewSession.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_add_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionNewSession->setIcon(iconNewSession);
 
   mActionAssistant->setText(QApplication::translate("MainWindowView", "Assistant", nullptr));
   mActionAssistant->setObjectName(QStringLiteral("actionAssistant"));
 
   mActionPreprocess->setText(QApplication::translate("MainWindowView", "Preprocess", nullptr));
-  mActionPreprocess->setObjectName(QStringLiteral("actionPreprocess"));
-  QIcon icon8;
-  icon8.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-settings-button.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionPreprocess->setIcon(icon8);
+  QIcon iconPreprocess;
+  iconPreprocess.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_services_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionPreprocess->setIcon(iconPreprocess);
 
   mActionFeatureExtraction->setText(QApplication::translate("MainWindowView", "Feature Extraction", nullptr));
-  mActionFeatureExtraction->setObjectName(QStringLiteral("actionFeatureExtraction"));
-  QIcon icon9;
-  icon9.addFile(QStringLiteral(":/ico/24/img/material/24/features.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionFeatureExtraction->setIcon(icon9);
+  QIcon iconFeatureExtraction;
+  iconFeatureExtraction.addFile(QStringLiteral(":/ico/24/img/material/24/features.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionFeatureExtraction->setIcon(iconFeatureExtraction);
 
   mActionFeatureMatching->setText(QApplication::translate("MainWindowView", "Feature Matching", nullptr));
-  mActionFeatureMatching->setObjectName(QStringLiteral("actionFeatureMatching"));
-  QIcon icon10;
-  icon10.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-match_view.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionFeatureMatching->setIcon(icon10);
+  QIcon iconFeatureMatching;
+  iconFeatureMatching.addFile(QStringLiteral(":/ico/24/img/material/24/match_view.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionFeatureMatching->setIcon(iconFeatureMatching);
 
   mActionSettings->setText(QApplication::translate("MainWindowView", "Settings", nullptr));
-  mActionSettings->setObjectName(QStringLiteral("actionSettings"));
-  QIcon icon11;
-  icon11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-settings.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionSettings->setIcon(icon11);
+  QIcon iconSettings;
+  iconSettings.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionSettings->setIcon(iconSettings);
 
   mActionHelp->setText(QApplication::translate("MainWindowView", "Help", nullptr));
-  mActionHelp->setObjectName(QStringLiteral("actionHelp"));
-  QIcon icon12;
-  icon12.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-help.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionHelp->setIcon(icon12);
+  QIcon iconHelp;
+  iconHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionHelp->setIcon(iconHelp);
 
   mActionAbout->setText(QApplication::translate("MainWindowView", "About", nullptr));
-  mActionAbout->setObjectName(QStringLiteral("actionAbout"));
-  QIcon icon13;
-  icon13.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-about.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionAbout->setIcon(icon13);
+  QIcon iconAbout;
+  iconAbout.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_about_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionAbout->setIcon(iconAbout);
 
   mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export Tie Points", nullptr));
   mActionExportTiePoints->setObjectName(QStringLiteral("actionExportTiePoints"));
 
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
-  mActionMatchesViewer->setObjectName(QStringLiteral("actionMatchesViewer"));
 
   mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
-  mActionHomography->setObjectName(QStringLiteral("actionHomography"));
 
   mActionRepeteability->setText(QApplication::translate("MainWindowView", "Repeteability", nullptr));
-  mActionRepeteability->setObjectName(QStringLiteral("actionRepeteability"));
 
   mActionRecall->setText(QApplication::translate("MainWindowView", "Recall", nullptr));
-  mActionRecall->setObjectName(QStringLiteral("actionRecall"));
 
   mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
-  mActionNotRecentProjects->setObjectName(QStringLiteral("actionNotRecentProjects"));
   mActionNotRecentProjects->setEnabled(false);
 
   mActionClearHistory->setText(QApplication::translate("MainWindowView", "Clear History", nullptr));
-  mActionClearHistory->setObjectName(QStringLiteral("actionClearHistory"));
+  QIcon icon_delete_trash;
+  icon_delete_trash.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_delete_trash_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionClearHistory->setIcon(icon_delete_trash);
 
   mActionZoomIn->setText(QApplication::translate("MainWindowView", "Zoom In", nullptr));
-  mActionZoomIn->setObjectName(QStringLiteral("actionZoomIn"));
-  QIcon icon14;
-  icon14.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-zoom-in.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomIn->setIcon(icon14);
+  QIcon iconZoomIn;
+  iconZoomIn.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomIn->setIcon(iconZoomIn);
 
   mActionZoomOut->setText(QApplication::translate("MainWindowView", "Zoom Out", nullptr));
-  mActionZoomOut->setObjectName(QStringLiteral("actionZoomOut"));
-  QIcon icon15;
-  icon15.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-zoom-out.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomOut->setIcon(icon15);
+  QIcon iconZoomOut;
+  iconZoomOut.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomOut->setIcon(iconZoomOut);
 
   mActionZoomExtend->setText(QApplication::translate("MainWindowView", "Zoom Extend", nullptr));
-  mActionZoomExtend->setObjectName(QStringLiteral("actionZoomExtend"));
-  QIcon icon16;
-  icon16.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-magnifying-glass-with-expand-sign.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomExtend->setIcon(icon16);
+  QIcon iconZoomExtend;
+  iconZoomExtend.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomExtend->setIcon(iconZoomExtend);
 
   mActionZoom11->setText(QApplication::translate("MainWindowView", "Zoom 1:1", nullptr));
-  mActionZoom11->setObjectName(QStringLiteral("actionZoom11"));
-  QIcon icon17;
-  icon17.addFile(QStringLiteral(":/ico/24/img/material/24/icons8-one-to-one.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoom11->setIcon(icon17);
+  QIcon iconZoom11;
+  iconZoom11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoom11->setIcon(iconZoom11);
+
+  mActionShowKeyPoints->setText(QApplication::translate("MainWindowView", "Show Keypoints", nullptr));
+  QIcon iconZoomShowKeyPoints;
+  iconZoomShowKeyPoints.addFile(QStringLiteral(":/ico/24/img/material/24/keypoints.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionShowKeyPoints->setIcon(iconZoomShowKeyPoints);
+  mActionShowKeyPoints->setCheckable(true);
 
   /* Árbol de proyecto */
   //ui->dockWidgetContentsProject->setContentsMargins(0, 0, 0, 0);
@@ -996,12 +1096,20 @@ void MainWindowView::init()
   ui->mainToolBar->addAction(mActionSaveProject);
   ui->mainToolBar->addAction(mActionSaveProjectAs);
 
+  ui->toolBarTools->addAction(mActionLoadImages);
+  ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionNewSession);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionPreprocess);
   ui->toolBarTools->addAction(mActionFeatureExtraction);
   ui->toolBarTools->addAction(mActionFeatureMatching);
 
+  ui->toolBarView->addAction(mActionZoomIn);
+  ui->toolBarView->addAction(mActionZoomOut);
+  ui->toolBarView->addAction(mActionZoom11);
+  ui->toolBarView->addAction(mActionZoomExtend);
+  ui->toolBarView->addSeparator();
+  ui->toolBarView->addAction(mActionShowKeyPoints);
 
   mStartPageWidget = ui->tabWidget->widget(0);
 

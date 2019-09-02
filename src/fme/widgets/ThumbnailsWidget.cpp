@@ -272,13 +272,13 @@ void ThumbnailsWidget::init()
 
   QToolBar *toolBar = new QToolBar(this);
 
-  mThumbnailAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-medium-icons.png"), tr("Thumbnails"), this);
+  mThumbnailAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_medium_icons_48px.png"), tr("Thumbnails"), this);
   mThumbnailAction->setStatusTip(tr("Thumbnail"));
   mThumbnailAction->setCheckable(true);
   connect(mThumbnailAction, SIGNAL(toggled(bool)), this, SLOT(onThumbnailToggled(bool)));
   toolBar->addAction(mThumbnailAction);
 
-  mThumbnailSmallAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-small-icons.png"), tr("Small Thumbnails"), this);
+  mThumbnailSmallAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_small_icons_48px.png"), tr("Small Thumbnails"), this);
   mThumbnailSmallAction->setStatusTip(tr("Thumbnail small"));
   mThumbnailSmallAction->setCheckable(true);
   connect(mThumbnailSmallAction, SIGNAL(toggled(bool)), this, SLOT(onThumbnailSmallToggled(bool)));
@@ -286,7 +286,7 @@ void ThumbnailsWidget::init()
 
   toolBar->addSeparator();
 
-  mDetailsAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-details.png"), tr("Details"), this);
+  mDetailsAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_details_48px.png"), tr("Details"), this);
   mDetailsAction->setStatusTip(tr("Details"));
   mDetailsAction->setCheckable(true);
   connect(mDetailsAction, SIGNAL(toggled(bool)), this, SLOT(onDetailsToggled(bool)));
@@ -294,7 +294,7 @@ void ThumbnailsWidget::init()
 
   toolBar->addSeparator();
 
-  mDeleteImageAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-close-button.png"), tr("Delete image"), this);
+  mDeleteImageAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_delete_sign_48px.png"), tr("Delete image"), this);
   mDeleteImageAction->setStatusTip(tr("Delete image"));
   connect(mDeleteImageAction, SIGNAL(triggered(bool)), this, SLOT(onDeleteImageClicked()));
   toolBar->addAction(mDeleteImageAction);

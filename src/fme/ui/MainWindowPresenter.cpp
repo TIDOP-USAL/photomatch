@@ -33,6 +33,7 @@
 /* Qt */
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QImageReader>
 
 namespace fme
 {
@@ -94,6 +95,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(selectImages(QStringList)),   this, SLOT(activeImages(QStringList)));
   connect(mView, SIGNAL(deleteImages(QStringList)),   this, SLOT(deleteImages(QStringList)));
   connect(mView, SIGNAL(selectSession(QString)),      this, SLOT(selectSession(QString)));
+
+  /* Visor de imagenes */
+  connect(mView, SIGNAL(loadKeyPoints(QString)), this, SLOT(loadKeyPoints(QString)));
 
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
 }
@@ -444,39 +448,52 @@ void MainWindowPresenter::loadProject()
       if (preprocess){
         mView->setFlag(MainWindowView::Flag::preprocess, true);
 
+        /// Preprocess
+        QString preprocess_name;
+        if (preprocess->type() == Preprocess::Type::acebsf){
+          preprocess_name = "ACEBSF";
+        } else if (preprocess->type() == Preprocess::Type::clahe){
+          preprocess_name = "CLAHE";
+        } else if (preprocess->type() == Preprocess::Type::cmbfhe){
+          preprocess_name = "CMBFHE";
+        } else if (preprocess->type() == Preprocess::Type::dhe){
+          preprocess_name = "DHE";
+        } else if (preprocess->type() == Preprocess::Type::fahe){
+          preprocess_name = "FAHE";
+        } else if (preprocess->type() == Preprocess::Type::hmclahe){
+          preprocess_name = "HMCLAHE";
+        } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
+          preprocess_name = "LCE_BSESCS";
+        } else if (preprocess->type() == Preprocess::Type::msrcp){
+          preprocess_name = "MSRCP";
+        } else if (preprocess->type() == Preprocess::Type::noshp){
+          preprocess_name = "NOSHP";
+        } else if (preprocess->type() == Preprocess::Type::pohe){
+          preprocess_name = "POHE";
+        } else if (preprocess->type() == Preprocess::Type::rswhe){
+          preprocess_name = "RSWHE";
+        } else if (preprocess->type() == Preprocess::Type::wallis){
+          preprocess_name = "WALLIS";
+        }
+
+        QStringList preprocess_images;
+        for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+          QString file_in = (*it)->path();
+          QFileInfo fileInfo(file_in);
+          QString preprocessed_image = fileInfo.path();
+          preprocessed_image.append("\\").append((*it)->name());
+          preprocessed_image.append("\\preprocess\\");
+          preprocessed_image.append(fileInfo.fileName());
+          preprocess_images.push_back(preprocessed_image);
+        }
+        mView->addPreprocess((*it)->name(), preprocess_name, preprocess_images);
+
         std::shared_ptr<Feature> detector = (*it)->detector();
         std::shared_ptr<Feature> descriptor = (*it)->descriptor();
         if (detector && descriptor){
           mView->setFlag(MainWindowView::Flag::feature_extraction, true);
 
-          /// Preprocess
-          QString preprocess_name;
-          if (preprocess->type() == Preprocess::Type::acebsf){
-            preprocess_name = "ACEBSF";
-          } else if (preprocess->type() == Preprocess::Type::clahe){
-            preprocess_name = "CLAHE";
-          } else if (preprocess->type() == Preprocess::Type::cmbfhe){
-            preprocess_name = "CMBFHE";
-          } else if (preprocess->type() == Preprocess::Type::dhe){
-            preprocess_name = "DHE";
-          } else if (preprocess->type() == Preprocess::Type::fahe){
-            preprocess_name = "FAHE";
-          } else if (preprocess->type() == Preprocess::Type::hmclahe){
-            preprocess_name = "HMCLAHE";
-          } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
-            preprocess_name = "LCE_BSESCS";
-          } else if (preprocess->type() == Preprocess::Type::msrcp){
-            preprocess_name = "MSRCP";
-          } else if (preprocess->type() == Preprocess::Type::noshp){
-            preprocess_name = "NOSHP";
-          } else if (preprocess->type() == Preprocess::Type::pohe){
-            preprocess_name = "POHE";
-          } else if (preprocess->type() == Preprocess::Type::rswhe){
-            preprocess_name = "RSWHE";
-          } else if (preprocess->type() == Preprocess::Type::wallis){
-            preprocess_name = "WALLIS";
-          }
-          mView->addPreprocess((*it)->name(), preprocess_name);
+
 
           /// Detector
           QString detector_name;
@@ -595,23 +612,57 @@ void MainWindowPresenter::selectSession(const QString &session)
 void MainWindowPresenter::loadPreprocess()
 {
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
-
-  std::shared_ptr<Preprocess> preprocess = _session->preprocess();
-  if (preprocess){
-    mView->setFlag(MainWindowView::Flag::preprocess, true);
-    mView->setFlag(MainWindowView::Flag::project_modified, true);
+  if (_session){
+    std::shared_ptr<Preprocess> preprocess = _session->preprocess();
+    if (preprocess){
+      mView->setFlag(MainWindowView::Flag::preprocess, true);
+      mView->setFlag(MainWindowView::Flag::project_modified, true);
+    }
   }
 }
 
 void MainWindowPresenter::loadFeatures()
 {
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
-  std::shared_ptr<Feature> detector = _session->detector();
-  std::shared_ptr<Feature> descriptor = _session->descriptor();
-  if (detector && descriptor){
-    mView->setFlag(MainWindowView::Flag::feature_extraction, true);
-    mView->setFlag(MainWindowView::Flag::project_modified, true);
+  if (_session){
+    std::shared_ptr<Feature> detector = _session->detector();
+    std::shared_ptr<Feature> descriptor = _session->descriptor();
+    if (detector && descriptor){
+      mView->setFlag(MainWindowView::Flag::feature_extraction, true);
+      mView->setFlag(MainWindowView::Flag::project_modified, true);
+    }
   }
+}
+
+void MainWindowPresenter::loadKeyPoints(const QString &image)
+{
+  QFileInfo fileInfo(image);
+  QString features = fileInfo.path();
+  features.append("\\").append(mProjectModel->currentSession()->name());
+  features.append("\\features\\");
+  features.append(fileInfo.fileName()).append(".xml");
+
+  std::vector<QPointF>keyPoints = mModel->loadKeyPoints(features);
+  if (mProjectModel->fullImageSize() == false){
+    int maxSize = mProjectModel->maxImageSize();
+    QImageReader imageReader(image);
+    QSize size = imageReader.size();
+    double scale = 1.;
+    int w = size.width();
+    int h = size.height();
+    if (w > h){
+      scale = w / static_cast<double>(maxSize);
+    } else {
+      scale = h / static_cast<double>(maxSize);
+    }
+    if (scale > 1.) {
+      for (size_t i = 0; i < keyPoints.size(); i++){
+        keyPoints[i]*= scale;
+      }
+    }
+  }
+
+  mView->setKeyPoints(keyPoints);
 }
 
 void MainWindowPresenter::help()

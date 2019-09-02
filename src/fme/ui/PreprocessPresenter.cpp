@@ -258,6 +258,7 @@ void PreprocessPresenter::run()
                                                       mWallis->kernelSize());
   }
 
+  mProjectModel->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
   mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
 
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){

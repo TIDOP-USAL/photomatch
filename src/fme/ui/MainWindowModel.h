@@ -23,6 +23,8 @@ public:
 
   std::list<std::pair<QString, QString>> exif(const QString &image) const;
 
+  std::vector<QPointF> loadKeyPoints(const QString &file) const;
+
 signals:
 
 public slots:

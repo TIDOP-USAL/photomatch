@@ -58,6 +58,7 @@ void LogWidget::print(const char *msg, const char *date, MessageLevel level)
   if (!sFilterLevel.isActive(level)) {
     mListWidget->setRowHidden(mListWidget->count() - 1, true);
   }
+  update();
 }
 
 void LogWidget::refresh()
@@ -74,6 +75,7 @@ void LogWidget::refresh()
 void LogWidget::clear()
 {
   mListWidget->clear();
+  update();
 }
 
 void LogWidget::onPushButtonShowLogWarningToggled(bool active)
@@ -102,6 +104,7 @@ void LogWidget::onPushButtonShowLogDebugToggled(bool active)
 
 void LogWidget::update()
 {
+  mClearAction->setEnabled(mListWidget->count() > 0);
 }
 
 void LogWidget::reset()
@@ -113,21 +116,21 @@ void LogWidget::init()
 {
   QToolBar *toolBar = new QToolBar(this);
 
-  mMsgErrorAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-delete.png"), tr("Show errors"), this);
+  mMsgErrorAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_close_window_48px.png"), tr("Show errors"), this);
   mMsgErrorAction->setStatusTip(tr("Show errors"));
   mMsgErrorAction->setCheckable(true);
   mMsgErrorAction->setChecked(true);
   connect(mMsgErrorAction, SIGNAL(toggled(bool)), this, SLOT(onPushButtonShowLogErrorsToggled(bool)));
   toolBar->addAction(mMsgErrorAction);
 
-  mMsgWarningAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-error.png"), tr("Show warnings"), this);
+  mMsgWarningAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_error_48px.png"), tr("Show warnings"), this);
   mMsgWarningAction->setStatusTip(tr("Show warnings"));
   mMsgWarningAction->setCheckable(true);
   mMsgWarningAction->setChecked(true);
   connect(mMsgWarningAction, SIGNAL(toggled(bool)), this, SLOT(onPushButtonShowLogWarningToggled(bool)));
   toolBar->addAction(mMsgWarningAction);
 
-  mMsgInfoAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-attention-sign.png"), tr("Show messages"), this);
+  mMsgInfoAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_box_important_48px.png"), tr("Show messages"), this);
   mMsgInfoAction->setStatusTip(tr("Show messages"));
   mMsgInfoAction->setCheckable(true);
   mMsgInfoAction->setChecked(true);
@@ -136,7 +139,7 @@ void LogWidget::init()
 
   toolBar->addSeparator();
 
-  mClearAction = new QAction(QIcon(":/ico/48/img/material/48/icons8-trash-can.png"), tr("Clean log"), this);
+  mClearAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_trash_48px.png"), tr("Clean log"), this);
   mClearAction->setStatusTip(tr("Clean log"));
   connect(mClearAction, SIGNAL(triggered(bool)), this, SLOT(clear()));
   toolBar->addAction(mClearAction);

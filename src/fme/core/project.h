@@ -373,7 +373,7 @@ public:
   bool checkOldVersion(const QString &file) const override;
   void oldVersionBak(const QString &file) const override;
 
-private:
+protected:
 
   void readACEBSF(QXmlStreamReader *stream, IAcebsf *acebsf) const;
   void readCLAHE(QXmlStreamReader *stream, IClahe *clahe) const;

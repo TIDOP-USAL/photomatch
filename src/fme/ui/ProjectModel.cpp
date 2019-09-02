@@ -225,6 +225,28 @@ void ProjectModel::setDescriptor(const std::shared_ptr<Feature> &descriptor)
   bUnsavedChanges = true;
 }
 
+int ProjectModel::maxImageSize() const
+{
+  return this->currentSession()->maxImageSize();
+}
+
+void ProjectModel::setMaxImageSize(int size)
+{
+  this->currentSession()->setMaxImageSize(size);
+  bUnsavedChanges = true;
+}
+
+bool ProjectModel::fullImageSize() const
+{
+  return this->currentSession()->fullImageSize();
+}
+
+void ProjectModel::setFullImageSize(bool fullImageSize)
+{
+  this->currentSession()->setFullImageSize(fullImageSize);
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::clear()
 {
   mProject->clear();

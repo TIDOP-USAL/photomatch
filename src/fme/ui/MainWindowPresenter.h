@@ -84,6 +84,7 @@ protected slots:
 
   void loadPreprocess();
   void loadFeatures();
+  void loadKeyPoints(const QString &image);
 
 // IPresenter interface
 

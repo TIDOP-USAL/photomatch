@@ -56,7 +56,8 @@ public:
   void setActiveImage(const QString &image);
   void setActiveImages(const QStringList &images);
   void addSession(const QString &sessionName, const QString &sessionDescription, bool activeSession = false);
-  void addPreprocess(const QString &sessionName, const QString &preprocess);
+  void addPreprocess(const QString &sessionName, const QString &preprocess, const QStringList &preprocessImages);
+
   void addDetector(const QString &sessionName, const QString &detector);
   void addDescriptor(const QString &sessionName, const QString &descriptor);
 
@@ -96,6 +97,9 @@ public slots:
    */
   void showImage(const QString &file);
 
+  bool showKeyPoints() const;
+  void setKeyPoints(const std::vector<QPointF> &keyPoints);
+
 signals:
 
   /* Menu File */
@@ -132,6 +136,8 @@ signals:
   void deleteImages(QStringList);
   void selectSession(QString);
 
+  void loadKeyPoints(QString);
+
 protected:
 
   void changeEvent(QEvent *e) override;
@@ -146,6 +152,7 @@ private slots:
   void onItemDoubleClicked(QTreeWidgetItem *item, int column);
   void openStartPage();
   void onCommandLinkButtonGitHubClicked();
+  void onShowKeyPoints(bool show);
 
 private:
 
@@ -188,6 +195,7 @@ protected:
   QAction *mActionZoomOut;
   QAction *mActionZoomExtend;
   QAction *mActionZoom11;
+  QAction *mActionShowKeyPoints;
   QMenu *mMenuRecentProjects;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;

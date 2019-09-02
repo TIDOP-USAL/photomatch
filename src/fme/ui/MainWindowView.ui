@@ -57,7 +57,7 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">color: rgb(95, 141, 211);</string>
+           <string notr="true">color: rgb(26, 188, 156);</string>
           </property>
           <property name="text">
            <string>FME</string>
@@ -90,7 +90,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../../res/res.qrc">
-                <normaloff>:/ico/48/img/material/48/icons8-empty-document.png</normaloff>:/ico/48/img/material/48/icons8-empty-document.png</iconset>
+                <normaloff>:/ico/48/img/material/48/icons8_file_48px.png</normaloff>:/ico/48/img/material/48/icons8_file_48px.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -107,7 +107,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../../res/res.qrc">
-                <normaloff>:/ico/48/img/material/48/icons8-open.png</normaloff>:/ico/48/img/material/48/icons8-open.png</iconset>
+                <normaloff>:/ico/48/img/material/48/icons8_opened_folder_48px.png</normaloff>:/ico/48/img/material/48/icons8_opened_folder_48px.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -131,7 +131,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../../res/res.qrc">
-                <normaloff>:/ico/48/img/material/48/icons8-settings.png</normaloff>:/ico/48/img/material/48/icons8-settings.png</iconset>
+                <normaloff>:/ico/48/img/material/48/icons8_automatic_48px.png</normaloff>:/ico/48/img/material/48/icons8_automatic_48px.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -161,7 +161,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../../res/res.qrc">
-                <normaloff>:/ico/48/img/material/48/icons8-github-48.png</normaloff>:/ico/48/img/material/48/icons8-github-48.png</iconset>
+                <normaloff>:/ico/48/img/material/48/icons8_github_48px.png</normaloff>:/ico/48/img/material/48/icons8_github_48px.png</iconset>
               </property>
               <property name="iconSize">
                <size>
@@ -240,7 +240,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../../res/res.qrc">
-                <normaloff>:/ico/24/img/material/24/icons8-delete-2.png</normaloff>:/ico/24/img/material/24/icons8-delete-2.png</iconset>
+                <normaloff>:/ico/24/img/material/24/icons8_delete_trash_24px.png</normaloff>:/ico/24/img/material/24/icons8_delete_trash_24px.png</iconset>
               </property>
               <property name="iconSize">
                <size>

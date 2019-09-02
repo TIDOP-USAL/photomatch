@@ -6,6 +6,8 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgcodecs.hpp>
 
+#include <QFileInfo>
+
 namespace fme
 {
 
@@ -68,10 +70,20 @@ void FeatureExtractor::run()
   if (mDescriptorExtractor == nullptr) return;
   cv::Mat descriptors = mDescriptorExtractor->extract(img, key_points);
 
+  cv::Mat out;
+  cv::drawKeypoints(img, key_points, out, cv::Scalar(0,255,0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+  QFileInfo fileInfo(mFeatures);
+  QString imgKeypoints = fileInfo.path();
+  imgKeypoints.append("\\").append(fileInfo.completeBaseName());
+  ba = imgKeypoints.toLocal8Bit();
+  const char *ckp = ba.data();
+  cv::imwrite(ckp, out);
+
   featuresWrite(mFeatures, key_points, descriptors);
   ba = mFeatures.toLocal8Bit();
   const char *cfeat = ba.data();
   msgInfo("Write features at: %s", cfeat);
+
 }
 
 } // namespace fme

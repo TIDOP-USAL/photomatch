@@ -46,6 +46,30 @@ public:
    */
   virtual void setDescription(const QString &description) = 0;
 
+  /*!
+   * \brief Devuelve el tamaño máximo de imagen
+   * \return
+   */
+  virtual int maxImageSize() const = 0;
+
+  /*!
+   * \brief Establece el tamaño máximo de imagen
+   * \param[in] size Tamaño máximo de imagen
+   */
+  virtual void setMaxImageSize(int size) = 0;
+
+  /*!
+   * \brief Utiliza el tamaño completo de imagen
+   * \param[in] fullImageSize
+   */
+  virtual void setFullImageSize(bool fullImageSize) = 0;
+
+  /*!
+   * \brief Comprueba si esta activo el uso de la imagen a tamaño completo
+   * \return
+   */
+  virtual bool fullImageSize() const = 0;
+
   virtual std::shared_ptr<Preprocess> preprocess() = 0;
 
   virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
@@ -82,6 +106,10 @@ public:
   void setName(const QString &name) override;
   QString description() const override;
   void setDescription(const QString &description) override;
+  int maxImageSize() const override;
+  void setMaxImageSize(int size) override;
+  void setFullImageSize(bool fullImageSize) override;
+  bool fullImageSize() const override;
   std::shared_ptr<Preprocess> preprocess() override;
   void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) override;
   std::shared_ptr<Feature> detector() override;
@@ -95,6 +123,7 @@ protected:
 
   QString mName;
   QString mDescription;
+  int mMaxImageSize;
   std::shared_ptr<Preprocess> mPreprocess;
   std::shared_ptr<Feature> mFeatureDetector;
   std::shared_ptr<Feature> mFeatureDescriptor;

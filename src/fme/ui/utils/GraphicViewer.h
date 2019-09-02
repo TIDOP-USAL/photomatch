@@ -5,6 +5,7 @@
 
 #include <QGraphicsView>
 #include <QMenu>
+#include <QGraphicsEllipseItem>
 
 // Default zoom factors
 #define DEFAULT_ZOOM_FACTOR 1.15
@@ -229,6 +230,14 @@ signals:
   void mouseClicked(QPoint);
   void mouseClicked(QPointF);
 
+};
+
+
+class GraphicEllipse
+  : public QGraphicsEllipseItem
+{
+public:
+  GraphicEllipse() {}
 };
 
 } // namespace fme

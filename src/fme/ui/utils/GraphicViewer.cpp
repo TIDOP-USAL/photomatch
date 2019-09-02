@@ -75,7 +75,12 @@ void GraphicViewer::init()
 void GraphicViewer::setImage(const QImage &image)
 {
   // Update the pixmap in the scene
-  mPixmap = QPixmap::fromImage(image);
+  if (image.isGrayscale()){
+    mPixmap = QPixmap::fromImage(image.convertToFormat(QImage::Format::Format_RGB888));
+  } else{
+    mPixmap = QPixmap::fromImage(image);
+  }
+
   mPixmapItem->setPixmap(mPixmap);
 
   mScene->setSceneRect(QRect(QPoint(0,0), image.size()));
@@ -118,14 +123,14 @@ void GraphicViewer::drawInViewPort(QPainter *painter, QSize portSize)
 
 void GraphicViewer::drawForeground(QPainter *painter, const QRectF &rect)
 {
-  // Call the function to draw over the image
-  drawOnImage(painter, mImageSize);
+//  // Call the function to draw over the image
+//  drawOnImage(painter, mImageSize);
 
-  // Reset transformation and call the function draw in the view port
-  painter->resetTransform();
+//  // Reset transformation and call the function draw in the view port
+//  painter->resetTransform();
 
-  // Call the function to draw in the view port
-  drawInViewPort(painter, viewport()->size());
+//  // Call the function to draw in the view port
+//  drawInViewPort(painter, viewport()->size());
 }
 
 void GraphicViewer::mousePressEvent(QMouseEvent *event)

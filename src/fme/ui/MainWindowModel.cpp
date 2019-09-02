@@ -1,8 +1,12 @@
 #include "MainWindowModel.h"
 
+#include "fme/core/features/features.h"
+
 #include <tidop/core/messages.h>
 
 #include <easyexif/exif.h>
+
+#include <opencv2/features2d.hpp>
 
 #include <QStandardPaths>
 #include <QDir>
@@ -144,6 +148,23 @@ std::list<std::pair<QString, QString>> MainWindowModel::exif(const QString &imag
   }
 
   return exif;
+}
+
+std::vector<QPointF> MainWindowModel::loadKeyPoints(const QString &file) const
+{
+
+  std::vector<cv::KeyPoint> cvKeyPoints;
+  cv::Mat descriptors;
+  featuresRead(file, cvKeyPoints, descriptors);
+
+  size_t size = cvKeyPoints.size();
+  std::vector<QPointF> keyPoints(size);
+  for (size_t i = 0; i < size; i++){
+    keyPoints[i].setX(static_cast<qreal>(cvKeyPoints[i].pt.x));
+    keyPoints[i].setY(static_cast<qreal>(cvKeyPoints[i].pt.y));
+  }
+
+  return keyPoints;
 }
 
 void MainWindowModel::init()
