@@ -214,11 +214,11 @@ public slots:
 
 protected slots:
 
-    /*!
-     * \brief showContextMenu       Display the contextual menu (on right click)
-     * \param pos                   Position of the mouse in the widget
-     */
-  virtual void showContextMenu(const QPoint & pos);
+  /*!
+   * \brief showContextMenu       Display the contextual menu (on right click)
+   * \param pos                   Position of the mouse in the widget
+   */
+  virtual void showContextMenu(const QPoint &position);
 
 private:
  
@@ -233,12 +233,12 @@ signals:
 };
 
 
-class GraphicEllipse
-  : public QGraphicsEllipseItem
-{
-public:
-  GraphicEllipse() {}
-};
+//class GraphicEllipse
+//  : public QGraphicsEllipseItem
+//{
+//public:
+//  GraphicEllipse() {}
+//};
 
 } // namespace fme
 

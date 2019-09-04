@@ -43,6 +43,7 @@ set(FME_SOURCES
     DescriptorMatcherModel.cpp
     DescriptorMatcherPresenter.cpp
     utils/GraphicViewer.cpp
+    utils/ProgressDialog.cpp
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
 )  
 
@@ -69,6 +70,7 @@ set(FME_HEADERS
     DescriptorMatcherModel.h
     DescriptorMatcherPresenter.h
     utils/GraphicViewer.h
+    utils/ProgressDialog.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h
 )
 
@@ -79,6 +81,7 @@ endif(MSVC)
 # forms
 set(FME_FORMS
   MainWindowView.ui
+  utils/ProgressDialog.ui
 )
 
 # Translation files

@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_blockSize_data();
   void test_blockSize();
   void test_l_data();
@@ -58,6 +59,11 @@ void TestHmclahe::testDefaultConstructor()
 void TestHmclahe::test_type()
 {
   QCOMPARE(Preprocess::Type::hmclahe, mHmclahePreprocess->type());
+}
+
+void TestHmclahe::test_name()
+{
+  QCOMPARE(QString("HMCLAHE"), mHmclahePreprocess->name());
 }
 
 void TestHmclahe::test_blockSize_data()

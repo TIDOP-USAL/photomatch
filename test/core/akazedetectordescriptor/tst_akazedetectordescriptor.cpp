@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void testDescriptorType_data();
   void testDescriptorType();
   void testDescriptorType2_data();
@@ -83,6 +84,11 @@ void TestAkazeDetectorDescriptor::testDefaultConstructor()
 void TestAkazeDetectorDescriptor::test_type()
 {
   QCOMPARE(AkazeDetectorDescriptor::Type::akaze, this->type());
+}
+
+void TestAkazeDetectorDescriptor::test_name()
+{
+  QCOMPARE("AKAZE", this->name());
 }
 
 void TestAkazeDetectorDescriptor::testDescriptorType_data()

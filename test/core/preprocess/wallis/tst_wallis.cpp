@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void testContrast_data();
   void testContrast();
   void testBrightness_data();
@@ -64,6 +65,11 @@ void TestWallis::testDefaultConstructor()
 void TestWallis::test_type()
 {
   QCOMPARE(Preprocess::Type::wallis, mWallisPreprocess->type());
+}
+
+void TestWallis::test_name()
+{
+  QCOMPARE(QString("WALLIS"), mWallisPreprocess->name());
 }
 
 void TestWallis::testContrast_data()

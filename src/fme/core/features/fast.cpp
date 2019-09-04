@@ -55,6 +55,11 @@ void FastProperties::reset()
   mDetectorType = "TYPE_9_16";
 }
 
+QString FastProperties::name() const
+{
+  return QString("FAST");
+}
+
 
 /*----------------------------------------------------------------*/
 

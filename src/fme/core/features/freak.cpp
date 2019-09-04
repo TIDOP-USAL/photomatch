@@ -65,6 +65,11 @@ void FreakProperties::reset()
   mOctaves = 4;
 }
 
+QString FreakProperties::name() const
+{
+  return QString("FREAK");
+}
+
 
 /*----------------------------------------------------------------*/
 

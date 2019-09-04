@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_histogramDivisions_data();
   void test_histogramDivisions();
   void test_histogramCut_data();
@@ -55,6 +56,11 @@ void TestRswhe::testDefaultConstructor()
 void TestRswhe::test_type()
 {
   QCOMPARE(Preprocess::Type::rswhe, mRswhePreprocess->type());
+}
+
+void TestRswhe::test_name()
+{
+  QCOMPARE(QString("RSWHE"), mRswhePreprocess->name());
 }
 
 void TestRswhe::test_histogramDivisions_data()

@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_orientationNormalized_data();
   void test_orientationNormalized();
   void test_scaleNormalized_data();
@@ -73,6 +74,11 @@ void TestFreakDescriptor::testDefaultConstructor()
 void TestFreakDescriptor::test_type()
 {
   QCOMPARE(FreakDescriptor::Type::freak, mFreakDescriptor->type());
+}
+
+void TestFreakDescriptor::test_name()
+{
+  QCOMPARE("FREAK", mFreakDescriptor->name());
 }
 
 void TestFreakDescriptor::test_orientationNormalized_data()

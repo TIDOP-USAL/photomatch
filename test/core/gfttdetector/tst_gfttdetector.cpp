@@ -22,6 +22,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_maxFeatures_data();
   void test_maxFeatures();
   void test_qualityLevel_data();
@@ -74,6 +75,11 @@ void TestGfttDetector::testDefaultConstructor()
 void TestGfttDetector::test_type()
 {
   QCOMPARE(GfttDetector::Type::gftt, this->type());
+}
+
+void TestGfttDetector::test_name()
+{
+  QCOMPARE("GFTT", this->name());
 }
 
 void TestGfttDetector::test_maxFeatures_data()

@@ -254,10 +254,10 @@ void GraphicViewer::zoomOut(QPoint point)
   scale(factor, factor);
 }
 
-void GraphicViewer::showContextMenu(const QPoint &pos)
+void GraphicViewer::showContextMenu(const QPoint &position)
 {
   // Get the mouse position in the scene
-  QPoint globalPos = mapToGlobal(pos);
+  QPoint globalPos = mapToGlobal(position);
   // Create the menu and add action
   //QMenu contextMenu;
   //contextMenu.addAction("Reset view", this, SLOT(zoomExtend()));

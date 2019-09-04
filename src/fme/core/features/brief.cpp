@@ -48,6 +48,11 @@ void BriefProperties::reset()
   mUseOrientation = false;
 }
 
+QString BriefProperties::name() const
+{
+  return QString("BRIEF");
+}
+
 /*----------------------------------------------------------------*/
 
 

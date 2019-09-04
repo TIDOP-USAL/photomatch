@@ -10,7 +10,7 @@ namespace fme
 
 LceBsescsProperties::LceBsescsProperties()
   : ILceBsescs(),
-    mBlockSize(17,17)
+    mBlockSize(33, 33)
 {}
 
 LceBsescsProperties::~LceBsescsProperties()
@@ -30,6 +30,11 @@ void LceBsescsProperties::setBlockSize(const QSize &blockSize)
 void LceBsescsProperties::reset()
 {
   mBlockSize = QSize(33, 33);
+}
+
+QString LceBsescsProperties::name() const
+{
+  return QString("LCE_BSESCS");
 }
 
 

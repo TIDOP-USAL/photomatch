@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_smallScale_data();
   void test_smallScale();
   void test_midScale_data();
@@ -58,6 +59,11 @@ void TestMsrcp::testDefaultConstructor()
 void TestMsrcp::test_type()
 {
   QCOMPARE(Preprocess::Type::msrcp, mMsrcpPreprocess->type());
+}
+
+void TestMsrcp::test_name()
+{
+  QCOMPARE(QString("MSRCP"), mMsrcpPreprocess->name());
 }
 
 void TestMsrcp::test_smallScale_data()

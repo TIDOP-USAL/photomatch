@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_clipLimit_data();
   void test_clipLimit();
   void test_tilesGridSize_data();
@@ -56,6 +57,11 @@ void TestClahe::testDefaultConstructor()
 void TestClahe::test_type()
 {
   QCOMPARE(Preprocess::Type::clahe, mClahePreprocess->type());
+}
+
+void TestClahe::test_name()
+{
+  QCOMPARE(QString("CLAHE"), mClahePreprocess->name());
 }
 
 void TestClahe::test_clipLimit_data()

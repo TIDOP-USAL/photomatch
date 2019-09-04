@@ -22,6 +22,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_thresholdSaliency_data();
   void test_thresholdSaliency();
   void test_pathRadius_data();
@@ -89,6 +90,11 @@ void TestMsdDetector::testDefaultConstructor()
 void TestMsdDetector::test_type()
 {
   QCOMPARE(MsdDetector::Type::msd, this->type());
+}
+
+void TestMsdDetector::test_name()
+{
+  QCOMPARE("MSD", this->name());
 }
 
 void TestMsdDetector::test_thresholdSaliency_data()

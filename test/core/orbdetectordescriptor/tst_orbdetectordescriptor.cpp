@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_featuresNumber_data();
   void test_featuresNumber();
   void test_scaleFactor();
@@ -70,6 +71,11 @@ void TestOrbDetectorDescriptor::testDefaultConstructor()
 void TestOrbDetectorDescriptor::test_type()
 {
   QCOMPARE(OrbDetectorDescriptor::Type::orb, this->type());
+}
+
+void TestOrbDetectorDescriptor::test_name()
+{
+  QCOMPARE("ORB", this->name());
 }
 
 void TestOrbDetectorDescriptor::test_featuresNumber_data()

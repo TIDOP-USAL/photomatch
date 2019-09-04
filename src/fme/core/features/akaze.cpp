@@ -114,6 +114,11 @@ void AkazeProperties::reset()
   mDiffusivity = "DIFF_PM_G2";
 }
 
+QString AkazeProperties::name() const
+{
+  return QString("AKAZE");
+}
+
 
 
 /*----------------------------------------------------------------*/

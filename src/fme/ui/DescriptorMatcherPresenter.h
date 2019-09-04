@@ -16,6 +16,7 @@ class IDescriptorMatcherView;
 class IDescriptorMatcherModel;
 class IProjectModel;
 class ISettingsModel;
+class IProgressDialog;
 
 class IDescriptorMatcherPresenter
   : public IPresenter
@@ -31,6 +32,10 @@ public:
 signals:
 
   void matchesFinished();
+
+public slots:
+
+  virtual void setProgressDialog(IProgressDialog *progressDialog) = 0;
 
 private slots:
 
@@ -65,9 +70,15 @@ private:
 
 // IDescriptorMatcherPresenter interface
 
+public slots:
+
+  void setProgressDialog(IProgressDialog *progressDialog) override;
+
 private slots:
 
   void run() override;
+  void onError(int code, const QString &msg);
+  void onFinished();
 
 protected:
 
@@ -76,6 +87,7 @@ protected:
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
   MultiProcess *mMultiProcess;
+  IProgressDialog *mProgressDialog;
 };
 
 } // namespace fme

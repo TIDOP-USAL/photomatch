@@ -20,6 +20,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_lucidKernel_data();
   void test_lucidKernel();
   void test_blurKernel_data();
@@ -66,6 +67,11 @@ void TestLucidDescriptor::testDefaultConstructor()
 void TestLucidDescriptor::test_type()
 {
   QCOMPARE(LucidDescriptor::Type::lucid, mLucidDescriptor->type());
+}
+
+void TestLucidDescriptor::test_name()
+{
+  QCOMPARE("LUCID", mLucidDescriptor->name());
 }
 
 void TestLucidDescriptor::test_lucidKernel_data()

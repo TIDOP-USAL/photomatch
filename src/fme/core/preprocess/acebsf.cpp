@@ -140,5 +140,12 @@ cv::Mat AcebsfPreprocess::process(const cv::Mat &img)
   return img_out;
 }
 
+QString AcebsfProperties::name() const
+{
+  return QString("ACEBSF");
+}
+
 } // namespace fme
+
+
 

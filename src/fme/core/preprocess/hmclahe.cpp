@@ -56,6 +56,11 @@ void HmclaheProperties::reset()
   mPhi = 0.5;
 }
 
+QString HmclaheProperties::name() const
+{
+  return QString("HMCLAHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

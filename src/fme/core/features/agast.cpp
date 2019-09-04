@@ -58,6 +58,11 @@ void AgastProperties::reset()
   mDetectorType = "OAST_9_16";
 }
 
+QString AgastProperties::name() const
+{
+  return QString("AGAST");
+}
+
 
 /*----------------------------------------------------------------*/
 

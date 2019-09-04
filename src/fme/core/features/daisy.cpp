@@ -100,6 +100,11 @@ void DaisyProperties::reset()
   mUseOrientation = false;
 }
 
+QString DaisyProperties::name() const
+{
+  return QString("DAISY");
+}
+
 
 /*----------------------------------------------------------------*/
 

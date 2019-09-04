@@ -17,6 +17,7 @@
 #include "fme/ui/PreprocessView.h"
 #include "fme/ui/ProjectModel.h"
 #include "fme/ui/SettingsModel.h"
+#include "fme/ui/utils/ProgressDialog.h"
 
 #include "fme/widgets/AcebsfWidget.h"
 #include "fme/widgets/ClaheWidget.h"
@@ -34,6 +35,8 @@
 
 #include "fme/process/MultiProcess.h"
 #include "fme/process/preprocess/imagePreprocess.h"
+
+#include <tidop/core/messages.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -63,7 +66,8 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
     mPOHE(new PoheWidget),
     mRSWHE(new RswheWidget),
     mWallis(new WallisWidget),
-    mMultiProcess(new MultiProcess(true))
+    mMultiProcess(new MultiProcess(true)),
+    mProgressDialog(nullptr)
 {
   init();
 
@@ -73,7 +77,7 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
   connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 
-  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError()));
+  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 }
 
@@ -209,6 +213,11 @@ void PreprocessPresenter::init()
   mView->setCurrentPreprocess(mACEBSF->windowTitle());
 }
 
+void PreprocessPresenter::setProgressDialog(IProgressDialog *progressDialog)
+{
+  mProgressDialog = progressDialog;
+}
+
 void PreprocessPresenter::run()
 {
   ///TODO: se crean los procesos
@@ -280,6 +289,20 @@ void PreprocessPresenter::run()
     mMultiProcess->appendProcess(preprocess);
   }
 
+  mView->hide();
+  if (mProgressDialog) {
+    connect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+    mProgressDialog->setRange(0,0);
+    mProgressDialog->setWindowTitle("Preprocessing images...");
+    mProgressDialog->setStatusText("Preprocessing images...");
+    mProgressDialog->setFinished(false);
+    mProgressDialog->show();
+  }
+
+  msgInfo("Preprocessing images");
+  QByteArray ba = currentPreprocess.toLocal8Bit();
+  const char *data = ba.constData();
+  msgInfo("  Preprocessing method     :  %s", data);
   mMultiProcess->start();
 }
 
@@ -288,14 +311,24 @@ void PreprocessPresenter::setCurrentPreprocess(const QString &preprocess)
   mView->setCurrentPreprocess(preprocess);
 }
 
-void PreprocessPresenter::onError(int, QString)
+void PreprocessPresenter::onError(int code, const QString &msg)
 {
-
+  QByteArray ba = msg.toLocal8Bit();
+  msgError("(%i) %s", code, ba.constData());
 }
 
 void PreprocessPresenter::onFinished()
 {
+  if (mProgressDialog){
+    mProgressDialog->setRange(0,1);
+    mProgressDialog->setValue(1);
+    mProgressDialog->setFinished(true);
+    mProgressDialog->setStatusText(tr("Image preprocessing finished"));
+    disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+  }
+
   emit preprocessFinished();
+  msgInfo("Image preprocessing finished");
 }
 
 } // namespace fme

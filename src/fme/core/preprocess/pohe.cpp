@@ -34,6 +34,11 @@ void PoheProperties::reset()
   mBlockSize = QSize(127, 127);
 }
 
+QString PoheProperties::name() const
+{
+  return QString("POHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

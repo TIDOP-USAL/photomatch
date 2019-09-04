@@ -19,6 +19,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_featuresNumber_data();
   void test_featuresNumber();
   void test_octaveLayers_data();
@@ -74,6 +75,11 @@ void TestSiftDetectorDescriptor::testDefaultConstructor()
 void TestSiftDetectorDescriptor::test_type()
 {
   QCOMPARE(SiftDetectorDescriptor::Type::sift, mSiftDetectorDescriptor->type());
+}
+
+void TestSiftDetectorDescriptor::test_name()
+{
+  QCOMPARE("SIFT", mSiftDetectorDescriptor->name());
 }
 
 void TestSiftDetectorDescriptor::test_featuresNumber_data()

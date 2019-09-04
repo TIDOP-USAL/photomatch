@@ -28,6 +28,11 @@ void CmbfheProperties::reset()
   mBlockSize = QSize(11,11);
 }
 
+QString CmbfheProperties::name() const
+{
+  return QString("CMBFHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

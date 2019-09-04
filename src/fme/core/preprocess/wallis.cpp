@@ -83,6 +83,11 @@ void WallisProperties::reset()
   mKernelSize = 50;
 }
 
+QString WallisProperties::name() const
+{
+  return QString("WALLIS");
+}
+
 
 /*----------------------------------------------------------------*/
 

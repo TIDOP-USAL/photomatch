@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void testThreshold_data();
   void testThreshold();
   void testOctaves_data();
@@ -67,6 +68,11 @@ void TestBriskDetectorDescriptor::testDefaultConstructor()
 void TestBriskDetectorDescriptor::test_type()
 {
   QCOMPARE(BriskDetectorDescriptor::Type::brisk, mBriskDetectorDescriptor->type());
+}
+
+void TestBriskDetectorDescriptor::test_name()
+{
+  QCOMPARE("BRISK", mBriskDetectorDescriptor->name());
 }
 
 void TestBriskDetectorDescriptor::testThreshold_data()

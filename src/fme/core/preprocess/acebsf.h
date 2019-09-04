@@ -38,6 +38,7 @@ public:
 public:
 
   virtual void reset() override;
+  QString name() const final;
 
 private:
 
@@ -45,6 +46,7 @@ private:
   double mL;
   double mK1;
   double mK2;
+
 };
 
 

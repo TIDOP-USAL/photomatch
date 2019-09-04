@@ -20,6 +20,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_maxSize_data();
   void test_maxSize();
   void test_responseThreshold_data();
@@ -76,6 +77,11 @@ void TestStarDetector::testDefaultConstructor()
 void TestStarDetector::test_type()
 {
   QCOMPARE(StarDetector::Type::star, mStarDetector->type());
+}
+
+void TestStarDetector::test_name()
+{
+  QCOMPARE("STAR", mStarDetector->name());
 }
 
 void TestStarDetector::test_maxSize_data()

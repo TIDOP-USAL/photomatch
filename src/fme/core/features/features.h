@@ -54,6 +54,7 @@ public:
   virtual void reset() = 0;
 
   Type type() const { return mFeatType.flags(); }
+  virtual QString name() const = 0;
 
 protected:
 

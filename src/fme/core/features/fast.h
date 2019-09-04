@@ -38,6 +38,7 @@ public:
 public:
 
   void reset() override;
+  QString name() const final;
 
 private:
 

@@ -20,6 +20,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_extendedDescriptor_data();
   void test_extendedDescriptor();
   void test_upright_data();
@@ -78,6 +79,11 @@ void TestKazeDetectorDescriptor::testDefaultConstructor()
 void TestKazeDetectorDescriptor::test_type()
 {
   QCOMPARE(KazeDetectorDescriptor::Type::kaze, mKazeDetectorDescriptor->type());
+}
+
+void TestKazeDetectorDescriptor::test_name()
+{
+  QCOMPARE("KAZE", mKazeDetectorDescriptor->name());
 }
 
 void TestKazeDetectorDescriptor::test_extendedDescriptor_data()

@@ -29,6 +29,11 @@ void DheProperties::reset()
   mX = 1;
 }
 
+QString DheProperties::name() const
+{
+  return QString("DHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

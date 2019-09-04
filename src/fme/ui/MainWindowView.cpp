@@ -25,6 +25,9 @@ enum
   preprocess,
   preprocess_images,
   preprocess_image,
+  features,
+  features_images,
+  features_image,
   detector,
   descriptor
 };
@@ -378,7 +381,75 @@ void MainWindowView::addPreprocess(const QString &sessionName, const QString &pr
   }
 }
 
-void MainWindowView::addDetector(const QString &sessionName, const QString &detector)
+//void MainWindowView::addDetector(const QString &sessionName, const QString &detector)
+//{
+//  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+//    /* Sessions */
+
+//    QTreeWidgetItem *itemSessions = nullptr;
+//    for (int i = 0; i < itemProject->childCount(); i++) {
+//      QTreeWidgetItem *temp = itemProject->child(i);
+//      if (temp->text(0).compare(tr("Sessions")) == 0) {
+//        itemSessions = itemProject->child(i);
+//        break;
+//      }
+//    }
+
+//    if (itemSessions != nullptr) {
+
+//      for (int i = 0; i < itemSessions->childCount(); i++) {
+//        QTreeWidgetItem *itemSession = itemSessions->child(i);
+//        if (itemSession){
+//          if (itemSession->text(0).compare(sessionName) == 0){
+//            QTreeWidgetItem *itemDetector = new QTreeWidgetItem();
+//            itemDetector->setText(0, QString("Detector: ").append(detector));
+//            itemDetector->setData(0, Qt::UserRole, fme::detector);
+//            itemSession->addChild(itemDetector);
+//            update();
+//            break;
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+
+//void MainWindowView::addDescriptor(const QString &sessionName, const QString &descriptor)
+//{
+//  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+//    /* Sessions */
+
+//    QTreeWidgetItem *itemSessions = nullptr;
+//    for (int i = 0; i < itemProject->childCount(); i++) {
+//      QTreeWidgetItem *temp = itemProject->child(i);
+//      if (temp->text(0).compare(tr("Sessions")) == 0) {
+//        itemSessions = itemProject->child(i);
+//        break;
+//      }
+//    }
+
+//    if (itemSessions != nullptr) {
+
+//      for (int i = 0; i < itemSessions->childCount(); i++) {
+//        QTreeWidgetItem *itemSession = itemSessions->child(i);
+//        if (itemSession){
+//          if (itemSession->text(0).compare(sessionName) == 0){
+//            QTreeWidgetItem *itemDescriptor = new QTreeWidgetItem();
+//            itemDescriptor->setText(0, QString("Descriptor: ").append(descriptor));
+//            itemDescriptor->setData(0, Qt::UserRole, fme::descriptor);
+//            itemSession->addChild(itemDescriptor);
+//            update();
+//            break;
+//          }
+//        }
+//      }
+//    }
+//  }
+//}
+
+void MainWindowView::addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const QStringList &features)
 {
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
@@ -395,53 +466,65 @@ void MainWindowView::addDetector(const QString &sessionName, const QString &dete
 
     if (itemSessions != nullptr) {
 
+      QTreeWidgetItem *itemFeatures = nullptr;
       for (int i = 0; i < itemSessions->childCount(); i++) {
         QTreeWidgetItem *itemSession = itemSessions->child(i);
         if (itemSession){
           if (itemSession->text(0).compare(sessionName) == 0){
-            QTreeWidgetItem *itemDetector = new QTreeWidgetItem();
-            itemDetector->setText(0, QString("Detector: ").append(detector));
-            itemDetector->setData(0, Qt::UserRole, fme::detector);
-            itemSession->addChild(itemDetector);
+            itemFeatures = new QTreeWidgetItem();
+            itemFeatures->setText(0, QString("Features"));
+            itemFeatures->setData(0, Qt::UserRole, fme::features);
+            itemSession->addChild(itemFeatures);
             update();
             break;
           }
         }
       }
-    }
-  }
-}
 
-void MainWindowView::addDescriptor(const QString &sessionName, const QString &descriptor)
-{
-  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+      if (itemFeatures != nullptr){
 
-    /* Sessions */
+        /// Detector
+        QTreeWidgetItem *itemDetector = new QTreeWidgetItem();
+        itemDetector->setText(0, QString("Detector: ").append(detector));
+        itemDetector->setData(0, Qt::UserRole, fme::detector);
+        itemFeatures->addChild(itemDetector);
 
-    QTreeWidgetItem *itemSessions = nullptr;
-    for (int i = 0; i < itemProject->childCount(); i++) {
-      QTreeWidgetItem *temp = itemProject->child(i);
-      if (temp->text(0).compare(tr("Sessions")) == 0) {
-        itemSessions = itemProject->child(i);
-        break;
-      }
-    }
+        /// Descriptor
+        QTreeWidgetItem *itemDescriptor = new QTreeWidgetItem();
+        itemDescriptor->setText(0, QString("Descriptor: ").append(descriptor));
+        itemDescriptor->setData(0, Qt::UserRole, fme::descriptor);
+        itemFeatures->addChild(itemDescriptor);
 
-    if (itemSessions != nullptr) {
-
-      for (int i = 0; i < itemSessions->childCount(); i++) {
-        QTreeWidgetItem *itemSession = itemSessions->child(i);
-        if (itemSession){
-          if (itemSession->text(0).compare(sessionName) == 0){
-            QTreeWidgetItem *itemDescriptor = new QTreeWidgetItem();
-            itemDescriptor->setText(0, QString("Descriptor: ").append(descriptor));
-            itemDescriptor->setData(0, Qt::UserRole, fme::descriptor);
-            itemSession->addChild(itemDescriptor);
-            update();
+        QTreeWidgetItem *itemImagesFeatures = nullptr;
+        for (int i = 0; i < itemFeatures->childCount(); i++) {
+          QTreeWidgetItem *temp = itemFeatures->child(i);
+          if (temp->text(0).compare(tr("Features")) == 0) {
+            itemImagesFeatures = itemFeatures->child(i);
             break;
           }
         }
+
+        if (itemImagesFeatures == nullptr) {
+          itemImagesFeatures = new QTreeWidgetItem();
+          itemImagesFeatures->setText(0, tr("Features"));
+          itemImagesFeatures->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_documents_folder_48px.png"));
+          itemImagesFeatures->setFlags(itemImagesFeatures->flags() | Qt::ItemIsTristate);
+          itemImagesFeatures->setData(0, Qt::UserRole, fme::features_images);
+          itemFeatures->addChild(itemImagesFeatures);
+          itemImagesFeatures->setExpanded(true);
+        }
+
+        for (auto image_features : features) {
+          QTreeWidgetItem *itemPhotogram = new QTreeWidgetItem();
+          itemPhotogram->setText(0, QFileInfo(image_features).baseName());
+          itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_image_48px.png"));
+          itemPhotogram->setToolTip(0, image_features);
+          itemPhotogram->setData(0, Qt::UserRole, fme::features_image);
+          itemImagesFeatures->addChild(itemPhotogram);
+        }
+
       }
+
     }
   }
 }
@@ -720,6 +803,7 @@ void MainWindowView::onSelectionChanged()
       }
     }
   } else if (item[0]->data(0, Qt::UserRole) == fme::sessions){
+    ui->treeWidgetProperties->clear();
   } else if (item[0]->data(0, Qt::UserRole) == fme::session){
     int size = item.size();
     if(size > 0){
@@ -734,9 +818,37 @@ void MainWindowView::onSelectionChanged()
       }*/
     }
   } else if (item[0]->data(0, Qt::UserRole) == fme::preprocess){
+    int size = item.size();
+    if(size > 0){
+      if (size == 1) {
+        QString session = item[0]->parent()->text(0);
+        emit selectPreprocess(session);
+      }
+    }
+  } else if (item[0]->data(0, Qt::UserRole) == fme::features){
+    ui->treeWidgetProperties->clear();
+    QString session = item[0]->parent()->text(0);
+    emit selectFeatures(session);
+  } else if (item[0]->data(0, Qt::UserRole) == fme::features_images){
+    ui->treeWidgetProperties->clear();
+  } else if (item[0]->data(0, Qt::UserRole) == fme::features_image){
+    ui->treeWidgetProperties->clear();
   } else if (item[0]->data(0, Qt::UserRole) == fme::detector){
+    int size = item.size();
+    if(size > 0){
+      if (size == 1) {
+        QString session = item[0]->parent()->parent()->text(0);
+        emit selectDetector(session);
+      }
+    }
   } else if (item[0]->data(0, Qt::UserRole) == fme::descriptor){
-
+    int size = item.size();
+    if(size > 0){
+      if (size == 1) {
+        QString session = item[0]->parent()->parent()->text(0);
+        emit selectDescriptor(session);
+      }
+    }
   }
 
 //  if (item[0]->parent()->text(0).compare(tr("Images")) == 0){

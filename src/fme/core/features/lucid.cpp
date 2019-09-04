@@ -41,6 +41,11 @@ void LucidProperties::reset()
   mBlurKernel = 2;
 }
 
+QString LucidProperties::name() const
+{
+  return QString("LUCID");
+}
+
 
 /*----------------------------------------------------------------*/
 

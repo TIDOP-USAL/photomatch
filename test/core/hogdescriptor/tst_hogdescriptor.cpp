@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_winSize_data();
   void test_winSize();
   void test_blockSize_data();
@@ -87,6 +88,11 @@ void TestHogDescriptor::testDefaultConstructor()
 void TestHogDescriptor::test_type()
 {
   QCOMPARE(HogDescriptor::Type::hog, mHogDescriptor->type());
+}
+
+void TestHogDescriptor::test_name()
+{
+  QCOMPARE("HOG", mHogDescriptor->name());
 }
 
 void TestHogDescriptor::test_winSize_data()

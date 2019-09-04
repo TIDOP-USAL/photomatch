@@ -81,6 +81,11 @@ void SurfProperties::reset()
   mRotatedFeatures = false;
 }
 
+QString SurfProperties::name() const
+{
+  return QString("SURF");
+}
+
 
 /*----------------------------------------------------------------*/
 

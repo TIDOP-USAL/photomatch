@@ -22,6 +22,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void testThreshold_data();
   void testThreshold();
   void testNonmaxSuppression_data();
@@ -66,6 +67,11 @@ void TestFastDetector::testDefaultConstructor()
 void TestFastDetector::test_type()
 {
   QCOMPARE(FastDetector::Type::fast, this->type());
+}
+
+void TestFastDetector::test_name()
+{
+  QCOMPARE("FAST", this->name());
 }
 
 void TestFastDetector::testThreshold_data()

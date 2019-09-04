@@ -78,6 +78,11 @@ void SiftProperties::reset()
   mSigma = 1.6;
 }
 
+QString SiftProperties::name() const
+{
+  return QString("SIFT");
+}
+
 
 /*----------------------------------------------------------------*/
 

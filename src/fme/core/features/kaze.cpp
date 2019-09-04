@@ -97,6 +97,11 @@ void KazeProperties::reset()
   mDiffusivity = "DIFF_PM_G2";
 }
 
+QString KazeProperties::name() const
+{
+  return QString("KAZE");
+}
+
 /*----------------------------------------------------------------*/
 
 

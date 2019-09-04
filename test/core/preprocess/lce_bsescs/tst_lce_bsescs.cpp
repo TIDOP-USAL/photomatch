@@ -2,69 +2,65 @@
 #include <QCoreApplication>
 
 #include "fme/fme_global.h"
-#include "fme/core/preprocess/acebsf.h"
+#include "fme/core/preprocess/lce_bsescs.h"
 
 using namespace fme;
 
-class TestAcebsf 
+class TestLceBsescs
   : public QObject
 {
   Q_OBJECT
 
 public:
 
-  TestAcebsf();
-  ~TestAcebsf();
+  TestLceBsescs();
+  ~TestLceBsescs();
 
 private slots:
 
   void testDefaultConstructor();
   void test_type();
-  void test_blockSize_data();
-  void test_blockSize();
-  void test_l_data();
-  void test_l();
-  void test_k1_data();
-  void test_k1();
-  void test_k2_data();
-  void test_k2();
+  void test_name();
+  void test_tilesGridSize_data();
+  void test_tilesGridSize();
   void test_reset();
 
 private:
 
-  AcebsfPreprocess *mAcebsfPreprocess;
+  LceBsescsPreprocess *mLceBsescsPreprocess;
 };
 
-TestAcebsf::TestAcebsf()
-  : mAcebsfPreprocess(new AcebsfPreprocess)
+TestLceBsescs::TestLceBsescs()
+  : mLceBsescsPreprocess(new LceBsescsPreprocess)
 {
 
 }
 
-TestAcebsf::~TestAcebsf()
+TestLceBsescs::~TestLceBsescs()
 {
-  if (mAcebsfPreprocess){
-    delete mAcebsfPreprocess;
-    mAcebsfPreprocess = nullptr;
+  if (mLceBsescsPreprocess){
+    delete mLceBsescsPreprocess;
+    mLceBsescsPreprocess = nullptr;
   }
 }
 
-void TestAcebsf::testDefaultConstructor()
+void TestLceBsescs::testDefaultConstructor()
 {
-  AcebsfPreprocess acebsfPreprocess;
-  QCOMPARE(QSize(8, 8), acebsfPreprocess.blockSize());
-  QCOMPARE(0.03, acebsfPreprocess.l());
-  QCOMPARE(10., acebsfPreprocess.k1());
-  QCOMPARE(0.5, acebsfPreprocess.k2());
-
+  LceBsescsPreprocess lceBsescsPreprocess;
+  QCOMPARE(QSize(33, 33), lceBsescsPreprocess.blockSize());
 }
 
-void TestAcebsf::test_type()
+void TestLceBsescs::test_type()
 {
-  QCOMPARE(IAcebsf::Type::acebsf, mAcebsfPreprocess->type());
+  QCOMPARE(IAcebsf::Type::lce_bsescs, mLceBsescsPreprocess->type());
 }
 
-void TestAcebsf::test_blockSize_data()
+void TestLceBsescs::test_name()
+{
+  QCOMPARE(QString("LCE_BSESCS"), mLceBsescsPreprocess->name());
+}
+
+void TestLceBsescs::test_tilesGridSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -73,88 +69,25 @@ void TestAcebsf::test_blockSize_data()
   QTest::newRow("QSize(50, 50)") << QSize(50, 50) << QSize(50, 50);
 }
 
-void TestAcebsf::test_blockSize()
+void TestLceBsescs::test_tilesGridSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
 
-  mAcebsfPreprocess->setBlockSize(value);
-  QCOMPARE(result, mAcebsfPreprocess->blockSize());
+  mLceBsescsPreprocess->setBlockSize(value);
+  QCOMPARE(result, mLceBsescsPreprocess->blockSize());
 }
 
-void TestAcebsf::test_l_data()
+void TestLceBsescs::test_reset()
 {
-  QTest::addColumn<double>("value");
-  QTest::addColumn<double>("result");
+  mLceBsescsPreprocess->setBlockSize(QSize(5, 5));
 
-  QTest::newRow("0.5") << 0.5 << 0.5;
-  QTest::newRow("0.1") << .1 << .1;
-  QTest::newRow("0.2") << .2 << .2;
-}
+  mLceBsescsPreprocess->reset();
 
-void TestAcebsf::test_l()
-{
-  QFETCH(double, value);
-  QFETCH(double, result);
-
-  mAcebsfPreprocess->setL(value);
-  QCOMPARE(result, mAcebsfPreprocess->l());
-}
-
-void TestAcebsf::test_k1_data()
-{
-  QTest::addColumn<double>("value");
-  QTest::addColumn<double>("result");
-
-  QTest::newRow("10.0") << 10.0 << 10.0;
-  QTest::newRow("20.0") << 20.0 << 20.0;
-}
-
-void TestAcebsf::test_k1()
-{
-  QFETCH(double, value);
-  QFETCH(double, result);
-
-  mAcebsfPreprocess->setK1(value);
-  QCOMPARE(result, mAcebsfPreprocess->k1());
-}
-
-void TestAcebsf::test_k2_data()
-{
-  QTest::addColumn<double>("value");
-  QTest::addColumn<double>("result");
-
-  QTest::newRow("0.5") << 0.5 << 0.5;
-  QTest::newRow("0.1") << .1 << .1;
-  QTest::newRow("0.2") << .2 << .2;
-}
-
-void TestAcebsf::test_k2()
-{
-  QFETCH(double, value);
-  QFETCH(double, result);
-
-  mAcebsfPreprocess->setK2(value);
-  QCOMPARE(result, mAcebsfPreprocess->k2());
-}
-
-void TestAcebsf::test_reset()
-{
-  mAcebsfPreprocess->setBlockSize(QSize(5, 5));
-  mAcebsfPreprocess->setL(0.05);
-  mAcebsfPreprocess->setK1(5.);
-  mAcebsfPreprocess->setK2(0.6);
-
-
-  mAcebsfPreprocess->reset();
-
-  QCOMPARE(QSize(8, 8), mAcebsfPreprocess->blockSize());
-  QCOMPARE(0.03, mAcebsfPreprocess->l());
-  QCOMPARE(10., mAcebsfPreprocess->k1());
-  QCOMPARE(0.5, mAcebsfPreprocess->k2());
+  QCOMPARE(QSize(33, 33), mLceBsescsPreprocess->blockSize());
 }
 
 
-QTEST_MAIN(TestAcebsf)
+QTEST_MAIN(TestLceBsescs)
 
-#include "tst_acebsf.moc"
+#include "tst_lce_bsescs.moc"

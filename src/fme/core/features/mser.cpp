@@ -125,6 +125,11 @@ void MserProperties::reset()
   mEdgeBlurSize = 5;
 }
 
+QString MserProperties::name() const
+{
+  return QString("MSER");
+}
+
 
 /*----------------------------------------------------------------*/
 

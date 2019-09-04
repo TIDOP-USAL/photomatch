@@ -57,6 +57,11 @@ void MsrcpProperties::reset()
   mLargeScale = 220.;
 }
 
+QString MsrcpProperties::name() const
+{
+  return QString("MSRCP");
+}
+
 
 /*----------------------------------------------------------------*/
 

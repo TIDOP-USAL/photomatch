@@ -49,6 +49,7 @@ public:
   virtual void reset() = 0;
 
   Type type() const { return mPreprocessType.flags(); }
+  virtual QString name() const = 0;
 
 protected:
 
@@ -92,6 +93,7 @@ public:
 
   virtual int maxImageSize() const = 0;
   virtual void setMaxImageSize(int size) = 0;
+
 };
 
 

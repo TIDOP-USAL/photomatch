@@ -1416,7 +1416,6 @@ void ProjectRW::writeACEBSF(QXmlStreamWriter *stream, IAcebsf *acebsf) const
     stream->writeTextElement("L", QString::number(acebsf->l()));
     stream->writeTextElement("K1", QString::number(acebsf->k1()));
     stream->writeTextElement("K2", QString::number(acebsf->k2()));
-
   }
   stream->writeEndElement(); // Acebsf
 }

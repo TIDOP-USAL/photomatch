@@ -58,8 +58,9 @@ public:
   void addSession(const QString &sessionName, const QString &sessionDescription, bool activeSession = false);
   void addPreprocess(const QString &sessionName, const QString &preprocess, const QStringList &preprocessImages);
 
-  void addDetector(const QString &sessionName, const QString &detector);
-  void addDescriptor(const QString &sessionName, const QString &descriptor);
+  //void addDetector(const QString &sessionName, const QString &detector);
+  //void addDescriptor(const QString &sessionName, const QString &descriptor);
+  void addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const QStringList &features);
 
   /*!
    * \brief Añade un mensaje temporal en la barra de herramientas
@@ -135,6 +136,10 @@ signals:
   void selectImages(QStringList);
   void deleteImages(QStringList);
   void selectSession(QString);
+  void selectPreprocess(QString);
+  void selectFeatures(QString);
+  void selectDetector(QString);
+  void selectDescriptor(QString);
 
   void loadKeyPoints(QString);
 

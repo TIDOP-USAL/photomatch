@@ -19,6 +19,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_hessianThreshold_data();
   void test_hessianThreshold();
   void test_octaves_data();
@@ -66,6 +67,11 @@ void TestSurfDetectorDescriptor::testDefaultConstructor()
 void TestSurfDetectorDescriptor::test_type()
 {
   QCOMPARE(SurfDetectorDescriptor::Type::surf, this->type());
+}
+
+void TestSurfDetectorDescriptor::test_name()
+{
+  QCOMPARE("SURF", this->name());
 }
 
 void TestSurfDetectorDescriptor::test_hessianThreshold_data()

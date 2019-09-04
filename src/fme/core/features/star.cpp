@@ -77,6 +77,11 @@ void StarProperties::reset()
   mSuppressNonmaxSize = 5;
 }
 
+QString StarProperties::name() const
+{
+  return QString("STAR");
+}
+
 
 /*----------------------------------------------------------------*/
 

@@ -46,6 +46,11 @@ void RswheProperties::reset()
   mHistogramCut = HistogramCut::by_mean;
 }
 
+QString RswheProperties::name() const
+{
+  return QString("RSWHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

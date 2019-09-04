@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -53,6 +54,11 @@ void TestPohe::testDefaultConstructor()
 void TestPohe::test_type()
 {
   QCOMPARE(Preprocess::Type::pohe, mPohePreprocess->type());
+}
+
+void TestPohe::test_name()
+{
+  QCOMPARE(QString("POHE"), mPohePreprocess->name());
 }
 
 void TestPohe::test_tilesGridSize_data()

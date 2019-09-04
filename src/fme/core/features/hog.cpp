@@ -91,6 +91,11 @@ void HogProperties::reset()
   mDerivAperture = 1;
 }
 
+QString HogProperties::name() const
+{
+  return QString("HOG");
+}
+
 
 /*----------------------------------------------------------------*/
 

@@ -39,6 +39,7 @@ public:
 public:
 
   virtual void reset() override;
+  QString name() const final;
 
 private:
 

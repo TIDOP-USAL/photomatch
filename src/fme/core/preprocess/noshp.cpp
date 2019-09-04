@@ -34,6 +34,11 @@ void NoshpProperties::reset()
   mBlockSize = QSize(127, 127);
 }
 
+QString NoshpProperties::name() const
+{
+  return QString("NOSHP");
+}
+
 
 /*----------------------------------------------------------------*/
 

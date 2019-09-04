@@ -55,6 +55,11 @@ void BriskProperties::reset()
   mPatternScale = 1.0;
 }
 
+QString BriskProperties::name() const
+{
+  return QString("BRISK");
+}
+
 
 /*----------------------------------------------------------------*/
 

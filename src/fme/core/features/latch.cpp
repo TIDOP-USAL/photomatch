@@ -60,6 +60,11 @@ void LatchProperties::reset()
   mHalfSsdSize = 3;
 }
 
+QString LatchProperties::name() const
+{
+  return QString("LATCH");
+}
+
 
 /*----------------------------------------------------------------*/
 

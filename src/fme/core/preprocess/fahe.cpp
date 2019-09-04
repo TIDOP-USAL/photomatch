@@ -29,6 +29,11 @@ void FaheProperties::reset()
   mBlockSize = QSize(11, 11);
 }
 
+QString FaheProperties::name() const
+{
+  return QString("FAHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

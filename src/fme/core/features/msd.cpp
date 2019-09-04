@@ -153,6 +153,11 @@ void MsdProperties::reset()
   mAffineTilts = 3;
 }
 
+QString MsdProperties::name() const
+{
+  return QString("MSD");
+}
+
 
 
 /*----------------------------------------------------------------*/

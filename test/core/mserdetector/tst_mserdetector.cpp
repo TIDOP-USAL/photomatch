@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/Mser.h"
+#include "fme/core/features/mser.h"
 
 using namespace fme;
 
@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_delta_data();
   void test_delta();
   void test_minArea_data();
@@ -88,6 +89,11 @@ void TestMserDetector::testDefaultConstructor()
 void TestMserDetector::test_type()
 {
   QCOMPARE(MserDetector::Type::mser, mMserDetector->type());
+}
+
+void TestMserDetector::test_name()
+{
+  QCOMPARE("MSER", mMserDetector->name());
 }
 
 void TestMserDetector::test_delta_data()

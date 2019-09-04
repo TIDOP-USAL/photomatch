@@ -41,6 +41,11 @@ void ClaheProperties::reset()
   mTilesGridSize = QSize(8, 8);
 }
 
+QString ClaheProperties::name() const
+{
+  return QString("CLAHE");
+}
+
 
 /*----------------------------------------------------------------*/
 

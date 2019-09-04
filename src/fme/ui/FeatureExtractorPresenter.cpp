@@ -24,6 +24,7 @@
 #include "fme/ui/FeatureExtractorView.h"
 #include "fme/ui/ProjectModel.h"
 #include "fme/ui/SettingsModel.h"
+#include "fme/ui/utils/ProgressDialog.h"
 
 #include "fme/widgets/AgastWidget.h"
 #include "fme/widgets/AkazeWidget.h"
@@ -46,6 +47,8 @@
 
 #include "fme/process/MultiProcess.h"
 #include "fme/process/features/FeatureExtractorProcess.h"
+
+#include <tidop/core/messages.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -87,18 +90,19 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mOrbDescriptor(new OrbWidget),
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
-    mMultiProcess(new MultiProcess(true))
+    mMultiProcess(new MultiProcess(true)),
+    mProgressDialog(nullptr)
 {
   init();
 
   connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
   connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
-  connect(mView, SIGNAL(run()), this, SLOT(run()));
-  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  connect(mView, SIGNAL(run()),                                this, SLOT(run()));
+  connect(mView, SIGNAL(rejected()),                           this, SLOT(discart()));
+  connect(mView, SIGNAL(help()),                               this, SLOT(help()));
 
-  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError()));
-  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+  connect(mMultiProcess, SIGNAL(error(int, QString)),          this, SLOT(onError(int, QString)));
+  connect(mMultiProcess, SIGNAL(finished()),                   this, SLOT(onFinished()));
 }
 
 FeatureExtractorPresenter::~FeatureExtractorPresenter()
@@ -416,6 +420,11 @@ void FeatureExtractorPresenter::init()
   setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
 }
 
+void FeatureExtractorPresenter::setProgressDialog(IProgressDialog *progressDialog)
+{
+  mProgressDialog = progressDialog;
+}
+
 void FeatureExtractorPresenter::run()
 {
 
@@ -658,6 +667,25 @@ void FeatureExtractorPresenter::run()
     mMultiProcess->appendProcess(feat_extract);
   }
 
+  mView->hide();
+
+  if (mProgressDialog){
+    connect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+    mProgressDialog->setRange(0,0);
+    mProgressDialog->setWindowTitle("Computing Features...");
+    mProgressDialog->setStatusText("Computing Features...");
+    mProgressDialog->setFinished(false);
+    mProgressDialog->show();
+  }
+
+  msgInfo("Starting Feature Extraction");
+  QByteArray ba = currentKeypointDetector.toLocal8Bit();
+  const char *keypoint_detector = ba.constData();
+  msgInfo("  Feature Detector     :  %s", keypoint_detector);
+  ba = currentDescriptorExtractor.toLocal8Bit();
+  const char *descriptor_extractor = ba.constData();
+  msgInfo("  DescriptorExtractor  :  %s", descriptor_extractor);
+
   mMultiProcess->start();
 }
 
@@ -702,14 +730,24 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
   mView->setCurrentDescriptorExtractor(descriptorExtractor);
 }
 
-void FeatureExtractorPresenter::onError(int, QString)
+void FeatureExtractorPresenter::onError(int code, const QString &msg)
 {
-
+  QByteArray ba = msg.toLocal8Bit();
+  msgError("(%i) %s", code, ba.constData());
 }
 
 void FeatureExtractorPresenter::onFinished()
 {
+  if (mProgressDialog){
+    mProgressDialog->setRange(0,1);
+    mProgressDialog->setValue(1);
+    mProgressDialog->setFinished(true);
+    mProgressDialog->setStatusText(tr("Feature detection and description finished"));
+    disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+  }
+
   emit featureExtractorFinished();
+  msgInfo("Feature detection and description finished.");
 }
 
 } // namespace fme

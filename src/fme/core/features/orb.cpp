@@ -113,6 +113,11 @@ void OrbProperties::reset()
   mFastThreshold = 20;
 }
 
+QString OrbProperties::name() const
+{
+  return QString("ORB");
+}
+
 /*----------------------------------------------------------------*/
 
 

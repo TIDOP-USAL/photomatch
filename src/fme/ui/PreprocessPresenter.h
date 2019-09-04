@@ -29,6 +29,7 @@ class INoshpWidget;
 class IPoheWidget;
 class IRswheWidget;
 class IWallisWidget;
+class IProgressDialog;
 
 class IPreprocessPresenter
   : public IPresenter
@@ -44,6 +45,10 @@ public:
 signals:
 
   void preprocessFinished();
+
+public slots:
+
+  virtual void setProgressDialog(IProgressDialog *progressDialog) = 0;
 
 private slots:
 
@@ -79,11 +84,15 @@ private:
 
 // IPreprocessPresenter interface
 
+public slots:
+
+  void setProgressDialog(IProgressDialog *progressDialog) override;
+
 private slots:
 
   void run() override;
   void setCurrentPreprocess(const QString &preprocess) override;
-  void onError(int, QString);
+  void onError(int code, const QString &msg);
   void onFinished();
 
 protected:
@@ -107,6 +116,8 @@ protected:
   IWallisWidget *mWallis;
 
   MultiProcess *mMultiProcess;
+
+  IProgressDialog *mProgressDialog;
 };
 
 } // namespace fme

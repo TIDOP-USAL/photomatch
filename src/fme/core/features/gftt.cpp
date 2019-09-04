@@ -90,6 +90,11 @@ void GfttProperties::reset()
   mK = 0.04;
 }
 
+QString GfttProperties::name() const
+{
+  return QString("GFTT");
+}
+
 
 /*----------------------------------------------------------------*/
 

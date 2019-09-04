@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_bytes_data();
   void test_bytes();
   void test_rotationInvariance_data();
@@ -70,6 +71,11 @@ void TestLatchDescriptor::testDefaultConstructor()
 void TestLatchDescriptor::test_type()
 {
   QCOMPARE(LatchDescriptor::Type::latch, mLatchDescriptor->type());
+}
+
+void TestLatchDescriptor::test_name()
+{
+  QCOMPARE("LATCH", mLatchDescriptor->name());
 }
 
 void TestLatchDescriptor::test_bytes_data()

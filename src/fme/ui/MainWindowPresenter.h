@@ -3,6 +3,8 @@
 
 #include "mvp.h"
 
+class QTextEdit;
+
 namespace fme
 {
 
@@ -23,6 +25,7 @@ class IFeatureExtractorModel;
 class IFeatureExtractorPresenter;
 class IDescriptorMatcherModel;
 class IDescriptorMatcherPresenter;
+class IProgressDialog;
 
 class MainWindowPresenter
   : public IPresenter
@@ -81,9 +84,14 @@ protected slots:
 
   void loadSession(const QString &session);
   void selectSession(const QString &session);
+  void selectPreprocess(const QString &session);
+  void selectFeatures(const QString &session);
+  void selectDetector(const QString &session);
+  void selectDescriptor(const QString &session);
 
   void loadPreprocess();
   void loadFeatures();
+  void loadMatches();
   void loadKeyPoints(const QString &image);
 
 // IPresenter interface
@@ -124,6 +132,11 @@ private:
 
   void initFeatureMatching();
 
+  void initProgressDialog();
+
+  bool loadPreprocess(const QString &session);
+  bool loadFeatures(const QString &session);
+
 protected:
 
   MainWindowView *mView;
@@ -150,6 +163,9 @@ protected:
 
   IDescriptorMatcherModel *mDescriptorMatcherModel;
   IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
+
+  IProgressDialog *mProgressDialog;
+  QTextEdit *mConsole;
 };
 
 } // namespace fme

@@ -22,6 +22,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void testThreshold_data();
   void testThreshold();
   void testNonmaxSuppression_data();
@@ -67,6 +68,11 @@ void TestAgastDetector::testDefaultConstructor()
 void TestAgastDetector::test_type()
 {
   QCOMPARE(AgastDetector::Type::agast, this->type());
+}
+
+void TestAgastDetector::test_name()
+{
+  QCOMPARE("AGAST", this->name());
 }
 
 void TestAgastDetector::testThreshold_data()

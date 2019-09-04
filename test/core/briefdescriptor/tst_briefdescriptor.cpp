@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_bytes_data();
   void test_bytes();
   void test_useOrientation_data();
@@ -67,6 +68,11 @@ void TestBriefDescriptor::testDefaultConstructor()
 void TestBriefDescriptor::test_type()
 {
   QCOMPARE(BriefDescriptor::Type::brief, mBriefDescriptor->type());
+}
+
+void TestBriefDescriptor::test_name()
+{
+  QCOMPARE("BRIEF", mBriefDescriptor->name());
 }
 
 void TestBriefDescriptor::test_bytes_data()

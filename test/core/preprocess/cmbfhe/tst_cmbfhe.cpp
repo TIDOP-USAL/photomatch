@@ -20,6 +20,7 @@ private slots:
 
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_reset();
@@ -53,6 +54,11 @@ void TestCmbfhe::testDefaultConstructor()
 void TestCmbfhe::test_type()
 {
   QCOMPARE(Preprocess::Type::cmbfhe, mCmbfhePreprocess->type());
+}
+
+void TestCmbfhe::test_name()
+{
+  QCOMPARE(QString("CMBFHE"), mCmbfhePreprocess->name());
 }
 
 void TestCmbfhe::test_tilesGridSize_data()

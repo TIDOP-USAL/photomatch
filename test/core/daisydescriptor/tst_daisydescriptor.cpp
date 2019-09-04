@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void testDefaultConstructor();
   void test_type();
+  void test_name();
   void test_radius_data();
   void test_radius();
   void test_qRadius_data();
@@ -82,6 +83,11 @@ void TestDaisyDescriptor::testDefaultConstructor()
 void TestDaisyDescriptor::test_type()
 {
   QCOMPARE(DaisyDescriptor::Type::daisy, mDaisyDescriptor->type());
+}
+
+void TestDaisyDescriptor::test_name()
+{
+  QCOMPARE("DAISY", mDaisyDescriptor->name());
 }
 
 void TestDaisyDescriptor::test_radius_data()

@@ -58,6 +58,8 @@ void ImagePreprocess::run()
   QByteArray ba = mImgInput.toLocal8Bit();
   const char *input_img = ba.data();
 
+  msgInfo("Preprocessing image %s", input_img);
+
   QImageReader imageReader(input_img);
   QSize size = imageReader.size();
   double scale = 1.;
@@ -71,13 +73,15 @@ void ImagePreprocess::run()
 
   cv::Mat img;
   if (scale > 1.) {
+
     size /= scale;
     imageReader.setScaledSize(size);
     QImage image_scaled = imageReader.read();
     img = qImageToCvMat(image_scaled);
-
+    msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
   } else {
     img = cv::imread(input_img);
+    //msgWarning("Full image size. ");
   }
 
   cv::Mat img_out = mPreprocess->process(img);
