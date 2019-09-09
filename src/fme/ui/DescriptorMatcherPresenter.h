@@ -31,7 +31,9 @@ public:
 
 signals:
 
-  void matchesFinished();
+  void running();
+  void matchCompute(QString);
+  void finished();
 
 public slots:
 
@@ -79,6 +81,7 @@ private slots:
   void run() override;
   void onError(int code, const QString &msg);
   void onFinished();
+  void onMatchCompute(const QString &left, const QString &right, const QString &match);
 
 protected:
 

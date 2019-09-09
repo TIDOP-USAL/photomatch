@@ -102,6 +102,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(selectFeatures(QString)),     this, SLOT(selectFeatures(QString)));
   connect(mView, SIGNAL(selectDetector(QString)),     this, SLOT(selectDetector(QString)));
   connect(mView, SIGNAL(selectDescriptor(QString)),   this, SLOT(selectDescriptor(QString)));
+  connect(mView, SIGNAL(selectImageFeatures(QString)),   this, SLOT(selectImageFeatures(QString)));
 
   /* Visor de imagenes */
   connect(mView, SIGNAL(loadKeyPoints(QString)),      this, SLOT(loadKeyPoints(QString)));
@@ -456,8 +457,14 @@ void MainWindowPresenter::loadProject()
       mView->addSession((*it)->name(), (*it)->description());
       mView->setFlag(MainWindowView::Flag::session_created, true);
 
-      std::shared_ptr<Preprocess> preprocess = (*it)->preprocess();
-      loadPreprocess((*it)->name());
+      bool bPreprocess = loadPreprocess((*it)->name());
+      if (bPreprocess){
+        bool bFeatures = loadFeatures((*it)->name());
+        if (bFeatures){
+          loadMatches((*it)->name());
+        }
+      }
+
     }
   }
 
@@ -537,6 +544,8 @@ void MainWindowPresenter::selectPreprocess(const QString &session)
     properties.push_back(std::make_pair(QString("Name"), "CMBFHE"));
     properties.push_back(std::make_pair(QString("Block Size"),
                                         QString::number(cmbfhe->blockSize().width()).append("x").append(QString::number(cmbfhe->blockSize().height()))));
+  } else if (preprocess->type() == Preprocess::Type::decolor){
+    properties.push_back(std::make_pair(QString("Name"), "Decolor"));
   } else if (preprocess->type() == Preprocess::Type::dhe){
     IDhe *dhe = dynamic_cast<IDhe *>(preprocess.get());
     properties.push_back(std::make_pair(QString("Name"), "DHE"));
@@ -838,7 +847,15 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
   mView->setProperties(properties);
 }
 
-void MainWindowPresenter::loadPreprocess()
+void MainWindowPresenter::selectImageFeatures(const QString &imageFeatures)
+{
+  std::vector<QPointF> feat = mModel->loadKeyPoints(imageFeatures);
+  std::list<std::pair<QString, QString>> properties;
+  properties.push_back(std::make_pair(QString("Features"), QString::number(feat.size())));
+  mView->setProperties(properties);
+}
+
+void MainWindowPresenter::updatePreprocess()
 {
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
   if (_session){
@@ -847,7 +864,7 @@ void MainWindowPresenter::loadPreprocess()
   }
 }
 
-void MainWindowPresenter::loadFeatures()
+void MainWindowPresenter::updateFeatures()
 {
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
   if (_session){
@@ -856,9 +873,13 @@ void MainWindowPresenter::loadFeatures()
   }
 }
 
-void MainWindowPresenter::loadMatches()
+void MainWindowPresenter::updateMatches()
 {
-  ///TODO: ....
+  std::shared_ptr<Session> _session = mProjectModel->currentSession();
+  if (_session){
+    bool project_modified = loadMatches(_session->name());
+    mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
+  }
 }
 
 void MainWindowPresenter::loadKeyPoints(const QString &image)
@@ -890,6 +911,16 @@ void MainWindowPresenter::loadKeyPoints(const QString &image)
   }
 
   mView->setKeyPoints(keyPoints);
+}
+
+void MainWindowPresenter::processFinish()
+{
+  mView->setFlag(MainWindowView::Flag::processing, false);
+}
+
+void MainWindowPresenter::processRunning()
+{
+  mView->setFlag(MainWindowView::Flag::processing, true);
 }
 
 void MainWindowPresenter::help()
@@ -948,7 +979,9 @@ void MainWindowPresenter::initPreprocessDialog()
     IPreprocessView *preprocessView = new PreprocessView(mView);
     mPreprocessPresenter = new PreprocessPresenter(preprocessView, mPreprocessModel, mProjectModel, mSettingsModel);
 
-    connect(mPreprocessPresenter, SIGNAL(preprocessFinished()), this, SLOT(loadPreprocess()));
+    connect(mPreprocessPresenter, SIGNAL(running()),   this, SLOT(processRunning()));
+    connect(mPreprocessPresenter, SIGNAL(finished()),  this, SLOT(processFinish()));
+    connect(mPreprocessPresenter, SIGNAL(imagePreprocessed(QString)),  this, SLOT(updatePreprocess()));
 
     initProgressDialog();
     mPreprocessPresenter->setProgressDialog(mProgressDialog);
@@ -962,8 +995,9 @@ void MainWindowPresenter::initFeatureExtractionDialog()
     IFeatureExtractorView *featureExtractorView = new FeatureExtractorView(mView);
     mFeatureExtractorPresenter = new FeatureExtractorPresenter(featureExtractorView, mFeatureExtractorModel, mProjectModel, mSettingsModel);
 
-    connect(mFeatureExtractorPresenter, SIGNAL(featureExtractorFinished()),
-            this, SLOT(loadFeatures()));
+    connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
+    connect(mFeatureExtractorPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
+    connect(mFeatureExtractorPresenter, SIGNAL(featuresExtracted(QString)), this, SLOT(updateFeatures()));
 
     initProgressDialog();
     mFeatureExtractorPresenter->setProgressDialog(mProgressDialog);
@@ -977,10 +1011,12 @@ void MainWindowPresenter::initFeatureMatching()
     IDescriptorMatcherView *descriptorMatcherView = new DescriptorMatcherView(mView);
     mDescriptorMatcherPresenter = new DescriptorMatcherPresenter(descriptorMatcherView, mDescriptorMatcherModel, mProjectModel, mSettingsModel);
 
-    connect(mDescriptorMatcherPresenter, SIGNAL(matchesFinished()),
-            this, SLOT(loadMatches()));
+    connect(mDescriptorMatcherPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
+    connect(mDescriptorMatcherPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
+    connect(mDescriptorMatcherPresenter, SIGNAL(matchCompute(QString)), this, SLOT(updateMatches()));
 
     initProgressDialog();
+    mDescriptorMatcherPresenter->setProgressDialog(mProgressDialog);
   }
 }
 
@@ -988,12 +1024,13 @@ void MainWindowPresenter::initProgressDialog()
 {
   if (mProgressDialog == nullptr){
     mProgressDialog = new ProgressDialog;
-    mConsole = new QTextEdit(mProgressDialog);
-    QFont font("Courier");
-    font.setPixelSize(10);
-    mConsole->setFont(font);
-    mConsole->setReadOnly(true);
-    mProgressDialog->setConsole(mConsole);
+//    mConsole = new QTextEdit(mProgressDialog);
+//    QFont font("Courier");
+//    font.setPixelSize(10);
+//    mConsole->setFont(font);
+//    mConsole->setReadOnly(true);
+//    mProgressDialog->setConsole(mConsole);
+    mProgressDialog->setConsoleVisible(false);
   }
 }
 
@@ -1008,20 +1045,8 @@ bool MainWindowPresenter::loadPreprocess(const QString &session)
 
       /// Preprocess
       QString preprocess_name = preprocess->name();
+      mView->addPreprocess(_session->name(), preprocess_name, _session->preprocessImages());
 
-      QStringList preprocess_images;
-      for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-        QString file_in = (*it)->path();
-        QFileInfo fileInfo(file_in);
-        QString preprocessed_image = fileInfo.path();
-        preprocessed_image.append("\\").append(_session->name());
-        preprocessed_image.append("\\preprocess\\");
-        preprocessed_image.append(fileInfo.fileName());
-        preprocess_images.push_back(preprocessed_image);
-      }
-      mView->addPreprocess(_session->name(), preprocess_name, preprocess_images);
-
-      loadFeatures(session);
       return true;
 
     }
@@ -1037,19 +1062,29 @@ bool MainWindowPresenter::loadFeatures(const QString &session)
     std::shared_ptr<Feature> descriptor = _session->descriptor();
     if (detector && descriptor){
       mView->setFlag(MainWindowView::Flag::feature_extraction, true);
+      mView->addFeatures(_session->name(), detector->name(), descriptor->name(), _session->features());
 
-      QStringList img_features;
-      for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-        QString file_in = (*it)->path();
-        QFileInfo fileInfo(file_in);
-        QString features = fileInfo.path();
-        features.append("\\").append(_session->name());
-        features.append("\\features\\");
-        features.append(fileInfo.fileName());
-        features.append(".xml");
-        img_features.push_back(features);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool MainWindowPresenter::loadMatches(const QString &session)
+{
+  std::shared_ptr<Session> _session = mProjectModel->findSession(session);
+  if (_session){
+    std::shared_ptr<Match> match = _session->matcher();
+    if (match){
+
+      for (auto &matches : _session->matches()){
+        QString img1 = matches.first;
+        for (size_t i = 0; i < matches.second.size(); i++){
+          QString img2 = matches.second[i].first;
+          QString file = matches.second[i].second;
+          mView->addMatches(_session->name(), match->name(), img1, img2, file);
+        }
       }
-      mView->addFeatures(_session->name(), detector->name(), descriptor->name(), img_features);
 
       return true;
     }

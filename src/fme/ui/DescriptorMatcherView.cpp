@@ -92,7 +92,7 @@ void DescriptorMatcherView::setCrossMatching(bool crossMatching)
 
 void DescriptorMatcherView::init()
 {
-  this->setWindowTitle(tr("DescriptorMatcher"));
+  this->setWindowTitle(tr("Descriptor Matcher"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(350, 450);
 

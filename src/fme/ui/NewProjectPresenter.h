@@ -7,7 +7,6 @@
 
 #include "fme/ui/mvp.h"
 
-
 namespace fme
 {
 

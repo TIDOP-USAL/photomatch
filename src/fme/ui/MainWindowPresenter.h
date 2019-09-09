@@ -88,11 +88,15 @@ protected slots:
   void selectFeatures(const QString &session);
   void selectDetector(const QString &session);
   void selectDescriptor(const QString &session);
+  void selectImageFeatures(const QString &imageFeatures);
 
-  void loadPreprocess();
-  void loadFeatures();
-  void loadMatches();
+  void updatePreprocess();
+  void updateFeatures();
+  void updateMatches();
   void loadKeyPoints(const QString &image);
+
+  void processFinish();
+  void processRunning();
 
 // IPresenter interface
 
@@ -136,6 +140,7 @@ private:
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
+  bool loadMatches(const QString &session);
 
 protected:
 

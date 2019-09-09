@@ -1265,38 +1265,38 @@ void TestSettingsModel::test_starSuppressNonmaxSize()
 
 void TestSettingsModel::test_matchMatchingMethod()
 {
-  mSettingsModel->setMatchMatchingMethod("Brute-Force");
-  QCOMPARE("Brute-Force", mSettingsModel->matchMatchingMethod());
+//  mSettingsModel->setMatchMatchingMethod("Brute-Force");
+//  QCOMPARE("Brute-Force", mSettingsModel->matchMatchingMethod());
 }
 
 void TestSettingsModel::test_matchNormType()
 {
-  mSettingsModel->setMatchNormType("NORM_L1");
-  QCOMPARE("NORM_L1", mSettingsModel->matchNormType());
+//  mSettingsModel->setMatchNormType("NORM_L1");
+//  QCOMPARE("NORM_L1", mSettingsModel->matchNormType());
 }
 
 void TestSettingsModel::test_matchRatio()
 {
-  mSettingsModel->setMatchRatio(0.5);
-  QCOMPARE(0.5, mSettingsModel->matchRatio());
+//  mSettingsModel->setMatchRatio(0.5);
+//  QCOMPARE(0.5, mSettingsModel->matchRatio());
 }
 
 void TestSettingsModel::test_matchDistance()
 {
-  mSettingsModel->setMatchDistance(0.8);
-  QCOMPARE(0.8, mSettingsModel->matchDistance());
+//  mSettingsModel->setMatchDistance(0.8);
+//  QCOMPARE(0.8, mSettingsModel->matchDistance());
 }
 
 void TestSettingsModel::test_matchConfidence()
 {
-  mSettingsModel->setMatchConfidence(0.95);
-  QCOMPARE(0.95, mSettingsModel->matchConfidence());
+//  mSettingsModel->setMatchConfidence(0.95);
+//  QCOMPARE(0.95, mSettingsModel->matchConfidence());
 }
 
 void TestSettingsModel::test_matchCrossMatching()
 {
-  mSettingsModel->setMatchCrossMatching(false);
-  QCOMPARE(false, mSettingsModel->matchCrossMatching());
+//  mSettingsModel->setMatchCrossMatching(false);
+//  QCOMPARE(false, mSettingsModel->matchCrossMatching());
 }
 
 void TestSettingsModel::test_reset()

@@ -20,10 +20,12 @@
 #include "fme/core/features/sift.h"
 #include "fme/core/features/star.h"
 #include "fme/core/features/surf.h"
+#include "fme/core/features/matcher.h"
 
 #include "fme/core/preprocess/acebsf.h"
 #include "fme/core/preprocess/clahe.h"
 #include "fme/core/preprocess/cmbfhe.h"
+#include "fme/core/preprocess/decolor.h"
 #include "fme/core/preprocess/dhe.h"
 #include "fme/core/preprocess/fahe.h"
 #include "fme/core/preprocess/hmclahe.h"
@@ -33,6 +35,8 @@
 #include "fme/core/preprocess/pohe.h"
 #include "fme/core/preprocess/rswhe.h"
 #include "fme/core/preprocess/wallis.h"
+
+#include <tidop/core/messages.h>
 
 #include <QFile>
 #include <QFileInfo>
@@ -97,8 +101,7 @@ void Project::addImage(const std::shared_ptr<Image> &img)
   std::shared_ptr<Image> image = findImage(img->path());
   if (image != nullptr) {
     QByteArray ba = img->path().toLocal8Bit();
-    /// TODO: mensajes de la aplicación
-    //msgWarning("Image %s already in the project", ba.data());
+    msgWarning("Image %s already in the project", ba.data());
   } else {
     mImages.push_back(img);
   }
@@ -411,6 +414,10 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                         std::shared_ptr<ICmbfhe> cmbfhe(new CmbfheProperties);
                         readCMBFHE(&stream, cmbfhe.get());
                         session->setPreprocess(cmbfhe);
+                      } else if (stream.name() == "Decolor") {
+                        std::shared_ptr<IDecolor> decolor = std::make_shared<DecolorProperties>();
+                        session->setPreprocess(decolor);
+                        stream.skipCurrentElement();
                       } else if (stream.name() == "Dhe") {
                         std::shared_ptr<IDhe> dhe = std::make_shared<DheProperties>();
                         readDHE(&stream, dhe.get());
@@ -447,112 +454,206 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                         std::shared_ptr<IWallis> wallis = std::make_shared<WallisProperties>();
                         readWALLIS(&stream, wallis.get());
                         session->setPreprocess(wallis);
+                      } else if (stream.name() == "PreprocessedImages") {
+                        while (stream.readNextStartElement()) {
+                          if (stream.name() == "PreprocessedImage") {
+                            session->addPreprocessImage(stream.readElementText());
+                          } else
+                            stream.skipCurrentElement();
+                        }
                       } else
                         stream.skipCurrentElement();
                     }
-                  } else if (stream.name() == "FeatureDetector") {
+                  } else if (stream.name() == "Features") {
                     while (stream.readNextStartElement()){
-                      if (stream.name() == "AGAST") {
-                        std::shared_ptr<IAgast> agast = std::make_shared<AgastProperties>();
-                        readAGAST(&stream, agast.get());
-                        session->setDetector(agast);
-                      } else if (stream.name() == "AKAZE") {
-                        std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
-                        readAKAZE(&stream, akaze.get());
-                        session->setDetector(akaze);
-                      } else if (stream.name() == "BRISK") {
-                        std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
-                        readBRISK(&stream, brisk.get());
-                        session->setDetector(brisk);
-                      } else if (stream.name() == "FAST") {
-                        std::shared_ptr<IFast> fast = std::make_shared<FastProperties>();
-                        readFAST(&stream, fast.get());
-                        session->setDetector(fast);
-                      } else if (stream.name() == "GFTT") {
-                        std::shared_ptr<IGftt> gftt = std::make_shared<GfttProperties>();
-                        readGFTT(&stream, gftt.get());
-                        session->setDetector(gftt);
-                      } else if (stream.name() == "KAZE") {
-                        std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
-                        readKAZE(&stream, kaze.get());
-                        session->setDetector(kaze);
-                      } else if (stream.name() == "MSD") {
-                        std::shared_ptr<IMsd> msd = std::make_shared<MsdProperties>();
-                        readMSD(&stream, msd.get());
-                        session->setDetector(msd);
-                      } else if (stream.name() == "MSER") {
-                        std::shared_ptr<IMser> mser = std::make_shared<MserProperties>();
-                        readMSER(&stream, mser.get());
-                        session->setDetector(mser);
-                      } else if (stream.name() == "ORB") {
-                        std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
-                        readORB(&stream, orb.get());
-                        session->setDetector(orb);
-                      } else if (stream.name() == "SIFT") {
-                        std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
-                        readSIFT(&stream, sift.get());
-                        session->setDetector(sift);
-                      } else if (stream.name() == "STAR") {
-                        std::shared_ptr<IStar> star = std::make_shared<StarProperties>();
-                        readSTAR(&stream, star.get());
-                        session->setDetector(star);
-                      } else if (stream.name() == "SURF") {
-                        std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
-                        readSURF(&stream, surf.get());
-                        session->setDetector(surf);
-                      }
+                      if (stream.name() == "Detector") {
+                        while (stream.readNextStartElement()){
+                          if (stream.name() == "AGAST") {
+                            std::shared_ptr<IAgast> agast = std::make_shared<AgastProperties>();
+                            readAGAST(&stream, agast.get());
+                            session->setDetector(agast);
+                          } else if (stream.name() == "AKAZE") {
+                            std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
+                            readAKAZE(&stream, akaze.get());
+                            session->setDetector(akaze);
+                          } else if (stream.name() == "BRISK") {
+                            std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
+                            readBRISK(&stream, brisk.get());
+                            session->setDetector(brisk);
+                          } else if (stream.name() == "FAST") {
+                            std::shared_ptr<IFast> fast = std::make_shared<FastProperties>();
+                            readFAST(&stream, fast.get());
+                            session->setDetector(fast);
+                          } else if (stream.name() == "GFTT") {
+                            std::shared_ptr<IGftt> gftt = std::make_shared<GfttProperties>();
+                            readGFTT(&stream, gftt.get());
+                            session->setDetector(gftt);
+                          } else if (stream.name() == "KAZE") {
+                            std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
+                            readKAZE(&stream, kaze.get());
+                            session->setDetector(kaze);
+                          } else if (stream.name() == "MSD") {
+                            std::shared_ptr<IMsd> msd = std::make_shared<MsdProperties>();
+                            readMSD(&stream, msd.get());
+                            session->setDetector(msd);
+                          } else if (stream.name() == "MSER") {
+                            std::shared_ptr<IMser> mser = std::make_shared<MserProperties>();
+                            readMSER(&stream, mser.get());
+                            session->setDetector(mser);
+                          } else if (stream.name() == "ORB") {
+                            std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
+                            readORB(&stream, orb.get());
+                            session->setDetector(orb);
+                          } else if (stream.name() == "SIFT") {
+                            std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
+                            readSIFT(&stream, sift.get());
+                            session->setDetector(sift);
+                          } else if (stream.name() == "STAR") {
+                            std::shared_ptr<IStar> star = std::make_shared<StarProperties>();
+                            readSTAR(&stream, star.get());
+                            session->setDetector(star);
+                          } else if (stream.name() == "SURF") {
+                            std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
+                            readSURF(&stream, surf.get());
+                            session->setDetector(surf);
+                          }
+                        }
+                      } else if (stream.name() == "Descriptor") {
+                        while (stream.readNextStartElement()){
+                          if (stream.name() == "AKAZE") {
+                            std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
+                            readAKAZE(&stream, akaze.get());
+                            session->setDescriptor(akaze);
+                          } else if (stream.name() == "BRIEF") {
+                            std::shared_ptr<IBrief> brief = std::make_shared<BriefProperties>();
+                            readBRIEF(&stream, brief.get());
+                            session->setDescriptor(brief);
+                          } else if (stream.name() == "BRISK") {
+                            std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
+                            readBRISK(&stream, brisk.get());
+                            session->setDescriptor(brisk);
+                          } else if (stream.name() == "DAISY") {
+                            std::shared_ptr<IDaisy> daisy = std::make_shared<DaisyProperties>();
+                            readDAISY(&stream, daisy.get());
+                            session->setDescriptor(daisy);
+                          } else if (stream.name() == "FREAK") {
+                            std::shared_ptr<IFreak> freak = std::make_shared<FreakProperties>();
+                            readFREAK(&stream, freak.get());
+                            session->setDescriptor(freak);
+                          } else if (stream.name() == "HOG") {
+                            std::shared_ptr<IHog> hog = std::make_shared<HogProperties>();
+                            readHOG(&stream, hog.get());
+                            session->setDescriptor(hog);
+                          } else if (stream.name() == "KAZE") {
+                            std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
+                            readKAZE(&stream, kaze.get());
+                            session->setDescriptor(kaze);
+                          } else if (stream.name() == "LATCH") {
+                            std::shared_ptr<ILatch> latch = std::make_shared<LatchProperties>();
+                            readLATCH(&stream, latch.get());
+                            session->setDescriptor(latch);
+                          } else if (stream.name() == "LUCID") {
+                            std::shared_ptr<ILucid> lucid = std::make_shared<LucidProperties>();
+                            readLUCID(&stream, lucid.get());
+                            session->setDescriptor(lucid);
+                          } else if (stream.name() == "ORB") {
+                            std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
+                            readORB(&stream, orb.get());
+                            session->setDescriptor(orb);
+                          } else if (stream.name() == "SIFT") {
+                            std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
+                            readSIFT(&stream, sift.get());
+                            session->setDescriptor(sift);
+                          } else if (stream.name() == "SURF") {
+                            std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
+                            readSURF(&stream, surf.get());
+                            session->setDescriptor(surf);
+                          }
+                        }
+                      } else if (stream.name() == "Files") {
+                        while (stream.readNextStartElement()) {
+                          if (stream.name() == "FeatFile") {
+                            session->addFeatures(stream.readElementText());
+                          } else
+                            stream.skipCurrentElement();
+                        }
+                      } else
+                        stream.skipCurrentElement();
                     }
-                  } else if (stream.name() == "FeatureDescriptor") {
-                    while (stream.readNextStartElement()){
-                      if (stream.name() == "AKAZE") {
-                        std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
-                        readAKAZE(&stream, akaze.get());
-                        session->setDescriptor(akaze);
-                      } else if (stream.name() == "BRIEF") {
-                        std::shared_ptr<IBrief> brief = std::make_shared<BriefProperties>();
-                        readBRIEF(&stream, brief.get());
-                        session->setDescriptor(brief);
-                      } else if (stream.name() == "BRISK") {
-                        std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
-                        readBRISK(&stream, brisk.get());
-                        session->setDescriptor(brisk);
-                      } else if (stream.name() == "DAISY") {
-                        std::shared_ptr<IDaisy> daisy = std::make_shared<DaisyProperties>();
-                        readDAISY(&stream, daisy.get());
-                        session->setDescriptor(daisy);
-                      } else if (stream.name() == "FREAK") {
-                        std::shared_ptr<IFreak> freak = std::make_shared<FreakProperties>();
-                        readFREAK(&stream, freak.get());
-                        session->setDescriptor(freak);
-                      } else if (stream.name() == "HOG") {
-                        std::shared_ptr<IHog> hog = std::make_shared<HogProperties>();
-                        readHOG(&stream, hog.get());
-                        session->setDescriptor(hog);
-                      } else if (stream.name() == "KAZE") {
-                        std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
-                        readKAZE(&stream, kaze.get());
-                        session->setDescriptor(kaze);
-                      } else if (stream.name() == "LATCH") {
-                        std::shared_ptr<ILatch> latch = std::make_shared<LatchProperties>();
-                        readLATCH(&stream, latch.get());
-                        session->setDescriptor(latch);
-                      } else if (stream.name() == "LUCID") {
-                        std::shared_ptr<ILucid> lucid = std::make_shared<LucidProperties>();
-                        readLUCID(&stream, lucid.get());
-                        session->setDescriptor(lucid);
-                      } else if (stream.name() == "ORB") {
-                        std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
-                        readORB(&stream, orb.get());
-                        session->setDescriptor(orb);
-                      } else if (stream.name() == "SIFT") {
-                        std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
-                        readSIFT(&stream, sift.get());
-                        session->setDescriptor(sift);
-                      } else if (stream.name() == "SURF") {
-                        std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
-                        readSURF(&stream, surf.get());
-                        session->setDescriptor(surf);
-                      }
+                  } else if (stream.name() == "Matches") {
+                    while (stream.readNextStartElement()) {
+                      if (stream.name() == "DescriptorMatcher") {
+                        while (stream.readNextStartElement()) {
+                          if (stream.name() == "BruteForceMatcher") {
+                            std::shared_ptr<IBruteForceMatcher> brute_force = std::make_shared<BruteForceMatcherProperties>();
+
+                            while (stream.readNextStartElement()) {
+                              if (stream.name() == "NORM") {
+                                QString normType = stream.readElementText();
+                                BruteForceMatcher::Norm norm = BruteForceMatcherProperties::Norm::l2;
+                                if (normType.compare("NORM_L1") == 0) {
+                                  norm = BruteForceMatcherProperties::Norm::l1;
+                                } else if (normType.compare("NORM_L2") == 0) {
+                                  norm = BruteForceMatcherProperties::Norm::l2;
+                                } else if (normType.compare("NORM_HAMMING") == 0) {
+                                  norm = BruteForceMatcherProperties::Norm::hamming;
+                                } else if (normType.compare("NORM_HAMMING2") == 0) {
+                                  norm = BruteForceMatcherProperties::Norm::hamming2;
+                                }
+                                brute_force->setNormType(norm);
+                              } else
+                                stream.skipCurrentElement();
+                            }
+                            session->setMatcher(brute_force);
+
+                          } else if (stream.name() == "Flann") {
+                            std::shared_ptr<IFlannMatcher> flann = std::make_shared<FlannMatcherProperties>();
+                            session->setMatcher(flann);
+                          } else
+                            stream.skipCurrentElement();
+                        }
+                      } else if (stream.name() == "Images") {
+
+                        QString img1;
+                        QString img2;
+                        QString file;
+
+                        while (stream.readNextStartElement()) {
+                          if (stream.name() == "Image") {
+                            while (stream.readNextStartElement()) {
+                              if (stream.name() == "Name") {
+                                img1 = stream.readElementText();
+                              } else if (stream.name() == "Pairs") {
+                                while (stream.readNextStartElement()) {
+                                  if (stream.name() == "Pair") {
+                                    while (stream.readNextStartElement()) {
+                                      if (stream.name() == "Name") {
+                                        img2 = stream.readElementText();
+                                      } else if (stream.name() == "File") {
+                                        file = stream.readElementText();
+                                      } else
+                                        stream.skipCurrentElement();
+                                    }
+                                    session->addMatches(img1, img2, file);
+                                  } else
+                                    stream.skipCurrentElement();
+                                }
+                              } else
+                                stream.skipCurrentElement();
+                            }
+                          } else
+                            stream.skipCurrentElement();
+                        }
+//                      if (stream.name() == "Files") {
+//                        while (stream.readNextStartElement()) {
+//                          if (stream.name() == "MatchFile") {
+//                            session->addMatches(stream.readElementText());
+//                          } else
+//                            stream.skipCurrentElement();
+//                        }
+                      } else
+                        stream.skipCurrentElement();
+
                     }
                   } else
                     stream.skipCurrentElement();
@@ -639,7 +740,7 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
 
           stream.writeTextElement("Name", (*it)->name());
           stream.writeTextElement("Description", (*it)->description());
-          stream.writeTextElement("Description", QString::number((*it)->maxImageSize()));
+          stream.writeTextElement("MaxImageSize", QString::number((*it)->maxImageSize()));
 
           Preprocess *preprocess = (*it)->preprocess().get();
           if (preprocess){
@@ -651,6 +752,8 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
               writeCLAHE(&stream, dynamic_cast<IClahe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::cmbfhe){
               writeCMBFHE(&stream, dynamic_cast<ICmbfhe *>(preprocess));
+            } else if (preprocess->type() == Preprocess::Type::decolor){
+              writeDecolor(&stream, dynamic_cast<IDecolor *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::dhe){
               writeDHE(&stream, dynamic_cast<IDhe *>(preprocess));
             } else if (preprocess->type() == Preprocess::Type::fahe){
@@ -671,74 +774,158 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
               writeWALLIS(&stream, dynamic_cast<IWallis *>(preprocess));
             }
 
+            /// Imagenes
+            stream.writeStartElement("PreprocessedImages");
+            {
+              for (auto preprocess_image : (*it)->preprocessImages()){
+                stream.writeTextElement("PreprocessedImage", preprocess_image);
+              }
+            }
+            stream.writeEndElement();  // PreprocessedImages
+
             stream.writeEndElement(); // Preprocess
           }
 
+          stream.writeStartElement("Features");
+          {
+            if (Feature *detector = (*it)->detector().get()){
+              stream.writeStartElement("Detector");
 
-          if (Feature *detector = (*it)->detector().get()){
-            stream.writeStartElement("FeatureDetector");
+              if (detector->type() == Feature::Type::agast){
+                writeAGAST(&stream, dynamic_cast<IAgast *>(detector));
+              } else if (detector->type() == Feature::Type::akaze){
+                writeAKAZE(&stream, dynamic_cast<IAkaze *>(detector));
+              } else if (detector->type() == Feature::Type::brisk){
+                writeBRISK(&stream, dynamic_cast<IBrisk *>(detector));
+              } else if (detector->type() == Feature::Type::fast){
+                writeFAST(&stream, dynamic_cast<IFast *>(detector));
+              } else if (detector->type() == Feature::Type::gftt){
+                writeGFTT(&stream, dynamic_cast<IGftt *>(detector));
+              } else if (detector->type() == Feature::Type::kaze){
+                writeKAZE(&stream, dynamic_cast<IKaze *>(detector));
+              } else if (detector->type() == Feature::Type::msd){
+                writeMSD(&stream, dynamic_cast<IMsd *>(detector));
+              } else if (detector->type() == Feature::Type::mser){
+                writeMSER(&stream, dynamic_cast<IMser *>(detector));
+              } else if (detector->type() == Feature::Type::orb){
+                writeORB(&stream, dynamic_cast<IOrb *>(detector));
+              } else if (detector->type() == Feature::Type::sift){
+                writeSIFT(&stream, dynamic_cast<ISift *>(detector));
+              } else if (detector->type() == Feature::Type::star){
+                writeSTAR(&stream, dynamic_cast<IStar *>(detector));
+              } else if (detector->type() == Feature::Type::surf){
+                writeSURF(&stream, dynamic_cast<ISurf *>(detector));
+              }
 
-            if (detector->type() == Feature::Type::agast){
-              writeAGAST(&stream, dynamic_cast<IAgast *>(detector));
-            } else if (detector->type() == Feature::Type::akaze){
-              writeAKAZE(&stream, dynamic_cast<IAkaze *>(detector));
-            } else if (detector->type() == Feature::Type::brisk){
-              writeBRISK(&stream, dynamic_cast<IBrisk *>(detector));
-            } else if (detector->type() == Feature::Type::fast){
-              writeFAST(&stream, dynamic_cast<IFast *>(detector));
-            } else if (detector->type() == Feature::Type::gftt){
-              writeGFTT(&stream, dynamic_cast<IGftt *>(detector));
-            } else if (detector->type() == Feature::Type::kaze){
-              writeKAZE(&stream, dynamic_cast<IKaze *>(detector));
-            } else if (detector->type() == Feature::Type::msd){
-              writeMSD(&stream, dynamic_cast<IMsd *>(detector));
-            } else if (detector->type() == Feature::Type::mser){
-              writeMSER(&stream, dynamic_cast<IMser *>(detector));
-            } else if (detector->type() == Feature::Type::orb){
-              writeORB(&stream, dynamic_cast<IOrb *>(detector));
-            } else if (detector->type() == Feature::Type::sift){
-              writeSIFT(&stream, dynamic_cast<ISift *>(detector));
-            } else if (detector->type() == Feature::Type::star){
-              writeSTAR(&stream, dynamic_cast<IStar *>(detector));
-            } else if (detector->type() == Feature::Type::surf){
-              writeSURF(&stream, dynamic_cast<ISurf *>(detector));
+              stream.writeEndElement(); // Detector
             }
 
-            stream.writeEndElement(); // FeatureDetector
-          }
 
+            if (Feature *descriptor = (*it)->descriptor().get()){
+              stream.writeStartElement("Descriptor");
 
-          if (Feature *descriptor = (*it)->descriptor().get()){
-            stream.writeStartElement("FeatureDescriptor");
+              if (descriptor->type() == Feature::Type::akaze){
+                writeAKAZE(&stream, dynamic_cast<IAkaze *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::brief){
+                writeBRIEF(&stream, dynamic_cast<IBrief *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::brisk){
+                writeBRISK(&stream, dynamic_cast<IBrisk *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::daisy){
+                writeDAISY(&stream, dynamic_cast<IDaisy *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::freak){
+                writeFREAK(&stream, dynamic_cast<IFreak *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::hog){
+                writeHOG(&stream, dynamic_cast<IHog *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::kaze){
+                writeKAZE(&stream, dynamic_cast<IKaze *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::latch){
+                writeLATCH(&stream, dynamic_cast<ILatch *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::lucid){
+                writeLUCID(&stream, dynamic_cast<ILucid *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::orb){
+                writeORB(&stream, dynamic_cast<IOrb *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::sift){
+                writeSIFT(&stream, dynamic_cast<ISift *>(descriptor));
+              } else if (descriptor->type() == Feature::Type::surf){
+                writeSURF(&stream, dynamic_cast<ISurf *>(descriptor));
+              }
 
-            if (descriptor->type() == Feature::Type::akaze){
-              writeAKAZE(&stream, dynamic_cast<IAkaze *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::brief){
-              writeBRIEF(&stream, dynamic_cast<IBrief *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::brisk){
-              writeBRISK(&stream, dynamic_cast<IBrisk *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::daisy){
-              writeDAISY(&stream, dynamic_cast<IDaisy *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::freak){
-              writeFREAK(&stream, dynamic_cast<IFreak *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::hog){
-              writeHOG(&stream, dynamic_cast<IHog *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::kaze){
-              writeKAZE(&stream, dynamic_cast<IKaze *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::latch){
-              writeLATCH(&stream, dynamic_cast<ILatch *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::lucid){
-              writeLUCID(&stream, dynamic_cast<ILucid *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::orb){
-              writeORB(&stream, dynamic_cast<IOrb *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::sift){
-              writeSIFT(&stream, dynamic_cast<ISift *>(descriptor));
-            } else if (descriptor->type() == Feature::Type::surf){
-              writeSURF(&stream, dynamic_cast<ISurf *>(descriptor));
+              stream.writeEndElement(); // Descriptor
             }
 
-            stream.writeEndElement(); // FeatureDescriptor
+            stream.writeStartElement("Files");
+            {
+              for (auto &feat_file : (*it)->features()){
+                stream.writeTextElement("FeatFile", feat_file);
+              }
+            }
+            stream.writeEndElement();  // Files
+
           }
+          stream.writeEndElement(); // Features
+
+          stream.writeStartElement("Matches");
+          {
+
+            stream.writeStartElement("DescriptorMatcher");
+            {
+              if (Match *match = (*it)->matcher().get()){
+
+                if (match->type() == Match::Type::flann){
+                  stream.writeStartElement("Flann");
+                  stream.writeEndElement();
+                } else if (match->type() == Match::Type::brute_force){
+                  stream.writeStartElement("BruteForceMatcher");
+                  IBruteForceMatcher *bf = dynamic_cast<IBruteForceMatcher *>(match);
+                  BruteForceMatcher::Norm norm = bf->normType();
+                  QString s_norm = "NORM_L2";
+                  if (norm == BruteForceMatcherProperties::Norm::l1) {
+                    s_norm = "NORM_L1";
+                  } else if (norm == BruteForceMatcherProperties::Norm::l2) {
+                    s_norm = "NORM_L2";
+                  } else if (norm == BruteForceMatcherProperties::Norm::hamming) {
+                    s_norm = "NORM_HAMMING";
+                  } else if (norm == BruteForceMatcherProperties::Norm::hamming2) {
+                    s_norm = "NORM_HAMMING2";
+                  }
+                  stream.writeTextElement("NORM", s_norm);
+                  stream.writeEndElement();
+                }
+
+              }
+
+            }
+            stream.writeEndElement(); // DescriptorMatcher
+
+            stream.writeStartElement("Images");
+            {
+              for (auto &matches : (*it)->matches()){
+
+                stream.writeStartElement("Image");
+                {
+                  stream.writeTextElement("Name", matches.first);
+
+                  stream.writeStartElement("Pairs");
+                  {
+                    for (size_t i = 0; i < matches.second.size(); i++){
+
+                      stream.writeStartElement("Pair");
+                      {
+                        stream.writeTextElement("Name", matches.second[i].first);
+                        stream.writeTextElement("File", matches.second[i].second);
+                      }
+                      stream.writeEndElement();  // Pair
+                    }
+                  }
+                  stream.writeEndElement();  // Pairs
+
+                }
+                stream.writeEndElement();  // Image
+              }
+            }
+            stream.writeEndElement();  // Images
+          }
+          stream.writeEndElement();  // Matches
 
         }
         stream.writeEndElement(); // Session
@@ -1443,6 +1630,12 @@ void ProjectRW::writeCMBFHE(QXmlStreamWriter *stream, ICmbfhe *cmbfhe) const
     stream->writeEndElement(); // BlockSize
   }
   stream->writeEndElement(); // Cmbfhe
+}
+
+void ProjectRW::writeDecolor(QXmlStreamWriter *stream, IDecolor *decolor) const
+{
+  stream->writeStartElement("Decolor");
+  stream->writeEndElement(); // Decolor
 }
 
 void ProjectRW::writeDHE(QXmlStreamWriter *stream, IDhe *dhe) const

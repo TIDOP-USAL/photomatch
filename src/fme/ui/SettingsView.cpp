@@ -23,7 +23,7 @@ SettingsView::SettingsView(QWidget *parent)
     mTabWidgetTools(nullptr),
     mListWidgetPreprocess(nullptr),
     mListWidgetFeatures(nullptr),
-    mListWidgetMatching(nullptr),
+    //mListWidgetMatching(nullptr),
     mButtonBox(new QDialogButtonBox(this)),
     bUnsaveChanges(false)
 {
@@ -150,18 +150,18 @@ void SettingsView::init()
   mTabWidgetTools->addTab(tabFeatures, QString("Feature Detector / Extractor"));
 
   QWidget *tabMatching = new QWidget();
-  QGridLayout *gridLayoutMatching = new QGridLayout(tabMatching);
-  gridLayoutMatching->setContentsMargins(0, 0, 0, 0);
-  QScrollArea *scrollAreaMatching = new QScrollArea(tabMatching);
-  scrollAreaMatching->setWidgetResizable(true);
-  scrollAreaMatching->setFrameShape(QFrame::Shape::NoFrame);
-  QWidget *scrollAreaWidgetMatching = new QWidget();
-  scrollAreaWidgetMatching->setGeometry(QRect(0, 0, 439, 358));
-  QGridLayout *gridLayoutMatching2 = new QGridLayout(scrollAreaWidgetMatching);
-  mListWidgetMatching = new QListWidget(scrollAreaWidgetMatching);
-  gridLayoutMatching2->addWidget(mListWidgetMatching, 0, 0, 1, 1);
-  scrollAreaMatching->setWidget(scrollAreaWidgetMatching);
-  gridLayoutMatching->addWidget(scrollAreaMatching, 0, 0, 1, 1);
+  //QGridLayout *gridLayoutMatching = new QGridLayout(tabMatching);
+  //gridLayoutMatching->setContentsMargins(0, 0, 0, 0);
+  //QScrollArea *scrollAreaMatching = new QScrollArea(tabMatching);
+  //scrollAreaMatching->setWidgetResizable(true);
+  //scrollAreaMatching->setFrameShape(QFrame::Shape::NoFrame);
+  //QWidget *scrollAreaWidgetMatching = new QWidget();
+  //scrollAreaWidgetMatching->setGeometry(QRect(0, 0, 439, 358));
+  mGridLayoutMatcher = new QGridLayout(tabMatching);
+  //mListWidgetMatching = new QListWidget(scrollAreaWidgetMatching);
+  //gridLayoutMatching2->addWidget(mListWidgetMatching, 0, 0, 1, 1);
+  //scrollAreaMatching->setWidget(scrollAreaWidgetMatching);
+  //gridLayoutMatching->addWidget(scrollAreaMatching, 0, 0, 1, 1);
   mTabWidgetTools->addTab(tabMatching, QString("Matching"));
 
   gridLayoutTools->addWidget(mTabWidgetTools, 0, 0, 1, 1);
@@ -215,6 +215,11 @@ void SettingsView::addFeatureDetectorMethod(QWidget *detector)
   mListWidgetFeatures->addItem(detector->windowTitle());
   mGridLayoutFeatures->addWidget(detector, 1, 0, 1, 1);
   detector->setVisible(false);
+}
+
+void SettingsView::addDescriptorMatcher(QWidget *detector)
+{
+  mGridLayoutMatcher->addWidget(detector, 0, 0, 1, 1);
 }
 
 void SettingsView::setUnsavedChanges(bool unsaveChanges)

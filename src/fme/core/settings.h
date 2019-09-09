@@ -132,8 +132,8 @@ public:
   virtual ISurf *surf() = 0;
   virtual const ISurf *surf() const = 0;
 
-  virtual IDescriptorMatcher *descriptorMatcher() = 0;
-  virtual const IDescriptorMatcher *descriptorMatcher() const = 0;
+//  virtual IDescriptorMatcher *descriptorMatcher() = 0;
+//  virtual const IDescriptorMatcher *descriptorMatcher() const = 0;
 
   /*!
    * \brief Recupera la configuración por defecto
@@ -264,8 +264,8 @@ public:
   ISurf *surf() override;
   const ISurf *surf() const override;
 
-  IDescriptorMatcher *descriptorMatcher() override;
-  const IDescriptorMatcher *descriptorMatcher() const override;
+//  IDescriptorMatcher *descriptorMatcher() override;
+//  const IDescriptorMatcher *descriptorMatcher() const override;
 
   void reset() override;
 
@@ -307,7 +307,7 @@ protected:
   IStar *mStar;
   ISurf *mSurf;
 
-  IDescriptorMatcher *mDescriptorMatcher;
+  //IDescriptorMatcher *mDescriptorMatcher;
 };
 
 

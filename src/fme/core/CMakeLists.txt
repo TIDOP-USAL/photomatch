@@ -64,6 +64,8 @@ add_library(libcore ${LIB_TYPE}
             preprocess/clahe.h
             preprocess/cmbfhe.cpp
             preprocess/cmbfhe.h
+            preprocess/decolor.cpp
+            preprocess/decolor.h
             preprocess/dhe.cpp
             preprocess/dhe.h
             preprocess/fahe.cpp

@@ -4,15 +4,17 @@
 #include "fme/fme_global.h"
 
 #include <memory>
+#include <vector>
+#include <map>
 
 #include <QString>
-
-#include "fme/core/features/features.h"
 
 namespace fme
 {
 
 class Preprocess;
+class Feature;
+class Match;
 
 class FME_EXPORT ISession
 {
@@ -80,6 +82,24 @@ public:
   virtual std::shared_ptr<Feature> descriptor() = 0;
   virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
 
+  virtual std::shared_ptr<Match> matcher() = 0;
+  virtual void setMatcher(const std::shared_ptr<Match> &matcher) = 0;
+
+  virtual void addPreprocessImage(const QString &img) = 0;
+  virtual void deletePreprocessImage(const QString &img) = 0;
+  virtual void deletePreprocessImages() = 0;
+  virtual std::vector<QString> preprocessImages() const = 0;
+
+  virtual void addFeatures(const QString &feat) = 0;
+  virtual void deleteFeatures(const QString &feat) = 0;
+  virtual void deleteFeatures() = 0;
+  virtual std::vector<QString> features() const = 0;
+
+  virtual void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
+  virtual void deleteMatches(const QString &match) = 0;
+  virtual void deleteMatches() = 0;
+  virtual std::map<QString, std::vector<std::pair<QString, QString>>> matches() const = 0;
+
   /*!
    * \brief Limpia la sesión
    */
@@ -116,6 +136,20 @@ public:
   void setDetector(const std::shared_ptr<Feature> &detector) override;
   std::shared_ptr<Feature> descriptor() override;
   void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
+  std::shared_ptr<Match> matcher() override;
+  void setMatcher(const std::shared_ptr<Match> &matcher) override;
+  void addPreprocessImage(const QString &img) override;
+  void deletePreprocessImage(const QString &img) override;
+  void deletePreprocessImages() override;
+  std::vector<QString> preprocessImages() const override;
+  void addFeatures(const QString &feat) override;
+  void deleteFeatures(const QString &feat) override;
+  void deleteFeatures() override;
+  std::vector<QString> features() const override;
+  void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
+  void deleteMatches(const QString &match) override;
+  void deleteMatches() override;
+  std::map<QString, std::vector<std::pair<QString, QString>>> matches() const override;
 
   void clear() override;
 
@@ -127,6 +161,11 @@ protected:
   std::shared_ptr<Preprocess> mPreprocess;
   std::shared_ptr<Feature> mFeatureDetector;
   std::shared_ptr<Feature> mFeatureDescriptor;
+  std::shared_ptr<Match> mMatcher;
+  std::vector<QString> mPreprocessImages;
+  std::vector<QString> mFeatures;
+  //std::vector<QString> mMatches;
+  std::map<QString, std::vector<std::pair<QString, QString>>> mImagesPairs;
 };
 
 } // namespace fme

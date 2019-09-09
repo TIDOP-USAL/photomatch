@@ -37,6 +37,9 @@
 #include "fme/widgets/StarWidget.h"
 #include "fme/widgets/SurfWidget.h"
 
+/* Descriptor Matcher */
+#include "fme/widgets/DescriptorMatcherWidget.h"
+
 #include <QLocale>
 
 namespace fme
@@ -76,7 +79,8 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mOrb(new OrbWidget),
     mSift(new SiftWidget),
     mStar(new StarWidget),
-    mSurf(new SurfWidget)
+    mSurf(new SurfWidget),
+    mMatcher(new DescriptorMatcherWidget)
 {
   init();
 
@@ -268,6 +272,13 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mSurf, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setSurfOctaveLayers(int)));
   connect(mSurf, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setSurfExtendedDescriptor(bool)));
   connect(mSurf, SIGNAL(rotatedFeaturesChange(bool)),        mModel, SLOT(setSurfRotatedFeatures(bool)));
+
+//  connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMatchingMethod(QString)));
+//  connect(mMatcher, SIGNAL(normTypeChange(QString)),         mModel, SLOT(setMatchNormType(QString)));
+//  connect(mMatcher, SIGNAL(ratioChange(double)),             mModel, SLOT(setMatchRatio(double)));
+//  connect(mMatcher, SIGNAL(distanceChange(double)),          mModel, SLOT(setMatchDistance(double)));
+//  connect(mMatcher, SIGNAL(confidenceChange(double)),        mModel, SLOT(setMatchConfidence(double)));
+//  connect(mMatcher, SIGNAL(crossMatchingChange(bool)),       mModel, SLOT(setMatchCrossMatching(bool)));
 }
 
 SettingsPresenter::~SettingsPresenter()
@@ -415,11 +426,16 @@ SettingsPresenter::~SettingsPresenter()
     delete mSurf;
     mSurf = nullptr;
   }
+
+  if (mMatcher){
+    delete mMatcher;
+    mMatcher = nullptr;
+  }
 }
 
 void SettingsPresenter::help()
 {
-  //  if (mHelp){
+//  if (mHelp){
 //    mHelp->setPage("settings.html");
 //    mHelp->setModal(true);
 //    mHelp->showMaximized();
@@ -594,6 +610,13 @@ void SettingsPresenter::open()
   mSurf->setHessianThreshold(mModel->surfHessianThreshold());
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
 
+//  mMatcher->setMatchingMethod(mModel->matchMatchingMethod());
+//  mMatcher->setNormType(mModel->matchNormType());
+//  mMatcher->setRatio(mModel->matchRatio());
+//  mMatcher->setDistance(mModel->matchDistance());
+//  mMatcher->setConfidence(mModel->matchConfidence());
+//  mMatcher->setCrossMatching(mModel->matchCrossMatching());
+
   mView->exec();
 }
 
@@ -631,6 +654,8 @@ void SettingsPresenter::init()
   mView->addFeatureDetectorMethod(mMser);
   mView->addFeatureDetectorMethod(mStar);
   mView->addFeatureDetectorMethod(mHog);
+
+  mView->addDescriptorMatcher(mMatcher);
 }
 
 void SettingsPresenter::setLanguage(const QString &language)

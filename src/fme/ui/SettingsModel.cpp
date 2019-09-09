@@ -637,35 +637,35 @@ bool SettingsModel::surfRotatedFeatures() const
   return mSettings->surf()->rotatedFeatures();
 }
 
-QString SettingsModel::matchMatchingMethod() const
-{
-  return mSettings->descriptorMatcher()->matchingMethod();
-}
+//QString SettingsModel::matchMatchingMethod() const
+//{
+//  return mSettings->descriptorMatcher()->matchingMethod();
+//}
 
-QString SettingsModel::matchNormType() const
-{
-  return mSettings->descriptorMatcher()->normType();
-}
+//QString SettingsModel::matchNormType() const
+//{
+//  return mSettings->descriptorMatcher()->normType();
+//}
 
-double SettingsModel::matchRatio() const
-{
-  return mSettings->descriptorMatcher()->ratio();
-}
+//double SettingsModel::matchRatio() const
+//{
+//  return mSettings->descriptorMatcher()->ratio();
+//}
 
-double SettingsModel::matchDistance() const
-{
-  return mSettings->descriptorMatcher()->distance();
-}
+//double SettingsModel::matchDistance() const
+//{
+//  return mSettings->descriptorMatcher()->distance();
+//}
 
-double SettingsModel::matchConfidence() const
-{
-  return mSettings->descriptorMatcher()->confidence();
-}
+//double SettingsModel::matchConfidence() const
+//{
+//  return mSettings->descriptorMatcher()->confidence();
+//}
 
-bool SettingsModel::matchCrossMatching() const
-{
-  return mSettings->descriptorMatcher()->crossMatching();
-}
+//bool SettingsModel::matchCrossMatching() const
+//{
+//  return mSettings->descriptorMatcher()->crossMatching();
+//}
 
 void SettingsModel::setLanguage(const QString &language)
 {
@@ -1411,35 +1411,41 @@ void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchMatchingMethod(const QString &matchingMethod)
-{
-  mSettings->descriptorMatcher()->setMatchingMethod(matchingMethod);
-}
+//void SettingsModel::setMatchMatchingMethod(const QString &matchingMethod)
+//{
+//  mSettings->descriptorMatcher()->setMatchingMethod(matchingMethod);
+//  emit unsavedChanges(true);
+//}
 
-void SettingsModel::setMatchNormType(const QString &normType)
-{
-  mSettings->descriptorMatcher()->setNormType(normType);
-}
+//void SettingsModel::setMatchNormType(const QString &normType)
+//{
+//  mSettings->descriptorMatcher()->setNormType(normType);
+//  emit unsavedChanges(true);
+//}
 
-void SettingsModel::setMatchRatio(double ratio)
-{
-  mSettings->descriptorMatcher()->setRatio(ratio);
-}
+//void SettingsModel::setMatchRatio(double ratio)
+//{
+//  mSettings->descriptorMatcher()->setRatio(ratio);
+//  emit unsavedChanges(true);
+//}
 
-void SettingsModel::setMatchDistance(double distance)
-{
-  mSettings->descriptorMatcher()->setDistance(distance);
-}
+//void SettingsModel::setMatchDistance(double distance)
+//{
+//  mSettings->descriptorMatcher()->setDistance(distance);
+//  emit unsavedChanges(true);
+//}
 
-void SettingsModel::setMatchConfidence(double confidence)
-{
-  mSettings->descriptorMatcher()->setConfidence(confidence);
-}
+//void SettingsModel::setMatchConfidence(double confidence)
+//{
+//  mSettings->descriptorMatcher()->setConfidence(confidence);
+//  emit unsavedChanges(true);
+//}
 
-void SettingsModel::setMatchCrossMatching(bool crossMatching)
-{
-  mSettings->descriptorMatcher()->setCrossMatching(crossMatching);
-}
+//void SettingsModel::setMatchCrossMatching(bool crossMatching)
+//{
+//  mSettings->descriptorMatcher()->setCrossMatching(crossMatching);
+//  emit unsavedChanges(true);
+//}
 
 void SettingsModel::reset()
 {

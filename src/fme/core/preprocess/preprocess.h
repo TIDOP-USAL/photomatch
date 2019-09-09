@@ -27,6 +27,7 @@ public:
     acebsf,
     clahe,
     cmbfhe,
+    decolor,
     dhe,
     fahe,
     hmclahe,
@@ -185,6 +186,26 @@ public:
 
   virtual int x() const = 0;
   virtual void setX(int x) = 0;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+/*!
+ * \brief The IDecolor class
+ * Cewu Lu, Li Xu, Jiaya Jia, “Contrast Preserving Decolorization”,
+ * IEEE International Conference on Computational Photography (ICCP), 2012.
+ */
+class FME_EXPORT IDecolor
+  : public Preprocess
+{
+
+public:
+
+  IDecolor() : Preprocess(Preprocess::Type::decolor) {}
+  virtual ~IDecolor() = default;
 
 };
 

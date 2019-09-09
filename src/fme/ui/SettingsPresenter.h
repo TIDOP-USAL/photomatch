@@ -47,6 +47,8 @@ class ISiftWidget;
 class IStarWidget;
 class ISurfWidget;
 
+class IDescriptorMatcherWidget;
+
 class ISettingsPresenter
   : public IPresenter
 {
@@ -147,6 +149,8 @@ protected:
   ISiftWidget *mSift;
   IStarWidget *mStar;
   ISurfWidget *mSurf;
+
+  IDescriptorMatcherWidget *mMatcher;
 
   std::map<QString, QString> mLang;
 

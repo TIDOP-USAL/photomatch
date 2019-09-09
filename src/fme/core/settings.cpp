@@ -71,8 +71,8 @@ Settings::Settings()
     mOrb(new OrbProperties),
     mSift(new SiftProperties),
     mStar(new StarProperties),
-    mSurf(new SurfProperties),
-    mDescriptorMatcher(new DescriptorMatcherProperties)
+    mSurf(new SurfProperties)/*,
+    mDescriptorMatcher(new DescriptorMatcherProperties)*/
 {
   reset();
 }
@@ -229,10 +229,10 @@ Settings::~Settings()
     mSurf = nullptr;
   }
 
-  if (mDescriptorMatcher){
-    delete mDescriptorMatcher;
-    mDescriptorMatcher = nullptr;
-  }
+//  if (mDescriptorMatcher){
+//    delete mDescriptorMatcher;
+//    mDescriptorMatcher = nullptr;
+//  }
 }
 
 QString Settings::language() const
@@ -574,15 +574,15 @@ const ISurf *Settings::surf() const
   return mSurf;
 }
 
-IDescriptorMatcher *Settings::descriptorMatcher()
-{
-  return mDescriptorMatcher;
-}
+//IDescriptorMatcher *Settings::descriptorMatcher()
+//{
+//  return mDescriptorMatcher;
+//}
 
-const IDescriptorMatcher *Settings::descriptorMatcher() const
-{
-  return mDescriptorMatcher;
-}
+//const IDescriptorMatcher *Settings::descriptorMatcher() const
+//{
+//  return mDescriptorMatcher;
+//}
 
 void Settings::reset()
 {
@@ -623,7 +623,7 @@ void Settings::reset()
   mStar->reset();
   mSurf->reset();
 
-  mDescriptorMatcher->reset();
+  //mDescriptorMatcher->reset();
 }
 
 
@@ -834,13 +834,13 @@ void SettingsRW::read(ISettings &settings)
   settings.surf()->setHessianThreshold(mSettingsRW->value("SURF/HessianThreshold", settings.surf()->hessianThreshold()).toDouble());
   settings.surf()->setExtendedDescriptor(mSettingsRW->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
 
-  /* Descriptor Matcher */
-  settings.descriptorMatcher()->setRatio(mSettingsRW->value("MATCH/Ratio", settings.descriptorMatcher()->ratio()).toDouble());
-  settings.descriptorMatcher()->setDistance(mSettingsRW->value("MATCH/Distance", settings.descriptorMatcher()->distance()).toDouble());
-  settings.descriptorMatcher()->setNormType(mSettingsRW->value("MATCH/NormType", settings.descriptorMatcher()->normType()).toString());
-  settings.descriptorMatcher()->setConfidence(mSettingsRW->value("MATCH/Confidence", settings.descriptorMatcher()->confidence()).toDouble());
-  settings.descriptorMatcher()->setCrossMatching(mSettingsRW->value("MATCH/CrossMatching", settings.descriptorMatcher()->crossMatching()).toBool());
-  settings.descriptorMatcher()->setMatchingMethod(mSettingsRW->value("MATCH/MatchingMethod", settings.descriptorMatcher()->matchingMethod()).toString());
+//  /* Descriptor Matcher */
+//  settings.descriptorMatcher()->setRatio(mSettingsRW->value("MATCH/Ratio", settings.descriptorMatcher()->ratio()).toDouble());
+//  settings.descriptorMatcher()->setDistance(mSettingsRW->value("MATCH/Distance", settings.descriptorMatcher()->distance()).toDouble());
+//  settings.descriptorMatcher()->setNormType(mSettingsRW->value("MATCH/NormType", settings.descriptorMatcher()->normType()).toString());
+//  settings.descriptorMatcher()->setConfidence(mSettingsRW->value("MATCH/Confidence", settings.descriptorMatcher()->confidence()).toDouble());
+//  settings.descriptorMatcher()->setCrossMatching(mSettingsRW->value("MATCH/CrossMatching", settings.descriptorMatcher()->crossMatching()).toBool());
+//  settings.descriptorMatcher()->setMatchingMethod(mSettingsRW->value("MATCH/MatchingMethod", settings.descriptorMatcher()->matchingMethod()).toString());
 
 }
 
@@ -1026,13 +1026,13 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("SURF/HessianThreshold", settings.surf()->hessianThreshold());
   mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
 
-  /* Descriptor Matcher */
-  mSettingsRW->setValue("MATCH/Ratio", settings.descriptorMatcher()->ratio());
-  mSettingsRW->setValue("MATCH/Distance", settings.descriptorMatcher()->distance());
-  mSettingsRW->setValue("MATCH/NormType", settings.descriptorMatcher()->normType());
-  mSettingsRW->setValue("MATCH/Confidence", settings.descriptorMatcher()->confidence());
-  mSettingsRW->setValue("MATCH/CrossMatching", settings.descriptorMatcher()->crossMatching());
-  mSettingsRW->setValue("MATCH/MatchingMethod", settings.descriptorMatcher()->matchingMethod());
+//  /* Descriptor Matcher */
+//  mSettingsRW->setValue("MATCH/Ratio", settings.descriptorMatcher()->ratio());
+//  mSettingsRW->setValue("MATCH/Distance", settings.descriptorMatcher()->distance());
+//  mSettingsRW->setValue("MATCH/NormType", settings.descriptorMatcher()->normType());
+//  mSettingsRW->setValue("MATCH/Confidence", settings.descriptorMatcher()->confidence());
+//  mSettingsRW->setValue("MATCH/CrossMatching", settings.descriptorMatcher()->crossMatching());
+//  mSettingsRW->setValue("MATCH/MatchingMethod", settings.descriptorMatcher()->matchingMethod());
 
 }
 

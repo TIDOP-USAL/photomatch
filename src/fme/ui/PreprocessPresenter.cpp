@@ -3,6 +3,7 @@
 #include "fme/core/preprocess/acebsf.h"
 #include "fme/core/preprocess/clahe.h"
 #include "fme/core/preprocess/cmbfhe.h"
+#include "fme/core/preprocess/decolor.h"
 #include "fme/core/preprocess/dhe.h"
 #include "fme/core/preprocess/fahe.h"
 #include "fme/core/preprocess/hmclahe.h"
@@ -23,6 +24,7 @@
 #include "fme/widgets/ClaheWidget.h"
 #include "fme/widgets/CmbfheWidget.h"
 #include "fme/widgets/CmbfheWidget.h"
+#include "fme/widgets/DecolorWidget.h"
 #include "fme/widgets/DheWidget.h"
 #include "fme/widgets/FaheWidget.h"
 #include "fme/widgets/HmclaheWidget.h"
@@ -57,6 +59,7 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
     mACEBSF(new AcebsfWidget),
     mCLAHE(new ClaheWidget),
     mCMBFHE(new CmbfheWidget),
+    mDecolor(new DecolorWidget),
     mDHE(new DheWidget),
     mFAHE(new FaheWidget),
     mHMCLAHE(new HmclaheWidget),
@@ -96,6 +99,11 @@ PreprocessPresenter::~PreprocessPresenter()
   if (mCMBFHE){
     delete mCMBFHE;
     mCMBFHE = nullptr;
+  }
+
+  if (mDecolor){
+    delete mDecolor;
+    mDecolor = nullptr;
   }
 
   if (mDHE){
@@ -197,6 +205,7 @@ void PreprocessPresenter::open()
 
 void PreprocessPresenter::init()
 {
+  mView->addPreprocess(mDecolor);
   mView->addPreprocess(mACEBSF);
   mView->addPreprocess(mCLAHE);
   mView->addPreprocess(mCMBFHE);
@@ -210,7 +219,7 @@ void PreprocessPresenter::init()
   mView->addPreprocess(mRSWHE);
   mView->addPreprocess(mWallis);
 
-  mView->setCurrentPreprocess(mACEBSF->windowTitle());
+  mView->setCurrentPreprocess(mDecolor->windowTitle());
 }
 
 void PreprocessPresenter::setProgressDialog(IProgressDialog *progressDialog)
@@ -238,6 +247,8 @@ void PreprocessPresenter::run()
                                                      mCLAHE->tileGridSize());
   } else if (currentPreprocess.compare("CMBFHE") == 0) {
     imageProcess = std::make_shared<CmbfhePreprocess>(mCMBFHE->blockSize());
+  } else if (currentPreprocess.compare("Decolorization") == 0) {
+    imageProcess = std::make_shared<DecolorPreprocess>();
   } else if (currentPreprocess.compare("DHE") == 0) {
     imageProcess = std::make_shared<DhePreprocess>(mDHE->x());
   } else if (currentPreprocess.compare("FAHE") == 0) {
@@ -286,6 +297,8 @@ void PreprocessPresenter::run()
                                                                     file_out,
                                                                     imageProcess,
                                                                     mView->fullImageSize() ? -1 : mView->maxImageSize()));
+
+    connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
     mMultiProcess->appendProcess(preprocess);
   }
 
@@ -303,6 +316,9 @@ void PreprocessPresenter::run()
   QByteArray ba = currentPreprocess.toLocal8Bit();
   const char *data = ba.constData();
   msgInfo("  Preprocessing method     :  %s", data);
+
+  emit running();
+
   mMultiProcess->start();
 }
 
@@ -315,6 +331,7 @@ void PreprocessPresenter::onError(int code, const QString &msg)
 {
   QByteArray ba = msg.toLocal8Bit();
   msgError("(%i) %s", code, ba.constData());
+  emit finished();
 }
 
 void PreprocessPresenter::onFinished()
@@ -327,8 +344,14 @@ void PreprocessPresenter::onFinished()
     disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
   }
 
-  emit preprocessFinished();
+  emit finished();
   msgInfo("Image preprocessing finished");
+}
+
+void PreprocessPresenter::onImagePreprocessed(const QString &image)
+{
+  mProjectModel->addPreprocessedImage(image);
+  emit imagePreprocessed(image);
 }
 
 } // namespace fme

@@ -238,10 +238,14 @@ public:
   virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
   virtual void setDetector(const std::shared_ptr<Feature> &detector) = 0;
   virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
+  virtual void setMatcher(const std::shared_ptr<Match> &descriptor) = 0;
   virtual int maxImageSize() const = 0;
   virtual void setMaxImageSize(int size) = 0;
   virtual bool fullImageSize() const = 0;
   virtual void setFullImageSize(bool fullImageSize) = 0;
+  virtual void addPreprocessedImage(const QString &image) = 0;
+  virtual void addFeatures(const QString &feat) = 0;
+  virtual void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
 
   /*!
    * \brief Limpia el proyecto
@@ -317,10 +321,14 @@ public:
   void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) override;
   void setDetector(const std::shared_ptr<Feature> &detector) override;
   void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
+  void setMatcher(const std::shared_ptr<Match> &matcher) override;
   int maxImageSize() const override;
   void setMaxImageSize(int size) override;
   bool fullImageSize() const override;
   void setFullImageSize(bool fullImageSize) override;
+  void addPreprocessedImage(const QString &image) override;
+  void addFeatures(const QString &feat) override;
+  void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
 
   void clear() override;
 

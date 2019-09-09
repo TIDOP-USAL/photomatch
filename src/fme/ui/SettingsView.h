@@ -28,6 +28,7 @@ public:
   virtual void setActiveLanguage(const QString &language) = 0;
   virtual void addPreprocess(QWidget *preprocess) = 0;
   virtual void addFeatureDetectorMethod(QWidget *detector) = 0;
+  virtual void addDescriptorMatcher(QWidget *detector) = 0;
 
 public slots:
 
@@ -77,6 +78,7 @@ public:
   void setActiveLanguage(const QString &language) override;
   void addPreprocess(QWidget *preprocess) override;
   void addFeatureDetectorMethod(QWidget *detector) override;
+  void addDescriptorMatcher(QWidget *detector) override;
 
 public slots:
 
@@ -90,10 +92,11 @@ protected:
   QTabWidget *mTabWidgetTools;
   QGridLayout *mGridLayoutPreprocess;
   QGridLayout *mGridLayoutFeatures;
+  QGridLayout *mGridLayoutMatcher;
 
   QListWidget *mListWidgetPreprocess;
   QListWidget *mListWidgetFeatures;
-  QListWidget *mListWidgetMatching;
+  //QListWidget *mListWidgetMatching;
   QDialogButtonBox *mButtonBox;
   bool bUnsaveChanges;
 };

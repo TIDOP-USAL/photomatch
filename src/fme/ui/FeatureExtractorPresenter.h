@@ -50,7 +50,9 @@ public:
 
 signals:
 
-  void featureExtractorFinished();
+  void running();
+  void featuresExtracted(QString);
+  void finished();
 
 private slots:
 
@@ -102,6 +104,7 @@ private slots:
   void setCurrentDescriptorExtractor(const QString &descriptorExtractor) override;
   void onError(int code, const QString &msg);
   void onFinished();
+  void onFeaturesExtracted(const QString &features);
 
 protected:
 

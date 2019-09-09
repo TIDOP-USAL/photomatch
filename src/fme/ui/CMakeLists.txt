@@ -42,6 +42,9 @@ set(FME_SOURCES
     DescriptorMatcherView.cpp
     DescriptorMatcherModel.cpp
     DescriptorMatcherPresenter.cpp
+    MatchViewerModel.cpp
+    MatchViewerView.cpp
+    MatchViewerPresenter.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
@@ -69,6 +72,9 @@ set(FME_HEADERS
     DescriptorMatcherView.h
     DescriptorMatcherModel.h
     DescriptorMatcherPresenter.h
+    MatchViewerModel.h
+    MatchViewerView.h
+    MatchViewerPresenter.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h

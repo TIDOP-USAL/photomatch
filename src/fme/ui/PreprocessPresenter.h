@@ -20,6 +20,7 @@ class ISettingsModel;
 class IAcebsfWidget;
 class IClaheWidget;
 class ICmbfheWidget;
+class IDecolorWidget;
 class IDheWidget;
 class IFaheWidget;
 class IHmclaheWidget;
@@ -44,7 +45,9 @@ public:
 
 signals:
 
-  void preprocessFinished();
+  void running();
+  void imagePreprocessed(QString);
+  void finished();
 
 public slots:
 
@@ -92,8 +95,10 @@ private slots:
 
   void run() override;
   void setCurrentPreprocess(const QString &preprocess) override;
+
   void onError(int code, const QString &msg);
   void onFinished();
+  void onImagePreprocessed(const QString &image);
 
 protected:
 
@@ -105,6 +110,7 @@ protected:
   IAcebsfWidget *mACEBSF;
   IClaheWidget *mCLAHE;
   ICmbfheWidget *mCMBFHE;
+  IDecolorWidget *mDecolor;
   IDheWidget *mDHE;
   IFaheWidget *mFAHE;
   IHmclaheWidget *mHMCLAHE;

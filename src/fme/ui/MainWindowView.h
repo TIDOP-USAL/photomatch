@@ -35,7 +35,8 @@ public:
     session_created       = (1 << 4),
     preprocess            = (1 << 5),
     feature_extraction    = (1 << 6),
-    feature_matching      = (1 << 7)
+    feature_matching      = (1 << 7),
+    processing            = (1 << 20),
   };
 
 public:
@@ -56,11 +57,9 @@ public:
   void setActiveImage(const QString &image);
   void setActiveImages(const QStringList &images);
   void addSession(const QString &sessionName, const QString &sessionDescription, bool activeSession = false);
-  void addPreprocess(const QString &sessionName, const QString &preprocess, const QStringList &preprocessImages);
-
-  //void addDetector(const QString &sessionName, const QString &detector);
-  //void addDescriptor(const QString &sessionName, const QString &descriptor);
-  void addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const QStringList &features);
+  void addPreprocess(const QString &sessionName, const QString &preprocess, const std::vector<QString> &preprocessImages);
+  void addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const std::vector<QString> &features);
+  void addMatches(const QString &sessionName, const QString &matcher, const QString &left, const QString &right, const QString &file);
 
   /*!
    * \brief Añade un mensaje temporal en la barra de herramientas
@@ -140,6 +139,7 @@ signals:
   void selectFeatures(QString);
   void selectDetector(QString);
   void selectDescriptor(QString);
+  void selectImageFeatures(QString);
 
   void loadKeyPoints(QString);
 

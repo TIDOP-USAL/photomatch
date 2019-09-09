@@ -59,6 +59,8 @@ add_library(libprocess ${LIB_TYPE}
             Matching/FLANNMatcherProcess.h
             Matching/WriteMatchesToAperoProcess.cpp
             Matching/WriteMatchesToAperoProcess.h
+            Matching/MatchingProcess.cpp
+            Matching/MatchingProcess.h
            )
 
 set_property(TARGET libprocess PROPERTY FOLDER "lib")

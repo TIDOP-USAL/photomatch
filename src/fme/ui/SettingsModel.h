@@ -194,12 +194,12 @@ public:
   virtual bool surfExtendedDescriptor() const = 0;
   virtual bool surfRotatedFeatures() const = 0;
 
-  virtual QString matchMatchingMethod() const = 0;
-  virtual QString matchNormType() const = 0;
-  virtual double matchRatio() const = 0;
-  virtual double matchDistance() const = 0;
-  virtual double matchConfidence() const = 0;
-  virtual bool matchCrossMatching() const = 0;
+//  virtual QString matchMatchingMethod() const = 0;
+//  virtual QString matchNormType() const = 0;
+//  virtual double matchRatio() const = 0;
+//  virtual double matchDistance() const = 0;
+//  virtual double matchConfidence() const = 0;
+//  virtual bool matchCrossMatching() const = 0;
 
   /*!
    * \brief read
@@ -394,12 +394,12 @@ public slots:
   virtual void setSurfExtendedDescriptor(bool extendedDescriptor) = 0;
   virtual void setSurfRotatedFeatures(bool rotatedFeatures) = 0;
 
-  virtual void setMatchMatchingMethod(const QString &matchingMethod) = 0;
-  virtual void setMatchNormType(const QString &normType) = 0;
-  virtual void setMatchRatio(double ratio) = 0;
-  virtual void setMatchDistance(double distance) = 0;
-  virtual void setMatchConfidence(double confidence) = 0;
-  virtual void setMatchCrossMatching(bool crossMatching) = 0;
+//  virtual void setMatchMatchingMethod(const QString &matchingMethod) = 0;
+//  virtual void setMatchNormType(const QString &normType) = 0;
+//  virtual void setMatchRatio(double ratio) = 0;
+//  virtual void setMatchDistance(double distance) = 0;
+//  virtual void setMatchConfidence(double confidence) = 0;
+//  virtual void setMatchCrossMatching(bool crossMatching) = 0;
 
   virtual void reset() = 0;
 
@@ -578,12 +578,12 @@ public:
   bool surfExtendedDescriptor() const override;
   bool surfRotatedFeatures() const override;
 
-  QString matchMatchingMethod() const override;
-  QString matchNormType() const override;
-  double matchRatio() const override;
-  double matchDistance() const override;
-  double matchConfidence() const override;
-  bool matchCrossMatching() const override;
+//  QString matchMatchingMethod() const override;
+//  QString matchNormType() const override;
+//  double matchRatio() const override;
+//  double matchDistance() const override;
+//  double matchConfidence() const override;
+//  bool matchCrossMatching() const override;
 
   QStringList languages() const override;
   void read() override;
@@ -747,12 +747,12 @@ public slots:
   void setSurfExtendedDescriptor(bool extendedDescriptor) override;
   void setSurfRotatedFeatures(bool rotatedFeatures) override;
 
-  void setMatchMatchingMethod(const QString &matchingMethod) override;
-  void setMatchNormType(const QString &normType) override;
-  void setMatchRatio(double ratio) override;
-  void setMatchDistance(double distance) override;
-  void setMatchConfidence(double confidence) override;
-  void setMatchCrossMatching(bool crossMatching) override;
+//  void setMatchMatchingMethod(const QString &matchingMethod) override;
+//  void setMatchNormType(const QString &normType) override;
+//  void setMatchRatio(double ratio) override;
+//  void setMatchDistance(double distance) override;
+//  void setMatchConfidence(double confidence) override;
+//  void setMatchCrossMatching(bool crossMatching) override;
 
   void reset() override;
 

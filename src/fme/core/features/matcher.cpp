@@ -1,218 +1,342 @@
 #include "matcher.h"
 
+#include <tidop/core/messages.h>
+
 #include <opencv2/xfeatures2d.hpp>
+
+#include <QFileInfo>
 
 namespace fme
 {
 
-DescriptorMatcherProperties::DescriptorMatcherProperties()
-  : IDescriptorMatcher(),
-    mMatchingMethod("BRUTE_FORCE"),
-    mNorm("NORM_L2"),
-    mRatio(0.8),
-    mDistance(0.7),
-    mConfidence(0.999),
-    mCrossMatching(true)
+
+/*----------------------------------------------------------------*/
+
+
+FlannMatcherProperties::FlannMatcherProperties()
+  : IFlannMatcher()
+{
+}
+
+FlannMatcherProperties::~FlannMatcherProperties()
+{
+}
+
+void FlannMatcherProperties::reset()
+{
+}
+
+QString FlannMatcherProperties::name() const
+{
+  return QString("Flann Based Matching");
+}
+
+
+/*----------------------------------------------------------------*/
+
+
+FlannMatcher::FlannMatcher()
+  : FlannMatcherProperties(),
+    DescriptorMatcher()
+{
+  mFlannBasedMatcher = cv::FlannBasedMatcher::create();
+}
+
+FlannMatcher::~FlannMatcher()
 {
 
 }
 
-DescriptorMatcherProperties::~DescriptorMatcherProperties()
+void FlannMatcher::match(cv::InputArray &queryDescriptors,
+                         cv::InputArray &trainDescriptors,
+                         std::vector<cv::DMatch> &matches,
+                         cv::InputArray mask)
 {
-
+  mFlannBasedMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
 }
 
-QString DescriptorMatcherProperties::matchingMethod() const
+void FlannMatcher::reset()
 {
-  return mMatchingMethod;
+  mFlannBasedMatcher = cv::FlannBasedMatcher::create();
 }
 
-QString DescriptorMatcherProperties::normType() const
+
+
+/*----------------------------------------------------------------*/
+
+
+
+BruteForceMatcherProperties::BruteForceMatcherProperties()
+  : IBruteForceMatcher(),
+    mNormType(BruteForceMatcherProperties::Norm::l2)
 {
-  return mNorm;
 }
 
-double DescriptorMatcherProperties::ratio() const
+BruteForceMatcherProperties::~BruteForceMatcherProperties()
 {
-  return mRatio;
 }
 
-double DescriptorMatcherProperties::distance() const
+void BruteForceMatcherProperties::reset()
 {
-  return mDistance;
+  mNormType = BruteForceMatcherProperties::Norm::l2;
 }
 
-double DescriptorMatcherProperties::confidence() const
+QString BruteForceMatcherProperties::name() const
 {
-  return mConfidence;
+  return QString("Brute Force Matching");
 }
 
-bool DescriptorMatcherProperties::crossMatching() const
+BruteForceMatcherProperties::Norm BruteForceMatcherProperties::normType() const
 {
-  return mCrossMatching;
+  return mNormType;
 }
 
-void DescriptorMatcherProperties::setMatchingMethod(const QString &matchingMethod)
+void BruteForceMatcherProperties::setNormType(IBruteForceMatcher::Norm normType)
 {
-  mMatchingMethod = matchingMethod;
+  mNormType = normType;
 }
 
-void DescriptorMatcherProperties::setNormType(const QString &normType)
+/*----------------------------------------------------------------*/
+
+
+BruteForceMatcher::BruteForceMatcher()
+  : BruteForceMatcherProperties(),
+    DescriptorMatcher()
 {
-  mNorm = normType;
+  update();
 }
 
-void DescriptorMatcherProperties::setRatio(double ratio)
+BruteForceMatcher::BruteForceMatcher(IBruteForceMatcher::Norm normType)
+  : BruteForceMatcherProperties(),
+    DescriptorMatcher()
 {
-  mRatio = ratio;
+  BruteForceMatcherProperties::setNormType(normType);
+  update();
 }
 
-void DescriptorMatcherProperties::setDistance(double distance)
+void BruteForceMatcher::update()
 {
-  mDistance = distance;
+  int norm = cv::NORM_L2;
+  BruteForceMatcherProperties::Norm norm_type = BruteForceMatcherProperties::normType();
+  if (norm_type == BruteForceMatcherProperties::Norm::l1) {
+    norm = cv::NORM_L1;
+  } else if (norm_type == BruteForceMatcherProperties::Norm::l2) {
+    norm = cv::NORM_L2;
+  } else if (norm_type == BruteForceMatcherProperties::Norm::hamming) {
+    norm = cv::NORM_HAMMING;
+  } else if (norm_type == BruteForceMatcherProperties::Norm::hamming2) {
+    norm = cv::NORM_HAMMING2;
+  }
+
+  mBFMatcher = cv::BFMatcher::create(norm);
 }
 
-void DescriptorMatcherProperties::setConfidence(double confidence)
+void BruteForceMatcher::match(cv::InputArray &queryDescriptors,
+                                 cv::InputArray &trainDescriptors,
+                                 std::vector<cv::DMatch> &matches,
+                                 cv::InputArray mask)
 {
-  mConfidence = confidence;
+  //mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
+  mBFMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
 }
 
-void DescriptorMatcherProperties::setCrossMatching(bool crossMatching)
+void BruteForceMatcher::reset()
 {
-  mCrossMatching = crossMatching;
+  BruteForceMatcherProperties::reset();
+  update();
 }
 
-void DescriptorMatcherProperties::reset()
+void BruteForceMatcher::setNormType(IBruteForceMatcher::Norm normType)
 {
-  mMatchingMethod = "Brute-Force";
-  mNorm = "NORM_L2";
-  mRatio = 0.8;
-  mDistance = 0.7;
-  mConfidence = 0.999;
-  mCrossMatching = true;
+  BruteForceMatcherProperties::setNormType(normType);
 }
 
-//BruteForceMatcherProperties::BruteForceMatcherProperties()
-//  : IBruteForceMatcher(),
-//    mNormType(BruteForceMatcherProperties::Norm::l2)
+
+/*----------------------------------------------------------------*/
+
+
+void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches)
+{
+
+  QByteArray ba = fname.toLocal8Bit();
+  const char *matches_file = ba.data();
+  QString ext = QFileInfo(fname).suffix();
+  int flags = 0;
+  if (ext.compare("xml") == 0) {
+    flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_XML;
+  } else if (ext.compare("yml") == 0) {
+    flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_YAML;
+  } else if (ext.compare("bin") == 0) {
+
+  } else {
+    ba = ext.toLocal8Bit();
+    const char *cext = ba.data();
+    msgError("file extension '%s' not valid", cext);
+    return;
+  }
+
+  if (ext.compare("bin") == 0) {
+    FILE* fp = std::fopen(matches_file, "wb");
+    if (fp) {
+      // Cabecera
+      int size = static_cast<int>(matches.size());
+      std::fwrite("TIDOPLIB-Matching-#01", sizeof("TIDOPLIB-Matching-#01"), 1, fp);
+      std::fwrite(&size, sizeof(int32_t), 1, fp);
+      char extraHead[100]; // Reserva de espacio para futuros usos
+      std::fwrite(&extraHead, sizeof(char), 100, fp);
+      //Cuerpo
+      for (size_t i = 0; i < matches.size(); i++) {
+        std::fwrite(&matches[i].queryIdx, sizeof(int32_t), 1, fp);
+        std::fwrite(&matches[i].trainIdx, sizeof(int32_t), 1, fp);
+        std::fwrite(&matches[i].imgIdx, sizeof(int32_t), 1, fp);
+        std::fwrite(&matches[i].distance, sizeof(float), 1, fp);
+      }
+      std::fclose(fp);
+    } else {
+      //msgError("No pudo escribir archivo %s", matches_file);
+    }
+  } else {
+    cv::FileStorage fs(matches_file, flags);
+    if (fs.isOpened()) {
+      if (!matches.empty()) write(fs, "matches", matches);
+      fs.release();
+    } else {
+      //msgError("No pudo escribir archivo %s", matches_file);
+    }
+  }
+}
+
+void matchesRead(const QString &fname, std::vector<cv::DMatch> &matches)
+{
+  QByteArray ba = fname.toLocal8Bit();
+  const char *feat_file = ba.data();
+  QString ext = QFileInfo(fname).suffix();
+  if (ext.isEmpty() == false) {
+    if (ext.compare("bin") == 0) {
+      if (FILE* fp = std::fopen(feat_file, "rb")) {
+        //cabecera
+        char h[22];
+        int size;
+        char extraHead[100];
+        std::fread(h, sizeof(char), 22, fp);
+        std::fread(&size, sizeof(int32_t), 1, fp);
+        std::fread(&extraHead, sizeof(char), 100, fp);
+        //Cuerpo
+        matches.resize(static_cast<size_t>(size));
+        for (auto &match : matches) {
+          std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+          std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+          std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+          std::fread(&match.distance, sizeof(float), 1, fp);
+        }
+        std::fclose(fp);
+      } /*else
+        msgError("No pudo leer archivo %s", fname);*/
+    } else if (ext.compare("xml") == 0 || ext.compare("yml") == 0) {
+
+      cv::FileStorage fs(feat_file, cv::FileStorage::READ);
+      if (fs.isOpened()) {
+        matches.resize(0);
+        fs["matches"] >> matches;
+        fs.release();
+      } else {
+        //msgError("No pudo leer archivo %s", fname.c_str());
+      }
+    }
+  } /*else msgError("Fichero no valido: %s", fname);*/
+}
+
+
+/*----------------------------------------------------------------*/
+
+
+//DescriptorMatcherProperties::DescriptorMatcherProperties()
+//  : IDescriptorMatcher(),
+//    mMatchingMethod("BRUTE_FORCE"),
+//    mNorm("NORM_L2"),
+//    mRatio(0.8),
+//    mDistance(0.7),
+//    mConfidence(0.999),
+//    mCrossMatching(true)
 //{
 
 //}
 
-//BruteForceMatcherProperties::~BruteForceMatcherProperties()
+//DescriptorMatcherProperties::~DescriptorMatcherProperties()
 //{
 
 //}
 
-//void BruteForceMatcherProperties::reset()
+//QString DescriptorMatcherProperties::matchingMethod() const
 //{
-//  mNormType = BruteForceMatcherProperties::Norm::l2;
+//  return mMatchingMethod;
 //}
 
-//BruteForceMatcherProperties::Norm BruteForceMatcherProperties::normType() const
+//QString DescriptorMatcherProperties::normType() const
 //{
-//  return mNormType;
+//  return mNorm;
 //}
 
-//void BruteForceMatcherProperties::setNormType(Norm normType)
+//double DescriptorMatcherProperties::ratio() const
 //{
-//  mNormType = normType;
+//  return mRatio;
 //}
 
-///*----------------------------------------------------------------*/
-
-
-//BruteForceMatcher::BruteForceMatcher()
-//  : BruteForceMatcherProperties(),
-//    DescriptorMatcher()
+//double DescriptorMatcherProperties::distance() const
 //{
-//  update();
+//  return mDistance;
 //}
 
-
-//BruteForceMatcher::BruteForceMatcher(IBruteForceMatcher::Norm normType)
-//  : BruteForceMatcherProperties(),
-//    DescriptorMatcher()
+//double DescriptorMatcherProperties::confidence() const
 //{
-//  BruteForceMatcherProperties::setNormType(normType);
-//  update();
+//  return mConfidence;
 //}
 
-//void BruteForceMatcher::update()
+//bool DescriptorMatcherProperties::crossMatching() const
 //{
-//  int norm = cv::NORM_L2;
-//  BruteForceMatcherProperties::Norm norm_type = BruteForceMatcherProperties::normType();
-//  if (norm_type == BruteForceMatcherProperties::Norm::l1) {
-//    norm = cv::NORM_L1;
-//  } else if (norm_type == BruteForceMatcherProperties::Norm::l2) {
-//    norm = cv::NORM_L2;
-//  } else if (norm_type == BruteForceMatcherProperties::Norm::hamming) {
-//    norm = cv::NORM_HAMMING;
-//  } else if (norm_type == BruteForceMatcherProperties::Norm::hamming2) {
-//    norm = cv::NORM_HAMMING2;
-//  }
-
-//  mBFMatcher = cv::BFMatcher::create(norm);
+//  return mCrossMatching;
 //}
 
-//void BruteForceMatcher::match(cv::InputArray &queryDescriptors,
-//                                 cv::InputArray &trainDescriptors,
-//                                 std::vector<cv::DMatch> &matches,
-//                                 cv::InputArray mask)
+//void DescriptorMatcherProperties::setMatchingMethod(const QString &matchingMethod)
 //{
-//  //mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
-//  mBFMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
+//  mMatchingMethod = matchingMethod;
 //}
 
-//void BruteForceMatcher::reset()
+//void DescriptorMatcherProperties::setNormType(const QString &normType)
 //{
-//  BruteForceMatcherProperties::reset();
-//  update();
+//  mNorm = normType;
 //}
 
-//void BruteForceMatcher::setNormType(IBruteForceMatcher::Norm normType)
+//void DescriptorMatcherProperties::setRatio(double ratio)
 //{
-//  BruteForceMatcherProperties::setNormType(normType);
+//  mRatio = ratio;
 //}
 
-///*----------------------------------------------------------------*/
-
-//FlannMatcherProperties::FlannMatcherProperties()
-//  : IFlannMatcher()
+//void DescriptorMatcherProperties::setDistance(double distance)
 //{
+//  mDistance = distance;
 //}
 
-//FlannMatcherProperties::~FlannMatcherProperties()
+//void DescriptorMatcherProperties::setConfidence(double confidence)
 //{
+//  mConfidence = confidence;
 //}
 
-//void FlannMatcherProperties::reset()
+//void DescriptorMatcherProperties::setCrossMatching(bool crossMatching)
 //{
+//  mCrossMatching = crossMatching;
 //}
 
-///*----------------------------------------------------------------*/
-
-//FlannMatcher::FlannMatcher()
-//  : FlannMatcherProperties(),
-//    DescriptorMatcher()
+//void DescriptorMatcherProperties::reset()
 //{
-//  mFlannBasedMatcher = cv::FlannBasedMatcher::create();
+//  mMatchingMethod = "Brute-Force";
+//  mNorm = "NORM_L2";
+//  mRatio = 0.8;
+//  mDistance = 0.7;
+//  mConfidence = 0.999;
+//  mCrossMatching = true;
 //}
 
-//FlannMatcher::~FlannMatcher()
-//{
-
-//}
-
-//void FlannMatcher::match(cv::InputArray &queryDescriptors, cv::InputArray &trainDescriptors, std::vector<cv::DMatch> &matches, cv::InputArray mask)
-//{
-//  mFlannBasedMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
-//}
-
-//void FlannMatcher::reset()
-//{
-//  mFlannBasedMatcher = cv::FlannBasedMatcher::create();
-//}
 
 
 } // namespace fme

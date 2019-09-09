@@ -36,6 +36,7 @@
         <file>img/material/24/icons8_close_all_tabs_24px.png</file>
         <file>img/material/24/icons8_remove_image_24px.png</file>
         <file>img/material/24/keypoints.png</file>
+        <file>img/material/24/icons8_xml_24px.png</file>
     </qresource>
     <qresource prefix="/ico/48">
         <file>img/material/48/icons8_add_list_48px.png</file>
@@ -70,6 +71,7 @@
         <file>img/material/48/icons8_medium_icons_48px.png</file>
         <file>img/material/48/icons8_small_icons_48px.png</file>
         <file>img/material/48/icons8_remove_image_48px.png</file>
+        <file>img/material/48/icons8_xml_48px.png</file>
     </qresource>
     <qresource prefix="/ico/96">
         <file>img/material/96/icons8_about_96px.png</file>
@@ -105,6 +107,7 @@
         <file>img/material/96/icons8_details_96px.png</file>
         <file>img/material/96/icons8_remove_image_96px.png</file>
         <file>img/material/96/icons8_images_folder_96px.png</file>
+        <file>img/material/96/icons8_xml_96px.png</file>
     </qresource>
     <qresource prefix="/img/logos">
         <file>img/isprs_logo.jpg</file>

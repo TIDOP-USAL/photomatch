@@ -225,6 +225,12 @@ void ProjectModel::setDescriptor(const std::shared_ptr<Feature> &descriptor)
   bUnsavedChanges = true;
 }
 
+void ProjectModel::setMatcher(const std::shared_ptr<Match> &matcher)
+{
+  this->currentSession()->setMatcher(matcher);
+  bUnsavedChanges = true;
+}
+
 int ProjectModel::maxImageSize() const
 {
   return this->currentSession()->maxImageSize();
@@ -244,6 +250,24 @@ bool ProjectModel::fullImageSize() const
 void ProjectModel::setFullImageSize(bool fullImageSize)
 {
   this->currentSession()->setFullImageSize(fullImageSize);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::addPreprocessedImage(const QString &image)
+{
+  this->currentSession()->addPreprocessImage(image);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::addFeatures(const QString &feat)
+{
+  this->currentSession()->addFeatures(feat);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+{
+  this->currentSession()->addMatches(img1, img2, fileMatch);
   bUnsavedChanges = true;
 }
 

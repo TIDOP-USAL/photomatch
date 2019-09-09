@@ -11,6 +11,8 @@ class FME_EXPORT ImagePreprocess
   : public ProcessConcurrent
 {
 
+  Q_OBJECT
+
 public:
 
   ImagePreprocess(const QString &img,
@@ -27,6 +29,10 @@ public:
   void setMaxImageSize(int size);
 
   std::shared_ptr<ImageProcess> preprocess() const;
+
+signals:
+
+  void preprocessed(QString);
 
 // ProcessConcurrent interface
 

@@ -19,6 +19,7 @@ target_link_libraries(${the_target} PRIVATE
                       Qt5::Core
                       Qt5::Widgets
                       Qt5::Test
+                      tl_core
                       libcore
                       ${OpenCV_LIBS}
                       ${PIXKIT_LIBRARIES})

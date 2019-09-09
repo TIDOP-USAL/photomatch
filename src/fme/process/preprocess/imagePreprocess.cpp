@@ -88,8 +88,15 @@ void ImagePreprocess::run()
 
   ba = mImgOutput.toLocal8Bit();
   const char *output_img = ba.data();
-  cv::imwrite(output_img, img_out);
-  msgInfo("Write preprocessed image: %s", output_img);
+
+  try {
+    cv::imwrite(output_img, img_out);
+    msgInfo("Write preprocessed image: %s", output_img);
+    emit preprocessed(mImgOutput);
+  } catch (cv::Exception& e) {
+    msgError("Write preprocessed image Exception: %s\n", e.what());
+  }
+
 }
 
 } // namespace fme

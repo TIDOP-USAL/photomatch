@@ -519,6 +519,9 @@ void FeatureExtractorPresenter::run()
                                                                 mSurfDetector->octaveLayers(),
                                                                 mSurfDetector->extendedDescriptor(),
                                                                 mSurfDetector->rotatedFeatures());
+  } else {
+    ///TODO: error
+    return;
   }
 
 
@@ -638,6 +641,9 @@ void FeatureExtractorPresenter::run()
                                                                      mSurfDescriptor->extendedDescriptor(),
                                                                      mSurfDescriptor->rotatedFeatures());
     }
+  } else {
+    ///TODO: error
+    return;
   }
 
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
@@ -664,6 +670,7 @@ void FeatureExtractorPresenter::run()
                                                                         features,
                                                                         keypointDetector,
                                                                         descriptorExtractor));
+    connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
     mMultiProcess->appendProcess(feat_extract);
   }
 
@@ -685,6 +692,8 @@ void FeatureExtractorPresenter::run()
   ba = currentDescriptorExtractor.toLocal8Bit();
   const char *descriptor_extractor = ba.constData();
   msgInfo("  DescriptorExtractor  :  %s", descriptor_extractor);
+
+  emit running();
 
   mMultiProcess->start();
 }
@@ -734,6 +743,7 @@ void FeatureExtractorPresenter::onError(int code, const QString &msg)
 {
   QByteArray ba = msg.toLocal8Bit();
   msgError("(%i) %s", code, ba.constData());
+  emit finished();
 }
 
 void FeatureExtractorPresenter::onFinished()
@@ -746,8 +756,14 @@ void FeatureExtractorPresenter::onFinished()
     disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
   }
 
-  emit featureExtractorFinished();
+  emit finished();
   msgInfo("Feature detection and description finished.");
+}
+
+void FeatureExtractorPresenter::onFeaturesExtracted(const QString &features)
+{
+  mProjectModel->addFeatures(features);
+  emit featuresExtracted(features);
 }
 
 } // namespace fme

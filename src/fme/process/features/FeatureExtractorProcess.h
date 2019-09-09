@@ -7,12 +7,11 @@
 namespace fme
 {
 
-class KeypointDetector;
-class DescriptorExtractor;
-
 class FME_EXPORT FeatureExtractor
   : public ProcessConcurrent
 {
+
+  Q_OBJECT
 
 public:
 
@@ -29,6 +28,10 @@ public:
 
   std::shared_ptr<KeypointDetector> keypointDetector() const;
   std::shared_ptr<DescriptorExtractor> descriptorExtractor() const;
+
+signals:
+
+  void featuresExtracted(QString);
 
 // ProcessConcurrent interface
 

@@ -12,6 +12,8 @@
 #include "fme/core/image.h"
 #include "fme/core/session.h"
 #include "fme/core/preprocess/preprocess.h"
+#include "fme/core/features/features.h"
+#include "fme/core/features/matcher.h"
 
 class QXmlStreamWriter;
 class QXmlStreamReader;
@@ -410,6 +412,7 @@ protected:
   void writeACEBSF(QXmlStreamWriter *stream, IAcebsf *acebsf) const;
   void writeCLAHE(QXmlStreamWriter *stream, IClahe *clahe) const;
   void writeCMBFHE(QXmlStreamWriter *stream, ICmbfhe *cmbfhe) const;
+  void writeDecolor(QXmlStreamWriter *stream, IDecolor *decolor) const;
   void writeDHE(QXmlStreamWriter *stream, IDhe *dhe) const;
   void writeFAHE(QXmlStreamWriter *stream, IFahe *fahe) const;
   void writeHMCLAHE(QXmlStreamWriter *stream, IHmclahe *hmclahe) const;

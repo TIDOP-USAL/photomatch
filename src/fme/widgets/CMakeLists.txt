@@ -19,6 +19,8 @@ add_library(libwidgets ${LIB_TYPE}
             DaisyWidget.h
             DescriptorMatcherWidget.cpp
             DescriptorMatcherWidget.h
+            DecolorWidget.cpp
+            DecolorWidget.h
             DheWidget.cpp
             DheWidget.h
             FaheWidget.cpp

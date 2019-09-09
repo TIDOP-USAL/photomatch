@@ -83,7 +83,7 @@ void FeatureExtractor::run()
   ba = mFeatures.toLocal8Bit();
   const char *cfeat = ba.data();
   msgInfo("Write features at: %s", cfeat);
-
+  emit featuresExtracted(mFeatures);
 }
 
 } // namespace fme
