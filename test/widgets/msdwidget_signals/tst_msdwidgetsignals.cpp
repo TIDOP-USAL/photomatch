@@ -82,7 +82,7 @@ void TestMsdWidgetSignals::testPathRadiusChange()
   QList<QVariant> args = spyPathRadiusChange.takeFirst();
   QCOMPARE(args.at(0).toInt(), 5);
 
-  this->setPathRadius(10);
+  this->setPatchRadius(10);
   QCOMPARE(spyPathRadiusChange.count(), 0);
 }
 
@@ -236,7 +236,7 @@ void TestMsdWidgetSignals::testReset()
   QSignalSpy spyTiltsChange(this, &MsdWidget::tiltsChange);
 
   this->setThresholdSaliency(1500);
-  this->setPathRadius(9);
+  this->setPatchRadius(9);
   this->setKNN(9);
   this->setAreaRadius(8);
   this->setScaleFactor(9.);

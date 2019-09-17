@@ -19,7 +19,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_featuresNumber_data();
@@ -54,7 +55,7 @@ void TestOrbDetectorDescriptor::cleanupTestCase()
 
 }
 
-void TestOrbDetectorDescriptor::testDefaultConstructor()
+void TestOrbDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
   OrbDetectorDescriptor orbDetectorDescriptor;
@@ -66,6 +67,20 @@ void TestOrbDetectorDescriptor::testDefaultConstructor()
   QCOMPARE("Harris", orbDetectorDescriptor.scoreType());
   QCOMPARE(31, orbDetectorDescriptor.patchSize());
   QCOMPARE(20, orbDetectorDescriptor.fastThreshold());
+}
+
+void TestOrbDetectorDescriptor::test_constructor()
+{
+  /// Check default values
+  OrbDetectorDescriptor orbDetectorDescriptor(4000, 1.5, 6, 11, 2, "FAST", 11, 10);
+  QCOMPARE(4000, orbDetectorDescriptor.featuresNumber());
+  QCOMPARE(1.5, orbDetectorDescriptor.scaleFactor());
+  QCOMPARE(6, orbDetectorDescriptor.levelsNumber());
+  QCOMPARE(11, orbDetectorDescriptor.edgeThreshold());
+  QCOMPARE(2, orbDetectorDescriptor.wta_k());
+  QCOMPARE("FAST", orbDetectorDescriptor.scoreType());
+  QCOMPARE(11, orbDetectorDescriptor.patchSize());
+  QCOMPARE(10, orbDetectorDescriptor.fastThreshold());
 }
 
 void TestOrbDetectorDescriptor::test_type()

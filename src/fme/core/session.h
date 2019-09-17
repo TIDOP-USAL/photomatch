@@ -94,12 +94,14 @@ public:
   virtual void deleteFeatures(const QString &feat) = 0;
   virtual void deleteFeatures() = 0;
   virtual std::vector<QString> features() const = 0;
+  virtual QString features(const QString &image) const = 0;
 
   virtual void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
-  virtual void deleteMatches(const QString &match) = 0;
+  virtual void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
+  virtual void deleteMatches(const QString &img1) = 0;
   virtual void deleteMatches() = 0;
   virtual std::map<QString, std::vector<std::pair<QString, QString>>> matches() const = 0;
-
+  virtual std::vector<std::pair<QString, QString>> matches(const QString &image) const = 0;
   /*!
    * \brief Limpia la sesión
    */
@@ -146,10 +148,13 @@ public:
   void deleteFeatures(const QString &feat) override;
   void deleteFeatures() override;
   std::vector<QString> features() const override;
+  QString features(const QString &image) const override;
   void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
-  void deleteMatches(const QString &match) override;
+  void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
+  void deleteMatches(const QString &img1) override;
   void deleteMatches() override;
   std::map<QString, std::vector<std::pair<QString, QString>>> matches() const override;
+  std::vector<std::pair<QString, QString>> matches(const QString &image) const override;
 
   void clear() override;
 

@@ -3,14 +3,12 @@
 
 #include <memory>
 
-#include "fme/core/settings.h"
 #include "fme/ui/mvp.h"
 
 namespace fme
 {
 
-class Image;
-class Camera;
+class IProjectModel;
 
 /*!
  * \brief The IMatchViewerModel class
@@ -27,12 +25,9 @@ public:
 
   virtual ~IMatchViewerModel() {}
 
-  virtual void load() = 0;
-  virtual void save() = 0;
-
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &image) const = 0;
-  virtual std::vector<std::pair<QPointF, QPointF>> loadMatches(const QString &file1, const QString &file2) const = 0;
+  virtual std::vector<std::tuple<QPointF, QPointF, float>> loadMatches(const QString &imgName1, const QString &imgName2) const = 0;
 
 public slots:
 
@@ -45,7 +40,7 @@ class MatchViewerModel
 
 public:
 
-  MatchViewerModel();
+  MatchViewerModel(IProjectModel *mProjectModel);
 
 
 // IModel interface
@@ -58,11 +53,13 @@ private:
 
 public:
 
-  void load() override;
-  void save() override;
   std::vector<QString> images() const override;
-  std::vector<QString> imagePairs(const QString &image) const override;
-  std::vector<std::pair<QPointF, QPointF> > loadMatches(const QString &file1, const QString &file2) const override;
+  std::vector<QString> imagePairs(const QString &imageName) const override;
+  std::vector<std::tuple<QPointF, QPointF, float> > loadMatches(const QString &imgName1, const QString &imgName2) const override;
+
+protected:
+
+  IProjectModel *mProjectModel;
 };
 
 } // namespace fme

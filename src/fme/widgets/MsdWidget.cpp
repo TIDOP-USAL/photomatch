@@ -104,7 +104,7 @@ void MsdWidget::setThresholdSaliency(double thresholdSaliency)
   mThresholdSaliency->setValue(thresholdSaliency);
 }
 
-void MsdWidget::setPathRadius(int pathRadius)
+void MsdWidget::setPatchRadius(int pathRadius)
 {
   const QSignalBlocker blocker(mPathRadius);
   mPathRadius->setValue(pathRadius);

@@ -19,7 +19,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_winSize_data();
@@ -65,7 +66,7 @@ void TestHogDescriptor::cleanupTestCase()
 
 }
 
-void TestHogDescriptor::testDefaultConstructor()
+void TestHogDescriptor::test_defaultConstructor()
 {
   /// Check default values
   HogDescriptor hogDescriptor;
@@ -84,6 +85,19 @@ void TestHogDescriptor::testDefaultConstructor()
 //  QCOMPARE(64, hogDescriptor.nlevels());
   //  QCOMPARE(false, hogDescriptor.signedGradient());
 }
+
+void TestHogDescriptor::test_constructor()
+{
+  HogDescriptor hogDescriptor(QSize(32, 32), QSize(8, 8), QSize(4, 4), QSize(4, 4), 5, 2);
+  /// Check default values
+  QCOMPARE(QSize(32, 32), hogDescriptor.winSize());
+  QCOMPARE(QSize(8, 8), hogDescriptor.blockSize());
+  QCOMPARE(QSize(4, 4), hogDescriptor.blockStride());
+  QCOMPARE(QSize(4, 4), hogDescriptor.cellSize());
+  QCOMPARE(5, hogDescriptor.nbins());
+  QCOMPARE(2, hogDescriptor.derivAperture());
+}
+
 
 void TestHogDescriptor::test_type()
 {

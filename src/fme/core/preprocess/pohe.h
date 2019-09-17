@@ -58,18 +58,6 @@ public:
   PohePreprocess(const QSize &blockSize);
   ~PohePreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IPohe interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-
 // ImageProcess interface
 
 public:

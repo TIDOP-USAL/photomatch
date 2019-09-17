@@ -44,12 +44,6 @@ public:
   DecolorPreprocess();
   ~DecolorPreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
 // ImageProcess interface
 
 public:

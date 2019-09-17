@@ -20,7 +20,9 @@ class IMatchViewerView
 
 public:
 
-  explicit IMatchViewerView(QWidget *parent = nullptr) : IDialogView(parent) {}
+  explicit IMatchViewerView(QWidget *parent = nullptr,
+                            Qt::WindowFlags f = Qt::WindowFlags())
+    : IDialogView(parent, f) {}
   virtual ~IMatchViewerView() = default;
 
   /*!
@@ -47,7 +49,7 @@ public:
    */
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
-  virtual void setMatches(const std::vector<std::pair<QPointF, QPointF>> &matches) = 0;
+  virtual void setMatches(const std::vector<std::tuple<QPointF, QPointF, float>> &matches) = 0;
 
 signals:
 
@@ -73,7 +75,7 @@ class MatchViewerView
 
 public:
 
-  MatchViewerView(QWidget *parent = nullptr);
+  MatchViewerView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
   ~MatchViewerView() override;
 
 protected slots :
@@ -93,7 +95,7 @@ public:
   void setRightImage(const QString &rightImage) override;
   void setLeftImageList(const std::vector<QString> &leftImageList) override;
   void setRightImageList(const std::vector<QString> &rightImageList) override;
-  void setMatches(const std::vector<std::pair<QPointF, QPointF> > &matches) override;
+  void setMatches(const std::vector<std::tuple<QPointF, QPointF, float>> &matches) override;
 
 // IDialogView interface
 

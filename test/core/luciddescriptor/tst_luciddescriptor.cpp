@@ -18,7 +18,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_lucidKernel_data();
@@ -56,12 +57,19 @@ void TestLucidDescriptor::cleanupTestCase()
 
 }
 
-void TestLucidDescriptor::testDefaultConstructor()
+void TestLucidDescriptor::test_defaultConstructor()
 {
   /// Check default values
   LucidDescriptor lucidDescriptor;
   QCOMPARE(1, lucidDescriptor.lucidKernel());
   QCOMPARE(2, lucidDescriptor.blurKernel());
+}
+
+void TestLucidDescriptor::test_constructor()
+{
+  LucidDescriptor lucidDescriptor(3, 3);
+  QCOMPARE(3, lucidDescriptor.lucidKernel());
+  QCOMPARE(3, lucidDescriptor.blurKernel());
 }
 
 void TestLucidDescriptor::test_type()

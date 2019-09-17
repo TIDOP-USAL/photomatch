@@ -4,6 +4,8 @@
 #include "fme/core/features/features.h"
 #include "fme/core/features/matcher.h"
 
+#include <QFileInfo>
+
 namespace fme
 {
 
@@ -165,26 +167,42 @@ std::vector<QString> Session::features() const
   return mFeatures;
 }
 
-void Session::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+QString Session::features(const QString &image) const
 {
-  mImagesPairs[img1].push_back(std::make_pair(img2, fileMatch));
-  mImagesPairs[img2].push_back(std::make_pair(img1, fileMatch));
-//  for (auto &m : mMatches) {
-//    if (m.compare(img1) == 0) {
-//      return;
-//    }
-//  }
-//  mMatches.push_back(img1);
+  QString feat_file;
+  for (size_t i = 0; i < mFeatures.size(); i++){
+    QString feat_file_name = QFileInfo(mFeatures[i]).baseName();
+    if (feat_file_name.compare(image) == 0) {
+      feat_file = mFeatures[i];
+      break;
+    }
+  }
+  return feat_file;
 }
 
-void Session::deleteMatches(const QString &match)
+void Session::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
 {
-//  for (size_t i = 0; i < mMatches.size(); i++){
-//    if (mMatches[i].compare(match) == 0) {
-//      mMatches.erase(mMatches.begin()+ static_cast<long long>(i));
-//      break;
-//    }
-//  }
+  for (auto &f : mImagesPairs[img1]) {
+    if (f.first.compare(img2) == 0 && f.second.compare(fileMatch) == 0) {
+      return;
+    }
+  }
+  mImagesPairs[img1].push_back(std::make_pair(img2, fileMatch));
+  mImagesPairs[img2].push_back(std::make_pair(img1, fileMatch));
+}
+
+void Session::deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+{
+  for (size_t i = 0; i < mImagesPairs[img1].size(); i++){
+    if (mImagesPairs[img1][i].first.compare(img2) == 0 && mImagesPairs[img1][i].second.compare(fileMatch) == 0) {
+      mImagesPairs[img1].erase(mImagesPairs[img1].begin()+ static_cast<long long>(i));
+    }
+  }
+}
+
+void Session::deleteMatches(const QString &img1)
+{
+  mImagesPairs[img1].clear();
 }
 
 void Session::deleteMatches()
@@ -195,6 +213,18 @@ void Session::deleteMatches()
 std::map<QString, std::vector<std::pair<QString, QString>>> Session::matches() const
 {
   return mImagesPairs;
+}
+
+std::vector<std::pair<QString, QString>> Session::matches(const QString &image) const
+{
+  std::vector<std::pair<QString, QString>> pairs;
+  for (auto &matches : mImagesPairs){
+    if (image.compare(matches.first) == 0) {
+      pairs = matches.second;
+      break;
+    }
+  }
+  return pairs;
 }
 
 void Session::clear()

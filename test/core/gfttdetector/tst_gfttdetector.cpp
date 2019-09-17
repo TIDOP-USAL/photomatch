@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_maxFeatures_data();
@@ -60,7 +61,7 @@ void TestGfttDetector::cleanupTestCase()
 
 }
 
-void TestGfttDetector::testDefaultConstructor()
+void TestGfttDetector::test_defaultConstructor()
 {
   /// Check default values
   GfttDetector gfttDetector;
@@ -70,6 +71,17 @@ void TestGfttDetector::testDefaultConstructor()
   QCOMPARE(3, gfttDetector.blockSize());
   QCOMPARE(false, gfttDetector.harrisDetector());
   QCOMPARE(0.04, gfttDetector.k());
+}
+
+void TestGfttDetector::test_constructor()
+{
+  GfttDetector gfttDetector(2000, 0.05, 2, 5, true, 0.05);
+  QCOMPARE(2000, gfttDetector.maxFeatures());
+  QCOMPARE(0.05, gfttDetector.qualityLevel());
+  QCOMPARE(2, gfttDetector.minDistance());
+  QCOMPARE(5, gfttDetector.blockSize());
+  QCOMPARE(true, gfttDetector.harrisDetector());
+  QCOMPARE(0.05, gfttDetector.k());
 }
 
 void TestGfttDetector::test_type()

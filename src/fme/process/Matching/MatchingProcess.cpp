@@ -13,7 +13,7 @@ namespace fme
 MatchingProcess::MatchingProcess(const QString &queryDescriptors,
                                  const QString &trainDescriptors,
                                  const QString &matches,
-                                 const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
+                                 const std::shared_ptr<RobustMatching> &descriptorMatcher)
   : ProcessConcurrent(),
     mQueryDescriptors(queryDescriptors),
     mTrainDescriptors(trainDescriptors),
@@ -53,10 +53,10 @@ void MatchingProcess::setMatches(const QString &matches)
   mMatches = matches;
 }
 
-std::shared_ptr<DescriptorMatcher> MatchingProcess::descriptorMatcher() const
-{
-  return mDescriptorMatcher;
-}
+//std::shared_ptr<DescriptorMatcher> MatchingProcess::descriptorMatcher() const
+//{
+//  return mDescriptorMatcher;
+//}
 
 void MatchingProcess::run()
 {
@@ -69,11 +69,12 @@ void MatchingProcess::run()
   cv::Mat descriptors2;
   featuresRead(mTrainDescriptors, keyPoints2, descriptors2);
 
-  std::vector<cv::DMatch> matches;
-  mDescriptorMatcher->match(descriptors1, descriptors2, matches);
+  std::vector<cv::DMatch> matches = mDescriptorMatcher->match(descriptors1, descriptors2);
 
-  //mDescriptorMatcher->write(mMatches);
-  matchesWrite(mMatches, matches);
+  std::vector<cv::DMatch> filter_matches = mDescriptorMatcher->geometricFilter(matches, keyPoints1, keyPoints2);
+
+
+  matchesWrite(mMatches, filter_matches);
 
   QByteArray ba = mMatches.toLocal8Bit();
   const char *cfeat = ba.data();

@@ -17,7 +17,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_featuresNumber_data();
@@ -61,7 +62,7 @@ void TestSiftDetectorDescriptor::cleanupTestCase()
 
 }
 
-void TestSiftDetectorDescriptor::testDefaultConstructor()
+void TestSiftDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
   SiftDetectorDescriptor siftDetectorDescriptor;
@@ -70,6 +71,16 @@ void TestSiftDetectorDescriptor::testDefaultConstructor()
   QCOMPARE(0.04, siftDetectorDescriptor.contrastThreshold());
   QCOMPARE(10., siftDetectorDescriptor.edgeThreshold());
   QCOMPARE(1.6, siftDetectorDescriptor.sigma());
+}
+
+void TestSiftDetectorDescriptor::test_constructor()
+{
+  SiftDetectorDescriptor siftDetectorDescriptor(500, 4, 0.5, 20., 3.);
+  QCOMPARE(500, siftDetectorDescriptor.featuresNumber());
+  QCOMPARE(4, siftDetectorDescriptor.octaveLayers());
+  QCOMPARE(0.5, siftDetectorDescriptor.contrastThreshold());
+  QCOMPARE(20., siftDetectorDescriptor.edgeThreshold());
+  QCOMPARE(3., siftDetectorDescriptor.sigma());
 }
 
 void TestSiftDetectorDescriptor::test_type()

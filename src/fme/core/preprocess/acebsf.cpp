@@ -93,39 +93,17 @@ AcebsfPreprocess::~AcebsfPreprocess()
 
 }
 
-void AcebsfPreprocess::reset()
-{
-  AcebsfProperties::reset();
-}
-
-void AcebsfPreprocess::setBlockSize(const QSize &blockSize)
-{
-  AcebsfProperties::setBlockSize(blockSize);
-}
-
-void AcebsfPreprocess::setL(double l)
-{
-  AcebsfProperties::setL(l);
-}
-
-void AcebsfPreprocess::setK1(double k1)
-{
-  AcebsfProperties::setK1(k1);
-}
-
-void AcebsfPreprocess::setK2(double k2)
-{
-  AcebsfProperties::setK2(k2);
-}
-
 cv::Mat AcebsfPreprocess::process(const cv::Mat &img)
 {
   cv::Mat tmp;
   if (img.channels() == 1)  cv::cvtColor(img, tmp, cv::COLOR_GRAY2BGR);
   else img.copyTo(tmp);
 
-  pixkit::enhancement::local::Lal2014(tmp, tmp, cv::Size(AcebsfProperties::blockSize().width(), AcebsfProperties::blockSize().height()),
-                                      static_cast<float>(AcebsfProperties::l()), static_cast<float>(AcebsfProperties::k1()),
+  pixkit::enhancement::local::Lal2014(tmp, tmp,
+                                      cv::Size(AcebsfProperties::blockSize().width(),
+                                               AcebsfProperties::blockSize().height()),
+                                      static_cast<float>(AcebsfProperties::l()),
+                                      static_cast<float>(AcebsfProperties::k1()),
                                       static_cast<float>(AcebsfProperties::k2()));
   cv::Mat color_boost;
   cv::Mat img_out;

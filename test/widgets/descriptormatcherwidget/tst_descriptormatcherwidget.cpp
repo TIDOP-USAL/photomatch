@@ -16,23 +16,31 @@ public:
 private slots:
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
   void test_windowTitle();
-  void testDescriptorMatcher_data();
-  void testDescriptorMatcher();
-  void testNormType_data();
-  void testNormType();
-  void testUpdateNormTypes_data();
-  void testUpdateNormTypes();
-  void testRatio_data();
-  void testRatio();
-  void testDistance_data();
-  void testDistance();
-  void testConfidence_data();
-  void testConfidence();
-  void testCrossMatching();
-  void testCrossMatching_data();
-  void testReset();
+  void test_descriptorMatcher_data();
+  void test_descriptorMatcher();
+  void test_normType_data();
+  void test_normType();
+  void test_ratio_data();
+  void test_ratio();
+  void test_distance_data();
+  void test_distance();
+  void test_confidence_data();
+  void test_confidence();
+  void test_crossMatching_data();
+  void test_crossMatching();
+  void test_geometricTest_data();
+  void test_geometricTest();
+  void test_homographyMatrixMethod_data();
+  void test_homographyMatrixMethod();
+  void test_fundamentalMatrixMethod_data();
+  void test_fundamentalMatrixMethod();
+  void test_essentialMatrixMethod_data();
+  void test_essentialMatrixMethod();
+  void test_maxIters_data();
+  void test_maxIters();
+  void test_reset();
 
 private:
 
@@ -64,15 +72,20 @@ void TestDescriptorMatcherWidget::cleanupTestCase()
 
 }
 
-void TestDescriptorMatcherWidget::testDefaultConstructor()
+void TestDescriptorMatcherWidget::test_defaultConstructor()
 {
   /// Check default values
   DescriptorMatcherWidget descriptorMatcherWidget;
   QCOMPARE("Brute-Force", descriptorMatcherWidget.matchingMethod());
   QCOMPARE("NORM_L1", descriptorMatcherWidget.normType());
-  QCOMPARE(0.7, descriptorMatcherWidget.distance());
   QCOMPARE(0.8, descriptorMatcherWidget.ratio());
+  QCOMPARE("Homography Matrix", descriptorMatcherWidget.geometricTest());
+  QCOMPARE("RANSAC", descriptorMatcherWidget.homographyComputeMethod());
+  QCOMPARE("RANSAC", descriptorMatcherWidget.fundamentalComputeMethod());
+  QCOMPARE("RANSAC", descriptorMatcherWidget.essentialComputeMethod());
+  QCOMPARE(0.7, descriptorMatcherWidget.distance());
   QCOMPARE(0.999, descriptorMatcherWidget.confidence());
+  QCOMPARE(2000, descriptorMatcherWidget.maxIters());
   QCOMPARE(true, descriptorMatcherWidget.crossMatching());
 }
 
@@ -81,7 +94,7 @@ void TestDescriptorMatcherWidget::test_windowTitle()
   QCOMPARE("Descriptor Matcher", mDescriptorMatcherWidget->windowTitle());
 }
 
-void TestDescriptorMatcherWidget::testDescriptorMatcher_data()
+void TestDescriptorMatcherWidget::test_descriptorMatcher_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -91,7 +104,7 @@ void TestDescriptorMatcherWidget::testDescriptorMatcher_data()
   QTest::newRow("bad_value") << "bad_value" << "FLANN";
 }
 
-void TestDescriptorMatcherWidget::testDescriptorMatcher()
+void TestDescriptorMatcherWidget::test_descriptorMatcher()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -100,7 +113,7 @@ void TestDescriptorMatcherWidget::testDescriptorMatcher()
   QCOMPARE(result, mDescriptorMatcherWidget->matchingMethod());
 }
 
-void TestDescriptorMatcherWidget::testNormType_data()
+void TestDescriptorMatcherWidget::test_normType_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -112,7 +125,7 @@ void TestDescriptorMatcherWidget::testNormType_data()
   QTest::newRow("bad_value") << "bad_value" << "NORM_HAMMING2";
 }
 
-void TestDescriptorMatcherWidget::testNormType()
+void TestDescriptorMatcherWidget::test_normType()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -121,17 +134,7 @@ void TestDescriptorMatcherWidget::testNormType()
   QCOMPARE(result, mDescriptorMatcherWidget->normType());
 }
 
-void TestDescriptorMatcherWidget::testUpdateNormTypes_data()
-{
-
-}
-
-void TestDescriptorMatcherWidget::testUpdateNormTypes()
-{
-
-}
-
-void TestDescriptorMatcherWidget::testRatio_data()
+void TestDescriptorMatcherWidget::test_ratio_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -144,7 +147,7 @@ void TestDescriptorMatcherWidget::testRatio_data()
   QTest::newRow("Out of range value") << 101. << 100.;
 }
 
-void TestDescriptorMatcherWidget::testRatio()
+void TestDescriptorMatcherWidget::test_ratio()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -153,7 +156,7 @@ void TestDescriptorMatcherWidget::testRatio()
   QCOMPARE(result, mDescriptorMatcherWidget->ratio());
 }
 
-void TestDescriptorMatcherWidget::testDistance_data()
+void TestDescriptorMatcherWidget::test_distance_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -166,7 +169,7 @@ void TestDescriptorMatcherWidget::testDistance_data()
   QTest::newRow("Out of range value") << 101. << 100.;
 }
 
-void TestDescriptorMatcherWidget::testDistance()
+void TestDescriptorMatcherWidget::test_distance()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -175,7 +178,7 @@ void TestDescriptorMatcherWidget::testDistance()
   QCOMPARE(result, mDescriptorMatcherWidget->distance());
 }
 
-void TestDescriptorMatcherWidget::testConfidence_data()
+void TestDescriptorMatcherWidget::test_confidence_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -187,7 +190,7 @@ void TestDescriptorMatcherWidget::testConfidence_data()
   QTest::newRow("Out of range value") << 1.1 << 1.;
 }
 
-void TestDescriptorMatcherWidget::testConfidence()
+void TestDescriptorMatcherWidget::test_confidence()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -196,7 +199,7 @@ void TestDescriptorMatcherWidget::testConfidence()
   QCOMPARE(result, mDescriptorMatcherWidget->confidence());
 }
 
-void TestDescriptorMatcherWidget::testCrossMatching_data()
+void TestDescriptorMatcherWidget::test_crossMatching_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -205,7 +208,108 @@ void TestDescriptorMatcherWidget::testCrossMatching_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestDescriptorMatcherWidget::testCrossMatching()
+void TestDescriptorMatcherWidget::test_geometricTest_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("Homography Matrix") << "Homography Matrix" << "Homography Matrix";
+  QTest::newRow("Fundamental Matrix") << "Fundamental Matrix" << "Fundamental Matrix";
+  QTest::newRow("Essential Matrix") << "Essential Matrix" << "Essential Matrix";
+  QTest::newRow("bad_value") << "bad_value" << "Essential Matrix";
+}
+
+void TestDescriptorMatcherWidget::test_geometricTest()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mDescriptorMatcherWidget->setGeometricTest(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->geometricTest());
+}
+
+void TestDescriptorMatcherWidget::test_homographyMatrixMethod_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("All Points") << "All Points" << "All Points";
+  QTest::newRow("RANSAC") << "RANSAC" << "RANSAC";
+  QTest::newRow("LMedS") << "LMedS" << "LMedS";
+  QTest::newRow("RHO") << "RHO" << "RHO";
+  QTest::newRow("bad_value") << "bad_value" << "RHO";
+}
+
+void TestDescriptorMatcherWidget::test_homographyMatrixMethod()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mDescriptorMatcherWidget->setHomographyComputeMethod(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->homographyComputeMethod());
+}
+
+void TestDescriptorMatcherWidget::test_fundamentalMatrixMethod_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("7-point algorithm") << "7-point algorithm" << "7-point algorithm";
+  QTest::newRow("8-point algorithm") << "8-point algorithm" << "8-point algorithm";
+  QTest::newRow("RANSAC") << "RANSAC" << "RANSAC";
+  QTest::newRow("LMedS") << "LMedS" << "LMedS";
+  QTest::newRow("bad_value") << "bad_value" << "LMedS";
+}
+
+void TestDescriptorMatcherWidget::test_fundamentalMatrixMethod()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mDescriptorMatcherWidget->setFundamentalComputeMethod(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->fundamentalComputeMethod());
+}
+
+void TestDescriptorMatcherWidget::test_essentialMatrixMethod_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("RANSAC") << "RANSAC" << "RANSAC";
+  QTest::newRow("LMedS") << "LMedS" << "LMedS";
+  QTest::newRow("bad_value") << "bad_value" << "LMedS";
+}
+
+void TestDescriptorMatcherWidget::test_essentialMatrixMethod()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mDescriptorMatcherWidget->setEssentialComputeMethod(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->essentialComputeMethod());
+}
+
+void TestDescriptorMatcherWidget::test_maxIters_data()
+{
+  QTest::addColumn<int>("value");
+  QTest::addColumn<int>("result");
+
+  QTest::newRow("2000") << 2000 << 2000;
+  QTest::newRow("1000") << 1000 << 1000;
+  QTest::newRow("500") << 500 << 500;
+  QTest::newRow("Out of range value") << 10001 << 10000;
+}
+
+void TestDescriptorMatcherWidget::test_maxIters()
+{
+  QFETCH(int, value);
+  QFETCH(int, result);
+
+  mDescriptorMatcherWidget->setMaxIters(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->maxIters());
+}
+
+void TestDescriptorMatcherWidget::test_crossMatching()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -214,11 +318,15 @@ void TestDescriptorMatcherWidget::testCrossMatching()
   QCOMPARE(result, mDescriptorMatcherWidget->crossMatching());
 }
 
-void TestDescriptorMatcherWidget::testReset()
+void TestDescriptorMatcherWidget::test_reset()
 {
   mDescriptorMatcherWidget->setMatchingMethod("FLANN");
   mDescriptorMatcherWidget->setNormType("NORM_L2");
   mDescriptorMatcherWidget->setRatio(0.5);
+  mDescriptorMatcherWidget->setGeometricTest("Fundamental Matrix");
+  mDescriptorMatcherWidget->setHomographyComputeMethod("All Points");
+  mDescriptorMatcherWidget->setFundamentalComputeMethod("LMedS");
+  mDescriptorMatcherWidget->setEssentialComputeMethod("LMedS");
   mDescriptorMatcherWidget->setDistance(0.3);
   mDescriptorMatcherWidget->setConfidence(0.2);
   mDescriptorMatcherWidget->setCrossMatching(false);
@@ -228,9 +336,14 @@ void TestDescriptorMatcherWidget::testReset()
   /// Check default values
   QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
   QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
-  QCOMPARE(0.7, mDescriptorMatcherWidget->distance());
   QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
+  QCOMPARE("Homography Matrix", mDescriptorMatcherWidget->geometricTest());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->homographyComputeMethod());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->fundamentalComputeMethod());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->essentialComputeMethod());
+  QCOMPARE(0.7, mDescriptorMatcherWidget->distance());
   QCOMPARE(0.999, mDescriptorMatcherWidget->confidence());
+  QCOMPARE(2000, mDescriptorMatcherWidget->maxIters());
   QCOMPARE(true, mDescriptorMatcherWidget->crossMatching());
 }
 

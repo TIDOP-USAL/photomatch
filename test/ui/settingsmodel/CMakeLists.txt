@@ -16,6 +16,7 @@ add_executable(${the_target}
     )
 
 target_link_libraries(${the_target} PRIVATE
+                      tl_core
                       Qt5::Core
                       Qt5::Widgets
                       Qt5::Test

@@ -51,22 +51,12 @@ LceBsescsPreprocess::LceBsescsPreprocess(const QSize &blockSize)
   : LceBsescsProperties(),
     ImageProcess()
 {
-  setBlockSize(blockSize);
+  this->setBlockSize(blockSize);
 }
 
 LceBsescsPreprocess::~LceBsescsPreprocess()
 {
 
-}
-
-void LceBsescsPreprocess::reset()
-{
-  LceBsescsProperties::reset();
-}
-
-void LceBsescsPreprocess::setBlockSize(const QSize &blockSize)
-{
-  LceBsescsProperties::setBlockSize(blockSize);
 }
 
 cv::Mat LceBsescsPreprocess::process(const cv::Mat &img)
@@ -81,7 +71,9 @@ cv::Mat LceBsescsPreprocess::process(const cv::Mat &img)
   }
 
   cv::Mat img_out;
-  pixkit::enhancement::local::LCE_BSESCS2014(temp, img_out, cv::Size(LceBsescsProperties::blockSize().width(), LceBsescsProperties::blockSize().height()));
+  pixkit::enhancement::local::LCE_BSESCS2014(temp, img_out,
+                                             cv::Size(LceBsescsProperties::blockSize().width(),
+                                                      LceBsescsProperties::blockSize().height()));
   temp.release();
 
   return img_out;

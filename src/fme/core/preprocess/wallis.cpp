@@ -106,46 +106,16 @@ WallisPreprocess::WallisPreprocess(double contrast,
   : WallisProperties(),
     ImageProcess()
 {
-  setContrast(contrast);
-  setBrightness(brightness);
-  setImposedAverage(imposedAverage);
-  setImposedLocalStdDev(imposedLocalStdDev);
-  setKernelSize(kernelSize);
+  this->setContrast(contrast);
+  this->setBrightness(brightness);
+  this->setImposedAverage(imposedAverage);
+  this->setImposedLocalStdDev(imposedLocalStdDev);
+  this->setKernelSize(kernelSize);
 }
 
 WallisPreprocess::~WallisPreprocess()
 {
 
-}
-
-void WallisPreprocess::reset()
-{
-  WallisProperties::reset();
-}
-
-void WallisPreprocess::setContrast(double contrast)
-{
-  WallisProperties::setContrast(contrast);
-}
-
-void WallisPreprocess::setBrightness(double brightness)
-{
-  WallisProperties::setBrightness(brightness);
-}
-
-void WallisPreprocess::setImposedAverage(int imposedAverage)
-{
-  WallisProperties::setImposedAverage(imposedAverage);
-}
-
-void WallisPreprocess::setImposedLocalStdDev(int imposedLocalStdDev)
-{
-  WallisProperties::setImposedLocalStdDev(imposedLocalStdDev);
-}
-
-void WallisPreprocess::setKernelSize(int kernelSize)
-{
-  WallisProperties::setKernelSize(kernelSize);
 }
 
 cv::Mat WallisPreprocess::process(const cv::Mat &img)

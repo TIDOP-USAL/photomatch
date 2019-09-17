@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_thresholdSaliency_data();
@@ -70,7 +71,7 @@ void TestMsdDetector::cleanupTestCase()
 
 }
 
-void TestMsdDetector::testDefaultConstructor()
+void TestMsdDetector::test_defaultConstructor()
 {
   /// Check default values
   MsdDetector msdDetector;
@@ -85,6 +86,22 @@ void TestMsdDetector::testDefaultConstructor()
   QCOMPARE(false, msdDetector.computeOrientation());
   QCOMPARE(false, msdDetector.affineMSD());
   QCOMPARE(3, msdDetector.affineTilts());
+}
+
+void TestMsdDetector::test_constructor()
+{
+  MsdDetector msdDetector(150, 5, 5, 5, 1.5, 2, 3, 1, true, true, 4);
+  QCOMPARE(150, msdDetector.thresholdSaliency());
+  QCOMPARE(5, msdDetector.patchRadius());
+  QCOMPARE(5, msdDetector.knn());
+  QCOMPARE(5, msdDetector.searchAreaRadius());
+  QCOMPARE(1.5, msdDetector.scaleFactor());
+  QCOMPARE(2, msdDetector.NMSRadius());
+  QCOMPARE(3, msdDetector.nScales());
+  QCOMPARE(1, msdDetector.NMSScaleRadius());
+  QCOMPARE(true, msdDetector.computeOrientation());
+  QCOMPARE(true, msdDetector.affineMSD());
+  QCOMPARE(4, msdDetector.affineTilts());
 }
 
 void TestMsdDetector::test_type()

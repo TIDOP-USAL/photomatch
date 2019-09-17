@@ -48,22 +48,12 @@ DhePreprocess::DhePreprocess(int x)
   : DheProperties(),
     ImageProcess()
 {
-  setX(x);
+  this->setX(x);
 }
 
 DhePreprocess::~DhePreprocess()
 {
 
-}
-
-void DhePreprocess::reset()
-{
-  DheProperties::reset();
-}
-
-void DhePreprocess::setX(int x)
-{
-  DheProperties::setX(x);
 }
 
 cv::Mat DhePreprocess::process(const cv::Mat &img)

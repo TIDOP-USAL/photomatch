@@ -65,21 +65,6 @@ public:
                    double k2);
   ~AcebsfPreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IAcebsf interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-  void setL(double l) override;
-  void setK1(double k1) override;
-  void setK2(double k2) override;
-
 // ImageProcess interface
 
 public:

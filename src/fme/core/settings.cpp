@@ -18,6 +18,7 @@
 #include "fme/core/features/sift.h"
 #include "fme/core/features/star.h"
 #include "fme/core/features/surf.h"
+#include "fme/core/features/matcher.h"
 
 #include "fme/core/preprocess/acebsf.h"
 #include "fme/core/preprocess/clahe.h"
@@ -34,6 +35,8 @@
 
 #include <QSettings>
 #include <QLocale>
+
+#include <memory>
 
 namespace fme
 {
@@ -71,9 +74,12 @@ Settings::Settings()
     mOrb(new OrbProperties),
     mSift(new SiftProperties),
     mStar(new StarProperties),
-    mSurf(new SurfProperties)/*,
-    mDescriptorMatcher(new DescriptorMatcherProperties)*/
+    mSurf(new SurfProperties),
+    mFlannMatcher(new FlannMatcherProperties),
+    mBruteForceMatcher(new BruteForceMatcherProperties),
+    mRobustMatcherRefinement(new RobustMatcherProperties)
 {
+
   reset();
 }
 
@@ -229,10 +235,21 @@ Settings::~Settings()
     mSurf = nullptr;
   }
 
-//  if (mDescriptorMatcher){
-//    delete mDescriptorMatcher;
-//    mDescriptorMatcher = nullptr;
-//  }
+  if (mFlannMatcher){
+    delete mFlannMatcher;
+    mFlannMatcher = nullptr;
+  }
+
+  if (mBruteForceMatcher){
+    delete mBruteForceMatcher;
+    mBruteForceMatcher = nullptr;
+  }
+
+  if (mRobustMatcherRefinement){
+    delete mRobustMatcherRefinement;
+    mRobustMatcherRefinement = nullptr;
+  }
+
 }
 
 QString Settings::language() const
@@ -574,15 +591,36 @@ const ISurf *Settings::surf() const
   return mSurf;
 }
 
-//IDescriptorMatcher *Settings::descriptorMatcher()
-//{
-//  return mDescriptorMatcher;
-//}
+IFlannMatcher *Settings::flannMatcher()
+{
+  return mFlannMatcher;
+}
 
-//const IDescriptorMatcher *Settings::descriptorMatcher() const
-//{
-//  return mDescriptorMatcher;
-//}
+const IFlannMatcher *Settings::flannMatcher() const
+{
+  return mFlannMatcher;
+}
+
+IBruteForceMatcher *Settings::bruteForceMatcher()
+{
+  return mBruteForceMatcher;
+}
+
+const IBruteForceMatcher *Settings::bruteForceMatcher() const
+{
+  return mBruteForceMatcher;
+}
+
+IRobustMatcherRefinement *Settings::robustMatcherRefinement()
+{
+  return mRobustMatcherRefinement;
+}
+
+const IRobustMatcherRefinement *Settings::robustMatcherRefinement() const
+{
+  return mRobustMatcherRefinement;
+}
+
 
 void Settings::reset()
 {
@@ -623,7 +661,9 @@ void Settings::reset()
   mStar->reset();
   mSurf->reset();
 
-  //mDescriptorMatcher->reset();
+  mFlannMatcher->reset();
+  mBruteForceMatcher->reset();
+  mRobustMatcherRefinement->reset();
 }
 
 
@@ -834,14 +874,21 @@ void SettingsRW::read(ISettings &settings)
   settings.surf()->setHessianThreshold(mSettingsRW->value("SURF/HessianThreshold", settings.surf()->hessianThreshold()).toDouble());
   settings.surf()->setExtendedDescriptor(mSettingsRW->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
 
-//  /* Descriptor Matcher */
-//  settings.descriptorMatcher()->setRatio(mSettingsRW->value("MATCH/Ratio", settings.descriptorMatcher()->ratio()).toDouble());
-//  settings.descriptorMatcher()->setDistance(mSettingsRW->value("MATCH/Distance", settings.descriptorMatcher()->distance()).toDouble());
-//  settings.descriptorMatcher()->setNormType(mSettingsRW->value("MATCH/NormType", settings.descriptorMatcher()->normType()).toString());
-//  settings.descriptorMatcher()->setConfidence(mSettingsRW->value("MATCH/Confidence", settings.descriptorMatcher()->confidence()).toDouble());
-//  settings.descriptorMatcher()->setCrossMatching(mSettingsRW->value("MATCH/CrossMatching", settings.descriptorMatcher()->crossMatching()).toBool());
-//  settings.descriptorMatcher()->setMatchingMethod(mSettingsRW->value("MATCH/MatchingMethod", settings.descriptorMatcher()->matchingMethod()).toString());
-
+  /* Matching */
+  int normType = mSettingsRW->value("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType())).toInt();
+  settings.bruteForceMatcher()->setNormType(static_cast<IBruteForceMatcher::Norm>(normType));
+  settings.robustMatcherRefinement()->setRatio(mSettingsRW->value("MATCH/RefinementRatio", settings.robustMatcherRefinement()->ratio()).toDouble());
+  settings.robustMatcherRefinement()->setDistance(mSettingsRW->value("MATCH/RefinementDistance", settings.robustMatcherRefinement()->distance()).toDouble());
+  settings.robustMatcherRefinement()->setConfidence(mSettingsRW->value("MATCH/RefinementConfidence", settings.robustMatcherRefinement()->confidence()).toDouble());
+  settings.robustMatcherRefinement()->setCrossCheck(mSettingsRW->value("MATCH/RefinementCrossCheck", settings.robustMatcherRefinement()->crossCheck()).toBool());
+  int geometricTest = mSettingsRW->value("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcherRefinement()->geometricTest())).toInt();
+  settings.robustMatcherRefinement()->setGeometricTest(static_cast<IRobustMatcherRefinement::GeometricTest>(geometricTest));
+  int homographyComputeMethod = mSettingsRW->value("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->homographyComputeMethod())).toInt();
+  settings.robustMatcherRefinement()->setHomographyComputeMethod(static_cast<IRobustMatcherRefinement::HomographyComputeMethod>(homographyComputeMethod));
+  int fundamentalComputeMethod = mSettingsRW->value("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->fundamentalComputeMethod())).toInt();
+  settings.robustMatcherRefinement()->setFundamentalComputeMethod(static_cast<IRobustMatcherRefinement::FundamentalComputeMethod>(fundamentalComputeMethod));
+  int essentialComputeMethod = mSettingsRW->value("MATCH/RefinementEssentialComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->essentialComputeMethod())).toInt();
+  settings.robustMatcherRefinement()->setEssentialComputeMethod(static_cast<IRobustMatcherRefinement::EssentialComputeMethod>(essentialComputeMethod));
 }
 
 void SettingsRW::write(const ISettings &settings)
@@ -1026,14 +1073,16 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("SURF/HessianThreshold", settings.surf()->hessianThreshold());
   mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
 
-//  /* Descriptor Matcher */
-//  mSettingsRW->setValue("MATCH/Ratio", settings.descriptorMatcher()->ratio());
-//  mSettingsRW->setValue("MATCH/Distance", settings.descriptorMatcher()->distance());
-//  mSettingsRW->setValue("MATCH/NormType", settings.descriptorMatcher()->normType());
-//  mSettingsRW->setValue("MATCH/Confidence", settings.descriptorMatcher()->confidence());
-//  mSettingsRW->setValue("MATCH/CrossMatching", settings.descriptorMatcher()->crossMatching());
-//  mSettingsRW->setValue("MATCH/MatchingMethod", settings.descriptorMatcher()->matchingMethod());
-
+  /* Matching */
+  mSettingsRW->setValue("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType()));
+  mSettingsRW->setValue("MATCH/RefinementRatio", settings.robustMatcherRefinement()->ratio());
+  mSettingsRW->setValue("MATCH/RefinementDistance", settings.robustMatcherRefinement()->distance());
+  mSettingsRW->setValue("MATCH/RefinementConfidence", settings.robustMatcherRefinement()->confidence());
+  mSettingsRW->setValue("MATCH/RefinementCrossCheck", settings.robustMatcherRefinement()->crossCheck());
+  mSettingsRW->setValue("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcherRefinement()->geometricTest()));
+  mSettingsRW->setValue("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->homographyComputeMethod()));
+  mSettingsRW->setValue("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->fundamentalComputeMethod()));
+  mSettingsRW->setValue("MATCH/RefinementEssentialComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->essentialComputeMethod()));
 }
 
 void SettingsRW::writeHistory(const ISettings &settings)

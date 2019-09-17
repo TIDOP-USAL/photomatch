@@ -562,7 +562,7 @@ void SettingsPresenter::open()
   mLucid->setBlurKernel(mModel->lucidBlurKernel());
 
   mMsd->setThresholdSaliency(mModel->msdThresholdSaliency());
-  mMsd->setPathRadius(mModel->msdPathRadius());
+  mMsd->setPatchRadius(mModel->msdPathRadius());
   mMsd->setKNN(mModel->msdKnn());
   mMsd->setAreaRadius(mModel->msdAreaRadius());
   mMsd->setScaleFactor(mModel->msdScaleFactor());

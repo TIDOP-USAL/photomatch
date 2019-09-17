@@ -65,28 +65,13 @@ RswhePreprocess::RswhePreprocess(int histogramDivisions, HistogramCut histogramC
   : RswheProperties(),
     ImageProcess()
 {
-  setHistogramDivisions(histogramDivisions);
-  setHistogramCut(histogramCut);
+  this->setHistogramDivisions(histogramDivisions);
+  this->setHistogramCut(histogramCut);
 }
 
 RswhePreprocess::~RswhePreprocess()
 {
 
-}
-
-void RswhePreprocess::reset()
-{
-  RswheProperties::reset();
-}
-
-void RswhePreprocess::setHistogramDivisions(int histogramDivisions)
-{
-  RswheProperties::setHistogramDivisions(histogramDivisions);
-}
-
-void RswhePreprocess::setHistogramCut(HistogramCut histogramCut)
-{
-  RswheProperties::setHistogramCut(histogramCut);
 }
 
 cv::Mat RswhePreprocess::process(const cv::Mat &img)

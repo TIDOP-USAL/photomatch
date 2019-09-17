@@ -53,22 +53,12 @@ NoshpPreprocess::NoshpPreprocess(const QSize &blockSize)
   : NoshpProperties(),
     ImageProcess()
 {
-  setBlockSize(blockSize);
+  this->setBlockSize(blockSize);
 }
 
 NoshpPreprocess::~NoshpPreprocess()
 {
 
-}
-
-void NoshpPreprocess::reset()
-{
-  NoshpProperties::reset();
-}
-
-void NoshpPreprocess::setBlockSize(const QSize &blockSize)
-{
-  NoshpProperties::setBlockSize(blockSize);
 }
 
 cv::Mat NoshpPreprocess::process(const cv::Mat &img)

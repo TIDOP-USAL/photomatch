@@ -17,7 +17,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_hessianThreshold_data();
@@ -53,7 +54,7 @@ void TestSurfDetectorDescriptor::cleanupTestCase()
 
 }
 
-void TestSurfDetectorDescriptor::testDefaultConstructor()
+void TestSurfDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
   SurfDetectorDescriptor surfDetectorDescriptor;
@@ -62,6 +63,16 @@ void TestSurfDetectorDescriptor::testDefaultConstructor()
   QCOMPARE(3, surfDetectorDescriptor.octaveLayers());
   QCOMPARE(false, surfDetectorDescriptor.extendedDescriptor());
   QCOMPARE(false, surfDetectorDescriptor.rotatedFeatures());
+}
+
+void TestSurfDetectorDescriptor::test_constructor()
+{
+  SurfDetectorDescriptor surfDetectorDescriptor(50., 2, 5, true, true);
+  QCOMPARE(50., surfDetectorDescriptor.hessianThreshold());
+  QCOMPARE(2, surfDetectorDescriptor.octaves());
+  QCOMPARE(5, surfDetectorDescriptor.octaveLayers());
+  QCOMPARE(true, surfDetectorDescriptor.extendedDescriptor());
+  QCOMPARE(true, surfDetectorDescriptor.rotatedFeatures());
 }
 
 void TestSurfDetectorDescriptor::test_type()

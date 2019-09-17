@@ -239,152 +239,606 @@ void FeatureExtractorPresenter::help()
 
 void FeatureExtractorPresenter::open()
 {
-  mAgastDetector->setThreshold(mSettingsModel->agastThreshold());
-  mAgastDetector->setDetectorType(mSettingsModel->agastDetectorType());
-  mAgastDetector->setNonmaxSuppression(mSettingsModel->agastNonmaxSuppression());
+//  mAgastDetector->setThreshold(mSettingsModel->agastThreshold());
+//  mAgastDetector->setDetectorType(mSettingsModel->agastDetectorType());
+//  mAgastDetector->setNonmaxSuppression(mSettingsModel->agastNonmaxSuppression());
 
-  mAkazeDetector->setOctaves(mSettingsModel->akazeOctaves());
-  mAkazeDetector->setThreshold(mSettingsModel->akazeThreshold());
-  mAkazeDetector->setDiffusivity(mSettingsModel->akazeDiffusivity());
-  mAkazeDetector->setOctaveLayers(mSettingsModel->akazeOctaveLayers());
-  mAkazeDetector->setDescriptorSize(mSettingsModel->akazeDescriptorSize());
-  mAkazeDetector->setDescriptorType(mSettingsModel->akazeDescriptorType());
-  mAkazeDetector->setDescriptorChannels(mSettingsModel->akazeDescriptorChannels());
-  mAkazeDescriptor->setOctaves(mSettingsModel->akazeOctaves());
-  mAkazeDescriptor->setThreshold(mSettingsModel->akazeThreshold());
-  mAkazeDescriptor->setDiffusivity(mSettingsModel->akazeDiffusivity());
-  mAkazeDescriptor->setOctaveLayers(mSettingsModel->akazeOctaveLayers());
-  mAkazeDescriptor->setDescriptorSize(mSettingsModel->akazeDescriptorSize());
-  mAkazeDescriptor->setDescriptorType(mSettingsModel->akazeDescriptorType());
-  mAkazeDescriptor->setDescriptorChannels(mSettingsModel->akazeDescriptorChannels());
+//  mAkazeDetector->setOctaves(mSettingsModel->akazeOctaves());
+//  mAkazeDetector->setThreshold(mSettingsModel->akazeThreshold());
+//  mAkazeDetector->setDiffusivity(mSettingsModel->akazeDiffusivity());
+//  mAkazeDetector->setOctaveLayers(mSettingsModel->akazeOctaveLayers());
+//  mAkazeDetector->setDescriptorSize(mSettingsModel->akazeDescriptorSize());
+//  mAkazeDetector->setDescriptorType(mSettingsModel->akazeDescriptorType());
+//  mAkazeDetector->setDescriptorChannels(mSettingsModel->akazeDescriptorChannels());
+//  mAkazeDescriptor->setOctaves(mSettingsModel->akazeOctaves());
+//  mAkazeDescriptor->setThreshold(mSettingsModel->akazeThreshold());
+//  mAkazeDescriptor->setDiffusivity(mSettingsModel->akazeDiffusivity());
+//  mAkazeDescriptor->setOctaveLayers(mSettingsModel->akazeOctaveLayers());
+//  mAkazeDescriptor->setDescriptorSize(mSettingsModel->akazeDescriptorSize());
+//  mAkazeDescriptor->setDescriptorType(mSettingsModel->akazeDescriptorType());
+//  mAkazeDescriptor->setDescriptorChannels(mSettingsModel->akazeDescriptorChannels());
 
-  mBriefDescriptor->setBytes(mSettingsModel->briefBytes());
-  mBriefDescriptor->setUseOrientation(mSettingsModel->briefUseOrientation());
+//  mBriefDescriptor->setBytes(mSettingsModel->briefBytes());
+//  mBriefDescriptor->setUseOrientation(mSettingsModel->briefUseOrientation());
 
-  mBriskDetector->setThreshold(mSettingsModel->briskThreshold());
-  mBriskDetector->setOctaves(mSettingsModel->briskOctaves());
-  mBriskDetector->setPatternScale(mSettingsModel->briskPatternScale());
-  mBriskDescriptor->setThreshold(mSettingsModel->briskThreshold());
-  mBriskDescriptor->setOctaves(mSettingsModel->briskOctaves());
-  mBriskDescriptor->setPatternScale(mSettingsModel->briskPatternScale());
+//  mBriskDetector->setThreshold(mSettingsModel->briskThreshold());
+//  mBriskDetector->setOctaves(mSettingsModel->briskOctaves());
+//  mBriskDetector->setPatternScale(mSettingsModel->briskPatternScale());
+//  mBriskDescriptor->setThreshold(mSettingsModel->briskThreshold());
+//  mBriskDescriptor->setOctaves(mSettingsModel->briskOctaves());
+//  mBriskDescriptor->setPatternScale(mSettingsModel->briskPatternScale());
 
-  mDaisyDescriptor->setNorm(mSettingsModel->daisyNorm());
-  mDaisyDescriptor->setQRadius(mSettingsModel->daisyQRadius());
-  mDaisyDescriptor->setQTheta(mSettingsModel->daisyQTheta());
-  mDaisyDescriptor->setQHist(mSettingsModel->daisyQHist());
-  mDaisyDescriptor->setNorm(mSettingsModel->daisyNorm());
-  mDaisyDescriptor->setInterpolation(mSettingsModel->daisyInterpolation());
-  mDaisyDescriptor->setUseOrientation(mSettingsModel->daisyUseOrientation());
+//  mDaisyDescriptor->setNorm(mSettingsModel->daisyNorm());
+//  mDaisyDescriptor->setQRadius(mSettingsModel->daisyQRadius());
+//  mDaisyDescriptor->setQTheta(mSettingsModel->daisyQTheta());
+//  mDaisyDescriptor->setQHist(mSettingsModel->daisyQHist());
+//  mDaisyDescriptor->setNorm(mSettingsModel->daisyNorm());
+//  mDaisyDescriptor->setInterpolation(mSettingsModel->daisyInterpolation());
+//  mDaisyDescriptor->setUseOrientation(mSettingsModel->daisyUseOrientation());
 
-  mFastDetector->setThreshold(mSettingsModel->fastThreshold());
-  mFastDetector->setNonmaxSuppression(mSettingsModel->fastNonmaxSuppression());
-  mFastDetector->setDetectorType(mSettingsModel->fastdetectorType());
+//  mFastDetector->setThreshold(mSettingsModel->fastThreshold());
+//  mFastDetector->setNonmaxSuppression(mSettingsModel->fastNonmaxSuppression());
+//  mFastDetector->setDetectorType(mSettingsModel->fastdetectorType());
 
-  mFreakDescriptor->setOrientationNormalized(mSettingsModel->freakOrientationNormalized());
-  mFreakDescriptor->setScaleNormalized(mSettingsModel->freakScaleNormalized());
-  mFreakDescriptor->setPatternScale(mSettingsModel->freakPatternScale());
-  mFreakDescriptor->setOctaves(mSettingsModel->freakOctaves());
+//  mFreakDescriptor->setOrientationNormalized(mSettingsModel->freakOrientationNormalized());
+//  mFreakDescriptor->setScaleNormalized(mSettingsModel->freakScaleNormalized());
+//  mFreakDescriptor->setPatternScale(mSettingsModel->freakPatternScale());
+//  mFreakDescriptor->setOctaves(mSettingsModel->freakOctaves());
 
-  mGfttDetector->setMaxFeatures(mSettingsModel->gfttMaxFeatures());
-  mGfttDetector->setQualityLevel(mSettingsModel->gfttQualityLevel());
-  mGfttDetector->setMinDistance(mSettingsModel->gfttMinDistance());
-  mGfttDetector->setBlockSize(mSettingsModel->gfttBlockSize());
-  mGfttDetector->setHarrisDetector(mSettingsModel->gfttHarrisDetector());
-  mGfttDetector->setK(mSettingsModel->gfttK());
+//  mGfttDetector->setMaxFeatures(mSettingsModel->gfttMaxFeatures());
+//  mGfttDetector->setQualityLevel(mSettingsModel->gfttQualityLevel());
+//  mGfttDetector->setMinDistance(mSettingsModel->gfttMinDistance());
+//  mGfttDetector->setBlockSize(mSettingsModel->gfttBlockSize());
+//  mGfttDetector->setHarrisDetector(mSettingsModel->gfttHarrisDetector());
+//  mGfttDetector->setK(mSettingsModel->gfttK());
 
-  mHogDescriptor->setWinSize(mSettingsModel->hogWinSize());
-  mHogDescriptor->setBlockSize(mSettingsModel->hogBlockSize());
-  mHogDescriptor->setBlockStride(mSettingsModel->hogBlockStride());
-  mHogDescriptor->setCellSize(mSettingsModel->hogCellSize());
-  mHogDescriptor->setNbins(mSettingsModel->hogNbins());
-  mHogDescriptor->setDerivAperture(mSettingsModel->hogDerivAperture());
+//  mHogDescriptor->setWinSize(mSettingsModel->hogWinSize());
+//  mHogDescriptor->setBlockSize(mSettingsModel->hogBlockSize());
+//  mHogDescriptor->setBlockStride(mSettingsModel->hogBlockStride());
+//  mHogDescriptor->setCellSize(mSettingsModel->hogCellSize());
+//  mHogDescriptor->setNbins(mSettingsModel->hogNbins());
+//  mHogDescriptor->setDerivAperture(mSettingsModel->hogDerivAperture());
 
-  mKazeDetector->setExtendedDescriptor(mSettingsModel->kazeExtendedDescriptor());
-  mKazeDetector->setUpright(mSettingsModel->kazeUpright());
-  mKazeDetector->setThreshold(mSettingsModel->kazeUpright());
-  mKazeDetector->setOctaves(mSettingsModel->kazeOctaves());
-  mKazeDetector->setOctaveLayers(mSettingsModel->kazeOctaveLayers());
-  mKazeDetector->setDiffusivity(mSettingsModel->kazeDiffusivity());
-  mKazeDescriptor->setExtendedDescriptor(mSettingsModel->kazeExtendedDescriptor());
-  mKazeDescriptor->setUpright(mSettingsModel->kazeUpright());
-  mKazeDescriptor->setThreshold(mSettingsModel->kazeUpright());
-  mKazeDescriptor->setOctaves(mSettingsModel->kazeOctaves());
-  mKazeDescriptor->setOctaveLayers(mSettingsModel->kazeOctaveLayers());
-  mKazeDescriptor->setDiffusivity(mSettingsModel->kazeDiffusivity());
+//  mKazeDetector->setExtendedDescriptor(mSettingsModel->kazeExtendedDescriptor());
+//  mKazeDetector->setUpright(mSettingsModel->kazeUpright());
+//  mKazeDetector->setThreshold(mSettingsModel->kazeUpright());
+//  mKazeDetector->setOctaves(mSettingsModel->kazeOctaves());
+//  mKazeDetector->setOctaveLayers(mSettingsModel->kazeOctaveLayers());
+//  mKazeDetector->setDiffusivity(mSettingsModel->kazeDiffusivity());
+//  mKazeDescriptor->setExtendedDescriptor(mSettingsModel->kazeExtendedDescriptor());
+//  mKazeDescriptor->setUpright(mSettingsModel->kazeUpright());
+//  mKazeDescriptor->setThreshold(mSettingsModel->kazeUpright());
+//  mKazeDescriptor->setOctaves(mSettingsModel->kazeOctaves());
+//  mKazeDescriptor->setOctaveLayers(mSettingsModel->kazeOctaveLayers());
+//  mKazeDescriptor->setDiffusivity(mSettingsModel->kazeDiffusivity());
 
-  mLatchDescriptor->setBytes(mSettingsModel->latchBytes());
-  mLatchDescriptor->setRotationInvariance(mSettingsModel->latchRotationInvariance());
-  mLatchDescriptor->setHalfSsdSize(mSettingsModel->latchHalfSsdSize());
+//  mLatchDescriptor->setBytes(mSettingsModel->latchBytes());
+//  mLatchDescriptor->setRotationInvariance(mSettingsModel->latchRotationInvariance());
+//  mLatchDescriptor->setHalfSsdSize(mSettingsModel->latchHalfSsdSize());
 
-  mLucidDescriptor->setLucidKernel(mSettingsModel->lucidKernel());
-  mLucidDescriptor->setBlurKernel(mSettingsModel->lucidBlurKernel());
+//  mLucidDescriptor->setLucidKernel(mSettingsModel->lucidKernel());
+//  mLucidDescriptor->setBlurKernel(mSettingsModel->lucidBlurKernel());
 
-  mMsdDetector->setThresholdSaliency(mSettingsModel->msdThresholdSaliency());
-  mMsdDetector->setPathRadius(mSettingsModel->msdPathRadius());
-  mMsdDetector->setKNN(mSettingsModel->msdKnn());
-  mMsdDetector->setAreaRadius(mSettingsModel->msdAreaRadius());
-  mMsdDetector->setScaleFactor(mSettingsModel->msdScaleFactor());
-  mMsdDetector->setNMSRadius(mSettingsModel->msdNMSRadius());
-  mMsdDetector->setNScales(mSettingsModel->msdNScales());
-  mMsdDetector->setNMSScaleR(mSettingsModel->msdNMSScaleR());
-  mMsdDetector->setComputeOrientations(mSettingsModel->msdComputeOrientations());
-  mMsdDetector->setAffineMSD(mSettingsModel->msdAffineMSD());
-  mMsdDetector->setTilts(mSettingsModel->msdTilts());
+//  mMsdDetector->setThresholdSaliency(mSettingsModel->msdThresholdSaliency());
+//  mMsdDetector->setPathRadius(mSettingsModel->msdPathRadius());
+//  mMsdDetector->setKNN(mSettingsModel->msdKnn());
+//  mMsdDetector->setAreaRadius(mSettingsModel->msdAreaRadius());
+//  mMsdDetector->setScaleFactor(mSettingsModel->msdScaleFactor());
+//  mMsdDetector->setNMSRadius(mSettingsModel->msdNMSRadius());
+//  mMsdDetector->setNScales(mSettingsModel->msdNScales());
+//  mMsdDetector->setNMSScaleR(mSettingsModel->msdNMSScaleR());
+//  mMsdDetector->setComputeOrientations(mSettingsModel->msdComputeOrientations());
+//  mMsdDetector->setAffineMSD(mSettingsModel->msdAffineMSD());
+//  mMsdDetector->setTilts(mSettingsModel->msdTilts());
 
-  mMserDetector->setDelta(mSettingsModel->mserDelta());
-  mMserDetector->setMaxArea(mSettingsModel->mserMaxArea());
-  mMserDetector->setMinArea(mSettingsModel->mserMinArea());
-  mMserDetector->setMaxVariation(mSettingsModel->mserMaxVariation());
-  mMserDetector->setMinDiversity(mSettingsModel->mserMinDiversity());
-  mMserDetector->setMaxEvolution(mSettingsModel->mserMaxEvolution());
-  mMserDetector->setAreaThreshold(mSettingsModel->mserAreaThreshold());
-  mMserDetector->setMinMargin(mSettingsModel->mserMinMargin());
-  mMserDetector->setEdgeBlurSize(mSettingsModel->mserEdgeBlurSize());
+//  mMserDetector->setDelta(mSettingsModel->mserDelta());
+//  mMserDetector->setMaxArea(mSettingsModel->mserMaxArea());
+//  mMserDetector->setMinArea(mSettingsModel->mserMinArea());
+//  mMserDetector->setMaxVariation(mSettingsModel->mserMaxVariation());
+//  mMserDetector->setMinDiversity(mSettingsModel->mserMinDiversity());
+//  mMserDetector->setMaxEvolution(mSettingsModel->mserMaxEvolution());
+//  mMserDetector->setAreaThreshold(mSettingsModel->mserAreaThreshold());
+//  mMserDetector->setMinMargin(mSettingsModel->mserMinMargin());
+//  mMserDetector->setEdgeBlurSize(mSettingsModel->mserEdgeBlurSize());
 
-  mOrbDetector->setScaleFactor(mSettingsModel->orbScaleFactor());
-  mOrbDetector->setFeaturesNumber(mSettingsModel->orbFeaturesNumber());
-  mOrbDetector->setLevelsNumber(mSettingsModel->orbLevelsNumber());
-  mOrbDetector->setEdgeThreshold(mSettingsModel->orbEdgeThreshold());
-  mOrbDetector->setWTA_K(mSettingsModel->orbWta_k());
-  mOrbDetector->setScoreType(mSettingsModel->orbScoreType());
-  mOrbDetector->setPatchSize(mSettingsModel->orbPatchSize());
-  mOrbDetector->setFastThreshold(mSettingsModel->orbFastThreshold());
-  mOrbDescriptor->setScaleFactor(mSettingsModel->orbScaleFactor());
-  mOrbDescriptor->setFeaturesNumber(mSettingsModel->orbFeaturesNumber());
-  mOrbDescriptor->setLevelsNumber(mSettingsModel->orbLevelsNumber());
-  mOrbDescriptor->setEdgeThreshold(mSettingsModel->orbEdgeThreshold());
-  mOrbDescriptor->setWTA_K(mSettingsModel->orbWta_k());
-  mOrbDescriptor->setScoreType(mSettingsModel->orbScoreType());
-  mOrbDescriptor->setPatchSize(mSettingsModel->orbPatchSize());
-  mOrbDescriptor->setFastThreshold(mSettingsModel->orbFastThreshold());
+//  mOrbDetector->setScaleFactor(mSettingsModel->orbScaleFactor());
+//  mOrbDetector->setFeaturesNumber(mSettingsModel->orbFeaturesNumber());
+//  mOrbDetector->setLevelsNumber(mSettingsModel->orbLevelsNumber());
+//  mOrbDetector->setEdgeThreshold(mSettingsModel->orbEdgeThreshold());
+//  mOrbDetector->setWTA_K(mSettingsModel->orbWta_k());
+//  mOrbDetector->setScoreType(mSettingsModel->orbScoreType());
+//  mOrbDetector->setPatchSize(mSettingsModel->orbPatchSize());
+//  mOrbDetector->setFastThreshold(mSettingsModel->orbFastThreshold());
+//  mOrbDescriptor->setScaleFactor(mSettingsModel->orbScaleFactor());
+//  mOrbDescriptor->setFeaturesNumber(mSettingsModel->orbFeaturesNumber());
+//  mOrbDescriptor->setLevelsNumber(mSettingsModel->orbLevelsNumber());
+//  mOrbDescriptor->setEdgeThreshold(mSettingsModel->orbEdgeThreshold());
+//  mOrbDescriptor->setWTA_K(mSettingsModel->orbWta_k());
+//  mOrbDescriptor->setScoreType(mSettingsModel->orbScoreType());
+//  mOrbDescriptor->setPatchSize(mSettingsModel->orbPatchSize());
+//  mOrbDescriptor->setFastThreshold(mSettingsModel->orbFastThreshold());
 
-  mSiftDetector->setSigma(mSettingsModel->siftSigma());
-  mSiftDetector->setOctaveLayers(mSettingsModel->siftOctaveLayers());
-  mSiftDetector->setEdgeThreshold(mSettingsModel->siftEdgeThreshold());
-  mSiftDetector->setFeaturesNumber(mSettingsModel->siftFeaturesNumber());
-  mSiftDetector->setContrastThreshold(mSettingsModel->siftContrastThreshold());
-  mSiftDescriptor->setSigma(mSettingsModel->siftSigma());
-  mSiftDescriptor->setOctaveLayers(mSettingsModel->siftOctaveLayers());
-  mSiftDescriptor->setEdgeThreshold(mSettingsModel->siftEdgeThreshold());
-  mSiftDescriptor->setFeaturesNumber(mSettingsModel->siftFeaturesNumber());
-  mSiftDescriptor->setContrastThreshold(mSettingsModel->siftContrastThreshold());
+//  mSiftDetector->setSigma(mSettingsModel->siftSigma());
+//  mSiftDetector->setOctaveLayers(mSettingsModel->siftOctaveLayers());
+//  mSiftDetector->setEdgeThreshold(mSettingsModel->siftEdgeThreshold());
+//  mSiftDetector->setFeaturesNumber(mSettingsModel->siftFeaturesNumber());
+//  mSiftDetector->setContrastThreshold(mSettingsModel->siftContrastThreshold());
+//  mSiftDescriptor->setSigma(mSettingsModel->siftSigma());
+//  mSiftDescriptor->setOctaveLayers(mSettingsModel->siftOctaveLayers());
+//  mSiftDescriptor->setEdgeThreshold(mSettingsModel->siftEdgeThreshold());
+//  mSiftDescriptor->setFeaturesNumber(mSettingsModel->siftFeaturesNumber());
+//  mSiftDescriptor->setContrastThreshold(mSettingsModel->siftContrastThreshold());
 
-  mStarDetector->setMaxSize(mSettingsModel->starMaxSize());
-  mStarDetector->setResponseThreshold(mSettingsModel->starResponseThreshold());
-  mStarDetector->setLineThresholdProjected(mSettingsModel->starLineThresholdProjected());
-  mStarDetector->setLineThresholdBinarized(mSettingsModel->starLineThresholdBinarized());
-  mStarDetector->setSuppressNonmaxSize(mSettingsModel->starSuppressNonmaxSize());
+//  mStarDetector->setMaxSize(mSettingsModel->starMaxSize());
+//  mStarDetector->setResponseThreshold(mSettingsModel->starResponseThreshold());
+//  mStarDetector->setLineThresholdProjected(mSettingsModel->starLineThresholdProjected());
+//  mStarDetector->setLineThresholdBinarized(mSettingsModel->starLineThresholdBinarized());
+//  mStarDetector->setSuppressNonmaxSize(mSettingsModel->starSuppressNonmaxSize());
 
-  mSurfDetector->setOctaves(mSettingsModel->surfOctaves());
-  mSurfDetector->setOctaveLayers(mSettingsModel->surfOctaveLayers());
-  mSurfDetector->setRotatedFeatures(mSettingsModel->surfRotatedFeatures());
-  mSurfDetector->setHessianThreshold(mSettingsModel->surfHessianThreshold());
-  mSurfDetector->setExtendedDescriptor(mSettingsModel->surfExtendedDescriptor());
-  mSurfDescriptor->setOctaves(mSettingsModel->surfOctaves());
-  mSurfDescriptor->setOctaveLayers(mSettingsModel->surfOctaveLayers());
-  mSurfDescriptor->setRotatedFeatures(mSettingsModel->surfRotatedFeatures());
-  mSurfDescriptor->setHessianThreshold(mSettingsModel->surfHessianThreshold());
-  mSurfDescriptor->setExtendedDescriptor(mSettingsModel->surfExtendedDescriptor());
+//  mSurfDetector->setOctaves(mSettingsModel->surfOctaves());
+//  mSurfDetector->setOctaveLayers(mSettingsModel->surfOctaveLayers());
+//  mSurfDetector->setRotatedFeatures(mSettingsModel->surfRotatedFeatures());
+//  mSurfDetector->setHessianThreshold(mSettingsModel->surfHessianThreshold());
+//  mSurfDetector->setExtendedDescriptor(mSettingsModel->surfExtendedDescriptor());
+//  mSurfDescriptor->setOctaves(mSettingsModel->surfOctaves());
+//  mSurfDescriptor->setOctaveLayers(mSettingsModel->surfOctaveLayers());
+//  mSurfDescriptor->setRotatedFeatures(mSettingsModel->surfRotatedFeatures());
+//  mSurfDescriptor->setHessianThreshold(mSettingsModel->surfHessianThreshold());
+//  mSurfDescriptor->setExtendedDescriptor(mSettingsModel->surfExtendedDescriptor());
+
+  Feature *detector = mProjectModel->currentSession()->detector().get();
+  Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
+  if (detector) setCurrentkeypointDetector(detector->name());
+  if (descriptor) setCurrentDescriptorExtractor(descriptor->name());
+
+  TL_TODO("Cargar la configuración guardada en el proyecto")
+
+  /* AGAST */
+
+  mAgastDetector->setThreshold(detector && detector->type() == Feature::Type::agast ?
+                                 dynamic_cast<IAgast *>(detector)->threshold() :
+                                 mSettingsModel->agastThreshold());
+  mAgastDetector->setDetectorType(detector && detector->type() == Feature::Type::agast ?
+                                    dynamic_cast<IAgast *>(detector)->detectorType() :
+                                    mSettingsModel->agastDetectorType());
+  mAgastDetector->setNonmaxSuppression(detector && detector->type() == Feature::Type::agast ?
+                                         dynamic_cast<IAgast *>(detector)->nonmaxSuppression() :
+                                         mSettingsModel->agastNonmaxSuppression());
+
+  /* AKAZE */
+
+  mAkazeDetector->setOctaves(detector && detector->type() == Feature::Type::akaze ?
+                               dynamic_cast<IAkaze *>(detector)->octaves() :
+                               mSettingsModel->akazeOctaves());
+  mAkazeDetector->setThreshold(detector && detector->type() == Feature::Type::akaze ?
+                               dynamic_cast<IAkaze *>(detector)->threshold() :
+                               mSettingsModel->akazeThreshold());
+  mAkazeDetector->setDiffusivity(detector && detector->type() == Feature::Type::akaze ?
+                                 dynamic_cast<IAkaze *>(detector)->diffusivity() :
+                                 mSettingsModel->akazeDiffusivity());
+  mAkazeDetector->setOctaveLayers(detector && detector->type() == Feature::Type::akaze ?
+                                  dynamic_cast<IAkaze *>(detector)->octaveLayers() :
+                                  mSettingsModel->akazeOctaveLayers());
+  mAkazeDetector->setDescriptorSize(detector && detector->type() == Feature::Type::akaze ?
+                                    dynamic_cast<IAkaze *>(detector)->descriptorSize() :
+                                    mSettingsModel->akazeDescriptorSize());
+  mAkazeDetector->setDescriptorType(detector && detector->type() == Feature::Type::akaze ?
+                                    dynamic_cast<IAkaze *>(detector)->descriptorType() :
+                                    mSettingsModel->akazeDescriptorType());
+  mAkazeDetector->setDescriptorChannels(detector && detector->type() == Feature::Type::akaze ?
+                                        dynamic_cast<IAkaze *>(detector)->descriptorChannels() :
+                                        mSettingsModel->akazeDescriptorChannels());
+  mAkazeDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::akaze ?
+                               dynamic_cast<IAkaze *>(descriptor)->octaves() :
+                               mSettingsModel->akazeOctaves());
+  mAkazeDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::akaze ?
+                                 dynamic_cast<IAkaze *>(descriptor)->threshold() :
+                                 mSettingsModel->akazeThreshold());
+  mAkazeDescriptor->setDiffusivity(descriptor && descriptor->type() == Feature::Type::akaze ?
+                                   dynamic_cast<IAkaze *>(descriptor)->diffusivity() :
+                                   mSettingsModel->akazeDiffusivity());
+  mAkazeDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::akaze ?
+                                    dynamic_cast<IAkaze *>(descriptor)->octaveLayers() :
+                                    mSettingsModel->akazeOctaveLayers());
+  mAkazeDescriptor->setDescriptorSize(descriptor && descriptor->type() == Feature::Type::akaze ?
+                                      dynamic_cast<IAkaze *>(descriptor)->descriptorSize() :
+                                      mSettingsModel->akazeDescriptorSize());
+  mAkazeDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::akaze ?
+                                      dynamic_cast<IAkaze *>(descriptor)->descriptorType() :
+                                      mSettingsModel->akazeDescriptorType());
+  mAkazeDescriptor->setDescriptorChannels(descriptor && descriptor->type() == Feature::Type::akaze ?
+                                          dynamic_cast<IAkaze *>(descriptor)->descriptorChannels() :
+                                          mSettingsModel->akazeDescriptorChannels());
+
+  /* BRIEF */
+
+  mBriefDescriptor->setBytes(descriptor && descriptor->type() == Feature::Type::brief ?
+                               dynamic_cast<IBrief *>(descriptor)->bytes() :
+                               mSettingsModel->briefBytes());
+  mBriefDescriptor->setUseOrientation(descriptor && descriptor->type() == Feature::Type::brief ?
+                                        dynamic_cast<IBrief *>(descriptor)->useOrientation() :
+                                        mSettingsModel->briefUseOrientation());
+
+  /* BRISK */
+
+  mBriskDetector->setThreshold(detector && detector->type() == Feature::Type::brisk ?
+                                 dynamic_cast<IBrisk *>(detector)->threshold() :
+                                 mSettingsModel->briskThreshold());
+  mBriskDetector->setOctaves(detector && detector->type() == Feature::Type::brisk ?
+                               dynamic_cast<IBrisk *>(detector)->octaves() :
+                               mSettingsModel->briskOctaves());
+  mBriskDetector->setPatternScale(detector && detector->type() == Feature::Type::brisk ?
+                                    dynamic_cast<IBrisk *>(detector)->patternScale() :
+                                    mSettingsModel->briskPatternScale());
+
+  mBriskDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::brisk ?
+                                   dynamic_cast<IBrisk *>(descriptor)->threshold() :
+                                   mSettingsModel->briskThreshold());
+  mBriskDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::brisk ?
+                                 dynamic_cast<IBrisk *>(descriptor)->threshold() :
+                                 mSettingsModel->briskOctaves());
+  mBriskDescriptor->setPatternScale(descriptor && descriptor->type() == Feature::Type::brisk ?
+                                      dynamic_cast<IBrisk *>(descriptor)->patternScale() :
+                                      mSettingsModel->briskPatternScale());
+
+  /* DAISY */
+
+  mDaisyDescriptor->setRadius(descriptor && descriptor->type() == Feature::Type::daisy ?
+                                dynamic_cast<IDaisy *>(descriptor)->radius() :
+                                mSettingsModel->daisyRadius());
+  mDaisyDescriptor->setQRadius(descriptor && descriptor->type() == Feature::Type::daisy ?
+                                 dynamic_cast<IDaisy *>(descriptor)->qRadius() :
+                                 mSettingsModel->daisyQRadius());
+  mDaisyDescriptor->setQTheta(descriptor && descriptor->type() == Feature::Type::daisy ?
+                                dynamic_cast<IDaisy *>(descriptor)->qTheta() :
+                                mSettingsModel->daisyQTheta());
+  mDaisyDescriptor->setQHist(descriptor && descriptor->type() == Feature::Type::daisy ?
+                               dynamic_cast<IDaisy *>(descriptor)->qHist() :
+                               mSettingsModel->daisyQHist());
+  mDaisyDescriptor->setNorm(descriptor && descriptor->type() == Feature::Type::daisy ?
+                              dynamic_cast<IDaisy *>(descriptor)->norm() :
+                              mSettingsModel->daisyNorm());
+  mDaisyDescriptor->setInterpolation(descriptor && descriptor->type() == Feature::Type::daisy ?
+                                       dynamic_cast<IDaisy *>(descriptor)->interpolation() :
+                                       mSettingsModel->daisyInterpolation());
+  mDaisyDescriptor->setUseOrientation(descriptor && descriptor->type() == Feature::Type::daisy ?
+                                        dynamic_cast<IDaisy *>(descriptor)->useOrientation() :
+                                        mSettingsModel->daisyUseOrientation());
+
+  /* FAST */
+
+  mFastDetector->setThreshold(detector && detector->type() == Feature::Type::fast ?
+                                dynamic_cast<IFast *>(detector)->threshold() :
+                                mSettingsModel->fastThreshold());
+  mFastDetector->setNonmaxSuppression(detector && detector->type() == Feature::Type::fast ?
+                                        dynamic_cast<IFast *>(detector)->nonmaxSuppression() :
+                                        mSettingsModel->fastNonmaxSuppression());
+  mFastDetector->setDetectorType(detector && detector->type() == Feature::Type::fast ?
+                                   dynamic_cast<IFast *>(detector)->detectorType() :
+                                   mSettingsModel->fastdetectorType());
+
+  /* FREAK */
+
+  mFreakDescriptor->setOrientationNormalized(descriptor && descriptor->type() == Feature::Type::freak ?
+                                               dynamic_cast<IFreak *>(descriptor)->orientationNormalized() :
+                                               mSettingsModel->freakOrientationNormalized());
+  mFreakDescriptor->setScaleNormalized(descriptor && descriptor->type() == Feature::Type::freak ?
+                                         dynamic_cast<IFreak *>(descriptor)->scaleNormalized() :
+                                         mSettingsModel->freakScaleNormalized());
+  mFreakDescriptor->setPatternScale(descriptor && descriptor->type() == Feature::Type::freak ?
+                                      dynamic_cast<IFreak *>(descriptor)->patternScale() :
+                                      mSettingsModel->freakPatternScale());
+  mFreakDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::freak ?
+                                 dynamic_cast<IFreak *>(descriptor)->octaves() :
+                                 mSettingsModel->freakOctaves());
+
+  /* GFTT */
+
+  mGfttDetector->setMaxFeatures(detector && detector->type() == Feature::Type::gftt ?
+                                  dynamic_cast<IGftt *>(detector)->maxFeatures() :
+                                  mSettingsModel->gfttMaxFeatures());
+  mGfttDetector->setQualityLevel(detector && detector->type() == Feature::Type::gftt ?
+                                   dynamic_cast<IGftt *>(detector)->qualityLevel() :
+                                   mSettingsModel->gfttQualityLevel());
+  mGfttDetector->setMinDistance(detector && detector->type() == Feature::Type::gftt ?
+                                  dynamic_cast<IGftt *>(detector)->minDistance() :
+                                  mSettingsModel->gfttMinDistance());
+  mGfttDetector->setBlockSize(detector && detector->type() == Feature::Type::gftt ?
+                                dynamic_cast<IGftt *>(detector)->blockSize() :
+                                mSettingsModel->gfttBlockSize());
+  mGfttDetector->setHarrisDetector(detector && detector->type() == Feature::Type::gftt ?
+                                     dynamic_cast<IGftt *>(detector)->harrisDetector() :
+                                     mSettingsModel->gfttHarrisDetector());
+  mGfttDetector->setK(detector && detector->type() == Feature::Type::gftt ?
+                        dynamic_cast<IGftt *>(detector)->k() :
+                        mSettingsModel->gfttK());
+
+  /* HOG */
+
+  mHogDescriptor->setWinSize(descriptor && descriptor->type() == Feature::Type::hog ?
+                               dynamic_cast<IHog *>(descriptor)->winSize() :
+                               mSettingsModel->hogWinSize());
+  mHogDescriptor->setBlockSize(descriptor && descriptor->type() == Feature::Type::hog ?
+                                 dynamic_cast<IHog *>(descriptor)->blockSize() :
+                                 mSettingsModel->hogBlockSize());
+  mHogDescriptor->setBlockStride(descriptor && descriptor->type() == Feature::Type::hog ?
+                                   dynamic_cast<IHog *>(descriptor)->blockStride() :
+                                   mSettingsModel->hogBlockStride());
+  mHogDescriptor->setCellSize(descriptor && descriptor->type() == Feature::Type::hog ?
+                                dynamic_cast<IHog *>(descriptor)->cellSize() :
+                                mSettingsModel->hogCellSize());
+  mHogDescriptor->setNbins(descriptor && descriptor->type() == Feature::Type::hog ?
+                             dynamic_cast<IHog *>(descriptor)->nbins() :
+                             mSettingsModel->hogNbins());
+  mHogDescriptor->setDerivAperture(descriptor && descriptor->type() == Feature::Type::hog ?
+                                     dynamic_cast<IHog *>(descriptor)->derivAperture() :
+                                     mSettingsModel->hogDerivAperture());
+
+  /* KAZE */
+
+  mKazeDetector->setExtendedDescriptor(detector && detector->type() == Feature::Type::kaze ?
+                                         dynamic_cast<IKaze *>(detector)->extendedDescriptor() :
+                                         mSettingsModel->kazeExtendedDescriptor());
+  mKazeDetector->setUpright(detector && detector->type() == Feature::Type::kaze ?
+                              dynamic_cast<IKaze *>(detector)->upright() :
+                              mSettingsModel->kazeUpright());
+  mKazeDetector->setThreshold(detector && detector->type() == Feature::Type::kaze ?
+                                dynamic_cast<IKaze *>(detector)->threshold() :
+                                mSettingsModel->kazeThreshold());
+  mKazeDetector->setOctaves(detector && detector->type() == Feature::Type::kaze ?
+                              dynamic_cast<IKaze *>(detector)->octaves() :
+                              mSettingsModel->kazeOctaves());
+  mKazeDetector->setOctaveLayers(detector && detector->type() == Feature::Type::kaze ?
+                                   dynamic_cast<IKaze *>(detector)->octaveLayers() :
+                                   mSettingsModel->kazeOctaveLayers());
+  mKazeDetector->setDiffusivity(detector && detector->type() == Feature::Type::kaze ?
+                                  dynamic_cast<IKaze *>(detector)->diffusivity() :
+                                  mSettingsModel->kazeDiffusivity());
+
+  mKazeDescriptor->setExtendedDescriptor(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                           dynamic_cast<IKaze *>(descriptor)->extendedDescriptor() :
+                                           mSettingsModel->kazeExtendedDescriptor());
+  mKazeDescriptor->setUpright(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                dynamic_cast<IKaze *>(descriptor)->upright() :
+                                mSettingsModel->kazeUpright());
+  mKazeDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                  dynamic_cast<IKaze *>(descriptor)->threshold() :
+                                  mSettingsModel->kazeThreshold());
+  mKazeDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                dynamic_cast<IKaze *>(descriptor)->octaves() :
+                                mSettingsModel->kazeOctaves());
+  mKazeDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                     dynamic_cast<IKaze *>(descriptor)->octaveLayers() :
+                                     mSettingsModel->kazeOctaveLayers());
+  mKazeDescriptor->setDiffusivity(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                    dynamic_cast<IKaze *>(descriptor)->diffusivity() :
+                                    mSettingsModel->kazeDiffusivity());
+
+  /* LATCH */
+
+  mLatchDescriptor->setBytes(descriptor && descriptor->type() == Feature::Type::latch ?
+                               dynamic_cast<ILatch *>(descriptor)->bytes() :
+                               mSettingsModel->latchBytes());
+  mLatchDescriptor->setRotationInvariance(descriptor && descriptor->type() == Feature::Type::latch ?
+                                            dynamic_cast<ILatch *>(descriptor)->rotationInvariance() :
+                                            mSettingsModel->latchRotationInvariance());
+  mLatchDescriptor->setHalfSsdSize(descriptor && descriptor->type() == Feature::Type::latch ?
+                                     dynamic_cast<ILatch *>(descriptor)->halfSsdSize() :
+                                     mSettingsModel->latchHalfSsdSize());
+
+  /* LUCID */
+
+  mLucidDescriptor->setLucidKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
+                                     dynamic_cast<ILucid *>(descriptor)->lucidKernel() :
+                                     mSettingsModel->lucidKernel());
+  mLucidDescriptor->setBlurKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
+                                    dynamic_cast<ILucid *>(descriptor)->blurKernel() :
+                                    mSettingsModel->lucidBlurKernel());
+
+  /* MSD */
+
+  mMsdDetector->setThresholdSaliency(detector && detector->type() == Feature::Type::msd ?
+                                       dynamic_cast<IMsd *>(detector)->thresholdSaliency() :
+                                       mSettingsModel->msdThresholdSaliency());
+  mMsdDetector->setPatchRadius(detector && detector->type() == Feature::Type::msd ?
+                                dynamic_cast<IMsd *>(detector)->patchRadius() :
+                                mSettingsModel->msdPathRadius());
+  mMsdDetector->setKNN(detector && detector->type() == Feature::Type::msd ?
+                         dynamic_cast<IMsd *>(detector)->knn() :
+                         mSettingsModel->msdKnn());
+  mMsdDetector->setAreaRadius(detector && detector->type() == Feature::Type::msd ?
+                                dynamic_cast<IMsd *>(detector)->searchAreaRadius() :
+                                mSettingsModel->msdAreaRadius());
+  mMsdDetector->setScaleFactor(detector && detector->type() == Feature::Type::msd ?
+                                 dynamic_cast<IMsd *>(detector)->scaleFactor() :
+                                 mSettingsModel->msdScaleFactor());
+  mMsdDetector->setNMSRadius(detector && detector->type() == Feature::Type::msd ?
+                               dynamic_cast<IMsd *>(detector)->NMSRadius() :
+                               mSettingsModel->msdNMSRadius());
+  mMsdDetector->setNScales(detector && detector->type() == Feature::Type::msd ?
+                             dynamic_cast<IMsd *>(detector)->nScales() :
+                             mSettingsModel->msdNScales());
+  mMsdDetector->setNMSScaleR(detector && detector->type() == Feature::Type::msd ?
+                               dynamic_cast<IMsd *>(detector)->NMSScaleRadius() :
+                               mSettingsModel->msdNMSScaleR());
+  mMsdDetector->setComputeOrientations(detector && detector->type() == Feature::Type::msd ?
+                                         dynamic_cast<IMsd *>(detector)->computeOrientation() :
+                                         mSettingsModel->msdComputeOrientations());
+  mMsdDetector->setAffineMSD(detector && detector->type() == Feature::Type::msd ?
+                               dynamic_cast<IMsd *>(detector)->affineMSD() :
+                               mSettingsModel->msdAffineMSD());
+  mMsdDetector->setTilts(detector && detector->type() == Feature::Type::msd ?
+                           dynamic_cast<IMsd *>(detector)->affineTilts() :
+                           mSettingsModel->msdTilts());
+
+  /* MSER */
+
+  mMserDetector->setDelta(detector && detector->type() == Feature::Type::mser ?
+                            dynamic_cast<IMser *>(detector)->delta() :
+                            mSettingsModel->mserDelta());
+  mMserDetector->setMaxArea(detector && detector->type() == Feature::Type::mser ?
+                              dynamic_cast<IMser *>(detector)->maxArea() :
+                              mSettingsModel->mserMaxArea());
+  mMserDetector->setMinArea(detector && detector->type() == Feature::Type::mser ?
+                              dynamic_cast<IMser *>(detector)->minArea() :
+                              mSettingsModel->mserMinArea());
+  mMserDetector->setMaxVariation(detector && detector->type() == Feature::Type::mser ?
+                                   dynamic_cast<IMser *>(detector)->maxVariation() :
+                                   mSettingsModel->mserMaxVariation());
+  mMserDetector->setMinDiversity(detector && detector->type() == Feature::Type::mser ?
+                                   dynamic_cast<IMser *>(detector)->minDiversity() :
+                                   mSettingsModel->mserMinDiversity());
+  mMserDetector->setMaxEvolution(detector && detector->type() == Feature::Type::mser ?
+                                   dynamic_cast<IMser *>(detector)->maxEvolution() :
+                                   mSettingsModel->mserMaxEvolution());
+  mMserDetector->setAreaThreshold(detector && detector->type() == Feature::Type::mser ?
+                                    dynamic_cast<IMser *>(detector)->areaThreshold() :
+                                    mSettingsModel->mserAreaThreshold());
+  mMserDetector->setMinMargin(detector && detector->type() == Feature::Type::mser ?
+                                dynamic_cast<IMser *>(detector)->minMargin() :
+                                mSettingsModel->mserMinMargin());
+  mMserDetector->setEdgeBlurSize(detector && detector->type() == Feature::Type::mser ?
+                                   dynamic_cast<IMser *>(detector)->edgeBlurSize() :
+                                   mSettingsModel->mserEdgeBlurSize());
+
+  /* ORB */
+
+  mOrbDetector->setScaleFactor(detector && detector->type() == Feature::Type::orb ?
+                                 dynamic_cast<IOrb *>(detector)->scaleFactor() :
+                                 mSettingsModel->orbScaleFactor());
+  mOrbDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::orb ?
+                                    dynamic_cast<IOrb *>(detector)->featuresNumber() :
+                                    mSettingsModel->orbFeaturesNumber());
+  mOrbDetector->setLevelsNumber(detector && detector->type() == Feature::Type::orb ?
+                                  dynamic_cast<IOrb *>(detector)->levelsNumber() :
+                                  mSettingsModel->orbLevelsNumber());
+  mOrbDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::orb ?
+                                   dynamic_cast<IOrb *>(detector)->edgeThreshold() :
+                                   mSettingsModel->orbEdgeThreshold());
+  mOrbDetector->setWTA_K(detector && detector->type() == Feature::Type::orb ?
+                           dynamic_cast<IOrb *>(detector)->wta_k() :
+                           mSettingsModel->orbWta_k());
+  mOrbDetector->setScoreType(detector && detector->type() == Feature::Type::orb ?
+                               dynamic_cast<IOrb *>(detector)->scoreType() :
+                               mSettingsModel->orbScoreType());
+  mOrbDetector->setPatchSize(detector && detector->type() == Feature::Type::orb ?
+                               dynamic_cast<IOrb *>(detector)->patchSize() :
+                               mSettingsModel->orbPatchSize());
+  mOrbDetector->setFastThreshold(detector && detector->type() == Feature::Type::orb ?
+                                   dynamic_cast<IOrb *>(detector)->fastThreshold() :
+                                   mSettingsModel->orbFastThreshold());
+
+  mOrbDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::orb ?
+                                   dynamic_cast<IOrb *>(descriptor)->scaleFactor() :
+                                   mSettingsModel->orbScaleFactor());
+  mOrbDescriptor->setFeaturesNumber(descriptor && descriptor->type() == Feature::Type::orb ?
+                                      dynamic_cast<IOrb *>(descriptor)->featuresNumber() :
+                                      mSettingsModel->orbFeaturesNumber());
+  mOrbDescriptor->setLevelsNumber(descriptor && descriptor->type() == Feature::Type::orb ?
+                                    dynamic_cast<IOrb *>(descriptor)->levelsNumber() :
+                                    mSettingsModel->orbLevelsNumber());
+  mOrbDescriptor->setEdgeThreshold(descriptor && descriptor->type() == Feature::Type::orb ?
+                                     dynamic_cast<IOrb *>(descriptor)->edgeThreshold() :
+                                     mSettingsModel->orbEdgeThreshold());
+  mOrbDescriptor->setWTA_K(descriptor && descriptor->type() == Feature::Type::orb ?
+                             dynamic_cast<IOrb *>(descriptor)->wta_k() :
+                             mSettingsModel->orbWta_k());
+  mOrbDescriptor->setScoreType(descriptor && descriptor->type() == Feature::Type::orb ?
+                                 dynamic_cast<IOrb *>(descriptor)->scoreType() :
+                                 mSettingsModel->orbScoreType());
+  mOrbDescriptor->setPatchSize(descriptor && descriptor->type() == Feature::Type::orb ?
+                                 dynamic_cast<IOrb *>(descriptor)->patchSize() :
+                                 mSettingsModel->orbPatchSize());
+  mOrbDescriptor->setFastThreshold(descriptor && descriptor->type() == Feature::Type::orb ?
+                                     dynamic_cast<IOrb *>(descriptor)->fastThreshold() :
+                                     mSettingsModel->orbFastThreshold());
+
+  /* SIFT */
+
+  mSiftDetector->setSigma(detector && detector->type() == Feature::Type::sift ?
+                            dynamic_cast<ISift *>(detector)->sigma() :
+                            mSettingsModel->siftSigma());
+  mSiftDetector->setOctaveLayers(detector && detector->type() == Feature::Type::sift ?
+                                   dynamic_cast<ISift *>(detector)->octaveLayers() :
+                                   mSettingsModel->siftOctaveLayers());
+  mSiftDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::sift ?
+                                    dynamic_cast<ISift *>(detector)->edgeThreshold() :
+                                    mSettingsModel->siftEdgeThreshold());
+  mSiftDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::sift ?
+                                     dynamic_cast<ISift *>(detector)->featuresNumber() :
+                                     mSettingsModel->siftFeaturesNumber());
+  mSiftDetector->setContrastThreshold(detector && detector->type() == Feature::Type::sift ?
+                                        dynamic_cast<ISift *>(detector)->contrastThreshold() :
+                                        mSettingsModel->siftContrastThreshold());
+
+  mSiftDescriptor->setSigma(descriptor && descriptor->type() == Feature::Type::sift ?
+                              dynamic_cast<ISift *>(descriptor)->sigma() :
+                              mSettingsModel->siftSigma());
+  mSiftDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::sift ?
+                                     dynamic_cast<ISift *>(descriptor)->octaveLayers() :
+                                     mSettingsModel->siftOctaveLayers());
+  mSiftDescriptor->setEdgeThreshold(descriptor && descriptor->type() == Feature::Type::sift ?
+                                      dynamic_cast<ISift *>(descriptor)->edgeThreshold() :
+                                      mSettingsModel->siftEdgeThreshold());
+  mSiftDescriptor->setFeaturesNumber(descriptor && descriptor->type() == Feature::Type::sift ?
+                                       dynamic_cast<ISift *>(descriptor)->featuresNumber() :
+                                       mSettingsModel->siftFeaturesNumber());
+  mSiftDescriptor->setContrastThreshold(descriptor && descriptor->type() == Feature::Type::sift ?
+                                          dynamic_cast<ISift *>(descriptor)->contrastThreshold() :
+                                          mSettingsModel->siftContrastThreshold());
+
+  /* STAR */
+
+  mStarDetector->setMaxSize(detector && detector->type() == Feature::Type::star ?
+                              dynamic_cast<IStar *>(descriptor)->maxSize() :
+                              mSettingsModel->starMaxSize());
+  mStarDetector->setResponseThreshold(detector && detector->type() == Feature::Type::star ?
+                                        dynamic_cast<IStar *>(descriptor)->responseThreshold() :
+                                        mSettingsModel->starResponseThreshold());
+  mStarDetector->setLineThresholdProjected(detector && detector->type() == Feature::Type::star ?
+                                             dynamic_cast<IStar *>(descriptor)->lineThresholdProjected() :
+                                             mSettingsModel->starLineThresholdProjected());
+  mStarDetector->setLineThresholdBinarized(detector && detector->type() == Feature::Type::star ?
+                                             dynamic_cast<IStar *>(descriptor)->lineThresholdBinarized() :
+                                             mSettingsModel->starLineThresholdBinarized());
+  mStarDetector->setSuppressNonmaxSize(detector && detector->type() == Feature::Type::star ?
+                                         dynamic_cast<IStar *>(descriptor)->suppressNonmaxSize() :
+                                         mSettingsModel->starSuppressNonmaxSize());
+
+  /* SURF */
+
+  mSurfDetector->setOctaves(detector && detector->type() == Feature::Type::surf ?
+                            dynamic_cast<ISurf *>(detector)->octaves() :
+                            mSettingsModel->surfOctaves());
+  mSurfDetector->setOctaveLayers(detector && detector->type() == Feature::Type::surf ?
+                                 dynamic_cast<ISurf *>(detector)->octaveLayers() :
+                                 mSettingsModel->surfOctaveLayers());
+  mSurfDetector->setRotatedFeatures(detector && detector->type() == Feature::Type::surf ?
+                                    dynamic_cast<ISurf *>(detector)->rotatedFeatures() :
+                                    mSettingsModel->surfRotatedFeatures());
+  mSurfDetector->setHessianThreshold(detector && detector->type() == Feature::Type::surf ?
+                                     dynamic_cast<ISurf *>(detector)->hessianThreshold() :
+                                     mSettingsModel->surfHessianThreshold());
+  mSurfDetector->setExtendedDescriptor(detector && detector->type() == Feature::Type::surf ?
+                                       dynamic_cast<ISurf *>(detector)->extendedDescriptor() :
+                                       mSettingsModel->surfExtendedDescriptor());
+
+  mSurfDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::surf ?
+                              dynamic_cast<ISurf *>(descriptor)->octaves() :
+                              mSettingsModel->surfOctaves());
+  mSurfDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::surf ?
+                                   dynamic_cast<ISurf *>(descriptor)->octaveLayers() :
+                                   mSettingsModel->surfOctaveLayers());
+  mSurfDescriptor->setRotatedFeatures(descriptor && descriptor->type() == Feature::Type::surf ?
+                                      dynamic_cast<ISurf *>(descriptor)->rotatedFeatures() :
+                                      mSettingsModel->surfRotatedFeatures());
+  mSurfDescriptor->setHessianThreshold(descriptor && descriptor->type() == Feature::Type::surf ?
+                                       dynamic_cast<ISurf *>(descriptor)->hessianThreshold() :
+                                       mSettingsModel->surfHessianThreshold());
+  mSurfDescriptor->setExtendedDescriptor(descriptor && descriptor->type() == Feature::Type::surf ?
+                                         dynamic_cast<ISurf *>(descriptor)->extendedDescriptor() :
+                                         mSettingsModel->surfExtendedDescriptor());
+
 
   mView->exec();
 }
@@ -628,7 +1082,7 @@ void FeatureExtractorPresenter::run()
                                                                      mSiftDescriptor->sigma());
     }
   } else if (currentDescriptorExtractor.compare("SURF") == 0){
-    if (currentKeypointDetector.compare("SIFT") == 0){
+    if (currentKeypointDetector.compare("SURF") == 0){
       descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                      mSurfDetector->octaves(),
                                                                      mSurfDetector->octaveLayers(),

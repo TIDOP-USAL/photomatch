@@ -51,7 +51,6 @@ private slots:
 
   void test_loadImages();
   void test_newProcessing();
-  void test_openAssistant();
   void test_openPreprocess();
   void test_openFeatureExtraction();
   void test_openFeatureMatching();
@@ -127,14 +126,17 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(true, mActionExit->isEnabled());
   QCOMPARE(true, mActionLoadImages->isEnabled());
   QCOMPARE(false, mActionNewSession->isEnabled());
-  QCOMPARE(false, mActionAssistant->isEnabled());
   QCOMPARE(false, mActionPreprocess->isEnabled());
   QCOMPARE(false, mActionFeatureExtraction->isEnabled());
   QCOMPARE(false, mActionFeatureMatching->isEnabled());
   QCOMPARE(true, mActionSettings->isEnabled());
   QCOMPARE(true, mActionHelp->isEnabled());
   QCOMPARE(true, mActionAbout->isEnabled());
-  QCOMPARE(false, mActionExportTiePoints->isEnabled());
+  QCOMPARE(false, mActionExportTiePointsCvXml->isEnabled());
+  QCOMPARE(false, mActionExportTiePointsCvYml->isEnabled());
+  QCOMPARE(false, mActionExportMatchesToCvXml->isEnabled());
+  QCOMPARE(false, mActionExportMatchesToCvYml->isEnabled());
+  QCOMPARE(false, mActionExportMatchesToTxt->isEnabled());
   QCOMPARE(false, mActionMatchesViewer->isEnabled());
   QCOMPARE(false, mActionHomography->isEnabled());
   QCOMPARE(false, mActionRepeteability->isEnabled());
@@ -153,7 +155,6 @@ void TestMainWindowView::test_setFlag()
 
   /// Procesamiento, sesion o test (no se muy bien como llamarlo todavía)
   setFlag(MainWindowView::Flag::session_created, true);
-  QCOMPARE(true, mActionAssistant->isEnabled());
   QCOMPARE(true, mActionPreprocess->isEnabled());
 
   /// Preprocesado
@@ -163,7 +164,8 @@ void TestMainWindowView::test_setFlag()
   /// Extracción de caracteristicas
   setFlag(MainWindowView::Flag::feature_extraction, true);
   QCOMPARE(true, mActionFeatureMatching->isEnabled());
-  QCOMPARE(true, mActionExportTiePoints->isEnabled());
+  QCOMPARE(true, mActionExportTiePointsCvXml->isEnabled());
+  QCOMPARE(true, mActionExportTiePointsCvYml->isEnabled());
 
   ///Matching
   setFlag(MainWindowView::Flag::feature_matching, true);
@@ -171,6 +173,9 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(true, mActionHomography->isEnabled());
   QCOMPARE(true, mActionRepeteability->isEnabled());
   QCOMPARE(true, mActionRecall->isEnabled());
+  QCOMPARE(true, mActionExportMatchesToCvXml->isEnabled());
+  QCOMPARE(true, mActionExportMatchesToCvYml->isEnabled());
+  QCOMPARE(true, mActionExportMatchesToTxt->isEnabled());
 }
 
 void TestMainWindowView::test_clear()
@@ -321,14 +326,6 @@ void TestMainWindowView::test_newProcessing()
 
   emit mActionNewSession->triggered(true);
   QCOMPARE(spy_newProcessing.count(), 1);
-}
-
-void TestMainWindowView::test_openAssistant()
-{
-  QSignalSpy spy_openAssistant(this, &MainWindowView::openAssistant);
-
-  emit mActionAssistant->triggered(true);
-  QCOMPARE(spy_openAssistant.count(), 1);
 }
 
 void TestMainWindowView::test_openPreprocess()

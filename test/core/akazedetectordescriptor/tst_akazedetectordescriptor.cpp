@@ -19,7 +19,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void testDescriptorType_data();
@@ -63,7 +64,7 @@ void TestAkazeDetectorDescriptor::cleanupTestCase()
 
 }
 
-void TestAkazeDetectorDescriptor::testDefaultConstructor()
+void TestAkazeDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
   AkazeDetectorDescriptor akazeDetectorDescriptor;
@@ -79,6 +80,18 @@ void TestAkazeDetectorDescriptor::testDefaultConstructor()
   QCOMPARE(4, akazeDetectorDescriptor.octaves());
   QCOMPARE(4, akazeDetectorDescriptor.octaveLayers());
   QCOMPARE("DIFF_PM_G2", akazeDetectorDescriptor.diffusivity());
+}
+
+void TestAkazeDetectorDescriptor::test_constructor()
+{
+  AkazeDetectorDescriptor akazeDetectorDescriptor("KAZE_UPRIGHT", 32, 4, 0.1, 3, 6, "DIFF_WEICKERT");
+  QCOMPARE("KAZE_UPRIGHT", akazeDetectorDescriptor.descriptorType());
+  QCOMPARE(32, akazeDetectorDescriptor.descriptorSize());
+  QCOMPARE(4, akazeDetectorDescriptor.descriptorChannels());
+  QCOMPARE(0.1, akazeDetectorDescriptor.threshold());
+  QCOMPARE(3, akazeDetectorDescriptor.octaves());
+  QCOMPARE(6, akazeDetectorDescriptor.octaveLayers());
+  QCOMPARE("DIFF_WEICKERT", akazeDetectorDescriptor.diffusivity());
 }
 
 void TestAkazeDetectorDescriptor::test_type()

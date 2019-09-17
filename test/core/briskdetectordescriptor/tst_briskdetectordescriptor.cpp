@@ -19,7 +19,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void testThreshold_data();
@@ -57,12 +58,20 @@ void TestBriskDetectorDescriptor::cleanupTestCase()
 
 }
 
-void TestBriskDetectorDescriptor::testDefaultConstructor()
+void TestBriskDetectorDescriptor::test_defaultConstructor()
 {
   BriskDetectorDescriptor briskDetectorDescriptor;
   QCOMPARE(30, briskDetectorDescriptor.threshold());
   QCOMPARE(3, briskDetectorDescriptor.octaves());
   QCOMPARE(1.0, briskDetectorDescriptor.patternScale());
+}
+
+void TestBriskDetectorDescriptor::test_constructor()
+{
+  BriskDetectorDescriptor briskDetectorDescriptor(15, 4, 2.);
+  QCOMPARE(15, briskDetectorDescriptor.threshold());
+  QCOMPARE(4, briskDetectorDescriptor.octaves());
+  QCOMPARE(2.0, briskDetectorDescriptor.patternScale());
 }
 
 void TestBriskDetectorDescriptor::test_type()

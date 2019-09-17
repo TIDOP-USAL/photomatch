@@ -87,6 +87,16 @@ const std::shared_ptr<Image> ProjectModel::findImage(const QString &path) const
   return mProject->findImage(path);
 }
 
+const std::shared_ptr<Image> ProjectModel::findImageById(size_t id) const
+{
+  return mProject->findImageById(id);
+}
+
+const std::shared_ptr<Image> ProjectModel::findImageByName(const QString &imgName) const
+{
+  return mProject->findImageByName(imgName);
+}
+
 //size_t ProjectModel::findImageId(const QString &path)
 //{
 //  return mProject->findImageId(path);
@@ -259,15 +269,51 @@ void ProjectModel::addPreprocessedImage(const QString &image)
   bUnsavedChanges = true;
 }
 
+void ProjectModel::deletePreprocessedImage(const QString &image)
+{
+  this->currentSession()->deletePreprocessImage(image);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::clearPreprocessedImages()
+{
+  this->currentSession()->deletePreprocessImages();
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::addFeatures(const QString &feat)
 {
   this->currentSession()->addFeatures(feat);
   bUnsavedChanges = true;
 }
 
+void ProjectModel::deleteFeatures(const QString &feat)
+{
+  this->currentSession()->deleteFeatures(feat);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::clearFeatures()
+{
+  this->currentSession()->deleteFeatures();
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
 {
   this->currentSession()->addMatches(img1, img2, fileMatch);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+{
+  this->currentSession()->deleteMatches(img1, img2, fileMatch);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::clearMatches()
+{
+  this->currentSession()->deleteMatches();
   bUnsavedChanges = true;
 }
 

@@ -18,7 +18,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_maxSize_data();
@@ -63,7 +64,7 @@ void TestStarDetector::cleanupTestCase()
 
 }
 
-void TestStarDetector::testDefaultConstructor()
+void TestStarDetector::test_defaultConstructor()
 {
   /// Check default values
   StarDetector starDetector;
@@ -72,6 +73,16 @@ void TestStarDetector::testDefaultConstructor()
   QCOMPARE(10, starDetector.lineThresholdProjected());
   QCOMPARE(8, starDetector.lineThresholdBinarized());
   QCOMPARE(5, starDetector.suppressNonmaxSize());
+}
+
+void TestStarDetector::test_constructor()
+{
+  StarDetector starDetector(35, 20, 20, 10, 20);
+  QCOMPARE(35, starDetector.maxSize());
+  QCOMPARE(20, starDetector.responseThreshold());
+  QCOMPARE(20, starDetector.lineThresholdProjected());
+  QCOMPARE(10, starDetector.lineThresholdBinarized());
+  QCOMPARE(20, starDetector.suppressNonmaxSize());
 }
 
 void TestStarDetector::test_type()

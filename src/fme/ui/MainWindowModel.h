@@ -24,6 +24,9 @@ public:
   std::list<std::pair<QString, QString>> exif(const QString &image) const;
 
   std::vector<QPointF> loadKeyPoints(const QString &file) const;
+  std::vector<std::pair<QPointF, QPointF>> loadMatches(const QString &fileMatches,
+                                                       const QString &fileKeyPoints1,
+                                                       const QString &fileKeyPoints2) const;
 
 signals:
 

@@ -18,7 +18,8 @@ public:
   MatchingProcess(const QString &queryDescriptors,
                   const QString &trainDescriptors,
                   const QString &matches,
-                  const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+                  const std::shared_ptr<RobustMatching> &descriptorMatcher
+                  );
 
   QString queryDescriptors() const;
   void setQueryDescriptors(const QString &descriptors);
@@ -26,7 +27,7 @@ public:
   void setTrainDescriptors(const QString &descriptors);
   QString matches() const;
   void setMatches(const QString &matches);
-  std::shared_ptr<DescriptorMatcher> descriptorMatcher() const;
+  //std::shared_ptr<RobustMatching> descriptorMatcher() const;
 
 signals:
 
@@ -43,7 +44,7 @@ protected:
   QString mQueryDescriptors;
   QString mTrainDescriptors;
   QString mMatches;
-  std::shared_ptr<DescriptorMatcher> mDescriptorMatcher;
+  std::shared_ptr<RobustMatching> mDescriptorMatcher;
 
 };
 

@@ -24,7 +24,11 @@
 #include "fme/ui/DescriptorMatcherPresenter.h"
 #include "fme/ui/DescriptorMatcherModel.h"  ///TODO: por ahora no tiene ninguna utilidad
 #include "fme/ui/DescriptorMatcherView.h"
+#include "fme/ui/MatchViewerPresenter.h"
+#include "fme/ui/MatchViewerModel.h"
+#include "fme/ui/MatchViewerView.h"
 #include "fme/ui/utils/ProgressDialog.h"
+
 
 #include "fme/core/project.h"
 
@@ -58,6 +62,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mFeatureExtractorPresenter(nullptr),
     mDescriptorMatcherModel(nullptr),
     mDescriptorMatcherPresenter(nullptr),
+    mMatchesViewerPresenter(nullptr),
+    mMatchesViewerModel(nullptr),
     mProgressDialog(nullptr)
 {
   init();
@@ -68,12 +74,26 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(openProject()),                   this, SLOT(openProject()));
   connect(mView, SIGNAL(openProjectFromHistory(QString)), this, SLOT(openFromHistory(QString)));  ///TODO: falta test señal
   connect(mView, SIGNAL(clearHistory()),                  this, SLOT(deleteHistory()));
+  //connect(mView, SIGNAL(exportTiePoints()),               this, SLOT(exportTiePoints()));
+  connect(mView, SIGNAL(exportTiePointsCvXml()),          this, SLOT(exportTiePointsCvXml()));
+  connect(mView, SIGNAL(exportTiePointsCvYml()),          this, SLOT(exportTiePointsCvYml()));
+  connect(mView, SIGNAL(exportMatchesCvYml()),            this, SLOT(exportMatchesCvYml()));
+  connect(mView, SIGNAL(exportMatchesCvXml()),            this, SLOT(exportMatchesCvXml()));
+  connect(mView, SIGNAL(exportMatchesTxt()),              this, SLOT(exportMatchesTxt()));
   connect(mView, SIGNAL(saveProject()),                   this, SLOT(saveProject()));
   connect(mView, SIGNAL(saveProjectAs()),                 this, SLOT(saveProjectAs()));
   connect(mView, SIGNAL(closeProject()),                  this, SLOT(closeProject()));
   connect(mView, SIGNAL(exit()),                          this, SLOT(exit()));
 
   /* Menú View */
+
+  /* Quality Control */
+
+  connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
+  //connect(mView,  SIGNAL(homography()),               this, SLOT(homography()));
+  //connect(mView,  SIGNAL(repeteability()),            this, SLOT(repeteability()));
+  //connect(mView,  SIGNAL(recall()),                   this, SLOT(recall()));
+
 
   /* Menú herramientas */
 
@@ -106,6 +126,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   /* Visor de imagenes */
   connect(mView, SIGNAL(loadKeyPoints(QString)),      this, SLOT(loadKeyPoints(QString)));
+  connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
 
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
 }
@@ -185,6 +206,16 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mProgressDialog){
     delete mProgressDialog;
     mProgressDialog = nullptr;
+  }
+
+  if (mMatchesViewerPresenter){
+    delete mMatchesViewerPresenter;
+    mMatchesViewerPresenter = nullptr;
+  }
+
+  if (mMatchesViewerModel){
+    delete mMatchesViewerModel;
+    mMatchesViewerModel = nullptr;
   }
 }
 
@@ -317,6 +348,66 @@ void MainWindowPresenter::saveProjectAs()
   }
 }
 
+void MainWindowPresenter::exportTiePointsCvXml()
+{
+  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+                                                       tr("Export directory"),
+                                                       "",
+                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+  if (!pathName.isEmpty()) {
+
+  }
+}
+
+void MainWindowPresenter::exportTiePointsCvYml()
+{
+  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+                                                       tr("Export directory"),
+                                                       "",
+                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+  if (!pathName.isEmpty()) {
+
+  }
+}
+
+void MainWindowPresenter::exportMatchesCvYml()
+{
+  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+                                                       tr("Export directory"),
+                                                       "",
+                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+  if (!pathName.isEmpty()) {
+
+  }
+}
+
+void MainWindowPresenter::exportMatchesCvXml()
+{
+  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+                                                       tr("Export directory"),
+                                                       "",
+                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+  if (!pathName.isEmpty()) {
+
+  }
+}
+
+void MainWindowPresenter::exportMatchesTxt()
+{
+  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+                                                       tr("Export directory"),
+                                                       "",
+                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+  if (!pathName.isEmpty()) {
+
+  }
+}
+
 void MainWindowPresenter::closeProject()
 {
   if(mProjectModel->checkUnsavedChanges()){
@@ -356,6 +447,12 @@ void MainWindowPresenter::exit()
   }
 
   mView->close();
+}
+
+void MainWindowPresenter::openMatchesViewer()
+{
+  initMatchesViewer();
+  mMatchesViewerPresenter->open();
 }
 
 void MainWindowPresenter::loadImages()
@@ -448,24 +545,19 @@ void MainWindowPresenter::loadProject()
     mView->setFlag(MainWindowView::Flag::images_added, true);
   }
 
-  TL_TODO("Lo mismo que para las imagenes... ")
-  if (mProjectModel->currentSession()){
-    QString currentSession = mProjectModel->currentSession()->name();
-    for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
-      //loadSession((*it)->name());
-      //(currentSession.compare((*it)->name()) == 0)
-      mView->addSession((*it)->name(), (*it)->description());
-      mView->setFlag(MainWindowView::Flag::session_created, true);
+  for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
 
-      bool bPreprocess = loadPreprocess((*it)->name());
-      if (bPreprocess){
-        bool bFeatures = loadFeatures((*it)->name());
-        if (bFeatures){
-          loadMatches((*it)->name());
-        }
+    mView->addSession((*it)->name(), (*it)->description());
+    mView->setFlag(MainWindowView::Flag::session_created, true);
+
+    bool bPreprocess = loadPreprocess((*it)->name());
+    if (bPreprocess){
+      bool bFeatures = loadFeatures((*it)->name());
+      if (bFeatures){
+        loadMatches((*it)->name());
       }
-
     }
+
   }
 
 }
@@ -511,6 +603,9 @@ void MainWindowPresenter::loadSession(const QString &session)
 
   mView->setFlag(MainWindowView::Flag::session_created, true);
   mView->setFlag(MainWindowView::Flag::project_modified, true);
+  mView->setFlag(MainWindowView::Flag::preprocess, false);
+  mView->setFlag(MainWindowView::Flag::feature_extraction, false);
+  mView->setFlag(MainWindowView::Flag::feature_matching, false);
 }
 
 void MainWindowPresenter::selectSession(const QString &session)
@@ -855,6 +950,66 @@ void MainWindowPresenter::selectImageFeatures(const QString &imageFeatures)
   mView->setProperties(properties);
 }
 
+void MainWindowPresenter::openImageMatches(const QString &sessionName, const QString &imgName1, const QString &imgName2)
+{
+  std::vector<std::pair<QPointF, QPointF>> matches;
+  QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();
+  QString imgPath2 = mProjectModel->findImageByName(imgName2)->path();
+
+  if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
+    return;
+
+  /// Una escala para cada imagen por si tienen tamaño diferente
+  double scale1 = 1.;
+  double scale2 = 1.;
+  if (mProjectModel->fullImageSize() == false){
+    int maxSize = mProjectModel->maxImageSize();
+    QImageReader imageReader1(imgPath1);
+    QSize size = imageReader1.size();
+    int w = size.width();
+    int h = size.height();
+    if (w > h){
+      scale1 = w / static_cast<double>(maxSize);
+    } else {
+      scale1 = h / static_cast<double>(maxSize);
+    }
+    if (scale1 < 1.) scale1 = 1.;
+
+    QImageReader imageReader2(imgPath2);
+    size = imageReader2.size();
+    w = size.width();
+    h = size.height();
+    if (w > h){
+      scale2 = w / static_cast<double>(maxSize);
+    } else {
+      scale2 = h / static_cast<double>(maxSize);
+    }
+    if (scale2 < 1.) scale2 = 1.;
+
+  }
+
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
+
+    std::vector<std::pair<QString, QString>> pairs = session->matches(imgName1);
+    if (!pairs.empty()){
+      for (auto &pair : pairs){
+        if (pair.first.compare(imgName2) == 0){
+          matches = mModel->loadMatches(pair.second, session->features(imgName1), session->features(imgName2));
+
+          for (size_t i = 0; i < matches.size(); i++){
+            matches[i].first *= scale1;
+            matches[i].second *= scale2;
+          }
+
+          break;
+        }
+      }
+    }
+  }
+
+  mView->showMatches(imgPath1, imgPath2, matches);
+}
+
 void MainWindowPresenter::updatePreprocess()
 {
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
@@ -890,6 +1045,7 @@ void MainWindowPresenter::loadKeyPoints(const QString &image)
   features.append("\\features\\");
   features.append(fileInfo.fileName()).append(".xml");
 
+  ///TODO: Mover a Modelo?? Crear un método loadKeyPointsScaled??
   std::vector<QPointF>keyPoints = mModel->loadKeyPoints(features);
   if (mProjectModel->fullImageSize() == false){
     int maxSize = mProjectModel->maxImageSize();
@@ -1034,14 +1190,29 @@ void MainWindowPresenter::initProgressDialog()
   }
 }
 
+void MainWindowPresenter::initMatchesViewer()
+{
+  if (mMatchesViewerPresenter == nullptr) {
+    mMatchesViewerModel = new MatchViewerModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    IMatchViewerView *matchViewerView = new MatchViewerView(mView, f);
+    mMatchesViewerPresenter = new MatchViewerPresenter(matchViewerView, mMatchesViewerModel);
+    //mMatchesViewerPresenter->setHelp(mHelp);
+  }
+}
+
 bool MainWindowPresenter::loadPreprocess(const QString &session)
 {
   std::shared_ptr<Session> _session = mProjectModel->findSession(session);
   if (_session){
     std::shared_ptr<Preprocess> preprocess = _session->preprocess();
 
+    QString currentSession = mProjectModel->currentSession()->name();
+    if (currentSession.compare(session) == 0){
+      mView->setFlag(MainWindowView::Flag::preprocess, preprocess != nullptr);
+    }
+
     if (preprocess){
-      mView->setFlag(MainWindowView::Flag::preprocess, true);
 
       /// Preprocess
       QString preprocess_name = preprocess->name();
@@ -1056,25 +1227,39 @@ bool MainWindowPresenter::loadPreprocess(const QString &session)
 
 bool MainWindowPresenter::loadFeatures(const QString &session)
 {
-  std::shared_ptr<Session> _session = mProjectModel->findSession(session);
-  if (_session){
+  if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
+
     std::shared_ptr<Feature> detector = _session->detector();
     std::shared_ptr<Feature> descriptor = _session->descriptor();
+
+    QString currentSession = mProjectModel->currentSession()->name();
+    if (currentSession.compare(session) == 0){
+      mView->setFlag(MainWindowView::Flag::feature_extraction, detector && descriptor);
+    }
+
     if (detector && descriptor){
-      mView->setFlag(MainWindowView::Flag::feature_extraction, true);
+
+      //mView->setFlag(MainWindowView::Flag::feature_extraction, true);
       mView->addFeatures(_session->name(), detector->name(), descriptor->name(), _session->features());
 
       return true;
     }
+
   }
   return false;
 }
 
 bool MainWindowPresenter::loadMatches(const QString &session)
 {
-  std::shared_ptr<Session> _session = mProjectModel->findSession(session);
-  if (_session){
+  if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
+
     std::shared_ptr<Match> match = _session->matcher();
+
+    QString currentSession = mProjectModel->currentSession()->name();
+    if (currentSession.compare(session) == 0){
+      mView->setFlag(MainWindowView::Flag::feature_matching, match != nullptr);
+    }
+
     if (match){
 
       for (auto &matches : _session->matches()){

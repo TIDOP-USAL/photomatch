@@ -72,22 +72,6 @@ public:
                    int kernelSize);
   ~WallisPreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IPohe interface
-
-public:
-
-  void setContrast(double contrast) override;
-  void setBrightness(double brightness) override;
-  void setImposedAverage(int imposedAverage) override;
-  void setImposedLocalStdDev(int imposedLocalStdDev) override;
-  void setKernelSize(int kernelSize) override;
-
 // ImageProcess interface
 
 public:

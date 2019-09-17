@@ -35,11 +35,6 @@ DecolorPreprocess::~DecolorPreprocess()
 {
 }
 
-void DecolorPreprocess::reset()
-{
-
-}
-
 cv::Mat DecolorPreprocess::process(const cv::Mat &img)
 {
   cv::Mat img_out;

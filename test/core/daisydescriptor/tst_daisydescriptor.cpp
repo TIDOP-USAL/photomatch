@@ -19,7 +19,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_radius_data();
@@ -67,7 +68,7 @@ void TestDaisyDescriptor::cleanupTestCase()
 
 }
 
-void TestDaisyDescriptor::testDefaultConstructor()
+void TestDaisyDescriptor::test_defaultConstructor()
 {
   /// Check default values
   DaisyDescriptor daisyDescriptor;
@@ -78,6 +79,18 @@ void TestDaisyDescriptor::testDefaultConstructor()
   QCOMPARE("NRM_NONE", daisyDescriptor.norm());
   QCOMPARE(true, daisyDescriptor.interpolation());
   QCOMPARE(false, daisyDescriptor.useOrientation());
+}
+
+void TestDaisyDescriptor::test_constructor()
+{
+  DaisyDescriptor daisyDescriptor(10., 4, 4, 4, "NRM_PARTIAL", false, true);
+  QCOMPARE(10., daisyDescriptor.radius());
+  QCOMPARE(4, daisyDescriptor.qRadius());
+  QCOMPARE(4, daisyDescriptor.qTheta());
+  QCOMPARE(4, daisyDescriptor.qHist());
+  QCOMPARE("NRM_PARTIAL", daisyDescriptor.norm());
+  QCOMPARE(false, daisyDescriptor.interpolation());
+  QCOMPARE(true, daisyDescriptor.useOrientation());
 }
 
 void TestDaisyDescriptor::test_type()

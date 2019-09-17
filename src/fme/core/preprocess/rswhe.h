@@ -61,19 +61,6 @@ public:
   RswhePreprocess(int histogramDivisions, HistogramCut histogramCut);
   ~RswhePreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IRswhe interface
-
-public:
-
-  void setHistogramDivisions(int histogramDivisions) ;
-  void setHistogramCut(HistogramCut histogramCut) override;
-
 // ImageProcess interface
 
 public:

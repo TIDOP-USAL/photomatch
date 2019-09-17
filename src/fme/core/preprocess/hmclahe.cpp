@@ -75,34 +75,14 @@ HmclahePreprocess::HmclahePreprocess(const QSize &blockSize, double l, double ph
   : HmclaheProperties(),
     ImageProcess()
 {
-  setBlockSize(blockSize);
-  setL(l);
-  setPhi(phi);
+  this->setBlockSize(blockSize);
+  this->setL(l);
+  this->setPhi(phi);
 }
 
 HmclahePreprocess::~HmclahePreprocess()
 {
 
-}
-
-void HmclahePreprocess::reset()
-{
-  HmclaheProperties::reset();
-}
-
-void HmclahePreprocess::setBlockSize(const QSize &blockSize)
-{
-  HmclaheProperties::setBlockSize(blockSize);
-}
-
-void HmclahePreprocess::setL(double l)
-{
-  HmclaheProperties::setL(l);
-}
-
-void HmclahePreprocess::setPhi(double phi)
-{
-  HmclaheProperties::setPhi(phi);
 }
 
 cv::Mat HmclahePreprocess::process(const cv::Mat &img)

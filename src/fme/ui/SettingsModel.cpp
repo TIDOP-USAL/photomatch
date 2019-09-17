@@ -1,5 +1,38 @@
 #include "SettingsModel.h"
 
+#include "fme/core/features/agast.h"
+#include "fme/core/features/akaze.h"
+#include "fme/core/features/brief.h"
+#include "fme/core/features/brisk.h"
+#include "fme/core/features/daisy.h"
+#include "fme/core/features/fast.h"
+#include "fme/core/features/freak.h"
+#include "fme/core/features/gftt.h"
+#include "fme/core/features/hog.h"
+#include "fme/core/features/latch.h"
+#include "fme/core/features/lucid.h"
+#include "fme/core/features/msd.h"
+#include "fme/core/features/mser.h"
+#include "fme/core/features/kaze.h"
+#include "fme/core/features/orb.h"
+#include "fme/core/features/sift.h"
+#include "fme/core/features/star.h"
+#include "fme/core/features/surf.h"
+#include "fme/core/features/matcher.h"
+
+#include "fme/core/preprocess/acebsf.h"
+#include "fme/core/preprocess/clahe.h"
+#include "fme/core/preprocess/cmbfhe.h"
+#include "fme/core/preprocess/dhe.h"
+#include "fme/core/preprocess/fahe.h"
+#include "fme/core/preprocess/hmclahe.h"
+#include "fme/core/preprocess/lce_bsescs.h"
+#include "fme/core/preprocess/msrcp.h"
+#include "fme/core/preprocess/noshp.h"
+#include "fme/core/preprocess/pohe.h"
+#include "fme/core/preprocess/rswhe.h"
+#include "fme/core/preprocess/wallis.h"
+
 #include <QDir>
 #include <QSettings>
 #include <QLocale>

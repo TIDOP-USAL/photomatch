@@ -57,18 +57,6 @@ public:
   LceBsescsPreprocess(const QSize &blockSize);
   ~LceBsescsPreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// ILceBsescs interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-
 // ImageProcess interface
 
 public:

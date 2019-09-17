@@ -14,8 +14,8 @@
 namespace fme
 {
 
-MatchViewerView::MatchViewerView(QWidget *parent)
-  : IMatchViewerView(parent)
+MatchViewerView::MatchViewerView(QWidget *parent, Qt::WindowFlags f)
+  : IMatchViewerView(parent, f)
 {
   init();
 
@@ -38,8 +38,9 @@ void MatchViewerView::setLeftImage(const QString &leftImage)
   QSignalBlocker blocker(mComboBoxLeftImage);
   QFileInfo file_info(leftImage);
   mComboBoxLeftImage->setCurrentText(file_info.baseName());
+  mGraphicsViewLeft->scene()->clearSelection();
   mGraphicsViewLeft->setImage(QImage(leftImage));
-  mGraphicsViewLeft->zoomExtend();
+  //mGraphicsViewLeft->zoomExtend();
 }
 
 void MatchViewerView::setRightImage(const QString &rightImage)
@@ -47,8 +48,9 @@ void MatchViewerView::setRightImage(const QString &rightImage)
   QSignalBlocker blocker(mComboBoxRightImage);
   QFileInfo file_info(rightImage);
   mComboBoxRightImage->setCurrentText(file_info.baseName());
+  mGraphicsViewRight->scene()->clearSelection();
   mGraphicsViewRight->setImage(QImage(rightImage));
-  mGraphicsViewRight->zoomExtend();
+  //mGraphicsViewRight->zoomExtend();
 }
 
 void MatchViewerView::setLeftImageList(const std::vector<QString> &leftImageList)
@@ -71,12 +73,16 @@ void MatchViewerView::setRightImageList(const std::vector<QString> &rightImageLi
   }
 }
 
-void MatchViewerView::setMatches(const std::vector<std::pair<QPointF, QPointF> > &matches)
+void MatchViewerView::setMatches(const std::vector<std::tuple<QPointF, QPointF, float> > &matches)
 {
-  std::vector<QPointF> points_left(matches.size());
-  std::vector<QPointF> points_right(matches.size());
+//  std::vector<QPointF> points_left(matches.size());
+//  std::vector<QPointF> points_right(matches.size());
 
+  QSignalBlocker blocker(mTreeWidgetMatches);
   mTreeWidgetMatches->clear();
+
+  mGraphicsViewLeft->zoomExtend();
+  mGraphicsViewRight->zoomExtend();
 
 //  /////////////////////////////////////////////////////////////////////////
 //  /// No esta bien aqui...
@@ -112,18 +118,24 @@ void MatchViewerView::setMatches(const std::vector<std::pair<QPointF, QPointF> >
     //points_right[i] = matches[i].second;
     QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
     treeWidgetItem->setText(0, QString::number(i + 1));
-    treeWidgetItem->setText(1, QString::number(matches[i].first.x()).append(";").append(QString::number(matches[i].first.y())));
-    treeWidgetItem->setText(2, QString::number(matches[i].second.x()).append(";").append(QString::number(matches[i].second.y())));
+    QPointF query_point, train_point;
+    double distance;
+    std::tie(query_point, train_point, distance) = matches[i];
+    treeWidgetItem->setText(1, QString::number(query_point.x()));
+    treeWidgetItem->setText(2, QString::number(query_point.y()));
+    treeWidgetItem->setText(3, QString::number(train_point.x()));
+    treeWidgetItem->setText(4, QString::number(train_point.y()));
+    treeWidgetItem->setText(5, QString::number(distance));
     mTreeWidgetMatches->addTopLevelItem(treeWidgetItem);
 
     /// Dibujado de puntos
     if (symbol == 0){
       /// Circle
-      QGraphicsEllipseItem *ellipse_left = mGraphicsViewLeft->scene()->addEllipse(matches[i].first.x() - r,
-                                                                          matches[i].first.y() - r,
+      QGraphicsEllipseItem *ellipse_left = mGraphicsViewLeft->scene()->addEllipse(query_point.x() - r,
+                                                                          query_point.y() - r,
                                                                           r * 2, r * 2, pen, brush);
-      QGraphicsEllipseItem *ellipse_right = mGraphicsViewRight->scene()->addEllipse(matches[i].second.x() - r,
-                                                                          matches[i].second.y() - r,
+      QGraphicsEllipseItem *ellipse_right = mGraphicsViewRight->scene()->addEllipse(train_point.x() - r,
+                                                                          train_point.y() - r,
                                                                           r * 2, r * 2, pen, brush);
       ///e->setToolTip("ID punto...");
       ellipse_left->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -196,23 +208,26 @@ void MatchViewerView::init()
 
   QTreeWidgetItem *qTreeWidgetItem = mTreeWidgetMatches->headerItem();
   qTreeWidgetItem->setText(0, tr("ID"));
-  qTreeWidgetItem->setText(1, tr("Key Point Left"));
-  qTreeWidgetItem->setText(2, tr("Key Point Right"));
+  qTreeWidgetItem->setText(1, tr("Left X"));
+  qTreeWidgetItem->setText(2, tr("Left Y"));
+  qTreeWidgetItem->setText(3, tr("Right X"));
+  qTreeWidgetItem->setText(4, tr("Right Y"));
+  qTreeWidgetItem->setText(5, tr("Distance"));
 
   mTreeWidgetMatches->setAlternatingRowColors(true);
 
   QMenu *contextMenuLeft = new QMenu(mGraphicsViewLeft);
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8-zoom-in.png"), tr("Zoom In"), mGraphicsViewLeft, SLOT(zoomIn()));
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8-zoom-out.png"), tr("Zoom Out"), mGraphicsViewLeft, SLOT(zoomOut()));
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8-magnifying-glass-with-expand-sign.png"), tr("Zoom Extend"), mGraphicsViewLeft, SLOT(zoomExtend()));
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8-one-to-one.png"), tr("Zoom 1:1"), mGraphicsViewLeft, SLOT(zoom11()));
+  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), tr("Zoom In"), mGraphicsViewLeft, SLOT(zoomIn()));
+  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), tr("Zoom Out"), mGraphicsViewLeft, SLOT(zoomOut()));
+  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), tr("Zoom Extend"), mGraphicsViewLeft, SLOT(zoomExtend()));
+  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), tr("Zoom 1:1"), mGraphicsViewLeft, SLOT(zoom11()));
   mGraphicsViewLeft->setContextMenu(contextMenuLeft);
 
   QMenu *contextMenuRight = new QMenu(mGraphicsViewRight);
-  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8-zoom-in.png"), tr("Zoom In"), mGraphicsViewRight, SLOT(zoomIn()));
-  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8-zoom-out.png"), tr("Zoom Out"), mGraphicsViewRight, SLOT(zoomOut()));
-  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8-magnifying-glass-with-expand-sign.png"), tr("Zoom Extend"), mGraphicsViewRight, SLOT(zoomExtend()));
-  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8-one-to-one.png"), tr("Zoom 1:1"), mGraphicsViewRight, SLOT(zoom11()));
+  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), tr("Zoom In"), mGraphicsViewRight, SLOT(zoomIn()));
+  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), tr("Zoom Out"), mGraphicsViewRight, SLOT(zoomOut()));
+  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), tr("Zoom Extend"), mGraphicsViewRight, SLOT(zoomExtend()));
+  contextMenuRight->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), tr("Zoom 1:1"), mGraphicsViewRight, SLOT(zoom11()));
   mGraphicsViewRight->setContextMenu(contextMenuRight);
 
   update();
@@ -243,43 +258,43 @@ void MatchViewerView::onComboBoxRightImageIndexChanged(int idx)
 
 void MatchViewerView::onTreeWidgetMatchesItemClicked(QTreeWidgetItem *item, int col)
 {
-  ///TODO: se selecciona un punto de matching. Se hace zoom en la zona en cada ventana
-  QString pt1_string = item->text(1);
-  QString pt2_string = item->text(2);
-  QStringList pt1_string_list = pt1_string.split(';');
-  QStringList pt2_string_list = pt2_string.split(';');
+  QPointF query_point(item->text(1).toDouble(), item->text(2).toDouble());
+  QPointF train_point(item->text(3).toDouble(), item->text(4).toDouble());
+
   //pt1_string_list[0]
   mGraphicsViewLeft->zoom11();
-  mGraphicsViewLeft->centerOn(pt1_string_list[0].toFloat(), pt1_string_list[1].toFloat());
+  mGraphicsViewLeft->centerOn(query_point);
   mGraphicsViewRight->zoom11();
-  mGraphicsViewRight->centerOn(pt2_string_list[0].toFloat(), pt2_string_list[1].toFloat());
+  mGraphicsViewRight->centerOn(train_point);
 }
 
 void MatchViewerView::onTreeWidgetMatchesItemSelectionChanged()
 {
   if (QTreeWidgetItem *item = mTreeWidgetMatches->currentItem()){
-    QString pt1_string = item->text(1);
-    QString pt2_string = item->text(2);
-    QStringList pt1_string_list = pt1_string.split(';');
-    QStringList pt2_string_list = pt2_string.split(';');
+
+    QPointF query_point(item->text(1).toDouble(), item->text(2).toDouble());
+    QPointF train_point(item->text(3).toDouble(), item->text(4).toDouble());
 
     mGraphicsViewLeft->scene()->clearSelection();
     mGraphicsViewRight->scene()->clearSelection();
 
     mGraphicsViewLeft->zoom11();
-    mGraphicsViewLeft->centerOn(pt1_string_list[0].toFloat(), pt1_string_list[1].toFloat());
-    QPoint pt_left = mGraphicsViewLeft->mapFromScene(pt1_string_list[0].toFloat(), pt1_string_list[1].toFloat());
+    mGraphicsViewLeft->centerOn(query_point);
+    QPoint pt_left = mGraphicsViewLeft->mapFromScene(query_point);
     QGraphicsItem *select_item_left = mGraphicsViewLeft->itemAt(pt_left);
     if (select_item_left) {
       select_item_left->setSelected(true);
     }
     mGraphicsViewRight->zoom11();
-    mGraphicsViewRight->centerOn(pt2_string_list[0].toFloat(), pt2_string_list[1].toFloat());
-    QPoint pt_right = mGraphicsViewRight->mapFromScene(pt2_string_list[0].toFloat(), pt2_string_list[1].toFloat());
+    mGraphicsViewRight->centerOn(train_point);
+    QPoint pt_right = mGraphicsViewRight->mapFromScene(train_point);
     QGraphicsItem *select_item_right = mGraphicsViewRight->itemAt(pt_right);
     if (select_item_right) {
       select_item_right->setSelected(true);
     }
+  } else {
+    mGraphicsViewLeft->scene()->clearSelection();
+    mGraphicsViewRight->scene()->clearSelection();
   }
 }
 

@@ -48,14 +48,19 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionStartPage(new QAction(this)),
     mActionLoadImages(new QAction(this)),
     mActionNewSession(new QAction(this)),
-    mActionAssistant(new QAction(this)),
+    //mActionAssistant(new QAction(this)),
     mActionPreprocess(new QAction(this)),
     mActionFeatureExtraction(new QAction(this)),
     mActionFeatureMatching(new QAction(this)),
     mActionSettings(new QAction(this)),
     mActionHelp(new QAction(this)),
     mActionAbout(new QAction(this)),
-    mActionExportTiePoints(new QAction(this)),
+    mActionExportTiePointsCvXml(new QAction(this)),
+    mActionExportTiePointsCvYml(new QAction(this)),
+    mActionExportMatchesToCvXml(new QAction(this)),
+    mActionExportMatchesToCvYml(new QAction(this)),
+    mActionExportMatchesToTxt(new QAction(this)),
+    //mActionExportTiePoints(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
     mActionHomography(new QAction(this)),
     mActionRepeteability(new QAction(this)),
@@ -76,36 +81,52 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   /* Menú Archivo */
 
-  connect(mActionNewProject,       SIGNAL(triggered(bool)),   this,   SIGNAL(openNew()));
-  connect(mActionOpenProject,      SIGNAL(triggered(bool)),   this,   SIGNAL(openProject()));
-  connect(mActionClearHistory,     SIGNAL(triggered(bool)),   this,   SIGNAL(clearHistory()));
-  connect(mActionSaveProject,      SIGNAL(triggered(bool)),   this,   SIGNAL(saveProject()));
-  connect(mActionSaveProjectAs,    SIGNAL(triggered(bool)),   this,   SIGNAL(saveProjectAs()));
-  connect(mActionCloseProject,     SIGNAL(triggered(bool)),   this,   SIGNAL(closeProject()));
-  connect(mActionExit,             SIGNAL(triggered(bool)),   this,   SIGNAL(exit()));
+  connect(mActionNewProject,         SIGNAL(triggered(bool)),   this,   SIGNAL(openNew()));
+  connect(mActionOpenProject,        SIGNAL(triggered(bool)),   this,   SIGNAL(openProject()));
+  connect(mActionClearHistory,       SIGNAL(triggered(bool)),   this,   SIGNAL(clearHistory()));
+  connect(mActionSaveProject,        SIGNAL(triggered(bool)),   this,   SIGNAL(saveProject()));
+  connect(mActionSaveProjectAs,      SIGNAL(triggered(bool)),   this,   SIGNAL(saveProjectAs()));
+  //connect(mActionExportTiePoints,    SIGNAL(triggered(bool)),   this,   SIGNAL(exportTiePoints()));
+  connect(mActionExportTiePointsCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvXml()));
+  connect(mActionExportTiePointsCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvYml()));
+  connect(mActionExportMatchesToCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvYml()));
+  connect(mActionExportMatchesToCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvXml()));
+  connect(mActionExportMatchesToTxt,   SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesTxt()));
+  connect(mActionCloseProject,       SIGNAL(triggered(bool)),   this,   SIGNAL(closeProject()));
+  connect(mActionExit,               SIGNAL(triggered(bool)),   this,   SIGNAL(exit()));
 
   /* Menú View */
 
-  connect(mActionStartPage,    SIGNAL(triggered(bool)), this, SLOT(openStartPage()));
+  connect(mActionStartPage,          SIGNAL(triggered(bool)),   this,   SLOT(openStartPage()));
 
   /* Menú herramientas */
+
   connect(mActionLoadImages,         SIGNAL(triggered(bool)),   this,   SIGNAL(loadImages()));
   connect(mActionNewSession,         SIGNAL(triggered(bool)),   this,   SIGNAL(newSession()));
-  connect(mActionAssistant,          SIGNAL(triggered(bool)),   this,   SIGNAL(openAssistant()));
+  //connect(mActionAssistant,          SIGNAL(triggered(bool)),   this,   SIGNAL(openAssistant()));
   connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
   connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
   connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
   connect(mActionSettings,           SIGNAL(triggered(bool)),   this,   SIGNAL(openSettings()));
 
+  /* Quality Control */
+
+  connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(matchesViewer()));
+  connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
+  connect(mActionRepeteability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeteability()));
+  connect(mActionRecall,             SIGNAL(triggered(bool)),   this,   SIGNAL(recall()));
+
   /* Menú Ayuda */
-  connect(mActionHelp,  SIGNAL(triggered(bool)), this, SIGNAL(openHelpDialog()));
-  connect(mActionAbout, SIGNAL(triggered(bool)), this, SIGNAL(openAboutDialog()));
+
+  connect(mActionHelp,               SIGNAL(triggered(bool)),   this,   SIGNAL(openHelpDialog()));
+  connect(mActionAbout,              SIGNAL(triggered(bool)),   this,   SIGNAL(openAboutDialog()));
 
   /* Panel de vistas en miniatura */
-  connect(mThumbnailsWidget, SIGNAL(openImage(QString)),        this, SIGNAL(openImage(QString)));
-  connect(mThumbnailsWidget, SIGNAL(selectImage(QString)),      this, SIGNAL(selectImage(QString)));
-  connect(mThumbnailsWidget, SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
-  connect(mThumbnailsWidget, SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
+
+  connect(mThumbnailsWidget,  SIGNAL(openImage(QString)),        this, SIGNAL(openImage(QString)));
+  connect(mThumbnailsWidget,  SIGNAL(selectImage(QString)),      this, SIGNAL(selectImage(QString)));
+  connect(mThumbnailsWidget,  SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
+  connect(mThumbnailsWidget,  SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
 
   connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
   connect(mTreeWidgetProject, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem *, int)));
@@ -966,6 +987,99 @@ void MainWindowView::setKeyPoints(const std::vector<QPointF> &keyPoints)
   }
 }
 
+void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF> > &matches)
+{
+  const QSignalBlocker blocker(ui->tabWidget);
+
+  QFileInfo fileInfoLeft(pairLeft);
+  QFileInfo fileInfoRight(pairRight);
+
+  if (mGraphicViewer != nullptr){
+    disconnect(mActionZoomIn, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomIn()));
+    disconnect(mActionZoomOut, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
+    disconnect(mActionZoomExtend, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
+    disconnect(mActionZoom11, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
+    for (auto &item : mGraphicViewer->scene()->items()) {
+      QGraphicsEllipseItem *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
+      if (ellipse){
+        mGraphicViewer->scene()->removeItem(item);
+      }
+    }
+  }
+
+  QString name(fileInfoLeft.baseName());
+  name.append("-").append(fileInfoRight.baseName());
+
+  // Carga en nueva pestaña
+  int id = -1;
+  for (int i = 0; i < ui->tabWidget->count(); i++){
+
+    if (ui->tabWidget->tabToolTip(i) == name){
+      id = i;
+      mGraphicViewer = static_cast<GraphicViewer *>(ui->tabWidget->widget(i));
+      ui->tabWidget->setCurrentIndex(id);
+    }
+  }
+
+  if (id == -1) {
+    GraphicViewer *graphicViewer = new GraphicViewer(this);
+    mGraphicViewer = graphicViewer;
+    QImage imageLeft(pairLeft);
+    QImage imageRight(pairRight);
+    int height = imageLeft.height() > imageRight.height() ? imageLeft.height() : imageRight.height();
+    QImage pair(imageLeft.width() + imageRight.width(), height, imageLeft.format());
+    QPainter painter;
+    painter.begin(&pair);
+    painter.drawImage(0, 0, imageLeft);
+    painter.drawImage(imageLeft.width(), 0, imageRight);
+    QPen pen = painter.pen();
+    QBrush brush = painter.brush();
+    QPen point_pen(QColor(0, 255, 0), 2.);
+    QPen line_pen(QColor(0, 0, 255), 2.);
+    QBrush _brush = QBrush(Qt::NoBrush);
+    painter.setBrush(_brush);
+    for (size_t i = 0; i < matches.size(); i++){
+      painter.setPen(line_pen);
+      painter.drawLine(matches[i].first.x(), matches[i].first.y(), imageLeft.width() + matches[i].second.x(), matches[i].second.y());
+      painter.setPen(point_pen);
+      painter.drawEllipse(matches[i].first.x() - 5, matches[i].first.y() - 5, 10, 10);
+      painter.drawEllipse(imageLeft.width()+matches[i].second.x() - 5, matches[i].second.y() - 5, 10, 10);
+    }
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.end();
+    mGraphicViewer->setImage(pair);
+    id = ui->tabWidget->addTab(mGraphicViewer, name);
+    ui->tabWidget->setCurrentIndex(id);
+    ui->tabWidget->setTabToolTip(id, name);
+    mGraphicViewer->zoomExtend();
+
+    QMenu *contextMenu = new QMenu(graphicViewer);
+    contextMenu->addAction(mActionZoomIn);
+    contextMenu->addAction(mActionZoomOut);
+    contextMenu->addAction(mActionZoomExtend);
+    contextMenu->addAction(mActionZoom11);
+    //contextMenu->addSeparator();
+    //contextMenu->addAction(ui->actionShowKeyPoints);
+    // Show all matches
+    // Show inliers matches
+    mGraphicViewer->setContextMenu(contextMenu);
+
+    //emit loadMatches(pairLeft, pairRight);
+  }
+
+  connect(mActionZoomIn, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomIn()));
+  connect(mActionZoomOut, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
+  connect(mActionZoomExtend, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
+  connect(mActionZoom11, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
+
+  //mFlags.activeFlag(Flag::images_open, true);
+
+  //emit selectImage(file);
+
+  update();
+}
+
 void MainWindowView::changeEvent(QEvent *e)
 {
   QMainWindow::changeEvent(e);
@@ -991,12 +1105,17 @@ void MainWindowView::update()
 
   mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
   mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added) && !bProcessing);
-  mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
+  //mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  //mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionExportTiePointsCvYml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   mActionMatchesViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
+  mActionExportMatchesToCvYml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
+  mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
+  mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionRepeteability->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionRecall->setEnabled(mFlags.isActive(Flag::feature_matching));
@@ -1153,6 +1272,9 @@ void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
   if (item->data(0, Qt::UserRole) == fme::image ||
       item->data(0, Qt::UserRole) == fme::preprocess_image){
     emit openImage(item->toolTip(column));
+  } else if (item->data(0, Qt::UserRole) == fme::pair_right){
+    QString session = item->parent()->parent()->parent()->parent()->text(0);
+    emit openImageMatches(session, item->parent()->text(0), item->text(column));
   }
 }
 
@@ -1241,6 +1363,36 @@ void MainWindowView::init()
   iconSaveProjectAs.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_save_as_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionSaveProjectAs->setIcon(iconSaveProjectAs);
 
+  mActionExportTiePointsCvXml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV XML", nullptr));
+  mActionExportTiePointsCvXml->setObjectName(QStringLiteral("actionExportTiePointsCvXml"));
+  QIcon iconExportTiePointsCvXml;
+  iconExportTiePointsCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionExportTiePointsCvXml->setIcon(iconExportTiePointsCvXml);
+
+  mActionExportTiePointsCvYml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV YML", nullptr));
+  mActionExportTiePointsCvYml->setObjectName(QStringLiteral("actionExportTiePointsCvYml"));
+  QIcon iconExportTiePointsCvYml;
+  iconExportTiePointsCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionExportTiePointsCvYml->setIcon(iconExportTiePointsCvYml);
+
+  mActionExportMatchesToCvXml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV XML", nullptr));
+  mActionExportMatchesToCvXml->setObjectName(QStringLiteral("actionExportMatchesToCvXml"));
+  QIcon iconExportMatchesToCvXml;
+  iconExportMatchesToCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionExportMatchesToCvXml->setIcon(iconExportMatchesToCvXml);
+
+  mActionExportMatchesToCvYml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV YML", nullptr));
+  mActionExportMatchesToCvYml->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
+  QIcon iconExportMatchesToCvYml;
+  iconExportMatchesToCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionExportMatchesToCvYml->setIcon(iconExportMatchesToCvYml);
+
+  mActionExportMatchesToTxt->setText(QApplication::translate("MainWindowView", "Export matches to txt", nullptr));
+  mActionExportMatchesToTxt->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
+  QIcon iconExportMatchesToTxt;
+  iconExportMatchesToTxt.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_txt_24px"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionExportMatchesToTxt->setIcon(iconExportMatchesToTxt);
+
   mActionCloseProject->setText(QApplication::translate("MainWindowView", "Close Project", nullptr));
   QIcon icon4;
   icon4.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_delete_sign_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -1265,13 +1417,13 @@ void MainWindowView::init()
   iconLoadImages.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_images_folder_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionLoadImages->setIcon(iconLoadImages);
 
-  mActionNewSession->setText(QApplication::translate("MainWindowView", "New Processing", nullptr));
+  mActionNewSession->setText(QApplication::translate("MainWindowView", "New Session", nullptr));
   QIcon iconNewSession;
   iconNewSession.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_add_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionNewSession->setIcon(iconNewSession);
 
-  mActionAssistant->setText(QApplication::translate("MainWindowView", "Assistant", nullptr));
-  mActionAssistant->setObjectName(QStringLiteral("actionAssistant"));
+//  mActionAssistant->setText(QApplication::translate("MainWindowView", "Assistant", nullptr));
+//  mActionAssistant->setObjectName(QStringLiteral("actionAssistant"));
 
   mActionPreprocess->setText(QApplication::translate("MainWindowView", "Preprocess", nullptr));
   QIcon iconPreprocess;
@@ -1303,8 +1455,8 @@ void MainWindowView::init()
   iconAbout.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_about_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionAbout->setIcon(iconAbout);
 
-  mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export Tie Points", nullptr));
-  mActionExportTiePoints->setObjectName(QStringLiteral("actionExportTiePoints"));
+  //mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export Tie Points", nullptr));
+  //mActionExportTiePoints->setObjectName(QStringLiteral("actionExportTiePoints"));
 
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
 
@@ -1384,6 +1536,18 @@ void MainWindowView::init()
   ui->menuFile->addAction(mActionSaveProject);
   ui->menuFile->addAction(mActionSaveProjectAs);
   ui->menuFile->addSeparator();
+  mMenuExport = new QMenu(tr("Export"), this);
+  mMenuExportTiePoints = new QMenu(tr("Tie Points"), this);
+  mMenuExportMatches = new QMenu(tr("Matches"), this);
+  mMenuExportTiePoints->addAction(mActionExportTiePointsCvXml);
+  mMenuExportTiePoints->addAction(mActionExportTiePointsCvYml);
+  mMenuExportMatches->addAction(mActionExportMatchesToCvXml);
+  mMenuExportMatches->addAction(mActionExportMatchesToCvYml);
+  mMenuExportMatches->addAction(mActionExportMatchesToTxt);
+  mMenuExport->addMenu(mMenuExportTiePoints);
+  mMenuExport->addMenu(mMenuExportMatches);
+  ui->menuFile->addMenu(mMenuExport);
+  ui->menuFile->addSeparator();
   ui->menuFile->addAction(mActionCloseProject);
   ui->menuFile->addSeparator();
   ui->menuFile->addAction(mActionExit);
@@ -1395,7 +1559,6 @@ void MainWindowView::init()
   QMenu *menuPanels = new QMenu(tr("Dockable panels"), this);
   menuPanels->addAction(ui->dockWidgetProject->toggleViewAction());
   menuPanels->addAction(ui->dockWidgetProperties->toggleViewAction());
-  menuPanels->addAction(ui->dockWidgetAssistant->toggleViewAction());
   menuPanels->addAction(ui->dockWidgetConsole->toggleViewAction());
   ui->menuView->addMenu(menuPanels);
 
@@ -1403,9 +1566,6 @@ void MainWindowView::init()
 
   QMenu *menuToolBar = new QMenu(tr("Toolbars"), this);
   menuToolBar->addAction(ui->mainToolBar->toggleViewAction());
-//  menuToolBar->addAction(ui->toolBarView->toggleViewAction());
-//  menuToolBar->addAction(ui->toolBarWorkflow->toggleViewAction());
-//  menuToolBar->addAction(ui->toolBar3dModel->toggleViewAction());
   menuToolBar->addAction(ui->toolBarTools->toggleViewAction());
   menuToolBar->addAction(ui->toolBarView->toggleViewAction());
   ui->menuView->addMenu(menuToolBar);
@@ -1416,8 +1576,6 @@ void MainWindowView::init()
   ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionNewSession);
   ui->menuTools->addSeparator();
-  ui->menuTools->addAction(mActionAssistant);
-  ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionPreprocess);
   ui->menuTools->addAction(mActionFeatureExtraction);
   ui->menuTools->addAction(mActionFeatureMatching);
@@ -1426,15 +1584,19 @@ void MainWindowView::init()
 
   /* Menu Quality Control */
 
-  QMenu *menuPhotogrammetricQualityControl = new QMenu(tr("Photogrammetric Quality Control"), this);
-  menuPhotogrammetricQualityControl->addAction(mActionExportTiePoints);
-  menuPhotogrammetricQualityControl->addAction(mActionMatchesViewer);
-  ui->menuQualityControl->addMenu(menuPhotogrammetricQualityControl);
-  QMenu *menuComputerVisionQualityControl = new QMenu(tr("Computer Vision Quality Control"), this);
-  menuComputerVisionQualityControl->addAction(mActionHomography);
-  menuComputerVisionQualityControl->addAction(mActionRepeteability);
-  menuComputerVisionQualityControl->addAction(mActionRecall);
-  ui->menuQualityControl->addMenu(menuComputerVisionQualityControl);
+  //QMenu *menuPhotogrammetricQualityControl = new QMenu(tr("Photogrammetric Quality Control"), this);
+  //menuPhotogrammetricQualityControl->addAction(mActionMatchesViewer);
+  //ui->menuQualityControl->addMenu(menuPhotogrammetricQualityControl);
+  //QMenu *menuComputerVisionQualityControl = new QMenu(tr("Computer Vision Quality Control"), this);
+  //menuComputerVisionQualityControl->addAction(mActionHomography);
+  //menuComputerVisionQualityControl->addAction(mActionRepeteability);
+  //menuComputerVisionQualityControl->addAction(mActionRecall);
+  //ui->menuQualityControl->addMenu(menuComputerVisionQualityControl);
+  ui->menuQualityControl->addAction(mActionMatchesViewer);
+  ui->menuQualityControl->addSeparator();
+  ui->menuQualityControl->addAction(mActionHomography);
+  ui->menuQualityControl->addAction(mActionRepeteability);
+  ui->menuQualityControl->addAction(mActionRecall);
 
   /* Menu Help */
 

@@ -100,6 +100,8 @@ public slots:
   bool showKeyPoints() const;
   void setKeyPoints(const std::vector<QPointF> &keyPoints);
 
+  void showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF>> &matches);
+
 signals:
 
   /* Menu File */
@@ -110,6 +112,12 @@ signals:
   void clearHistory();
   void saveProject();
   void saveProjectAs();
+  void exportTiePointsCvXml();
+  void exportTiePointsCvYml();
+  void exportMatchesCvYml();
+  void exportMatchesCvXml();
+  void exportMatchesTxt();
+
   void closeProject();
   void exit();
 
@@ -122,6 +130,14 @@ signals:
   void openFeatureExtraction();
   void openFeatureMatching();
   void openSettings();
+
+  /* Quality Control */
+
+  //void exportTiePoints();
+  void matchesViewer();
+  void homography();
+  void repeteability();
+  void recall();
 
   /* Menú Ayuda */
 
@@ -142,6 +158,7 @@ signals:
   void selectImageFeatures(QString);
 
   void loadKeyPoints(QString);
+  void openImageMatches(QString, QString, QString);
 
 protected:
 
@@ -182,14 +199,19 @@ protected:
   QAction *mActionStartPage;
   QAction *mActionLoadImages;
   QAction *mActionNewSession;
-  QAction *mActionAssistant;
+  //QAction *mActionAssistant;
   QAction *mActionPreprocess;
   QAction *mActionFeatureExtraction;
   QAction *mActionFeatureMatching;
   QAction *mActionSettings;
   QAction *mActionHelp;
   QAction *mActionAbout;
-  QAction *mActionExportTiePoints;
+  //QAction *mActionExportTiePoints;
+  QAction *mActionExportTiePointsCvXml;
+  QAction *mActionExportTiePointsCvYml;
+  QAction *mActionExportMatchesToCvXml;
+  QAction *mActionExportMatchesToCvYml;
+  QAction *mActionExportMatchesToTxt;
   QAction *mActionMatchesViewer;
   QAction *mActionHomography;
   QAction *mActionRepeteability;
@@ -202,6 +224,9 @@ protected:
   QAction *mActionZoom11;
   QAction *mActionShowKeyPoints;
   QMenu *mMenuRecentProjects;
+  QMenu *mMenuExport;
+  QMenu *mMenuExportTiePoints;
+  QMenu *mMenuExportMatches;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
   GraphicViewer *mGraphicViewer;

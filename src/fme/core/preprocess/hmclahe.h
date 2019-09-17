@@ -63,20 +63,6 @@ public:
   HmclahePreprocess(const QSize &blockSize, double l, double phi);
   ~HmclahePreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IHmclahe interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-  void setL(double l) override;
-  void setPhi(double phi) override;
-
 // ImageProcess interface
 
 public:

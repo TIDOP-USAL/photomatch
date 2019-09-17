@@ -108,6 +108,11 @@ public:
   virtual std::shared_ptr<Image> findImage(const QString &path) = 0;
   virtual const std::shared_ptr<Image> findImage(const QString &path) const = 0;
 
+  virtual std::shared_ptr<Image> findImageById(size_t id) = 0;
+  virtual const std::shared_ptr<Image> findImageById(size_t id) const = 0;
+  virtual std::shared_ptr<Image> findImageByName(const QString &imgName) = 0;
+  virtual const std::shared_ptr<Image> findImageByName(const QString &imgName) const = 0;
+
   /*!
    * \brief Busca una imagen en el proyecto
    * \param[in] path Ruta de la imagen a buscar
@@ -319,6 +324,10 @@ public:
   void deleteImage(size_t imgId) override;
   std::shared_ptr<Image> findImage(const QString &path) override;
   const std::shared_ptr<Image> findImage(const QString &path) const override;
+  std::shared_ptr<Image> findImageById(size_t id) override;
+  const std::shared_ptr<Image> findImageById(size_t id) const override;
+  std::shared_ptr<Image> findImageByName(const QString &imgName) override;
+  const std::shared_ptr<Image> findImageByName(const QString &imgName) const override;
   //size_t findImageId(const QString &path) override;
   size_t findImageId(const QString &path) const override;
   image_iterator imageBegin() override;

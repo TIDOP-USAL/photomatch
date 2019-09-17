@@ -139,6 +139,36 @@ const std::shared_ptr<Image> Project::findImage(const QString &path) const
   return nullptr;
 }
 
+std::shared_ptr<Image> Project::findImageById(size_t id)
+{
+  return mImages[id];
+}
+
+const std::shared_ptr<Image> Project::findImageById(size_t id) const
+{
+  return mImages[id];
+}
+
+std::shared_ptr<Image> Project::findImageByName(const QString &imgName)
+{
+  for (auto &image : mImages) {
+    if (image->name().compare(imgName) == 0) {
+      return image;
+    }
+  }
+  return nullptr;
+}
+
+const std::shared_ptr<Image> Project::findImageByName(const QString &imgName) const
+{
+  for (auto &image : mImages) {
+    if (image->name().compare(imgName) == 0) {
+      return image;
+    }
+  }
+  return nullptr;
+}
+
 //size_t Project::findImageId(const QString &path)
 //{
 //  for (size_t i = 0; i < mImages.size(); i++){
@@ -375,6 +405,7 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                 stream.skipCurrentElement();
             }
           } else if (stream.name() == "Sessions") {
+
             while (stream.readNextStartElement()) {
 
               if (stream.name() == "Session") {
@@ -609,6 +640,7 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                           } else if (stream.name() == "Flann") {
                             std::shared_ptr<IFlannMatcher> flann = std::make_shared<FlannMatcherProperties>();
                             session->setMatcher(flann);
+                            stream.skipCurrentElement();
                           } else
                             stream.skipCurrentElement();
                         }

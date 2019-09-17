@@ -58,18 +58,6 @@ public:
   NoshpPreprocess(const QSize &blockSize);
   ~NoshpPreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// INoshp interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-
 // ImageProcess interface
 
 public:

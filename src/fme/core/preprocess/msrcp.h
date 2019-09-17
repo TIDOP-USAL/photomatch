@@ -63,20 +63,6 @@ public:
   MsrcpPreprocess(double smallScale, double midScale, double largeScale);
   ~MsrcpPreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IMsrcp interface
-
-public:
-
-  void setSmallScale(double smallScale) override;
-  void setMidScale(double midScale) override;
-  void setLargeScale(double largeScale) override;
-
 // ImageProcess interface
 
 public:

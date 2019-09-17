@@ -18,7 +18,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_extendedDescriptor_data();
@@ -64,7 +65,7 @@ void TestKazeDetectorDescriptor::cleanupTestCase()
 
 }
 
-void TestKazeDetectorDescriptor::testDefaultConstructor()
+void TestKazeDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
   KazeDetectorDescriptor kazeDetectorDescriptor;
@@ -74,6 +75,17 @@ void TestKazeDetectorDescriptor::testDefaultConstructor()
   QCOMPARE(4, kazeDetectorDescriptor.octaves());
   QCOMPARE(4, kazeDetectorDescriptor.octaveLayers());
   QCOMPARE("DIFF_PM_G2", kazeDetectorDescriptor.diffusivity());
+}
+
+void TestKazeDetectorDescriptor::test_constructor()
+{
+  KazeDetectorDescriptor kazeDetectorDescriptor(true, true, 0.05, 8, 3, "DIFF_PM_G1");
+  QCOMPARE(true, kazeDetectorDescriptor.extendedDescriptor());
+  QCOMPARE(true, kazeDetectorDescriptor.upright());
+  QCOMPARE(0.05, kazeDetectorDescriptor.threshold());
+  QCOMPARE(8, kazeDetectorDescriptor.octaves());
+  QCOMPARE(3, kazeDetectorDescriptor.octaveLayers());
+  QCOMPARE("DIFF_PM_G1", kazeDetectorDescriptor.diffusivity());
 }
 
 void TestKazeDetectorDescriptor::test_type()

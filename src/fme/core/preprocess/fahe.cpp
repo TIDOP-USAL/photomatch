@@ -48,22 +48,12 @@ FahePreprocess::FahePreprocess(const QSize &blockSize)
   : FaheProperties(),
     ImageProcess()
 {
-  setBlockSize(blockSize);
+  this->setBlockSize(blockSize);
 }
 
 FahePreprocess::~FahePreprocess()
 {
 
-}
-
-void FahePreprocess::reset()
-{
-  FaheProperties::reset();
-}
-
-void FahePreprocess::setBlockSize(const QSize &blockSize)
-{
-  FaheProperties::setBlockSize(blockSize);
 }
 
 cv::Mat FahePreprocess::process(const cv::Mat &img)
@@ -78,7 +68,9 @@ cv::Mat FahePreprocess::process(const cv::Mat &img)
   }
 
   cv::Mat img_out;
-  pixkit::enhancement::local::FAHE2006(temp, img_out, cv::Size(FaheProperties::blockSize().width(), FaheProperties::blockSize().height()));
+  pixkit::enhancement::local::FAHE2006(temp, img_out,
+                                       cv::Size(FaheProperties::blockSize().width(),
+                                                FaheProperties::blockSize().height()));
   temp.release();
   return img_out;
 }

@@ -25,6 +25,8 @@ class IFeatureExtractorModel;
 class IFeatureExtractorPresenter;
 class IDescriptorMatcherModel;
 class IDescriptorMatcherPresenter;
+class IMatchViewerPresenter;
+class IMatchViewerModel;
 class IProgressDialog;
 
 class MainWindowPresenter
@@ -51,11 +53,20 @@ protected slots:
   void deleteHistory();
   void saveProject();
   void saveProjectAs();
+  void exportTiePointsCvXml();
+  void exportTiePointsCvYml();
+  void exportMatchesCvYml();
+  void exportMatchesCvXml();
+  void exportMatchesTxt();
+
   void closeProject();
   void exit();
 
   /* Menú View */
 
+  /* Quality Control */
+
+  void openMatchesViewer();
 
   /* Menú herramientas */
 
@@ -89,6 +100,7 @@ protected slots:
   void selectDetector(const QString &session);
   void selectDescriptor(const QString &session);
   void selectImageFeatures(const QString &imageFeatures);
+  void openImageMatches(const QString &sessionName, const QString &imgName1, const QString &imgName2);
 
   void updatePreprocess();
   void updateFeatures();
@@ -138,6 +150,8 @@ private:
 
   void initProgressDialog();
 
+  void initMatchesViewer();
+
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
   bool loadMatches(const QString &session);
@@ -168,6 +182,9 @@ protected:
 
   IDescriptorMatcherModel *mDescriptorMatcherModel;
   IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
+
+  IMatchViewerPresenter *mMatchesViewerPresenter;
+  IMatchViewerModel *mMatchesViewerModel;
 
   IProgressDialog *mProgressDialog;
   QTextEdit *mConsole;

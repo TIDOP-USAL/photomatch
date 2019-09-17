@@ -156,14 +156,14 @@ OrbDetectorDescriptor::OrbDetectorDescriptor(int featuresNumber,
     DescriptorExtractor(),
     mOrb(cv::ORB::create())
 {
-  OrbProperties::setFeaturesNumber(featuresNumber);
-  OrbProperties::setScaleFactor(scaleFactor);
-  OrbProperties::setLevelsNumber(levelsNumber);
-  OrbProperties::setEdgeThreshold(edgeThreshold);
-  OrbProperties::setWTA_K(wta_k);
-  OrbProperties::setScoreType(scoreType);
-  OrbProperties::setPatchSize(patchSize);
-  OrbProperties::setFastThreshold(fastThreshold);
+  setFeaturesNumber(featuresNumber);
+  setScaleFactor(scaleFactor);
+  setLevelsNumber(levelsNumber);
+  setEdgeThreshold(edgeThreshold);
+  setWTA_K(wta_k);
+  setScoreType(scoreType);
+  setPatchSize(patchSize);
+  setFastThreshold(fastThreshold);
 }
 
 OrbDetectorDescriptor::~OrbDetectorDescriptor()

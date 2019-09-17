@@ -1,6 +1,7 @@
 #include "MainWindowModel.h"
 
 #include "fme/core/features/features.h"
+#include "fme/core/features/matcher.h"
 
 #include <tidop/core/messages.h>
 
@@ -165,6 +166,36 @@ std::vector<QPointF> MainWindowModel::loadKeyPoints(const QString &file) const
   }
 
   return keyPoints;
+}
+
+std::vector<std::pair<QPointF, QPointF> > MainWindowModel::loadMatches(const QString &fileMatches,
+                                                                       const QString &fileKeyPoints1,
+                                                                       const QString &fileKeyPoints2) const
+{
+  std::vector<std::pair<QPointF, QPointF>> r_matches;
+
+  std::vector<cv::DMatch> match;
+  matchesRead(fileMatches, match);
+  std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
+  cv::Mat descriptors;
+  featuresRead(fileKeyPoints1, keyPoints1, descriptors);
+  featuresRead(fileKeyPoints2, keyPoints2, descriptors);
+  /// Un tanto artificioso.... Revisar
+  QString nameMatchesFile = QFileInfo(fileMatches).baseName();
+  QString nameKeyPoints1File = QFileInfo(fileKeyPoints1).baseName();
+  int idx = nameMatchesFile.indexOf(nameKeyPoints1File);
+  for (size_t i = 0; i < match.size(); i++){
+    size_t query_id = (idx == 0) ? static_cast<size_t>(match[i].queryIdx) : static_cast<size_t>(match[i].trainIdx);
+    size_t train_id = (idx == 0) ? static_cast<size_t>(match[i].trainIdx) : static_cast<size_t>(match[i].queryIdx);
+    QPointF pt_query(static_cast<double>(keyPoints1[query_id].pt.x),
+                     static_cast<double>(keyPoints1[query_id].pt.y));
+    QPointF pt_train(static_cast<double>(keyPoints2[train_id].pt.x),
+                     static_cast<double>(keyPoints2[train_id].pt.y));
+
+    r_matches.push_back(std::make_pair(pt_query, pt_train));
+  }
+
+  return r_matches;
 }
 
 void MainWindowModel::init()

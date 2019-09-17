@@ -130,6 +130,9 @@ public:
    */
   virtual const std::shared_ptr<Image> findImage(const QString &path) const = 0;
 
+  virtual const std::shared_ptr<Image> findImageById(size_t id) const = 0;
+  virtual const std::shared_ptr<Image> findImageByName(const QString &imgName) const = 0;
+
   /*!
    * \brief Busca una imagen en el proyecto
    * \param[in] path Ruta de la imagen a buscar
@@ -244,8 +247,14 @@ public:
   virtual bool fullImageSize() const = 0;
   virtual void setFullImageSize(bool fullImageSize) = 0;
   virtual void addPreprocessedImage(const QString &image) = 0;
+  virtual void deletePreprocessedImage(const QString &image) = 0;
+  virtual void clearPreprocessedImages() = 0;
   virtual void addFeatures(const QString &feat) = 0;
+  virtual void deleteFeatures(const QString &feat) = 0;
+  virtual void clearFeatures() = 0;
   virtual void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
+  virtual void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
+  virtual void clearMatches() = 0;
 
   /*!
    * \brief Limpia el proyecto
@@ -295,6 +304,8 @@ public:
   void deleteImage(size_t imgId) override;
   //std::shared_ptr<Image> findImage(const QString &path) override;
   const std::shared_ptr<Image> findImage(const QString &path) const override;
+  const std::shared_ptr<Image> findImageById(size_t id) const override;
+  const std::shared_ptr<Image> findImageByName(const QString &imgName) const override;
   //size_t findImageId(const QString &path) override;
   size_t findImageId(const QString &path) const override;
 //  image_iterator imageBegin() override;
@@ -327,8 +338,14 @@ public:
   bool fullImageSize() const override;
   void setFullImageSize(bool fullImageSize) override;
   void addPreprocessedImage(const QString &image) override;
+  void deletePreprocessedImage(const QString &image) override;
+  void clearPreprocessedImages() override;
   void addFeatures(const QString &feat) override;
+  void deleteFeatures(const QString &feat) override;
+  void clearFeatures() override;
   void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
+  void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
+  void clearMatches() override;
 
   void clear() override;
 

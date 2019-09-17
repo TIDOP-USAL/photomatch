@@ -53,22 +53,12 @@ PohePreprocess::PohePreprocess(const QSize &blockSize)
   : PoheProperties(),
     ImageProcess()
 {
-  setBlockSize(blockSize);
+  this->setBlockSize(blockSize);
 }
 
 PohePreprocess::~PohePreprocess()
 {
 
-}
-
-void PohePreprocess::reset()
-{
-  PoheProperties::reset();
-}
-
-void PohePreprocess::setBlockSize(const QSize &blockSize)
-{
-  PoheProperties::setBlockSize(blockSize);
 }
 
 cv::Mat PohePreprocess::process(const cv::Mat &img)

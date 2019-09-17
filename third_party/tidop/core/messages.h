@@ -425,15 +425,15 @@ public:
 };
 
 #ifdef _DEBUG
-#  define msgDebug(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_debug, __FILE__, __LINE__, TL_FUNCTION);
-#  define msgInfo(...)     tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_info, __FILE__, __LINE__, TL_FUNCTION);
-#  define msgWarning(...)  tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_warning, __FILE__, __LINE__, TL_FUNCTION);
-#  define msgError(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_error, __FILE__, __LINE__, TL_FUNCTION);
+#  define msgDebug(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_debug, __FILE__, __LINE__, TL_FUNCTION)
+#  define msgInfo(...)     tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_info, __FILE__, __LINE__, TL_FUNCTION)
+#  define msgWarning(...)  tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_warning, __FILE__, __LINE__, TL_FUNCTION)
+#  define msgError(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_error, __FILE__, __LINE__, TL_FUNCTION)
 #else
-#  define msgDebug(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_debug);
-#  define msgInfo(...)     tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_info);
-#  define msgWarning(...)  tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_warning);
-#  define msgError(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_error);
+#  define msgDebug(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_debug)
+#  define msgInfo(...)     tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_info)
+#  define msgWarning(...)  tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_warning)
+#  define msgError(...)    tl::MessageManager::release(tl::MessageManager::Message(__VA_ARGS__).message(), tl::MessageLevel::msg_error)
 #endif
 
 #else  // End TL_MESSAGE_HANDLER

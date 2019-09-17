@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void testThreshold_data();
@@ -56,13 +57,21 @@ void TestAgastDetector::cleanupTestCase()
 
 }
 
-void TestAgastDetector::testDefaultConstructor()
+void TestAgastDetector::test_defaultConstructor()
 {
   /// Check default values
   AgastDetector agastDetector;
   QCOMPARE(10, agastDetector.threshold());
   QCOMPARE("OAST_9_16", agastDetector.detectorType());
   QCOMPARE(true, agastDetector.nonmaxSuppression());
+}
+
+void TestAgastDetector::test_constructor()
+{
+  AgastDetector agastDetector(20, false, "AGAST_7_12s");
+  QCOMPARE(20, agastDetector.threshold());
+  QCOMPARE("AGAST_7_12s", agastDetector.detectorType());
+  QCOMPARE(false, agastDetector.nonmaxSuppression());
 }
 
 void TestAgastDetector::test_type()

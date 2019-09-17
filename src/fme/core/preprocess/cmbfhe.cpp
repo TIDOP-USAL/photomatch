@@ -47,22 +47,12 @@ CmbfhePreprocess::CmbfhePreprocess(const QSize &blockSize)
   : CmbfheProperties(),
     ImageProcess()
 {
-  setBlockSize(blockSize);
+  this->setBlockSize(blockSize);
 }
 
 CmbfhePreprocess::~CmbfhePreprocess()
 {
 
-}
-
-void CmbfhePreprocess::reset()
-{
-  CmbfheProperties::reset();
-}
-
-void CmbfhePreprocess::setBlockSize(const QSize &blockSize)
-{
-  CmbfheProperties::setBlockSize(blockSize);
 }
 
 cv::Mat CmbfhePreprocess::process(const cv::Mat &img)
@@ -77,7 +67,10 @@ cv::Mat CmbfhePreprocess::process(const cv::Mat &img)
   }
 
   cv::Mat img_out;
-  pixkit::enhancement::local::LambertiMontrucchioSanna2006(temp, img_out, cv::Size(CmbfheProperties::blockSize().width(), CmbfheProperties::blockSize().height()), cv::Size(44,44));
+  pixkit::enhancement::local::LambertiMontrucchioSanna2006(temp, img_out,
+                                                           cv::Size(CmbfheProperties::blockSize().width(),
+                                                                    CmbfheProperties::blockSize().height()),
+                                                           cv::Size(44,44));
 
   return img_out;
 }

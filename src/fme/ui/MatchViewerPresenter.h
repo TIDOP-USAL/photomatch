@@ -12,6 +12,8 @@ namespace fme
 
 class IMatchViewerView;
 class IMatchViewerModel;
+//class IProjectModel;
+//class ISettingsModel;
 class Help;
 
 /*!
@@ -26,13 +28,12 @@ class IMatchViewerPresenter
 public:
 
   IMatchViewerPresenter(){}
-
   virtual ~IMatchViewerPresenter() {}
 
 protected slots:
 
-  virtual void leftImageChange(const QString &image) = 0;
-  virtual void rightImageChange(const QString &image) = 0;
+  virtual void loadLeftImage(const QString &image) = 0;
+  virtual void loadRightImage(const QString &image) = 0;
   virtual void loadMatches(const QString &imageLeft, const QString &imageRight) = 0;
 
 };
@@ -45,13 +46,15 @@ class MatchViewerPresenter
 
 public:
 
-  MatchViewerPresenter(IMatchViewerView *view, IMatchViewerModel *model);
+  MatchViewerPresenter(IMatchViewerView *view,
+                       IMatchViewerModel *model);
 
+  ~MatchViewerPresenter() override;
 
 protected slots:
 
-  void leftImageChange(const QString &image) override;
-  void rightImageChange(const QString &image) override;
+  void loadLeftImage(const QString &image) override;
+  void loadRightImage(const QString &image) override;
   void loadMatches(const QString &imageLeft, const QString &imageRight) override;
 
   //void save();
@@ -81,6 +84,8 @@ private:
 
   IMatchViewerView *mView;
   IMatchViewerModel *mModel;
+//  IProjectModel *mProjectModel;
+//  ISettingsModel *mSettingsModel;
   std::shared_ptr<Help> mHelp;
 
 };

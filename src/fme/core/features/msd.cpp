@@ -224,14 +224,14 @@ std::vector<cv::KeyPoint> MsdDetector::detect(const cv::Mat &img, cv::InputArray
     float maxX = 0;
     float maxY = 0;
 
-    int i = 0;
+    //int i = 0;
     int affineTilts = MsdProperties::affineTilts();
     for (int tl = 1; tl <= affineTilts; tl++) {
       double t = pow(2, 0.5*tl);
-      for (int phi = 0; phi < 180; phi += 72.0 / t) {
-        i++;
+      for (double phi = 0.; phi < 180.; phi += 72.0 / t) {
+        //i++;
         std::vector<cv::KeyPoint> kps;
-        kps.clear();
+        //kps.clear();
         cv::Mat timg, mask, Ai;
 
         img.copyTo(timg);
@@ -247,7 +247,7 @@ std::vector<cv::KeyPoint> MsdDetector::detect(const cv::Mat &img, cv::InputArray
 
           kps[i].pt.x = kpt_t.at<float>(0, 0);
           kps[i].pt.y = kpt_t.at<float>(1, 0);
-          if (phi == 0 || pointIsAcceptable(kps[i], img.cols, img.rows)) {
+          if (phi == 0. || pointIsAcceptable(kps[i], img.cols, img.rows)) {
             if (kps[i].pt.x > maxX) {
               maxX = kps[i].pt.x;
             }
@@ -292,7 +292,8 @@ std::vector<cv::KeyPoint> MsdDetector::detect(const cv::Mat &img, cv::InputArray
     //emit newStdData("MSD Key-points found in image " + mImageName + ": " + QString::number(key_points.size()));
 
   }
-  return std::vector<cv::KeyPoint>();
+
+  return key_points;
 }
 
 void MsdDetector::compensate_affine_coor1(float *x0, float *y0, int w1, int h1, float t1, float t2, float Rtheta)

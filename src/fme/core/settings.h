@@ -7,14 +7,45 @@
 #include <QStringList>
 #include <QSize>
 
-#include "fme/core/features/features.h"
-#include "fme/core/preprocess/preprocess.h"
-#include "fme/core/features/matcher.h"
-
 class QSettings;
 
 namespace fme
 {
+
+class IAcebsf;
+class IClahe;
+class ICmbfhe;
+class IDecolor;
+class IDhe;
+class IFahe;
+class IHmclahe;
+class ILceBsescs;
+class IMsrcp;
+class INoshp;
+class IPohe;
+class IRswhe;
+class IWallis;
+class IAgast;
+class IAkaze;
+class IBrief;
+class IBrisk;
+class IDaisy;
+class IFast;
+class IFreak;
+class IGftt;
+class IHog;
+class IKaze;
+class ILatch;
+class ILucid;
+class IMsd;
+class IMser;
+class IOrb;
+class ISift;
+class IStar;
+class ISurf;
+class IFlannMatcher;
+class IBruteForceMatcher;
+class IRobustMatcherRefinement;
 
 /*----------------------------------------------------------------*/
 
@@ -132,8 +163,12 @@ public:
   virtual ISurf *surf() = 0;
   virtual const ISurf *surf() const = 0;
 
-//  virtual IDescriptorMatcher *descriptorMatcher() = 0;
-//  virtual const IDescriptorMatcher *descriptorMatcher() const = 0;
+  virtual IFlannMatcher *flannMatcher() = 0;
+  virtual const IFlannMatcher *flannMatcher() const = 0;
+  virtual IBruteForceMatcher *bruteForceMatcher() = 0;
+  virtual const IBruteForceMatcher *bruteForceMatcher() const = 0;
+  virtual IRobustMatcherRefinement *robustMatcherRefinement() = 0;
+  virtual const IRobustMatcherRefinement *robustMatcherRefinement() const = 0;
 
   /*!
    * \brief Recupera la configuración por defecto
@@ -264,8 +299,12 @@ public:
   ISurf *surf() override;
   const ISurf *surf() const override;
 
-//  IDescriptorMatcher *descriptorMatcher() override;
-//  const IDescriptorMatcher *descriptorMatcher() const override;
+  IFlannMatcher *flannMatcher() override;
+  const IFlannMatcher *flannMatcher() const override;
+  IBruteForceMatcher *bruteForceMatcher() override;
+  const IBruteForceMatcher *bruteForceMatcher() const override;
+  IRobustMatcherRefinement *robustMatcherRefinement() override;
+  const IRobustMatcherRefinement *robustMatcherRefinement() const override;
 
   void reset() override;
 
@@ -307,7 +346,9 @@ protected:
   IStar *mStar;
   ISurf *mSurf;
 
-  //IDescriptorMatcher *mDescriptorMatcher;
+  IFlannMatcher *mFlannMatcher;
+  IBruteForceMatcher *mBruteForceMatcher;
+  IRobustMatcherRefinement *mRobustMatcherRefinement;
 };
 
 

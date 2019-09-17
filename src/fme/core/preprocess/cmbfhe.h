@@ -57,18 +57,6 @@ public:
   CmbfhePreprocess(const QSize &blockSize);
   ~CmbfhePreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// ICmbfhe interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-
 // ImageProcess interface
 
 public:

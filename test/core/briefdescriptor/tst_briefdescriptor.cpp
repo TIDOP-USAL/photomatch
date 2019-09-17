@@ -19,7 +19,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_defaultConstructor();
+  void test_constructor();
   void test_type();
   void test_name();
   void test_bytes_data();
@@ -57,12 +58,20 @@ void TestBriefDescriptor::cleanupTestCase()
 
 }
 
-void TestBriefDescriptor::testDefaultConstructor()
+void TestBriefDescriptor::test_defaultConstructor()
 {
   /// Check default values
   BriefDescriptor briefDescriptor;
   QCOMPARE("32", briefDescriptor.bytes());
   QCOMPARE(false, briefDescriptor.useOrientation());
+}
+
+void TestBriefDescriptor::test_constructor()
+{
+  /// Check default values
+  BriefDescriptor briefDescriptor("16", true);
+  QCOMPARE("16", briefDescriptor.bytes());
+  QCOMPARE(true, briefDescriptor.useOrientation());
 }
 
 void TestBriefDescriptor::test_type()

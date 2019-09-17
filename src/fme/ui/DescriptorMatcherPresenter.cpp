@@ -104,6 +104,10 @@ void DescriptorMatcherPresenter::run()
 
   mProjectModel->setMatcher(std::dynamic_pointer_cast<Match>(descriptorMatcher));
 
+  std::shared_ptr<RobustMatching> robustMatching(new RobustMatching(descriptorMatcher/*,
+                                                                    mView->ratio(),
+                                                                    mView->crossMatching()*/));
+
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
 
     auto it2 = it;
@@ -131,7 +135,7 @@ void DescriptorMatcherPresenter::run()
       }
       matches.append(fileInfo.baseName()).append("_").append(fileInfo2.baseName()).append(".xml");
 
-      std::shared_ptr<MatchingProcess> matcher(new MatchingProcess(features1, features2, matches, descriptorMatcher));
+      std::shared_ptr<MatchingProcess> matcher(new MatchingProcess(features1, features2, matches, robustMatching));
       connect(matcher.get(), SIGNAL(matchCompute(QString,QString,QString)), this, SLOT(onMatchCompute(QString,QString,QString)));
       mMultiProcess->appendProcess(matcher);
 
@@ -140,6 +144,8 @@ void DescriptorMatcherPresenter::run()
   }
 
   mView->hide();
+
+  mProjectModel->clearMatches();
 
   if (mProgressDialog){
     connect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));

@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_defaultConstructor();
   void test_type();
   void test_name();
   void test_histogramDivisions_data();
@@ -46,7 +46,7 @@ TestRswhe::~TestRswhe()
   }
 }
 
-void TestRswhe::testDefaultConstructor()
+void TestRswhe::test_defaultConstructor()
 {
   RswhePreprocess rswhePreprocess;
   QCOMPARE(2, rswhePreprocess.histogramDivisions());

@@ -49,7 +49,7 @@ signals:
 public slots:
 
   virtual void setThresholdSaliency(double thresholdSaliency) = 0;
-  virtual void setPathRadius(int pathRadius) = 0;
+  virtual void setPatchRadius(int pathRadius) = 0;
   virtual void setKNN(int knn) = 0;
   virtual void setAreaRadius(int areaRadius) = 0;
   virtual void setScaleFactor(double scaleFactor) = 0;
@@ -92,7 +92,7 @@ public:
 public slots:
 
   void setThresholdSaliency(double thresholdSaliency) override;
-  void setPathRadius(int pathRadius) override;
+  void setPatchRadius(int pathRadius) override;
   void setKNN(int knn) override;
   void setAreaRadius(int areaRadius) override;
   void setScaleFactor(double scaleFactor) override;

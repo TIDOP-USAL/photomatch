@@ -56,18 +56,6 @@ public:
   FahePreprocess(const QSize &blockSize);
   ~FahePreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IFahe interface
-
-public:
-
-  void setBlockSize(const QSize &blockSize) override;
-
 // ImageProcess interface
 
 public:

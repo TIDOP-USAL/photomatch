@@ -76,34 +76,15 @@ MsrcpPreprocess::MsrcpPreprocess(double smallScale, double midScale, double larg
   : MsrcpProperties(),
     ImageProcess()
 {
-  setSmallScale(smallScale);
-  setMidScale(midScale);
-  setLargeScale(largeScale);
+  TL_TODO("Ver por que aparecen estos parametros que MSRCP2014 no admite")
+  this->setSmallScale(smallScale);
+  this->setMidScale(midScale);
+  this->setLargeScale(largeScale);
 }
 
 MsrcpPreprocess::~MsrcpPreprocess()
 {
 
-}
-
-void MsrcpPreprocess::reset()
-{
-  MsrcpProperties::reset();
-}
-
-void MsrcpPreprocess::setSmallScale(double smallScale)
-{
-  MsrcpProperties::setSmallScale(smallScale);
-}
-
-void MsrcpPreprocess::setMidScale(double midScale)
-{
-  MsrcpProperties::setMidScale(midScale);
-}
-
-void MsrcpPreprocess::setLargeScale(double largeScale)
-{
-  MsrcpProperties::setLargeScale(largeScale);
 }
 
 cv::Mat MsrcpPreprocess::process(const cv::Mat &img)

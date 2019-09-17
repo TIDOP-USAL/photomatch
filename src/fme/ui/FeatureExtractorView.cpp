@@ -116,7 +116,7 @@ void FeatureExtractorView::enableDescriptorExtractor(const QString &descriptorEx
 
 void FeatureExtractorView::init()
 {
-  this->setWindowTitle(tr("FeatureExtractor"));
+  this->setWindowTitle(tr("Feature Extractor"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(350, 450);
 

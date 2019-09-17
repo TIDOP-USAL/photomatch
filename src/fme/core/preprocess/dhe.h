@@ -56,18 +56,6 @@ public:
   DhePreprocess(int x);
   ~DhePreprocess() override;
 
-// Preprocess interface
-
-public:
-
-  void reset() override;
-
-// IDhe interface
-
-public:
-
-  void setX(int x) override;
-
 // ImageProcess interface
 
 public:

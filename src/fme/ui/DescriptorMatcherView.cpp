@@ -94,7 +94,7 @@ void DescriptorMatcherView::init()
 {
   this->setWindowTitle(tr("Descriptor Matcher"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
-  this->resize(350, 450);
+  this->resize(350, 400);
 
   QGridLayout *gridLayout = new QGridLayout();
   this->setLayout(gridLayout);

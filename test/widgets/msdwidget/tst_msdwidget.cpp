@@ -128,7 +128,7 @@ void TestMsdWidget::test_pathRadius()
   QFETCH(int, value);
   QFETCH(int, result);
 
-  mMsdWidget->setPathRadius(value);
+  mMsdWidget->setPatchRadius(value);
   QCOMPARE(result, mMsdWidget->pathRadius());
 }
 
@@ -313,7 +313,7 @@ void TestMsdWidget::test_tilts()
 void TestMsdWidget::test_Reset()
 {
   mMsdWidget->setThresholdSaliency(200);
-  mMsdWidget->setPathRadius(4);
+  mMsdWidget->setPatchRadius(4);
   mMsdWidget->setKNN(5);
   mMsdWidget->setAreaRadius(3);
   mMsdWidget->setScaleFactor(1.5);
