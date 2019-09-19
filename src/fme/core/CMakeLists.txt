@@ -33,8 +33,8 @@ add_library(libcore ${LIB_TYPE}
             features/latch.cpp
             features/lucid.h
             features/lucid.cpp
-            #features/lss.h
-            #features/lss.cpp
+            features/lss.h
+            features/lss.cpp
             features/kaze.h
             features/kaze.cpp
             features/msd.h
@@ -43,6 +43,8 @@ add_library(libcore ${LIB_TYPE}
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSD.cpp
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.h
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.cpp
+            ${CMAKE_SOURCE_DIR}/third_party/lss/lss.cpp
+            ${CMAKE_SOURCE_DIR}/third_party/lss/lss.h
             features/mser.h
             features/mser.cpp
             features/sift.h

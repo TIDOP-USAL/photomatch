@@ -1,5 +1,8 @@
 #include "kaze.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -144,18 +147,34 @@ KazeDetectorDescriptor::~KazeDetectorDescriptor()
 
 }
 
-std::vector<cv::KeyPoint> KazeDetectorDescriptor::detect(const cv::Mat &img, cv::InputArray &mask)
+bool KazeDetectorDescriptor::detect(const cv::Mat &img,
+                                    std::vector<cv::KeyPoint> &keyPoints,
+                                    cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mKaze->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mKaze->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("KAZE Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
-cv::Mat KazeDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool KazeDetectorDescriptor::extract(const cv::Mat &img,
+                                     std::vector<cv::KeyPoint> &keyPoints,
+                                     cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mKaze->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mKaze->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("KAZE Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void KazeDetectorDescriptor::setExtendedDescriptor(bool extended)

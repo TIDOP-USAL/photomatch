@@ -81,7 +81,9 @@ public:
 
 public:
 
-  std::vector<cv::KeyPoint> detect(const cv::Mat &img, cv::InputArray &mask) override;
+  bool detect(const cv::Mat &img,
+              std::vector<cv::KeyPoint> &keyPoints,
+              cv::InputArray &mask) override;
 
 // IGftt interface
 

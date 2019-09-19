@@ -1,5 +1,8 @@
 #include "star.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -124,11 +127,19 @@ void StarDetector::update()
                                                 StarProperties::suppressNonmaxSize());
 }
 
-std::vector<cv::KeyPoint> StarDetector::detect(const cv::Mat &img, cv::InputArray &mask)
+bool StarDetector::detect(const cv::Mat &img,
+                          std::vector<cv::KeyPoint> &keyPoints,
+                          cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mSTAR->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mSTAR->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("STAR Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void StarDetector::setMaxSize(int maxSize)

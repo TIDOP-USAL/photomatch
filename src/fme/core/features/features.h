@@ -37,6 +37,7 @@ public:
     lss,
     msd,
     mser,
+    mtm,
     orb,
     sift,
     star,
@@ -74,12 +75,15 @@ public:
   virtual ~KeypointDetector() = default;
 
   /*!
-   * \brief Detecta los puntos de interes de una imagen
-   * \param[in] img Imagen
-   * \param[in] mask Mascara opcional
-   * \return Número de Key points detectados
+   * \brief Detects keypoints in an image
+   * \param[in] img Image
+   * \param[out] keyPoints The detected keypoints
+   * \param[in] mask Optional mask
+   * \return true if error
    */
-  virtual std::vector<cv::KeyPoint> detect(const cv::Mat &img, cv::InputArray &mask = cv::noArray()) = 0;
+  virtual bool detect(const cv::Mat &img,
+                      std::vector<cv::KeyPoint> &keyPoints,
+                      cv::InputArray &mask = cv::noArray()) = 0;
 
 };
 
@@ -94,12 +98,15 @@ public:
   virtual ~DescriptorExtractor() = default;
 
   /*!
-   * \brief Calcula los Descriptores
-   * \param[in] img Imagen
-   * \param[in] keyPoints Puntos de interés
-   * \return Descriptores
+   * \brief Extract descriptors
+   * \param[in] img Image
+   * \param[in] keyPoints KeyPoints
+   * \param[out] descriptors Computed descriptors
+   * \return true if error
    */
-  virtual cv::Mat extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints) = 0;
+  virtual bool extract(const cv::Mat &img,
+                       std::vector<cv::KeyPoint> &keyPoints,
+                       cv::Mat &descriptors) = 0;
 
 };
 

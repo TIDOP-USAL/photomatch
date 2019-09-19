@@ -1,5 +1,8 @@
 #include "mser.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -183,11 +186,19 @@ void MserDetector::update()
                            MserProperties::edgeBlurSize());
 }
 
-std::vector<cv::KeyPoint> MserDetector::detect(const cv::Mat &img, cv::InputArray &mask)
+bool MserDetector::detect(const cv::Mat &img,
+                          std::vector<cv::KeyPoint> &keyPoints,
+                          cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mMSER->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mMSER->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("MSER Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void MserDetector::setDelta(int delta)

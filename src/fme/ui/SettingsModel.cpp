@@ -670,35 +670,42 @@ bool SettingsModel::surfRotatedFeatures() const
   return mSettings->surf()->rotatedFeatures();
 }
 
-//QString SettingsModel::matchMatchingMethod() const
-//{
-//  return mSettings->descriptorMatcher()->matchingMethod();
-//}
+QString SettingsModel::matchNormType() const
+{
+  BruteForceMatcher::Norm norm = mSettings->bruteForceMatcher()->normType();
+  QString s_norm = "NORM_L2";
+  if (norm == BruteForceMatcherProperties::Norm::l1) {
+    s_norm = "NORM_L1";
+  } else if (norm == BruteForceMatcherProperties::Norm::l2) {
+    s_norm = "NORM_L2";
+  } else if (norm == BruteForceMatcherProperties::Norm::hamming) {
+    s_norm = "NORM_HAMMING";
+  } else if (norm == BruteForceMatcherProperties::Norm::hamming2) {
+    s_norm = "NORM_HAMMING2";
+  }
 
-//QString SettingsModel::matchNormType() const
-//{
-//  return mSettings->descriptorMatcher()->normType();
-//}
+  return s_norm;
+}
 
-//double SettingsModel::matchRatio() const
-//{
-//  return mSettings->descriptorMatcher()->ratio();
-//}
+double SettingsModel::matchRatio() const
+{
+  return mSettings->robustMatcherRefinement()->ratio();
+}
 
-//double SettingsModel::matchDistance() const
-//{
-//  return mSettings->descriptorMatcher()->distance();
-//}
+double SettingsModel::matchDistance() const
+{
+  return mSettings->robustMatcherRefinement()->distance();
+}
 
-//double SettingsModel::matchConfidence() const
-//{
-//  return mSettings->descriptorMatcher()->confidence();
-//}
+double SettingsModel::matchConfidence() const
+{
+  return mSettings->robustMatcherRefinement()->confidence();
+}
 
-//bool SettingsModel::matchCrossMatching() const
-//{
-//  return mSettings->descriptorMatcher()->crossMatching();
-//}
+bool SettingsModel::matchCrossMatching() const
+{
+  return mSettings->robustMatcherRefinement()->crossCheck();
+}
 
 void SettingsModel::setLanguage(const QString &language)
 {
@@ -1444,41 +1451,45 @@ void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
   emit unsavedChanges(true);
 }
 
-//void SettingsModel::setMatchMatchingMethod(const QString &matchingMethod)
-//{
-//  mSettings->descriptorMatcher()->setMatchingMethod(matchingMethod);
-//  emit unsavedChanges(true);
-//}
+void SettingsModel::setMatchNormType(const QString &normType)
+{
+  BruteForceMatcher::Norm norm = BruteForceMatcherProperties::Norm::l2;
+  if (normType.compare("NORM_L1") == 0) {
+    norm = BruteForceMatcherProperties::Norm::l1;
+  } else if (normType.compare("NORM_L2") == 0) {
+    norm = BruteForceMatcherProperties::Norm::l2;
+  } else if (normType.compare("NORM_HAMMING") == 0) {
+    norm = BruteForceMatcherProperties::Norm::hamming;
+  } else if (normType.compare("NORM_HAMMING2") == 0) {
+    norm = BruteForceMatcherProperties::Norm::hamming2;
+  }
+  mSettings->bruteForceMatcher()->setNormType(norm);
+  emit unsavedChanges(true);
+}
 
-//void SettingsModel::setMatchNormType(const QString &normType)
-//{
-//  mSettings->descriptorMatcher()->setNormType(normType);
-//  emit unsavedChanges(true);
-//}
+void SettingsModel::setMatchRatio(double ratio)
+{
+  mSettings->robustMatcherRefinement()->setRatio(ratio);
+  emit unsavedChanges(true);
+}
 
-//void SettingsModel::setMatchRatio(double ratio)
-//{
-//  mSettings->descriptorMatcher()->setRatio(ratio);
-//  emit unsavedChanges(true);
-//}
+void SettingsModel::setMatchDistance(double distance)
+{
+  mSettings->robustMatcherRefinement()->setDistance(distance);
+  emit unsavedChanges(true);
+}
 
-//void SettingsModel::setMatchDistance(double distance)
-//{
-//  mSettings->descriptorMatcher()->setDistance(distance);
-//  emit unsavedChanges(true);
-//}
+void SettingsModel::setMatchConfidence(double confidence)
+{
+  mSettings->robustMatcherRefinement()->setConfidence(confidence);
+  emit unsavedChanges(true);
+}
 
-//void SettingsModel::setMatchConfidence(double confidence)
-//{
-//  mSettings->descriptorMatcher()->setConfidence(confidence);
-//  emit unsavedChanges(true);
-//}
-
-//void SettingsModel::setMatchCrossMatching(bool crossMatching)
-//{
-//  mSettings->descriptorMatcher()->setCrossMatching(crossMatching);
-//  emit unsavedChanges(true);
-//}
+void SettingsModel::setMatchCrossMatching(bool crossMatching)
+{
+  mSettings->robustMatcherRefinement()->setCrossCheck(crossMatching);
+  emit unsavedChanges(true);
+}
 
 void SettingsModel::reset()
 {

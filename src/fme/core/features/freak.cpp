@@ -1,5 +1,8 @@
 #include "freak.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -108,11 +111,19 @@ void FreakDescriptor::update()
                                           FreakProperties::octaves());
 }
 
-cv::Mat FreakDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool FreakDescriptor::extract(const cv::Mat &img,
+                              std::vector<cv::KeyPoint> &keyPoints,
+                              cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mFREAK->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mFREAK->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("FREAK Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void FreakDescriptor::setOrientationNormalized(bool orientationNormalized)

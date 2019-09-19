@@ -87,7 +87,9 @@ private:
 
 public:
 
-  cv::Mat extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints) override;
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
 
 // IHog interface
 

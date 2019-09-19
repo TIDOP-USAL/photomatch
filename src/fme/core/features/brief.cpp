@@ -1,9 +1,10 @@
 #include "brief.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
-
-/*----------------------------------------------------------------*/
 
 
 BriefProperties::BriefProperties()
@@ -83,11 +84,19 @@ void BriefDescriptor::update()
                                                              BriefProperties::useOrientation());
 }
 
-cv::Mat BriefDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool BriefDescriptor::extract(const cv::Mat &img,
+                              std::vector<cv::KeyPoint> &keyPoints,
+                              cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mBrief->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mBrief->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("BRIEF Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void BriefDescriptor::setBytes(const QString &bytes)

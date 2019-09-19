@@ -229,8 +229,8 @@ void Project::addSession(const std::shared_ptr<Session> &session)
     //msgWarning("Image %s already in the project", ba.data());
   } else {
     mSessions.push_back(session);
-    /// Se establece como sesión activa
-    mCurrentSession = static_cast<int>(mSessions.size()) - 1;
+//    /// Se establece como sesión activa
+//    mCurrentSession = static_cast<int>(mSessions.size()) - 1;
   }
 }
 
@@ -639,8 +639,21 @@ bool ProjectRW::read(const QString &file, IProject &prj)
 
                           } else if (stream.name() == "Flann") {
                             std::shared_ptr<IFlannMatcher> flann = std::make_shared<FlannMatcherProperties>();
+
+                            while (stream.readNextStartElement()) {
+                              if (stream.name() == "Index") {
+                                QString normType = stream.readElementText();
+                                FlannMatcherProperties::Index index = FlannMatcherProperties::Index::kdtree;
+                                if (normType.compare("KDTree") == 0) {
+                                  index = FlannMatcherProperties::Index::kdtree;
+                                } else if (normType.compare("LSH") == 0) {
+                                  index = FlannMatcherProperties::Index::lsh;
+                                }
+                                flann->setIndex(index);
+                              } else
+                                stream.skipCurrentElement();
+                            }
                             session->setMatcher(flann);
-                            stream.skipCurrentElement();
                           } else
                             stream.skipCurrentElement();
                         }
@@ -905,6 +918,15 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
 
                 if (match->type() == Match::Type::flann){
                   stream.writeStartElement("Flann");
+                  IFlannMatcher *flann = dynamic_cast<IFlannMatcher *>(match);
+                  FlannMatcherProperties::Index index = flann->index();
+                  QString s_index = "KDTree";
+                  if (index == FlannMatcherProperties::Index::kdtree) {
+                    s_index = "KDTree";
+                  } else if (index == FlannMatcherProperties::Index::lsh) {
+                    s_index = "LSH";
+                  }
+                  stream.writeTextElement("Index", s_index);
                   stream.writeEndElement();
                 } else if (match->type() == Match::Type::brute_force){
                   stream.writeStartElement("BruteForceMatcher");

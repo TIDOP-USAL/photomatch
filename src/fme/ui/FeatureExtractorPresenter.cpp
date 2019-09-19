@@ -239,159 +239,11 @@ void FeatureExtractorPresenter::help()
 
 void FeatureExtractorPresenter::open()
 {
-//  mAgastDetector->setThreshold(mSettingsModel->agastThreshold());
-//  mAgastDetector->setDetectorType(mSettingsModel->agastDetectorType());
-//  mAgastDetector->setNonmaxSuppression(mSettingsModel->agastNonmaxSuppression());
-
-//  mAkazeDetector->setOctaves(mSettingsModel->akazeOctaves());
-//  mAkazeDetector->setThreshold(mSettingsModel->akazeThreshold());
-//  mAkazeDetector->setDiffusivity(mSettingsModel->akazeDiffusivity());
-//  mAkazeDetector->setOctaveLayers(mSettingsModel->akazeOctaveLayers());
-//  mAkazeDetector->setDescriptorSize(mSettingsModel->akazeDescriptorSize());
-//  mAkazeDetector->setDescriptorType(mSettingsModel->akazeDescriptorType());
-//  mAkazeDetector->setDescriptorChannels(mSettingsModel->akazeDescriptorChannels());
-//  mAkazeDescriptor->setOctaves(mSettingsModel->akazeOctaves());
-//  mAkazeDescriptor->setThreshold(mSettingsModel->akazeThreshold());
-//  mAkazeDescriptor->setDiffusivity(mSettingsModel->akazeDiffusivity());
-//  mAkazeDescriptor->setOctaveLayers(mSettingsModel->akazeOctaveLayers());
-//  mAkazeDescriptor->setDescriptorSize(mSettingsModel->akazeDescriptorSize());
-//  mAkazeDescriptor->setDescriptorType(mSettingsModel->akazeDescriptorType());
-//  mAkazeDescriptor->setDescriptorChannels(mSettingsModel->akazeDescriptorChannels());
-
-//  mBriefDescriptor->setBytes(mSettingsModel->briefBytes());
-//  mBriefDescriptor->setUseOrientation(mSettingsModel->briefUseOrientation());
-
-//  mBriskDetector->setThreshold(mSettingsModel->briskThreshold());
-//  mBriskDetector->setOctaves(mSettingsModel->briskOctaves());
-//  mBriskDetector->setPatternScale(mSettingsModel->briskPatternScale());
-//  mBriskDescriptor->setThreshold(mSettingsModel->briskThreshold());
-//  mBriskDescriptor->setOctaves(mSettingsModel->briskOctaves());
-//  mBriskDescriptor->setPatternScale(mSettingsModel->briskPatternScale());
-
-//  mDaisyDescriptor->setNorm(mSettingsModel->daisyNorm());
-//  mDaisyDescriptor->setQRadius(mSettingsModel->daisyQRadius());
-//  mDaisyDescriptor->setQTheta(mSettingsModel->daisyQTheta());
-//  mDaisyDescriptor->setQHist(mSettingsModel->daisyQHist());
-//  mDaisyDescriptor->setNorm(mSettingsModel->daisyNorm());
-//  mDaisyDescriptor->setInterpolation(mSettingsModel->daisyInterpolation());
-//  mDaisyDescriptor->setUseOrientation(mSettingsModel->daisyUseOrientation());
-
-//  mFastDetector->setThreshold(mSettingsModel->fastThreshold());
-//  mFastDetector->setNonmaxSuppression(mSettingsModel->fastNonmaxSuppression());
-//  mFastDetector->setDetectorType(mSettingsModel->fastdetectorType());
-
-//  mFreakDescriptor->setOrientationNormalized(mSettingsModel->freakOrientationNormalized());
-//  mFreakDescriptor->setScaleNormalized(mSettingsModel->freakScaleNormalized());
-//  mFreakDescriptor->setPatternScale(mSettingsModel->freakPatternScale());
-//  mFreakDescriptor->setOctaves(mSettingsModel->freakOctaves());
-
-//  mGfttDetector->setMaxFeatures(mSettingsModel->gfttMaxFeatures());
-//  mGfttDetector->setQualityLevel(mSettingsModel->gfttQualityLevel());
-//  mGfttDetector->setMinDistance(mSettingsModel->gfttMinDistance());
-//  mGfttDetector->setBlockSize(mSettingsModel->gfttBlockSize());
-//  mGfttDetector->setHarrisDetector(mSettingsModel->gfttHarrisDetector());
-//  mGfttDetector->setK(mSettingsModel->gfttK());
-
-//  mHogDescriptor->setWinSize(mSettingsModel->hogWinSize());
-//  mHogDescriptor->setBlockSize(mSettingsModel->hogBlockSize());
-//  mHogDescriptor->setBlockStride(mSettingsModel->hogBlockStride());
-//  mHogDescriptor->setCellSize(mSettingsModel->hogCellSize());
-//  mHogDescriptor->setNbins(mSettingsModel->hogNbins());
-//  mHogDescriptor->setDerivAperture(mSettingsModel->hogDerivAperture());
-
-//  mKazeDetector->setExtendedDescriptor(mSettingsModel->kazeExtendedDescriptor());
-//  mKazeDetector->setUpright(mSettingsModel->kazeUpright());
-//  mKazeDetector->setThreshold(mSettingsModel->kazeUpright());
-//  mKazeDetector->setOctaves(mSettingsModel->kazeOctaves());
-//  mKazeDetector->setOctaveLayers(mSettingsModel->kazeOctaveLayers());
-//  mKazeDetector->setDiffusivity(mSettingsModel->kazeDiffusivity());
-//  mKazeDescriptor->setExtendedDescriptor(mSettingsModel->kazeExtendedDescriptor());
-//  mKazeDescriptor->setUpright(mSettingsModel->kazeUpright());
-//  mKazeDescriptor->setThreshold(mSettingsModel->kazeUpright());
-//  mKazeDescriptor->setOctaves(mSettingsModel->kazeOctaves());
-//  mKazeDescriptor->setOctaveLayers(mSettingsModel->kazeOctaveLayers());
-//  mKazeDescriptor->setDiffusivity(mSettingsModel->kazeDiffusivity());
-
-//  mLatchDescriptor->setBytes(mSettingsModel->latchBytes());
-//  mLatchDescriptor->setRotationInvariance(mSettingsModel->latchRotationInvariance());
-//  mLatchDescriptor->setHalfSsdSize(mSettingsModel->latchHalfSsdSize());
-
-//  mLucidDescriptor->setLucidKernel(mSettingsModel->lucidKernel());
-//  mLucidDescriptor->setBlurKernel(mSettingsModel->lucidBlurKernel());
-
-//  mMsdDetector->setThresholdSaliency(mSettingsModel->msdThresholdSaliency());
-//  mMsdDetector->setPathRadius(mSettingsModel->msdPathRadius());
-//  mMsdDetector->setKNN(mSettingsModel->msdKnn());
-//  mMsdDetector->setAreaRadius(mSettingsModel->msdAreaRadius());
-//  mMsdDetector->setScaleFactor(mSettingsModel->msdScaleFactor());
-//  mMsdDetector->setNMSRadius(mSettingsModel->msdNMSRadius());
-//  mMsdDetector->setNScales(mSettingsModel->msdNScales());
-//  mMsdDetector->setNMSScaleR(mSettingsModel->msdNMSScaleR());
-//  mMsdDetector->setComputeOrientations(mSettingsModel->msdComputeOrientations());
-//  mMsdDetector->setAffineMSD(mSettingsModel->msdAffineMSD());
-//  mMsdDetector->setTilts(mSettingsModel->msdTilts());
-
-//  mMserDetector->setDelta(mSettingsModel->mserDelta());
-//  mMserDetector->setMaxArea(mSettingsModel->mserMaxArea());
-//  mMserDetector->setMinArea(mSettingsModel->mserMinArea());
-//  mMserDetector->setMaxVariation(mSettingsModel->mserMaxVariation());
-//  mMserDetector->setMinDiversity(mSettingsModel->mserMinDiversity());
-//  mMserDetector->setMaxEvolution(mSettingsModel->mserMaxEvolution());
-//  mMserDetector->setAreaThreshold(mSettingsModel->mserAreaThreshold());
-//  mMserDetector->setMinMargin(mSettingsModel->mserMinMargin());
-//  mMserDetector->setEdgeBlurSize(mSettingsModel->mserEdgeBlurSize());
-
-//  mOrbDetector->setScaleFactor(mSettingsModel->orbScaleFactor());
-//  mOrbDetector->setFeaturesNumber(mSettingsModel->orbFeaturesNumber());
-//  mOrbDetector->setLevelsNumber(mSettingsModel->orbLevelsNumber());
-//  mOrbDetector->setEdgeThreshold(mSettingsModel->orbEdgeThreshold());
-//  mOrbDetector->setWTA_K(mSettingsModel->orbWta_k());
-//  mOrbDetector->setScoreType(mSettingsModel->orbScoreType());
-//  mOrbDetector->setPatchSize(mSettingsModel->orbPatchSize());
-//  mOrbDetector->setFastThreshold(mSettingsModel->orbFastThreshold());
-//  mOrbDescriptor->setScaleFactor(mSettingsModel->orbScaleFactor());
-//  mOrbDescriptor->setFeaturesNumber(mSettingsModel->orbFeaturesNumber());
-//  mOrbDescriptor->setLevelsNumber(mSettingsModel->orbLevelsNumber());
-//  mOrbDescriptor->setEdgeThreshold(mSettingsModel->orbEdgeThreshold());
-//  mOrbDescriptor->setWTA_K(mSettingsModel->orbWta_k());
-//  mOrbDescriptor->setScoreType(mSettingsModel->orbScoreType());
-//  mOrbDescriptor->setPatchSize(mSettingsModel->orbPatchSize());
-//  mOrbDescriptor->setFastThreshold(mSettingsModel->orbFastThreshold());
-
-//  mSiftDetector->setSigma(mSettingsModel->siftSigma());
-//  mSiftDetector->setOctaveLayers(mSettingsModel->siftOctaveLayers());
-//  mSiftDetector->setEdgeThreshold(mSettingsModel->siftEdgeThreshold());
-//  mSiftDetector->setFeaturesNumber(mSettingsModel->siftFeaturesNumber());
-//  mSiftDetector->setContrastThreshold(mSettingsModel->siftContrastThreshold());
-//  mSiftDescriptor->setSigma(mSettingsModel->siftSigma());
-//  mSiftDescriptor->setOctaveLayers(mSettingsModel->siftOctaveLayers());
-//  mSiftDescriptor->setEdgeThreshold(mSettingsModel->siftEdgeThreshold());
-//  mSiftDescriptor->setFeaturesNumber(mSettingsModel->siftFeaturesNumber());
-//  mSiftDescriptor->setContrastThreshold(mSettingsModel->siftContrastThreshold());
-
-//  mStarDetector->setMaxSize(mSettingsModel->starMaxSize());
-//  mStarDetector->setResponseThreshold(mSettingsModel->starResponseThreshold());
-//  mStarDetector->setLineThresholdProjected(mSettingsModel->starLineThresholdProjected());
-//  mStarDetector->setLineThresholdBinarized(mSettingsModel->starLineThresholdBinarized());
-//  mStarDetector->setSuppressNonmaxSize(mSettingsModel->starSuppressNonmaxSize());
-
-//  mSurfDetector->setOctaves(mSettingsModel->surfOctaves());
-//  mSurfDetector->setOctaveLayers(mSettingsModel->surfOctaveLayers());
-//  mSurfDetector->setRotatedFeatures(mSettingsModel->surfRotatedFeatures());
-//  mSurfDetector->setHessianThreshold(mSettingsModel->surfHessianThreshold());
-//  mSurfDetector->setExtendedDescriptor(mSettingsModel->surfExtendedDescriptor());
-//  mSurfDescriptor->setOctaves(mSettingsModel->surfOctaves());
-//  mSurfDescriptor->setOctaveLayers(mSettingsModel->surfOctaveLayers());
-//  mSurfDescriptor->setRotatedFeatures(mSettingsModel->surfRotatedFeatures());
-//  mSurfDescriptor->setHessianThreshold(mSettingsModel->surfHessianThreshold());
-//  mSurfDescriptor->setExtendedDescriptor(mSettingsModel->surfExtendedDescriptor());
 
   Feature *detector = mProjectModel->currentSession()->detector().get();
   Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
   if (detector) setCurrentkeypointDetector(detector->name());
   if (descriptor) setCurrentDescriptorExtractor(descriptor->name());
-
-  TL_TODO("Cargar la configuración guardada en el proyecto")
 
   /* AGAST */
 
@@ -860,7 +712,7 @@ void FeatureExtractorPresenter::init()
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
   mView->addDescriptorExtractor(mBriefDescriptor);
-  mView->addKeypointDetector(mBriskDescriptor);
+  mView->addDescriptorExtractor(mBriskDescriptor);
   mView->addDescriptorExtractor(mDaisyDescriptor);
   mView->addDescriptorExtractor(mFreakDescriptor);
   mView->addDescriptorExtractor(mHogDescriptor);
@@ -1157,14 +1009,19 @@ void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &featur
   mView->setCurrentKeypointDetector(featureExtractor);
 
   mView->disableDescriptorExtractor("AKAZE");
+  mView->disableDescriptorExtractor("KAZE");
+  mView->enableDescriptorExtractor("ORB");
+  mView->enableDescriptorExtractor("HOG");
 
   if (featureExtractor.compare("AGAST") == 0){
     mView->setCurrentDescriptorExtractor("SIFT");
   } else if (featureExtractor.compare("AKAZE") == 0){
     mView->setCurrentDescriptorExtractor("AKAZE");
     mView->enableDescriptorExtractor("AKAZE");
+    mView->enableDescriptorExtractor("KAZE");
   } else if (featureExtractor.compare("BRISK") == 0){
     mView->setCurrentDescriptorExtractor("BRISK");
+    mView->disableDescriptorExtractor("HOG");
   } else if (featureExtractor.compare("FAST") == 0){
     mView->setCurrentDescriptorExtractor("SIFT");
   } else if (featureExtractor.compare("GFTT") == 0){
@@ -1172,6 +1029,7 @@ void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &featur
   } else if (featureExtractor.compare("KAZE") == 0){
     mView->setCurrentDescriptorExtractor("KAZE");
     mView->enableDescriptorExtractor("AKAZE");
+    mView->enableDescriptorExtractor("KAZE");
   } else if (featureExtractor.compare("MSD") == 0){
     mView->setCurrentDescriptorExtractor("SIFT");
   } else if (featureExtractor.compare("MSER") == 0){
@@ -1180,6 +1038,7 @@ void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &featur
     mView->setCurrentDescriptorExtractor("ORB");
   } else if (featureExtractor.compare("SIFT") == 0){
     mView->setCurrentDescriptorExtractor("SIFT");
+    mView->disableDescriptorExtractor("ORB");
   } else if (featureExtractor.compare("STAR") == 0){
     mView->setCurrentDescriptorExtractor("SIFT");
   } else if (featureExtractor.compare("SURF") == 0){
@@ -1195,8 +1054,8 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
 
 void FeatureExtractorPresenter::onError(int code, const QString &msg)
 {
-  QByteArray ba = msg.toLocal8Bit();
-  msgError("(%i) %s", code, ba.constData());
+//  QByteArray ba = msg.toLocal8Bit();
+//  msgError("(%i) %s", code, ba.constData());
   emit finished();
 }
 

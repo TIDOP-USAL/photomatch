@@ -27,16 +27,19 @@ public:
   virtual void addDescriptorExtractor(QWidget *descriptorExtractor) = 0;
   virtual QString currentKeypointDetector() const = 0;
   virtual QString currentDescriptorExtractor() const = 0;
-  virtual void setCurrentKeypointDetector(const QString &keypointDetector) = 0;
-  virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
-  virtual void disableDescriptorExtractor(const QString &descriptorExtractor) = 0;
-  virtual void enableDescriptorExtractor(const QString &descriptorExtractor) = 0;
 
 signals:
 
   void keypointDetectorChange(QString);
   void descriptorExtractorChange(QString);
   void run();
+
+public slots:
+
+  virtual void setCurrentKeypointDetector(const QString &keypointDetector) = 0;
+  virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
+  virtual void disableDescriptorExtractor(const QString &descriptorExtractor) = 0;
+  virtual void enableDescriptorExtractor(const QString &descriptorExtractor) = 0;
 
 };
 
@@ -62,6 +65,9 @@ public:
   void addDescriptorExtractor(QWidget *descriptorExtractor) override;
   QString currentKeypointDetector() const override;
   QString currentDescriptorExtractor() const override;
+
+public slots:
+
   void setCurrentKeypointDetector(const QString &keypointDetector) override;
   void setCurrentDescriptorExtractor(const QString &descriptorExtractor) override;
   void disableDescriptorExtractor(const QString &descriptorExtractor) override;

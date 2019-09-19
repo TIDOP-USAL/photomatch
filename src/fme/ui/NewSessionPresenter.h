@@ -40,6 +40,8 @@ protected slots:
    * \brief Descarta los cambios en el proyecto
    */
   virtual void discartProject() = 0;
+
+  virtual void checkSessionName(const QString &name) = 0;
 };
 
 
@@ -70,6 +72,7 @@ protected slots:
 
   void saveProject() override;
   void discartProject() override;
+  void checkSessionName(const QString &name) override;
 
 private:
 

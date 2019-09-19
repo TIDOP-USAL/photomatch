@@ -55,12 +55,60 @@ void DescriptorMatcherPresenter::help()
 
 void DescriptorMatcherPresenter::open()
 {
-//  mView->setRatio(mSettingsModel->matchRatio());
-//  mView->setDistance(mSettingsModel->matchDistance());
-//  mView->setNormType(mSettingsModel->matchNormType());
-//  mView->setConfidence(mSettingsModel->matchConfidence());
-//  mView->setCrossMatching(mSettingsModel->matchCrossMatching());
-//  mView->setMatchingMethod(mSettingsModel->matchMatchingMethod());
+  TL_TODO("Leer valores guardados en proyecto")
+//  Match *matcher = mProjectModel->currentSession()->matcher().get();
+//  matcher->type() == Match::Type::flann;
+//  matcher->type() == Match::Type::brute_force;
+
+  mView->setRatio(mSettingsModel->matchRatio());
+  mView->setDistance(mSettingsModel->matchDistance());
+  mView->setNormType(mSettingsModel->matchNormType());
+  mView->setConfidence(mSettingsModel->matchConfidence());
+  mView->setCrossMatching(mSettingsModel->matchCrossMatching());
+
+  if (Feature *descriptor = mProjectModel->currentSession()->descriptor().get()){
+
+    if (descriptor->type() == Feature::Type::akaze){
+      QString descriptorType = dynamic_cast<IAkaze *>(descriptor)->descriptorType();
+
+      if (descriptorType.compare("KAZE") == 0 ||
+          descriptorType.compare("KAZE_UPRIGHT") == 0){
+        mView->disableBruteForceNorm("NORM_HAMMING");
+        mView->disableBruteForceNorm("NORM_HAMMING2");
+      } else if (descriptorType.compare("MLDB") == 0 ||
+                 descriptorType.compare("MLDB_UPRIGHT") == 0){
+        mView->enableBruteForceNorm("NORM_HAMMING");
+        mView->enableBruteForceNorm("NORM_HAMMING2");
+      }
+    } else if (descriptor->type() == Feature::Type::brief ||
+               descriptor->type() == Feature::Type::brisk ||
+               descriptor->type() == Feature::Type::freak ||
+               descriptor->type() == Feature::Type::latch ||
+               descriptor->type() == Feature::Type::lucid){
+      mView->enableBruteForceNorm("NORM_HAMMING");
+      mView->enableBruteForceNorm("NORM_HAMMING2");
+      mView->setNormType("NORM_HAMMING");
+    } else if (descriptor->type() == Feature::Type::orb){
+      int wta_k = dynamic_cast<IOrb *>(descriptor)->wta_k();
+      if (wta_k == 3 || wta_k == 4){
+        mView->setNormType("NORM_HAMMING2");
+      } else {
+        mView->setNormType("NORM_HAMMING");
+      }
+      mView->enableBruteForceNorm("NORM_HAMMING");
+      mView->enableBruteForceNorm("NORM_HAMMING2");
+      TL_TODO("Con L1 y L2 funciona aunque la documentación indica que se debe usar NORM_HAMMING o NORM_HAMMING2")
+    } else if (descriptor->type() == Feature::Type::sift ||
+               descriptor->type() == Feature::Type::surf ||
+               descriptor->type() == Feature::Type::daisy ||
+               descriptor->type() == Feature::Type::kaze ||
+               descriptor->type() == Feature::Type::hog){
+      mView->disableBruteForceNorm("NORM_HAMMING");
+      mView->disableBruteForceNorm("NORM_HAMMING2");
+    }
+
+  }
+
 
   mView->exec();
 }
@@ -96,7 +144,30 @@ void DescriptorMatcherPresenter::run()
   if (matchingMethod.compare("Brute-Force") == 0){
     descriptorMatcher = std::make_shared<BruteForceMatcher>(norm);
   } else if (matchingMethod.compare("FLANN") == 0){
-    descriptorMatcher = std::make_shared<FlannMatcher>();
+
+    FlannMatcher::Index index;
+    Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
+    if (descriptor->type() == Feature::Type::orb ||
+        descriptor->type() == Feature::Type::brief ||
+        descriptor->type() == Feature::Type::freak ||
+        descriptor->type() == Feature::Type::latch ||
+        descriptor->type() == Feature::Type::lucid ||
+        descriptor->type() == Feature::Type::brisk){
+      index = FlannMatcher::Index::lsh;
+    } else if (descriptor->type() == Feature::Type::akaze) {
+      QString descriptorType = dynamic_cast<IAkaze *>(descriptor)->descriptorType();
+      if (descriptorType.compare("KAZE") == 0 ||
+          descriptorType.compare("KAZE_UPRIGHT") == 0){
+        index = FlannMatcher::Index::kdtree;
+      } else if (descriptorType.compare("MLDB") == 0 ||
+                 descriptorType.compare("MLDB_UPRIGHT") == 0){
+        index = FlannMatcher::Index::lsh;
+      }
+    } else {
+      index = FlannMatcher::Index::kdtree;
+    }
+
+    descriptorMatcher = std::make_shared<FlannMatcher>(index);
   } else {
     ///TODO: error
     return;

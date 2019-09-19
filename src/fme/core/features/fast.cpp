@@ -1,9 +1,11 @@
 #include "fast.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
-/*----------------------------------------------------------------*/
 
 FastProperties::FastProperties()
   : IFast(),
@@ -99,11 +101,19 @@ FastDetector::~FastDetector()
 
 }
 
-std::vector<cv::KeyPoint> FastDetector::detect(const cv::Mat &img, cv::InputArray &mask)
+bool FastDetector::detect(const cv::Mat &img,
+                          std::vector<cv::KeyPoint> &keyPoints,
+                          cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mFast->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mFast->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("FAST Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void FastDetector::setThreshold(int threshold)

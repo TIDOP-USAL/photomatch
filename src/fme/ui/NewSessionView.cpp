@@ -15,11 +15,13 @@ NewSessionView::NewSessionView(QWidget *parent)
   : INewSessionView(parent),
     mLineEditSessionName(new QLineEdit(this)),
     mTextEditSessionDescription(new QTextEdit(this)),
-    mButtonBox(new QDialogButtonBox(this))
+    mButtonBox(new QDialogButtonBox(this)),
+    bNameExist(false)
 {
   init();
 
   connect(mLineEditSessionName,        SIGNAL(textChanged(QString)), this, SLOT(update()));
+  connect(mLineEditSessionName,        SIGNAL(textChanged(QString)), this, SIGNAL(sessionNameChange(QString)));
   connect(mTextEditSessionDescription, SIGNAL(stateChanged(int)),    this, SLOT(update()));
 
   connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
@@ -67,7 +69,7 @@ void NewSessionView::clear()
 void NewSessionView::update()
 {
   bool bSave = !mLineEditSessionName->text().isEmpty();
-  mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave);
+  mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave && !bNameExist);
 }
 
 QString NewSessionView::sessionName() const
@@ -78,6 +80,19 @@ QString NewSessionView::sessionName() const
 QString NewSessionView::sessionDescription() const
 {
   return mTextEditSessionDescription->toPlainText();
+}
+
+void NewSessionView::setExistingName(bool nameExist)
+{
+  bNameExist = nameExist;
+  QPalette *palette = new QPalette();
+  if (bNameExist){
+    palette->setColor(QPalette::Text, Qt::red);
+  } else {
+    palette->setColor(QPalette::Text, Qt::black);
+  }
+  mLineEditSessionName->setPalette(*palette);
+  update();
 }
 
 } // namespace fme

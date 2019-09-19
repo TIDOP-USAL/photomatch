@@ -98,8 +98,8 @@ void TestMainWindowView::initTestCase()
 
   //setActiveImage("C:\\img01.jpg");
 
-  addSession("session01", "Session 1", true);
-
+  this->addSession("session01", "Session 1");
+  this->setActiveSession("session01");
 }
 
 void TestMainWindowView::cleanupTestCase()

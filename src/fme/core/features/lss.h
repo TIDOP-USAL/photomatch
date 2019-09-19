@@ -1,13 +1,16 @@
-#ifndef FME_BRIEF_DESCRIPTOR_H
-#define FME_BRIEF_DESCRIPTOR_H
+#ifndef FME_LSS_DESCRIPTOR_H
+#define FME_LSS_DESCRIPTOR_H
 
 #include "fme/fme_global.h"
 
-#include "fme/core/features/features.h"
+#include <memory>
 
 #include <opencv2/xfeatures2d.hpp>
 
 #include <QString>
+
+#include "fme/core/features/features.h"
+#include "lss/lss.h"
 
 namespace fme
 {
@@ -16,22 +19,13 @@ namespace fme
 /*----------------------------------------------------------------*/
 
 
-class FME_EXPORT BriefProperties
-  : public IBrief
+class FME_EXPORT LssProperties
+  : public ILss
 {
 public:
 
-  BriefProperties();
-  ~BriefProperties() override;
-
-// IBrief interface
-
-public:
-
-  virtual QString bytes() const override;
-  virtual bool useOrientation() const override;
-  virtual void setBytes(const QString &bytes) override;
-  virtual void setUseOrientation(bool useOrientation) override;
+  LssProperties();
+  ~LssProperties() override;
 
 // Feature interface
 
@@ -39,28 +33,21 @@ public:
 
   virtual void reset() override;
 
-private:
-
-  QString mBytes;
-  bool mUseOrientation;
 };
 
 
 /*----------------------------------------------------------------*/
 
 
-class FME_EXPORT BriefDescriptor
-    : public BriefProperties,
+class FME_EXPORT LssDescriptor
+    : public LssProperties,
       public DescriptorExtractor
 {
 
 public:
 
-  BriefDescriptor();
-  BriefDescriptor(QString bytes,
-                  bool useOrientation);
-
-  ~BriefDescriptor() override;
+  LssDescriptor();
+  ~LssDescriptor() override;
 
 private:
 
@@ -70,15 +57,9 @@ private:
 
 public:
 
-  cv::Mat extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints) override;
-
-
-// IBrief interface
-
-public:
-
-  void setBytes(const QString &bytes) override;
-  void setUseOrientation(bool useOrientation) override;
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
 
 // Feature interface
 
@@ -88,7 +69,7 @@ public:
 
 protected:
 
-  cv::Ptr<cv::xfeatures2d::BriefDescriptorExtractor> mBrief;
+  std::shared_ptr<LSS> mLSS;
 };
 
 
@@ -97,4 +78,4 @@ protected:
 
 } // namespace fme
 
-#endif // FME_BRIEF_DESCRIPTOR_H
+#endif // FME_LSS_DESCRIPTOR_H

@@ -1,5 +1,8 @@
 #include "latch.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -100,11 +103,19 @@ void LatchDescriptor::update()
                                           LatchProperties::halfSsdSize());
 }
 
-cv::Mat LatchDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool LatchDescriptor::extract(const cv::Mat &img,
+                              std::vector<cv::KeyPoint> &keyPoints,
+                              cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mLATCH->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mLATCH->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("LATCH Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void LatchDescriptor::setBytes(const QString &bytes)

@@ -15,7 +15,8 @@ namespace fme
 
 
 FlannMatcherProperties::FlannMatcherProperties()
-  : IFlannMatcher()
+  : IFlannMatcher(),
+    mIndex(FlannMatcherProperties::Index::kdtree)
 {
 }
 
@@ -25,6 +26,7 @@ FlannMatcherProperties::~FlannMatcherProperties()
 
 void FlannMatcherProperties::reset()
 {
+  mIndex = FlannMatcherProperties::Index::kdtree;
 }
 
 QString FlannMatcherProperties::name() const
@@ -32,6 +34,15 @@ QString FlannMatcherProperties::name() const
   return QString("Flann Based Matching");
 }
 
+IFlannMatcher::Index FlannMatcherProperties::index() const
+{
+  return mIndex;
+}
+
+void FlannMatcherProperties::setIndex(IFlannMatcher::Index index)
+{
+  mIndex = index;
+}
 
 /*----------------------------------------------------------------*/
 
@@ -40,12 +51,31 @@ FlannMatcher::FlannMatcher()
   : FlannMatcherProperties(),
     DescriptorMatcher()
 {
-  mFlannBasedMatcher = cv::FlannBasedMatcher::create();
+  update();
+}
+
+FlannMatcher::FlannMatcher(Index index)
+  : FlannMatcherProperties(),
+    DescriptorMatcher()
+{
+  FlannMatcherProperties::setIndex(index);
+  update();
 }
 
 FlannMatcher::~FlannMatcher()
 {
 
+}
+
+void FlannMatcher::update()
+{
+  cv::Ptr<cv::flann::IndexParams> indexParams;
+  if (FlannMatcherProperties::index() == FlannMatcherProperties::Index::kdtree){
+    indexParams = cv::makePtr<cv::flann::KDTreeIndexParams>();
+  } else if (FlannMatcherProperties::index() == FlannMatcherProperties::Index::lsh){
+    indexParams = cv::makePtr<cv::flann::LshIndexParams>(12, 20, 2);
+  }
+  mFlannBasedMatcher = cv::Ptr<cv::FlannBasedMatcher>(new cv::FlannBasedMatcher(indexParams));
 }
 
 std::vector<std::vector<cv::DMatch>> FlannMatcher::match(cv::InputArray &queryDescriptors,
@@ -56,16 +86,20 @@ std::vector<std::vector<cv::DMatch>> FlannMatcher::match(cv::InputArray &queryDe
   try {
     mFlannBasedMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
   } catch (cv::Exception &e) {
-    msgError(e.what());
+    msgError("Flann Based Matcher error: %s", e.what());
   }
   return matches;
 }
 
 void FlannMatcher::reset()
 {
-  mFlannBasedMatcher = cv::FlannBasedMatcher::create();
+  FlannMatcherProperties::reset();
+  update();
 }
 
+void FlannMatcher::setIndex(IFlannMatcher::Index index)
+{
+}
 
 /*----------------------------------------------------------------*/
 
@@ -144,7 +178,7 @@ std::vector<std::vector<cv::DMatch>> BruteForceMatcher::match(cv::InputArray &qu
   try {
     mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
   } catch (cv::Exception &e) {
-    msgError(e.what());
+    msgError("Brute-force Matcher error: %s", e.what());
   }
   return matches;
 }
@@ -671,4 +705,3 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> &matches)
 /*----------------------------------------------------------------*/
 
 } // namespace fme
-

@@ -1,5 +1,8 @@
 #include "gftt.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -135,11 +138,19 @@ GfttDetector::~GfttDetector()
 
 }
 
-std::vector<cv::KeyPoint> GfttDetector::detect(const cv::Mat &img, cv::InputArray &mask)
+bool GfttDetector::detect(const cv::Mat &img,
+                          std::vector<cv::KeyPoint> &keyPoints,
+                          cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mGFTT->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mGFTT->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("GFTT Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void GfttDetector::setMaxFeatures(int maxFeatures)

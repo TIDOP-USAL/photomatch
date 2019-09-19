@@ -170,6 +170,9 @@ public slots:
    */
   virtual void setCrossMatching(bool crossMatching) = 0;
 
+  virtual void disableBruteForceNorm(const QString &norm) = 0;
+  virtual void enableBruteForceNorm(const QString &norm) = 0;
+
 };
 
 class FME_EXPORT DescriptorMatcherWidget
@@ -219,6 +222,8 @@ public slots:
   void setConfidence(double confidence) override;
   void setMaxIters(int maxIter) override;
   void setCrossMatching(bool crossMatching) override;
+  void disableBruteForceNorm(const QString &norm) override;
+  void enableBruteForceNorm(const QString &norm) override;
 
 // FmeWidget interface
 

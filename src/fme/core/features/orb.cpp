@@ -1,5 +1,8 @@
 #include "orb.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -171,18 +174,34 @@ OrbDetectorDescriptor::~OrbDetectorDescriptor()
 
 }
 
-std::vector<cv::KeyPoint> OrbDetectorDescriptor::detect(const cv::Mat &img, cv::InputArray &mask)
+bool OrbDetectorDescriptor::detect(const cv::Mat &img,
+                                   std::vector<cv::KeyPoint> &keyPoints,
+                                   cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mOrb->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mOrb->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("ORB Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
-cv::Mat OrbDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool OrbDetectorDescriptor::extract(const cv::Mat &img,
+                                    std::vector<cv::KeyPoint> &keyPoints,
+                                    cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mOrb->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mOrb->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("ORB Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void OrbDetectorDescriptor::setFeaturesNumber(int featuresNumber)

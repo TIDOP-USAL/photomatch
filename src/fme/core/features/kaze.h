@@ -82,13 +82,17 @@ public:
 
 public:
 
-  std::vector<cv::KeyPoint> detect(const cv::Mat &img, cv::InputArray &mask) override;
+  bool detect(const cv::Mat &img,
+              std::vector<cv::KeyPoint> &keyPoints,
+              cv::InputArray &mask = cv::noArray()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  cv::Mat extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints) override;
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
 
 // IKaze interface
 

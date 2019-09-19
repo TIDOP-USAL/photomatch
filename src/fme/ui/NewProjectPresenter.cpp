@@ -50,16 +50,16 @@ void NewProjectPresenter::saveProject()
   ///   QRegExp re("(^(PRN|AUX|NUL|CON|COM[1-9]|LPT[1-9]|(\\.+)$)(\\..*)?$)|(([\\x00-\\x1f\\\\?*:\";|/<>])+)|(([\\. ]+)");
   /// https://www.boost.org/doc/libs/1_43_0/libs/filesystem/doc/portability_guide.htm
 
-  QDir dir(mProjectModel->projectFolder());
-  if (!dir.exists()) {
-    dir.mkpath(".");
-  }
 
   QString prj_path = mView->projectPath();
   if (mView->createProjectFolder())
     prj_path.append("/").append(mView->projectName());
   mProjectModel->setName(mView->projectName());
   mProjectModel->setProjectFolder(prj_path);
+  QDir dir(prj_path);
+  if (!dir.exists()) {
+    dir.mkpath(".");
+  }
   mProjectModel->setDescription(mView->projectDescription());
   prj_path.append("/").append(mView->projectName()).append(".xml");
   mProjectModel->saveAs(prj_path);

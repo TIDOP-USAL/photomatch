@@ -1,5 +1,7 @@
 #include "sift.h"
 
+#include <tidop/core/messages.h>
+
 
 namespace fme
 {
@@ -127,18 +129,34 @@ void SiftDetectorDescriptor::update()
                                         SiftProperties::sigma());
 }
 
-std::vector<cv::KeyPoint> SiftDetectorDescriptor::detect(const cv::Mat &img, cv::InputArray &mask)
+bool SiftDetectorDescriptor::detect(const cv::Mat &img,
+                                    std::vector<cv::KeyPoint> &keyPoints,
+                                    cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mSift->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mSift->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("SIFT Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
-cv::Mat SiftDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool SiftDetectorDescriptor::extract(const cv::Mat &img,
+                                     std::vector<cv::KeyPoint> &keyPoints,
+                                     cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mSift->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mSift->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("SIFT Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void SiftDetectorDescriptor::setFeaturesNumber(int featuresNumber)

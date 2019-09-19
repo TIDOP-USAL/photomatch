@@ -6,6 +6,7 @@
 #include <QDoubleSpinBox>
 #include <QCheckBox>
 #include <QGroupBox>
+#include <QStandardItemModel>
 
 namespace fme
 {
@@ -179,6 +180,28 @@ void DescriptorMatcherWidget::setMaxIters(int maxIter)
 void DescriptorMatcherWidget::setCrossMatching(bool crossMatching)
 {
   mCrossMatching->setChecked(crossMatching);
+}
+
+void DescriptorMatcherWidget::disableBruteForceNorm(const QString &norm)
+{
+  QStandardItemModel *model = qobject_cast<QStandardItemModel *>(mNormType->model());
+  if (model != nullptr) {
+    QList<QStandardItem *> items = model->findItems(norm);
+    for (auto &item : items){
+      item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
+    }
+  }
+}
+
+void DescriptorMatcherWidget::enableBruteForceNorm(const QString &norm)
+{
+  QStandardItemModel *model = qobject_cast<QStandardItemModel *>(mNormType->model());
+  if (model != nullptr) {
+    QList<QStandardItem *> items = model->findItems(norm);
+    for (auto &item : items){
+      item->setFlags(item->flags() | Qt::ItemIsEnabled);
+    }
+  }
 }
 
 void DescriptorMatcherWidget::update()

@@ -14,6 +14,8 @@ NewSessionPresenter::NewSessionPresenter(INewSessionView *view, IProjectModel *m
 {
   init();
 
+  connect(mView, SIGNAL(sessionNameChange(QString)), this, SLOT(checkSessionName(QString)));
+
   connect(mView, SIGNAL(accepted()), this, SLOT(saveProject()));
   connect(mView, SIGNAL(rejected()), this, SLOT(discartProject()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
@@ -54,6 +56,15 @@ void NewSessionPresenter::saveProject()
 void NewSessionPresenter::discartProject()
 {
   mView->clear();
+}
+
+void NewSessionPresenter::checkSessionName(const QString &name)
+{
+  std::shared_ptr<Session> session = mProjectModel->findSession(name);
+  if (session)
+    mView->setExistingName(true);
+  else
+    mView->setExistingName(false);
 }
 
 } // namespace fme

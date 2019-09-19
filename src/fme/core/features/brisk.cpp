@@ -1,9 +1,10 @@
 #include "brisk.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
-
-/*----------------------------------------------------------------*/
 
 
 BriskProperties::BriskProperties()
@@ -97,18 +98,33 @@ void BriskDetectorDescriptor::update()
                              static_cast<float>(BriskProperties::patternScale()));
 }
 
-cv::Mat BriskDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool BriskDetectorDescriptor::detect(const cv::Mat &img,
+                                     std::vector<cv::KeyPoint> &keyPoints,
+                                     cv::InputArray &mask)
 {
-  cv::Mat descriptors;
-  mBrisk->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mBrisk->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("BRISK Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
-std::vector<cv::KeyPoint> BriskDetectorDescriptor::detect(const cv::Mat &img, cv::InputArray &mask)
+bool BriskDetectorDescriptor::extract(const cv::Mat &img,
+                                      std::vector<cv::KeyPoint> &keyPoints,
+                                      cv::Mat &descriptors)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mBrisk->detect(img, keyPoints, mask);
-  return keyPoints;
+  try {
+    mBrisk->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("BRISK Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void BriskDetectorDescriptor::setThreshold(int threshold)

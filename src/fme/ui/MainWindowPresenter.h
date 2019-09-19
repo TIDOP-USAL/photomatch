@@ -95,6 +95,7 @@ protected slots:
 
   void loadSession(const QString &session);
   void selectSession(const QString &session);
+  void activeSession(const QString &session);
   void selectPreprocess(const QString &session);
   void selectFeatures(const QString &session);
   void selectDetector(const QString &session);

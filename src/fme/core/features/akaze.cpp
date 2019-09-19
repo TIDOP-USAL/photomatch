@@ -1,10 +1,10 @@
 #include "akaze.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
-
-
-/*----------------------------------------------------------------*/
 
 
 AkazeProperties::AkazeProperties()
@@ -165,18 +165,35 @@ AkazeDetectorDescriptor::~AkazeDetectorDescriptor()
 
 }
 
-std::vector<cv::KeyPoint> AkazeDetectorDescriptor::detect(const cv::Mat &img, cv::InputArray &mask)
+bool AkazeDetectorDescriptor::detect(const cv::Mat &img,
+                                     std::vector<cv::KeyPoint> &keyPoints,
+                                     cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mAkaze->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mAkaze->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("AKAZE Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
-cv::Mat AkazeDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+
+bool AkazeDetectorDescriptor::extract(const cv::Mat &img,
+                                      std::vector<cv::KeyPoint> &keyPoints,
+                                      cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mAkaze->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mAkaze->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("AKAZE Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void AkazeDetectorDescriptor::setDescriptorType(const QString &descriptorType)

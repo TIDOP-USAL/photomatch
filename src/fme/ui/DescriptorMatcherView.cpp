@@ -45,6 +45,26 @@ double DescriptorMatcherView::ratio() const
   return mDescriptorMatcherWidget->ratio();
 }
 
+QString DescriptorMatcherView::geometricTest() const
+{
+  return mDescriptorMatcherWidget->geometricTest();
+}
+
+QString DescriptorMatcherView::homographyComputeMethod() const
+{
+  return mDescriptorMatcherWidget->homographyComputeMethod();
+}
+
+QString DescriptorMatcherView::fundamentalComputeMethod() const
+{
+  return mDescriptorMatcherWidget->fundamentalComputeMethod();
+}
+
+QString DescriptorMatcherView::essentialComputeMethod() const
+{
+  return mDescriptorMatcherWidget->essentialComputeMethod();
+}
+
 double DescriptorMatcherView::distance() const
 {
   return mDescriptorMatcherWidget->distance();
@@ -53,6 +73,11 @@ double DescriptorMatcherView::distance() const
 double DescriptorMatcherView::confidence() const
 {
   return mDescriptorMatcherWidget->confidence();
+}
+
+int DescriptorMatcherView::maxIters() const
+{
+  return mDescriptorMatcherWidget->maxIters();
 }
 
 bool DescriptorMatcherView::crossMatching() const
@@ -75,6 +100,26 @@ void DescriptorMatcherView::setRatio(double ratio)
   mDescriptorMatcherWidget->setRatio(ratio);
 }
 
+void DescriptorMatcherView::setGeometricTest(const QString &geometricTest)
+{
+  mDescriptorMatcherWidget->setGeometricTest(geometricTest);
+}
+
+void DescriptorMatcherView::setHomographyComputeMethod(const QString &computeMethod)
+{
+  mDescriptorMatcherWidget->setHomographyComputeMethod(computeMethod);
+}
+
+void DescriptorMatcherView::setFundamentalComputeMethod(const QString &computeMethod)
+{
+  mDescriptorMatcherWidget->setFundamentalComputeMethod(computeMethod);
+}
+
+void DescriptorMatcherView::setEssentialComputeMethod(const QString &computeMethod)
+{
+  mDescriptorMatcherWidget->setEssentialComputeMethod(computeMethod);
+}
+
 void DescriptorMatcherView::setDistance(double distance)
 {
   mDescriptorMatcherWidget->setDistance(distance);
@@ -85,9 +130,24 @@ void DescriptorMatcherView::setConfidence(double confidence)
   mDescriptorMatcherWidget->setConfidence(confidence);
 }
 
+void DescriptorMatcherView::setMaxIters(int maxIter)
+{
+  mDescriptorMatcherWidget->setMaxIters(maxIter);
+}
+
 void DescriptorMatcherView::setCrossMatching(bool crossMatching)
 {
   mDescriptorMatcherWidget->setCrossMatching(crossMatching);
+}
+
+void DescriptorMatcherView::disableBruteForceNorm(const QString &norm)
+{
+  mDescriptorMatcherWidget->disableBruteForceNorm(norm);
+}
+
+void DescriptorMatcherView::enableBruteForceNorm(const QString &norm)
+{
+  mDescriptorMatcherWidget->enableBruteForceNorm(norm);
 }
 
 void DescriptorMatcherView::init()
@@ -104,7 +164,9 @@ void DescriptorMatcherView::init()
 
   mButtonBox = new QDialogButtonBox(this);
   mButtonBox->setOrientation(Qt::Orientation::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Apply |
+                                 QDialogButtonBox::Cancel |
+                                 QDialogButtonBox::Help);
   //mButtonBox->button(QDialogButtonBox::Ok)->setText("Ok");
   mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
   mButtonBox->button(QDialogButtonBox::Apply)->setText("Run");

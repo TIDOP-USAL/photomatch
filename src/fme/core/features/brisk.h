@@ -70,17 +70,22 @@ protected:
 
   void update();
 
-// DescriptorExtractor interface
-
-public:
-
-  cv::Mat extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints) override;
 
 // KeypointDetector interface
 
 public:
 
-  std::vector<cv::KeyPoint> detect(const cv::Mat &img, cv::InputArray &mask) override;
+  bool detect(const cv::Mat &img,
+              std::vector<cv::KeyPoint> &keyPoints,
+              cv::InputArray &mask = cv::noArray()) override;
+
+// DescriptorExtractor interface
+
+public:
+
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
 
 // IAkaze interface
 

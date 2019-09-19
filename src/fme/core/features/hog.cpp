@@ -1,6 +1,9 @@
 #include "hog.h"
 
+#include <tidop/core/messages.h>
+
 #include <opencv2/imgproc.hpp>
+
 
 namespace fme
 {
@@ -191,33 +194,42 @@ void HogDescriptor::normalizepatch(const cv::Mat &gray, const cv::KeyPoint &keyp
   else source1.copyTo(output);
 }
 
-cv::Mat HogDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool HogDescriptor::extract(const cv::Mat &img,
+                            std::vector<cv::KeyPoint> &keyPoints,
+                            cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
 
-  cv::Size win_size(HogProperties::winSize().width(), HogProperties::winSize().height());
+  try {
+    cv::Size win_size(HogProperties::winSize().width(), HogProperties::winSize().height());
 
-  std::vector<float> hogdescriptor;
-  std::vector<cv::Point> p_c;
-  cv::Point punto_central;
-  punto_central.x = win_size.width / 2;
-  punto_central.y = win_size.height / 2;
-  p_c.push_back(punto_central);
+    std::vector<float> hogdescriptor;
+    std::vector<cv::Point> p_c;
+    cv::Point punto_central;
+    punto_central.x = win_size.width / 2;
+    punto_central.y = win_size.height / 2;
+    p_c.push_back(punto_central);
 
-  int size = static_cast<int>(keyPoints.size());
-  descriptors = cv::Mat(size, static_cast<int>(mHOG->getDescriptorSize()), CV_32FC1);
+    int size = static_cast<int>(keyPoints.size());
+    descriptors = cv::Mat(size, static_cast<int>(mHOG->getDescriptorSize()), CV_32FC1);
 
-  for (int i = 0; i < size; i++) {
-    std::vector<float> hogdescriptor_aux;
-    cv::Mat patch;
-    normalizepatch(img, keyPoints[static_cast<size_t>(i)], patch);
-    mHOG->compute(patch, hogdescriptor_aux);
-    for (size_t j = 0; j < hogdescriptor_aux.size(); j++)
-      descriptors.at<float>(i, static_cast<int>(j)) = hogdescriptor_aux[j];
+    for (int i = 0; i < size; i++) {
+      std::vector<float> hogdescriptor_aux;
+      cv::Mat patch;
+      normalizepatch(img, keyPoints[static_cast<size_t>(i)], patch);
+      mHOG->compute(patch, hogdescriptor_aux);
+      for (size_t j = 0; j < hogdescriptor_aux.size(); j++)
+        descriptors.at<float>(i, static_cast<int>(j)) = hogdescriptor_aux[j];
+    }
+
+  } catch (cv::Exception &e) {
+    tl::MessageManager::release(tl::MessageManager::Message("HOG Descriptor error: %s", e.what()).message(), tl::MessageLevel::msg_error);
+    return true;
+  } catch (std::exception &e) {
+    tl::MessageManager::release(tl::MessageManager::Message("HOG Descriptor error: %s", e.what()).message(), tl::MessageLevel::msg_error);
+    return true;
   }
-  //emit newStdData("HOG key-point description finished for image " + mLeftImageName);
 
-  return descriptors;
+  return false;
 }
 
 void fme::HogDescriptor::setWinSize(const QSize &winSize)

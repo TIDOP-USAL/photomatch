@@ -63,12 +63,22 @@ void FeatureExtractor::run()
 
   msgInfo("Searching Keypoints for image %s", img_file);
   if (mKeypointDetector == nullptr) return;
-  std::vector<cv::KeyPoint> key_points = mKeypointDetector->detect(img);
+  std::vector<cv::KeyPoint> key_points;
+  bool _error = mKeypointDetector->detect(img, key_points);
+  if (_error){
+    emit error(0, "Keypoint Detector error");
+    return;
+  }
   msgInfo("%i Keypoints detected in image %s", key_points.size(), img_file);
 
   msgInfo("Computing keypoints descriptors for image %s", img_file);
   if (mDescriptorExtractor == nullptr) return;
-  cv::Mat descriptors = mDescriptorExtractor->extract(img, key_points);
+  cv::Mat descriptors;
+  _error = mDescriptorExtractor->extract(img, key_points, descriptors);
+  if (_error){
+    emit error(0, "Keypoint Descriptor error");
+    return;
+  }
 
   cv::Mat out;
   cv::drawKeypoints(img, key_points, out, cv::Scalar(0,255,0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);

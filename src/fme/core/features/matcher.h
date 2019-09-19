@@ -80,8 +80,22 @@ class FME_EXPORT IFlannMatcher
 {
 
 public:
+
+  /// TODO: Por ahora valores por defecto
+  enum class Index
+  {
+    kdtree,
+    lsh
+    ///TODO: https://docs.opencv.org/4.1.1/db/df4/structcv_1_1flann_1_1IndexParams.html
+  };
+
+public:
+
   IFlannMatcher() : Match(Match::Type::flann) {}
   virtual ~IFlannMatcher() override = default;
+
+  virtual Index index() const = 0;
+  virtual void setIndex(Index index) = 0;
 
 };
 
@@ -102,6 +116,17 @@ public:
 
   virtual void reset() override;
   QString name() const final;
+
+// IFlannMatcher interface
+
+public:
+
+  virtual Index index() const override;
+  virtual void setIndex(Index index) override;
+
+private:
+
+  Index mIndex;
 };
 
 /*----------------------------------------------------------------*/
@@ -114,7 +139,12 @@ class FME_EXPORT FlannMatcher
 public:
 
   FlannMatcher();
+  FlannMatcher(IFlannMatcher::Index index);
   ~FlannMatcher() override;
+
+private:
+
+  void update();
 
 // DescriptorMatcher interface
 
@@ -129,6 +159,12 @@ public:
 public:
 
   void reset() override;
+
+// IFlannMatcher interface
+
+public:
+
+  void setIndex(Index index) override;
 
 protected:
 
@@ -156,8 +192,6 @@ public:
 
   IBruteForceMatcher() : Match(Match::Type::brute_force) {}
   virtual ~IBruteForceMatcher() override = default;
-
-public:
 
   virtual Norm normType() const = 0;
   virtual void setNormType(Norm normType) = 0;

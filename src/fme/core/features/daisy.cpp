@@ -1,5 +1,8 @@
 #include "daisy.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -163,11 +166,19 @@ void DaisyDescriptor::update()
                                           DaisyProperties::useOrientation());
 }
 
-cv::Mat DaisyDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool DaisyDescriptor::extract(const cv::Mat &img,
+                              std::vector<cv::KeyPoint> &keyPoints,
+                              cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mDAISY->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+      mDAISY->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("DAISY Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void DaisyDescriptor::setRadius(double radius)

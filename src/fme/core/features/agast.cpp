@@ -1,5 +1,8 @@
 #include "agast.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -101,11 +104,19 @@ AgastDetector::~AgastDetector()
 
 }
 
-std::vector<cv::KeyPoint> AgastDetector::detect(const cv::Mat &img, cv::InputArray &mask)
+bool AgastDetector::detect(const cv::Mat &img,
+                           std::vector<cv::KeyPoint> &keyPoints,
+                           cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mAgast->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mAgast->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("AGAST Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 void AgastDetector::setThreshold(int threshold)

@@ -1,5 +1,8 @@
 #include "surf.h"
 
+#include <tidop/core/messages.h>
+
+
 namespace fme
 {
 
@@ -120,18 +123,34 @@ SurfDetectorDescriptor::SurfDetectorDescriptor(double hessianThreshold,
   setRotatedFeatures(rotatedFeatures);
 }
 
-std::vector<cv::KeyPoint> SurfDetectorDescriptor::detect(const cv::Mat &img, cv::InputArray &mask)
+bool SurfDetectorDescriptor::detect(const cv::Mat &img,
+                                    std::vector<cv::KeyPoint> &keyPoints,
+                                    cv::InputArray &mask)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-  mSurf->detect(img, keyPoints, mask);
-  return keyPoints;
+
+  try {
+    mSurf->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("SURF Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
-cv::Mat SurfDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+bool SurfDetectorDescriptor::extract(const cv::Mat &img,
+                                     std::vector<cv::KeyPoint> &keyPoints,
+                                     cv::Mat &descriptors)
 {
-  cv::Mat descriptors;
-  mSurf->compute(img, keyPoints, descriptors);
-  return descriptors;
+
+  try {
+    mSurf->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("SURF Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
 }
 
 SurfDetectorDescriptor::~SurfDetectorDescriptor()

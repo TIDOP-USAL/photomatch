@@ -11,6 +11,7 @@
 #include <QGraphicsEllipseItem>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QComboBox>
 
 namespace fme
 {
@@ -73,6 +74,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionZoom11(new QAction(this)),
     mActionShowKeyPoints(new QAction(this)),
     mGraphicViewer(nullptr),
+    mComboBoxActiveSession(new QComboBox(this)),
     ui(new Ui::MainWindowView)
 {
   ui->setupUi(this);
@@ -145,6 +147,7 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   connect(ui->listWidgetRecentProjects,      SIGNAL(currentTextChanged(QString)), this, SIGNAL(openProjectFromHistory(QString)));
 
+  connect(mComboBoxActiveSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(activeSessionChange(QString)));
 }
 
 MainWindowView::~MainWindowView()
@@ -300,8 +303,18 @@ void MainWindowView::setActiveImages(const QStringList &images)
   mThumbnailsWidget->setActiveImages(images);
 }
 
-void MainWindowView::addSession(const QString &sessionName, const QString &sessionDescription, bool activeSession)
+void MainWindowView::addSession(const QString &sessionName, const QString &sessionDescription)
 {
+  const QSignalBlocker blocker(mComboBoxActiveSession);
+
+  int id = mComboBoxActiveSession->findText(sessionName);
+  if (id == -1){
+    mComboBoxActiveSession->addItem(sessionName);
+  }
+//  if (activeSession){
+//    mComboBoxActiveSession->setCurrentText(sessionName);
+//  }
+
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
     /* Sessions */
@@ -326,20 +339,22 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
     }
 
     QTreeWidgetItem *itemSession = new QTreeWidgetItem();
+//    QFont font;
+//    font.setBold(activeSession);
+//    itemSession->setFont(0, font);
+    itemSession->setData(0, Qt::UserRole, fme::session);
     itemSession->setText(0, sessionName);
     itemSession->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_list_48px.png"));
     itemSession->setToolTip(0, sessionDescription);
     itemSessions->addChild(itemSession);
-    QFont font;
-    font.setBold(activeSession);
-    itemSession->setFont(0, font);
-    itemSession->setData(0, Qt::UserRole, fme::session);
 
     update();
   }
 }
 
-void MainWindowView::addPreprocess(const QString &sessionName, const QString &preprocess, const std::vector<QString> &preprocessImages)
+void MainWindowView::addPreprocess(const QString &sessionName,
+                                   const QString &preprocess,
+                                   const std::vector<QString> &preprocessImages)
 {
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
@@ -363,7 +378,7 @@ void MainWindowView::addPreprocess(const QString &sessionName, const QString &pr
           if (itemSession->text(0).compare(sessionName) == 0){
 
             for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)){
+              if (QTreeWidgetItem *temp = itemSession->child(i)) {
                 if (temp->text(0).compare(tr("Preprocess")) == 0) {
                   itemPreprocess = itemSession->child(i);
                   break;
@@ -562,7 +577,7 @@ void MainWindowView::addFeatures(const QString &sessionName, const QString &dete
           itemImagesFeatures->setFlags(itemImagesFeatures->flags() | Qt::ItemIsTristate);
           itemImagesFeatures->setData(0, Qt::UserRole, fme::features_images);
           itemFeatures->addChild(itemImagesFeatures);
-          itemImagesFeatures->setExpanded(true);
+          //itemImagesFeatures->setExpanded(true);
         }
 
         for (auto &image_features : features) {
@@ -590,7 +605,7 @@ void MainWindowView::addFeatures(const QString &sessionName, const QString &dete
             itemImageFeatures->setFlags(itemImageFeatures->flags() | Qt::ItemIsTristate);
             itemImageFeatures->setData(0, Qt::UserRole, fme::features_image);
             itemImagesFeatures->addChild(itemImageFeatures);
-            itemImageFeatures->setExpanded(true);
+            //itemImageFeatures->setExpanded(true);
           }
 
         }
@@ -710,7 +725,7 @@ void MainWindowView::addMatches(const QString &sessionName, const QString &match
           itemLeftImage->setFlags(itemLeftImage->flags() | Qt::ItemIsTristate);
           itemLeftImage->setData(0, Qt::UserRole, fme::pair_left);
           itemImagePairs->addChild(itemLeftImage);
-          itemLeftImage->setExpanded(true);
+          //itemLeftImage->setExpanded(true);
         }
 
         QTreeWidgetItem *itemRightImage = nullptr;
@@ -730,7 +745,7 @@ void MainWindowView::addMatches(const QString &sessionName, const QString &match
           itemRightImage->setFlags(itemRightImage->flags() | Qt::ItemIsTristate);
           itemRightImage->setData(0, Qt::UserRole, fme::pair_right);
           itemLeftImage->addChild(itemRightImage);
-          itemRightImage->setExpanded(false);
+          //itemRightImage->setExpanded(false);
         }
 
 //        for (auto &image_features : matches) {
@@ -1078,6 +1093,49 @@ void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRig
   //emit selectImage(file);
 
   update();
+}
+
+void MainWindowView::setActiveSession(const QString &session)
+{
+  const QSignalBlocker blocker(mComboBoxActiveSession);
+  mComboBoxActiveSession->setCurrentText(session);
+
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    /* Sessions */
+
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      QTreeWidgetItem *temp = itemProject->child(i);
+      if (temp->text(0).compare(tr("Sessions")) == 0) {
+        itemSessions = itemProject->child(i);
+        break;
+      }
+    }
+
+    if (itemSessions != nullptr) {
+      for (int i = 0; i < itemSessions->childCount(); i++) {
+        if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
+          QFont font;
+          font.setBold(itemSession->text(0).compare(session) == 0);
+          itemSession->setFont(0, font);
+        }
+      }
+
+//  //    QFont font;
+//  //    font.setBold(activeSession);
+//  //    itemSession->setFont(0, font);
+//      itemSession->setData(0, Qt::UserRole, fme::session);
+//      itemSession->setText(0, sessionName);
+//      itemSession->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_list_48px.png"));
+//      itemSession->setToolTip(0, sessionDescription);
+//      itemSessions->addChild(itemSession);
+
+    }
+
+
+    update();
+  }
 }
 
 void MainWindowView::changeEvent(QEvent *e)
@@ -1613,6 +1671,9 @@ void MainWindowView::init()
   ui->toolBarTools->addAction(mActionLoadImages);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionNewSession);
+  ui->toolBarTools->addWidget(new QLabel(tr("Active Session"), this));
+  mComboBoxActiveSession->setMinimumWidth(100);
+  ui->toolBarTools->addWidget(mComboBoxActiveSession);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionPreprocess);
   ui->toolBarTools->addAction(mActionFeatureExtraction);

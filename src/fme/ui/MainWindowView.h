@@ -11,6 +11,7 @@ class MainWindowView;
 
 class QTreeWidget;
 class QTreeWidgetItem;
+class QComboBox;
 
 namespace fme
 {
@@ -56,7 +57,7 @@ public:
   void addImages(const QStringList &images);
   void setActiveImage(const QString &image);
   void setActiveImages(const QStringList &images);
-  void addSession(const QString &sessionName, const QString &sessionDescription, bool activeSession = false);
+  void addSession(const QString &sessionName, const QString &sessionDescription);
   void addPreprocess(const QString &sessionName, const QString &preprocess, const std::vector<QString> &preprocessImages);
   void addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const std::vector<QString> &features);
   void addMatches(const QString &sessionName, const QString &matcher, const QString &left, const QString &right, const QString &file);
@@ -101,6 +102,8 @@ public slots:
   void setKeyPoints(const std::vector<QPointF> &keyPoints);
 
   void showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF>> &matches);
+
+  void setActiveSession(const QString &session);
 
 signals:
 
@@ -159,6 +162,8 @@ signals:
 
   void loadKeyPoints(QString);
   void openImageMatches(QString, QString, QString);
+
+  void activeSessionChange(QString);
 
 protected:
 
@@ -231,6 +236,7 @@ protected:
   LogWidget *mLogWidget;
   GraphicViewer *mGraphicViewer;
   QWidget *mStartPageWidget;
+  QComboBox *mComboBoxActiveSession;
 
   tl::EnumFlags<Flag> mFlags;
   std::vector<QAction*> mHistory;

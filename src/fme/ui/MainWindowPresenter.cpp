@@ -129,6 +129,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
 
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
+
+  connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -547,7 +549,11 @@ void MainWindowPresenter::loadProject()
 
   for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
 
+
+    bool bActive = mProjectModel->currentSession()->name().compare((*it)->name()) == 0;
+
     mView->addSession((*it)->name(), (*it)->description());
+    if (bActive) mView->setActiveSession((*it)->name());
     mView->setFlag(MainWindowView::Flag::session_created, true);
 
     bool bPreprocess = loadPreprocess((*it)->name());
@@ -611,6 +617,12 @@ void MainWindowPresenter::loadSession(const QString &session)
 void MainWindowPresenter::selectSession(const QString &session)
 {
   ///TODO: recuperar información de la sesión y mostrarla en la ventana de propiedades
+}
+
+void MainWindowPresenter::activeSession(const QString &session)
+{
+  mProjectModel->setCurrentSession(session);
+  mView->setActiveSession(session);
 }
 
 void MainWindowPresenter::selectPreprocess(const QString &session)
@@ -1115,6 +1127,7 @@ void MainWindowPresenter::initNewSessionDialog()
     mNewSessionPresenter = new NewSessionPresenter(newSessionView, mProjectModel);
 
     connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(loadSession(QString)));
+    connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(activeSession(QString)));
   }
 }
 
@@ -1234,7 +1247,7 @@ bool MainWindowPresenter::loadFeatures(const QString &session)
 
     QString currentSession = mProjectModel->currentSession()->name();
     if (currentSession.compare(session) == 0){
-      mView->setFlag(MainWindowView::Flag::feature_extraction, detector && descriptor);
+      mView->setFlag(MainWindowView::Flag::feature_extraction, detector && descriptor && _session->features().empty() == false);
     }
 
     if (detector && descriptor){

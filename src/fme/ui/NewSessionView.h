@@ -32,6 +32,12 @@ public:
    * \return Descripción de la sesión
    */
   virtual QString sessionDescription() const = 0;
+
+  virtual void setExistingName(bool nameExist) = 0;
+
+signals:
+
+  void sessionNameChange(QString);
 };
 
 class NewSessionView
@@ -64,13 +70,14 @@ public:
 
   QString sessionName() const override;
   QString sessionDescription() const override;
+  void setExistingName(bool nameExist) override;
 
 protected:
 
   QLineEdit *mLineEditSessionName;
   QTextEdit *mTextEditSessionDescription;
   QDialogButtonBox *mButtonBox;
-
+  bool bNameExist;
 };
 
 } // namespace fme
