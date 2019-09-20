@@ -13,6 +13,7 @@
 #include "fme/core/features/hog.h"
 #include "fme/core/features/latch.h"
 #include "fme/core/features/lucid.h"
+#include "fme/core/features/lss.h"
 #include "fme/core/features/msd.h"
 #include "fme/core/features/mser.h"
 #include "fme/core/features/kaze.h"
@@ -587,6 +588,10 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                             std::shared_ptr<ILucid> lucid = std::make_shared<LucidProperties>();
                             readLUCID(&stream, lucid.get());
                             session->setDescriptor(lucid);
+                          } else if (stream.name() == "LSS") {
+                            std::shared_ptr<ILss> lss = std::make_shared<LssProperties>();
+                            session->setDescriptor(lss);
+                            stream.skipCurrentElement();
                           } else if (stream.name() == "ORB") {
                             std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
                             readORB(&stream, orb.get());
@@ -887,7 +892,9 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
                 writeLATCH(&stream, dynamic_cast<ILatch *>(descriptor));
               } else if (descriptor->type() == Feature::Type::lucid){
                 writeLUCID(&stream, dynamic_cast<ILucid *>(descriptor));
-              } else if (descriptor->type() == Feature::Type::orb){
+              } else if (descriptor->type() == Feature::Type::lss){
+                writeLSS(&stream, dynamic_cast<ILss *>(descriptor));
+              }else if (descriptor->type() == Feature::Type::orb){
                 writeORB(&stream, dynamic_cast<IOrb *>(descriptor));
               } else if (descriptor->type() == Feature::Type::sift){
                 writeSIFT(&stream, dynamic_cast<ISift *>(descriptor));
@@ -1955,6 +1962,12 @@ void ProjectRW::writeLUCID(QXmlStreamWriter *stream, ILucid *lucid) const
     stream->writeTextElement("BlurKernel", QString::number(lucid->blurKernel()));
   }
   stream->writeEndElement(); // LUCID
+}
+
+void ProjectRW::writeLSS(QXmlStreamWriter *stream, ILss *lss) const
+{
+  stream->writeStartElement("LSS");
+  stream->writeEndElement(); // LSS
 }
 
 void ProjectRW::writeMSD(QXmlStreamWriter *stream, IMsd *msd) const

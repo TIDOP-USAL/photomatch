@@ -28,17 +28,15 @@ public:
   virtual void setStatusText(QString text) = 0;
   virtual void setRange(int min, int max) = 0;
   virtual void setValue(int value) = 0;
-  virtual void setProcess(Process *process) = 0;
+  //virtual void setProcess(Process *process) = 0;
   virtual void setFinished(bool finished) = 0;
-  virtual void setConsole(QTextEdit *console) = 0;
-  virtual void setConsoleVisible(bool visible) = 0;
-  virtual void writeinConsole(QString text) = 0;
-  virtual void clearConsole() = 0;
 
 public slots:
 
-  virtual void onSatutsChanged(int step, QString message) = 0;
-  virtual void onSatutsChangedNext() = 0;
+  virtual void onStatusChanged(int step, QString message) = 0;
+  virtual void onStatusChangedNext() = 0;
+  //virtual void onProcessFinished() = 0;
+  virtual void onMinimized() = 0;
 
 signals:
 
@@ -59,29 +57,35 @@ public:
   void setStatusText(QString text) override;
   void setRange(int min, int max) override;
   void setValue(int value) override;
-  void setProcess(Process *process) override;
+  //void setProcess(Process *process) override;
   void setFinished(bool finished) override;
-  void setConsole(QTextEdit *console) override;
-  void setConsoleVisible(bool visible) override;
-  void writeinConsole(QString text) override;
-  void clearConsole() override;
 
 public slots:
 
-  void onSatutsChanged(int step, QString message) override;
-  void onSatutsChangedNext() override;
+  void onStatusChanged(int step, QString message) override;
+  void onStatusChangedNext() override;
+  //void onProcessFinished() override;
+  void onMinimized() override;
 
 private slots:
 
   void on_pushButton_clicked();
-  void on_pushButton_save_clicked();
+
+// QWidget interface
+
+protected:
+
+  //void closeEvent(QCloseEvent *event) override;
 
 private:
 
   Ui::ProgressDialog *ui;
   Process *mProcess;
-  QTextEdit *mConsole;
 
+
+  // QWidget interface
+protected:
+  //void changeEvent(QEvent *) override;
 };
 
 } // namespace fme

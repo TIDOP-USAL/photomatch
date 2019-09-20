@@ -1199,7 +1199,7 @@ void MainWindowPresenter::initProgressDialog()
 //    mConsole->setFont(font);
 //    mConsole->setReadOnly(true);
 //    mProgressDialog->setConsole(mConsole);
-    mProgressDialog->setConsoleVisible(false);
+    //mProgressDialog->setConsoleVisible(false);
   }
 }
 

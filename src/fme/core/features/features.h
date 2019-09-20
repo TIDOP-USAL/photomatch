@@ -37,7 +37,6 @@ public:
     lss,
     msd,
     mser,
-    mtm,
     orb,
     sift,
     star,

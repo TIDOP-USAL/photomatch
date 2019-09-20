@@ -304,8 +304,15 @@ void PreprocessPresenter::run()
 
   mView->hide();
   if (mProgressDialog) {
-    connect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
-    mProgressDialog->setRange(0,0);
+    //connect(mMultiProcess, SIGNAL(finished()),                 mProgressDialog,    SLOT(onProcessFinished()));
+    connect(mMultiProcess, SIGNAL(statusChanged(int, QString)),   mProgressDialog,    SLOT(onStatusChanged(int,QString)));
+    connect(mMultiProcess, SIGNAL(statusChangedNext()),           mProgressDialog,    SLOT(onStatusChangedNext()));
+    //connect(mMultiProcess, SIGNAL(error(int, QString)),           mProgressDialog,    SLOT(onError(int,QString)));
+    connect(mProgressDialog, SIGNAL(cancel()),                    mMultiProcess, SLOT(stop()));
+
+    int n = mMultiProcess->count();
+    mProgressDialog->setRange(0, mMultiProcess->count());
+    mProgressDialog->setValue(0);
     mProgressDialog->setWindowTitle("Preprocessing images...");
     mProgressDialog->setStatusText("Preprocessing images...");
     mProgressDialog->setFinished(false);
@@ -337,10 +344,15 @@ void PreprocessPresenter::onError(int code, const QString &msg)
 void PreprocessPresenter::onFinished()
 {
   if (mProgressDialog){
-    mProgressDialog->setRange(0,1);
+    mProgressDialog->show();
+    mProgressDialog->setRange(0, 1);
     mProgressDialog->setValue(1);
     mProgressDialog->setFinished(true);
     mProgressDialog->setStatusText(tr("Image preprocessing finished"));
+    //connect(mMultiProcess, SIGNAL(finished()),                 mProgressDialog,    SLOT(onProcessFinished()));
+    connect(mMultiProcess, SIGNAL(statusChanged(int,QString)), mProgressDialog,    SLOT(onStatusChanged(int,QString)));
+    connect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressDialog,    SLOT(onStatusChangedNext()));
+    //connect(mMultiProcess, SIGNAL(error(int,QString)),         mProgressDialog,    SLOT(onError(int,QString)));
     disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
   }
 

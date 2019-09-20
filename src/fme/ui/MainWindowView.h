@@ -12,6 +12,7 @@ class MainWindowView;
 class QTreeWidget;
 class QTreeWidgetItem;
 class QComboBox;
+class QProgressBar;
 
 namespace fme
 {
@@ -72,6 +73,8 @@ public:
    * \brief Establece las propiedades del elemento seleccionado en el árbol de proyecto
    */
   void setProperties(const std::list<std::pair<QString, QString> > &properties);
+
+  QProgressBar *progressBar();
 
 public slots:
 
@@ -237,6 +240,7 @@ protected:
   GraphicViewer *mGraphicViewer;
   QWidget *mStartPageWidget;
   QComboBox *mComboBoxActiveSession;
+  QProgressBar *mProgressBar;
 
   tl::EnumFlags<Flag> mFlags;
   std::vector<QAction*> mHistory;

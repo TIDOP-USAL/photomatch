@@ -444,6 +444,7 @@ protected:
   void writeKAZE(QXmlStreamWriter *stream, IKaze *kaze) const;
   void writeLATCH(QXmlStreamWriter *stream, ILatch *latch) const;
   void writeLUCID(QXmlStreamWriter *stream, ILucid *lucid) const;
+  void writeLSS(QXmlStreamWriter *stream, ILss *lss) const;
   void writeMSD(QXmlStreamWriter *stream, IMsd *msd) const;
   void writeMSER(QXmlStreamWriter *stream, IMser *mser) const;
   void writeORB(QXmlStreamWriter *stream, IOrb *orb) const;

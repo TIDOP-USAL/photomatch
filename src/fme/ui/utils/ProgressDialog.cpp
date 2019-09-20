@@ -14,9 +14,11 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
 
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
+  this->setWindowFlags(this->windowFlags() | Qt::WindowMinimizeButtonHint);
+  this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
   ui->setupUi(this);
-  setRange(0,3);
-  ui->pushButton_save->setVisible(false);
+
+  connect(ui->pushButtonBgProcessing, SIGNAL(clicked(bool)), this, SLOT(onMinimized()));
 }
 
 ProgressDialog::~ProgressDialog()
@@ -31,7 +33,7 @@ void ProgressDialog::setStatusText(QString text)
 
 void ProgressDialog::setRange(int min, int max)
 {
-  ui->progressBar->setRange(min,max);
+  ui->progressBar->setRange(min, max);
 }
 
 void ProgressDialog::setValue(int value)
@@ -39,50 +41,49 @@ void ProgressDialog::setValue(int value)
   ui->progressBar->setValue(value);
 }
 
-void ProgressDialog::setProcess(Process *process)
-{
-  mProcess = process;
+//void ProgressDialog::setProcess(Process *process)
+//{
+//  mProcess = process;
 
-  connect(process, SIGNAL(finished()),                 this,    SLOT(onProcessFinished()));
-  connect(process, SIGNAL(statusChanged(int,QString)), this,    SLOT(onSatutsChanged(int,QString)));
-  connect(process, SIGNAL(statusChangedNext()),        this,    SLOT(onSatutsChangedNext()));
-  connect(process, SIGNAL(error(int,QString)),         this,    SLOT(onError(int,QString)));
-  connect(this,    SIGNAL(cancel()),                   process, SLOT(stop()));
-}
+//  connect(process, SIGNAL(finished()),                 this,    SLOT(onProcessFinished()));
+//  connect(process, SIGNAL(statusChanged(int,QString)), this,    SLOT(onStatusChanged(int,QString)));
+//  connect(process, SIGNAL(statusChangedNext()),        this,    SLOT(onStatusChangedNext()));
+//  connect(process, SIGNAL(error(int,QString)),         this,    SLOT(onError(int,QString)));
+//  //connect(this,    SIGNAL(cancel()),                   process, SLOT(stop()));
+//}
 
 void ProgressDialog::setFinished(bool finished)
 {
   if(finished){
     ui->pushButton->setText(tr("Close"));
-    ui->pushButton_save->setVisible(true);
+    //ui->pushButton_save->setVisible(true);
   } else{
     ui->pushButton->setText(tr("Cancel"));
-    ui->pushButton_save->setVisible(false);
+    //ui->pushButton_save->setVisible(false);
   }
 }
 
-void ProgressDialog::setConsole(QTextEdit *console)
-{
-  mConsole = console;
-  ui->frame_console->layout()->setContentsMargins(0,0,0,0);
-  ui->frame_console->layout()->addWidget(console);
-}
-
-void ProgressDialog::setConsoleVisible(bool visible)
-{
-  ui->frame_console->setVisible(visible);
-}
-
-void ProgressDialog::onSatutsChanged(int step, QString message)
+void ProgressDialog::onStatusChanged(int step, QString message)
 {
   ui->progressBar->setValue(step);
   ui->labelStatus->setText(message);
 }
 
-void ProgressDialog::onSatutsChangedNext()
+void ProgressDialog::onStatusChangedNext()
 {
-  ui->progressBar->setValue(ui->progressBar->value()+1);
+  int value = ui->progressBar->value()+1;
+  ui->progressBar->setValue(value);
 }
+
+void ProgressDialog::onMinimized()
+{
+  this->hide();
+}
+
+//void ProgressDialog::onProcessFinished()
+//{
+//  this->show();
+//}
 
 void ProgressDialog::on_pushButton_clicked()
 {
@@ -90,34 +91,21 @@ void ProgressDialog::on_pushButton_clicked()
   close();
 }
 
-void ProgressDialog::on_pushButton_save_clicked()
-{
- QString savePath = QFileDialog::getSaveFileName(this,
-                                                 tr("Text file"),
-                                                 "C://",
-                                                 trUtf8("(*.txt)"));
-
-  if(!savePath.isEmpty() && mConsole){
-    QFile file(savePath);
-    file.open(QFile::WriteOnly);
-    file.write(mConsole->toPlainText().toLatin1());
-
-    QString outputPath = savePath.left(savePath.lastIndexOf(QRegExp("/"))+1);
-  }
-}
-
-void ProgressDialog::writeinConsole(QString text)
-{
-  if (mConsole){
-    mConsole->append(text+"\n");
-  }
-}
-
-void ProgressDialog::clearConsole()
-{
-  if (mConsole){
-    mConsole->clear();
-  }
-}
-
 } // namespace fme
+
+
+//void fme::ProgressDialog::closeEvent(QCloseEvent *event)
+//{
+//}
+
+//void fme::ProgressDialog::changeEvent(QEvent *event)
+//{
+//  QEvent::Type type = event->type();
+//  if(type == QEvent::WindowStateChange) {
+//    bool bTopLevel = this->isTopLevel();
+//    if (bTopLevel == false){
+//      this->hide();
+//    }
+//  }
+//  QDialog::changeEvent(event);
+//}

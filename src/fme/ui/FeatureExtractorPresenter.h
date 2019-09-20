@@ -29,6 +29,7 @@ class IHogWidget;
 class IKazeWidget;
 class ILatchWidget;
 class ILucidWidget;
+class ILssWidget;
 class IMsdWidget;
 class IMserWidget;
 class IOrbWidget;
@@ -135,6 +136,7 @@ protected:
   IKazeWidget *mKazeDescriptor;
   ILatchWidget *mLatchDescriptor;
   ILucidWidget *mLucidDescriptor;
+  ILssWidget *mLssDescriptor;
   IOrbWidget *mOrbDescriptor;
   ISiftWidget *mSiftDescriptor;
   ISurfWidget *mSurfDescriptor;

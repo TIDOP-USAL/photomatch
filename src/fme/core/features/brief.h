@@ -95,9 +95,6 @@ protected:
 };
 
 
-/*----------------------------------------------------------------*/
-
-
 } // namespace fme
 
 #endif // FME_BRIEF_DESCRIPTOR_H

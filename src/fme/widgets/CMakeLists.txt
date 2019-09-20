@@ -44,6 +44,8 @@ add_library(libwidgets ${LIB_TYPE}
             LceBsescsWidget.h            
             LucidWidget.cpp
             LucidWidget.h
+            LssWidget.cpp
+            LssWidget.h
             MsdWidget.cpp
             MsdWidget.h
             MserWidget.cpp

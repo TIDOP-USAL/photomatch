@@ -84,7 +84,8 @@ void DescriptorMatcherPresenter::open()
                descriptor->type() == Feature::Type::brisk ||
                descriptor->type() == Feature::Type::freak ||
                descriptor->type() == Feature::Type::latch ||
-               descriptor->type() == Feature::Type::lucid){
+               descriptor->type() == Feature::Type::lucid ||
+               descriptor->type() == Feature::Type::lss){
       mView->enableBruteForceNorm("NORM_HAMMING");
       mView->enableBruteForceNorm("NORM_HAMMING2");
       mView->setNormType("NORM_HAMMING");

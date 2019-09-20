@@ -12,6 +12,7 @@
 #include "fme/core/features/hog.h"
 #include "fme/core/features/latch.h"
 #include "fme/core/features/lucid.h"
+#include "fme/core/features/lss.h"
 #include "fme/core/features/msd.h"
 #include "fme/core/features/mser.h"
 #include "fme/core/features/kaze.h"
@@ -38,6 +39,7 @@
 #include "fme/widgets/KazeWidget.h"
 #include "fme/widgets/LatchWidget.h"
 #include "fme/widgets/LucidWidget.h"
+#include "fme/widgets/LssWidget.h"
 #include "fme/widgets/MsdWidget.h"
 #include "fme/widgets/MserWidget.h"
 #include "fme/widgets/OrbWidget.h"
@@ -87,6 +89,7 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mKazeDescriptor(new KazeWidget),
     mLatchDescriptor(new LatchWidget),
     mLucidDescriptor(new LucidWidget),
+    mLssDescriptor(new LssWidget),
     mOrbDescriptor(new OrbWidget),
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
@@ -210,6 +213,11 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
   if (mLucidDescriptor){
     delete mLucidDescriptor;
     mLucidDescriptor = nullptr;
+  }
+
+  if (mLssDescriptor){
+    delete mLssDescriptor;
+    mLssDescriptor = nullptr;
   }
 
   if (mOrbDescriptor){
@@ -719,6 +727,7 @@ void FeatureExtractorPresenter::init()
   mView->addDescriptorExtractor(mKazeDescriptor);
   mView->addDescriptorExtractor(mLatchDescriptor);
   mView->addDescriptorExtractor(mLucidDescriptor);
+  mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
   mView->addDescriptorExtractor(mSiftDescriptor);
   mView->addDescriptorExtractor(mSurfDescriptor);
@@ -899,6 +908,8 @@ void FeatureExtractorPresenter::run()
   } else if (currentDescriptorExtractor.compare("LUCID") == 0){
     descriptorExtractor = std::make_shared<LucidDescriptor>(mLucidDescriptor->lucidKernel(),
                                                             mLucidDescriptor->blurKernel());
+  } else if (currentDescriptorExtractor.compare("LSS") == 0){
+    descriptorExtractor = std::make_shared<LssDescriptor>();
   } else if (currentDescriptorExtractor.compare("ORB") == 0){
     if (currentKeypointDetector.compare("ORB") == 0){
       descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),

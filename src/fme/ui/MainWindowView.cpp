@@ -12,6 +12,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QComboBox>
+#include <QProgressBar>
 
 namespace fme
 {
@@ -75,6 +76,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionShowKeyPoints(new QAction(this)),
     mGraphicViewer(nullptr),
     mComboBoxActiveSession(new QComboBox(this)),
+    mProgressBar(new QProgressBar(this)),
     ui(new Ui::MainWindowView)
 {
   ui->setupUi(this);
@@ -820,6 +822,11 @@ void MainWindowView::setProperties(const std::list<std::pair<QString, QString>> 
     ui->treeWidgetProperties->addTopLevelItem(item);
   }
 
+}
+
+QProgressBar *MainWindowView::progressBar()
+{
+  return mProgressBar;
 }
 
 void MainWindowView::updateHistory(const QStringList &history)
@@ -1687,6 +1694,8 @@ void MainWindowView::init()
   ui->toolBarView->addAction(mActionShowKeyPoints);
 
   mStartPageWidget = ui->tabWidget->widget(0);
+
+  mProgressBar->setVisible(false);
 
   // Configuración de mensajes
   tl::MessageManager &msg_h = tl::MessageManager::instance();

@@ -54,6 +54,7 @@ QString BriefProperties::name() const
   return QString("BRIEF");
 }
 
+
 /*----------------------------------------------------------------*/
 
 

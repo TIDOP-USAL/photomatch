@@ -47,6 +47,8 @@ set(FME_SOURCES
     MatchViewerPresenter.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
+    utils/Progress.cpp
+    utils/Progress.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
 )  
 
