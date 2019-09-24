@@ -5,7 +5,7 @@
 #include "fme/ui/DescriptorMatcherView.h"
 #include "fme/ui/ProjectModel.h"
 #include "fme/ui/SettingsModel.h"
-#include "fme/ui/utils/ProgressDialog.h"
+#include "fme/ui/utils/Progress.h"
 
 #include "fme/process/MultiProcess.h"
 #include "fme/process/Matching/MatchingProcess.h"
@@ -28,16 +28,13 @@ DescriptorMatcherPresenter::DescriptorMatcherPresenter(IDescriptorMatcherView *v
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mMultiProcess(new MultiProcess(true)),
-    mProgressDialog(nullptr)
+    mProgressHandler(nullptr)
 {
   init();
 
   connect(mView, SIGNAL(run()),      this, SLOT(run()));
   connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
-
-  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 
 }
 
@@ -118,9 +115,30 @@ void DescriptorMatcherPresenter::init()
 {
 }
 
-void DescriptorMatcherPresenter::setProgressDialog(IProgressDialog *progressDialog)
+void DescriptorMatcherPresenter::setProgressHandler(ProgressHandler *progressHandler)
 {
-  mProgressDialog = progressDialog;
+  mProgressHandler = progressHandler;
+}
+
+void DescriptorMatcherPresenter::cancel()
+{
+  mMultiProcess->stop();
+
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Processing has been canceled by the user"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+  }
+
+  msgInfo("Processing has been canceled by the user");
 }
 
 void DescriptorMatcherPresenter::run()
@@ -215,18 +233,24 @@ void DescriptorMatcherPresenter::run()
 
   }
 
-  mView->hide();
-
   mProjectModel->clearMatches();
 
-  if (mProgressDialog){
-    connect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
-    mProgressDialog->setRange(0, 0);
-    mProgressDialog->setWindowTitle("Matching Features...");
-    mProgressDialog->setStatusText("Matching Features...");
-    mProgressDialog->setFinished(false);
-    mProgressDialog->show();
+  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
+    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
+    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
+
+    mProgressHandler->setRange(0, mMultiProcess->count());
+    mProgressHandler->setValue(0);
+    mProgressHandler->setTitle("Feature Matching");
+    mProgressHandler->setDescription("Matching Features...");
+    mProgressHandler->onInit();
   }
+
+  mView->hide();
 
   emit running();
 
@@ -235,23 +259,43 @@ void DescriptorMatcherPresenter::run()
 
 void DescriptorMatcherPresenter::onError(int code, const QString &msg)
 {
-  QByteArray ba = msg.toLocal8Bit();
-  msgError("(%i) %s", code, ba.constData());
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Feature Matching error"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+  }
+
+//  QByteArray ba = msg.toLocal8Bit();
+//  msgError("(%i) %s", code, ba.constData());
   emit finished();
 }
 
 void DescriptorMatcherPresenter::onFinished()
 {
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 
-  if (mProgressDialog) {
-    mProgressDialog->setRange(0,1);
-    mProgressDialog->setValue(1);
-    mProgressDialog->setFinished(true);
-    mProgressDialog->setStatusText(tr("Feature matching finished."));
-    disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Feature Matching finished"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
   emit finished();
+
   msgInfo("Feature matching finished.");
 }
 

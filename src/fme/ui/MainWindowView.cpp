@@ -76,7 +76,6 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionShowKeyPoints(new QAction(this)),
     mGraphicViewer(nullptr),
     mComboBoxActiveSession(new QComboBox(this)),
-    mProgressBar(new QProgressBar(this)),
     ui(new Ui::MainWindowView)
 {
   ui->setupUi(this);
@@ -1678,8 +1677,9 @@ void MainWindowView::init()
   ui->toolBarTools->addAction(mActionLoadImages);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionNewSession);
-  ui->toolBarTools->addWidget(new QLabel(tr("Active Session"), this));
+  ui->toolBarTools->addWidget(new QLabel(tr("Active Session: "), this));
   mComboBoxActiveSession->setMinimumWidth(100);
+  mComboBoxActiveSession->setContentsMargins(8,0,0,0);
   ui->toolBarTools->addWidget(mComboBoxActiveSession);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionPreprocess);
@@ -1695,7 +1695,10 @@ void MainWindowView::init()
 
   mStartPageWidget = ui->tabWidget->widget(0);
 
+  mProgressBar = new QProgressBar(this);
   mProgressBar->setVisible(false);
+  mProgressBar->setMaximumSize(150, 20);
+  ui->statusBar->addPermanentWidget(mProgressBar);
 
   // Configuración de mensajes
   tl::MessageManager &msg_h = tl::MessageManager::instance();

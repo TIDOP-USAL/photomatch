@@ -27,7 +27,9 @@ class IDescriptorMatcherModel;
 class IDescriptorMatcherPresenter;
 class IMatchViewerPresenter;
 class IMatchViewerModel;
+class ProgressHandler;
 class IProgressDialog;
+
 
 class MainWindowPresenter
   : public IPresenter
@@ -149,7 +151,7 @@ private:
 
   void initFeatureMatching();
 
-  void initProgressDialog();
+  void initProgress();
 
   void initMatchesViewer();
 
@@ -187,8 +189,9 @@ protected:
   IMatchViewerPresenter *mMatchesViewerPresenter;
   IMatchViewerModel *mMatchesViewerModel;
 
+  ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;
-  QTextEdit *mConsole;
+  //QTextEdit *mConsole;
 };
 
 } // namespace fme

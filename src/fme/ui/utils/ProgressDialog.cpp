@@ -18,6 +18,8 @@ ProgressDialog::ProgressDialog(QWidget *parent)
   this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
   ui->setupUi(this);
 
+  ui->pushButtonBgProcessing->setEnabled(false);
+
   connect(ui->pushButtonBgProcessing, SIGNAL(clicked(bool)), this, SLOT(onMinimized()));
 }
 
@@ -41,6 +43,13 @@ void ProgressDialog::setValue(int value)
   ui->progressBar->setValue(value);
 }
 
+void ProgressDialog::setInitialized()
+{
+  ui->pushButton->setText(tr("Cancel"));
+  ui->pushButtonBgProcessing->setEnabled(true);
+  this->show();
+}
+
 //void ProgressDialog::setProcess(Process *process)
 //{
 //  mProcess = process;
@@ -52,15 +61,18 @@ void ProgressDialog::setValue(int value)
 //  //connect(this,    SIGNAL(cancel()),                   process, SLOT(stop()));
 //}
 
-void ProgressDialog::setFinished(bool finished)
+void ProgressDialog::setFinished()
 {
-  if(finished){
-    ui->pushButton->setText(tr("Close"));
-    //ui->pushButton_save->setVisible(true);
-  } else{
-    ui->pushButton->setText(tr("Cancel"));
-    //ui->pushButton_save->setVisible(false);
+  ui->pushButton->setText(tr("Close"));
+  if (!this->isVisible()){
+    this->show();
   }
+  ui->pushButtonBgProcessing->setDisabled(true);
+}
+
+void ProgressDialog::setTitle(QString title)
+{
+  ui->progressBar->setWindowTitle(title);
 }
 
 void ProgressDialog::onStatusChanged(int step, QString message)

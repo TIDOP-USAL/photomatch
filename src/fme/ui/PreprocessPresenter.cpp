@@ -18,7 +18,7 @@
 #include "fme/ui/PreprocessView.h"
 #include "fme/ui/ProjectModel.h"
 #include "fme/ui/SettingsModel.h"
-#include "fme/ui/utils/ProgressDialog.h"
+#include "fme/ui/utils/Progress.h"
 
 #include "fme/widgets/AcebsfWidget.h"
 #include "fme/widgets/ClaheWidget.h"
@@ -70,18 +70,16 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
     mRSWHE(new RswheWidget),
     mWallis(new WallisWidget),
     mMultiProcess(new MultiProcess(true)),
-    mProgressDialog(nullptr)
+    mProgressHandler(nullptr)
 {
   init();
 
   connect(mView, SIGNAL(preprocessChange(QString)), this, SLOT(setCurrentPreprocess(QString)));
 
   connect(mView, SIGNAL(run()),      this, SLOT(run()));
-  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
+  //connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 
-  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 }
 
 PreprocessPresenter::~PreprocessPresenter()
@@ -222,9 +220,30 @@ void PreprocessPresenter::init()
   mView->setCurrentPreprocess(mDecolor->windowTitle());
 }
 
-void PreprocessPresenter::setProgressDialog(IProgressDialog *progressDialog)
+void PreprocessPresenter::setProgressHandler(ProgressHandler *progressHandler)
 {
-  mProgressDialog = progressDialog;
+  mProgressHandler = progressHandler;
+}
+
+void PreprocessPresenter::cancel()
+{
+  mMultiProcess->stop();
+
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Processing has been canceled by the user"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+  }
+
+  msgInfo("Processing has been canceled by the user");
 }
 
 void PreprocessPresenter::run()
@@ -302,22 +321,22 @@ void PreprocessPresenter::run()
     mMultiProcess->appendProcess(preprocess);
   }
 
-  mView->hide();
-  if (mProgressDialog) {
-    //connect(mMultiProcess, SIGNAL(finished()),                 mProgressDialog,    SLOT(onProcessFinished()));
-    connect(mMultiProcess, SIGNAL(statusChanged(int, QString)),   mProgressDialog,    SLOT(onStatusChanged(int,QString)));
-    connect(mMultiProcess, SIGNAL(statusChangedNext()),           mProgressDialog,    SLOT(onStatusChangedNext()));
-    //connect(mMultiProcess, SIGNAL(error(int, QString)),           mProgressDialog,    SLOT(onError(int,QString)));
-    connect(mProgressDialog, SIGNAL(cancel()),                    mMultiProcess, SLOT(stop()));
+  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 
-    int n = mMultiProcess->count();
-    mProgressDialog->setRange(0, mMultiProcess->count());
-    mProgressDialog->setValue(0);
-    mProgressDialog->setWindowTitle("Preprocessing images...");
-    mProgressDialog->setStatusText("Preprocessing images...");
-    mProgressDialog->setFinished(false);
-    mProgressDialog->show();
+  if (mProgressHandler) {
+    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
+    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
+    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
+
+    mProgressHandler->setRange(0, mMultiProcess->count());
+    mProgressHandler->setValue(0);
+    mProgressHandler->setTitle("Image Preprocessing");
+    mProgressHandler->setDescription("Preprocessing images...");
+    mProgressHandler->onInit();
   }
+
+  mView->hide();
 
   msgInfo("Preprocessing images");
   QByteArray ba = currentPreprocess.toLocal8Bit();
@@ -336,27 +355,44 @@ void PreprocessPresenter::setCurrentPreprocess(const QString &preprocess)
 
 void PreprocessPresenter::onError(int code, const QString &msg)
 {
-  QByteArray ba = msg.toLocal8Bit();
-  msgError("(%i) %s", code, ba.constData());
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Feature detection and description error"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+  }
+
+  ///TODO: finalizado con error sin controlar...
+  //QByteArray ba = msg.toLocal8Bit();
+  //msgError("(%i) %s", code, ba.constData());
   emit finished();
 }
 
 void PreprocessPresenter::onFinished()
 {
-  if (mProgressDialog){
-    mProgressDialog->show();
-    mProgressDialog->setRange(0, 1);
-    mProgressDialog->setValue(1);
-    mProgressDialog->setFinished(true);
-    mProgressDialog->setStatusText(tr("Image preprocessing finished"));
-    //connect(mMultiProcess, SIGNAL(finished()),                 mProgressDialog,    SLOT(onProcessFinished()));
-    connect(mMultiProcess, SIGNAL(statusChanged(int,QString)), mProgressDialog,    SLOT(onStatusChanged(int,QString)));
-    connect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressDialog,    SLOT(onStatusChangedNext()));
-    //connect(mMultiProcess, SIGNAL(error(int,QString)),         mProgressDialog,    SLOT(onError(int,QString)));
-    disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0, 1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Image preprocessing finished"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
   emit finished();
+
   msgInfo("Image preprocessing finished");
 }
 

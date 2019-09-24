@@ -879,10 +879,12 @@ private:
 
 public:
 
+  Chrono();
+
   /*!
    * \brief Constructor
    */
-  Chrono(const char *msg = "", bool writeMsg = true);
+  Chrono(const char *msg, bool writeMsg = false);
 
   /*!
    * \brief Destructora

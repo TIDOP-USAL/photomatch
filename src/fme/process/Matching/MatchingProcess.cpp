@@ -81,6 +81,7 @@ void MatchingProcess::run()
   msgInfo("Write matches at: %s", cfeat);
 
   emit matchCompute(QFileInfo(mQueryDescriptors).baseName(), QFileInfo(mTrainDescriptors).baseName(), mMatches);
+  emit statusChangedNext();
 }
 
 } // namespace fme

@@ -27,6 +27,7 @@
 #include "fme/ui/MatchViewerPresenter.h"
 #include "fme/ui/MatchViewerModel.h"
 #include "fme/ui/MatchViewerView.h"
+#include "fme/ui/utils/Progress.h"
 #include "fme/ui/utils/ProgressDialog.h"
 
 
@@ -39,6 +40,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QImageReader>
+#include <QProgressBar>
 
 namespace fme
 {
@@ -64,6 +66,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mDescriptorMatcherPresenter(nullptr),
     mMatchesViewerPresenter(nullptr),
     mMatchesViewerModel(nullptr),
+    mProgressHandler(nullptr),
     mProgressDialog(nullptr)
 {
   init();
@@ -203,6 +206,11 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mDescriptorMatcherPresenter){
     delete mDescriptorMatcherPresenter;
     mDescriptorMatcherPresenter = nullptr;
+  }
+
+  if (mProgressHandler){
+    delete mProgressHandler;
+    mProgressHandler = nullptr;
   }
 
   if (mProgressDialog){
@@ -1152,8 +1160,12 @@ void MainWindowPresenter::initPreprocessDialog()
     connect(mPreprocessPresenter, SIGNAL(finished()),  this, SLOT(processFinish()));
     connect(mPreprocessPresenter, SIGNAL(imagePreprocessed(QString)),  this, SLOT(updatePreprocess()));
 
-    initProgressDialog();
-    mPreprocessPresenter->setProgressDialog(mProgressDialog);
+    initProgress();
+
+    ///TODO: Esto aqui...
+    ///connect(mProgressHandler, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+    //connect(mProgressDialog, SIGNAL(cancel()),     mPreprocessPresenter, SLOT(cancel()));
+    mPreprocessPresenter->setProgressHandler(mProgressHandler);
   }
 }
 
@@ -1168,8 +1180,9 @@ void MainWindowPresenter::initFeatureExtractionDialog()
     connect(mFeatureExtractorPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
     connect(mFeatureExtractorPresenter, SIGNAL(featuresExtracted(QString)), this, SLOT(updateFeatures()));
 
-    initProgressDialog();
-    mFeatureExtractorPresenter->setProgressDialog(mProgressDialog);
+    initProgress();
+
+    mFeatureExtractorPresenter->setProgressHandler(mProgressHandler);
   }
 }
 
@@ -1184,22 +1197,33 @@ void MainWindowPresenter::initFeatureMatching()
     connect(mDescriptorMatcherPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
     connect(mDescriptorMatcherPresenter, SIGNAL(matchCompute(QString)), this, SLOT(updateMatches()));
 
-    initProgressDialog();
-    mDescriptorMatcherPresenter->setProgressDialog(mProgressDialog);
+    initProgress();
+
+    mDescriptorMatcherPresenter->setProgressHandler(mProgressHandler);
   }
 }
 
-void MainWindowPresenter::initProgressDialog()
+void MainWindowPresenter::initProgress()
 {
-  if (mProgressDialog == nullptr){
+  if (mProgressHandler == nullptr){
     mProgressDialog = new ProgressDialog;
-//    mConsole = new QTextEdit(mProgressDialog);
-//    QFont font("Courier");
-//    font.setPixelSize(10);
-//    mConsole->setFont(font);
-//    mConsole->setReadOnly(true);
-//    mProgressDialog->setConsole(mConsole);
-    //mProgressDialog->setConsoleVisible(false);
+
+    QProgressBar *statusBarProgress = mView->progressBar();
+
+    mProgressHandler = new ProgressHandler;
+
+    connect(mProgressHandler, SIGNAL(rangeChange(int, int)),      mProgressDialog, SLOT(setRange(int, int)));
+    connect(mProgressHandler, SIGNAL(valueChange(int)),           mProgressDialog, SLOT(setValue(int)));
+    connect(mProgressHandler, SIGNAL(initialized()),              mProgressDialog, SLOT(setInitialized()));
+    connect(mProgressHandler, SIGNAL(finished()),                 mProgressDialog, SLOT(setFinished()));
+    connect(mProgressHandler, SIGNAL(titleChange(QString)),       mProgressDialog, SLOT(setWindowTitle(QString)));
+    connect(mProgressHandler, SIGNAL(descriptionChange(QString)), mProgressDialog, SLOT(setStatusText(QString)));
+
+    connect(mProgressHandler, SIGNAL(rangeChange(int, int)),      statusBarProgress, SLOT(setRange(int, int)));
+    connect(mProgressHandler, SIGNAL(valueChange(int)),           statusBarProgress, SLOT(setValue(int)));
+    connect(mProgressHandler, SIGNAL(initialized()),              statusBarProgress, SLOT(show()));
+    connect(mProgressHandler, SIGNAL(finished()),                 statusBarProgress, SLOT(hide()));
+
   }
 }
 

@@ -2,6 +2,7 @@
 
 #include "fme/core/utils.h"
 
+#include <tidop/core/utils.h>
 #include <tidop/core/messages.h>
 
 #include <opencv2/core.hpp>
@@ -84,7 +85,11 @@ void ImagePreprocess::run()
     //msgWarning("Full image size. ");
   }
 
+  tl::Chrono chrono;
+  chrono.run();
   cv::Mat img_out = mPreprocess->process(img);
+  uint64_t time = chrono.stop();
+  msgInfo("Preprocessed image %s [Time: %f seconds]", input_img, time / 1000.);
 
   ba = mImgOutput.toLocal8Bit();
   const char *output_img = ba.data();

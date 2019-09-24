@@ -61,24 +61,35 @@ void FeatureExtractor::run()
 
   if (img.empty()) return;
 
-  msgInfo("Searching Keypoints for image %s", img_file);
   if (mKeypointDetector == nullptr) return;
+
+  msgInfo("Searching Keypoints for image %s", img_file);
+  tl::Chrono chrono;
+  chrono.run();
   std::vector<cv::KeyPoint> key_points;
   bool _error = mKeypointDetector->detect(img, key_points);
   if (_error){
     emit error(0, "Keypoint Detector error");
     return;
   }
-  msgInfo("%i Keypoints detected in image %s", key_points.size(), img_file);
+  uint64_t time = chrono.stop();
+  msgInfo("%i Keypoints detected in image %s [Time: %f seconds]", key_points.size(), img_file, time/1000.);
+
+
+
+  if (mDescriptorExtractor == nullptr) return;
 
   msgInfo("Computing keypoints descriptors for image %s", img_file);
-  if (mDescriptorExtractor == nullptr) return;
+  chrono.reset();
+  chrono.run();
   cv::Mat descriptors;
   _error = mDescriptorExtractor->extract(img, key_points, descriptors);
   if (_error){
     emit error(0, "Keypoint Descriptor error");
     return;
   }
+  time = chrono.stop();
+  msgInfo("Descriptors computed for image %s [Time: %f seconds]", img_file, time/1000.);
 
   cv::Mat out;
   cv::drawKeypoints(img, key_points, out, cv::Scalar(0,255,0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
@@ -94,6 +105,7 @@ void FeatureExtractor::run()
   const char *cfeat = ba.data();
   msgInfo("Write features at: %s", cfeat);
   emit featuresExtracted(mFeatures);
+  emit statusChangedNext();
 }
 
 } // namespace fme

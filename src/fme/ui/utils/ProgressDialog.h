@@ -25,13 +25,17 @@ public:
   explicit IProgressDialog(QWidget *parent = nullptr) : QDialog(parent){}
   virtual ~IProgressDialog() = default;
 
-  virtual void setStatusText(QString text) = 0;
-  virtual void setRange(int min, int max) = 0;
-  virtual void setValue(int value) = 0;
+
   //virtual void setProcess(Process *process) = 0;
-  virtual void setFinished(bool finished) = 0;
 
 public slots:
+
+  virtual void setRange(int min, int max) = 0;
+  virtual void setValue(int value) = 0;
+  virtual void setInitialized() = 0;
+  virtual void setFinished() = 0;
+  virtual void setTitle(QString text) = 0;
+  virtual void setStatusText(QString text) = 0;
 
   virtual void onStatusChanged(int step, QString message) = 0;
   virtual void onStatusChangedNext() = 0;
@@ -54,14 +58,16 @@ public:
   explicit ProgressDialog(QWidget *parent = nullptr);
   ~ProgressDialog()  override;
 
-  void setStatusText(QString text) override;
-  void setRange(int min, int max) override;
-  void setValue(int value) override;
   //void setProcess(Process *process) override;
-  void setFinished(bool finished) override;
 
 public slots:
 
+  void setRange(int min, int max) override;
+  void setValue(int value) override;
+  void setInitialized() override;
+  void setFinished() override;
+  void setTitle(QString title) override;
+  void setStatusText(QString text) override;
   void onStatusChanged(int step, QString message) override;
   void onStatusChangedNext() override;
   //void onProcessFinished() override;

@@ -30,7 +30,7 @@ class INoshpWidget;
 class IPoheWidget;
 class IRswheWidget;
 class IWallisWidget;
-class IProgressDialog;
+class ProgressHandler;
 
 class IPreprocessPresenter
   : public IPresenter
@@ -51,7 +51,8 @@ signals:
 
 public slots:
 
-  virtual void setProgressDialog(IProgressDialog *progressDialog) = 0;
+  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
+  virtual void cancel() = 0;
 
 private slots:
 
@@ -89,7 +90,8 @@ private:
 
 public slots:
 
-  void setProgressDialog(IProgressDialog *progressDialog) override;
+  void setProgressHandler(ProgressHandler *progressHandler) override;
+  void cancel() override;
 
 private slots:
 
@@ -123,7 +125,7 @@ protected:
 
   MultiProcess *mMultiProcess;
 
-  IProgressDialog *mProgressDialog;
+  ProgressHandler *mProgressHandler;
 };
 
 } // namespace fme

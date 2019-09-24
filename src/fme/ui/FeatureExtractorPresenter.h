@@ -36,7 +36,7 @@ class IOrbWidget;
 class ISiftWidget;
 class IStarWidget;
 class ISurfWidget;
-class IProgressDialog;
+class ProgressHandler;
 
 class IFeatureExtractorPresenter
   : public IPresenter
@@ -55,15 +55,16 @@ signals:
   void featuresExtracted(QString);
   void finished();
 
+public slots:
+
+  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
+  virtual void cancel() = 0;
+
 private slots:
 
   virtual void run() = 0;
   virtual void setCurrentkeypointDetector(const QString &featureExtractor) = 0;
   virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
-
-public slots:
-
-  virtual void setProgressDialog(IProgressDialog *progressDialog) = 0;
 
 };
 
@@ -96,13 +97,15 @@ private:
 
 public slots:
 
-  void setProgressDialog(IProgressDialog *progressDialog) override;
+  void setProgressHandler(ProgressHandler *progressHandler) override;
+  void cancel() override;
 
 private slots:
 
   void run() override;
   void setCurrentkeypointDetector(const QString &featureExtractor) override;
   void setCurrentDescriptorExtractor(const QString &descriptorExtractor) override;
+
   void onError(int code, const QString &msg);
   void onFinished();
   void onFeaturesExtracted(const QString &features);
@@ -143,7 +146,7 @@ protected:
 
   MultiProcess *mMultiProcess;
 
-  IProgressDialog *mProgressDialog;
+  ProgressHandler *mProgressHandler;
 };
 
 } // namespace fme

@@ -25,7 +25,7 @@
 #include "fme/ui/FeatureExtractorView.h"
 #include "fme/ui/ProjectModel.h"
 #include "fme/ui/SettingsModel.h"
-#include "fme/ui/utils/ProgressDialog.h"
+#include "fme/ui/utils/Progress.h"
 
 #include "fme/widgets/AgastWidget.h"
 #include "fme/widgets/AkazeWidget.h"
@@ -94,18 +94,16 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
     mMultiProcess(new MultiProcess(true)),
-    mProgressDialog(nullptr)
+    mProgressHandler(nullptr)
 {
   init();
 
   connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
   connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
   connect(mView, SIGNAL(run()),                                this, SLOT(run()));
-  connect(mView, SIGNAL(rejected()),                           this, SLOT(discart()));
+  //connect(mView, SIGNAL(rejected()),                           this, SLOT(discart()));
   connect(mView, SIGNAL(help()),                               this, SLOT(help()));
 
-  connect(mMultiProcess, SIGNAL(error(int, QString)),          this, SLOT(onError(int, QString)));
-  connect(mMultiProcess, SIGNAL(finished()),                   this, SLOT(onFinished()));
 }
 
 FeatureExtractorPresenter::~FeatureExtractorPresenter()
@@ -735,9 +733,30 @@ void FeatureExtractorPresenter::init()
   setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
 }
 
-void FeatureExtractorPresenter::setProgressDialog(IProgressDialog *progressDialog)
+void FeatureExtractorPresenter::setProgressHandler(ProgressHandler *progressHandler)
 {
-  mProgressDialog = progressDialog;
+  mProgressHandler = progressHandler;
+}
+
+void FeatureExtractorPresenter::cancel()
+{
+  mMultiProcess->stop();
+
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Processing has been canceled by the user"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+  }
+
+  msgInfo("Processing has been canceled by the user");
 }
 
 void FeatureExtractorPresenter::run()
@@ -991,16 +1010,22 @@ void FeatureExtractorPresenter::run()
     mMultiProcess->appendProcess(feat_extract);
   }
 
-  mView->hide();
+  connect(mMultiProcess, SIGNAL(error(int, QString)),          this, SLOT(onError(int, QString)));
+  connect(mMultiProcess, SIGNAL(finished()),                   this, SLOT(onFinished()));
 
-  if (mProgressDialog){
-    connect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
-    mProgressDialog->setRange(0,0);
-    mProgressDialog->setWindowTitle("Computing Features...");
-    mProgressDialog->setStatusText("Computing Features...");
-    mProgressDialog->setFinished(false);
-    mProgressDialog->show();
+  if (mProgressHandler){
+    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
+    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
+    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
+
+    mProgressHandler->setRange(0, mMultiProcess->count());
+    mProgressHandler->setValue(0);
+    mProgressHandler->setTitle("Computing Features...");
+    mProgressHandler->setDescription("Computing Features...");
+    mProgressHandler->onInit();
   }
+
+  mView->hide();
 
   msgInfo("Starting Feature Extraction");
   QByteArray ba = currentKeypointDetector.toLocal8Bit();
@@ -1065,22 +1090,43 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
 
 void FeatureExtractorPresenter::onError(int code, const QString &msg)
 {
-//  QByteArray ba = msg.toLocal8Bit();
-//  msgError("(%i) %s", code, ba.constData());
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Feature detection and description error"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+  }
+
+  //  QByteArray ba = msg.toLocal8Bit();
+  //  msgError("(%i) %s", code, ba.constData());
   emit finished();
 }
 
 void FeatureExtractorPresenter::onFinished()
 {
-  if (mProgressDialog){
-    mProgressDialog->setRange(0,1);
-    mProgressDialog->setValue(1);
-    mProgressDialog->setFinished(true);
-    mProgressDialog->setStatusText(tr("Feature detection and description finished"));
-    disconnect(mProgressDialog, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
+  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+  if (mProgressHandler){
+    mProgressHandler->setRange(0,1);
+    mProgressHandler->setValue(1);
+    mProgressHandler->onFinish();
+    mProgressHandler->setDescription(tr("Feature detection and description finished"));
+
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
   emit finished();
+
   msgInfo("Feature detection and description finished.");
 }
 

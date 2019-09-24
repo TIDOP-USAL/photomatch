@@ -946,6 +946,17 @@ uint64_t getTickCount()
   return tickCount();
 }
 
+
+Chrono::Chrono()
+  : mTimeIni(0),
+    mAccumulated(0),
+    mStatus(Chrono::Status::start),
+    mMessage(""),
+    bWriteMsg(false)
+{
+  //run();
+}
+
 Chrono::Chrono(const char *msg, bool writeMsg)
   : mTimeIni(0),
     mAccumulated(0),
