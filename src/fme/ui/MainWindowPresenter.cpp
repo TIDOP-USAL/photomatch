@@ -15,18 +15,22 @@
 #include "SettingsPresenter.h"
 #include "SettingsView.h"
 
-#include "fme/ui/PreprocessPresenter.h"
 #include "fme/ui/PreprocessModel.h"
 #include "fme/ui/PreprocessView.h"
-#include "fme/ui/FeatureExtractorPresenter.h"
+#include "fme/ui/PreprocessPresenter.h"
 #include "fme/ui/FeatureExtractorModel.h"
 #include "fme/ui/FeatureExtractorView.h"
-#include "fme/ui/DescriptorMatcherPresenter.h"
+#include "fme/ui/FeatureExtractorPresenter.h"
 #include "fme/ui/DescriptorMatcherModel.h"  ///TODO: por ahora no tiene ninguna utilidad
 #include "fme/ui/DescriptorMatcherView.h"
-#include "fme/ui/MatchViewerPresenter.h"
+#include "fme/ui/DescriptorMatcherPresenter.h"
 #include "fme/ui/MatchViewerModel.h"
 #include "fme/ui/MatchViewerView.h"
+#include "fme/ui/MatchViewerPresenter.h"
+#include "fme/ui/HomographyViewerModel.h"
+#include "fme/ui/HomographyViewerView.h"
+#include "fme/ui/HomographyViewerPresenter.h"
+
 #include "fme/ui/utils/Progress.h"
 #include "fme/ui/utils/ProgressDialog.h"
 
@@ -66,6 +70,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mDescriptorMatcherPresenter(nullptr),
     mMatchesViewerPresenter(nullptr),
     mMatchesViewerModel(nullptr),
+    mHomographyViewerPresenter(nullptr),
+    mHomographyViewerModel(nullptr),
     mProgressHandler(nullptr),
     mProgressDialog(nullptr)
 {
@@ -93,7 +99,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   /* Quality Control */
 
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
-  //connect(mView,  SIGNAL(homography()),               this, SLOT(homography()));
+  connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
   //connect(mView,  SIGNAL(repeteability()),            this, SLOT(repeteability()));
   //connect(mView,  SIGNAL(recall()),                   this, SLOT(recall()));
 
@@ -226,6 +232,16 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mMatchesViewerModel){
     delete mMatchesViewerModel;
     mMatchesViewerModel = nullptr;
+  }
+
+  if (mHomographyViewerPresenter){
+    delete mHomographyViewerPresenter;
+    mHomographyViewerPresenter = nullptr;
+  }
+
+  if (mHomographyViewerModel){
+    delete mHomographyViewerModel;
+    mHomographyViewerModel = nullptr;
   }
 }
 
@@ -465,6 +481,12 @@ void MainWindowPresenter::openMatchesViewer()
   mMatchesViewerPresenter->open();
 }
 
+void MainWindowPresenter::openHomographyViewer()
+{
+  initHomographyViewer();
+  mHomographyViewerPresenter->open();
+}
+
 void MainWindowPresenter::loadImages()
 {
   QStringList fileNames = QFileDialog::getOpenFileNames(Q_NULLPTR,
@@ -624,13 +646,19 @@ void MainWindowPresenter::loadSession(const QString &session)
 
 void MainWindowPresenter::selectSession(const QString &session)
 {
-  ///TODO: recuperar información de la sesión y mostrarla en la ventana de propiedades
+  TL_TODO("recuperar información de la sesión y mostrarla en la ventana de propiedades")
 }
 
 void MainWindowPresenter::activeSession(const QString &session)
 {
   mProjectModel->setCurrentSession(session);
   mView->setActiveSession(session);
+  mView->setFlag(MainWindowView::Flag::project_modified, true);
+
+  TL_TODO("Por ahora pero hay que revisarlo")
+  updatePreprocess();
+  updateFeatures();
+  updateMatches();
 }
 
 void MainWindowPresenter::selectPreprocess(const QString &session)
@@ -1234,6 +1262,17 @@ void MainWindowPresenter::initMatchesViewer()
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     IMatchViewerView *matchViewerView = new MatchViewerView(mView, f);
     mMatchesViewerPresenter = new MatchViewerPresenter(matchViewerView, mMatchesViewerModel);
+    //mMatchesViewerPresenter->setHelp(mHelp);
+  }
+}
+
+void MainWindowPresenter::initHomographyViewer()
+{
+  if (mHomographyViewerPresenter == nullptr) {
+    mHomographyViewerModel = new HomographyViewerModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    IHomographyViewerView *homographyViewerView = new HomographyViewerView(mView, f);
+    mHomographyViewerPresenter = new HomographyViewerPresenter(homographyViewerView, mHomographyViewerModel);
     //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }

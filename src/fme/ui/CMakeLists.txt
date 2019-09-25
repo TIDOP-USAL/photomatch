@@ -45,6 +45,9 @@ set(FME_SOURCES
     MatchViewerModel.cpp
     MatchViewerView.cpp
     MatchViewerPresenter.cpp
+    HomographyViewerModel.cpp
+    HomographyViewerView.cpp
+    HomographyViewerPresenter.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
     utils/Progress.cpp
@@ -77,6 +80,9 @@ set(FME_HEADERS
     MatchViewerModel.h
     MatchViewerView.h
     MatchViewerPresenter.h
+    HomographyViewerModel.h
+    HomographyViewerView.h
+    HomographyViewerPresenter.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h

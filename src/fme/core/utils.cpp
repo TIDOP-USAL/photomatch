@@ -71,4 +71,29 @@ cv::Mat fme::qImageToCvMat(const QImage &image)
   return img;
 }
 
+QImage cvMatToQImage(const cv::Mat &image)
+{
+  cv::Mat aux;
+  QImage::Format format;
+  if (image.channels() == 1){
+    format = QImage::Format_Grayscale8;
+    image.copyTo(aux);
+  } else if (image.channels() == 3) {
+    format = QImage::Format_RGB888;
+    cv::cvtColor(image, aux, CV_BGR2RGB);
+  } else if (image.channels() == 4) {
+    format = QImage::Format_RGBA8888;
+    cv::cvtColor(image, aux, CV_BGRA2RGB);
+  } else {
+    format = QImage::Format_Invalid;
+  }
+
+  QImage image_scaled;
+
+  if (format != QImage::Format_Invalid)
+    image_scaled= QImage(aux.data, aux.cols, aux.rows, static_cast<int>(aux.step), format).copy();
+
+  return image_scaled;
+}
+
 } // namespace fme

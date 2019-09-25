@@ -163,6 +163,7 @@ void MainWindowView::clear()
   mThumbnailsWidget->clear();
   ui->treeWidgetProperties->clear();
   mFlags.clear();
+  mComboBoxActiveSession->clear();
 
   const QSignalBlocker blocker(ui->tabWidget);
   int n = ui->tabWidget->count();
@@ -1569,6 +1570,9 @@ void MainWindowView::init()
   mTreeWidgetProject = new QTreeWidget(ui->dockWidgetContentsProject);
   mTreeWidgetProject->header()->close();
   mTreeWidgetProject->setColumnCount(1);
+  mTreeWidgetProject->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+  mTreeWidgetProject->header()->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+  mTreeWidgetProject->header()->setStretchLastSection(false);
   ui->gridLayout->addWidget(mTreeWidgetProject, 0, 0, 1, 1);
 
   /* Thumbnails */

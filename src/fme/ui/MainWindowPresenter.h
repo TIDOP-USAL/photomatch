@@ -27,6 +27,8 @@ class IDescriptorMatcherModel;
 class IDescriptorMatcherPresenter;
 class IMatchViewerPresenter;
 class IMatchViewerModel;
+class IHomographyViewerPresenter;
+class IHomographyViewerModel;
 class ProgressHandler;
 class IProgressDialog;
 
@@ -69,6 +71,7 @@ protected slots:
   /* Quality Control */
 
   void openMatchesViewer();
+  void openHomographyViewer();
 
   /* Menú herramientas */
 
@@ -149,11 +152,22 @@ private:
    */
   void initFeatureExtractionDialog();
 
+  /*!
+   * \brief Inicializa la herramienta de matching
+   */
   void initFeatureMatching();
 
   void initProgress();
 
+  /*!
+   * \brief Inicializa el visor de matches
+   */
   void initMatchesViewer();
+
+  /*!
+   * \brief Inicializa el visor de homografía
+   */
+  void initHomographyViewer();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
@@ -188,6 +202,9 @@ protected:
 
   IMatchViewerPresenter *mMatchesViewerPresenter;
   IMatchViewerModel *mMatchesViewerModel;
+
+  IHomographyViewerPresenter *mHomographyViewerPresenter;
+  IHomographyViewerModel *mHomographyViewerModel;
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;

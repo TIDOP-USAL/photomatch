@@ -81,7 +81,8 @@ void ImagePreprocess::run()
     img = qImageToCvMat(image_scaled);
     msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
   } else {
-    img = cv::imread(input_img);
+    /// Se ignoran las imagenes giradas ya que QImageReader ignora si están giradas
+    img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
     //msgWarning("Full image size. ");
   }
 

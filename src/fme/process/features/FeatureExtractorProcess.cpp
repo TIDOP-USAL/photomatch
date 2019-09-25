@@ -57,7 +57,7 @@ void FeatureExtractor::run()
 {
   QByteArray ba = mImage.toLocal8Bit();
   const char *img_file = ba.data();
-  cv::Mat img = cv::imread(img_file);
+  cv::Mat img = cv::imread(img_file, cv::IMREAD_IGNORE_ORIENTATION);
 
   if (img.empty()) return;
 

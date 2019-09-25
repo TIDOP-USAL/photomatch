@@ -13,7 +13,7 @@ namespace fme
 /*----------------------------------------------------------------*/
 
 FME_EXPORT cv::Mat qImageToCvMat(const QImage &image);
-
+FME_EXPORT QImage cvMatToQImage(const cv::Mat &image);
 
 /*----------------------------------------------------------------*/
 
