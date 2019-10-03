@@ -11,9 +11,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 class FME_EXPORT GfttProperties
   : public IGftt
 {
@@ -107,9 +104,6 @@ protected:
   cv::Ptr<cv::GFTTDetector> mGFTT;
 
 };
-
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

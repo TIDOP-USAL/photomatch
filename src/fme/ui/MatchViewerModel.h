@@ -37,6 +37,8 @@ class MatchViewerModel
   : public IMatchViewerModel
 {
 
+  Q_OBJECT
+
 public:
 
   MatchViewerModel(IProjectModel *mProjectModel);

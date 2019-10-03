@@ -2,6 +2,7 @@
 
 #include "fme/core/features/features.h"
 #include "fme/core/features/matcher.h"
+#include "fme/ui/ProjectModel.h"
 
 #include <tidop/core/messages.h>
 
@@ -151,18 +152,43 @@ std::list<std::pair<QString, QString>> MainWindowModel::exif(const QString &imag
   return exif;
 }
 
-std::vector<QPointF> MainWindowModel::loadKeyPoints(const QString &file) const
+std::vector<QPointF> MainWindowModel::loadKeyPointsCoordinates(const QString &file) const
 {
+  std::vector<QPointF> keyPoints;
 
   std::vector<cv::KeyPoint> cvKeyPoints;
   cv::Mat descriptors;
   featuresRead(file, cvKeyPoints, descriptors);
 
-  size_t size = cvKeyPoints.size();
-  std::vector<QPointF> keyPoints(size);
-  for (size_t i = 0; i < size; i++){
-    keyPoints[i].setX(static_cast<qreal>(cvKeyPoints[i].pt.x));
-    keyPoints[i].setY(static_cast<qreal>(cvKeyPoints[i].pt.y));
+  if (cvKeyPoints.size() > 0){
+
+    for (size_t i = 0; i < cvKeyPoints.size(); i++){
+      QPointF pt(static_cast<qreal>(cvKeyPoints[i].pt.x),
+                static_cast<qreal>(cvKeyPoints[i].pt.y));
+      keyPoints.push_back(pt);
+    }
+
+  }
+
+  return keyPoints;
+}
+
+std::vector<std::tuple<QPointF, double, double>> MainWindowModel::loadKeyPoints(const QString &file) const
+{
+  std::vector<std::tuple<QPointF, double, double>> keyPoints;
+
+  std::vector<cv::KeyPoint> cvKeyPoints;
+  cv::Mat descriptors;
+  featuresRead(file, cvKeyPoints, descriptors);
+
+  if (cvKeyPoints.size() > 0){
+
+    for (size_t i = 0; i < cvKeyPoints.size(); i++){
+      QPointF pt(static_cast<qreal>(cvKeyPoints[i].pt.x),
+                static_cast<qreal>(cvKeyPoints[i].pt.y));
+      keyPoints.push_back(std::make_tuple(pt, static_cast<double>(cvKeyPoints[i].size), static_cast<double>(cvKeyPoints[i].angle)));
+    }
+
   }
 
   return keyPoints;

@@ -17,6 +17,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
   this->setWindowFlags(this->windowFlags() | Qt::WindowMinimizeButtonHint);
   this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
   ui->setupUi(this);
+  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
 
   ui->pushButtonBgProcessing->setEnabled(false);
 

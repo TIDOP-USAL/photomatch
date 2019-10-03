@@ -4,6 +4,7 @@
 #include "fme/widgets/ThumbnailsWidget.h"
 #include "fme/widgets/LogWidget.h"
 #include "fme/ui/utils/GraphicViewer.h"
+#include "fme/ui/utils/KeyPointGraphicsItem.h"
 
 #include <QTreeWidgetItem>
 #include <QFileInfo>
@@ -50,7 +51,6 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionStartPage(new QAction(this)),
     mActionLoadImages(new QAction(this)),
     mActionNewSession(new QAction(this)),
-    //mActionAssistant(new QAction(this)),
     mActionPreprocess(new QAction(this)),
     mActionFeatureExtraction(new QAction(this)),
     mActionFeatureMatching(new QAction(this)),
@@ -62,11 +62,13 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionExportMatchesToCvXml(new QAction(this)),
     mActionExportMatchesToCvYml(new QAction(this)),
     mActionExportMatchesToTxt(new QAction(this)),
-    //mActionExportTiePoints(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
+    mActionCreateGroundTruth(new QAction(this)),
+    mActionImportGroundTruth(new QAction(this)),
     mActionHomography(new QAction(this)),
     mActionRepeteability(new QAction(this)),
-    mActionRecall(new QAction(this)),
+    mActionPRCurves(new QAction(this)),
+    mActionROCCurves(new QAction(this)),
     mActionNotRecentProjects(new QAction(this)),
     mActionClearHistory(new QAction(this)),
     mActionZoomIn(new QAction(this)),
@@ -89,7 +91,6 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionClearHistory,       SIGNAL(triggered(bool)),   this,   SIGNAL(clearHistory()));
   connect(mActionSaveProject,        SIGNAL(triggered(bool)),   this,   SIGNAL(saveProject()));
   connect(mActionSaveProjectAs,      SIGNAL(triggered(bool)),   this,   SIGNAL(saveProjectAs()));
-  //connect(mActionExportTiePoints,    SIGNAL(triggered(bool)),   this,   SIGNAL(exportTiePoints()));
   connect(mActionExportTiePointsCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvXml()));
   connect(mActionExportTiePointsCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvYml()));
   connect(mActionExportMatchesToCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvYml()));
@@ -106,7 +107,6 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   connect(mActionLoadImages,         SIGNAL(triggered(bool)),   this,   SIGNAL(loadImages()));
   connect(mActionNewSession,         SIGNAL(triggered(bool)),   this,   SIGNAL(newSession()));
-  //connect(mActionAssistant,          SIGNAL(triggered(bool)),   this,   SIGNAL(openAssistant()));
   connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
   connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
   connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
@@ -115,9 +115,12 @@ MainWindowView::MainWindowView(QWidget *parent)
   /* Quality Control */
 
   connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(matchesViewer()));
+  connect(mActionCreateGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(createGroundTruth()));
+  connect(mActionImportGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(importGroundTruth()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
   connect(mActionRepeteability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeteability()));
-  connect(mActionRecall,             SIGNAL(triggered(bool)),   this,   SIGNAL(recall()));
+  connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
+  connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
 
   /* Menú Ayuda */
 
@@ -159,10 +162,13 @@ MainWindowView::~MainWindowView()
 void MainWindowView::clear()
 {
   setWindowTitle(QString("FME"));
+  const QSignalBlocker blockerTreeWidgetProject(mTreeWidgetProject);
   mTreeWidgetProject->clear();
+  const QSignalBlocker blockerThumbnailsWidget(mThumbnailsWidget);
   mThumbnailsWidget->clear();
   ui->treeWidgetProperties->clear();
   mFlags.clear();
+  const QSignalBlocker blockerComboBoxActiveSession(mComboBoxActiveSession);
   mComboBoxActiveSession->clear();
 
   const QSignalBlocker blocker(ui->tabWidget);
@@ -913,8 +919,8 @@ void MainWindowView::showImage(const QString &file)
     disconnect(mActionZoom11,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
     //mGraphicViewer->deleteKeyPoints();
     for (auto &item : mGraphicViewer->scene()->items()) {
-      QGraphicsEllipseItem *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
-      if (ellipse){
+      KeyPointGraphicsItem *keyPoints = dynamic_cast<KeyPointGraphicsItem *>(item);
+      if (keyPoints){
         mGraphicViewer->scene()->removeItem(item);
       }
     }
@@ -968,46 +974,89 @@ bool MainWindowView::showKeyPoints() const
   return mActionShowKeyPoints->isChecked();
 }
 
-void MainWindowView::setKeyPoints(const std::vector<QPointF> &keyPoints)
-{
-//  /////////////////////////////////////////////////////////////////////////
-//  /// No esta bien aqui...
-//  Settings &settings = Settings::instance();
+//void MainWindowView::setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints)
+//{
 //  QColor color;
-//  color.setNamedColor(settings.keyPointsColor());
+//  color.setNamedColor(QString("#00FF00"));
 //  QPen pen(color, 1.);
 //  QBrush brush;
-//  if (settings.keyPointsBgColor().compare("-") == 0){
-//    brush = QBrush(Qt::NoBrush);
-//  } else {
-//    brush.setColor(QColor(settings.keyPointsBgColor()));
-//    brush.setStyle(Qt::SolidPattern);
-//  }
-
-//  int symbol = settings.symbol();
-//  double symbol_size = settings.symbolSize();
+//  brush = QBrush(Qt::NoBrush);
+//  int symbol = 0;
+//  double symbol_size = 10.;
 //  double r = symbol_size / 2.;
 
-//  /////////////////////////////////////////////////////////////////////////
+//  for (size_t i = 0; i < keyPoints.size(); i++){
+//    QPointF point;
+//    double size;
+//    double angle;
+//    std::tie(point, size, angle) = keyPoints[i];
+//    KeyPointGraphicsItem *item = new KeyPointGraphicsItem(point);
+//    item->setPen(pen);
+//    item->setBrush(brush);
+//    mGraphicViewer->scene()->addItem(item);
+//  }
+//}
 
+void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
+{
   QColor color;
   color.setNamedColor(QString("#00FF00"));
   QPen pen(color, 1.);
   QBrush brush;
   brush = QBrush(Qt::NoBrush);
-  double symbol_size = 10.;
-  double r = symbol_size / 2.;
+  //int symbol = 0;
+  //double symbol_size = 10.;
+  //double r = symbol_size / 2.;
 
-  for (size_t i = 0; i < keyPoints.size(); i++){
-    QGraphicsEllipseItem *ellipse = mGraphicViewer->scene()->addEllipse(keyPoints[i].x() - r,
-                                                                        keyPoints[i].y() - r,
-                                                                        r * 2, r * 2, pen, brush);
-    ///e->setToolTip("ID punto...");
-    ellipse->setFlag(QGraphicsItem::ItemIsSelectable, true);
-    //ellipse->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
-    //ellipse->setToolTip(QString::number(static_cast<int>(i)));
-  }
+  KeyPointGraphicsItem *item = new KeyPointGraphicsItem(pt);
+  item->setPen(pen);
+  item->setBrush(brush);
+  item->setSize(size);
+  item->setAngle(angle);
+  item->setToolTip(QString("Size: ").append(QString::number(size)).append("\nAngle: ").append(QString::number(angle)));
+  mGraphicViewer->scene()->addItem(item);
 }
+
+//void MainWindowView::setKeyPoints(const std::vector<QPointF> &keyPoints)
+//{
+////  /////////////////////////////////////////////////////////////////////////
+////  /// No esta bien aqui...
+////  Settings &settings = Settings::instance();
+////  QColor color;
+////  color.setNamedColor(settings.keyPointsColor());
+////  QPen pen(color, 1.);
+////  QBrush brush;
+////  if (settings.keyPointsBgColor().compare("-") == 0){
+////    brush = QBrush(Qt::NoBrush);
+////  } else {
+////    brush.setColor(QColor(settings.keyPointsBgColor()));
+////    brush.setStyle(Qt::SolidPattern);
+////  }
+
+////  int symbol = settings.symbol();
+////  double symbol_size = settings.symbolSize();
+////  double r = symbol_size / 2.;
+
+////  /////////////////////////////////////////////////////////////////////////
+
+//  QColor color;
+//  color.setNamedColor(QString("#00FF00"));
+//  QPen pen(color, 1.);
+//  QBrush brush;
+//  brush = QBrush(Qt::NoBrush);
+//  double symbol_size = 10.;
+//  double r = symbol_size / 2.;
+
+//  for (size_t i = 0; i < keyPoints.size(); i++){
+//    QGraphicsEllipseItem *ellipse = mGraphicViewer->scene()->addEllipse(keyPoints[i].x() - r,
+//                                                                        keyPoints[i].y() - r,
+//                                                                        r * 2, r * 2, pen, brush);
+//    ///e->setToolTip("ID punto...");
+//    ellipse->setFlag(QGraphicsItem::ItemIsSelectable, true);
+//    //ellipse->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+//    //ellipse->setToolTip(QString::number(static_cast<int>(i)));
+//  }
+//}
 
 void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF> > &matches)
 {
@@ -1169,6 +1218,8 @@ void MainWindowView::update()
   mActionCloseProject->setEnabled(bProjectExists);
 
   mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
+  mActionCreateGroundTruth->setEnabled(mFlags.isActive(Flag::images_added));
+  mActionImportGroundTruth->setEnabled(mFlags.isActive(Flag::images_added));
   mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added) && !bProcessing);
   //mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
@@ -1183,7 +1234,8 @@ void MainWindowView::update()
   mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionRepeteability->setEnabled(mFlags.isActive(Flag::feature_matching));
-  mActionRecall->setEnabled(mFlags.isActive(Flag::feature_matching));
+  mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
+  mActionROCCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
 
   mActionNotRecentProjects->setVisible(mHistory.size() == 0);
   mActionClearHistory->setEnabled(mHistory.size() > 0);
@@ -1384,8 +1436,8 @@ void MainWindowView::onShowKeyPoints(bool show)
     }
   } else {
     for (auto &item : mGraphicViewer->scene()->items()) {
-      QGraphicsEllipseItem *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
-      if (ellipse){
+      KeyPointGraphicsItem *kp = dynamic_cast<KeyPointGraphicsItem *>(item);
+      if (kp){
         mGraphicViewer->scene()->removeItem(item);
       }
     }
@@ -1525,11 +1577,17 @@ void MainWindowView::init()
 
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
 
+  mActionCreateGroundTruth->setText(QApplication::translate("MainWindowView", "Create Ground Truth", nullptr));
+
+  mActionImportGroundTruth->setText(QApplication::translate("MainWindowView", "Import Ground Truth", nullptr));
+
   mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
 
   mActionRepeteability->setText(QApplication::translate("MainWindowView", "Repeteability", nullptr));
 
-  mActionRecall->setText(QApplication::translate("MainWindowView", "Recall", nullptr));
+  mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
+
+  mActionROCCurves->setText(QApplication::translate("MainWindowView", "ROC Curves", nullptr));
 
   mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
   mActionNotRecentProjects->setEnabled(false);
@@ -1652,19 +1710,15 @@ void MainWindowView::init()
 
   /* Menu Quality Control */
 
-  //QMenu *menuPhotogrammetricQualityControl = new QMenu(tr("Photogrammetric Quality Control"), this);
-  //menuPhotogrammetricQualityControl->addAction(mActionMatchesViewer);
-  //ui->menuQualityControl->addMenu(menuPhotogrammetricQualityControl);
-  //QMenu *menuComputerVisionQualityControl = new QMenu(tr("Computer Vision Quality Control"), this);
-  //menuComputerVisionQualityControl->addAction(mActionHomography);
-  //menuComputerVisionQualityControl->addAction(mActionRepeteability);
-  //menuComputerVisionQualityControl->addAction(mActionRecall);
-  //ui->menuQualityControl->addMenu(menuComputerVisionQualityControl);
   ui->menuQualityControl->addAction(mActionMatchesViewer);
+  ui->menuQualityControl->addSeparator();
+  ui->menuQualityControl->addAction(mActionCreateGroundTruth);
+  ui->menuQualityControl->addAction(mActionImportGroundTruth);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionHomography);
   ui->menuQualityControl->addAction(mActionRepeteability);
-  ui->menuQualityControl->addAction(mActionRecall);
+  ui->menuQualityControl->addAction(mActionPRCurves);
+  ui->menuQualityControl->addAction(mActionROCCurves);
 
   /* Menu Help */
 
@@ -1681,6 +1735,7 @@ void MainWindowView::init()
   ui->toolBarTools->addAction(mActionLoadImages);
   ui->toolBarTools->addSeparator();
   ui->toolBarTools->addAction(mActionNewSession);
+  ui->toolBarTools->addSeparator();
   ui->toolBarTools->addWidget(new QLabel(tr("Active Session: "), this));
   mComboBoxActiveSession->setMinimumWidth(100);
   mComboBoxActiveSession->setContentsMargins(8,0,0,0);

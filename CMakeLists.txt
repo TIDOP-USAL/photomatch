@@ -77,7 +77,9 @@ endif (BUILD_SHARED_LIBS)
 option(WITH_BOOST    "Include Boost"                   ON)
 option(WITH_OPENCV   "Include OpenCV"                  ON)
 option(WITH_PIXKIT   "Include PixKit"                  ON)
-
+if(MSVC)
+option (WITH_VLD     "Include Visual Leak Detector Support"    OFF)
+endif(MSVC)
 
 #------------------------------------------------------------#
 
@@ -88,7 +90,8 @@ find_package(Qt5 REQUIRED
                Widgets
                Help
                Concurrent
-               LinguistTools)
+               LinguistTools
+               Charts)
 
 if(BUILD_TEST)
 find_package(Qt5 REQUIRED 
@@ -106,7 +109,8 @@ if(Qt5_FOUND)
                         ${Qt5Widgets_INCLUDE_DIRS}
                         ${Qt5Help_INCLUDE_DIRS}
                         ${Qt5Concurrent_INCLUDE_DIRS}
-                        ${Qt5LinguistTools_INCLUDE_DIRS})
+                        ${Qt5LinguistTools_INCLUDE_DIRS}
+                        ${Qt5Charts_INCLUDE_DIRS})
 
     message(STATUS "Found Qt")
     message(STATUS "  Module : ${Qt5Core_DIR}")
@@ -114,6 +118,7 @@ if(Qt5_FOUND)
     message(STATUS "  Module : ${Qt5Help_DIR}")
     message(STATUS "  Module : ${Qt5Concurrent_DIR}")
     message(STATUS "  Module : ${Qt5LinguistTools_DIR}")
+    message(STATUS "  Module : ${Qt5Charts_DIR}")
 endif()
 
 #------------------------------------------------------------#
@@ -189,6 +194,22 @@ if(WITH_PIXKIT)
 endif(WITH_PIXKIT)
 
 
+#------------------------------------------------------------#
+
+# VLD
+
+if(WITH_VLD)
+
+    find_package(VLD)
+
+    if(NOT VLD_FOUND)
+        set(HAVE_VLD NO)
+    else()
+        set(HAVE_VLD YES)
+        include_directories(${VLD_INCLUDE_DIRS})
+    endif()
+
+endif()
 
 ##############################################################
 # LIB / EXE                                                  #

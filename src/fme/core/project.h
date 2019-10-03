@@ -328,7 +328,6 @@ public:
   const std::shared_ptr<Image> findImageById(size_t id) const override;
   std::shared_ptr<Image> findImageByName(const QString &imgName) override;
   const std::shared_ptr<Image> findImageByName(const QString &imgName) const override;
-  //size_t findImageId(const QString &path) override;
   size_t findImageId(const QString &path) const override;
   image_iterator imageBegin() override;
   image_const_iterator imageBegin() const override;

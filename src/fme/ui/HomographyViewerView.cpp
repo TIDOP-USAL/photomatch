@@ -20,8 +20,7 @@ HomographyViewerView::HomographyViewerView(QWidget *parent, Qt::WindowFlags f)
   connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
 
-  connect(mButtonBox->button(QDialogButtonBox::Ok),     SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked(bool)), this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Close),     SIGNAL(clicked(bool)), this, SLOT(accept()));
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
@@ -116,11 +115,10 @@ void HomographyViewerView::init()
 
   mButtonBox = new QDialogButtonBox(this);
   mButtonBox->setOrientation(Qt::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
   gridLayout->addWidget(mButtonBox, 5, 0, 1, 2);
 
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
-  mButtonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+  mButtonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
   mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
 
   QMenu *contextMenuLeft = new QMenu(mGraphicsView);

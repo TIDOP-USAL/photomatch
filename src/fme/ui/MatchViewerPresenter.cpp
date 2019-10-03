@@ -24,8 +24,8 @@ MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
   connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
   connect(mView, SIGNAL(loadMatches(QString, QString)),    this, SLOT(loadMatches(QString, QString)));
 
-  connect(mView, SIGNAL(accepted()), this, SLOT(save()));
-  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
+  //connect(mView, SIGNAL(accepted()), this, SLOT(save()));
+  //connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 

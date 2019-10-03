@@ -78,8 +78,7 @@ private:
 
   INewSessionView *mView;
   IProjectModel *mProjectModel;
-  QString mProjectsDefaultPath;
-  std::shared_ptr<Help> mHelp;
+  //std::shared_ptr<Help> mHelp;
 };
 
 } // namespace fme

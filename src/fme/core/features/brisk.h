@@ -11,9 +11,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 class FME_EXPORT BriskProperties
   : public IBrisk
 {
@@ -106,9 +103,6 @@ protected:
   cv::Ptr<cv::BRISK> mBrisk;
 
 };
-
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

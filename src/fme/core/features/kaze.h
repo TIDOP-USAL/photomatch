@@ -10,8 +10,6 @@
 namespace fme
 {
 
-/*----------------------------------------------------------------*/
-
 
 class FME_EXPORT KazeProperties
   : public IKaze

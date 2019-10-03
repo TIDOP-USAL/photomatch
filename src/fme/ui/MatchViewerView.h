@@ -26,26 +26,26 @@ public:
   virtual ~IMatchViewerView() = default;
 
   /*!
-   * \brief Establece la imagen izquierda
-   * \param[in] leftImage Image izquierda
+   * \brief Set the left image
+   * \param[in] leftImage Left image
    */
   virtual void setLeftImage(const QString &leftImage) = 0;
 
   /*!
-   * \brief Establece la imagen derecha
-   * \param[in] rightImage imagen derecha
+   * \brief Set the right image
+   * \param[in] rightImage Right image
    */
   virtual void setRightImage(const QString &rightImage) = 0;
 
   /*!
-   * \brief Establece el listado de imagenes para el selector de imagen izquierda
-   * \param[in] leftImageList Listado de imagenes
+   * \brief Set the list of images for image selector left
+   * \param[in] leftImageList List of left images
    */
   virtual void setLeftImageList(const std::vector<QString> &leftImageList) = 0;
 
   /*!
-   * \brief Establece el listado de imagenes para el selector de imagen derecha
-   * \param[in] leftImageList Listado de imagenes
+   * \brief Set the list of images for image selector right
+   * \param[in] rightImageList List of right images
    */
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
@@ -53,16 +53,8 @@ public:
 
 signals:
 
-  /*!
-   * \brief Señal que se emite al cambiar la imagen izquierda
-   */
   void leftImageChange(QString);
-
-  /*!
-   * \brief Señal que se emite al cambiar la imagen derecha
-   */
   void rightImageChange(QString);
-
   void loadMatches(QString, QString);
 
 };

@@ -6,6 +6,8 @@
 namespace fme
 {
 
+class IProjectModel;
+
 class MainWindowModel
   : public IModel
 {
@@ -23,7 +25,8 @@ public:
 
   std::list<std::pair<QString, QString>> exif(const QString &image) const;
 
-  std::vector<QPointF> loadKeyPoints(const QString &file) const;
+  std::vector<QPointF> loadKeyPointsCoordinates(const QString &file) const;
+  std::vector<std::tuple<QPointF, double, double> > loadKeyPoints(const QString &file) const;
   std::vector<std::pair<QPointF, QPointF>> loadMatches(const QString &fileMatches,
                                                        const QString &fileKeyPoints1,
                                                        const QString &fileKeyPoints2) const;
@@ -42,7 +45,6 @@ private:
 protected:
 
   QString mPrjDefaultPath;
-
 };
 
 } // namespace fme

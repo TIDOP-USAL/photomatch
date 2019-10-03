@@ -242,6 +242,7 @@ public:
   virtual void setDetector(const std::shared_ptr<Feature> &detector) = 0;
   virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
   virtual void setMatcher(const std::shared_ptr<Match> &descriptor) = 0;
+  virtual void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) = 0;
   virtual int maxImageSize() const = 0;
   virtual void setMaxImageSize(int size) = 0;
   virtual bool fullImageSize() const = 0;
@@ -333,6 +334,7 @@ public:
   void setDetector(const std::shared_ptr<Feature> &detector) override;
   void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
   void setMatcher(const std::shared_ptr<Match> &matcher) override;
+  void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) override;
   int maxImageSize() const override;
   void setMaxImageSize(int size) override;
   bool fullImageSize() const override;

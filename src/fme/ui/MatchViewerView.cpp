@@ -23,8 +23,7 @@ MatchViewerView::MatchViewerView(QWidget *parent, Qt::WindowFlags f)
   connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
   connect(mTreeWidgetMatches,  SIGNAL(itemSelectionChanged()),   this, SLOT(onTreeWidgetMatchesItemSelectionChanged()));
 
-  connect(mButtonBox->button(QDialogButtonBox::Ok),     SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked(bool)), this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 
 }
@@ -40,7 +39,6 @@ void MatchViewerView::setLeftImage(const QString &leftImage)
   mComboBoxLeftImage->setCurrentText(file_info.baseName());
   mGraphicsViewLeft->scene()->clearSelection();
   mGraphicsViewLeft->setImage(QImage(leftImage));
-  //mGraphicsViewLeft->zoomExtend();
 }
 
 void MatchViewerView::setRightImage(const QString &rightImage)
@@ -50,7 +48,6 @@ void MatchViewerView::setRightImage(const QString &rightImage)
   mComboBoxRightImage->setCurrentText(file_info.baseName());
   mGraphicsViewRight->scene()->clearSelection();
   mGraphicsViewRight->setImage(QImage(rightImage));
-  //mGraphicsViewRight->zoomExtend();
 }
 
 void MatchViewerView::setLeftImageList(const std::vector<QString> &leftImageList)
@@ -191,11 +188,10 @@ void MatchViewerView::init()
 
   mButtonBox = new QDialogButtonBox(this);
   mButtonBox->setOrientation(Qt::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Help|QDialogButtonBox::Ok);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
   gridLayout->addWidget(mButtonBox, 5, 0, 1, 2);
 
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText(tr("Cancel"));
-  mButtonBox->button(QDialogButtonBox::Ok)->setText(tr("Ok"));
+  mButtonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
   mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
 
   mGraphicsViewLeft = new GraphicViewer(this);
@@ -261,7 +257,6 @@ void MatchViewerView::onTreeWidgetMatchesItemClicked(QTreeWidgetItem *item, int 
   QPointF query_point(item->text(1).toDouble(), item->text(2).toDouble());
   QPointF train_point(item->text(3).toDouble(), item->text(4).toDouble());
 
-  //pt1_string_list[0]
   mGraphicsViewLeft->zoom11();
   mGraphicsViewLeft->centerOn(query_point);
   mGraphicsViewRight->zoom11();

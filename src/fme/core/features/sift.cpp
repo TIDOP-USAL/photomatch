@@ -7,9 +7,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 SiftProperties::SiftProperties()
   : ISift(),
     mFeaturesNumber(5000),
@@ -195,7 +192,7 @@ void SiftDetectorDescriptor::reset()
   update();
 }
 
-/*----------------------------------------------------------------*/
+
 
 } // namespace fme
 

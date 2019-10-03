@@ -7,10 +7,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
-
 SurfProperties::SurfProperties()
   : ISurf(),
     mHessianThreshold(100),
@@ -199,7 +195,7 @@ void SurfDetectorDescriptor::reset()
 
 }
 
-/*----------------------------------------------------------------*/
+
 
 } // namespace fme
 

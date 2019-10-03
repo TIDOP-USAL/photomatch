@@ -23,7 +23,7 @@ class IHomographyViewerPresenter
 
 public:
 
-  IHomographyViewerPresenter(){}
+  IHomographyViewerPresenter() : IPresenter() {}
   virtual ~IHomographyViewerPresenter() {}
 
 protected slots:

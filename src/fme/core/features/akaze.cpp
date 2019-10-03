@@ -273,7 +273,4 @@ void AkazeDetectorDescriptor::reset()
 }
 
 
-/*----------------------------------------------------------------*/
-
-
 } // namespace fme

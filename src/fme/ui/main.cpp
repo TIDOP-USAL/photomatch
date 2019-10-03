@@ -4,6 +4,12 @@
 
 #include <QApplication>
 
+#include "fme/fme_global.h"
+
+#ifdef HAVE_VLD
+#include "vld.h"
+#endif
+
 using namespace fme;
 
 int main(int argc, char *argv[])

@@ -11,8 +11,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
 
 class FME_EXPORT MserProperties
   : public IMser
@@ -125,9 +123,6 @@ protected:
   cv::Ptr<cv::MSER> mMSER;
 
 };
-
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

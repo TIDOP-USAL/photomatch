@@ -12,8 +12,6 @@
 namespace fme
 {
 
-/*----------------------------------------------------------------*/
-
 
 /*!
  * \brief SURF detector/descriptor properties class
@@ -115,6 +113,7 @@ protected:
 
   cv::Ptr<cv::xfeatures2d::SURF> mSurf;
 };
+
 
 } // namespace fme
 

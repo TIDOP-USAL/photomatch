@@ -7,9 +7,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 KazeProperties::KazeProperties()
   : IKaze(),
     mExtended(false),
@@ -234,7 +231,6 @@ void KazeDetectorDescriptor::reset()
   setDiffusivity(KazeProperties::diffusivity());
 }
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme
 

@@ -13,8 +13,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
 
 class FME_EXPORT LatchProperties
   : public ILatch
@@ -98,8 +96,6 @@ protected:
   cv::Ptr<cv::xfeatures2d::LATCH> mLATCH;
 };
 
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

@@ -91,9 +91,6 @@ protected:
 };
 
 
-/*----------------------------------------------------------------*/
-
-
 } // namespace fme
 
 #endif // FME_LUCID_DESCRIPTOR_H

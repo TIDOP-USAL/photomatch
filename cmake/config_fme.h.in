@@ -7,4 +7,6 @@
 
 #cmakedefine HAVE_PIXKIT
 
+#cmakedefine HAVE_VLD
+
 #endif // FME_CONFIG_H

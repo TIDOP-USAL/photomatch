@@ -156,6 +156,5 @@ void FreakDescriptor::reset()
   update();
 }
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme

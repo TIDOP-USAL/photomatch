@@ -36,7 +36,7 @@
 #include "fme/widgets/WallisWidget.h"
 
 #include "fme/process/MultiProcess.h"
-#include "fme/process/preprocess/imagePreprocess.h"
+#include "fme/process/preprocess/ImagePreprocess.h"
 
 #include <tidop/core/messages.h>
 
@@ -77,7 +77,6 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
   connect(mView, SIGNAL(preprocessChange(QString)), this, SLOT(setCurrentPreprocess(QString)));
 
   connect(mView, SIGNAL(run()),      this, SLOT(run()));
-  //connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 
 }
@@ -161,42 +160,95 @@ void PreprocessPresenter::help()
 
 void PreprocessPresenter::open()
 {
-  mACEBSF->setBlockSize(mSettingsModel->acebsfBlockSize());
-  mACEBSF->setL(mSettingsModel->acebsfL());
-  mACEBSF->setK1(mSettingsModel->acebsfK1());
-  mACEBSF->setK2(mSettingsModel->acebsfK2());
+  Preprocess *preprocess = mProjectModel->currentSession()->preprocess().get();
+  if (preprocess) setCurrentPreprocess(preprocess->name());
 
-  mCLAHE->setClipLimit(mSettingsModel->claheClipLimit());
-  mCLAHE->setTilesGridSize(mSettingsModel->claheTilesGridSize());
+  mACEBSF->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
+                          dynamic_cast<IAcebsf *>(preprocess)->blockSize() :
+                          mSettingsModel->acebsfBlockSize());
+  mACEBSF->setL(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
+                  dynamic_cast<IAcebsf *>(preprocess)->l() :
+                  mSettingsModel->acebsfL());
+  mACEBSF->setK1(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
+                   dynamic_cast<IAcebsf *>(preprocess)->k1() :
+                   mSettingsModel->acebsfK1());
+  mACEBSF->setK2(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
+                   dynamic_cast<IAcebsf *>(preprocess)->k2() :
+                   mSettingsModel->acebsfK2());
 
-  mCMBFHE->setBlockSize(mSettingsModel->faheBlockSize());
+  mCLAHE->setClipLimit(preprocess && preprocess->type() == Preprocess::Type::clahe ?
+                         dynamic_cast<IClahe *>(preprocess)->clipLimit() :
+                         mSettingsModel->claheClipLimit());
+  mCLAHE->setTilesGridSize(preprocess && preprocess->type() == Preprocess::Type::clahe ?
+                             dynamic_cast<IClahe *>(preprocess)->tilesGridSize() :
+                             mSettingsModel->claheTilesGridSize());
 
-  mDHE->setX(mSettingsModel->dheX());
+  mCMBFHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::cmbfhe ?
+                          dynamic_cast<ICmbfhe *>(preprocess)->blockSize() :
+                          mSettingsModel->faheBlockSize());
 
-  mFAHE->setBlockSize(mSettingsModel->faheBlockSize());
+  mDHE->setX(preprocess && preprocess->type() == Preprocess::Type::dhe ?
+               dynamic_cast<IDhe *>(preprocess)->x() :
+               mSettingsModel->dheX());
 
-  mHMCLAHE->setBlockSize(mSettingsModel->hmclaheBlockSize());
-  mHMCLAHE->setL(mSettingsModel->hmclaheL());
-  mHMCLAHE->setPhi(mSettingsModel->hmclahePhi());
+  mFAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::fahe ?
+                        dynamic_cast<IFahe *>(preprocess)->blockSize() :
+                        mSettingsModel->faheBlockSize());
 
-  mLCEBSESCS->setBlockSize(mSettingsModel->lceBsescsBlockSize());
+  mHMCLAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
+                           dynamic_cast<IHmclahe *>(preprocess)->blockSize() :
+                           mSettingsModel->hmclaheBlockSize());
+  mHMCLAHE->setL(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
+                   dynamic_cast<IHmclahe *>(preprocess)->l() :
+                   mSettingsModel->hmclaheL());
+  mHMCLAHE->setPhi(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
+                     dynamic_cast<IHmclahe *>(preprocess)->phi() :
+                     mSettingsModel->hmclahePhi());
 
-  mMSRCP->setMidScale(mSettingsModel->msrcpMidScale());
-  mMSRCP->setLargeScale(mSettingsModel->msrcpLargeScale());
-  mMSRCP->setSmallScale(mSettingsModel->msrcpSmallScale());
+  mLCEBSESCS->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::lce_bsescs ?
+                             dynamic_cast<ILceBsescs *>(preprocess)->blockSize() :
+                             mSettingsModel->lceBsescsBlockSize());
 
-  mNOSHP->setBlockSize(mSettingsModel->noshpBlockSize());
+  mMSRCP->setMidScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
+                        dynamic_cast<IMsrcp *>(preprocess)->midScale() :
+                        mSettingsModel->msrcpMidScale());
+  mMSRCP->setLargeScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
+                          dynamic_cast<IMsrcp *>(preprocess)->largeScale() :
+                          mSettingsModel->msrcpLargeScale());
+  mMSRCP->setSmallScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
+                          dynamic_cast<IMsrcp *>(preprocess)->smallScale() :
+                          mSettingsModel->msrcpSmallScale());
 
-  mPOHE->setBlockSize(mSettingsModel->poheBlockSize());
+  mNOSHP->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::noshp ?
+                         dynamic_cast<INoshp *>(preprocess)->blockSize() :
+                         mSettingsModel->noshpBlockSize());
 
-  mRSWHE->setHistogramCut(static_cast<IRswheWidget::HistogramCut>(mSettingsModel->rswheHistogramCut()));
-  mRSWHE->setHistogramDivisions(mSettingsModel->rswheHistogramDivisions());
+  mPOHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::pohe ?
+                        dynamic_cast<IPohe *>(preprocess)->blockSize() :
+                        mSettingsModel->poheBlockSize());
 
-  mWallis->setContrast(mSettingsModel->wallisContrast());
-  mWallis->setBrightness(mSettingsModel->wallisBrightness());
-  mWallis->setKernelSize(mSettingsModel->wallisKernelSize());
-  mWallis->setImposedAverage(mSettingsModel->wallisImposedAverage());
-  mWallis->setImposedLocalStdDev(mSettingsModel->wallisImposedLocalStdDev());
+  mRSWHE->setHistogramCut(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
+                            static_cast<IRswheWidget::HistogramCut>(dynamic_cast<IRswhe *>(preprocess)->histogramCut()) :
+                            static_cast<IRswheWidget::HistogramCut>(mSettingsModel->rswheHistogramCut()));
+  mRSWHE->setHistogramDivisions(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
+                                  dynamic_cast<IRswhe *>(preprocess)->histogramDivisions() :
+                                  mSettingsModel->rswheHistogramDivisions());
+
+  mWallis->setContrast(preprocess && preprocess->type() == Preprocess::Type::wallis ?
+                         dynamic_cast<IWallis *>(preprocess)->contrast() :
+                         mSettingsModel->wallisContrast());
+  mWallis->setBrightness(preprocess && preprocess->type() == Preprocess::Type::wallis ?
+                           dynamic_cast<IWallis *>(preprocess)->brightness() :
+                           mSettingsModel->wallisBrightness());
+  mWallis->setKernelSize(preprocess && preprocess->type() == Preprocess::Type::wallis ?
+                           dynamic_cast<IWallis *>(preprocess)->kernelSize() :
+                           mSettingsModel->wallisKernelSize());
+  mWallis->setImposedAverage(preprocess && preprocess->type() == Preprocess::Type::wallis ?
+                               dynamic_cast<IWallis *>(preprocess)->imposedAverage() :
+                               mSettingsModel->wallisImposedAverage());
+  mWallis->setImposedLocalStdDev(preprocess && preprocess->type() == Preprocess::Type::wallis ?
+                                   dynamic_cast<IWallis *>(preprocess)->imposedLocalStdDev() :
+                                   mSettingsModel->wallisImposedLocalStdDev());
 
   mView->exec();
 }

@@ -11,9 +11,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 FlannMatcherProperties::FlannMatcherProperties()
   : IFlannMatcher(),
     mIndex(FlannMatcherProperties::Index::kdtree)
@@ -455,6 +452,7 @@ std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DM
 
   } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::fundamental){
 
+    filter_matches = filterByFundamentalMatrix(matches, pts1, pts2);
 
   }
 
@@ -702,6 +700,5 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> &matches)
   } /*else msgError("Fichero no valido: %s", fname);*/
 }
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme

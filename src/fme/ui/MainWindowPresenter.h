@@ -29,6 +29,10 @@ class IMatchViewerPresenter;
 class IMatchViewerModel;
 class IHomographyViewerPresenter;
 class IHomographyViewerModel;
+class ICurvesViewerPresenter;
+class ICurvesViewerModel;
+class IGroundTruthModel;
+class IGroundTruthPresenter;
 class ProgressHandler;
 class IProgressDialog;
 
@@ -71,13 +75,16 @@ protected slots:
   /* Quality Control */
 
   void openMatchesViewer();
+  void createGroundTruth();
+  void importGroundTruth();
   void openHomographyViewer();
+  void openPRCurvesViewer();
+  void openROCCurvesViewer();
 
   /* Menú herramientas */
 
   void loadImages();
   void newSession();
-  void openAssistant();
   void openPreprocess();
   void openFeatureExtraction();
   void openFeatureMatching();
@@ -164,10 +171,15 @@ private:
    */
   void initMatchesViewer();
 
+  void initCreateGroundTruth();
+
   /*!
    * \brief Inicializa el visor de homografía
    */
   void initHomographyViewer();
+
+  void initPRCurvesViewer();
+  void initROCCurvesViewer();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
@@ -203,8 +215,15 @@ protected:
   IMatchViewerPresenter *mMatchesViewerPresenter;
   IMatchViewerModel *mMatchesViewerModel;
 
+  IGroundTruthPresenter *mGroundTruthPresenter;
+  IGroundTruthModel *mGroundTruthModel;
+
   IHomographyViewerPresenter *mHomographyViewerPresenter;
   IHomographyViewerModel *mHomographyViewerModel;
+
+  ICurvesViewerPresenter *mCurvesPRViewerPresenter;
+  ICurvesViewerPresenter *mCurvesROCViewerPresenter;
+  ICurvesViewerModel *mCurvesViewerModel;
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;

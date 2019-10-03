@@ -12,8 +12,6 @@ namespace fme
 
 class IMatchViewerView;
 class IMatchViewerModel;
-//class IProjectModel;
-//class ISettingsModel;
 class Help;
 
 /*!

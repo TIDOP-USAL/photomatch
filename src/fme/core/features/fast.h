@@ -11,9 +11,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 class FME_EXPORT FastProperties
   : public IFast
 {
@@ -89,9 +86,6 @@ protected:
   cv::Ptr<cv::FastFeatureDetector> mFast;
 
 };
-
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

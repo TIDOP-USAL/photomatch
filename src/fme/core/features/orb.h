@@ -10,7 +10,6 @@
 namespace fme
 {
 
-/*----------------------------------------------------------------*/
 
 
 class FME_EXPORT OrbProperties

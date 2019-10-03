@@ -39,6 +39,7 @@ public:
     feature_extraction    = (1 << 6),
     feature_matching      = (1 << 7),
     processing            = (1 << 20),
+    ground_truth          = (1 << 30),
   };
 
 public:
@@ -102,7 +103,9 @@ public slots:
   void showImage(const QString &file);
 
   bool showKeyPoints() const;
-  void setKeyPoints(const std::vector<QPointF> &keyPoints);
+  //void setKeyPoints(const std::vector<QPointF> &keyPoints);
+  //void setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints);
+  void addKeyPoint(const QPointF &pt, double size, double angle);
 
   void showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF>> &matches);
 
@@ -131,7 +134,6 @@ signals:
 
   void loadImages();
   void newSession();
-  void openAssistant();
   void openPreprocess();
   void openFeatureExtraction();
   void openFeatureMatching();
@@ -139,11 +141,13 @@ signals:
 
   /* Quality Control */
 
-  //void exportTiePoints();
   void matchesViewer();
+  void createGroundTruth();
+  void importGroundTruth();
   void homography();
   void repeteability();
-  void recall();
+  void prCurves();
+  void rocCurves();
 
   /* Menú Ayuda */
 
@@ -207,23 +211,24 @@ protected:
   QAction *mActionStartPage;
   QAction *mActionLoadImages;
   QAction *mActionNewSession;
-  //QAction *mActionAssistant;
   QAction *mActionPreprocess;
   QAction *mActionFeatureExtraction;
   QAction *mActionFeatureMatching;
   QAction *mActionSettings;
   QAction *mActionHelp;
   QAction *mActionAbout;
-  //QAction *mActionExportTiePoints;
   QAction *mActionExportTiePointsCvXml;
   QAction *mActionExportTiePointsCvYml;
   QAction *mActionExportMatchesToCvXml;
   QAction *mActionExportMatchesToCvYml;
   QAction *mActionExportMatchesToTxt;
   QAction *mActionMatchesViewer;
+  QAction *mActionCreateGroundTruth;
+  QAction *mActionImportGroundTruth;
   QAction *mActionHomography;
   QAction *mActionRepeteability;
-  QAction *mActionRecall;
+  QAction *mActionPRCurves;
+  QAction *mActionROCCurves;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
   QAction *mActionZoomIn;

@@ -107,6 +107,16 @@ void Session::setMatcher(const std::shared_ptr<Match> &matcher)
   mMatcher = matcher;
 }
 
+std::shared_ptr<IRobustMatcherRefinement> Session::robustMatcherRefinement()
+{
+  return mRobustMatcherRefinement;
+}
+
+void Session::setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement)
+{
+  mRobustMatcherRefinement = robustMatcherRefinement;
+}
+
 void Session::addPreprocessImage(const QString &img)
 {
   for (auto &image : mPreprocessImages) {

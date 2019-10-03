@@ -277,7 +277,6 @@ void OrbDetectorDescriptor::reset()
   mOrb->setFastThreshold(OrbProperties::fastThreshold());
 }
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme
 

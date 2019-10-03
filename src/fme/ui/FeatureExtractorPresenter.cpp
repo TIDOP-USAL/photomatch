@@ -100,8 +100,8 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
 
   connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
   connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
+
   connect(mView, SIGNAL(run()),                                this, SLOT(run()));
-  //connect(mView, SIGNAL(rejected()),                           this, SLOT(discart()));
   connect(mView, SIGNAL(help()),                               this, SLOT(help()));
 
 }

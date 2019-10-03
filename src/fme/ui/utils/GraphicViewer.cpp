@@ -1,4 +1,4 @@
-#include "graphicviewer.h"
+#include "GraphicViewer.h"
 
 #include <QWheelEvent>
 #include <QMessageBox>
@@ -77,7 +77,7 @@ void GraphicViewer::setImage(const QImage &image)
   // Update the pixmap in the scene
   if (image.isGrayscale()){
     mPixmap = QPixmap::fromImage(image.convertToFormat(QImage::Format::Format_RGB888));
-  } else{
+  } else {
     mPixmap = QPixmap::fromImage(image);
   }
 
@@ -138,13 +138,27 @@ void GraphicViewer::mousePressEvent(QMouseEvent *event)
   if (event->button() == Qt::LeftButton)
     setDragMode(QGraphicsView::ScrollHandDrag);
 
+  mPointOld = event->pos();
+
   QGraphicsView::mousePressEvent(event);
 }
 
 void GraphicViewer::mouseReleaseEvent(QMouseEvent *event)
 {
-  if (event->button() == Qt::LeftButton)
-    setDragMode(QGraphicsView::NoDrag);
+  if (event->button() == Qt::LeftButton){
+
+    /*if (this->dragMode() == QGraphicsView::NoDrag){
+      emit mouseClicked(event->pos());
+    } else*/ if (this->dragMode() == QGraphicsView::ScrollHandDrag){
+      setDragMode(QGraphicsView::NoDrag);
+    }
+
+    if (event->pos() == mPointOld){
+      QPointF imagePoint = mapToScene(QPoint(event->x(), event->y()));
+      emit mouseClicked(imagePoint);
+    }
+
+  }
 
   QGraphicsView::mouseReleaseEvent(event);
 }
@@ -188,11 +202,16 @@ void GraphicViewer::wheelEvent(QWheelEvent *event)
 void GraphicViewer::mouseMoveEvent(QMouseEvent *event)
 {
   // es QPoint(event->x(), event->y()) == event->pos() ???
-  QPointF imagePoint = mapToScene(QPoint(event->x(), event->y()));
+  //QPointF imagePoint = mapToScene(QPoint(event->x(), event->y()));
 
+  if (event->pos() == mPointOld){
+
+  }
   //setToolTip(setToolTipText(QPoint((int)imagePoint.x(),(int)imagePoint.y())));
 
-  emit mousePosition(event->pos());
+//  if (event->button() == Qt::LeftButton){
+//    setDragMode(QGraphicsView::ScrollHandDrag);
+//  }
 
   QGraphicsView::mouseMoveEvent(event);
 }

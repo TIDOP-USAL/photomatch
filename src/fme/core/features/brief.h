@@ -13,9 +13,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 class FME_EXPORT BriefProperties
   : public IBrief
 {

@@ -170,16 +170,6 @@ const std::shared_ptr<Image> Project::findImageByName(const QString &imgName) co
   return nullptr;
 }
 
-//size_t Project::findImageId(const QString &path)
-//{
-//  for (size_t i = 0; i < mImages.size(); i++){
-//    if (mImages[i]->path().compare(path) == 0) {
-//      return i;
-//    }
-//  }
-//  return std::numeric_limits<size_t>().max();
-//}
-
 size_t Project::findImageId(const QString &path) const
 {
   for (size_t i = 0; i < mImages.size(); i++){
@@ -230,8 +220,6 @@ void Project::addSession(const std::shared_ptr<Session> &session)
     //msgWarning("Image %s already in the project", ba.data());
   } else {
     mSessions.push_back(session);
-//    /// Se establece como sesión activa
-//    mCurrentSession = static_cast<int>(mSessions.size()) - 1;
   }
 }
 
@@ -662,6 +650,99 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                           } else
                             stream.skipCurrentElement();
                         }
+                      } else if (stream.name() == "RobustMatcherRefinement") {
+
+                        std::shared_ptr<IRobustMatcherRefinement> rmr = std::make_shared<RobustMatcherProperties>();
+                        while (stream.readNextStartElement()) {
+                          if (stream.name() == "Ratio") {
+                            rmr->setRatio(stream.readElementText().toDouble());
+                          } else if (stream.name() == "CrossCheck") {
+                            rmr->setCrossCheck(stream.readElementText().compare("true") == 0 ? true : false);
+                          } else if (stream.name() == "GeometricTest") {
+                            while (stream.readNextStartElement()) {
+                              if (stream.name() == "HomographyMatrix") {
+                                rmr->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
+                                while (stream.readNextStartElement()) {
+                                  if (stream.name() == "ComputeMethod") {
+                                    QString computeMethod = stream.readElementText();
+                                    IRobustMatcherRefinement::HomographyComputeMethod hcm = IRobustMatcherRefinement::HomographyComputeMethod::ransac;
+                                    if (computeMethod.compare("All Points") == 0){
+                                      hcm = IRobustMatcherRefinement::HomographyComputeMethod::all_points;
+                                    } else if (computeMethod.compare("RANSAC") == 0){
+                                      hcm = IRobustMatcherRefinement::HomographyComputeMethod::ransac;
+                                    } else if (computeMethod.compare("LMedS") == 0){
+                                      hcm = IRobustMatcherRefinement::HomographyComputeMethod::lmeds;
+                                    } else if (computeMethod.compare("RHO") == 0){
+                                      hcm = IRobustMatcherRefinement::HomographyComputeMethod::rho;
+                                    }
+                                    rmr->setHomographyComputeMethod(hcm);
+                                  } else if (stream.name() == "Distance") {
+                                    rmr->setDistance(stream.readElementText().toDouble());
+                                  } else if (stream.name() == "MaxIter") {
+                                    rmr->setMaxIters(stream.readElementText().toInt());
+                                  } else if (stream.name() == "Confidence") {
+                                    rmr->setConfidence(stream.readElementText().toDouble());
+                                  } else {
+                                    stream.skipCurrentElement();
+                                  }
+                                }
+                              } else if (stream.name() == "FundamentalMatrix") {
+                                rmr->setGeometricTest(IRobustMatcherRefinement::GeometricTest::fundamental);
+                                while (stream.readNextStartElement()) {
+                                  if (stream.name() == "ComputeMethod") {
+                                    QString computeMethod = stream.readElementText();
+                                    IRobustMatcherRefinement::FundamentalComputeMethod fcm = IRobustMatcherRefinement::FundamentalComputeMethod::ransac;
+                                    if (computeMethod.compare("LMedS") == 0){
+                                      fcm = IRobustMatcherRefinement::FundamentalComputeMethod::lmeds;
+                                    } else if (computeMethod.compare("RANSAC") == 0){
+                                      fcm = IRobustMatcherRefinement::FundamentalComputeMethod::ransac;
+                                    } else if (computeMethod.compare("7-point algorithm") == 0){
+                                      fcm = IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point;
+                                    } else if (computeMethod.compare("8-point algorithm") == 0){
+                                      fcm = IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point;
+                                    }
+                                    rmr->setFundamentalComputeMethod(fcm);
+                                  } else if (stream.name() == "Distance") {
+                                    rmr->setDistance(stream.readElementText().toDouble());
+                                  } else if (stream.name() == "MaxIter") {
+                                    rmr->setMaxIters(stream.readElementText().toInt());
+                                  } else if (stream.name() == "Confidence") {
+                                    rmr->setConfidence(stream.readElementText().toDouble());
+                                  } else {
+                                    stream.skipCurrentElement();
+                                  }
+                                }
+                              } else if (stream.name() == "EssentialMatrix") {
+                                rmr->setGeometricTest(IRobustMatcherRefinement::GeometricTest::essential);
+                                while (stream.readNextStartElement()) {
+                                  if (stream.name() == "ComputeMethod") {
+                                    QString computeMethod = stream.readElementText();
+                                    IRobustMatcherRefinement::EssentialComputeMethod ecm = IRobustMatcherRefinement::EssentialComputeMethod::ransac;
+                                    if (computeMethod.compare("RANSAC") == 0){
+                                      ecm = IRobustMatcherRefinement::EssentialComputeMethod::ransac;
+                                    } else if (computeMethod.compare("LMedS") == 0){
+                                      ecm = IRobustMatcherRefinement::EssentialComputeMethod::lmeds;
+                                    }
+                                    rmr->setEssentialComputeMethod(ecm);
+                                  } else if (stream.name() == "Distance") {
+                                    rmr->setDistance(stream.readElementText().toDouble());
+                                  } else if (stream.name() == "MaxIter") {
+                                    rmr->setMaxIters(stream.readElementText().toInt());
+                                  } else if (stream.name() == "Confidence") {
+                                    rmr->setConfidence(stream.readElementText().toDouble());
+                                  } else {
+                                    stream.skipCurrentElement();
+                                  }
+                                }
+                              } else {
+                                stream.skipCurrentElement();
+                              }
+                            }
+                          } else {
+                            stream.skipCurrentElement();
+                          }
+                        }
+
                       } else if (stream.name() == "Images") {
 
                         QString img1;
@@ -957,6 +1038,82 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
 
             }
             stream.writeEndElement(); // DescriptorMatcher
+
+            stream.writeStartElement("RobustMatcherRefinement");
+            {
+              if (IRobustMatcherRefinement *rmr = (*it)->robustMatcherRefinement().get()){
+
+                stream.writeTextElement("Ratio", QString::number(rmr->ratio()));
+                stream.writeTextElement("CrossCheck", rmr->crossCheck() ? "true" : "false");
+
+                stream.writeStartElement("GeometricTest");
+                {
+                  IRobustMatcherRefinement::GeometricTest geometricTest = rmr->geometricTest();
+                  if (geometricTest == IRobustMatcherRefinement::GeometricTest::homography){
+
+                    stream.writeStartElement("HomographyMatrix");
+                    {
+                      IRobustMatcherRefinement::HomographyComputeMethod hcm = rmr->homographyComputeMethod();
+                      if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::all_points){
+                        stream.writeTextElement("ComputeMethod", "All Points");
+                      } else if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::ransac){
+                        stream.writeTextElement("ComputeMethod", "RANSAC");
+                        stream.writeTextElement("Distance", QString::number(rmr->distance()));
+                        stream.writeTextElement("MaxIter", QString::number(rmr->maxIter()));
+                      } else if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::lmeds){
+                        stream.writeTextElement("ComputeMethod", "LMedS");
+                      } else if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::rho){
+                        stream.writeTextElement("ComputeMethod", "RHO");
+                        stream.writeTextElement("Distance", QString::number(rmr->distance()));
+                      }
+
+                      stream.writeTextElement("Confidence", QString::number(rmr->confidence()));
+
+                    }
+                    stream.writeEndElement(); // HomographyMatrix
+
+                  } else if (geometricTest == IRobustMatcherRefinement::GeometricTest::fundamental){
+
+                    stream.writeStartElement("FundamentalMatrix");
+                    {
+                      IRobustMatcherRefinement::FundamentalComputeMethod fcm =  rmr->fundamentalComputeMethod();
+                      if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::lmeds){
+                        stream.writeTextElement("ComputeMethod", "LMedS");
+                        stream.writeTextElement("Confidence", QString::number(rmr->confidence()));
+                      } else if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::ransac){
+                        stream.writeTextElement("ComputeMethod", "RANSAC");
+                        stream.writeTextElement("Distance", QString::number(rmr->distance()));
+                        stream.writeTextElement("Confidence", QString::number(rmr->confidence()));
+                      } else if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point){
+                        stream.writeTextElement("ComputeMethod", "7-point algorithm");
+                      } else if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point){
+                        stream.writeTextElement("ComputeMethod", "8-point algorithm");
+                      }
+                    }
+                    stream.writeEndElement(); // FundamentalMatrix
+
+                  } else if (geometricTest == IRobustMatcherRefinement::GeometricTest::essential){
+
+                    stream.writeStartElement("EssentialMatrix");
+                    {
+                      IRobustMatcherRefinement::EssentialComputeMethod ecm = rmr->essentialComputeMethod();
+                      if (ecm == IRobustMatcherRefinement::EssentialComputeMethod::ransac){
+                        stream.writeTextElement("ComputeMethod", "RANSAC");
+                        stream.writeTextElement("Distance", QString::number(rmr->distance()));
+                      } else if (ecm == IRobustMatcherRefinement::EssentialComputeMethod::lmeds){
+                        stream.writeTextElement("ComputeMethod", "LMedS");
+                      }
+                      stream.writeTextElement("Confidence", QString::number(rmr->confidence()));
+                    }
+                    stream.writeEndElement(); // EssentialMatrix
+
+                  }
+                }
+                stream.writeEndElement(); // GeometricTest
+
+              }
+            }
+            stream.writeEndElement(); // RobustMatcherRefinement
 
             stream.writeStartElement("Images");
             {

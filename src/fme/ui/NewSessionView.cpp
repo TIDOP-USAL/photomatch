@@ -22,7 +22,7 @@ NewSessionView::NewSessionView(QWidget *parent)
 
   connect(mLineEditSessionName,        SIGNAL(textChanged(QString)), this, SLOT(update()));
   connect(mLineEditSessionName,        SIGNAL(textChanged(QString)), this, SIGNAL(sessionNameChange(QString)));
-  connect(mTextEditSessionDescription, SIGNAL(stateChanged(int)),    this, SLOT(update()));
+  //connect(mTextEditSessionDescription, SIGNAL(stateChanged(int)),    this, SLOT(update()));
 
   connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
   connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
@@ -85,13 +85,13 @@ QString NewSessionView::sessionDescription() const
 void NewSessionView::setExistingName(bool nameExist)
 {
   bNameExist = nameExist;
-  QPalette *palette = new QPalette();
+  QPalette palette;
   if (bNameExist){
-    palette->setColor(QPalette::Text, Qt::red);
+    palette.setColor(QPalette::Text, Qt::red);
   } else {
-    palette->setColor(QPalette::Text, Qt::black);
+    palette.setColor(QPalette::Text, Qt::black);
   }
-  mLineEditSessionName->setPalette(*palette);
+  mLineEditSessionName->setPalette(palette);
   update();
 }
 

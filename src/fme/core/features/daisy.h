@@ -116,9 +116,6 @@ protected:
 };
 
 
-/*----------------------------------------------------------------*/
-
-
 } // namespace fme
 
 #endif // FME_DAISY_DESCRIPTOR_H

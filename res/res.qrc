@@ -40,6 +40,8 @@
         <file>img/material/24/icons8_txt_24px.png</file>
         <file>img/material/24/icons8_xml_file_24px.png</file>
         <file>img/material/24/yml_file_24px.png</file>
+        <file>img/material/24/icons8_define_location_24px.png</file>
+        <file>img/material/24/icons8_erase_24px.png</file>
     </qresource>
     <qresource prefix="/ico/48">
         <file>img/material/48/icons8_add_list_48px.png</file>
@@ -79,6 +81,8 @@
         <file>img/material/48/icons8_txt_48px.png</file>
         <file>img/material/48/icons8_xml_file_48px.png</file>
         <file>img/material/48/yml_file_48px.png</file>
+        <file>img/material/48/icons8_define_location_48px.png</file>
+        <file>img/material/48/icons8_erase_48px.png</file>
     </qresource>
     <qresource prefix="/ico/96">
         <file>img/material/96/icons8_about_96px.png</file>
@@ -118,6 +122,8 @@
         <file>img/material/96/icons8_txt_96px.png</file>
         <file>img/material/96/icons8_xml_file_96px.png</file>
         <file>img/material/96/yml_file_96px.png</file>
+        <file>img/material/96/icons8_define_location_96px.png</file>
+        <file>img/material/96/icons8_erase_96px.png</file>
     </qresource>
     <qresource prefix="/img/logos">
         <file>img/isprs_logo.jpg</file>

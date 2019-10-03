@@ -15,6 +15,7 @@ namespace fme
 class Preprocess;
 class Feature;
 class Match;
+class IRobustMatcherRefinement;
 
 class FME_EXPORT ISession
 {
@@ -85,6 +86,9 @@ public:
   virtual std::shared_ptr<Match> matcher() = 0;
   virtual void setMatcher(const std::shared_ptr<Match> &matcher) = 0;
 
+  virtual std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement() = 0;
+  virtual void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) = 0;
+
   virtual void addPreprocessImage(const QString &img) = 0;
   virtual void deletePreprocessImage(const QString &img) = 0;
   virtual void deletePreprocessImages() = 0;
@@ -140,6 +144,8 @@ public:
   void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
   std::shared_ptr<Match> matcher() override;
   void setMatcher(const std::shared_ptr<Match> &matcher) override;
+  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement() override;
+  void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) override;
   void addPreprocessImage(const QString &img) override;
   void deletePreprocessImage(const QString &img) override;
   void deletePreprocessImages() override;
@@ -167,9 +173,9 @@ protected:
   std::shared_ptr<Feature> mFeatureDetector;
   std::shared_ptr<Feature> mFeatureDescriptor;
   std::shared_ptr<Match> mMatcher;
+  std::shared_ptr<IRobustMatcherRefinement> mRobustMatcherRefinement;
   std::vector<QString> mPreprocessImages;
   std::vector<QString> mFeatures;
-  //std::vector<QString> mMatches;
   std::map<QString, std::vector<std::pair<QString, QString>>> mImagesPairs;
 };
 

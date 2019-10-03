@@ -53,11 +53,6 @@ void MatchingProcess::setMatches(const QString &matches)
   mMatches = matches;
 }
 
-//std::shared_ptr<DescriptorMatcher> MatchingProcess::descriptorMatcher() const
-//{
-//  return mDescriptorMatcher;
-//}
-
 void MatchingProcess::run()
 {
 

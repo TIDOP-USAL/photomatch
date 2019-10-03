@@ -3,6 +3,7 @@
 #include <QToolBar>
 #include <QGridLayout>
 #include <QListWidgetItem>
+#include <QAbstractItemModel>
 
 using namespace tl;
 
@@ -11,6 +12,7 @@ namespace fme
 
 EnumFlags<MessageLevel> LogWidget::sLevel = MessageLevel::msg_verbose;
 EnumFlags<MessageLevel> LogWidget::sFilterLevel = MessageLevel::msg_verbose;
+std::mutex LogWidget::mtx;
 
 LogWidget::LogWidget(QWidget *parent)
   : FmeWidget(parent),
@@ -43,8 +45,10 @@ void LogWidget::setLogLevel(MessageLevel level)
 
 void LogWidget::print(const char *msg, const char *date, MessageLevel level)
 {
+  std::lock_guard<std::mutex> lck(LogWidget::mtx);
+
   QString _msg = QString(date) + " " + msg;
-  
+
   QListWidgetItem *qListWidgetItem = new QListWidgetItem(_msg);
   qListWidgetItem->setData(Qt::UserRole, QVariant(static_cast<int>(level)));
 
@@ -54,15 +58,16 @@ void LogWidget::print(const char *msg, const char *date, MessageLevel level)
     qListWidgetItem->setForeground(Qt::magenta);
 
   mListWidget->insertItem(mListWidget->count(), qListWidgetItem);
- 
+
   if (!sFilterLevel.isActive(level)) {
     mListWidget->setRowHidden(mListWidget->count() - 1, true);
   }
-  update();
+  //update();
 }
 
 void LogWidget::refresh()
 {
+  std::lock_guard<std::mutex> lck(LogWidget::mtx);
   MessageLevel level;
   for (int i = 0; i < mListWidget->count(); i++) {
     QListWidgetItem *qListWidgetItem = mListWidget->item(i);
@@ -102,6 +107,16 @@ void LogWidget::onPushButtonShowLogDebugToggled(bool active)
   refresh();
 }
 
+void LogWidget::onRowsInserted(const QModelIndex &parent, int start, int end, LogWidget::QPrivateSignal)
+{
+  update();
+}
+
+void LogWidget::onRowsRemoved(const QModelIndex &parent, int start, int end, LogWidget::QPrivateSignal)
+{
+  update();
+}
+
 void LogWidget::update()
 {
   mClearAction->setEnabled(mListWidget->count() > 0);
@@ -109,6 +124,7 @@ void LogWidget::update()
 
 void LogWidget::reset()
 {
+  std::lock_guard<std::mutex> lck(LogWidget::mtx);
   clear();
 }
 
@@ -149,7 +165,9 @@ void LogWidget::init()
   mListWidget = new QListWidget(this);
   mGridLayout->addWidget(mListWidget);
 
-  update();
+  connect(mListWidget->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)), this, SLOT(onRowsInserted(const QModelIndex &,int,int)));
+  connect(mListWidget->model(), SIGNAL(rowsRemoved(const QModelIndex &,int,int)),  this, SLOT(onRowsRemoved(const QModelIndex &,int,int)));
+  //update();
 }
 
 void LogWidget::onMsgDebug(const char *msg, const char *date)

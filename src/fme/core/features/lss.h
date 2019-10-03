@@ -16,8 +16,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
 
 class FME_EXPORT LssProperties
   : public ILss
@@ -72,9 +70,6 @@ protected:
 
   std::shared_ptr<LSS> mLSS;
 };
-
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

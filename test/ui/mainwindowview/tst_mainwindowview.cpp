@@ -124,6 +124,7 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(true, mActionSaveProjectAs->isEnabled());
   QCOMPARE(true, mActionCloseProject->isEnabled());
   QCOMPARE(true, mActionExit->isEnabled());
+  QCOMPARE(true, mActionStartPage->isEnabled());
   QCOMPARE(true, mActionLoadImages->isEnabled());
   QCOMPARE(false, mActionNewSession->isEnabled());
   QCOMPARE(false, mActionPreprocess->isEnabled());
@@ -138,9 +139,12 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(false, mActionExportMatchesToCvYml->isEnabled());
   QCOMPARE(false, mActionExportMatchesToTxt->isEnabled());
   QCOMPARE(false, mActionMatchesViewer->isEnabled());
+  QCOMPARE(false, mActionCreateGroundTruth->isEnabled());
+  QCOMPARE(false, mActionImportGroundTruth->isEnabled());
   QCOMPARE(false, mActionHomography->isEnabled());
   QCOMPARE(false, mActionRepeteability->isEnabled());
-  QCOMPARE(false, mActionRecall->isEnabled());
+  QCOMPARE(false, mActionPRCurves->isEnabled());
+  QCOMPARE(false, mActionROCCurves->isEnabled());
 
   /// Projecto modificado
   setFlag(MainWindowView::Flag::project_modified, true);
@@ -152,6 +156,8 @@ void TestMainWindowView::test_setFlag()
   /// Imagenes añadidas
   setFlag(MainWindowView::Flag::images_added, true);
   QCOMPARE(true, mActionNewSession->isEnabled());
+  QCOMPARE(true, mActionCreateGroundTruth->isEnabled());
+  QCOMPARE(true, mActionImportGroundTruth->isEnabled());
 
   /// Procesamiento, sesion o test (no se muy bien como llamarlo todavía)
   setFlag(MainWindowView::Flag::session_created, true);
@@ -172,10 +178,15 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(true, mActionMatchesViewer->isEnabled());
   QCOMPARE(true, mActionHomography->isEnabled());
   QCOMPARE(true, mActionRepeteability->isEnabled());
-  QCOMPARE(true, mActionRecall->isEnabled());
+  QCOMPARE(false, mActionPRCurves->isEnabled());
+  QCOMPARE(false, mActionROCCurves->isEnabled());
   QCOMPARE(true, mActionExportMatchesToCvXml->isEnabled());
   QCOMPARE(true, mActionExportMatchesToCvYml->isEnabled());
   QCOMPARE(true, mActionExportMatchesToTxt->isEnabled());
+
+  setFlag(MainWindowView::Flag::ground_truth, true);
+  QCOMPARE(true, mActionPRCurves->isEnabled());
+  QCOMPARE(true, mActionROCCurves->isEnabled());
 }
 
 void TestMainWindowView::test_clear()

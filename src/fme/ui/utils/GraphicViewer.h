@@ -90,6 +90,7 @@ protected:
    * \param[in] pos Posición del mouse en el widget
    */
   virtual void showContextMenu(const QPoint &pos) = 0;
+
 };
 
 
@@ -98,33 +99,6 @@ class GraphicViewer
     public IGraphicViewer
 {
   Q_OBJECT
-
-protected:
-
-  // Scene where the image is drawn
-  QGraphicsScene *mScene;
-
-  // Pixmap item containing the image
-  QGraphicsPixmapItem *mPixmapItem;
-
-  /*!
-   * \brief Tamaño de la imagen
-   */
-  QSize mImageSize;
-
-  QMenu *mContextMenu;
-
-  /*!
-   * \brief Factor de zoom
-   */
-  double mZoomFactor;
-
-  /*!
-   * \brief Factor de zoom cuando la tecla ctrl esta presionada
-   */
-  double mZoomCtrlFactor;
-
-  QPixmap mPixmap;
 
 public:
     
@@ -218,7 +192,7 @@ protected slots:
    * \brief showContextMenu       Display the contextual menu (on right click)
    * \param pos                   Position of the mouse in the widget
    */
-  virtual void showContextMenu(const QPoint &position);
+  virtual void showContextMenu(const QPoint &position) override;
 
 private:
  
@@ -230,15 +204,36 @@ signals:
   void mouseClicked(QPoint);
   void mouseClicked(QPointF);
 
+protected:
+
+  // Scene where the image is drawn
+  QGraphicsScene *mScene;
+
+  // Pixmap item containing the image
+  QGraphicsPixmapItem *mPixmapItem;
+
+  /*!
+   * \brief Tamaño de la imagen
+   */
+  QSize mImageSize;
+
+  QMenu *mContextMenu;
+
+  /*!
+   * \brief Factor de zoom
+   */
+  double mZoomFactor;
+
+  /*!
+   * \brief Factor de zoom cuando la tecla ctrl esta presionada
+   */
+  double mZoomCtrlFactor;
+
+  QPixmap mPixmap;
+
+  QPoint mPointOld;
 };
 
-
-//class GraphicEllipse
-//  : public QGraphicsEllipseItem
-//{
-//public:
-//  GraphicEllipse() {}
-//};
 
 } // namespace fme
 

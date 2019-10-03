@@ -118,6 +118,5 @@ void BriefDescriptor::reset()
   update();
 }
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme

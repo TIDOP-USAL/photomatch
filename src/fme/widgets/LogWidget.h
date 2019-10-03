@@ -3,6 +3,8 @@
 
 #include "fme/widgets/FmeWidget.h"
 
+#include <mutex>
+
 #include <tidop/core/defs.h>
 #include <tidop/core/flags.h>
 #include <tidop/core/messages.h>
@@ -50,6 +52,8 @@ private slots:
   void onPushButtonShowLogErrorsToggled(bool active);
   void onPushButtonShowLogInfoToggled(bool active);
   void onPushButtonShowLogDebugToggled(bool active);
+  void onRowsInserted(const QModelIndex &parent,int start,int end,QPrivateSignal);
+  void onRowsRemoved(const QModelIndex &parent,int start,int end,QPrivateSignal);
 
 // FmeWidget interface
 
@@ -77,6 +81,8 @@ private:
 
   static tl::EnumFlags<tl::MessageLevel> sLevel;
   static tl::EnumFlags<tl::MessageLevel> sFilterLevel;
+  static std::mutex mtx;
+
   QGridLayout *mGridLayout;
   QListWidget *mListWidget;
   QAction* mMsgErrorAction;

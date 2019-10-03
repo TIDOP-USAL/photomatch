@@ -8,9 +8,6 @@ namespace fme
 {
 
 
-/*----------------------------------------------------------------*/
-
-
 void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoints, const cv::Mat &descriptors)
 {
   QByteArray ba = fname.toLocal8Bit();
@@ -129,8 +126,6 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
     //msgError("Fichero no valido: %s", fname.c_str());
   }
 }
-
-/*----------------------------------------------------------------*/
 
 
 } // namespace fme

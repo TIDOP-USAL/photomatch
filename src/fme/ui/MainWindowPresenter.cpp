@@ -27,13 +27,19 @@
 #include "fme/ui/MatchViewerModel.h"
 #include "fme/ui/MatchViewerView.h"
 #include "fme/ui/MatchViewerPresenter.h"
+#include "fme/ui/GroundTruthModel.h"
+#include "fme/ui/GroundTruthView.h"
+#include "fme/ui/GroundTruthPresenter.h"
 #include "fme/ui/HomographyViewerModel.h"
 #include "fme/ui/HomographyViewerView.h"
 #include "fme/ui/HomographyViewerPresenter.h"
+#include "fme/ui/CurvesViewerModel.h"
+#include "fme/ui/CurvesViewerView.h"
+#include "fme/ui/CurvesViewerPresenter.h"
 
 #include "fme/ui/utils/Progress.h"
 #include "fme/ui/utils/ProgressDialog.h"
-
+#include "fme/ui/utils/KeyPointGraphicsItem.h"
 
 #include "fme/core/project.h"
 
@@ -70,8 +76,13 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mDescriptorMatcherPresenter(nullptr),
     mMatchesViewerPresenter(nullptr),
     mMatchesViewerModel(nullptr),
+    mGroundTruthPresenter(nullptr),
+    mGroundTruthModel(nullptr),
     mHomographyViewerPresenter(nullptr),
     mHomographyViewerModel(nullptr),
+    mCurvesPRViewerPresenter(nullptr),
+    mCurvesROCViewerPresenter(nullptr),
+    mCurvesViewerModel(nullptr),
     mProgressHandler(nullptr),
     mProgressDialog(nullptr)
 {
@@ -99,16 +110,17 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   /* Quality Control */
 
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
+  connect(mView,  SIGNAL(createGroundTruth()),        this, SLOT(createGroundTruth()));
+  connect(mView,  SIGNAL(importGroundTruth()),        this, SLOT(importGroundTruth()));
   connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
   //connect(mView,  SIGNAL(repeteability()),            this, SLOT(repeteability()));
-  //connect(mView,  SIGNAL(recall()),                   this, SLOT(recall()));
-
+  connect(mView,  SIGNAL(prCurves()),                 this, SLOT(openPRCurvesViewer()));
+  connect(mView,  SIGNAL(rocCurves()),                this, SLOT(openROCCurvesViewer()));
 
   /* Menú herramientas */
 
   connect(mView,   SIGNAL(loadImages()),              this, SLOT(loadImages()));
   connect(mView,   SIGNAL(newSession()),              this, SLOT(newSession()));
-  connect(mView,   SIGNAL(openAssistant()),           this, SLOT(openAssistant()));
   connect(mView,   SIGNAL(openPreprocess()),          this, SLOT(openPreprocess()));
   connect(mView,   SIGNAL(openFeatureExtraction()),   this, SLOT(openFeatureExtraction()));
   connect(mView,   SIGNAL(openFeatureMatching()),     this, SLOT(openFeatureMatching()));
@@ -234,6 +246,16 @@ MainWindowPresenter::~MainWindowPresenter()
     mMatchesViewerModel = nullptr;
   }
 
+  if (mGroundTruthPresenter){
+    delete mGroundTruthPresenter;
+    mGroundTruthPresenter = nullptr;
+  }
+
+  if (mGroundTruthModel){
+    delete mGroundTruthModel;
+    mGroundTruthModel = nullptr;
+  }
+
   if (mHomographyViewerPresenter){
     delete mHomographyViewerPresenter;
     mHomographyViewerPresenter = nullptr;
@@ -243,6 +265,22 @@ MainWindowPresenter::~MainWindowPresenter()
     delete mHomographyViewerModel;
     mHomographyViewerModel = nullptr;
   }
+
+  if (mCurvesPRViewerPresenter){
+    delete mCurvesPRViewerPresenter;
+    mCurvesPRViewerPresenter = nullptr;
+  }
+
+  if (mCurvesROCViewerPresenter){
+    delete mCurvesROCViewerPresenter;
+    mCurvesROCViewerPresenter = nullptr;
+  }
+
+  if (mCurvesViewerModel){
+    delete mCurvesViewerModel;
+    mCurvesViewerModel = nullptr;
+  }
+
 }
 
 void MainWindowPresenter::openNew()
@@ -481,10 +519,33 @@ void MainWindowPresenter::openMatchesViewer()
   mMatchesViewerPresenter->open();
 }
 
+void MainWindowPresenter::createGroundTruth()
+{
+  initCreateGroundTruth();
+  mGroundTruthPresenter->open();
+}
+
+void MainWindowPresenter::importGroundTruth()
+{
+
+}
+
 void MainWindowPresenter::openHomographyViewer()
 {
   initHomographyViewer();
   mHomographyViewerPresenter->open();
+}
+
+void MainWindowPresenter::openPRCurvesViewer()
+{
+  initPRCurvesViewer();
+  mCurvesPRViewerPresenter->open();
+}
+
+void MainWindowPresenter::openROCCurvesViewer()
+{
+  initROCCurvesViewer();
+  mCurvesROCViewerPresenter->open();
 }
 
 void MainWindowPresenter::loadImages()
@@ -511,11 +572,6 @@ void MainWindowPresenter::newSession()
   initNewSessionDialog();
 
   mNewSessionPresenter->open();
-}
-
-void MainWindowPresenter::openAssistant()
-{
-
 }
 
 void MainWindowPresenter::openPreprocess()
@@ -606,6 +662,9 @@ void MainWindowPresenter::updateProject()
 void MainWindowPresenter::openImage(const QString &image)
 {
   mView->showImage(image);
+  if (mView->showKeyPoints()){
+    this->loadKeyPoints(image);
+  }
 }
 
 void MainWindowPresenter::activeImage(const QString &image)
@@ -992,7 +1051,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
 
 void MainWindowPresenter::selectImageFeatures(const QString &imageFeatures)
 {
-  std::vector<QPointF> feat = mModel->loadKeyPoints(imageFeatures);
+  std::vector<QPointF> feat = mModel->loadKeyPointsCoordinates(imageFeatures);
   std::list<std::pair<QString, QString>> properties;
   properties.push_back(std::make_pair(QString("Features"), QString::number(feat.size())));
   mView->setProperties(properties);
@@ -1063,7 +1122,8 @@ void MainWindowPresenter::updatePreprocess()
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
   if (_session){
     bool project_modified = loadPreprocess(_session->name());
-    mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
+    if (project_modified)
+      mView->setFlag(MainWindowView::Flag::project_modified, true);
   }
 }
 
@@ -1072,7 +1132,8 @@ void MainWindowPresenter::updateFeatures()
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
   if (_session){
     bool project_modified = loadFeatures(_session->name());
-    mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
+    if (project_modified)
+      mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
   }
 }
 
@@ -1081,7 +1142,8 @@ void MainWindowPresenter::updateMatches()
   std::shared_ptr<Session> _session = mProjectModel->currentSession();
   if (_session){
     bool project_modified = loadMatches(_session->name());
-    mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
+    if (project_modified)
+      mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
   }
 }
 
@@ -1093,28 +1155,35 @@ void MainWindowPresenter::loadKeyPoints(const QString &image)
   features.append("\\features\\");
   features.append(fileInfo.fileName()).append(".xml");
 
-  ///TODO: Mover a Modelo?? Crear un método loadKeyPointsScaled??
-  std::vector<QPointF>keyPoints = mModel->loadKeyPoints(features);
-  if (mProjectModel->fullImageSize() == false){
-    int maxSize = mProjectModel->maxImageSize();
-    QImageReader imageReader(image);
-    QSize size = imageReader.size();
+  std::vector<std::tuple<QPointF, double, double>> keyPoints = mModel->loadKeyPoints(features);
+
+  if (keyPoints.size() > 0){
+
     double scale = 1.;
-    int w = size.width();
-    int h = size.height();
-    if (w > h){
-      scale = w / static_cast<double>(maxSize);
-    } else {
-      scale = h / static_cast<double>(maxSize);
-    }
-    if (scale > 1.) {
-      for (size_t i = 0; i < keyPoints.size(); i++){
-        keyPoints[i]*= scale;
+    if (mProjectModel->fullImageSize() == false){
+      int maxSize = mProjectModel->maxImageSize();
+      QImageReader imageReader(image);
+      QSize size = imageReader.size();
+      int w = size.width();
+      int h = size.height();
+      if (w > h){
+        scale = w / static_cast<double>(maxSize);
+      } else {
+        scale = h / static_cast<double>(maxSize);
       }
+      if (scale < 1.) scale = 1.;
     }
+
+    for (size_t i = 0; i < keyPoints.size(); i++){
+      QPointF point;
+      double size, angle;
+      std::tie(point, size, angle) = keyPoints[i];
+      point *= scale;
+      mView->addKeyPoint(point, size * scale, angle);
+    }
+
   }
 
-  mView->setKeyPoints(keyPoints);
 }
 
 void MainWindowPresenter::processFinish()
@@ -1266,6 +1335,16 @@ void MainWindowPresenter::initMatchesViewer()
   }
 }
 
+void MainWindowPresenter::initCreateGroundTruth()
+{
+  if (mGroundTruthPresenter == nullptr){
+    mGroundTruthModel = new GroundTruthModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    IGroundTruthView *groundTruthView = new GroundTruthView(mView, f);
+    mGroundTruthPresenter = new GroundTruthPresenter(groundTruthView, mGroundTruthModel);
+  }
+}
+
 void MainWindowPresenter::initHomographyViewer()
 {
   if (mHomographyViewerPresenter == nullptr) {
@@ -1274,6 +1353,36 @@ void MainWindowPresenter::initHomographyViewer()
     IHomographyViewerView *homographyViewerView = new HomographyViewerView(mView, f);
     mHomographyViewerPresenter = new HomographyViewerPresenter(homographyViewerView, mHomographyViewerModel);
     //mMatchesViewerPresenter->setHelp(mHelp);
+  }
+}
+
+void MainWindowPresenter::initPRCurvesViewer()
+{
+  if (mCurvesViewerModel == nullptr) {
+    mCurvesViewerModel = new CurvesViewerModel(mProjectModel);
+  }
+
+  if (mCurvesPRViewerPresenter == nullptr) {
+
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    CurvesViewerView *curvesViewerView = new PRCurvesViewer(mView, f);
+    mCurvesPRViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesViewerModel);
+//    //mMatchesViewerPresenter->setHelp(mHelp);
+  }
+}
+
+void MainWindowPresenter::initROCCurvesViewer()
+{
+  if (mCurvesViewerModel == nullptr) {
+    mCurvesViewerModel = new CurvesViewerModel(mProjectModel);
+  }
+
+  if (mCurvesROCViewerPresenter == nullptr) {
+
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    CurvesViewerView *curvesViewerView = new ROCCurvesViewer(mView, f);
+    mCurvesROCViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesViewerModel);
+//    //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }
 

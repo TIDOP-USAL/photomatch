@@ -48,10 +48,19 @@ set(FME_SOURCES
     HomographyViewerModel.cpp
     HomographyViewerView.cpp
     HomographyViewerPresenter.cpp
+    CurvesViewerModel.cpp
+    CurvesViewerView.cpp
+    CurvesViewerPresenter.cpp
+    GroundTruthModel.cpp
+    GroundTruthView.cpp
+    GroundTruthPresenter.cpp
+    AboutDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
     utils/Progress.cpp
-    utils/Progress.h
+    utils/KeyPointGraphicsItem.cpp
+    utils/CrossGraphicItem.cpp
+    utils/DiagonalCrossGraphicItem.cpp
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
 )  
 
@@ -83,8 +92,19 @@ set(FME_HEADERS
     HomographyViewerModel.h
     HomographyViewerView.h
     HomographyViewerPresenter.h
+    CurvesViewerModel.h
+    CurvesViewerView.h
+    CurvesViewerPresenter.h
+    GroundTruthModel.h
+    GroundTruthView.h
+    GroundTruthPresenter.h
+    AboutDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
+    utils/Progress.h
+    utils/KeyPointGraphicsItem.h
+    utils/CrossGraphicItem.h
+    utils/DiagonalCrossGraphicItem.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h
 )
 
@@ -95,6 +115,7 @@ endif(MSVC)
 # forms
 set(FME_FORMS
   MainWindowView.ui
+  AboutDialog.ui
   utils/ProgressDialog.ui
 )
 
@@ -128,6 +149,7 @@ target_link_libraries(${PROJECT_NAME}
                       Qt5::Widgets
                       Qt5::Help
                       Qt5::Concurrent
+                      Qt5::Charts
                       libcore
                       libwidgets
                       libprocess
@@ -142,6 +164,10 @@ target_link_libraries(${PROJECT_NAME}
                       ${Boost_THREAD_LIBRARY}
                       ${Boost_DATE_TIME_LIBRARY}
                       ${Boost_CHRONO_LIBRARY})
+
+if(HAVE_VLD)
+target_link_libraries(${PROJECT_NAME} ${VLD_LIBRARY})
+endif()
 
 if(ENABLE_SOLUTION_FOLDERS)
   set_target_properties(${PROJECT_NAME}  PROPERTIES FOLDER "fme")

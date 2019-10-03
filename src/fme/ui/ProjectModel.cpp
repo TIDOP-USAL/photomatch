@@ -241,6 +241,12 @@ void ProjectModel::setMatcher(const std::shared_ptr<Match> &matcher)
   bUnsavedChanges = true;
 }
 
+void ProjectModel::setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement)
+{
+  this->currentSession()->setRobustMatcherRefinement(robustMatcherRefinement);
+  bUnsavedChanges = true;
+}
+
 int ProjectModel::maxImageSize() const
 {
   return this->currentSession()->maxImageSize();

@@ -27,7 +27,6 @@ public:
   void setTrainDescriptors(const QString &descriptors);
   QString matches() const;
   void setMatches(const QString &matches);
-  //std::shared_ptr<RobustMatching> descriptorMatcher() const;
 
 signals:
 

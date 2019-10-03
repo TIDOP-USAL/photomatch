@@ -151,6 +151,5 @@ void BriskDetectorDescriptor::reset()
   update();
 }
 
-/*----------------------------------------------------------------*/
 
 } // namespace fme
