@@ -69,33 +69,33 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
     return image;
 
-  /// Una escala para cada imagen por si tienen tamaño diferente
-  double scale1 = 1.;
-  double scale2 = 1.;
-  if (mProjectModel->fullImageSize() == false){
-    int maxSize = mProjectModel->maxImageSize();
-    QImageReader imageReader1(imgPath1);
-    QSize size = imageReader1.size();
-    int w = size.width();
-    int h = size.height();
-    if (w > h){
-      scale1 = w / static_cast<double>(maxSize);
-    } else {
-      scale1 = h / static_cast<double>(maxSize);
-    }
-    if (scale1 < 1.) scale1 = 1.;
+//  /// Una escala para cada imagen por si tienen tamaño diferente
+//  double scale1 = 1.;
+//  double scale2 = 1.;
+//  if (mProjectModel->fullImageSize() == false){
+//    int maxSize = mProjectModel->maxImageSize();
+//    QImageReader imageReader1(imgPath1);
+//    QSize size = imageReader1.size();
+//    int w = size.width();
+//    int h = size.height();
+//    if (w > h){
+//      scale1 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale1 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale1 < 1.) scale1 = 1.;
 
-    QImageReader imageReader2(imgPath2);
-    size = imageReader2.size();
-    w = size.width();
-    h = size.height();
-    if (w > h){
-      scale2 = w / static_cast<double>(maxSize);
-    } else {
-      scale2 = h / static_cast<double>(maxSize);
-    }
-    if (scale2 < 1.) scale2 = 1.;
-  }
+//    QImageReader imageReader2(imgPath2);
+//    size = imageReader2.size();
+//    w = size.width();
+//    h = size.height();
+//    if (w > h){
+//      scale2 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale2 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale2 < 1.) scale2 = 1.;
+//  }
 
   if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
     std::vector<std::pair<QString, QString>> matches = session->matches(imgName1);
@@ -120,8 +120,8 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
           for (size_t i = 0; i < match.size(); i++){
             size_t query_id = (idx == 0) ? static_cast<size_t>(match[i].queryIdx) : static_cast<size_t>(match[i].trainIdx);
             size_t train_id = (idx == 0) ? static_cast<size_t>(match[i].trainIdx) : static_cast<size_t>(match[i].queryIdx);
-            pts_query.push_back(keyPoints1[query_id].pt * scale1);
-            pts_train.push_back(keyPoints2[train_id].pt * scale2);
+            pts_query.push_back(keyPoints1[query_id].pt /** scale1*/);
+            pts_train.push_back(keyPoints2[train_id].pt/* * scale2*/);
 //            cv::KeyPoint kp1 = keyPoints1[query_id];
 //            cv::KeyPoint kp2 = keyPoints2[train_id];
 //            kp1.pt *= scale1;

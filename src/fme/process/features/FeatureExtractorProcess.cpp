@@ -11,12 +11,13 @@
 namespace fme
 {
 
-FeatureExtractor::FeatureExtractor(const QString &img, const QString &features,
+FeatureExtractor::FeatureExtractor(const QString &img, const QString &features, double scale,
                                    const std::shared_ptr<KeypointDetector> &keypointDetector,
                                    const std::shared_ptr<DescriptorExtractor> &descriptorExtractor)
   : ProcessConcurrent(),
     mImage(img),
     mFeatures(features),
+    mScale(scale),
     mKeypointDetector(keypointDetector),
     mDescriptorExtractor(descriptorExtractor)
 {
@@ -99,6 +100,11 @@ void FeatureExtractor::run()
   ba = imgKeypoints.toLocal8Bit();
   const char *ckp = ba.data();
   cv::imwrite(ckp, out);
+
+  for (size_t i = 0; i < key_points.size(); i++){
+    key_points[i].pt *= mScale;
+    key_points[i].size *= static_cast<float>(mScale);
+  }
 
   featuresWrite(mFeatures, key_points, descriptors);
   ba = mFeatures.toLocal8Bit();

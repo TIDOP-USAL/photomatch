@@ -1085,34 +1085,34 @@ void MainWindowPresenter::openImageMatches(const QString &sessionName, const QSt
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
     return;
 
-  /// Una escala para cada imagen por si tienen tamaño diferente
-  double scale1 = 1.;
-  double scale2 = 1.;
-  if (mProjectModel->fullImageSize() == false){
-    int maxSize = mProjectModel->maxImageSize();
-    QImageReader imageReader1(imgPath1);
-    QSize size = imageReader1.size();
-    int w = size.width();
-    int h = size.height();
-    if (w > h){
-      scale1 = w / static_cast<double>(maxSize);
-    } else {
-      scale1 = h / static_cast<double>(maxSize);
-    }
-    if (scale1 < 1.) scale1 = 1.;
+//  /// Una escala para cada imagen por si tienen tamaño diferente
+//  double scale1 = 1.;
+//  double scale2 = 1.;
+//  if (mProjectModel->fullImageSize() == false){
+//    int maxSize = mProjectModel->maxImageSize();
+//    QImageReader imageReader1(imgPath1);
+//    QSize size = imageReader1.size();
+//    int w = size.width();
+//    int h = size.height();
+//    if (w > h){
+//      scale1 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale1 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale1 < 1.) scale1 = 1.;
 
-    QImageReader imageReader2(imgPath2);
-    size = imageReader2.size();
-    w = size.width();
-    h = size.height();
-    if (w > h){
-      scale2 = w / static_cast<double>(maxSize);
-    } else {
-      scale2 = h / static_cast<double>(maxSize);
-    }
-    if (scale2 < 1.) scale2 = 1.;
+//    QImageReader imageReader2(imgPath2);
+//    size = imageReader2.size();
+//    w = size.width();
+//    h = size.height();
+//    if (w > h){
+//      scale2 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale2 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale2 < 1.) scale2 = 1.;
 
-  }
+//  }
 
   if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
 
@@ -1122,10 +1122,10 @@ void MainWindowPresenter::openImageMatches(const QString &sessionName, const QSt
         if (pair.first.compare(imgName2) == 0){
           matches = mModel->loadMatches(pair.second, session->features(imgName1), session->features(imgName2));
 
-          for (size_t i = 0; i < matches.size(); i++){
-            matches[i].first *= scale1;
-            matches[i].second *= scale2;
-          }
+//          for (size_t i = 0; i < matches.size(); i++){
+//            matches[i].first *= scale1;
+//            matches[i].second *= scale2;
+//          }
 
           break;
         }
@@ -1178,27 +1178,27 @@ void MainWindowPresenter::loadKeyPoints(const QString &image)
 
   if (keyPoints.size() > 0){
 
-    double scale = 1.;
-    if (mProjectModel->fullImageSize() == false){
-      int maxSize = mProjectModel->maxImageSize();
-      QImageReader imageReader(image);
-      QSize size = imageReader.size();
-      int w = size.width();
-      int h = size.height();
-      if (w > h){
-        scale = w / static_cast<double>(maxSize);
-      } else {
-        scale = h / static_cast<double>(maxSize);
-      }
-      if (scale < 1.) scale = 1.;
-    }
+//    double scale = 1.;
+//    if (mProjectModel->fullImageSize() == false){
+//      int maxSize = mProjectModel->maxImageSize();
+//      QImageReader imageReader(image);
+//      QSize size = imageReader.size();
+//      int w = size.width();
+//      int h = size.height();
+//      if (w > h){
+//        scale = w / static_cast<double>(maxSize);
+//      } else {
+//        scale = h / static_cast<double>(maxSize);
+//      }
+//      if (scale < 1.) scale = 1.;
+//    }
 
     for (size_t i = 0; i < keyPoints.size(); i++){
       QPointF point;
       double size, angle;
       std::tie(point, size, angle) = keyPoints[i];
-      point *= scale;
-      mView->addKeyPoint(point, size * scale, angle);
+      //point *= scale;
+      mView->addKeyPoint(point, size/* * scale*/, angle);
     }
 
   }

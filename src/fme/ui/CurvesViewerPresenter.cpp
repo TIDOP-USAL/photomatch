@@ -63,16 +63,11 @@ void CurvesViewerPresenter::open()
 
   std::vector<std::tuple<QString,QString,QString>> sessions = mModel->sessions();
   for (auto &session : sessions){
-//  //std::tuple<QString,QString,QString> session = sessions[0];
     QString sessionName;
     QString sessionDetector;
     QString sessionDescriptor;
     std::tie(sessionName, sessionDetector, sessionDescriptor) = session;
     mView->addSession(sessionName, sessionDetector, sessionDescriptor);
-
-//    std::vector<QPointF> curve = mModel->computeCurve(sessionName, mView->leftImage(), mView->rightImage());
-//    mView->setCurve(sessionName, curve);
-
   }
 
   mView->show();

@@ -54,7 +54,7 @@
 
 #include <QFileInfo>
 #include <QDir>
-
+#include <QImageReader>
 
 namespace fme
 {
@@ -1002,8 +1002,24 @@ void FeatureExtractorPresenter::run()
     }
     features.append(fileInfo.fileName()).append(".xml");
 
+    double scale = 1.;
+    if (mProjectModel->fullImageSize() == false){
+      int maxSize = mProjectModel->maxImageSize();
+      QImageReader imageReader(file_in);
+      QSize size = imageReader.size();
+      int w = size.width();
+      int h = size.height();
+      if (w > h){
+        scale = w / static_cast<double>(maxSize);
+      } else {
+        scale = h / static_cast<double>(maxSize);
+      }
+      if (scale < 1.) scale = 1.;
+    }
+
     std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
                                                                         features,
+                                                                        scale,
                                                                         keypointDetector,
                                                                         descriptorExtractor));
     connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));

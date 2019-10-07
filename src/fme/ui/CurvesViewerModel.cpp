@@ -106,33 +106,33 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
   QString groundTruth = mProjectModel->groundTruth();
   std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
 
-  /// Una escala para cada imagen por si tienen tamaño diferente
-  double scale1 = 1.;
-  double scale2 = 1.;
-  if (mProjectModel->fullImageSize() == false){
-    int maxSize = mProjectModel->maxImageSize();
-    QImageReader imageReader1(imgPath1);
-    QSize size = imageReader1.size();
-    int w = size.width();
-    int h = size.height();
-    if (w > h){
-      scale1 = w / static_cast<double>(maxSize);
-    } else {
-      scale1 = h / static_cast<double>(maxSize);
-    }
-    if (scale1 < 1.) scale1 = 1.;
+//  /// Una escala para cada imagen por si tienen tamaño diferente
+//  double scale1 = 1.;
+//  double scale2 = 1.;
+//  if (mProjectModel->fullImageSize() == false){
+//    int maxSize = mProjectModel->maxImageSize();
+//    QImageReader imageReader1(imgPath1);
+//    QSize size = imageReader1.size();
+//    int w = size.width();
+//    int h = size.height();
+//    if (w > h){
+//      scale1 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale1 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale1 < 1.) scale1 = 1.;
 
-    QImageReader imageReader2(imgPath2);
-    size = imageReader2.size();
-    w = size.width();
-    h = size.height();
-    if (w > h){
-      scale2 = w / static_cast<double>(maxSize);
-    } else {
-      scale2 = h / static_cast<double>(maxSize);
-    }
-    if (scale2 < 1.) scale2 = 1.;
-  }
+//    QImageReader imageReader2(imgPath2);
+//    size = imageReader2.size();
+//    w = size.width();
+//    h = size.height();
+//    if (w > h){
+//      scale2 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale2 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale2 < 1.) scale2 = 1.;
+//  }
 
 
   std::vector<cv::Point2f> pts_query;
@@ -147,13 +147,13 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
       if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
         cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
         cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
-        pts_query.push_back(pt_query *= scale1);
-        pts_train.push_back(pt_train *= scale2);
+        pts_query.push_back(pt_query /**= scale1*/);
+        pts_train.push_back(pt_train /**= scale2*/);
       } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
         cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
         cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
-        pts_query.push_back(pt_query *= scale1);
-        pts_train.push_back(pt_train *= scale2);
+        pts_query.push_back(pt_query /**= scale1*/);
+        pts_train.push_back(pt_train /**= scale2*/);
       }
 
     }
@@ -179,12 +179,12 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
           featuresRead(_session->features(imgLeft), keyPoints1, descriptors);
           featuresRead(_session->features(imgRight), keyPoints2, descriptors);
 
-          for (size_t i = 0; i < keyPoints1.size(); i++){
-            keyPoints1[i].pt *= scale1;
-          }
-          for (size_t i = 0; i < keyPoints2.size(); i++){
-            keyPoints2[i].pt *= scale2;
-          }
+//          for (size_t i = 0; i < keyPoints1.size(); i++){
+//            keyPoints1[i].pt *= scale1;
+//          }
+//          for (size_t i = 0; i < keyPoints2.size(); i++){
+//            keyPoints2[i].pt *= scale2;
+//          }
 
           std::vector<uchar> inliers(match.size(), 1);
 
@@ -240,33 +240,33 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
   QString groundTruth = mProjectModel->groundTruth();
   std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
 
-  /// Una escala para cada imagen por si tienen tamaño diferente
-  double scale1 = 1.;
-  double scale2 = 1.;
-  if (mProjectModel->fullImageSize() == false){
-    int maxSize = mProjectModel->maxImageSize();
-    QImageReader imageReader1(imgPath1);
-    QSize size = imageReader1.size();
-    int w = size.width();
-    int h = size.height();
-    if (w > h){
-      scale1 = w / static_cast<double>(maxSize);
-    } else {
-      scale1 = h / static_cast<double>(maxSize);
-    }
-    if (scale1 < 1.) scale1 = 1.;
+//  /// Una escala para cada imagen por si tienen tamaño diferente
+//  double scale1 = 1.;
+//  double scale2 = 1.;
+//  if (mProjectModel->fullImageSize() == false){
+//    int maxSize = mProjectModel->maxImageSize();
+//    QImageReader imageReader1(imgPath1);
+//    QSize size = imageReader1.size();
+//    int w = size.width();
+//    int h = size.height();
+//    if (w > h){
+//      scale1 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale1 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale1 < 1.) scale1 = 1.;
 
-    QImageReader imageReader2(imgPath2);
-    size = imageReader2.size();
-    w = size.width();
-    h = size.height();
-    if (w > h){
-      scale2 = w / static_cast<double>(maxSize);
-    } else {
-      scale2 = h / static_cast<double>(maxSize);
-    }
-    if (scale2 < 1.) scale2 = 1.;
-  }
+//    QImageReader imageReader2(imgPath2);
+//    size = imageReader2.size();
+//    w = size.width();
+//    h = size.height();
+//    if (w > h){
+//      scale2 = w / static_cast<double>(maxSize);
+//    } else {
+//      scale2 = h / static_cast<double>(maxSize);
+//    }
+//    if (scale2 < 1.) scale2 = 1.;
+//  }
 
 
   std::vector<cv::Point2f> pts_query;
@@ -281,13 +281,13 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
       if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
         cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
         cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
-        pts_query.push_back(pt_query *= scale1);
-        pts_train.push_back(pt_train *= scale2);
+        pts_query.push_back(pt_query /**= scale1*/);
+        pts_train.push_back(pt_train /**= scale2*/);
       } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
         cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
         cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
-        pts_query.push_back(pt_query *= scale1);
-        pts_train.push_back(pt_train *= scale2);
+        pts_query.push_back(pt_query /**= scale1*/);
+        pts_train.push_back(pt_train /**= scale2*/);
       }
 
     }
@@ -313,12 +313,12 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
           featuresRead(_session->features(imgLeft), keyPoints1, descriptors);
           featuresRead(_session->features(imgRight), keyPoints2, descriptors);
 
-          for (size_t i = 0; i < keyPoints1.size(); i++){
-            keyPoints1[i].pt *= scale1;
-          }
-          for (size_t i = 0; i < keyPoints2.size(); i++){
-            keyPoints2[i].pt *= scale2;
-          }
+//          for (size_t i = 0; i < keyPoints1.size(); i++){
+//            keyPoints1[i].pt *= scale1;
+//          }
+//          for (size_t i = 0; i < keyPoints2.size(); i++){
+//            keyPoints2[i].pt *= scale2;
+//          }
 
           std::vector<uchar> inliers(match.size(), 1);
 

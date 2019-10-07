@@ -17,6 +17,7 @@ public:
 
   FeatureExtractor(const QString &img,
                    const QString &features,
+                   double scale,
                    const std::shared_ptr<KeypointDetector> &keypointDetector,
                    const std::shared_ptr<DescriptorExtractor> &descriptorExtractor);
 
@@ -25,6 +26,7 @@ public:
   void setImage(const QString &image);
   QString features() const;
   void setFeatures(const QString &features);
+  void setScale(double scale);
 
   std::shared_ptr<KeypointDetector> keypointDetector() const;
   std::shared_ptr<DescriptorExtractor> descriptorExtractor() const;
@@ -43,6 +45,7 @@ protected:
 
   QString mImage;
   QString mFeatures;
+  double mScale;
   std::shared_ptr<KeypointDetector> mKeypointDetector;
   std::shared_ptr<DescriptorExtractor> mDescriptorExtractor;
 
