@@ -75,17 +75,18 @@ void FlannMatcher::update()
   mFlannBasedMatcher = cv::Ptr<cv::FlannBasedMatcher>(new cv::FlannBasedMatcher(indexParams));
 }
 
-std::vector<std::vector<cv::DMatch>> FlannMatcher::match(cv::InputArray &queryDescriptors,
-                                                         cv::InputArray &trainDescriptors,
-                                                         cv::InputArray mask)
+bool FlannMatcher::match(cv::InputArray &queryDescriptors,
+                         cv::InputArray &trainDescriptors,
+                         std::vector<std::vector<cv::DMatch>> &matches,
+                         cv::InputArray mask)
 {
-  std::vector<std::vector<cv::DMatch>> matches;
   try {
     mFlannBasedMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
   } catch (cv::Exception &e) {
     msgError("Flann Based Matcher error: %s", e.what());
+    return true;
   }
-  return matches;
+  return false;
 }
 
 void FlannMatcher::reset()
@@ -167,17 +168,18 @@ void BruteForceMatcher::update()
   mBFMatcher = cv::BFMatcher::create(norm);
 }
 
-std::vector<std::vector<cv::DMatch>> BruteForceMatcher::match(cv::InputArray &queryDescriptors,
-                                                              cv::InputArray &trainDescriptors,
-                                                              cv::InputArray mask)
+bool BruteForceMatcher::match(cv::InputArray &queryDescriptors,
+                              cv::InputArray &trainDescriptors,
+                              std::vector<std::vector<cv::DMatch>> &matches,
+                              cv::InputArray mask)
 {
-  std::vector<std::vector<cv::DMatch>> matches;
   try {
     mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
   } catch (cv::Exception &e) {
     msgError("Brute-force Matcher error: %s", e.what());
+    return true;
   }
-  return matches;
+  return false;
 }
 
 void BruteForceMatcher::reset()
@@ -228,13 +230,18 @@ void BruteForceMatcher::update()
   mBFMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(norm);
 }
 
-std::vector<std::vector<cv::DMatch>> BruteForceMatcher::match(cv::InputArray &queryDescriptors,
-                                                              cv::InputArray &trainDescriptors,
-                                                              cv::InputArray mask)
+bool BruteForceMatcher::match(cv::InputArray &queryDescriptors,
+                              cv::InputArray &trainDescriptors,
+                              std::vector<std::vector<cv::DMatch>> &matches,
+                              cv::InputArray mask)
 {
-  std::vector<std::vector<cv::DMatch>> matches;
-  mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
-  return matches;
+  try {
+    mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
+  catch (cv::Exception &e) {
+    msgError("Brute-force Matcher error: %s", e.what());
+    return true;
+  }
+  return false;
 }
 
 void BruteForceMatcher::reset()
@@ -415,21 +422,22 @@ void RobustMatching::setDescriptorMatcher(const std::shared_ptr<DescriptorMatche
   mMatcher = matcher;
 }
 
-std::vector<cv::DMatch> RobustMatching::match(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor)
+bool RobustMatching::match(const cv::Mat &queryDescriptor,
+                           const cv::Mat &trainDescriptor,
+                           std::vector<cv::DMatch> *goodMatches,
+                           std::vector<cv::DMatch> *wrongMatches)
 {
-  std::vector<cv::DMatch> goodMatches;
   if (this->crossCheck()){
-    goodMatches = this->robustMatch(queryDescriptor, trainDescriptor);
+    return this->robustMatch(queryDescriptor, trainDescriptor, goodMatches, wrongMatches);
   } else {
-    goodMatches = this->fastRobustMatch(queryDescriptor, trainDescriptor);
+    return this->fastRobustMatch(queryDescriptor, trainDescriptor, goodMatches, wrongMatches);
   }
-
-  return goodMatches;
 }
 
 std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DMatch> &matches,
                                                         const std::vector<cv::KeyPoint> &keypoints1,
-                                                        const std::vector<cv::KeyPoint> &keypoints2)
+                                                        const std::vector<cv::KeyPoint> &keypoints2,
+                                                        std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -448,11 +456,11 @@ std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DM
 
   } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::homography){
 
-    filter_matches = filterByHomographyMatrix(matches, pts1, pts2);
+    filter_matches = filterByHomographyMatrix(matches, pts1, pts2, wrongMatches);
 
   } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::fundamental){
 
-    filter_matches = filterByFundamentalMatrix(matches, pts1, pts2);
+    filter_matches = filterByFundamentalMatrix(matches, pts1, pts2, wrongMatches);
 
   }
 
@@ -461,9 +469,8 @@ std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DM
 
 std::vector<cv::DMatch> RobustMatching::filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
                                                                  const std::vector<cv::Point2f> &points1,
-                                                                 const std::vector<cv::Point2f> &points2/*,
-                                                                 IRobustMatcherRefinement::HomographyComputeMethod method,
-                                                                 double distance, int maxIters, double confidence*/)
+                                                                 const std::vector<cv::Point2f> &points2,
+                                                                 std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -489,9 +496,10 @@ std::vector<cv::DMatch> RobustMatching::filterByHomographyMatrix(const std::vect
   // for all matches
   for (; itIn != inliers.end(); ++itIn, ++itM) {
 
-    if (*itIn) { // it is a valid match
-
+    if (*itIn) {
       filter_matches.push_back(*itM);
+    } else {
+      if (wrongMatches) wrongMatches->push_back(*itM);
     }
   }
 
@@ -501,8 +509,8 @@ std::vector<cv::DMatch> RobustMatching::filterByHomographyMatrix(const std::vect
 
 std::vector<cv::DMatch> RobustMatching::filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
                                                                 const std::vector<cv::Point2f> &points1,
-                                                                const std::vector<cv::Point2f> &points2/*,
-                                                                IRobustMatcherRefinement::EssentialComputeMethod method*/)
+                                                                const std::vector<cv::Point2f> &points2,
+                                                                std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -534,9 +542,8 @@ std::vector<cv::DMatch> RobustMatching::filterByEssentialMatrix(const std::vecto
 
 std::vector<cv::DMatch> RobustMatching::filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
                                                                   const std::vector<cv::Point2f> &points1,
-                                                                  const std::vector<cv::Point2f> &points2/*,
-                                                                  IRobustMatcherRefinement::FundamentalComputeMethod method,
-                                                                  double confidence, double distance*/)
+                                                                  const std::vector<cv::Point2f> &points2,
+                                                                  std::vector<cv::DMatch> *wrongMatches)
 {
   int fm_method = cv::FM_RANSAC;
   IRobustMatcherRefinement::FundamentalComputeMethod fundamentalComputeMethod = this->fundamentalComputeMethod();
@@ -564,44 +571,101 @@ std::vector<cv::DMatch> RobustMatching::filterByFundamentalMatrix(const std::vec
   for (; itIn != inliers.end(); ++itIn, ++itM) {
 
     if (*itIn) { // it is a valid match
-
       filter_matches.push_back(*itM);
+    } else {
+      if (wrongMatches) wrongMatches->push_back(*itM);
     }
   }
 
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
-                                                    const cv::Mat &trainDescriptor)
+bool RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
+                                 const cv::Mat &trainDescriptor,
+                                 std::vector<cv::DMatch> *goodMatches,
+                                 std::vector<cv::DMatch> *wrongMatches)
 {
 
-  std::vector<std::vector<cv::DMatch>> matches12 = mMatcher->match(queryDescriptor, trainDescriptor);
-  std::vector<std::vector<cv::DMatch>> matches21 = mMatcher->match(trainDescriptor, queryDescriptor);
+//  std::vector<std::vector<cv::DMatch>> matches12 = mMatcher->match(queryDescriptor, trainDescriptor);
+//  std::vector<std::vector<cv::DMatch>> matches21 = mMatcher->match(trainDescriptor, queryDescriptor);
 
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches12 = this->ratioTest(matches12, this->ratio());
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches21 = this->ratioTest(matches21, this->ratio());
+//  std::vector<std::vector<cv::DMatch>> ratio_test_matches12 = this->ratioTest(matches12, this->ratio());
+//  std::vector<std::vector<cv::DMatch>> ratio_test_matches21 = this->ratioTest(matches21, this->ratio());
+//  matches12.clear();
+//  matches21.clear();
+
+//  std::vector<cv::DMatch> goodMatches = this->crossCheckTest(ratio_test_matches12, ratio_test_matches21);
+//  return goodMatches;
+
+  std::vector<std::vector<cv::DMatch>> matches12;
+  std::vector<std::vector<cv::DMatch>> matches21;
+
+  bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches12);
+  if (err) return true;
+
+  err = mMatcher->match(trainDescriptor, queryDescriptor, matches21);
+  if (err) return true;
+
+  std::vector<std::vector<cv::DMatch>> good_matches12;
+  std::vector<std::vector<cv::DMatch>> good_matches21;
+  std::vector<std::vector<cv::DMatch>> wrong_matches12;
+  std::vector<std::vector<cv::DMatch>> wrong_matches21;
+  this->ratioTest(matches12, this->ratio(), &good_matches12, &wrong_matches12);
+  this->ratioTest(matches21, this->ratio(), &good_matches21, &wrong_matches21);
   matches12.clear();
   matches21.clear();
 
-  std::vector<cv::DMatch> goodMatches = this->crossCheckTest(ratio_test_matches12, ratio_test_matches21);
-  return goodMatches;
-}
-
-std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
-                                                        const cv::Mat &trainDescriptor)
-{
-  std::vector<cv::DMatch> goodMatches;
-
-  std::vector<std::vector<cv::DMatch>> matches = mMatcher->match(queryDescriptor, trainDescriptor);
-
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches = this->ratioTest(matches, this->ratio());
-
-  for (auto &match : ratio_test_matches){
-    if (!match.empty()) goodMatches.push_back(match[0]);
+  if (wrongMatches){
+    for (size_t i = 0; i < wrong_matches12.size(); i++){
+      wrongMatches->push_back(wrong_matches12[i][0]);
+    }
   }
 
-  return goodMatches;
+
+  this->crossCheckTest(good_matches12, good_matches21, goodMatches, wrongMatches);
+
+  return false;
+}
+
+bool RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
+                                     const cv::Mat &trainDescriptor,
+                                     std::vector<cv::DMatch> *goodMatches,
+                                     std::vector<cv::DMatch> *wrongMatches)
+{
+//  std::vector<cv::DMatch> goodMatches;
+
+//  std::vector<std::vector<cv::DMatch>> matches = mMatcher->match(queryDescriptor, trainDescriptor);
+
+//  std::vector<std::vector<cv::DMatch>> ratio_test_matches = this->ratioTest(matches, this->ratio());
+
+//  for (auto &match : ratio_test_matches){
+//    if (!match.empty()) goodMatches.push_back(match[0]);
+//  }
+
+//  return goodMatches;
+
+  std::vector<std::vector<cv::DMatch>> matches;
+  bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches);
+  if (err) return true;
+
+  std::vector<std::vector<cv::DMatch>> ratio_test_matches;
+  std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
+  this->ratioTest(matches, this->ratio(), &ratio_test_matches, &ratio_test_wrong_matches);
+
+  if (goodMatches) {
+    for (auto &match : ratio_test_matches){
+      goodMatches->push_back(match[0]);
+    }
+  }
+
+  if (wrongMatches) {
+    for (auto &wrong_match : ratio_test_wrong_matches){
+      wrongMatches->push_back(wrong_match[0]);
+    }
+  }
+
+  return true;
+
 }
 
 
@@ -609,7 +673,7 @@ std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDesc
 /*----------------------------------------------------------------*/
 
 
-void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches)
+void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches, const std::vector<cv::DMatch> &wrongMatches)
 {
 
   QByteArray ba = fname.toLocal8Bit();
@@ -653,6 +717,7 @@ void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches)
     cv::FileStorage fs(matches_file, flags);
     if (fs.isOpened()) {
       if (!matches.empty()) write(fs, "matches", matches);
+      if (!wrongMatches.empty()) write(fs, "wrong_matches", wrongMatches);
       fs.release();
     } else {
       //msgError("No pudo escribir archivo %s", matches_file);
@@ -660,7 +725,7 @@ void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches)
   }
 }
 
-void matchesRead(const QString &fname, std::vector<cv::DMatch> &matches)
+void matchesRead(const QString &fname, std::vector<cv::DMatch> *matches, std::vector<cv::DMatch> *wrongMatches)
 {
   QByteArray ba = fname.toLocal8Bit();
   const char *feat_file = ba.data();
@@ -676,13 +741,18 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> &matches)
         std::fread(&size, sizeof(int32_t), 1, fp);
         std::fread(&extraHead, sizeof(char), 100, fp);
         //Cuerpo
-        matches.resize(static_cast<size_t>(size));
-        for (auto &match : matches) {
-          std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
-          std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
-          std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
-          std::fread(&match.distance, sizeof(float), 1, fp);
+        if (matches){
+          matches->resize(static_cast<size_t>(size));
+          for (auto &match : *matches) {
+            std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+            std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+            std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+            std::fread(&match.distance, sizeof(float), 1, fp);
+          }
         }
+
+        /// TODO: wrong matches
+        /// ....
         std::fclose(fp);
       } /*else
         msgError("No pudo leer archivo %s", fname);*/
@@ -690,8 +760,14 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> &matches)
 
       cv::FileStorage fs(feat_file, cv::FileStorage::READ);
       if (fs.isOpened()) {
-        matches.resize(0);
-        fs["matches"] >> matches;
+        if (matches) {
+          matches->resize(0);
+          fs["matches"] >> *matches;
+        }
+        if (wrongMatches) {
+          wrongMatches->resize(0);
+          fs["wrong_matches"] >> *wrongMatches;
+        }
         fs.release();
       } else {
         //msgError("No pudo leer archivo %s", fname.c_str());

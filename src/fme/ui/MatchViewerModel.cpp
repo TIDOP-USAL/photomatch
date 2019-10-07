@@ -100,7 +100,7 @@ std::vector<std::tuple<QPointF, QPointF, float>> MatchViewerModel::loadMatches(c
       for (auto &m : matches){
         if (m.first.compare(imgName2) == 0){
           std::vector<cv::DMatch> match;
-          matchesRead(m.second, match);
+          matchesRead(m.second, &match);
           std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
           cv::Mat descriptors;
           featuresRead(session->features(imgName1), keyPoints1, descriptors);

@@ -66,7 +66,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionCreateGroundTruth(new QAction(this)),
     mActionImportGroundTruth(new QAction(this)),
     mActionHomography(new QAction(this)),
-    mActionRepeteability(new QAction(this)),
+    //mActionRepeteability(new QAction(this)),
     mActionPRCurves(new QAction(this)),
     mActionROCCurves(new QAction(this)),
     mActionNotRecentProjects(new QAction(this)),
@@ -118,7 +118,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionCreateGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(createGroundTruth()));
   connect(mActionImportGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(importGroundTruth()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
-  connect(mActionRepeteability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeteability()));
+  //connect(mActionRepeteability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeteability()));
   connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
   connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
 
@@ -1233,7 +1233,7 @@ void MainWindowView::update()
   mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
-  mActionRepeteability->setEnabled(mFlags.isActive(Flag::feature_matching));
+  //mActionRepeteability->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionROCCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
 
@@ -1583,7 +1583,7 @@ void MainWindowView::init()
 
   mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
 
-  mActionRepeteability->setText(QApplication::translate("MainWindowView", "Repeteability", nullptr));
+  //mActionRepeteability->setText(QApplication::translate("MainWindowView", "Repeteability", nullptr));
 
   mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
 
@@ -1716,7 +1716,7 @@ void MainWindowView::init()
   ui->menuQualityControl->addAction(mActionImportGroundTruth);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionHomography);
-  ui->menuQualityControl->addAction(mActionRepeteability);
+  //ui->menuQualityControl->addAction(mActionRepeteability);
   ui->menuQualityControl->addAction(mActionPRCurves);
   ui->menuQualityControl->addAction(mActionROCCurves);
 

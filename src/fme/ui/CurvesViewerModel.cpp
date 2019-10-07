@@ -173,7 +173,7 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
       for (auto &m : matches){
         if (m.first.compare(imgRight) == 0){
           std::vector<cv::DMatch> match;
-          matchesRead(m.second, match);
+          matchesRead(m.second, &match);
           std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
           cv::Mat descriptors;
           featuresRead(_session->features(imgLeft), keyPoints1, descriptors);
@@ -307,7 +307,7 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
       for (auto &m : matches){
         if (m.first.compare(imgRight) == 0){
           std::vector<cv::DMatch> match;
-          matchesRead(m.second, match);
+          matchesRead(m.second, &match);
           std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
           cv::Mat descriptors;
           featuresRead(_session->features(imgLeft), keyPoints1, descriptors);

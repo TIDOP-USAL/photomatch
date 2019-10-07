@@ -226,7 +226,7 @@ protected:
   QAction *mActionCreateGroundTruth;
   QAction *mActionImportGroundTruth;
   QAction *mActionHomography;
-  QAction *mActionRepeteability;
+  //QAction *mActionRepeteability;
   QAction *mActionPRCurves;
   QAction *mActionROCCurves;
   QAction *mActionNotRecentProjects;
