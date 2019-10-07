@@ -59,6 +59,16 @@ QString ProjectModel::version() const
   return mProject->version();
 }
 
+QString ProjectModel::groundTruth() const
+{
+  return mProject->groundTruth();
+}
+
+void ProjectModel::setGroundTruth(const QString &groundTruth)
+{
+  mProject->setGroundTruth(groundTruth);
+}
+
 void ProjectModel::addImage(const std::shared_ptr<Image> &img)
 {
   mProject->addImage(img);

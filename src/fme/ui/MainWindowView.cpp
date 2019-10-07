@@ -86,18 +86,18 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   /* Menú Archivo */
 
-  connect(mActionNewProject,         SIGNAL(triggered(bool)),   this,   SIGNAL(openNew()));
-  connect(mActionOpenProject,        SIGNAL(triggered(bool)),   this,   SIGNAL(openProject()));
-  connect(mActionClearHistory,       SIGNAL(triggered(bool)),   this,   SIGNAL(clearHistory()));
-  connect(mActionSaveProject,        SIGNAL(triggered(bool)),   this,   SIGNAL(saveProject()));
-  connect(mActionSaveProjectAs,      SIGNAL(triggered(bool)),   this,   SIGNAL(saveProjectAs()));
+  connect(mActionNewProject,           SIGNAL(triggered(bool)), this,   SIGNAL(openNew()));
+  connect(mActionOpenProject,          SIGNAL(triggered(bool)), this,   SIGNAL(openProject()));
+  connect(mActionClearHistory,         SIGNAL(triggered(bool)), this,   SIGNAL(clearHistory()));
+  connect(mActionSaveProject,          SIGNAL(triggered(bool)), this,   SIGNAL(saveProject()));
+  connect(mActionSaveProjectAs,        SIGNAL(triggered(bool)), this,   SIGNAL(saveProjectAs()));
   connect(mActionExportTiePointsCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvXml()));
   connect(mActionExportTiePointsCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvYml()));
   connect(mActionExportMatchesToCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvYml()));
   connect(mActionExportMatchesToCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvXml()));
   connect(mActionExportMatchesToTxt,   SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesTxt()));
-  connect(mActionCloseProject,       SIGNAL(triggered(bool)),   this,   SIGNAL(closeProject()));
-  connect(mActionExit,               SIGNAL(triggered(bool)),   this,   SIGNAL(exit()));
+  connect(mActionCloseProject,         SIGNAL(triggered(bool)), this,   SIGNAL(closeProject()));
+  connect(mActionExit,                 SIGNAL(triggered(bool)), this,   SIGNAL(exit()));
 
   /* Menú View */
 

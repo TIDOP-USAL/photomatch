@@ -17,8 +17,9 @@ CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
 {
   init();
 
-  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
-  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
+  connect(mView, SIGNAL(leftImageChange(QString)),           this, SLOT(loadLeftImage(QString)));
+  connect(mView, SIGNAL(rightImageChange(QString)),          this, SLOT(loadRightImage(QString)));
+  connect(mView, SIGNAL(drawCurve(QString,QString,QString)), this, SLOT(drawCurve(QString,QString,QString)));
 
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
@@ -39,6 +40,12 @@ void CurvesViewerPresenter::loadRightImage(const QString &image)
   mView->setRightImage(image);
 }
 
+void CurvesViewerPresenter::drawCurve(const QString &session, const QString &detector, const QString &descriptor)
+{
+  std::vector<QPointF> curve = mModel->computeCurve(session, detector, descriptor);
+  mView->setCurve(session, curve);
+}
+
 void CurvesViewerPresenter::help()
 {
 }
@@ -46,7 +53,7 @@ void CurvesViewerPresenter::help()
 void CurvesViewerPresenter::open()
 {
   mView->clear();
-  mView->show();
+
 
   std::vector<QString> imagesLeft = mModel->images();
   if (imagesLeft.empty() == false) {
@@ -56,12 +63,19 @@ void CurvesViewerPresenter::open()
 
   std::vector<std::tuple<QString,QString,QString>> sessions = mModel->sessions();
   for (auto &session : sessions){
+//  //std::tuple<QString,QString,QString> session = sessions[0];
     QString sessionName;
     QString sessionDetector;
     QString sessionDescriptor;
     std::tie(sessionName, sessionDetector, sessionDescriptor) = session;
     mView->addSession(sessionName, sessionDetector, sessionDescriptor);
+
+//    std::vector<QPointF> curve = mModel->computeCurve(sessionName, mView->leftImage(), mView->rightImage());
+//    mView->setCurve(sessionName, curve);
+
   }
+
+  mView->show();
 }
 
 void CurvesViewerPresenter::init()

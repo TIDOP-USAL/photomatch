@@ -82,6 +82,10 @@ public:
    */
   virtual QString version() const = 0;
 
+  virtual void setGroundTruth(const QString &groundTruth) = 0;
+
+  virtual QString groundTruth() const = 0;
+
   /*!
    * \brief Añade una imagen al proyecto
    * \param[in] img Imagen
@@ -319,6 +323,8 @@ public:
   QString projectFolder() const override;
   void setProjectFolder(const QString &dir) override;
   QString version() const override;
+  QString groundTruth() const override;
+  void setGroundTruth(const QString &groundTruth) override;
   void addImage(const std::shared_ptr<Image> &img) override;
   void deleteImage(const QString &img) override;
   void deleteImage(size_t imgId) override;
@@ -360,6 +366,7 @@ protected:
   QString mPath;
   QString mProjectFolder;
   QString mVersion;
+  QString mGroundTruth;
   std::vector<std::shared_ptr<Image>> mImages;
   std::vector<std::shared_ptr<Session>> mSessions;
   int mCurrentSession;

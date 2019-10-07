@@ -66,6 +66,7 @@ public:
                        "            <AltitudeExif>10.1</AltitudeExif>"
                        "        </Image>"
                        "    </Images>"
+                       "    <GroundTruth>C:/Users/User01/Documents/fme/Projects/prj001/GroundTruth.txt</GroundTruth>"
                        "    <Sessions>"
                        "        <Session active=\"true\">"
                        "            <Name>session001</Name>"
@@ -277,6 +278,8 @@ public:
               } else
                 stream.skipCurrentElement();
             }
+          } else if (stream.name() == "GroundTruth") {
+            prj.setGroundTruth(stream.readElementText());
           } else if (stream.name() == "Sessions") {
             while (stream.readNextStartElement()) {
 
@@ -660,6 +663,7 @@ void TestProject::testConstructor()
   QCOMPARE(QString("1.0"), mProject->version());
   QCOMPARE(0, mProject->imagesCount());
   QCOMPARE(0, mProject->sessionCount());
+  QCOMPARE(QString(""), mProject->groundTruth());
 
   QCOMPARE(QString("prj001"), mProjectXml->name());
   QCOMPARE(QString("Project example"), mProjectXml->description());
@@ -667,6 +671,7 @@ void TestProject::testConstructor()
   QCOMPARE(QString("1.0"), mProjectXml->version());
   QCOMPARE(2, mProjectXml->imagesCount());
   QCOMPARE(11, mProjectXml->sessionCount());
+  QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001/GroundTruth.txt"), mProjectXml->groundTruth());
 }
 
 void TestProject::test_name_data()

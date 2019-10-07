@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include <QPointF>
+
 #include "fme/ui/mvp.h"
 
 namespace fme
@@ -24,6 +26,8 @@ public:
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
   virtual std::vector<std::tuple<QString, QString, QString>> sessions() const = 0;
+  virtual std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const = 0;
+
 };
 
 
@@ -35,8 +39,8 @@ class CurvesViewerModel
 
 public:
 
-  CurvesViewerModel(IProjectModel *mProjectModel);
-  ~CurvesViewerModel() override;
+  CurvesViewerModel(IProjectModel *projectModel);
+  virtual ~CurvesViewerModel() override;
 
 // ICurvesViewerModel interface
 
@@ -56,6 +60,48 @@ protected:
 
   IProjectModel *mProjectModel;
 };
+
+
+
+
+class ROCCurvesViewerModel
+  : public CurvesViewerModel
+{
+  Q_OBJECT
+
+public:
+
+  ROCCurvesViewerModel(IProjectModel *projectModel);
+  ~ROCCurvesViewerModel() override;
+
+// ICurvesViewerModel interface
+
+public:
+
+  std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const override;
+
+};
+
+
+
+class PRCurvesViewerModel
+  : public CurvesViewerModel
+{
+  Q_OBJECT
+
+public:
+
+  PRCurvesViewerModel(IProjectModel *projectModel);
+  ~PRCurvesViewerModel() override;
+
+// ICurvesViewerModel interface
+
+public:
+
+  std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const override;
+
+};
+
 
 
 } // namespace fme

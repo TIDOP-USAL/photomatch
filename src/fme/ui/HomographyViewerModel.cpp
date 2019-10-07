@@ -122,8 +122,8 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
             size_t train_id = (idx == 0) ? static_cast<size_t>(match[i].trainIdx) : static_cast<size_t>(match[i].queryIdx);
             pts_query.push_back(keyPoints1[query_id].pt * scale1);
             pts_train.push_back(keyPoints2[train_id].pt * scale2);
-            cv::KeyPoint kp1 = keyPoints1[query_id];
-            cv::KeyPoint kp2 = keyPoints2[train_id];
+//            cv::KeyPoint kp1 = keyPoints1[query_id];
+//            cv::KeyPoint kp2 = keyPoints2[train_id];
 //            kp1.pt *= scale1;
 //            kp2.pt *= scale2;
 //            kps1.push_back(kp1);

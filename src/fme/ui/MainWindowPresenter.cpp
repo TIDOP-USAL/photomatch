@@ -527,7 +527,18 @@ void MainWindowPresenter::createGroundTruth()
 
 void MainWindowPresenter::importGroundTruth()
 {
+  QString file = QFileDialog::getOpenFileName(Q_NULLPTR,
+                                              tr("Import Ground Truth"),
+                                              mProjectModel->path(),
+                                              tr("Ground Truth (*.txt)"));
+  if (!file.isEmpty()) {
 
+    mProjectModel->setGroundTruth(file);
+
+    mView->setFlag(MainWindowView::Flag::ground_truth, true);
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+
+  }
 }
 
 void MainWindowPresenter::openHomographyViewer()
@@ -622,6 +633,9 @@ void MainWindowPresenter::loadProject()
   const char *cfile = ba.data();
   msgInfo("Load project: %s", cfile);
 
+  if (mProjectModel->groundTruth().isEmpty() == false)
+    mView->setFlag(MainWindowView::Flag::ground_truth, true);
+
   QStringList images;
   TL_TODO("Los iteradores sobre las imagenes deberian ser constantes unicamente para evitar que se modifiquen las imagenes. El problema es que no se notificaria al proyecto que ha cambiado")
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -631,6 +645,11 @@ void MainWindowPresenter::loadProject()
   if (images.size() > 0){
     mView->addImages(images);
     mView->setFlag(MainWindowView::Flag::images_added, true);
+  }
+
+  if (mProjectModel->currentSession() == nullptr){
+    auto it = mProjectModel->sessionBegin();
+    mProjectModel->setCurrentSession((*it)->name());
   }
 
   for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
@@ -1359,7 +1378,7 @@ void MainWindowPresenter::initHomographyViewer()
 void MainWindowPresenter::initPRCurvesViewer()
 {
   if (mCurvesViewerModel == nullptr) {
-    mCurvesViewerModel = new CurvesViewerModel(mProjectModel);
+    mCurvesViewerModel = new PRCurvesViewerModel(mProjectModel);
   }
 
   if (mCurvesPRViewerPresenter == nullptr) {
@@ -1374,7 +1393,7 @@ void MainWindowPresenter::initPRCurvesViewer()
 void MainWindowPresenter::initROCCurvesViewer()
 {
   if (mCurvesViewerModel == nullptr) {
-    mCurvesViewerModel = new CurvesViewerModel(mProjectModel);
+    mCurvesViewerModel = new ROCCurvesViewerModel(mProjectModel);
   }
 
   if (mCurvesROCViewerPresenter == nullptr) {

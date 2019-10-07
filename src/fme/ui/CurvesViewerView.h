@@ -6,9 +6,12 @@
 class QDialogButtonBox;
 class QComboBox;
 class QTreeWidget;
+class QTreeWidgetItem;
+
 namespace QtCharts
 {
 class QChart;
+class QValueAxis;
 }
 
 namespace fme
@@ -35,11 +38,15 @@ public:
    */
   virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) = 0;
 
+  virtual QString leftImage() const = 0;
+
   /*!
    * \brief Set the left image
    * \param[in] leftImage Image izquierda
    */
   virtual void setLeftImage(const QString &leftImage) = 0;
+
+  virtual QString rightImage() const = 0;
 
   /*!
    * \brief Set the right image
@@ -59,6 +66,14 @@ public:
    */
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
+  virtual void setCurve(const QString &session, const std::vector<QPointF> &curve) = 0;
+
+signals:
+
+  void leftImageChange(QString);
+  void rightImageChange(QString);
+  void drawCurve(QString, QString, QString);
+
 };
 
 class CurvesViewerView
@@ -74,40 +89,20 @@ public:
 
   virtual ~CurvesViewerView() override;
 
-  /*!
-   * \brief Add a session
-   * \param[in] session Session
-   */
-  virtual void addSession(const QString &session, const QString &detector, const QString &descriptor);
+private slots:
 
-  /*!
-   * \brief Set the left image
-   * \param[in] leftImage Image izquierda
-   */
-  virtual void setLeftImage(const QString &leftImage);
+  void onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item,int column);
 
-  /*!
-   * \brief Set the right image
-   * \param[in] rightImage Right image
-   */
-  virtual void setRightImage(const QString &rightImage);
+// ICurvesViewerView interface
 
-  /*!
-   * \brief Set the list of images for image selector left
-   * \param[in] leftImageList List of left images
-   */
-  virtual void setLeftImageList(const std::vector<QString> &leftImageList);
-
-  /*!
-   * \brief Set the list of images for image selector right
-   * \param[in] rightImageList List of right images
-   */
-  virtual void setRightImageList(const std::vector<QString> &rightImageList);
-
-signals:
-
-  void leftImageChange(QString);
-  void rightImageChange(QString);
+  virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) override;
+  virtual QString leftImage() const override;
+  virtual void setLeftImage(const QString &leftImage) override;
+  virtual QString rightImage() const override;
+  virtual void setRightImage(const QString &rightImage) override;
+  virtual void setLeftImageList(const std::vector<QString> &leftImageList) override;
+  virtual void setRightImageList(const std::vector<QString> &rightImageList) override;
+  virtual void setCurve(const QString &session, const std::vector<QPointF> &curve) override;
 
 // IDialogView interface
 
@@ -130,6 +125,8 @@ protected:
   QComboBox  *mComboBoxRightImage;
   QTreeWidget *mTreeWidgetSessions;
   QtCharts::QChart *mChart;
+  QtCharts::QValueAxis *mAxisX;
+  QtCharts::QValueAxis *mAxisY;
 };
 
 

@@ -57,6 +57,7 @@ Project::Project()
     mDescription(""),
     mProjectFolder(""),
     mVersion(FME_PROJECT_FILE_VERSION),
+    mGroundTruth(""),
     mCurrentSession(-1)
 {
 }
@@ -95,6 +96,16 @@ void Project::setProjectFolder(const QString &dir)
 QString Project::version() const
 {
   return mVersion;
+}
+
+QString Project::groundTruth() const
+{
+  return mGroundTruth;
+}
+
+void Project::setGroundTruth(const QString &groundTruth)
+{
+  mGroundTruth = groundTruth;
 }
 
 void Project::addImage(const std::shared_ptr<Image> &img)
@@ -333,6 +344,7 @@ void Project::clear()
   mDescription = "";
   mProjectFolder = "";
   mVersion = FME_PROJECT_FILE_VERSION;
+  mGroundTruth = "";
   mImages.resize(0);
   mSessions.resize(0);
   mCurrentSession = -1;
@@ -393,6 +405,8 @@ bool ProjectRW::read(const QString &file, IProject &prj)
               } else
                 stream.skipCurrentElement();
             }
+          } else if (stream.name() == "GroundTruth") {
+            prj.setGroundTruth(stream.readElementText());
           } else if (stream.name() == "Sessions") {
 
             while (stream.readNextStartElement()) {
@@ -857,6 +871,8 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
       }
     }
     stream.writeEndElement();  // Images
+
+    stream.writeTextElement("GroundTruth", prj.groundTruth());
 
     /// Sessions
     stream.writeStartElement("Sessions");

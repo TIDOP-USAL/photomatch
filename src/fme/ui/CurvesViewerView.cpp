@@ -21,6 +21,7 @@ CurvesViewerView::CurvesViewerView(QWidget *parent, Qt::WindowFlags f)
 
   //connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   //connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
+  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *,int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *,int)));
 
   connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
@@ -35,14 +36,30 @@ CurvesViewerView::~CurvesViewerView()
   }
 }
 
+void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
+{
+  bool checked = item->checkState(column);
+  if (checked) {
+    QString session = item->text(0);
+    QString detector = mComboBoxLeftImage->currentText();
+    QString descriptor = mComboBoxRightImage->currentText();
+    emit drawCurve(session, detector, descriptor);
+  }
+}
+
 void CurvesViewerView::addSession(const QString &session, const QString &detector, const QString &descriptor)
 {
   QTreeWidgetItem *item = new QTreeWidgetItem(mTreeWidgetSessions);
   item->setText(0, session);
   item->setText(1, detector);
   item->setText(2, descriptor);
-  item->setCheckState(0, Qt::Checked);
+  item->setCheckState(0, Qt::Unchecked);
   mTreeWidgetSessions->addTopLevelItem(item);
+}
+
+QString CurvesViewerView::leftImage() const
+{
+  return mComboBoxLeftImage->currentText();
 }
 
 void CurvesViewerView::setLeftImage(const QString &leftImage)
@@ -50,6 +67,11 @@ void CurvesViewerView::setLeftImage(const QString &leftImage)
   QSignalBlocker blocker(mComboBoxLeftImage);
   QFileInfo file_info(leftImage);
   mComboBoxLeftImage->setCurrentText(file_info.baseName());
+}
+
+QString CurvesViewerView::rightImage() const
+{
+  return mComboBoxRightImage->currentText();
 }
 
 void CurvesViewerView::setRightImage(const QString &rightImage)
@@ -77,6 +99,20 @@ void CurvesViewerView::setRightImageList(const std::vector<QString> &rightImageL
     QFileInfo file_info(image);
     mComboBoxRightImage->addItem(file_info.baseName(), image);
   }
+}
+
+void CurvesViewerView::setCurve(const QString &session, const std::vector<QPointF> &curve)
+{
+  QLineSeries *series = new QLineSeries(this);
+
+  for (size_t i = 0; i < curve.size(); i++){
+    series->append(curve[i]);
+  }
+
+  series->setName(session);
+  mChart->addSeries(series);
+  series->attachAxis(mAxisX);
+  series->attachAxis(mAxisY);
 }
 
 void CurvesViewerView::init()
@@ -112,19 +148,28 @@ void CurvesViewerView::init()
   hBoxLayout->addWidget(mTreeWidgetSessions);
 
   ///TODO: calcular la curva y cargar en mChart
-  QLineSeries *series = new QLineSeries(this);
-  series->append(0, 6);
-  series->append(2, 4);
-  series->append(3, 8);
-  series->append(7, 4);
-  series->append(10, 5);
-//      *series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
-  series->setName("Session 1");
+//  QLineSeries *series = new QLineSeries(this);
+//  series->append(0, 6);
+//  series->append(2, 4);
+//  series->append(3, 8);
+//  series->append(7, 4);
+//  series->append(10, 5);
+//////      *series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
+//  series->setName("Session 1");
 
   mChart = new QtCharts::QChart();
   //mChart->legend()->hide();
-  mChart->addSeries(series);
-  mChart->createDefaultAxes();
+  //mChart->addSeries(series);
+  //mChart->createDefaultAxes();
+
+  mAxisX = new QValueAxis(this);
+  //axisX->setTickCount(10);
+  mAxisX->setRange(0,1);
+  mChart->addAxis(mAxisX, Qt::AlignBottom);
+  mAxisY = new QValueAxis(this);
+  mAxisY->setRange(0,1);
+  mChart->addAxis(mAxisY, Qt::AlignLeft);
+
   QChartView *chartView = new QChartView(mChart);
   chartView->setRenderHint(QPainter::Antialiasing);
   hBoxLayout->addWidget(chartView);
@@ -168,6 +213,8 @@ void ROCCurvesViewer::init()
 {
   this->setWindowTitle(tr("ROC Curves Viewer"));
   this->mChart->setTitle("ROC Curves");
+  this->mAxisX->setTitleText(tr("Recall"));
+  this->mAxisY->setTitleText(tr("False Positive Rate"));
 }
 
 //void ROCCurvesViewer::clear()
@@ -195,7 +242,10 @@ void PRCurvesViewer::init()
 {
   this->setWindowTitle(tr("PR Curves Viewer"));
   this->mChart->setTitle("PR Curves");
+  this->mAxisX->setTitleText(tr("Precision"));
+  this->mAxisY->setTitleText(tr("Recall"));
 }
+
 
 //void PRCurvesViewer::clear()
 //{

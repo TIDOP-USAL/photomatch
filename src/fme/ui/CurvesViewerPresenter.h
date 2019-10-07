@@ -29,6 +29,7 @@ protected slots:
 
   virtual void loadLeftImage(const QString &image) = 0;
   virtual void loadRightImage(const QString &image) = 0;
+  virtual void drawCurve(const QString &session, const QString &detector, const QString &descriptor) = 0;
 };
 
 class CurvesViewerPresenter
@@ -49,7 +50,7 @@ protected slots:
 
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
-
+  void drawCurve(const QString &session, const QString &detector, const QString &descriptor) override;
 // IPresenter interface
 
 public slots:
