@@ -422,15 +422,14 @@ void RobustMatching::setDescriptorMatcher(const std::shared_ptr<DescriptorMatche
   mMatcher = matcher;
 }
 
-bool RobustMatching::match(const cv::Mat &queryDescriptor,
-                           const cv::Mat &trainDescriptor,
-                           std::vector<cv::DMatch> *goodMatches,
-                           std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatching::match(const cv::Mat &queryDescriptor,
+                                              const cv::Mat &trainDescriptor,
+                                              std::vector<cv::DMatch> *wrongMatches)
 {
   if (this->crossCheck()){
-    return this->robustMatch(queryDescriptor, trainDescriptor, goodMatches, wrongMatches);
+    return this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
   } else {
-    return this->fastRobustMatch(queryDescriptor, trainDescriptor, goodMatches, wrongMatches);
+    return this->fastRobustMatch(queryDescriptor, trainDescriptor, wrongMatches);
   }
 }
 
@@ -580,38 +579,27 @@ std::vector<cv::DMatch> RobustMatching::filterByFundamentalMatrix(const std::vec
   return filter_matches;
 }
 
-bool RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
-                                 const cv::Mat &trainDescriptor,
-                                 std::vector<cv::DMatch> *goodMatches,
-                                 std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
+                                                    const cv::Mat &trainDescriptor,
+                                                    std::vector<cv::DMatch> *wrongMatches)
 {
 
-//  std::vector<std::vector<cv::DMatch>> matches12 = mMatcher->match(queryDescriptor, trainDescriptor);
-//  std::vector<std::vector<cv::DMatch>> matches21 = mMatcher->match(trainDescriptor, queryDescriptor);
-
-//  std::vector<std::vector<cv::DMatch>> ratio_test_matches12 = this->ratioTest(matches12, this->ratio());
-//  std::vector<std::vector<cv::DMatch>> ratio_test_matches21 = this->ratioTest(matches21, this->ratio());
-//  matches12.clear();
-//  matches21.clear();
-
-//  std::vector<cv::DMatch> goodMatches = this->crossCheckTest(ratio_test_matches12, ratio_test_matches21);
-//  return goodMatches;
+  std::vector<cv::DMatch> goodMatches;
 
   std::vector<std::vector<cv::DMatch>> matches12;
   std::vector<std::vector<cv::DMatch>> matches21;
 
   bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches12);
-  if (err) return true;
+  if (err) return goodMatches;
 
   err = mMatcher->match(trainDescriptor, queryDescriptor, matches21);
-  if (err) return true;
+  if (err) return goodMatches;
 
-  std::vector<std::vector<cv::DMatch>> good_matches12;
-  std::vector<std::vector<cv::DMatch>> good_matches21;
   std::vector<std::vector<cv::DMatch>> wrong_matches12;
   std::vector<std::vector<cv::DMatch>> wrong_matches21;
-  this->ratioTest(matches12, this->ratio(), &good_matches12, &wrong_matches12);
-  this->ratioTest(matches21, this->ratio(), &good_matches21, &wrong_matches21);
+  std::vector<std::vector<cv::DMatch>> good_matches12 = this->ratioTest(matches12, this->ratio(), &wrong_matches12);
+  std::vector<std::vector<cv::DMatch>> good_matches21 = this->ratioTest(matches21, this->ratio(), &wrong_matches21);
+
   matches12.clear();
   matches21.clear();
 
@@ -622,40 +610,26 @@ bool RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
   }
 
 
-  this->crossCheckTest(good_matches12, good_matches21, goodMatches, wrongMatches);
+  goodMatches = this->crossCheckTest(good_matches12, good_matches21, wrongMatches);
 
-  return false;
+  return goodMatches;
 }
 
-bool RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
-                                     const cv::Mat &trainDescriptor,
-                                     std::vector<cv::DMatch> *goodMatches,
-                                     std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
+                                                        const cv::Mat &trainDescriptor,
+                                                        std::vector<cv::DMatch> *wrongMatches)
 {
-//  std::vector<cv::DMatch> goodMatches;
-
-//  std::vector<std::vector<cv::DMatch>> matches = mMatcher->match(queryDescriptor, trainDescriptor);
-
-//  std::vector<std::vector<cv::DMatch>> ratio_test_matches = this->ratioTest(matches, this->ratio());
-
-//  for (auto &match : ratio_test_matches){
-//    if (!match.empty()) goodMatches.push_back(match[0]);
-//  }
-
-//  return goodMatches;
+  std::vector<cv::DMatch> goodMatches;
 
   std::vector<std::vector<cv::DMatch>> matches;
   bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches);
-  if (err) return true;
+  if (err) return goodMatches;
 
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches;
   std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
-  this->ratioTest(matches, this->ratio(), &ratio_test_matches, &ratio_test_wrong_matches);
+  std::vector<std::vector<cv::DMatch>> ratio_test_matches = this->ratioTest(matches, this->ratio(), &ratio_test_wrong_matches);
 
-  if (goodMatches) {
-    for (auto &match : ratio_test_matches){
-      goodMatches->push_back(match[0]);
-    }
+  for (auto &match : ratio_test_matches){
+    goodMatches.push_back(match[0]);
   }
 
   if (wrongMatches) {
@@ -664,7 +638,7 @@ bool RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
     }
   }
 
-  return true;
+  return goodMatches;
 
 }
 

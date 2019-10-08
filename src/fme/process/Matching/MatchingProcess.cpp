@@ -64,13 +64,10 @@ void MatchingProcess::run()
   cv::Mat descriptors2;
   featuresRead(mTrainDescriptors, keyPoints2, descriptors2);
 
-  std::vector<cv::DMatch> goodMatches;
   std::vector<cv::DMatch> wrongMatches;
-  bool err = mDescriptorMatcher->match(descriptors1, descriptors2, &goodMatches, &wrongMatches);
-  if (err) return;
+  std::vector<cv::DMatch> goodMatches = mDescriptorMatcher->match(descriptors1, descriptors2, &wrongMatches);
 
   std::vector<cv::DMatch> filter_matches = mDescriptorMatcher->geometricFilter(goodMatches, keyPoints1, keyPoints2, &wrongMatches);
-
 
   matchesWrite(mMatches, filter_matches, wrongMatches);
 
