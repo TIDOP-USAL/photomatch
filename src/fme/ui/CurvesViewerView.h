@@ -150,14 +150,6 @@ private:
 
   void init() override;
 
-//public slots:
-
-//  void clear() override;
-
-//private slots:
-
-//  void update() override;
-
 };
 
 
@@ -181,15 +173,33 @@ private:
 
   void init() override;
 
-//public slots:
+};
 
-//  void clear() override;
 
-//private slots:
 
-//  void update() override;
+/*!
+ * \brief DET (Detection Error Tradeoff) Curve
+ */
+class DETCurvesViewer
+    : public CurvesViewerView
+{
+
+  Q_OBJECT
+
+public:
+
+  DETCurvesViewer(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ~DETCurvesViewer() override;
+
+// IDialogView interface
+
+private:
+
+  void init() override;
 
 };
+
+
 
 } // namespace fme
 

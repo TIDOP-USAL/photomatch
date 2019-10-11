@@ -80,6 +80,7 @@ protected slots:
   void openHomographyViewer();
   void openPRCurvesViewer();
   void openROCCurvesViewer();
+  void openDETCurvesViewer();
 
   /* Menú herramientas */
 
@@ -180,6 +181,7 @@ private:
 
   void initPRCurvesViewer();
   void initROCCurvesViewer();
+  void initDETCurvesViewer();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
@@ -222,8 +224,11 @@ protected:
   IHomographyViewerModel *mHomographyViewerModel;
 
   ICurvesViewerPresenter *mCurvesPRViewerPresenter;
+  ICurvesViewerModel *mCurvesPRViewerModel;
   ICurvesViewerPresenter *mCurvesROCViewerPresenter;
-  ICurvesViewerModel *mCurvesViewerModel;
+  ICurvesViewerModel *mCurvesROCViewerModel;
+  ICurvesViewerPresenter *mCurvesDETViewerPresenter;
+  ICurvesViewerModel *mCurvesDETViewerModel;
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;

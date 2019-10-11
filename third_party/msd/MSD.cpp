@@ -25,6 +25,9 @@
 #include <assert.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
+
+#include <opencv2/imgproc.hpp>
+
 #include <boost/thread.hpp>
 
 struct sortByStrength
@@ -63,7 +66,7 @@ std::vector<cv::KeyPoint> MsdDetector::detect(cv::Mat &img)
   if (img.channels() == 1)
     imgG = img;
   else
-    cv::cvtColor(img, imgG, CV_BGR2GRAY);
+    cv::cvtColor(img, imgG, cv::COLOR_BGR2GRAY);
 
   ImagePyramid scaleSpacer(imgG, m_cur_n_scales, m_scale_factor);
   m_scaleSpace = scaleSpacer.getImPyr();

@@ -146,7 +146,13 @@ DaisyDescriptor::~DaisyDescriptor()
 
 void DaisyDescriptor::update()
 {
+
+#if CV_VERSION_MAJOR >= 4
+  cv::xfeatures2d::DAISY::NormalizationType daisy_norm = cv::xfeatures2d::DAISY::NormalizationType::NRM_NONE;
+#else
   int daisy_norm = cv::xfeatures2d::DAISY::NRM_NONE;
+#endif
+
   QString norm = DaisyProperties::norm();
   if (norm.compare("NRM_NONE") == 0 ) {
     daisy_norm = cv::xfeatures2d::DAISY::NRM_NONE;

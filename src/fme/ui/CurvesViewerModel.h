@@ -103,6 +103,25 @@ public:
 };
 
 
+class DETCurvesViewerModel
+  : public CurvesViewerModel
+{
+  Q_OBJECT
+
+public:
+
+  DETCurvesViewerModel(IProjectModel *projectModel);
+  ~DETCurvesViewerModel() override;
+
+// ICurvesViewerModel interface
+
+public:
+
+  std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const override;
+
+};
+
+
 
 } // namespace fme
 

@@ -74,7 +74,11 @@ AgastDetector::AgastDetector()
   : AgastProperties(),
     KeypointDetector()
 {
+#if CV_VERSION_MAJOR >= 4
+  cv::AgastFeatureDetector::DetectorType detector_type = cv::AgastFeatureDetector::DetectorType::OAST_9_16;
+#else
   int detector_type = cv::AgastFeatureDetector::OAST_9_16;
+#endif
   QString detectorType = AgastProperties::detectorType();
   if (detectorType.compare("AGAST_5_8") == 0 ) {
     detector_type = cv::AgastFeatureDetector::AGAST_5_8;
@@ -134,7 +138,11 @@ void AgastDetector::setNonmaxSuppression(bool nonmaxSuppression)
 void AgastDetector::setDetectorType(const QString &detectorType)
 {
   AgastProperties::setDetectorType(detectorType);
+#if CV_VERSION_MAJOR >= 4
+  cv::AgastFeatureDetector::DetectorType detector_type = cv::AgastFeatureDetector::DetectorType::OAST_9_16;
+#else
   int detector_type = cv::AgastFeatureDetector::OAST_9_16;
+#endif
   if (detectorType.compare("AGAST_5_8") == 0 ) {
     detector_type = cv::AgastFeatureDetector::AGAST_5_8;
   } else if (detectorType.compare("AGAST_7_12d") == 0){

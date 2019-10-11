@@ -135,11 +135,16 @@ OrbDetectorDescriptor::OrbDetectorDescriptor()
   mOrb->setNLevels(OrbProperties::levelsNumber());
   mOrb->setEdgeThreshold(OrbProperties::edgeThreshold());
   mOrb->setWTA_K(OrbProperties::wta_k());
-  int score = 0;
+
+#if CV_VERSION_MAJOR >= 4
+  cv::ORB::ScoreType score = cv::ORB::HARRIS_SCORE;
+#else
+  int score = cv::ORB::HARRIS_SCORE;
+#endif
   if (OrbProperties::scoreType().compare("Harris") == 0){
-    score = 0;
+    score = cv::ORB::HARRIS_SCORE;
   } else if (OrbProperties::scoreType().compare("FAST") == 0){
-    score = 2;
+    score = cv::ORB::FAST_SCORE;
   }
   mOrb->setScoreType(score);
   OrbProperties::setPatchSize(OrbProperties::patchSize());
@@ -237,11 +242,15 @@ void OrbDetectorDescriptor::setWTA_K(int WTA_K)
 void OrbDetectorDescriptor::setScoreType(const QString &scoreType)
 {
   OrbProperties::setScoreType(scoreType);
-  int score = 0;
+#if CV_VERSION_MAJOR >= 4
+  cv::ORB::ScoreType score = cv::ORB::ScoreType::HARRIS_SCORE;
+#else
+  int score = cv::ORB::HARRIS_SCORE;
+#endif
   if (scoreType.compare("Harris") == 0){
-    score = 0;
+    score = cv::ORB::HARRIS_SCORE;
   } else if (scoreType.compare("FAST") == 0){
-    score = 1;
+    score = cv::ORB::FAST_SCORE;
   }
   mOrb->setScoreType(score);
 }
@@ -266,11 +275,17 @@ void OrbDetectorDescriptor::reset()
   mOrb->setNLevels(OrbProperties::levelsNumber());
   mOrb->setEdgeThreshold(OrbProperties::edgeThreshold());
   mOrb->setWTA_K(OrbProperties::wta_k());
-  int score = 0;
+
+#if CV_VERSION_MAJOR >= 4
+  cv::ORB::ScoreType score = cv::ORB::ScoreType::HARRIS_SCORE;
+#else
+  int score = cv::ORB::HARRIS_SCORE;
+#endif
+
   if (OrbProperties::scoreType().compare("Harris") == 0){
-    score = 0;
+    score = cv::ORB::HARRIS_SCORE;
   } else if (OrbProperties::scoreType().compare("FAST") == 0){
-    score = 2;
+    score = cv::ORB::FAST_SCORE;
   }
   mOrb->setScoreType(score);
   mOrb->setPatchSize(OrbProperties::patchSize());

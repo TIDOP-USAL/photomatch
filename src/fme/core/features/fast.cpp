@@ -73,7 +73,14 @@ FastDetector::FastDetector()
 {
   mFast->setThreshold(FastProperties::threshold());
   mFast->setNonmaxSuppression(FastProperties::nonmaxSuppression());
+  
+  
+#if CV_VERSION_MAJOR >= 4
+  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
+#else
   int type = cv::FastFeatureDetector::TYPE_9_16;
+#endif
+
   QString detectorType = FastProperties::detectorType();
   if (detectorType.compare("TYPE_5_8") == 0){
     type = cv::FastFeatureDetector::TYPE_5_8;
@@ -131,7 +138,13 @@ void FastDetector::setNonmaxSuppression(bool nonmaxSuppression)
 void FastDetector::setDetectorType(QString detectorType)
 {
   FastProperties::setDetectorType(detectorType);
+
+#if CV_VERSION_MAJOR >= 4
+  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
+#else
   int type = cv::FastFeatureDetector::TYPE_9_16;
+#endif
+
   if (detectorType.compare("TYPE_5_8") == 0){
     type = cv::FastFeatureDetector::TYPE_5_8;
   } else if (detectorType.compare("TYPE_7_12") == 0) {

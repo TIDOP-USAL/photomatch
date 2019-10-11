@@ -207,7 +207,13 @@ void KazeDetectorDescriptor::setOctaveLayers(int octaveLayers)
 void KazeDetectorDescriptor::setDiffusivity(const QString &diffusivity)
 {
   KazeProperties::setDiffusivity(diffusivity);
+
+#if CV_VERSION_MAJOR >= 4  
+  cv::KAZE::DiffusivityType diff = cv::KAZE::DIFF_PM_G1;
+#else
   int diff = cv::KAZE::DIFF_PM_G1;
+#endif
+
   if (diffusivity.compare("DIFF_PM_G1") == 0){
     diff = cv::KAZE::DIFF_PM_G1;
   } else if (diffusivity.compare("DIFF_PM_G2") == 0){

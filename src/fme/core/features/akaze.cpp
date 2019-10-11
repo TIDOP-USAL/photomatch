@@ -200,7 +200,12 @@ void AkazeDetectorDescriptor::setDescriptorType(const QString &descriptorType)
 {
   AkazeProperties::setDescriptorType(descriptorType);
 
+#if CV_VERSION_MAJOR >= 4
+  cv::AKAZE::DescriptorType descriptor_type = cv::AKAZE::DescriptorType::DESCRIPTOR_MLDB;
+#else
   int descriptor_type = cv::AKAZE::DESCRIPTOR_MLDB;
+#endif
+
   if (descriptorType.compare("KAZE") == 0){
     descriptor_type = cv::AKAZE::DESCRIPTOR_KAZE;
   } else if (descriptorType.compare("KAZE_UPRIGHT") == 0){
@@ -247,7 +252,12 @@ void AkazeDetectorDescriptor::setDiffusivity(const QString &diffusivity)
 {
   AkazeProperties::setDiffusivity(diffusivity);
 
+#if CV_VERSION_MAJOR >= 4
+  cv::KAZE::DiffusivityType diff = cv::KAZE::DiffusivityType::DIFF_PM_G1;
+#else
   int diff = cv::KAZE::DIFF_PM_G1;
+#endif
+
   if (diffusivity.compare("DIFF_PM_G1") == 0){
     diff = cv::KAZE::DIFF_PM_G1;
   } else if (diffusivity.compare("DIFF_PM_G2") == 0){

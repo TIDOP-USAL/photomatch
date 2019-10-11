@@ -36,7 +36,7 @@ ImagePyramid::ImagePyramid(const cv::Mat & im, const int nLevels, const float sc
 		{
 			float scale = 1 / std::pow(scaleFactor, (float)lvl);
 			m_imPyr[lvl] = cv::Mat(cv::Size(cvRound(im.cols * scale), cvRound(im.rows * scale)), im.type());
-			cv::resize(im, m_imPyr[lvl], cv::Size(m_imPyr[lvl].cols, m_imPyr[lvl].rows), 0.0, 0.0, CV_INTER_AREA);
+			cv::resize(im, m_imPyr[lvl], cv::Size(m_imPyr[lvl].cols, m_imPyr[lvl].rows), 0.0, 0.0, cv::INTER_AREA);
 		}
 	}
 }

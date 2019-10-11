@@ -144,36 +144,21 @@ void CurvesViewerView::init()
   qtreewidgetitem->setText(2, tr("Descriptor"));
   mTreeWidgetSessions->setHeaderItem(qtreewidgetitem);
   mTreeWidgetSessions->setMaximumWidth(250);
-  //gridLayout->addWidget(mTreeWidgetSessions, 1, 0, 1, 1);
   hBoxLayout->addWidget(mTreeWidgetSessions);
 
-  ///TODO: calcular la curva y cargar en mChart
-//  QLineSeries *series = new QLineSeries(this);
-//  series->append(0, 6);
-//  series->append(2, 4);
-//  series->append(3, 8);
-//  series->append(7, 4);
-//  series->append(10, 5);
-//////      *series << QPointF(11, 1) << QPointF(13, 3) << QPointF(17, 6) << QPointF(18, 3) << QPointF(20, 2);
-//  series->setName("Session 1");
 
   mChart = new QtCharts::QChart();
-  //mChart->legend()->hide();
-  //mChart->addSeries(series);
-  //mChart->createDefaultAxes();
-
   mAxisX = new QValueAxis(this);
-  //axisX->setTickCount(10);
   mAxisX->setRange(0,1);
   mChart->addAxis(mAxisX, Qt::AlignBottom);
   mAxisY = new QValueAxis(this);
   mAxisY->setRange(0,1);
   mChart->addAxis(mAxisY, Qt::AlignLeft);
+  mChart->legend()->setAlignment(Qt::AlignRight);
 
   QChartView *chartView = new QChartView(mChart);
   chartView->setRenderHint(QPainter::Antialiasing);
   hBoxLayout->addWidget(chartView);
-  //gridLayout->addWidget(chartView, 1, 1, 1, 3);
   gridLayout->addLayout(hBoxLayout, 1, 0, 1, 4);
 
   mButtonBox = new QDialogButtonBox(this);
@@ -213,20 +198,24 @@ void ROCCurvesViewer::init()
 {
   this->setWindowTitle(tr("ROC Curves Viewer"));
   this->mChart->setTitle("ROC Curves");
-  this->mAxisX->setTitleText(tr("Recall"));
-  this->mAxisY->setTitleText(tr("False Positive Rate"));
+  this->mAxisX->setTitleText(tr("False Positive Rate"));
+  this->mAxisY->setTitleText(tr("True Positive Rate or Recall"));
+
+  QLineSeries *series = new QLineSeries(this);
+  series->append(0, 0);
+  series->append(1, 1);
+  QPen pen(QColor(0, 0, 255));
+  pen.setStyle(Qt::PenStyle::DashLine);
+  series->setPen(pen);
+  mChart->addSeries(series);
+  QLegend *legend = mChart->legend();
+  QList<QLegendMarker *> legendMarker = legend->markers(series);
+  legendMarker.at(0)->setVisible(false);
+
 }
 
-//void ROCCurvesViewer::clear()
-//{
-//}
 
-//void ROCCurvesViewer::update()
-//{
-//}
-
-
-///*----------------------------------------------------------------*/
+/*----------------------------------------------------------------*/
 
 
 PRCurvesViewer::PRCurvesViewer(QWidget *parent, Qt::WindowFlags f)
@@ -242,17 +231,50 @@ void PRCurvesViewer::init()
 {
   this->setWindowTitle(tr("PR Curves Viewer"));
   this->mChart->setTitle("PR Curves");
-  this->mAxisX->setTitleText(tr("Precision"));
-  this->mAxisY->setTitleText(tr("Recall"));
+  this->mAxisX->setTitleText(tr("Recall"));
+  this->mAxisY->setTitleText(tr("Precision"));
+
+  QLineSeries *series = new QLineSeries(this);
+  series->append(0, 1);
+  series->append(1, 0);
+  QPen pen(QColor(0, 0, 255));
+  pen.setStyle(Qt::PenStyle::DashLine);
+  series->setPen(pen);
+  mChart->addSeries(series);
+  QLegend *legend = mChart->legend();
+  QList<QLegendMarker *> legendMarker = legend->markers(series);
+  legendMarker.at(0)->setVisible(false);
 }
 
 
-//void PRCurvesViewer::clear()
-//{
-//}
+/*----------------------------------------------------------------*/
 
-//void PRCurvesViewer::update()
-//{
-//}
 
+DETCurvesViewer::DETCurvesViewer(QWidget *parent, Qt::WindowFlags f)
+  : CurvesViewerView(parent, f)
+{
+  init();
+}
+
+DETCurvesViewer::~DETCurvesViewer()
+{}
+
+void DETCurvesViewer::init()
+{
+  this->setWindowTitle(tr("DET Curves Viewer"));
+  this->mChart->setTitle("DET Curves");
+  this->mAxisX->setTitleText(tr("False Positive Rate"));
+  this->mAxisY->setTitleText(tr("False Negative Rate"));
+
+  QLineSeries *series = new QLineSeries(this);
+  series->append(0, 1);
+  series->append(1, 0);
+  QPen pen(QColor(0, 0, 255));
+  pen.setStyle(Qt::PenStyle::DashLine);
+  series->setPen(pen);
+  mChart->addSeries(series);
+  QLegend *legend = mChart->legend();
+  QList<QLegendMarker *> legendMarker = legend->markers(series);
+  legendMarker.at(0)->setVisible(false);
+}
 } // namespace fme

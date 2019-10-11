@@ -80,10 +80,10 @@ QImage cvMatToQImage(const cv::Mat &image)
     image.copyTo(aux);
   } else if (image.channels() == 3) {
     format = QImage::Format_RGB888;
-    cv::cvtColor(image, aux, CV_BGR2RGB);
+    cv::cvtColor(image, aux, cv::COLOR_BGR2RGB);
   } else if (image.channels() == 4) {
     format = QImage::Format_RGBA8888;
-    cv::cvtColor(image, aux, CV_BGRA2RGB);
+    cv::cvtColor(image, aux, cv::COLOR_BGRA2RGB);
   } else {
     format = QImage::Format_Invalid;
   }

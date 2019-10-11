@@ -69,6 +69,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     //mActionRepeteability(new QAction(this)),
     mActionPRCurves(new QAction(this)),
     mActionROCCurves(new QAction(this)),
+    mActionDETCurves(new QAction(this)),
     mActionNotRecentProjects(new QAction(this)),
     mActionClearHistory(new QAction(this)),
     mActionZoomIn(new QAction(this)),
@@ -121,6 +122,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   //connect(mActionRepeteability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeteability()));
   connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
   connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
+  connect(mActionDETCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(detCurves()));
 
   /* Menú Ayuda */
 
@@ -134,11 +136,13 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mThumbnailsWidget,  SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
   connect(mThumbnailsWidget,  SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
 
+  connect(mTreeWidgetProject, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTreeContextMenu(const QPoint &)));
   connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
   connect(mTreeWidgetProject, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem *, int)));
 
   connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(hideTab(int)));
   connect(ui->tabWidget, SIGNAL(currentChanged(int)),    this, SLOT(tabChanged(int)));
+  connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTabWidgetContextMenu(const QPoint &)));
 
   connect(mActionShowKeyPoints, SIGNAL(toggled(bool)), this, SLOT(onShowKeyPoints(bool)));
 
@@ -1236,6 +1240,7 @@ void MainWindowView::update()
   //mActionRepeteability->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionROCCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
+  mActionDETCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
 
   mActionNotRecentProjects->setVisible(mHistory.size() == 0);
   mActionClearHistory->setEnabled(mHistory.size() > 0);
@@ -1444,6 +1449,121 @@ void MainWindowView::onShowKeyPoints(bool show)
   }
 }
 
+void MainWindowView::onTreeContextMenu(const QPoint &point)
+{
+  QPoint globalPos = mTreeWidgetProject->mapToGlobal(point);
+
+  QTreeWidgetItem *item = nullptr;
+  item = mTreeWidgetProject->itemAt(point);
+
+  if (item == nullptr)
+    return;
+
+  if (item->data(0, Qt::UserRole) == fme::project){
+    QMenu menu;
+    menu.addAction(mActionLoadImages/*tr("Load Images")*/);
+
+    QAction* selectedItem = menu.exec(globalPos);
+//    if (selectedItem) {
+//      if (selectedItem->text() == tr("Load Images")) {
+//        emit loadImages();
+//      }
+//    }
+  } else if (item->data(0, Qt::UserRole) == fme::images){
+  } else if (item->data(0, Qt::UserRole) == fme::image ||
+             item->data(0, Qt::UserRole) == fme::preprocess_image){
+    QMenu menu;
+    menu.addAction(tr("Open Image"));
+
+    QAction* selectedItem = menu.exec(globalPos);
+    if (selectedItem) {
+      if (selectedItem->text() == tr("Open Image")) {
+        emit openImage(item->toolTip(0));
+      }
+    }
+  } else if (item->data(0, Qt::UserRole) == fme::sessions){
+    QMenu menu;
+    menu.addAction(mActionNewSession/*tr("Add New Session")*/);
+
+    QAction* selectedItem = menu.exec(globalPos);
+//    if (selectedItem) {
+//      if (selectedItem->text() == tr("Add New Session")) {
+//        emit newSession();
+//      }
+//    }
+  } else if (item->data(0, Qt::UserRole) == fme::session){
+    QMenu menu;
+    menu.addAction(tr("Set as current session"));
+    menu.addAction(tr("Delete session"));
+    menu.addSeparator();
+    menu.addAction(mActionPreprocess);
+    menu.addAction(mActionFeatureExtraction);
+    menu.addAction(mActionFeatureMatching);
+
+    QAction* selectedItem = menu.exec(globalPos);
+    if (selectedItem) {
+      if (selectedItem->text() == tr("Set as current session")) {
+        emit activeSessionChange(item->text(0));
+      } else if (selectedItem->text() == tr("Delete session")) {
+        emit deleteSession(item->text(0));
+      }
+    }
+  } else if (item->data(0, Qt::UserRole) == fme::preprocess){
+
+  } else if (item->data(0, Qt::UserRole) == fme::features){
+
+  } else if (item->data(0, Qt::UserRole) == fme::features_images){
+
+  } else if (item->data(0, Qt::UserRole) == fme::features_image){
+
+  } else if (item->data(0, Qt::UserRole) == fme::detector){
+
+  } else if (item->data(0, Qt::UserRole) == fme::descriptor){
+
+  }
+
+}
+
+void MainWindowView::onTabWidgetContextMenu(const QPoint &point)
+{
+  if (point.isNull()) return;
+
+  int tabIndex = ui->tabWidget->tabBar()->tabAt(point);
+
+  if (tabIndex == -1) return;
+
+  //ui->tabWidget->widget(tabIndex);
+  QString tabText = ui->tabWidget->tabBar()->tabText(tabIndex);
+
+  QMenu menu;
+  menu.addAction(tr("Close"));
+  menu.addAction(tr("Close all tabs"));
+  menu.addAction(tr("Close all tabs but current one"));
+  QAction* selectedTab = menu.exec(ui->tabWidget->tabBar()->mapToGlobal(point));
+  if (selectedTab) {
+    if (selectedTab->text() == tr("Close")) {
+      hideTab(tabIndex);
+    } else if (selectedTab->text() == tr("Close all tabs")) {
+      const QSignalBlocker blocker(ui->tabWidget);
+      int n = ui->tabWidget->count();
+      for (int i = 0; i < n; i++){
+        hideTab(0);
+      }
+    } else if (selectedTab->text() == tr("Close all tabs but current one")) {
+      const QSignalBlocker blocker(ui->tabWidget);
+      int n = ui->tabWidget->count();
+      int tabToCloseId = 0;
+      for (int i = 0; i < n; i++){
+        if (ui->tabWidget->tabBar()->tabText(tabToCloseId).compare(tabText) == 0){
+          tabToCloseId = 1;
+        } else {
+          hideTab(tabToCloseId);
+        }
+      }
+    }
+  }
+}
+
 void MainWindowView::init()
 {
   setWindowTitle(QString("FME"));
@@ -1589,6 +1709,8 @@ void MainWindowView::init()
 
   mActionROCCurves->setText(QApplication::translate("MainWindowView", "ROC Curves", nullptr));
 
+  mActionDETCurves->setText(QApplication::translate("MainWindowView", "DET Curves", nullptr));
+
   mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
   mActionNotRecentProjects->setEnabled(false);
 
@@ -1626,6 +1748,7 @@ void MainWindowView::init()
   /* Árbol de proyecto */
   //ui->dockWidgetContentsProject->setContentsMargins(0, 0, 0, 0);
   mTreeWidgetProject = new QTreeWidget(ui->dockWidgetContentsProject);
+  mTreeWidgetProject->setContextMenuPolicy(Qt::CustomContextMenu);
   mTreeWidgetProject->header()->close();
   mTreeWidgetProject->setColumnCount(1);
   mTreeWidgetProject->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -1719,6 +1842,7 @@ void MainWindowView::init()
   //ui->menuQualityControl->addAction(mActionRepeteability);
   ui->menuQualityControl->addAction(mActionPRCurves);
   ui->menuQualityControl->addAction(mActionROCCurves);
+  ui->menuQualityControl->addAction(mActionDETCurves);
 
   /* Menu Help */
 

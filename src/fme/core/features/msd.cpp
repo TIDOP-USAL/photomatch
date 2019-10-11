@@ -2,6 +2,7 @@
 
 #include <tidop/core/messages.h>
 
+#include <opencv2/imgproc.hpp>
 
 namespace fme
 {
@@ -427,7 +428,7 @@ void MsdDetector::affineSkew(double tilt, double phi, cv::Mat &img, cv::Mat &mas
     cv::Rect rect = boundingRect(tcorners);
     A =  (cv::Mat_<float>(2,3) << c, -s, -rect.x, s, c, -rect.y);
 
-    warpAffine(img, img, A, cv::Size(rect.width, rect.height), cv::INTER_LINEAR, cv::BORDER_REPLICATE);
+    cv::warpAffine(img, img, A, cv::Size(rect.width, rect.height), cv::INTER_LINEAR, cv::BORDER_REPLICATE);
   }
   if(tilt != 1.0)
   {

@@ -81,8 +81,11 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mHomographyViewerPresenter(nullptr),
     mHomographyViewerModel(nullptr),
     mCurvesPRViewerPresenter(nullptr),
+    mCurvesPRViewerModel(nullptr),
     mCurvesROCViewerPresenter(nullptr),
-    mCurvesViewerModel(nullptr),
+    mCurvesROCViewerModel(nullptr),
+    mCurvesDETViewerPresenter(nullptr),
+    mCurvesDETViewerModel(nullptr),
     mProgressHandler(nullptr),
     mProgressDialog(nullptr)
 {
@@ -116,6 +119,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   //connect(mView,  SIGNAL(repeteability()),            this, SLOT(repeteability()));
   connect(mView,  SIGNAL(prCurves()),                 this, SLOT(openPRCurvesViewer()));
   connect(mView,  SIGNAL(rocCurves()),                this, SLOT(openROCCurvesViewer()));
+  connect(mView,  SIGNAL(detCurves()),                this, SLOT(openDETCurvesViewer()));
 
   /* Menú herramientas */
 
@@ -271,14 +275,29 @@ MainWindowPresenter::~MainWindowPresenter()
     mCurvesPRViewerPresenter = nullptr;
   }
 
+  if (mCurvesPRViewerModel){
+    delete mCurvesPRViewerModel;
+    mCurvesPRViewerModel = nullptr;
+  }
+
   if (mCurvesROCViewerPresenter){
     delete mCurvesROCViewerPresenter;
     mCurvesROCViewerPresenter = nullptr;
   }
 
-  if (mCurvesViewerModel){
-    delete mCurvesViewerModel;
-    mCurvesViewerModel = nullptr;
+  if (mCurvesROCViewerModel){
+    delete mCurvesROCViewerModel;
+    mCurvesROCViewerModel = nullptr;
+  }
+
+  if (mCurvesDETViewerPresenter){
+    delete mCurvesDETViewerPresenter;
+    mCurvesDETViewerPresenter = nullptr;
+  }
+
+  if (mCurvesDETViewerModel){
+    delete mCurvesDETViewerModel;
+    mCurvesDETViewerModel = nullptr;
   }
 
 }
@@ -558,6 +577,13 @@ void MainWindowPresenter::openROCCurvesViewer()
   initROCCurvesViewer();
   mCurvesROCViewerPresenter->open();
 }
+
+void MainWindowPresenter::openDETCurvesViewer()
+{
+  initDETCurvesViewer();
+  mCurvesDETViewerPresenter->open();
+}
+
 
 void MainWindowPresenter::loadImages()
 {
@@ -1377,30 +1403,33 @@ void MainWindowPresenter::initHomographyViewer()
 
 void MainWindowPresenter::initPRCurvesViewer()
 {
-  if (mCurvesViewerModel == nullptr) {
-    mCurvesViewerModel = new PRCurvesViewerModel(mProjectModel);
-  }
-
   if (mCurvesPRViewerPresenter == nullptr) {
-
+    mCurvesPRViewerModel = new PRCurvesViewerModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     CurvesViewerView *curvesViewerView = new PRCurvesViewer(mView, f);
-    mCurvesPRViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesViewerModel);
+    mCurvesPRViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesPRViewerModel);
 //    //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }
 
 void MainWindowPresenter::initROCCurvesViewer()
 {
-  if (mCurvesViewerModel == nullptr) {
-    mCurvesViewerModel = new ROCCurvesViewerModel(mProjectModel);
-  }
-
   if (mCurvesROCViewerPresenter == nullptr) {
-
+    mCurvesROCViewerModel = new ROCCurvesViewerModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     CurvesViewerView *curvesViewerView = new ROCCurvesViewer(mView, f);
-    mCurvesROCViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesViewerModel);
+    mCurvesROCViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesROCViewerModel);
+//    //mMatchesViewerPresenter->setHelp(mHelp);
+  }
+}
+
+void MainWindowPresenter::initDETCurvesViewer()
+{
+  if (mCurvesDETViewerPresenter == nullptr) {
+    mCurvesDETViewerModel = new DETCurvesViewerModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    CurvesViewerView *curvesViewerView = new DETCurvesViewer(mView, f);
+    mCurvesDETViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesDETViewerModel);
 //    //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }

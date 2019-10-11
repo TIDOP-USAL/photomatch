@@ -1,7 +1,7 @@
 #ifndef FME_LSS_H
 #define FME_LSS_H
 
-#include "opencv/cv.hpp"
+#include <opencv2/core.hpp>
 
 // ¿Es Local Self - Similarity????
 

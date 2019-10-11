@@ -25,7 +25,7 @@ Modificado para FME
 #define LSD_DETECTOR_H_
 
 #include <vector>
-#include "opencv/cv.hpp"
+#include <opencv2/core.hpp>
 
 #include "MSDImgPyramid.h"
 

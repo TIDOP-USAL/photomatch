@@ -148,6 +148,7 @@ signals:
   void repeteability();
   void prCurves();
   void rocCurves();
+  void detCurves();
 
   /* Menú Ayuda */
 
@@ -171,6 +172,7 @@ signals:
   void openImageMatches(QString, QString, QString);
 
   void activeSessionChange(QString);
+  void deleteSession(QString);
 
 protected:
 
@@ -187,6 +189,8 @@ private slots:
   void openStartPage();
   void onCommandLinkButtonGitHubClicked();
   void onShowKeyPoints(bool show);
+  void onTreeContextMenu(const QPoint &point);
+  void onTabWidgetContextMenu(const QPoint &point);
 
 private:
 
@@ -229,6 +233,7 @@ protected:
   //QAction *mActionRepeteability;
   QAction *mActionPRCurves;
   QAction *mActionROCCurves;
+  QAction *mActionDETCurves;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
   QAction *mActionZoomIn;
