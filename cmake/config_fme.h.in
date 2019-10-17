@@ -9,4 +9,6 @@
 
 #cmakedefine HAVE_VLD
 
+#cmakedefine HAVE_CUDA
+
 #endif // FME_CONFIG_H

@@ -48,6 +48,14 @@ void TestNoshp::testDefaultConstructor()
 {
   NoshpPreprocess noshpPreprocess;
   QCOMPARE(QSize(127, 127), noshpPreprocess.blockSize());
+
+  noshpPreprocess.setBlockSize(QSize(100, 100));
+  /// Copy constructor
+  NoshpPreprocess copy(noshpPreprocess);
+  QCOMPARE(QSize(100, 100), copy.blockSize());
+
+  NoshpPreprocess move(NoshpPreprocess(QSize(100, 100)));
+  QCOMPARE(QSize(100, 100), move.blockSize());
 }
 
 void TestNoshp::test_type()

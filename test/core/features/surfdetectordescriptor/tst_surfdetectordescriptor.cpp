@@ -3,9 +3,14 @@
 
 #include "fme/core/features/surf.h"
 
+
+
 using namespace fme;
 
-class TestSurfDetectorDescriptor : public QObject, public SurfDetectorDescriptor
+class TestSurfDetectorDescriptor : public QObject
+#ifdef OPENCV_ENABLE_NONFREE
+  , public SurfDetectorDescriptor
+#endif
 {
   Q_OBJECT
 
@@ -17,6 +22,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
+#ifdef OPENCV_ENABLE_NONFREE
   void test_defaultConstructor();
   void test_constructor();
   void test_type();
@@ -32,11 +38,13 @@ private slots:
   void test_rotatedFeatures_data();
   void test_rotatedFeatures();
   void test_reset();
-
+#endif
 };
 
 TestSurfDetectorDescriptor::TestSurfDetectorDescriptor()
+#ifdef OPENCV_ENABLE_NONFREE
   : SurfDetectorDescriptor()
+#endif
 {
 }
 
@@ -54,6 +62,7 @@ void TestSurfDetectorDescriptor::cleanupTestCase()
 
 }
 
+#ifdef OPENCV_ENABLE_NONFREE
 void TestSurfDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
@@ -202,7 +211,9 @@ void TestSurfDetectorDescriptor::test_reset()
   QCOMPARE(false, this->rotatedFeatures());
   QCOMPARE(false, this->mSurf->getUpright());
 }
+#endif
 
 QTEST_APPLESS_MAIN(TestSurfDetectorDescriptor)
 
 #include "tst_surfdetectordescriptor.moc"
+

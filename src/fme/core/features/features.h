@@ -40,7 +40,7 @@ public:
     star,
     surf
   };
-
+///TODO: GLOH -> https://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/mikolajczyk_pami2004.pdf
 public:
 
   Feature(Type type) : mFeatType(type) {}

@@ -189,8 +189,9 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
           }
 
 
-          ROCCurve rocCurve(matchClassification);
-          curve = rocCurve.compute();
+          ROCCurve<double> rocCurve(matchClassification);
+          //curve = rocCurve.compute(100);
+          curve = rocCurve.curve();
 
           break;
         }
@@ -308,8 +309,9 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
             matchClassification.push_back(pair);
           }
 
-          PRCurve prCurve(matchClassification);
-          curve = prCurve.compute();
+          PRCurve<double> prCurve(matchClassification);
+          //curve = prCurve.compute(100);
+          curve = prCurve.curve();
 
           break;
         }
@@ -427,8 +429,9 @@ std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, 
             matchClassification.push_back(pair);
           }
 
-          DETCurve detCurve(matchClassification);
-          curve = detCurve.compute();
+          DETCurve<double> detCurve(matchClassification);
+          //curve = detCurve.compute(100);
+          curve = detCurve.curve();
 
           break;
         }

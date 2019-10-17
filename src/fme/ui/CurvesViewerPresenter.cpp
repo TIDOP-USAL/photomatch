@@ -20,6 +20,7 @@ CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
   connect(mView, SIGNAL(leftImageChange(QString)),           this, SLOT(loadLeftImage(QString)));
   connect(mView, SIGNAL(rightImageChange(QString)),          this, SLOT(loadRightImage(QString)));
   connect(mView, SIGNAL(drawCurve(QString,QString,QString)), this, SLOT(drawCurve(QString,QString,QString)));
+  connect(mView, SIGNAL(deleteCurve(QString)),               this, SLOT(deleteCurve(QString)));
 
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
@@ -44,6 +45,11 @@ void CurvesViewerPresenter::drawCurve(const QString &session, const QString &det
 {
   std::vector<QPointF> curve = mModel->computeCurve(session, detector, descriptor);
   mView->setCurve(session, curve);
+}
+
+void CurvesViewerPresenter::deleteCurve(const QString &session)
+{
+  mView->eraseCurve(session);
 }
 
 void CurvesViewerPresenter::help()

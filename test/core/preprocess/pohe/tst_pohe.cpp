@@ -49,6 +49,13 @@ void TestPohe::testDefaultConstructor()
   PohePreprocess pohePreprocess;
   QCOMPARE(QSize(127, 127), pohePreprocess.blockSize());
 
+  pohePreprocess.setBlockSize(QSize(100, 100));
+  /// Copy constructor
+  PohePreprocess copy(pohePreprocess);
+  QCOMPARE(QSize(100, 100), copy.blockSize());
+
+  PohePreprocess move(PohePreprocess(QSize(100, 100)));
+  QCOMPARE(QSize(100, 100), move.blockSize());
 }
 
 void TestPohe::test_type()

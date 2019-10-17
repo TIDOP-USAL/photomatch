@@ -54,6 +54,18 @@ void TestHmclahe::testDefaultConstructor()
   QCOMPARE(QSize(17, 17), hmclahePreprocess.blockSize());
   QCOMPARE(0.03, hmclahePreprocess.l());
   QCOMPARE(0.5, hmclahePreprocess.phi());
+
+  /// Copy constructor
+  HmclahePreprocess copy(hmclahePreprocess);
+  QCOMPARE(QSize(17, 17), copy.blockSize());
+  QCOMPARE(0.03, copy.l());
+  QCOMPARE(0.5, copy.phi());
+
+  /// Move contructor
+  HmclahePreprocess move(std::move(HmclahePreprocess(QSize(8, 8), 0.03, 0.5)));
+  QCOMPARE(QSize(8, 8), move.blockSize());
+  QCOMPARE(0.03, move.l());
+  QCOMPARE(0.5, move.phi());
 }
 
 void TestHmclahe::test_type()

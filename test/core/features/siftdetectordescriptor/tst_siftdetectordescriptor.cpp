@@ -17,6 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
+#ifdef OPENCV_ENABLE_NONFREE
   void test_defaultConstructor();
   void test_constructor();
   void test_type();
@@ -36,21 +37,28 @@ private slots:
 private:
 
   SiftDetectorDescriptor *mSiftDetectorDescriptor;
+#endif
 
 };
 
+
 TestSiftDetectorDescriptor::TestSiftDetectorDescriptor()
 {
+#ifdef OPENCV_ENABLE_NONFREE
   mSiftDetectorDescriptor = new SiftDetectorDescriptor();
+#endif
 }
 
 TestSiftDetectorDescriptor::~TestSiftDetectorDescriptor()
 {
+#ifdef OPENCV_ENABLE_NONFREE
   if (mSiftDetectorDescriptor){
     delete mSiftDetectorDescriptor;
     mSiftDetectorDescriptor = nullptr;
   }
+#endif
 }
+
 
 void TestSiftDetectorDescriptor::initTestCase()
 {
@@ -62,6 +70,7 @@ void TestSiftDetectorDescriptor::cleanupTestCase()
 
 }
 
+#ifdef OPENCV_ENABLE_NONFREE
 void TestSiftDetectorDescriptor::test_defaultConstructor()
 {
   /// Check default values
@@ -205,6 +214,8 @@ void TestSiftDetectorDescriptor::test_reset()
   QCOMPARE(10., mSiftDetectorDescriptor->edgeThreshold());
   QCOMPARE(1.6, mSiftDetectorDescriptor->sigma());
 }
+
+#endif
 
 QTEST_APPLESS_MAIN(TestSiftDetectorDescriptor)
 

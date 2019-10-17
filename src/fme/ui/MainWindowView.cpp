@@ -66,7 +66,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionCreateGroundTruth(new QAction(this)),
     mActionImportGroundTruth(new QAction(this)),
     mActionHomography(new QAction(this)),
-    //mActionRepeteability(new QAction(this)),
+    mActionRepeatability(new QAction(this)),
     mActionPRCurves(new QAction(this)),
     mActionROCCurves(new QAction(this)),
     mActionDETCurves(new QAction(this)),
@@ -119,7 +119,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionCreateGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(createGroundTruth()));
   connect(mActionImportGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(importGroundTruth()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
-  //connect(mActionRepeteability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeteability()));
+  connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
   connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
   connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
   connect(mActionDETCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(detCurves()));
@@ -1018,7 +1018,8 @@ void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
   item->setSize(size);
   item->setAngle(angle);
   item->setToolTip(QString("Size: ").append(QString::number(size)).append("\nAngle: ").append(QString::number(angle)));
-  mGraphicViewer->scene()->addItem(item);
+  if (mGraphicViewer) 
+    mGraphicViewer->scene()->addItem(item);
 }
 
 //void MainWindowView::setKeyPoints(const std::vector<QPointF> &keyPoints)
@@ -1237,7 +1238,7 @@ void MainWindowView::update()
   mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
-  //mActionRepeteability->setEnabled(mFlags.isActive(Flag::feature_matching));
+  mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionROCCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionDETCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
@@ -1461,36 +1462,28 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
 
   if (item->data(0, Qt::UserRole) == fme::project){
     QMenu menu;
-    menu.addAction(mActionLoadImages/*tr("Load Images")*/);
+    menu.addAction(mActionLoadImages);
 
-    QAction* selectedItem = menu.exec(globalPos);
-//    if (selectedItem) {
-//      if (selectedItem->text() == tr("Load Images")) {
-//        emit loadImages();
-//      }
-//    }
+    QAction *selectedItem = menu.exec(globalPos);
   } else if (item->data(0, Qt::UserRole) == fme::images){
   } else if (item->data(0, Qt::UserRole) == fme::image ||
              item->data(0, Qt::UserRole) == fme::preprocess_image){
     QMenu menu;
     menu.addAction(tr("Open Image"));
+    menu.addAction(tr("Delete Image"));
 
-    QAction* selectedItem = menu.exec(globalPos);
-    if (selectedItem) {
+    if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("Open Image")) {
         emit openImage(item->toolTip(0));
+      } else if (selectedItem->text() == tr("Delete Image")) {
+        emit deleteImages(QStringList(item->toolTip(0)));
       }
     }
   } else if (item->data(0, Qt::UserRole) == fme::sessions){
     QMenu menu;
-    menu.addAction(mActionNewSession/*tr("Add New Session")*/);
+    menu.addAction(mActionNewSession);
 
-    QAction* selectedItem = menu.exec(globalPos);
-//    if (selectedItem) {
-//      if (selectedItem->text() == tr("Add New Session")) {
-//        emit newSession();
-//      }
-//    }
+    QAction *selectedItem = menu.exec(globalPos);
   } else if (item->data(0, Qt::UserRole) == fme::session){
     QMenu menu;
     menu.addAction(tr("Set as current session"));
@@ -1500,8 +1493,7 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     menu.addAction(mActionFeatureExtraction);
     menu.addAction(mActionFeatureMatching);
 
-    QAction* selectedItem = menu.exec(globalPos);
-    if (selectedItem) {
+    if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("Set as current session")) {
         emit activeSessionChange(item->text(0));
       } else if (selectedItem->text() == tr("Delete session")) {
@@ -1703,13 +1695,22 @@ void MainWindowView::init()
 
   mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
 
-  //mActionRepeteability->setText(QApplication::translate("MainWindowView", "Repeteability", nullptr));
+  mActionRepeatability->setText(QApplication::translate("MainWindowView", "Repeatability", nullptr));
 
   mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
+  QIcon iconPRCurves;
+  iconPRCurves.addFile(QStringLiteral(":/ico/24/img/material/24/pr_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionPRCurves->setIcon(iconPRCurves);
 
   mActionROCCurves->setText(QApplication::translate("MainWindowView", "ROC Curves", nullptr));
+  QIcon iconROCCurves;
+  iconROCCurves.addFile(QStringLiteral(":/ico/24/img/material/24/roc_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionROCCurves->setIcon(iconROCCurves);
 
   mActionDETCurves->setText(QApplication::translate("MainWindowView", "DET Curves", nullptr));
+  QIcon iconDETCurves;
+  iconDETCurves.addFile(QStringLiteral(":/ico/24/img/material/24/det_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionDETCurves->setIcon(iconDETCurves);
 
   mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
   mActionNotRecentProjects->setEnabled(false);
@@ -1839,7 +1840,7 @@ void MainWindowView::init()
   ui->menuQualityControl->addAction(mActionImportGroundTruth);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionHomography);
-  //ui->menuQualityControl->addAction(mActionRepeteability);
+  ui->menuQualityControl->addAction(mActionRepeatability);
   ui->menuQualityControl->addAction(mActionPRCurves);
   ui->menuQualityControl->addAction(mActionROCCurves);
   ui->menuQualityControl->addAction(mActionDETCurves);
@@ -1875,6 +1876,10 @@ void MainWindowView::init()
   ui->toolBarView->addAction(mActionZoomExtend);
   ui->toolBarView->addSeparator();
   ui->toolBarView->addAction(mActionShowKeyPoints);
+
+  ui->toolBarQualityControl->addAction(mActionPRCurves);
+  ui->toolBarQualityControl->addAction(mActionROCCurves);
+  ui->toolBarQualityControl->addAction(mActionDETCurves);
 
   mStartPageWidget = ui->tabWidget->widget(0);
 

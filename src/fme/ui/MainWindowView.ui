@@ -63,7 +63,7 @@
            <string notr="true">color: rgb(26, 188, 156);</string>
           </property>
           <property name="text">
-           <string>FME</string>
+           <string>PhotoMatch</string>
           </property>
          </widget>
         </item>
@@ -409,6 +409,17 @@
   <widget class="QToolBar" name="toolBarView">
    <property name="windowTitle">
     <string>Image viewer tools</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QToolBar" name="toolBarQualityControl">
+   <property name="windowTitle">
+    <string>Quality Control</string>
    </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>

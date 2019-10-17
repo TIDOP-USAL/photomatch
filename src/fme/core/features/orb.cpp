@@ -121,6 +121,7 @@ QString OrbProperties::name() const
   return QString("ORB");
 }
 
+
 /*----------------------------------------------------------------*/
 
 
@@ -147,7 +148,7 @@ OrbDetectorDescriptor::OrbDetectorDescriptor()
     score = cv::ORB::FAST_SCORE;
   }
   mOrb->setScoreType(score);
-  OrbProperties::setPatchSize(OrbProperties::patchSize());
+  mOrb->setPatchSize(OrbProperties::patchSize());
   mOrb->setFastThreshold(OrbProperties::fastThreshold());
 }
 
@@ -293,11 +294,156 @@ void OrbDetectorDescriptor::reset()
 }
 
 
+/*----------------------------------------------------------------*/
+
+
+#ifdef HAVE_CUDA
+
+OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor()
+  : OrbProperties(),
+    KeypointDetector(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor(int featuresNumber,
+                                                     double scaleFactor,
+                                                     int levelsNumber,
+                                                     int edgeThreshold,
+                                                     int wta_k,
+                                                     QString scoreType,
+                                                     int patchSize,
+                                                     int fastThreshold)
+  : OrbProperties(),
+    KeypointDetector(),
+    DescriptorExtractor()
+{
+  setFeaturesNumber(featuresNumber);
+  setScaleFactor(scaleFactor);
+  setLevelsNumber(levelsNumber);
+  setEdgeThreshold(edgeThreshold);
+  setWTA_K(wta_k);
+  setScoreType(scoreType);
+  setPatchSize(patchSize);
+  setFastThreshold(fastThreshold);
+}
+
+OrbCudaDetectorDescriptor::~OrbCudaDetectorDescriptor()
+{
+
+}
+
+void OrbCudaDetectorDescriptor::update()
+{
+
+#if CV_VERSION_MAJOR >= 4
+  cv::ORB::ScoreType score = cv::ORB::HARRIS_SCORE;
+#else
+  int score = cv::ORB::HARRIS_SCORE;
+#endif
+  if (OrbProperties::scoreType().compare("Harris") == 0){
+    score = cv::ORB::HARRIS_SCORE;
+  } else if (OrbProperties::scoreType().compare("FAST") == 0){
+    score = cv::ORB::FAST_SCORE;
+  }
+
+  mOrb = cv::cuda::ORB::create(OrbProperties::featuresNumber(),
+                               OrbProperties::scaleFactor(),
+                               OrbProperties::levelsNumber(),
+                               OrbProperties::edgeThreshold(),
+                               0,
+                               OrbProperties::wta_k(),
+                               score,
+                               OrbProperties::patchSize(),
+                               OrbProperties::fastThreshold());
+}
+
+bool OrbCudaDetectorDescriptor::detect(const cv::Mat &img,
+                                   std::vector<cv::KeyPoint> &keyPoints,
+                                   cv::InputArray &mask)
+{
+
+  try {
+    mOrb->detect(img, keyPoints, mask);
+  } catch (cv::Exception &e) {
+    msgError("ORB Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
+}
+
+bool OrbCudaDetectorDescriptor::extract(const cv::Mat &img,
+                                        std::vector<cv::KeyPoint> &keyPoints,
+                                        cv::Mat &descriptors)
+{
+
+  try {
+    mOrb->compute(img, keyPoints, descriptors);
+  } catch (cv::Exception &e) {
+    msgError("ORB Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
+}
+
+void OrbCudaDetectorDescriptor::setFeaturesNumber(int featuresNumber)
+{
+  OrbProperties::setFeaturesNumber(featuresNumber);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setScaleFactor(double scaleFactor)
+{
+  OrbProperties::setScaleFactor(scaleFactor);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setLevelsNumber(int levelsNumber)
+{
+  OrbProperties::setLevelsNumber(levelsNumber);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setEdgeThreshold(int edgeThreshold)
+{
+  OrbProperties::setEdgeThreshold(edgeThreshold);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setWTA_K(int WTA_K)
+{
+  OrbProperties::setWTA_K(WTA_K);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setScoreType(const QString &scoreType)
+{
+  OrbProperties::setScoreType(scoreType);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setPatchSize(int patchSize)
+{
+  OrbProperties::setPatchSize(patchSize);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::setFastThreshold(int fastThreshold)
+{
+  OrbProperties::setFastThreshold(fastThreshold);
+  update();
+}
+
+void OrbCudaDetectorDescriptor::reset()
+{
+  OrbProperties::reset();
+  update();
+}
+
+#endif // HAVE_CUDA
+
 } // namespace fme
-
-
-
-
-
-
 

@@ -54,6 +54,18 @@ void TestMsrcp::testDefaultConstructor()
   QCOMPARE(10., msrcpPreprocess.smallScale());
   QCOMPARE(100., msrcpPreprocess.midScale());
   QCOMPARE(220., msrcpPreprocess.largeScale());
+
+  /// Copy constructor
+  MsrcpPreprocess copy(msrcpPreprocess);
+  QCOMPARE(10., copy.smallScale());
+  QCOMPARE(100., copy.midScale());
+  QCOMPARE(220., copy.largeScale());
+
+  /// Move contructor
+  MsrcpPreprocess move(std::move(MsrcpPreprocess(20., 120., 200.)));
+  QCOMPARE(20., move.smallScale());
+  QCOMPARE(120., move.midScale());
+  QCOMPARE(200., move.largeScale());
 }
 
 void TestMsrcp::test_type()

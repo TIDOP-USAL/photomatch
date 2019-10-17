@@ -18,7 +18,12 @@ class FME_EXPORT AcebsfProperties
 public:
 
   AcebsfProperties();
+  AcebsfProperties(const AcebsfProperties &acebsfProperties);
+  AcebsfProperties(AcebsfProperties &&acebsfProperties) FME_NOEXCEPT;
   ~AcebsfProperties() override {}
+
+  AcebsfProperties &operator = (const AcebsfProperties& acebsfProperties);
+  AcebsfProperties &operator = (AcebsfProperties &&acebsfProperties) FME_NOEXCEPT;
 
 // IAcebs interface
 
@@ -59,6 +64,8 @@ class FME_EXPORT AcebsfPreprocess
 public:
 
   AcebsfPreprocess();
+  AcebsfPreprocess(const AcebsfPreprocess &acebsfPreprocess);
+  AcebsfPreprocess(AcebsfPreprocess &&acebsfPreprocess) FME_NOEXCEPT;
   AcebsfPreprocess(const QSize &blockSize,
                    double l,
                    double k1,

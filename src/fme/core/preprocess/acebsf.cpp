@@ -18,6 +18,49 @@ AcebsfProperties::AcebsfProperties()
 
 }
 
+AcebsfProperties::AcebsfProperties(const AcebsfProperties &acebsfProperties)
+  : IAcebsf(),
+    mBlockSize(acebsfProperties.mBlockSize),
+    mL(acebsfProperties.mL),
+    mK1(acebsfProperties.mK1),
+    mK2(acebsfProperties.mK2)
+{
+}
+
+AcebsfProperties::AcebsfProperties(AcebsfProperties &&acebsfProperties) FME_NOEXCEPT
+  : IAcebsf(),
+    mBlockSize(std::move(acebsfProperties.mBlockSize)),
+    mL(acebsfProperties.mL),
+    mK1(acebsfProperties.mK1),
+    mK2(acebsfProperties.mK2)
+{
+  acebsfProperties.mL = 0.;
+  acebsfProperties.mK1 = 0.;
+  acebsfProperties.mK2 = 0.;
+}
+
+AcebsfProperties &AcebsfProperties::operator=(const AcebsfProperties &acebsfProperties)
+{
+  if (this != &acebsfProperties) {  
+    mBlockSize = acebsfProperties.mBlockSize;
+    mL = acebsfProperties.mL;
+    mK1 = acebsfProperties.mK1;
+    mK2 = acebsfProperties.mK2;
+  }
+  return *this;
+}
+
+AcebsfProperties &AcebsfProperties::operator=(AcebsfProperties &&acebsfProperties) FME_NOEXCEPT
+{
+  if (this != &acebsfProperties) {  
+    mBlockSize = std::move(acebsfProperties.mBlockSize);
+    mL = std::move(acebsfProperties.mL);
+    mK1 = std::move(acebsfProperties.mK1);
+    mK2 = std::move(acebsfProperties.mK2);
+  }
+  return *this;
+}
+
 QSize AcebsfProperties::blockSize() const
 {
   return mBlockSize;
@@ -72,6 +115,20 @@ void AcebsfProperties::reset()
 
 AcebsfPreprocess::AcebsfPreprocess()
   : AcebsfProperties(),
+    ImageProcess()
+{
+
+}
+
+AcebsfPreprocess::AcebsfPreprocess(const AcebsfPreprocess &acebsfPreprocess)
+  : AcebsfProperties(acebsfPreprocess),
+    ImageProcess()
+{
+
+}
+
+AcebsfPreprocess::AcebsfPreprocess(AcebsfPreprocess &&acebsfPreprocess) FME_NOEXCEPT
+  : AcebsfProperties(std::forward<AcebsfProperties>(acebsfPreprocess)),
     ImageProcess()
 {
 

@@ -5,6 +5,10 @@
 
 #include "fme/core/features/features.h"
 
+#ifdef HAVE_CUDA
+#include <opencv2/cudafeatures2d.hpp>
+#endif // HAVE_CUDA
+
 #include <QString>
 
 namespace fme
@@ -124,6 +128,80 @@ protected:
   cv::Ptr<cv::ORB> mOrb;
 };
 
+
+
+/*----------------------------------------------------------------*/
+
+#ifdef HAVE_CUDA
+
+class FME_EXPORT OrbCudaDetectorDescriptor
+  : public OrbProperties,
+    public KeypointDetector,
+    public DescriptorExtractor
+{
+
+public:
+
+  OrbCudaDetectorDescriptor();
+  OrbCudaDetectorDescriptor(int featuresNumber,
+                            double scaleFactor,
+                            int levelsNumber,
+                            int edgeThreshold,
+                            int wta_k,
+                            QString scoreType,
+                            int patchSize,
+                            int fastThreshold);
+
+  ~OrbCudaDetectorDescriptor() override;
+
+private:
+
+  void update();
+
+// KeypointDetector interface
+
+public:
+
+  bool detect(const cv::Mat &img,
+              std::vector<cv::KeyPoint> &keyPoints,
+              cv::InputArray &mask = cv::noArray()) override;
+
+// DescriptorExtractor interface
+
+public:
+
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
+
+// IOrb interface
+
+public:
+
+  void setFeaturesNumber(int featuresNumber) override;
+  void setScaleFactor(double scaleFactor) override;
+  void setLevelsNumber(int levelsNumber) override;
+  void setEdgeThreshold(int edgeThreshold) override;
+  void setWTA_K(int WTA_K) override;
+  void setScoreType(const QString &scoreType) override;
+  void setPatchSize(int patchSize) override;
+  void setFastThreshold(int fastThreshold) override;
+
+// Feature interface
+
+public:
+
+  void reset() override;
+
+protected:
+
+  cv::Ptr<cv::cuda::ORB> mOrb;
+};
+
+#endif // HAVE_CUDA
+
 } // namespace fme
+
+
 
 #endif // FME_ORB_DETECTOR_DESCRIPTOR_H

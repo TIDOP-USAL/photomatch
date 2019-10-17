@@ -113,19 +113,19 @@ void SettingsView::init()
   mStackedWidget->addWidget(pageViewer);
 
   /* Tools */
-  QWidget *pageTools = new QWidget();
+  QWidget *pageTools = new QWidget(this);
   QGridLayout *gridLayoutTools = new QGridLayout(pageTools);
   gridLayoutTools->setContentsMargins(0, 0, 0, 0);
 
   mTabWidgetTools = new QTabWidget(pageTools);
 
-  QWidget *tabPreprocess = new QWidget();
+  QWidget *tabPreprocess = new QWidget(this);
   QGridLayout *gridLayoutTabPreprocess = new QGridLayout(tabPreprocess);
   gridLayoutTabPreprocess->setContentsMargins(0, 0, 0, 0);
   QScrollArea *scrollAreaPreprocess = new QScrollArea(tabPreprocess);
   scrollAreaPreprocess->setWidgetResizable(true);
   scrollAreaPreprocess->setFrameShape(QFrame::Shape::NoFrame);
-  QWidget *scrollAreaWidgetContents = new QWidget();
+  QWidget *scrollAreaWidgetContents = new QWidget(this);
   scrollAreaWidgetContents->setGeometry(QRect(0, 0, 439, 358));
   mGridLayoutPreprocess = new QGridLayout(scrollAreaWidgetContents);
   mListWidgetPreprocess = new QListWidget(scrollAreaWidgetContents);
@@ -134,13 +134,13 @@ void SettingsView::init()
   gridLayoutTabPreprocess->addWidget(scrollAreaPreprocess, 0, 0, 1, 1);
   mTabWidgetTools->addTab(tabPreprocess, QString("Preprocess"));
 
-  QWidget *tabFeatures = new QWidget();
+  QWidget *tabFeatures = new QWidget(this);
   QGridLayout *gridLayoutFeatures = new QGridLayout(tabFeatures);
   gridLayoutFeatures->setContentsMargins(0, 0, 0, 0);
   QScrollArea *scrollAreaFeatures = new QScrollArea(tabFeatures);
   scrollAreaFeatures->setWidgetResizable(true);
   scrollAreaFeatures->setFrameShape(QFrame::Shape::NoFrame);
-  QWidget *scrollAreaWidgetFeatures = new QWidget();
+  QWidget *scrollAreaWidgetFeatures = new QWidget(this);
   scrollAreaWidgetFeatures->setGeometry(QRect(0, 0, 439, 358));
   mGridLayoutFeatures = new QGridLayout(scrollAreaWidgetFeatures);
   mListWidgetFeatures = new QListWidget(scrollAreaWidgetFeatures);
@@ -149,7 +149,7 @@ void SettingsView::init()
   gridLayoutFeatures->addWidget(scrollAreaFeatures, 0, 0, 1, 1);
   mTabWidgetTools->addTab(tabFeatures, QString("Feature Detector / Extractor"));
 
-  QWidget *tabMatching = new QWidget();
+  QWidget *tabMatching = new QWidget(this);
   //QGridLayout *gridLayoutMatching = new QGridLayout(tabMatching);
   //gridLayoutMatching->setContentsMargins(0, 0, 0, 0);
   //QScrollArea *scrollAreaMatching = new QScrollArea(tabMatching);

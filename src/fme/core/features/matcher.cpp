@@ -198,14 +198,14 @@ void BruteForceMatcher::setNormType(IBruteForceMatcher::Norm normType)
 
 #ifdef HAVE_CUDA
 
-BruteForceMatcher::BruteForceMatcher()
+BruteForceMatcherCuda::BruteForceMatcherCuda()
   : BruteForceMatcherProperties(),
     DescriptorMatcher()
 {
   update();
 }
 
-BruteForceMatcher::BruteForceMatcher(IBruteForceMatcher::Norm normType)
+BruteForceMatcherCuda::BruteForceMatcherCuda(IBruteForceMatcher::Norm normType)
   : BruteForceMatcherProperties(),
     DescriptorMatcher()
 {
@@ -213,7 +213,7 @@ BruteForceMatcher::BruteForceMatcher(IBruteForceMatcher::Norm normType)
   update();
 }
 
-void BruteForceMatcher::update()
+void BruteForceMatcherCuda::update()
 {
   int norm = cv::NORM_L2;
   BruteForceMatcherProperties::Norm norm_type = BruteForceMatcherProperties::normType();
@@ -230,27 +230,27 @@ void BruteForceMatcher::update()
   mBFMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(norm);
 }
 
-bool BruteForceMatcher::match(cv::InputArray &queryDescriptors,
+bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
                               cv::InputArray &trainDescriptors,
                               std::vector<std::vector<cv::DMatch>> &matches,
                               cv::InputArray mask)
 {
   try {
     mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
-  catch (cv::Exception &e) {
+  } catch (cv::Exception &e) {
     msgError("Brute-force Matcher error: %s", e.what());
     return true;
   }
   return false;
 }
 
-void BruteForceMatcher::reset()
+void BruteForceMatcherCuda::reset()
 {
   BruteForceMatcherProperties::reset();
   update();
 }
 
-void BruteForceMatcher::setNormType(IBruteForceMatcher::Norm normType)
+void BruteForceMatcherCuda::setNormType(IBruteForceMatcher::Norm normType)
 {
   BruteForceMatcherProperties::setNormType(normType);
   update();

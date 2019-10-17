@@ -88,6 +88,7 @@ QString SurfProperties::name() const
 
 /*----------------------------------------------------------------*/
 
+#ifdef OPENCV_ENABLE_NONFREE
 
 SurfDetectorDescriptor::SurfDetectorDescriptor()
   : SurfProperties(),
@@ -195,7 +196,7 @@ void SurfDetectorDescriptor::reset()
 
 }
 
-
+#endif
 
 } // namespace fme
 

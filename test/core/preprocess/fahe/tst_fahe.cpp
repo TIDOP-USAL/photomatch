@@ -48,6 +48,14 @@ void TestFahe::testDefaultConstructor()
 {
   FahePreprocess fahePreprocess;
   QCOMPARE(QSize(11, 11), fahePreprocess.blockSize());
+
+  /// Copy constructor
+  FahePreprocess copy(fahePreprocess);
+  QCOMPARE(QSize(11, 11), copy.blockSize());
+
+  /// Move contructor
+  FahePreprocess move(FahePreprocess(QSize(11, 11)));
+  QCOMPARE(QSize(11, 11), move.blockSize());
 }
 
 void TestFahe::test_type()

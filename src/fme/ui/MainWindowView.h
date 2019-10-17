@@ -145,7 +145,7 @@ signals:
   void createGroundTruth();
   void importGroundTruth();
   void homography();
-  void repeteability();
+  void repeatability();
   void prCurves();
   void rocCurves();
   void detCurves();
@@ -157,6 +157,8 @@ signals:
 
   /* Panel de vistas en miniatura */
 
+  ///TODO: asegurarse que se utiliza siempre el mismo criterio como id de la imagen
+  ///      O nombre de la imagen o ruta completa
   void openImage(QString);
   void selectImage(QString);
   void selectImages(QStringList);
@@ -230,7 +232,7 @@ protected:
   QAction *mActionCreateGroundTruth;
   QAction *mActionImportGroundTruth;
   QAction *mActionHomography;
-  //QAction *mActionRepeteability;
+  QAction *mActionRepeatability;
   QAction *mActionPRCurves;
   QAction *mActionROCCurves;
   QAction *mActionDETCurves;

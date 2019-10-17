@@ -58,6 +58,19 @@ void TestAcebsf::testDefaultConstructor()
   QCOMPARE(10., acebsfPreprocess.k1());
   QCOMPARE(0.5, acebsfPreprocess.k2());
 
+  /// Copy constructor
+  AcebsfPreprocess copy(acebsfPreprocess);
+  QCOMPARE(QSize(8, 8), copy.blockSize());
+  QCOMPARE(0.03, copy.l());
+  QCOMPARE(10., copy.k1());
+  QCOMPARE(0.5, copy.k2());
+
+  /// Move contructor
+  AcebsfPreprocess move(AcebsfPreprocess(QSize(8, 8), 0.03, 10., 0.5));
+  QCOMPARE(QSize(8, 8), move.blockSize());
+  QCOMPARE(0.03, move.l());
+  QCOMPARE(10., move.k1());
+  QCOMPARE(0.5, move.k2());
 }
 
 void TestAcebsf::test_type()

@@ -1,11 +1,16 @@
-#ifndef ABOUTDIALOG_H
-#define ABOUTDIALOG_H
+#ifndef FME_ABOUT_DIALOG_H
+#define FME_ABOUT_DIALOG_H
+
+#include "fme/fme_global.h"
 
 #include <QDialog>
 
 namespace Ui {
 class AboutDialog;
 }
+
+namespace fme
+{
 
 class AboutDialog : public QDialog
 {
@@ -20,6 +25,9 @@ protected:
 
 private:
   Ui::AboutDialog *ui;
+
 };
 
-#endif // ABOUTDIALOG_H
+} // namespace fme
+
+#endif // FME_ABOUT_DIALOG_H

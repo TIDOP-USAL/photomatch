@@ -59,6 +59,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
+#ifdef OPENCV_ENABLE_NONFREE
 
 class FME_EXPORT SurfDetectorDescriptor
   : public SurfProperties,
@@ -114,6 +115,7 @@ protected:
   cv::Ptr<cv::xfeatures2d::SURF> mSurf;
 };
 
+#endif
 
 } // namespace fme
 

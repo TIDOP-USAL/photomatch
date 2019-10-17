@@ -85,7 +85,7 @@ QString SiftProperties::name() const
 
 /*----------------------------------------------------------------*/
 
-
+#ifdef OPENCV_ENABLE_NONFREE
 
 SiftDetectorDescriptor::SiftDetectorDescriptor()
   : SiftProperties(),
@@ -192,7 +192,7 @@ void SiftDetectorDescriptor::reset()
   update();
 }
 
-
+#endif
 
 } // namespace fme
 

@@ -33,9 +33,11 @@ class ICurvesViewerPresenter;
 class ICurvesViewerModel;
 class IGroundTruthModel;
 class IGroundTruthPresenter;
+class IRepeatabilityModel;
+class IRepeatabilityPresenter;
 class ProgressHandler;
 class IProgressDialog;
-
+class AboutDialog;
 
 class MainWindowPresenter
   : public IPresenter
@@ -78,6 +80,7 @@ protected slots:
   void createGroundTruth();
   void importGroundTruth();
   void openHomographyViewer();
+  void openRepeatability();
   void openPRCurvesViewer();
   void openROCCurvesViewer();
   void openDETCurvesViewer();
@@ -178,10 +181,12 @@ private:
    * \brief Inicializa el visor de homografía
    */
   void initHomographyViewer();
-
+  void initRepeatability();
   void initPRCurvesViewer();
   void initROCCurvesViewer();
   void initDETCurvesViewer();
+
+  void initAboutDialog();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
@@ -229,6 +234,11 @@ protected:
   ICurvesViewerModel *mCurvesROCViewerModel;
   ICurvesViewerPresenter *mCurvesDETViewerPresenter;
   ICurvesViewerModel *mCurvesDETViewerModel;
+
+  IRepeatabilityPresenter *mRepeatabilityPresenter;
+  IRepeatabilityModel *mRepeatabilityModel;
+
+  AboutDialog *mAboutDialog;
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;

@@ -36,7 +36,10 @@
 #include "fme/ui/CurvesViewerModel.h"
 #include "fme/ui/CurvesViewerView.h"
 #include "fme/ui/CurvesViewerPresenter.h"
-
+#include "fme/ui/RepeatabilityModel.h"
+#include "fme/ui/RepeatabilityView.h"
+#include "fme/ui/RepeatabilityPresenter.h"
+#include "fme/ui/AboutDialog.h"
 #include "fme/ui/utils/Progress.h"
 #include "fme/ui/utils/ProgressDialog.h"
 #include "fme/ui/utils/KeyPointGraphicsItem.h"
@@ -86,6 +89,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mCurvesROCViewerModel(nullptr),
     mCurvesDETViewerPresenter(nullptr),
     mCurvesDETViewerModel(nullptr),
+    mRepeatabilityPresenter(nullptr),
+    mRepeatabilityModel(nullptr),
+    mAboutDialog(nullptr),
     mProgressHandler(nullptr),
     mProgressDialog(nullptr)
 {
@@ -116,7 +122,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView,  SIGNAL(createGroundTruth()),        this, SLOT(createGroundTruth()));
   connect(mView,  SIGNAL(importGroundTruth()),        this, SLOT(importGroundTruth()));
   connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
-  //connect(mView,  SIGNAL(repeteability()),            this, SLOT(repeteability()));
+  connect(mView,  SIGNAL(repeatability()),            this, SLOT(openRepeatability()));
   connect(mView,  SIGNAL(prCurves()),                 this, SLOT(openPRCurvesViewer()));
   connect(mView,  SIGNAL(rocCurves()),                this, SLOT(openROCCurvesViewer()));
   connect(mView,  SIGNAL(detCurves()),                this, SLOT(openDETCurvesViewer()));
@@ -300,6 +306,15 @@ MainWindowPresenter::~MainWindowPresenter()
     mCurvesDETViewerModel = nullptr;
   }
 
+  if (mRepeatabilityPresenter){
+    delete mRepeatabilityPresenter;
+    mRepeatabilityPresenter = nullptr;
+  }
+
+  if (mRepeatabilityModel){
+    delete mRepeatabilityModel;
+    mRepeatabilityModel = nullptr;
+  }
 }
 
 void MainWindowPresenter::openNew()
@@ -566,6 +581,12 @@ void MainWindowPresenter::openHomographyViewer()
   mHomographyViewerPresenter->open();
 }
 
+void MainWindowPresenter::openRepeatability()
+{
+  initRepeatability();
+  mRepeatabilityPresenter->open();
+}
+
 void MainWindowPresenter::openPRCurvesViewer()
 {
   initPRCurvesViewer();
@@ -637,7 +658,8 @@ void MainWindowPresenter::openSettings()
 
 void MainWindowPresenter::openAboutDialog()
 {
-
+  initAboutDialog();
+  mAboutDialog->show();
 }
 
 void MainWindowPresenter::loadProject()
@@ -1401,6 +1423,16 @@ void MainWindowPresenter::initHomographyViewer()
   }
 }
 
+void MainWindowPresenter::initRepeatability()
+{
+  if (mRepeatabilityPresenter == nullptr){
+    mRepeatabilityModel = new RepeatabilityModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    IRepeatabilityView *repeatabilityView = new RepeatabilityView(mView, f);
+    mRepeatabilityPresenter = new RepeatabilityPresenter(repeatabilityView, mRepeatabilityModel);
+  }
+}
+
 void MainWindowPresenter::initPRCurvesViewer()
 {
   if (mCurvesPRViewerPresenter == nullptr) {
@@ -1431,6 +1463,13 @@ void MainWindowPresenter::initDETCurvesViewer()
     CurvesViewerView *curvesViewerView = new DETCurvesViewer(mView, f);
     mCurvesDETViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesDETViewerModel);
 //    //mMatchesViewerPresenter->setHelp(mHelp);
+  }
+}
+
+void MainWindowPresenter::initAboutDialog()
+{
+  if (mAboutDialog == nullptr) {
+    mAboutDialog = new AboutDialog(mView);
   }
 }
 

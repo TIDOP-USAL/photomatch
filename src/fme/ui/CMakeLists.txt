@@ -54,6 +54,9 @@ set(FME_SOURCES
     GroundTruthModel.cpp
     GroundTruthView.cpp
     GroundTruthPresenter.cpp
+    RepeatabilityModel.cpp
+    RepeatabilityView.cpp
+    RepeatabilityPresenter.cpp
     AboutDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
@@ -98,6 +101,9 @@ set(FME_HEADERS
     GroundTruthModel.h
     GroundTruthView.h
     GroundTruthPresenter.h
+    RepeatabilityModel.h
+    RepeatabilityView.h
+    RepeatabilityPresenter.h
     AboutDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h

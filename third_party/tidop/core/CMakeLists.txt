@@ -27,7 +27,7 @@ add_library(tl_core ${LIB_TYPE}
 )
   
 set_property(TARGET tl_core
-             PROPERTY FOLDER "lib")
+             PROPERTY FOLDER "third party")
 
 # Instalación
 if(BUILD_SHARED_LIBS)

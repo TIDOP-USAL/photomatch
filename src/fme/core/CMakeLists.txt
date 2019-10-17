@@ -57,7 +57,6 @@ add_library(libcore ${LIB_TYPE}
             features/orb.cpp
             features/matcher.cpp
             features/matcher.h
-            features/evaluation.cpp
             features/evaluation.h
             preprocess/preprocess.h
             #preprocess/downsample.cpp

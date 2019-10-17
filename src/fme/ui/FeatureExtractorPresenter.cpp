@@ -77,9 +77,13 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mMsdDetector(new MsdWidget),
     mMserDetector(new MserWidget),
     mOrbDetector(new OrbWidget),
+#ifdef OPENCV_ENABLE_NONFREE
     mSiftDetector(new SiftWidget),
+#endif
     mStarDetector(new StarWidget),
+#ifdef OPENCV_ENABLE_NONFREE
     mSurfDetector(new SurfWidget),
+#endif
     mAkazeDescriptor(new AkazeWidget),
     mBriefDescriptor(new BriefWidget),
     mBriskDescriptor(new BriskWidget),
@@ -91,8 +95,10 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mLucidDescriptor(new LucidWidget),
     mLssDescriptor(new LssWidget),
     mOrbDescriptor(new OrbWidget),
+#ifdef OPENCV_ENABLE_NONFREE
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
+#endif
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
@@ -153,20 +159,24 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     mOrbDetector = nullptr;
   }
 
+#ifdef OPENCV_ENABLE_NONFREE
   if (mSiftDetector){
     delete mSiftDetector;
     mSiftDetector = nullptr;
   }
+#endif
 
   if (mStarDetector){
     delete mStarDetector;
     mStarDetector = nullptr;
   }
 
+#ifdef OPENCV_ENABLE_NONFREE
   if (mSurfDetector){
     delete mSurfDetector;
     mSurfDetector = nullptr;
   }
+#endif
 
   if (mAkazeDescriptor){
     delete mAkazeDescriptor;
@@ -223,6 +233,7 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     mOrbDescriptor = nullptr;
   }
 
+#ifdef OPENCV_ENABLE_NONFREE
   if (mSiftDescriptor){
     delete mSiftDescriptor;
     mSiftDescriptor = nullptr;
@@ -232,6 +243,7 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     delete mSurfDescriptor;
     mSurfDescriptor = nullptr;
   }
+#endif
 
   if (mMultiProcess){
     delete mMultiProcess;
@@ -612,7 +624,7 @@ void FeatureExtractorPresenter::open()
                                      mSettingsModel->orbFastThreshold());
 
   /* SIFT */
-
+#ifdef OPENCV_ENABLE_NONFREE
   mSiftDetector->setSigma(detector && detector->type() == Feature::Type::sift ?
                             dynamic_cast<ISift *>(detector)->sigma() :
                             mSettingsModel->siftSigma());
@@ -644,6 +656,7 @@ void FeatureExtractorPresenter::open()
   mSiftDescriptor->setContrastThreshold(descriptor && descriptor->type() == Feature::Type::sift ?
                                           dynamic_cast<ISift *>(descriptor)->contrastThreshold() :
                                           mSettingsModel->siftContrastThreshold());
+#endif
 
   /* STAR */
 
@@ -664,7 +677,7 @@ void FeatureExtractorPresenter::open()
                                          mSettingsModel->starSuppressNonmaxSize());
 
   /* SURF */
-
+#ifdef OPENCV_ENABLE_NONFREE
   mSurfDetector->setOctaves(detector && detector->type() == Feature::Type::surf ?
                             dynamic_cast<ISurf *>(detector)->octaves() :
                             mSettingsModel->surfOctaves());
@@ -697,6 +710,7 @@ void FeatureExtractorPresenter::open()
                                          dynamic_cast<ISurf *>(descriptor)->extendedDescriptor() :
                                          mSettingsModel->surfExtendedDescriptor());
 
+#endif
 
   mView->exec();
 }
@@ -712,9 +726,13 @@ void FeatureExtractorPresenter::init()
   mView->addKeypointDetector(mMsdDetector);
   mView->addKeypointDetector(mMserDetector);
   mView->addKeypointDetector(mOrbDetector);
+#ifdef OPENCV_ENABLE_NONFREE
   mView->addKeypointDetector(mSiftDetector);
+#endif
   mView->addKeypointDetector(mStarDetector);
+#ifdef OPENCV_ENABLE_NONFREE
   mView->addKeypointDetector(mSurfDetector);
+#endif
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
   mView->addDescriptorExtractor(mBriefDescriptor);
@@ -727,10 +745,16 @@ void FeatureExtractorPresenter::init()
   mView->addDescriptorExtractor(mLucidDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
+#ifdef OPENCV_ENABLE_NONFREE
   mView->addDescriptorExtractor(mSiftDescriptor);
   mView->addDescriptorExtractor(mSurfDescriptor);
 
   setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
+#else
+  setCurrentkeypointDetector(mOrbDescriptor->windowTitle());
+#endif
+
+  
 }
 
 void FeatureExtractorPresenter::setProgressHandler(ProgressHandler *progressHandler)
@@ -835,25 +859,33 @@ void FeatureExtractorPresenter::run()
                                                                mOrbDetector->scoreType(),
                                                                mOrbDetector->patchSize(),
                                                                mOrbDetector->fastThreshold());
-  } else if (currentKeypointDetector.compare("SIFT") == 0){
+  } 
+#ifdef OPENCV_ENABLE_NONFREE
+  else if (currentKeypointDetector.compare("SIFT") == 0){
     keypointDetector = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
                                                                 mSiftDetector->octaveLayers(),
                                                                 mSiftDetector->contrastThreshold(),
                                                                 mSiftDetector->edgeThreshold(),
                                                                 mSiftDetector->sigma());
-  } else if (currentKeypointDetector.compare("STAR") == 0){
+  }
+#endif
+  else if (currentKeypointDetector.compare("STAR") == 0){
     keypointDetector = std::make_shared<StarDetector>(mStarDetector->maxSize(),
                                                       mStarDetector->responseThreshold(),
                                                       mStarDetector->lineThresholdProjected(),
                                                       mStarDetector->lineThresholdBinarized(),
                                                       mStarDetector->suppressNonmaxSize());
-  } else if (currentKeypointDetector.compare("SURF") == 0){
+  } 
+#ifdef OPENCV_ENABLE_NONFREE
+  else if (currentKeypointDetector.compare("SURF") == 0){
     keypointDetector = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                 mSurfDetector->octaves(),
                                                                 mSurfDetector->octaveLayers(),
                                                                 mSurfDetector->extendedDescriptor(),
                                                                 mSurfDetector->rotatedFeatures());
-  } else {
+  } 
+#endif
+  else {
     ///TODO: error
     return;
   }
@@ -949,7 +981,9 @@ void FeatureExtractorPresenter::run()
                                                                     mOrbDescriptor->patchSize(),
                                                                     mOrbDescriptor->fastThreshold());
     }
-  } else if (currentDescriptorExtractor.compare("SIFT") == 0){
+  } 
+#ifdef OPENCV_ENABLE_NONFREE
+  else if (currentDescriptorExtractor.compare("SIFT") == 0){
     if (currentKeypointDetector.compare("SIFT") == 0){
       descriptorExtractor = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
                                                                   mSiftDetector->octaveLayers(),
@@ -977,7 +1011,9 @@ void FeatureExtractorPresenter::run()
                                                                      mSurfDescriptor->extendedDescriptor(),
                                                                      mSurfDescriptor->rotatedFeatures());
     }
-  } else {
+  } 
+#endif
+  else {
     ///TODO: error
     return;
   }

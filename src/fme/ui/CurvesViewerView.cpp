@@ -21,19 +21,21 @@ CurvesViewerView::CurvesViewerView(QWidget *parent, Qt::WindowFlags f)
 
   //connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   //connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
-  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *,int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *,int)));
+  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
 
-  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
+  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
 
 }
 
 CurvesViewerView::~CurvesViewerView()
 {
-  if (mChart){
+
+  if (mChart) {
     delete mChart;
     mChart = nullptr;
   }
+
 }
 
 void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
@@ -44,6 +46,8 @@ void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, in
     QString detector = mComboBoxLeftImage->currentText();
     QString descriptor = mComboBoxRightImage->currentText();
     emit drawCurve(session, detector, descriptor);
+  } else {
+    emit deleteCurve(item->text(0));
   }
 }
 
@@ -85,7 +89,7 @@ void CurvesViewerView::setLeftImageList(const std::vector<QString> &leftImageLis
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   mComboBoxLeftImage->clear();
-  for (auto &image : leftImageList){
+  for (auto &image : leftImageList) {
     QFileInfo file_info(image);
     mComboBoxLeftImage->addItem(file_info.baseName(), image);
   }
@@ -95,7 +99,7 @@ void CurvesViewerView::setRightImageList(const std::vector<QString> &rightImageL
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   mComboBoxRightImage->clear();
-  for (auto &image : rightImageList){
+  for (auto &image : rightImageList) {
     QFileInfo file_info(image);
     mComboBoxRightImage->addItem(file_info.baseName(), image);
   }
@@ -105,7 +109,7 @@ void CurvesViewerView::setCurve(const QString &session, const std::vector<QPoint
 {
   QLineSeries *series = new QLineSeries(this);
 
-  for (size_t i = 0; i < curve.size(); i++){
+  for (size_t i = 0; i < curve.size(); i++) {
     series->append(curve[i]);
   }
 
@@ -113,6 +117,17 @@ void CurvesViewerView::setCurve(const QString &session, const std::vector<QPoint
   mChart->addSeries(series);
   series->attachAxis(mAxisX);
   series->attachAxis(mAxisY);
+}
+
+void CurvesViewerView::eraseCurve(const QString &session)
+{
+  QList<QAbstractSeries *> series = mChart->series();
+  for (int i = 0; i < series.size(); i++) {
+    if (series[i]->name().compare(session) == 0) {
+      mChart->removeSeries(series[i]);
+      break;
+    }
+  }
 }
 
 void CurvesViewerView::init()
@@ -174,8 +189,13 @@ void CurvesViewerView::init()
 
 void CurvesViewerView::clear()
 {
+  QSignalBlocker blocker1(mComboBoxLeftImage);
+  QSignalBlocker blocker2(mComboBoxRightImage);
+  QSignalBlocker blocker3(mTreeWidgetSessions);
+
   mComboBoxLeftImage->clear();
   mComboBoxLeftImage->clear();
+  mTreeWidgetSessions->clear();
 }
 
 void CurvesViewerView::update()

@@ -203,7 +203,7 @@ void MatchViewerView::init()
   gridLayout->addWidget(mTreeWidgetMatches, 4, 0, 1, 2);
 
   QTreeWidgetItem *qTreeWidgetItem = mTreeWidgetMatches->headerItem();
-  qTreeWidgetItem->setText(0, tr("ID"));
+  qTreeWidgetItem->setText(0, "ID");
   qTreeWidgetItem->setText(1, tr("Left X"));
   qTreeWidgetItem->setText(2, tr("Left Y"));
   qTreeWidgetItem->setText(3, tr("Right X"));

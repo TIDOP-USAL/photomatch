@@ -59,7 +59,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
-
+#ifdef OPENCV_ENABLE_NONFREE
 
 class FME_EXPORT SiftDetectorDescriptor
   : public SiftProperties,
@@ -118,6 +118,8 @@ protected:
 
   cv::Ptr<cv::xfeatures2d::SIFT> mSift;
 };
+
+#endif
 
 } // namespace fme
 

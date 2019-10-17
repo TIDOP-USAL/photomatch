@@ -52,6 +52,15 @@ void TestClahe::testDefaultConstructor()
   QCOMPARE(40.0, clahePreprocess.clipLimit());
   QCOMPARE(QSize(8, 8), clahePreprocess.tilesGridSize());
 
+  /// Copy constructor
+  ClahePreprocess copy(clahePreprocess);
+  QCOMPARE(40.0, copy.clipLimit());
+  QCOMPARE(QSize(8, 8), copy.tilesGridSize());
+
+  /// Move contructor
+  ClahePreprocess move(ClahePreprocess(40.0, QSize(8, 8)));
+  QCOMPARE(40.0, move.clipLimit());
+  QCOMPARE(QSize(8, 8), move.tilesGridSize());
 }
 
 void TestClahe::test_type()

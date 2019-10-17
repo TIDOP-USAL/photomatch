@@ -142,7 +142,7 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(false, mActionCreateGroundTruth->isEnabled());
   QCOMPARE(false, mActionImportGroundTruth->isEnabled());
   QCOMPARE(false, mActionHomography->isEnabled());
-  QCOMPARE(false, mActionRepeteability->isEnabled());
+  //QCOMPARE(false, mActionRepeteability->isEnabled());
   QCOMPARE(false, mActionPRCurves->isEnabled());
   QCOMPARE(false, mActionROCCurves->isEnabled());
 
@@ -177,7 +177,7 @@ void TestMainWindowView::test_setFlag()
   setFlag(MainWindowView::Flag::feature_matching, true);
   QCOMPARE(true, mActionMatchesViewer->isEnabled());
   QCOMPARE(true, mActionHomography->isEnabled());
-  QCOMPARE(true, mActionRepeteability->isEnabled());
+  //QCOMPARE(true, mActionRepeteability->isEnabled());
   QCOMPARE(false, mActionPRCurves->isEnabled());
   QCOMPARE(false, mActionROCCurves->isEnabled());
   QCOMPARE(true, mActionExportMatchesToCvXml->isEnabled());

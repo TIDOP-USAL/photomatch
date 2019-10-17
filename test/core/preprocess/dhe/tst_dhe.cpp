@@ -48,6 +48,14 @@ void TestDhe::testDefaultConstructor()
 {
   DhePreprocess dhePreprocess;
   QCOMPARE(1, dhePreprocess.x());
+
+  /// Copy constructor
+  DhePreprocess copy(dhePreprocess);
+  QCOMPARE(1, copy.x());
+
+  /// Move contructor
+  DhePreprocess move(DhePreprocess(1));
+  QCOMPARE(1, move.x());
 }
 
 void TestDhe::test_type()

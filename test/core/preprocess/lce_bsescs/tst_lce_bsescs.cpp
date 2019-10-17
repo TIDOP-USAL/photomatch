@@ -48,6 +48,12 @@ void TestLceBsescs::testDefaultConstructor()
 {
   LceBsescsPreprocess lceBsescsPreprocess;
   QCOMPARE(QSize(33, 33), lceBsescsPreprocess.blockSize());
+
+  LceBsescsPreprocess copy(lceBsescsPreprocess);
+  QCOMPARE(QSize(33, 33), copy.blockSize());
+
+  LceBsescsPreprocess move(std::move(LceBsescsPreprocess(QSize(11, 11))));
+  QCOMPARE(QSize(11, 11), move.blockSize());
 }
 
 void TestLceBsescs::test_type()

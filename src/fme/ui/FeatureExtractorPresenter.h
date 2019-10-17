@@ -143,7 +143,6 @@ protected:
   IOrbWidget *mOrbDescriptor;
   ISiftWidget *mSiftDescriptor;
   ISurfWidget *mSurfDescriptor;
-
   MultiProcess *mMultiProcess;
 
   ProgressHandler *mProgressHandler;

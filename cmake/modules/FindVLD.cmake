@@ -43,6 +43,7 @@ endif()
 
 if (VLD_INCLUDE_DIR AND VLD_LIBRARY)
     set(PIXKIT_FOUND TRUE)
+    message(STATUS "\n")
     message(STATUS "Found Visual Leak Detector")
     message(STATUS "  Include   : ${VLD_INCLUDE_DIR}")
     message(STATUS "  Library   : ${VLD_LIBRARY}")

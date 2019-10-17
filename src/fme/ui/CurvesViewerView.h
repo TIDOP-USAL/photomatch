@@ -67,13 +67,14 @@ public:
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
   virtual void setCurve(const QString &session, const std::vector<QPointF> &curve) = 0;
+  virtual void eraseCurve(const QString &session) = 0;
 
 signals:
 
   void leftImageChange(QString);
   void rightImageChange(QString);
   void drawCurve(QString, QString, QString);
-
+  void deleteCurve(QString);
 };
 
 class CurvesViewerView
@@ -103,6 +104,7 @@ private slots:
   virtual void setLeftImageList(const std::vector<QString> &leftImageList) override;
   virtual void setRightImageList(const std::vector<QString> &rightImageList) override;
   virtual void setCurve(const QString &session, const std::vector<QPointF> &curve) override;
+  virtual void eraseCurve(const QString &session) override;
 
 // IDialogView interface
 
