@@ -321,18 +321,22 @@ void DescriptorMatcherPresenter::run()
     it2++;
     for (; it2 != mProjectModel->imageEnd(); it2++){
 
-      QString file1 = (*it)->path();
-      QFileInfo fileInfo(file1);
-      QString features1 = fileInfo.path();
-      features1.append("\\").append(mProjectModel->currentSession()->name());
-      features1.append("\\features\\");
-      QString features2 = features1;
-      features1.append(fileInfo.fileName()).append(".xml");
-      QString file2 = (*it2)->path();
-      QFileInfo fileInfo2(file2);
-      features2.append(fileInfo2.fileName()).append(".xml");
+//      QString file1 = (*it)->path();
+//      QFileInfo fileInfo(file1);
+//      QString features1 = fileInfo.path();
+//      features1.append("\\").append(mProjectModel->currentSession()->name());
 
-      QString matches = fileInfo.path();
+//      features1.append("\\features\\");
+//      QString features2 = features1;
+//      features1.append(fileInfo.fileName()).append(".xml");
+//      QString file2 = (*it2)->path();
+//      QFileInfo fileInfo2(file2);
+//      features2.append(fileInfo2.fileName()).append(".xml");
+
+      QString features1 = mProjectModel->currentSession()->features((*it)->name());
+      QString features2 = mProjectModel->currentSession()->features((*it2)->name());
+
+      QString matches = mProjectModel->projectFolder();
       matches.append("\\").append(mProjectModel->currentSession()->name());
       matches.append("\\matches\\");
 
@@ -340,7 +344,15 @@ void DescriptorMatcherPresenter::run()
       if (!dir_out.exists()) {
         dir_out.mkpath(".");
       }
-      matches.append(fileInfo.baseName()).append("_").append(fileInfo2.baseName()).append(".xml");
+      matches.append((*it)->name()).append("_").append((*it2)->name());
+      QString matchesFormat = mSettingsModel->matchesFormat();
+      if (matchesFormat.compare("Binary") == 0){
+        matches.append(".bin");
+      } else if (matchesFormat.compare("YML") == 0){
+        matches.append(".yml");
+      } else {
+        matches.append(".xml");
+      }
 
       std::shared_ptr<MatchingProcess> matcher(new MatchingProcess(features1, features2, matches, robustMatching));
       connect(matcher.get(), SIGNAL(matchCompute(QString,QString,QString)), this, SLOT(onMatchCompute(QString,QString,QString)));

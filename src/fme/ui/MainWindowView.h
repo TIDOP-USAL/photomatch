@@ -126,9 +126,13 @@ signals:
   void exportMatchesCvYml();
   void exportMatchesCvXml();
   void exportMatchesTxt();
-
   void closeProject();
   void exit();
+  void openSettings();
+
+  /* Menú View */
+
+  void openViewSettings();
 
   /* Menú herramientas */
 
@@ -137,7 +141,7 @@ signals:
   void openPreprocess();
   void openFeatureExtraction();
   void openFeatureMatching();
-  void openSettings();
+  void openToolSettings();
 
   /* Quality Control */
 
@@ -220,7 +224,8 @@ protected:
   QAction *mActionPreprocess;
   QAction *mActionFeatureExtraction;
   QAction *mActionFeatureMatching;
-  QAction *mActionSettings;
+  QAction *mActionViewSettings;
+  QAction *mActionToolSettings;
   QAction *mActionHelp;
   QAction *mActionAbout;
   QAction *mActionExportTiePointsCvXml;

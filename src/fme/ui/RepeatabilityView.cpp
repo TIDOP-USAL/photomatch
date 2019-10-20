@@ -14,7 +14,7 @@ RepeatabilityView::RepeatabilityView(QWidget *parent, Qt::WindowFlags f)
 {
   init();
 
-  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
+  connect(mTreeWidgetSessions, SIGNAL(itemSelectionChanged()), this, SLOT(onTreeWidgetSessionsItemSelectionChanged()));
 
   connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
   connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
@@ -25,23 +25,25 @@ RepeatabilityView::~RepeatabilityView()
 {
 }
 
-void RepeatabilityView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
+void RepeatabilityView::onTreeWidgetSessionsItemSelectionChanged()
 {
-  emit selectSession(item->text(0));
+  emit selectSession(mTreeWidgetSessions->currentItem()->text(0));
 }
 
 void RepeatabilityView::addSession(const QString &session, const QString &detector, const QString &descriptor)
 {
+  QSignalBlocker blocker1(mTreeWidgetSessions);
+
   QTreeWidgetItem *item = new QTreeWidgetItem(mTreeWidgetSessions);
   item->setText(0, session);
   item->setText(1, detector);
   item->setText(2, descriptor);
-  item->setCheckState(0, Qt::Unchecked);
   mTreeWidgetSessions->addTopLevelItem(item);
 }
 
 void RepeatabilityView::setRepeatability(const std::vector<std::tuple<QString, QString, QString, float, int> > &repeatability)
 {
+  
   mTreeWidget->clear();
 
   QString session;
@@ -89,11 +91,10 @@ void RepeatabilityView::init()
   qtreewidgetitem2->setText(1, tr("Session"));
   qtreewidgetitem2->setText(2, tr("Image 1"));
   qtreewidgetitem2->setText(3, tr("Image 2"));
-  qtreewidgetitem2->setText(3, tr("Repeteability"));
-  qtreewidgetitem2->setText(3, tr("Image 2"));
+  qtreewidgetitem2->setText(4, tr("Repeteability"));
+  qtreewidgetitem2->setText(5, tr("Image 2"));
   mTreeWidget->setHeaderItem(qtreewidgetitem2);
-  mTreeWidget->setMaximumWidth(250);
-  hBoxLayout->addWidget(mTreeWidgetSessions);
+  hBoxLayout->addWidget(mTreeWidget);
 
   gridLayout->addLayout(hBoxLayout, 0, 0);
 

@@ -8,6 +8,11 @@
 #include <QString>
 
 #include <opencv2/xfeatures2d.hpp>
+#ifdef HAVE_CUDA
+#include <opencv2/cudafeatures2d.hpp>
+#include "opencv2/xfeatures2d/cuda.hpp"
+#endif // HAVE_CUDA
+
 
 namespace fme
 {
@@ -115,7 +120,70 @@ protected:
   cv::Ptr<cv::xfeatures2d::SURF> mSurf;
 };
 
-#endif
+
+/*----------------------------------------------------------------*/
+
+#ifdef HAVE_CUDA
+
+class FME_EXPORT SurfCudaDetectorDescriptor
+  : public SurfProperties,
+    public KeypointDetector,
+    public DescriptorExtractor
+{
+
+public:
+
+  SurfCudaDetectorDescriptor();
+  SurfCudaDetectorDescriptor(double hessianThreshold,
+                             int octaves,
+                             int octaveLayers,
+                             bool extendedDescriptor,
+                             bool rotatedFeatures);
+                             
+  ~SurfCudaDetectorDescriptor() override;
+
+// KeypointDetector interface
+
+public:
+
+  bool detect(const cv::Mat &img,
+              std::vector<cv::KeyPoint> &keyPoints,
+              cv::InputArray &mask = cv::noArray()) override;
+
+// DescriptorExtractor interface
+
+public:
+
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
+
+// ISurf interface
+
+public:
+
+  void setHessianThreshold(double hessianThreshold) override;
+  void setOctaves(int octaves) override;
+  void setOctaveLayers(int octaveLayers) override;
+  void setExtendedDescriptor(bool extendedDescriptor) override;
+  void setRotatedFeatures(bool rotatedFeatures) override;
+
+// Feature interface
+
+public:
+
+  void reset() override;
+
+protected:
+
+  std::unique_ptr<cv::cuda::SURF_CUDA> mSurf;
+};
+
+
+#endif // HAVE_CUDA
+
+
+#endif // OPENCV_ENABLE_NONFREE
 
 } // namespace fme
 

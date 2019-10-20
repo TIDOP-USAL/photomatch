@@ -147,6 +147,19 @@ std::vector<QString> Session::preprocessImages() const
   return mPreprocessImages;
 }
 
+QString Session::preprocessImage(const QString &image) const
+{
+  QString preprocess_image;
+  for (size_t i = 0; i < mPreprocessImages.size(); i++){
+    QString pre_file_name = QFileInfo(mPreprocessImages[i]).baseName();
+    if (pre_file_name.compare(image) == 0) {
+      preprocess_image = mPreprocessImages[i];
+      break;
+    }
+  }
+  return preprocess_image;
+}
+
 void Session::addFeatures(const QString &feat)
 {
   for (auto &f : mFeatures) {

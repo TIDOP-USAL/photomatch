@@ -93,6 +93,7 @@ public:
   virtual void deletePreprocessImage(const QString &img) = 0;
   virtual void deletePreprocessImages() = 0;
   virtual std::vector<QString> preprocessImages() const = 0;
+  virtual QString preprocessImage(const QString &image) const = 0;
 
   virtual void addFeatures(const QString &feat) = 0;
   virtual void deleteFeatures(const QString &feat) = 0;
@@ -146,15 +147,19 @@ public:
   void setMatcher(const std::shared_ptr<Match> &matcher) override;
   std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement() override;
   void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) override;
+
   void addPreprocessImage(const QString &img) override;
   void deletePreprocessImage(const QString &img) override;
   void deletePreprocessImages() override;
   std::vector<QString> preprocessImages() const override;
+  QString preprocessImage(const QString &image) const override;
+
   void addFeatures(const QString &feat) override;
   void deleteFeatures(const QString &feat) override;
   void deleteFeatures() override;
   std::vector<QString> features() const override;
   QString features(const QString &image) const override;
+
   void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
   void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
   void deleteMatches(const QString &img1) override;

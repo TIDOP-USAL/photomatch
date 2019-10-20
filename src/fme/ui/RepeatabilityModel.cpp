@@ -77,68 +77,70 @@ void RepeatabilityModel::init()
 {
 }
 
-std::vector<std::tuple<QString, QString, QString, float, int>> RepeatabilityModel::computeRepeatability(const QString &session/*, const QString &imgLeft, const QString &imgRight*/) const
+std::vector<std::tuple<QString, QString, QString, float, int>>
+RepeatabilityModel::computeRepeatability(const QString &session) const
 {
 
   std::vector<std::tuple<QString, QString, QString, float, int>> repeatability;
 
-  QString groundTruth = mProjectModel->groundTruth();
+  if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
 
-  std::vector<QString> imagesLeft = this->images();
+    QString groundTruth = mProjectModel->groundTruth();
 
-  for (size_t i = 0; i < imagesLeft.size(); i++){
+    std::vector<QString> imagesLeft = this->images();
 
-    QString imgPath1 = imagesLeft[i];
-    std::vector<QString> imagesRight = this->imagePairs(QFileInfo(imgPath1).baseName());
+    for (size_t i = 0; i < imagesLeft.size(); i++){
 
-    for (size_t j = 0; j < imagesRight.size(); j++){
-
-      QString imgPath2 = imagesRight[j];
-
-      if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
-        continue;
-
+      QString imgPath1 = imagesLeft[i];
       QString imgLeft = QFileInfo(imgPath1).baseName();
-      QString imgRight = QFileInfo(imgPath2).baseName();
+      std::vector<QString> imagesRight = this->imagePairs(QFileInfo(imgPath1).baseName());
+      cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
 
-      std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
+      for (size_t j = 0; j < imagesRight.size(); j++){
 
-      std::vector<cv::Point2f> pts_query;
-      std::vector<cv::Point2f> pts_train;
-      std::string line;
+        QString imgPath2 = imagesRight[j];
 
-      if (ifs.is_open()){
+        if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
+          continue;
 
-        while (std::getline(ifs, line)) {
 
-          QStringList list = QString(line.c_str()).split(";");
-          if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
-            cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
-            cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
-            pts_query.push_back(pt_query);
-            pts_train.push_back(pt_train);
-          } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
-            cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
-            cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
-            pts_query.push_back(pt_query);
-            pts_train.push_back(pt_train);
+        QString imgRight = QFileInfo(imgPath2).baseName();
+
+        std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
+
+        std::vector<cv::Point2f> pts_query;
+        std::vector<cv::Point2f> pts_train;
+
+
+        if (ifs.is_open()){
+
+          std::string line;
+
+          while (std::getline(ifs, line)) {
+
+            QStringList list = QString(line.c_str()).split(";");
+            if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
+              cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
+              cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
+              pts_query.push_back(pt_query);
+              pts_train.push_back(pt_train);
+            } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
+              cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
+              cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
+              pts_query.push_back(pt_query);
+              pts_train.push_back(pt_train);
+            }
+
           }
+
+          ifs.close();
 
         }
 
-        ifs.close();
 
-      }
+        if (pts_query.size() > 0 && pts_train.size() > 0 && pts_query.size() == pts_train.size()){
 
-
-      if (pts_query.size() > 0 && pts_train.size() > 0 && pts_query.size() == pts_train.size()){
-
-        cv::Mat H = cv::findHomography(pts_query, pts_train);
-
-        cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
-        cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
-
-        if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
+          cv::Mat H = cv::findHomography(pts_query, pts_train);
 
           std::vector<std::pair<QString, QString>> matches = _session->matches(imgLeft);
 
@@ -154,6 +156,7 @@ std::vector<std::tuple<QString, QString, QString, float, int>> RepeatabilityMode
                 cv::Mat descriptors;
                 featuresRead(_session->features(imgLeft), keyPoints1, descriptors);
                 featuresRead(_session->features(imgRight), keyPoints2, descriptors);
+                descriptors.release();
 
                 std::vector<std::pair<double, int>> matchClassification;
 
@@ -171,25 +174,23 @@ std::vector<std::tuple<QString, QString, QString, float, int>> RepeatabilityMode
 
                 float repeat = 0;
                 int corres = 0;
+                cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
                 cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeat, corres);
+                img2.release();
 
                 repeatability.push_back(std::make_tuple(_session->name(), imgLeft, imgRight, repeat, corres));
               }
             }
           }
         }
+
       }
 
     }
-
   }
 
   return repeatability;
 }
 
-
-
 } // namespace fme
-
-
 

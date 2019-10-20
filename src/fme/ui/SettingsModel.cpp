@@ -70,6 +70,16 @@ int SettingsModel::historyMaxSize() const
   return mSettings->historyMaxSize();
 }
 
+QString SettingsModel::keypointsFormat() const
+{
+  return mSettings->keypointsFormat();
+}
+
+QString SettingsModel::matchesFormat() const
+{
+  return mSettings->matchesFormat();
+}
+
 QSize SettingsModel::acebsfBlockSize() const
 {
   return mSettings->acebsf()->blockSize();
@@ -670,6 +680,11 @@ bool SettingsModel::surfRotatedFeatures() const
   return mSettings->surf()->rotatedFeatures();
 }
 
+QString SettingsModel::matchMethod() const
+{
+  return mSettings->matchMethod();
+}
+
 QString SettingsModel::matchNormType() const
 {
   BruteForceMatcher::Norm norm = mSettings->bruteForceMatcher()->normType();
@@ -707,6 +722,69 @@ bool SettingsModel::matchCrossMatching() const
   return mSettings->robustMatcherRefinement()->crossCheck();
 }
 
+int SettingsModel::matchMaxIters() const
+{
+  return mSettings->robustMatcherRefinement()->maxIter();
+}
+
+QString SettingsModel::matchGeometricTest() const
+{
+  IRobustMatcherRefinement::GeometricTest geometric_test = mSettings->robustMatcherRefinement()->geometricTest();
+  QString geometricTest = "Homography Matrix";
+  if (geometric_test == IRobustMatcherRefinement::GeometricTest::homography) {
+    geometricTest = "Homography Matrix";
+  } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::fundamental) {
+    geometricTest = "Fundamental Matrix";
+  } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::essential) {
+    geometricTest = "Essential Matrix";
+  }
+  return geometricTest;
+}
+
+QString SettingsModel::matchHomographyComputeMethod() const
+{
+  IRobustMatcherRefinement::HomographyComputeMethod computeMethod = mSettings->robustMatcherRefinement()->homographyComputeMethod();
+  QString homographyComputeMethod = "RANSAC";
+  if (computeMethod == IRobustMatcherRefinement::HomographyComputeMethod::all_points) {
+    homographyComputeMethod = "All Points";
+  } else if (computeMethod == IRobustMatcherRefinement::HomographyComputeMethod::ransac) {
+    homographyComputeMethod = "RANSAC";
+  } else if (computeMethod == IRobustMatcherRefinement::HomographyComputeMethod::lmeds) {
+    homographyComputeMethod = "LMedS";
+  } else if (computeMethod == IRobustMatcherRefinement::HomographyComputeMethod::rho) {
+    homographyComputeMethod = "RHO";
+  }
+  return homographyComputeMethod;
+}
+
+QString SettingsModel::matchFundamentalComputeMethod() const
+{
+  IRobustMatcherRefinement::FundamentalComputeMethod computeMethod = mSettings->robustMatcherRefinement()->fundamentalComputeMethod();
+  QString fundamentalComputeMethod = "RANSAC";
+  if (computeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point) {
+    fundamentalComputeMethod = "7-point algorithm";
+  } else if (computeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point) {
+    fundamentalComputeMethod = "8-point algorithm";
+  } else if (computeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::ransac) {
+    fundamentalComputeMethod = "RANSAC";
+  } else if (computeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::lmeds) {
+    fundamentalComputeMethod = "LMedS";
+  }
+  return fundamentalComputeMethod;
+}
+
+QString SettingsModel::matchEssentialComputeMethod() const
+{
+  IRobustMatcherRefinement::EssentialComputeMethod computeMethod = mSettings->robustMatcherRefinement()->essentialComputeMethod();
+  QString essentialComputeMethod = "RANSAC";
+  if (computeMethod == IRobustMatcherRefinement::EssentialComputeMethod::ransac) {
+    essentialComputeMethod = "RANSAC";
+  } else if (computeMethod == IRobustMatcherRefinement::EssentialComputeMethod::lmeds) {
+    essentialComputeMethod = "LMedS";
+  }
+  return essentialComputeMethod;
+}
+
 void SettingsModel::setLanguage(const QString &language)
 {
   mSettings->setLanguage(language);
@@ -728,6 +806,18 @@ void SettingsModel::clearHistory()
 void SettingsModel::setHistoryMaxSize(int maxSize)
 {
   mSettings->setHistoryMaxSize(maxSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsFormat(const QString &format)
+{
+  mSettings->setKeypointsFormat(format);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesFormat(const QString &format)
+{
+  mSettings->setMatchesFormat(format);
   emit unsavedChanges(true);
 }
 
@@ -1451,6 +1541,12 @@ void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
   emit unsavedChanges(true);
 }
 
+void SettingsModel::setMatchMethod(const QString &matchingMethod)
+{
+  mSettings->setMatchMethod(matchingMethod);
+  emit unsavedChanges(true);
+}
+
 void SettingsModel::setMatchNormType(const QString &normType)
 {
   BruteForceMatcher::Norm norm = BruteForceMatcherProperties::Norm::l2;
@@ -1488,6 +1584,70 @@ void SettingsModel::setMatchConfidence(double confidence)
 void SettingsModel::setMatchCrossMatching(bool crossMatching)
 {
   mSettings->robustMatcherRefinement()->setCrossCheck(crossMatching);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchMaxIters(int maxIters)
+{
+  mSettings->robustMatcherRefinement()->setMaxIters(maxIters);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchGeometricTest(const QString &geometricTest)
+{
+  IRobustMatcherRefinement::GeometricTest geometric_test = IRobustMatcherRefinement::GeometricTest::homography;
+  if (geometricTest.compare("Homography Matrix") == 0) {
+    geometric_test = IRobustMatcherRefinement::GeometricTest::homography;
+  } else if (geometricTest.compare("Fundamental Matrix") == 0) {
+    geometric_test = IRobustMatcherRefinement::GeometricTest::fundamental;
+  } else if (geometricTest.compare("Essential Matrix") == 0) {
+    geometric_test = IRobustMatcherRefinement::GeometricTest::essential;
+  }
+  mSettings->robustMatcherRefinement()->setGeometricTest(geometric_test);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchHomographyComputeMethod(const QString &computeMethod)
+{
+  IRobustMatcherRefinement::HomographyComputeMethod homographyComputeMethod = IRobustMatcherRefinement::HomographyComputeMethod::ransac;
+  if (computeMethod.compare("All Points") == 0) {
+    homographyComputeMethod = IRobustMatcherRefinement::HomographyComputeMethod::all_points;
+  } else if (computeMethod.compare("RANSAC") == 0) {
+    homographyComputeMethod = IRobustMatcherRefinement::HomographyComputeMethod::ransac;
+  } else if (computeMethod.compare("LMedS") == 0) {
+    homographyComputeMethod = IRobustMatcherRefinement::HomographyComputeMethod::lmeds;
+  } else if (computeMethod.compare("RHO") == 0) {
+    homographyComputeMethod = IRobustMatcherRefinement::HomographyComputeMethod::rho;
+  }
+  mSettings->robustMatcherRefinement()->setHomographyComputeMethod(homographyComputeMethod);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchFundamentalComputeMethod(const QString &computeMethod)
+{
+  IRobustMatcherRefinement::FundamentalComputeMethod fundamentalComputeMethod = IRobustMatcherRefinement::FundamentalComputeMethod::ransac;
+  if (computeMethod.compare("7-point algorithm") == 0) {
+    fundamentalComputeMethod = IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point;
+  } else if (computeMethod.compare("8-point algorithm") == 0) {
+    fundamentalComputeMethod = IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point;
+  } else if (computeMethod.compare("RANSAC") == 0) {
+    fundamentalComputeMethod = IRobustMatcherRefinement::FundamentalComputeMethod::ransac;
+  } else if (computeMethod.compare("LMedS") == 0) {
+    fundamentalComputeMethod = IRobustMatcherRefinement::FundamentalComputeMethod::lmeds;
+  }
+  mSettings->robustMatcherRefinement()->setFundamentalComputeMethod(fundamentalComputeMethod);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchEssentialComputeMethod(const QString &computeMethod)
+{
+  IRobustMatcherRefinement::EssentialComputeMethod essentialComputeMethod = IRobustMatcherRefinement::EssentialComputeMethod::ransac;
+  if (computeMethod.compare("RANSAC") == 0) {
+    essentialComputeMethod = IRobustMatcherRefinement::EssentialComputeMethod::ransac;
+  } else if (computeMethod.compare("LMedS") == 0) {
+    essentialComputeMethod = IRobustMatcherRefinement::EssentialComputeMethod::lmeds;
+  }
+  mSettings->robustMatcherRefinement()->setEssentialComputeMethod(essentialComputeMethod);
   emit unsavedChanges(true);
 }
 

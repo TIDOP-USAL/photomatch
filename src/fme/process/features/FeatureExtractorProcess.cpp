@@ -92,14 +92,14 @@ void FeatureExtractor::run()
   time = chrono.stop();
   msgInfo("Descriptors computed for image %s [Time: %f seconds]", img_file, time/1000.);
 
-  cv::Mat out;
-  cv::drawKeypoints(img, key_points, out, cv::Scalar(0,255,0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-  QFileInfo fileInfo(mFeatures);
-  QString imgKeypoints = fileInfo.path();
-  imgKeypoints.append("\\").append(fileInfo.completeBaseName());
-  ba = imgKeypoints.toLocal8Bit();
-  const char *ckp = ba.data();
-  cv::imwrite(ckp, out);
+  //cv::Mat out;
+  //cv::drawKeypoints(img, key_points, out, cv::Scalar(0,255,0), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+  //QFileInfo fileInfo(mImage);
+  //QString imgKeypoints = fileInfo.path();
+  //imgKeypoints.append("\\").append(fileInfo.fileName());
+  //ba = imgKeypoints.toLocal8Bit();
+  //const char *ckp = ba.data();
+  //cv::imwrite(ckp, out);
 
   for (size_t i = 0; i < key_points.size(); i++){
     key_points[i].pt *= mScale;

@@ -116,6 +116,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   /* Menú View */
 
+  connect(mView,   SIGNAL(openSettings()),            this, SLOT(openSettings()));
+  connect(mView,   SIGNAL(openViewSettings()),        this, SLOT(openViewSettings()));
+
   /* Quality Control */
 
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
@@ -134,7 +137,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView,   SIGNAL(openPreprocess()),          this, SLOT(openPreprocess()));
   connect(mView,   SIGNAL(openFeatureExtraction()),   this, SLOT(openFeatureExtraction()));
   connect(mView,   SIGNAL(openFeatureMatching()),     this, SLOT(openFeatureMatching()));
-  connect(mView,   SIGNAL(openSettings()),            this, SLOT(openSettings()));
+  connect(mView,   SIGNAL(openToolSettings()),        this, SLOT(openToolSettings()));
 
   /* Menú Ayuda */
 
@@ -547,6 +550,18 @@ void MainWindowPresenter::exit()
   mView->close();
 }
 
+void MainWindowPresenter::openSettings()
+{
+  initSettingsDialog();
+  mSettingsPresenter->open();
+}
+
+void MainWindowPresenter::openViewSettings()
+{
+  initSettingsDialog();
+  mSettingsPresenter->openPage(1);
+}
+
 void MainWindowPresenter::openMatchesViewer()
 {
   initMatchesViewer();
@@ -650,10 +665,10 @@ void MainWindowPresenter::openFeatureMatching()
   mDescriptorMatcherPresenter->open();
 }
 
-void MainWindowPresenter::openSettings()
+void MainWindowPresenter::openToolSettings()
 {
   initSettingsDialog();
-  mSettingsPresenter->open();
+  mSettingsPresenter->openPage(2);
 }
 
 void MainWindowPresenter::openAboutDialog()

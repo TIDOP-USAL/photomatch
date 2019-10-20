@@ -101,6 +101,11 @@ public:
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
 
+  virtual QString keypointsFormat() const = 0;
+  virtual void setKeypointsFormat(const QString &format) = 0;
+  virtual QString matchesFormat() const = 0;
+  virtual void setMatchesFormat(const QString &format) = 0;
+
   virtual IAcebsf *acebsf() = 0;
   virtual const IAcebsf *acebsf() const = 0;
   virtual IClahe *clahe() = 0;
@@ -163,6 +168,8 @@ public:
   virtual ISurf *surf() = 0;
   virtual const ISurf *surf() const = 0;
 
+  virtual QString matchMethod() const = 0;
+  virtual void setMatchMethod(const QString &matchingMethod) = 0;
   virtual IFlannMatcher *flannMatcher() = 0;
   virtual const IFlannMatcher *flannMatcher() const = 0;
   virtual IBruteForceMatcher *bruteForceMatcher() = 0;
@@ -237,6 +244,11 @@ public:
   int historyMaxSize() const override;
   void setHistoryMaxSize(int maxSize) override;
 
+  QString keypointsFormat() const override;
+  void setKeypointsFormat(const QString &format) override;
+  QString matchesFormat() const override;
+  void setMatchesFormat(const QString &format) override;
+
   IAcebsf *acebsf() override;
   const IAcebsf *acebsf() const override;
   IClahe *clahe() override;
@@ -299,6 +311,8 @@ public:
   ISurf *surf() override;
   const ISurf *surf() const override;
 
+  QString matchMethod() const override;
+  void setMatchMethod(const QString &matchingMethod) override;
   IFlannMatcher *flannMatcher() override;
   const IFlannMatcher *flannMatcher() const override;
   IBruteForceMatcher *bruteForceMatcher() override;
@@ -313,6 +327,8 @@ protected:
   QString mLanguage;
   int mHistoyMaxSize;
   QStringList mHistory;
+  QString mKeypointsFormat;
+  QString mMatchesFormat;
 
   IAcebsf *mAcebsf;
   IClahe *mClahe;
@@ -346,6 +362,7 @@ protected:
   IStar *mStar;
   ISurf *mSurf;
 
+  QString mMatchMethod;
   IFlannMatcher *mFlannMatcher;
   IBruteForceMatcher *mBruteForceMatcher;
   IRobustMatcherRefinement *mRobustMatcherRefinement;

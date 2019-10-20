@@ -84,7 +84,9 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 {
   init();
 
-  connect(mView, SIGNAL(languageChange(QString)), this, SLOT(setLanguage(QString)));
+  connect(mView, SIGNAL(languageChange(QString)),        this,   SLOT(setLanguage(QString)));
+  connect(mView, SIGNAL(keypointsFormatChange(QString)), mModel, SLOT(setKeypointsFormat(QString)));
+  connect(mView, SIGNAL(matchesFormatChange(QString)),   mModel, SLOT(setMatchesFormat(QString)));
 
   connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   connect(mView, SIGNAL(applyChanges()), this, SLOT(save()));
@@ -273,12 +275,18 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mSurf, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setSurfExtendedDescriptor(bool)));
   connect(mSurf, SIGNAL(rotatedFeaturesChange(bool)),        mModel, SLOT(setSurfRotatedFeatures(bool)));
 
-//  connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMatchingMethod(QString)));
-//  connect(mMatcher, SIGNAL(normTypeChange(QString)),         mModel, SLOT(setMatchNormType(QString)));
-//  connect(mMatcher, SIGNAL(ratioChange(double)),             mModel, SLOT(setMatchRatio(double)));
-//  connect(mMatcher, SIGNAL(distanceChange(double)),          mModel, SLOT(setMatchDistance(double)));
-//  connect(mMatcher, SIGNAL(confidenceChange(double)),        mModel, SLOT(setMatchConfidence(double)));
-//  connect(mMatcher, SIGNAL(crossMatchingChange(bool)),       mModel, SLOT(setMatchCrossMatching(bool)));
+  connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMethod(QString)));
+  connect(mMatcher, SIGNAL(normTypeChange(QString)),         mModel, SLOT(setMatchNormType(QString)));
+  connect(mMatcher, SIGNAL(ratioChange(double)),             mModel, SLOT(setMatchRatio(double)));
+  connect(mMatcher, SIGNAL(distanceChange(double)),          mModel, SLOT(setMatchDistance(double)));
+  connect(mMatcher, SIGNAL(confidenceChange(double)),        mModel, SLOT(setMatchConfidence(double)));
+  connect(mMatcher, SIGNAL(crossMatchingChange(bool)),       mModel, SLOT(setMatchCrossMatching(bool)));
+  connect(mMatcher, SIGNAL(maxItersChange(int)),             mModel, SLOT(setMatchMaxIters(int)));
+  connect(mMatcher, SIGNAL(geometricTestChange(QString)),    mModel, SLOT(setMatchGeometricTest(QString)));
+  connect(mMatcher, SIGNAL(homographyComputeMethodChange(QString)),  mModel, SLOT(setMatchHomographyComputeMethod(QString)));
+  connect(mMatcher, SIGNAL(fundamentalComputeMethodChange(QString)), mModel, SLOT(setMatchFundamentalComputeMethod(QString)));
+  connect(mMatcher, SIGNAL(essentialComputeMethodChange(QString)),   mModel, SLOT(setMatchEssentialComputeMethod(QString)));
+
 }
 
 SettingsPresenter::~SettingsPresenter()
@@ -433,6 +441,12 @@ SettingsPresenter::~SettingsPresenter()
   }
 }
 
+void SettingsPresenter::openPage(int page)
+{
+  mView->setPage(page);
+  this->open();
+}
+
 void SettingsPresenter::help()
 {
 //  if (mHelp){
@@ -458,6 +472,10 @@ void SettingsPresenter::open()
   }
 
   mView->setLanguages(langs);
+
+  mView->setHistoryMaxSize(mModel->historyMaxSize());
+  mView->setKeypointsFormat(mModel->keypointsFormat());
+  mView->setMatchesFormat(mModel->matchesFormat());
 
   mACEBSF->setBlockSize(mModel->acebsfBlockSize());
   mACEBSF->setL(mModel->acebsfL());
@@ -610,12 +628,17 @@ void SettingsPresenter::open()
   mSurf->setHessianThreshold(mModel->surfHessianThreshold());
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
 
-//  mMatcher->setMatchingMethod(mModel->matchMatchingMethod());
-//  mMatcher->setNormType(mModel->matchNormType());
-//  mMatcher->setRatio(mModel->matchRatio());
-//  mMatcher->setDistance(mModel->matchDistance());
-//  mMatcher->setConfidence(mModel->matchConfidence());
-//  mMatcher->setCrossMatching(mModel->matchCrossMatching());
+  mMatcher->setMatchingMethod(mModel->matchMethod());
+  mMatcher->setNormType(mModel->matchNormType());
+  mMatcher->setRatio(mModel->matchRatio());
+  mMatcher->setDistance(mModel->matchDistance());
+  mMatcher->setConfidence(mModel->matchConfidence());
+  mMatcher->setCrossMatching(mModel->matchCrossMatching());
+  mMatcher->setMaxIters(mModel->matchMaxIters());
+  mMatcher->setGeometricTest(mModel->matchGeometricTest());
+  mMatcher->setHomographyComputeMethod(mModel->matchHomographyComputeMethod());
+  mMatcher->setFundamentalComputeMethod(mModel->matchFundamentalComputeMethod());
+  mMatcher->setEssentialComputeMethod(mModel->matchEssentialComputeMethod());
 
   mView->exec();
 }

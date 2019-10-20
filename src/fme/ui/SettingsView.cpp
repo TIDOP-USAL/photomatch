@@ -9,8 +9,8 @@
 #include <QStackedWidget>
 #include <QTabWidget>
 #include <QScrollArea>
-
-
+#include <QSpacerItem>
+#include <QSpinBox>
 
 namespace fme
 {
@@ -20,7 +20,10 @@ SettingsView::SettingsView(QWidget *parent)
     mListWidget(new QListWidget(this)),
     mStackedWidget(new QStackedWidget(this)),
     mLanguages(new QComboBox(this)),
+    mHistoryMaxSize(new QSpinBox(this)),
     mTabWidgetTools(nullptr),
+    mKeypointsFormat(new QComboBox(this)),
+    mMatchesFormat(new QComboBox(this)),
     mListWidgetPreprocess(nullptr),
     mListWidgetFeatures(nullptr),
     //mListWidgetMatching(nullptr),
@@ -31,7 +34,9 @@ SettingsView::SettingsView(QWidget *parent)
 
   connect(mListWidget, SIGNAL(currentRowChanged(int)), mStackedWidget, SLOT(setCurrentIndex(int)));
 
-  connect(mLanguages,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(languageChange(QString)));
+  connect(mLanguages,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(languageChange(QString)));
+  connect(mKeypointsFormat, SIGNAL(currentTextChanged(QString)),  this, SIGNAL(keypointsFormatChange(QString)));
+  connect(mMatchesFormat,   SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchesFormatChange(QString)));
 
   connect(mListWidgetPreprocess, SIGNAL(currentTextChanged(QString)), this, SLOT(onPreprocessChange(QString)));
   connect(mListWidgetFeatures,   SIGNAL(currentTextChanged(QString)), this, SLOT(onFeatureDetectorDescriptorChange(QString)));
@@ -97,12 +102,16 @@ void SettingsView::init()
   QGridLayout *gridLayoutGeneral = new QGridLayout(pageGeneral);
 
   gridLayoutGeneral->addWidget(new QLabel(tr("Language")), 0, 0, 1, 1);
-
   gridLayoutGeneral->addWidget(mLanguages, 0, 1, 1, 1);
+
+  gridLayoutGeneral->addWidget(new QLabel(tr("History Max Size")), 1, 0, 1, 1);
+  mHistoryMaxSize->setRange(0, 50);
+  mHistoryMaxSize->setValue(10);
+  gridLayoutGeneral->addWidget(mHistoryMaxSize, 1, 1, 1, 1);
 
   QSpacerItem *verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-  gridLayoutGeneral->addItem(verticalSpacer, 1, 0, 1, 1);
+  gridLayoutGeneral->addItem(verticalSpacer, 2, 0, 1, 1);
 
   mStackedWidget->addWidget(pageGeneral);
 
@@ -119,6 +128,29 @@ void SettingsView::init()
 
   mTabWidgetTools = new QTabWidget(pageTools);
 
+  QWidget *tabToolsGeneral = new QWidget(this);
+  QGridLayout *gridLayoutTabToolsGeneral = new QGridLayout(tabToolsGeneral);
+  gridLayoutTabToolsGeneral->setContentsMargins(0, 0, 0, 0);
+  QScrollArea *scrollAreaToolsGeneral = new QScrollArea(tabToolsGeneral);
+  scrollAreaToolsGeneral->setWidgetResizable(true);
+  scrollAreaToolsGeneral->setFrameShape(QFrame::Shape::NoFrame);
+  QWidget *scrollAreaWidgetContentsToolsGeneral = new QWidget(this);
+  QGridLayout *gridLayoutContentsToolsGeneral = new QGridLayout(scrollAreaWidgetContentsToolsGeneral);
+  gridLayoutContentsToolsGeneral->addWidget(new QLabel(tr("Keypoints Format")), 0, 0, 1, 1);
+  mKeypointsFormat->addItem("Binary");
+  mKeypointsFormat->addItem("XML");
+  mKeypointsFormat->addItem("YML");
+  gridLayoutContentsToolsGeneral->addWidget(mKeypointsFormat, 0, 1, 1, 1);
+  gridLayoutContentsToolsGeneral->addWidget(new QLabel(tr("Matches Format")), 1, 0, 1, 1);
+  mMatchesFormat->addItem("Binary");
+  mMatchesFormat->addItem("XML");
+  mMatchesFormat->addItem("YML");
+  gridLayoutContentsToolsGeneral->addWidget(mMatchesFormat, 1, 1, 1, 1);
+  gridLayoutContentsToolsGeneral->addItem(new QSpacerItem(1,1, QSizePolicy::Fixed, QSizePolicy::Expanding), 2, 1, 1, 2);
+  scrollAreaToolsGeneral->setWidget(scrollAreaWidgetContentsToolsGeneral);
+  gridLayoutTabToolsGeneral->addWidget(scrollAreaToolsGeneral, 0, 0, 1, 1);
+  mTabWidgetTools->addTab(tabToolsGeneral, QString(tr("General")));
+
   QWidget *tabPreprocess = new QWidget(this);
   QGridLayout *gridLayoutTabPreprocess = new QGridLayout(tabPreprocess);
   gridLayoutTabPreprocess->setContentsMargins(0, 0, 0, 0);
@@ -132,7 +164,7 @@ void SettingsView::init()
   mGridLayoutPreprocess->addWidget(mListWidgetPreprocess, 0, 0, 1, 1);
   scrollAreaPreprocess->setWidget(scrollAreaWidgetContents);
   gridLayoutTabPreprocess->addWidget(scrollAreaPreprocess, 0, 0, 1, 1);
-  mTabWidgetTools->addTab(tabPreprocess, QString("Preprocess"));
+  mTabWidgetTools->addTab(tabPreprocess, QString(tr("Preprocess")));
 
   QWidget *tabFeatures = new QWidget(this);
   QGridLayout *gridLayoutFeatures = new QGridLayout(tabFeatures);
@@ -147,7 +179,7 @@ void SettingsView::init()
   mGridLayoutFeatures->addWidget(mListWidgetFeatures, 0, 0, 1, 1);
   scrollAreaFeatures->setWidget(scrollAreaWidgetFeatures);
   gridLayoutFeatures->addWidget(scrollAreaFeatures, 0, 0, 1, 1);
-  mTabWidgetTools->addTab(tabFeatures, QString("Feature Detector / Extractor"));
+  mTabWidgetTools->addTab(tabFeatures, QString(tr("Feature Detector / Extractor")));
 
   QWidget *tabMatching = new QWidget(this);
   //QGridLayout *gridLayoutMatching = new QGridLayout(tabMatching);
@@ -162,7 +194,7 @@ void SettingsView::init()
   //gridLayoutMatching2->addWidget(mListWidgetMatching, 0, 0, 1, 1);
   //scrollAreaMatching->setWidget(scrollAreaWidgetMatching);
   //gridLayoutMatching->addWidget(scrollAreaMatching, 0, 0, 1, 1);
-  mTabWidgetTools->addTab(tabMatching, QString("Matching"));
+  mTabWidgetTools->addTab(tabMatching, QString(tr("Matching")));
 
   gridLayoutTools->addWidget(mTabWidgetTools, 0, 0, 1, 1);
   mStackedWidget->addWidget(pageTools);
@@ -181,12 +213,18 @@ void SettingsView::init()
 
 void SettingsView::clear()
 {
+  const QSignalBlocker blocker1(mLanguages);
   mLanguages->clear();
 }
 
 void SettingsView::update()
 {
   mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(bUnsaveChanges);
+}
+
+void SettingsView::setPage(int page)
+{
+  mListWidget->setCurrentRow(page);
 }
 
 void SettingsView::setLanguages(const QStringList &languages)
@@ -201,6 +239,21 @@ void SettingsView::setActiveLanguage(const QString &language)
 {
   const QSignalBlocker blocker(mLanguages);
   mLanguages->setCurrentText(language);
+}
+
+void SettingsView::setHistoryMaxSize(int size)
+{
+  mHistoryMaxSize->setValue(size);
+}
+
+void SettingsView::setKeypointsFormat(const QString &format)
+{
+  mKeypointsFormat->setCurrentText(format);
+}
+
+void SettingsView::setMatchesFormat(const QString &format)
+{
+  mMatchesFormat->setCurrentText(format);
 }
 
 void SettingsView::addPreprocess(QWidget *preprocess)

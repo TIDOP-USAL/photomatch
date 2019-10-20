@@ -1023,25 +1023,38 @@ void FeatureExtractorPresenter::run()
 
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-    QString file_in = (*it)->path();
-    QFileInfo fileInfo(file_in);
-    QString preprocessed_image = fileInfo.path();
-    preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
-    preprocessed_image.append("\\preprocess\\");
-    preprocessed_image.append(fileInfo.fileName());
-    QString features = fileInfo.path();
+//    QString file_in = (*it)->path();
+//    QFileInfo fileInfo(file_in);
+//    QString preprocessed_image = fileInfo.path();
+//    preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
+//    preprocessed_image.append("\\preprocess\\");
+//    preprocessed_image.append(fileInfo.fileName());
+    QString fileName = (*it)->name();
+    QString preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
+
+
+    //QString features = fileInfo.path();
+    QString features = mProjectModel->projectFolder();
     features.append("\\").append(mProjectModel->currentSession()->name());
     features.append("\\features\\");
     QDir dir_out(features);
     if (!dir_out.exists()) {
       dir_out.mkpath(".");
     }
-    features.append(fileInfo.fileName()).append(".xml");
+    features.append(fileName);
+    QString keypointsFormat = mSettingsModel->keypointsFormat();
+    if (keypointsFormat.compare("Binary") == 0){
+      features.append(".bin");
+    } else if (keypointsFormat.compare("YML") == 0){
+      features.append(".yml");
+    } else {
+      features.append(".xml");
+    }
 
     double scale = 1.;
     if (mProjectModel->fullImageSize() == false){
       int maxSize = mProjectModel->maxImageSize();
-      QImageReader imageReader(file_in);
+      QImageReader imageReader((*it)->path());
       QSize size = imageReader.size();
       int w = size.width();
       int h = size.height();

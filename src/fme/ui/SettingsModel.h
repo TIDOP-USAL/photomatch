@@ -44,6 +44,9 @@ public:
    */
   virtual int historyMaxSize() const = 0;
 
+  virtual QString keypointsFormat() const = 0;
+  virtual QString matchesFormat() const = 0;
+
   virtual QSize acebsfBlockSize() const = 0;
   virtual double acebsfL() const = 0;
   virtual double acebsfK1() const = 0;
@@ -194,11 +197,17 @@ public:
   virtual bool surfExtendedDescriptor() const = 0;
   virtual bool surfRotatedFeatures() const = 0;
 
+  virtual QString matchMethod() const = 0;
   virtual QString matchNormType() const = 0;
   virtual double matchRatio() const = 0;
   virtual double matchDistance() const = 0;
   virtual double matchConfidence() const = 0;
   virtual bool matchCrossMatching() const = 0;
+  virtual int matchMaxIters() const = 0;
+  virtual QString matchGeometricTest() const = 0;
+  virtual QString matchHomographyComputeMethod() const = 0;
+  virtual QString matchFundamentalComputeMethod() const = 0;
+  virtual QString matchEssentialComputeMethod() const = 0;
 
   /*!
    * \brief read
@@ -242,6 +251,9 @@ public slots:
    * \param[in] maxSize Tamaño máximo del historial
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
+
+  virtual void setKeypointsFormat(const QString &format) = 0;
+  virtual void setMatchesFormat(const QString &format) = 0;
 
   virtual void setAcebsfBlockSize(const QSize &blockSize) = 0;
   virtual void setAcebsfL(double) = 0;
@@ -393,11 +405,17 @@ public slots:
   virtual void setSurfExtendedDescriptor(bool extendedDescriptor) = 0;
   virtual void setSurfRotatedFeatures(bool rotatedFeatures) = 0;
 
+  virtual void setMatchMethod(const QString &matchingMethod) = 0;
   virtual void setMatchNormType(const QString &normType) = 0;
   virtual void setMatchRatio(double ratio) = 0;
   virtual void setMatchDistance(double distance) = 0;
   virtual void setMatchConfidence(double confidence) = 0;
   virtual void setMatchCrossMatching(bool crossMatching) = 0;
+  virtual void setMatchMaxIters(int maxIters) = 0;
+  virtual void setMatchGeometricTest(const QString &geometricTest) = 0;
+  virtual void setMatchHomographyComputeMethod(const QString &computeMethod) = 0;
+  virtual void setMatchFundamentalComputeMethod(const QString &computeMethod) = 0;
+  virtual void setMatchEssentialComputeMethod(const QString &computeMethod) = 0;
 
   virtual void reset() = 0;
 
@@ -425,6 +443,8 @@ public:
   QString language() const override;
   QStringList history() const override;
   int historyMaxSize() const override;
+  QString keypointsFormat() const override;
+  QString matchesFormat() const override;
 
   QSize acebsfBlockSize() const override;
   double acebsfL() const override;
@@ -576,11 +596,17 @@ public:
   bool surfExtendedDescriptor() const override;
   bool surfRotatedFeatures() const override;
 
+  QString matchMethod() const override;
   QString matchNormType() const override;
   double matchRatio() const override;
   double matchDistance() const override;
   double matchConfidence() const override;
   bool matchCrossMatching() const override;
+  int matchMaxIters() const override;
+  QString matchGeometricTest() const override;
+  QString matchHomographyComputeMethod() const override;
+  QString matchFundamentalComputeMethod() const override;
+  QString matchEssentialComputeMethod() const override;
 
   QStringList languages() const override;
   void read() override;
@@ -593,6 +619,8 @@ public slots:
   void addToHistory(const QString &project) override;
   void clearHistory() override;
   void setHistoryMaxSize(int maxSize) override;
+  void setKeypointsFormat(const QString &format) override;
+  void setMatchesFormat(const QString &format) override;
 
   void setClaheClipLimit(double clipLimit) override;
   void setClaheTilesGridSize(const QSize &tilesGridSize) override;
@@ -744,11 +772,17 @@ public slots:
   void setSurfExtendedDescriptor(bool extendedDescriptor) override;
   void setSurfRotatedFeatures(bool rotatedFeatures) override;
 
+  void setMatchMethod(const QString &matchingMethod) override;
   void setMatchNormType(const QString &normType) override;
   void setMatchRatio(double ratio) override;
   void setMatchDistance(double distance) override;
   void setMatchConfidence(double confidence) override;
   void setMatchCrossMatching(bool crossMatching) override;
+  void setMatchMaxIters(int maxIters) override;
+  void setMatchGeometricTest(const QString &geometricTest) override;
+  void setMatchHomographyComputeMethod(const QString &computeMethod) override;
+  void setMatchFundamentalComputeMethod(const QString &computeMethod) override;
+  void setMatchEssentialComputeMethod(const QString &computeMethod) override;
 
   void reset() override;
 

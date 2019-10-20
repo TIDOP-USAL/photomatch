@@ -16,7 +16,7 @@ void DecolorProperties::reset()
 
 QString DecolorProperties::name() const
 {
-  return QString("Decolor");
+  return QString("Decolorization");
 }
 
 

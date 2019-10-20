@@ -58,7 +58,7 @@ public:
 
 private slots:
 
-  void onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item,int column);
+  void onTreeWidgetSessionsItemSelectionChanged();
 
 // IRepeatabilityView interface
 

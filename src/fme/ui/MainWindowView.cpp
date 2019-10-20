@@ -54,7 +54,8 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionPreprocess(new QAction(this)),
     mActionFeatureExtraction(new QAction(this)),
     mActionFeatureMatching(new QAction(this)),
-    mActionSettings(new QAction(this)),
+    mActionViewSettings(new QAction(this)),
+    mActionToolSettings(new QAction(this)),
     mActionHelp(new QAction(this)),
     mActionAbout(new QAction(this)),
     mActionExportTiePointsCvXml(new QAction(this)),
@@ -103,6 +104,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   /* Menú View */
 
   connect(mActionStartPage,          SIGNAL(triggered(bool)),   this,   SLOT(openStartPage()));
+  connect(mActionViewSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openViewSettings()));
 
   /* Menú herramientas */
 
@@ -111,7 +113,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
   connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
   connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
-  connect(mActionSettings,           SIGNAL(triggered(bool)),   this,   SIGNAL(openSettings()));
+  connect(mActionToolSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openToolSettings()));
 
   /* Quality Control */
 
@@ -1641,6 +1643,11 @@ void MainWindowView::init()
   iconStartPage.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_home_page_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionStartPage->setIcon(iconStartPage);
 
+  mActionViewSettings->setText(QApplication::translate("MainWindowView", "View Settings", nullptr));
+  QIcon iconSettingsView;
+  iconSettingsView.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionViewSettings->setIcon(iconSettingsView);
+
   mActionLoadImages->setText(QApplication::translate("MainWindowView", "Load Images", nullptr));
   QIcon iconLoadImages;
   iconLoadImages.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_images_folder_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -1669,10 +1676,10 @@ void MainWindowView::init()
   iconFeatureMatching.addFile(QStringLiteral(":/ico/24/img/material/24/match_view.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionFeatureMatching->setIcon(iconFeatureMatching);
 
-  mActionSettings->setText(QApplication::translate("MainWindowView", "Settings", nullptr));
+  mActionToolSettings->setText(QApplication::translate("MainWindowView", "Tools Settings", nullptr));
   QIcon iconSettings;
   iconSettings.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionSettings->setIcon(iconSettings);
+  mActionToolSettings->setIcon(iconSettings);
 
   mActionHelp->setText(QApplication::translate("MainWindowView", "Help", nullptr));
   QIcon iconHelp;
@@ -1820,6 +1827,10 @@ void MainWindowView::init()
   menuToolBar->addAction(ui->toolBarView->toggleViewAction());
   ui->menuView->addMenu(menuToolBar);
 
+  ui->menuView->addSeparator();
+
+  ui->menuView->addAction(mActionViewSettings);
+
   /* Menu Tools */
 
   ui->menuTools->addAction(mActionLoadImages);
@@ -1830,7 +1841,7 @@ void MainWindowView::init()
   ui->menuTools->addAction(mActionFeatureExtraction);
   ui->menuTools->addAction(mActionFeatureMatching);
   ui->menuTools->addSeparator();
-  ui->menuTools->addAction(mActionSettings);
+  ui->menuTools->addAction(mActionToolSettings);
 
   /* Menu Quality Control */
 

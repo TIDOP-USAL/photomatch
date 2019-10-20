@@ -72,7 +72,11 @@ protected slots:
   void closeProject();
   void exit();
 
+  void openSettings();
+
   /* Menú View */
+
+  void openViewSettings();
 
   /* Quality Control */
 
@@ -92,7 +96,7 @@ protected slots:
   void openPreprocess();
   void openFeatureExtraction();
   void openFeatureMatching();
-  void openSettings();
+  void openToolSettings();
 
   /* Menú Ayuda */
   void openAboutDialog();

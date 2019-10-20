@@ -355,7 +355,8 @@ void PreprocessPresenter::run()
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString file_in = (*it)->path();
     QFileInfo fileInfo(file_in);
-    QString file_out = fileInfo.path();
+    //QString file_out = fileInfo.path();
+    QString file_out = mProjectModel->projectFolder();
     file_out.append("\\").append(mProjectModel->currentSession()->name());
     file_out.append("\\preprocess\\");
     QDir dir_out(file_out);
@@ -364,7 +365,7 @@ void PreprocessPresenter::run()
     }
     file_out.append(fileInfo.fileName());
 
-    std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess(file_in,
+    std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
                                                                     file_out,
                                                                     imageProcess,
                                                                     mView->fullImageSize() ? -1 : mView->maxImageSize()));

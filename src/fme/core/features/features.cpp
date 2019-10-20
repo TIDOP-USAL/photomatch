@@ -33,8 +33,8 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
       // - KeyPoints
       int32_t size = static_cast<int32_t>(keyPoints.size());
       // - Descriptor
-      size_t rows = static_cast<size_t>(descriptors.rows);
-      size_t cols = static_cast<size_t>(descriptors.cols);
+      int32_t rows = static_cast<int32_t>(descriptors.rows);
+      int32_t cols = static_cast<int32_t>(descriptors.cols);
       int32_t type = descriptors.type();
       std::fwrite("TIDOPLIB-Features2D-#01", sizeof("TIDOPLIB-Features2D-#01"), 1, fp);
       std::fwrite(&size, sizeof(int32_t), 1, fp);
@@ -80,10 +80,10 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
       if (FILE* fp = std::fopen(feat_file, "rb")) {
         //cabecera
         char h[24];
-        size_t size;
-        size_t rows;
-        size_t cols;
-        int type;
+        int32_t size;
+        int32_t rows;
+        int32_t cols;
+        int32_t type;
         char extraHead[200];
         std::fread(h, sizeof(char), 24, fp);
         std::fread(&size, sizeof(int32_t), 1, fp);

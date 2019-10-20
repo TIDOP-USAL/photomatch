@@ -59,6 +59,8 @@ public:
   ISettingsPresenter() {}
   virtual ~ISettingsPresenter(){}
 
+  virtual void openPage(int page) = 0;
+
 signals:
 
 private slots:
@@ -89,6 +91,8 @@ public:
 
   SettingsPresenter(ISettingsView *view, ISettingsModel *model);
   ~SettingsPresenter() override;
+
+  void openPage(int page) override;
 
 // IPresenter interface
 

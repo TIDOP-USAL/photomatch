@@ -120,6 +120,11 @@ SurfDetectorDescriptor::SurfDetectorDescriptor(double hessianThreshold,
   setRotatedFeatures(rotatedFeatures);
 }
 
+SurfDetectorDescriptor::~SurfDetectorDescriptor()
+{
+
+}
+
 bool SurfDetectorDescriptor::detect(const cv::Mat &img,
                                     std::vector<cv::KeyPoint> &keyPoints,
                                     cv::InputArray &mask)
@@ -148,11 +153,6 @@ bool SurfDetectorDescriptor::extract(const cv::Mat &img,
   }
 
   return false;
-}
-
-SurfDetectorDescriptor::~SurfDetectorDescriptor()
-{
-
 }
 
 void SurfDetectorDescriptor::setHessianThreshold(double hessianThreshold)
@@ -196,7 +196,130 @@ void SurfDetectorDescriptor::reset()
 
 }
 
-#endif
+
+
+/*----------------------------------------------------------------*/
+
+
+#ifdef HAVE_CUDA
+
+SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor()
+  : SurfProperties(),
+    KeypointDetector(),
+    DescriptorExtractor(),
+    mSurf(new cv::cuda::SURF_CUDA())
+{
+  mSurf->hessianThreshold = SurfProperties::hessianThreshold();
+  mSurf->nOctaves = SurfProperties::octaves();
+  mSurf->nOctaveLayers = SurfProperties::octaveLayers();
+  mSurf->extended = SurfProperties::extendedDescriptor();
+  mSurf->upright = SurfProperties::rotatedFeatures();
+}
+
+SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor(double hessianThreshold,
+                                                       int octaves,
+                                                       int octaveLayers,
+                                                       bool extendedDescriptor,
+                                                       bool rotatedFeatures)
+  : SurfProperties(),
+    KeypointDetector(),
+    DescriptorExtractor(),
+    mSurf(new cv::cuda::SURF_CUDA())
+{
+  setHessianThreshold(hessianThreshold);
+  setOctaves(octaves);
+  setOctaveLayers(octaveLayers);
+  setExtendedDescriptor(extendedDescriptor);
+  setRotatedFeatures(rotatedFeatures);
+}
+
+SurfCudaDetectorDescriptor::~SurfCudaDetectorDescriptor()
+{
+
+}
+
+bool SurfCudaDetectorDescriptor::detect(const cv::Mat &img,
+                                        std::vector<cv::KeyPoint> &keyPoints,
+                                        cv::InputArray &mask)
+{
+
+  try {
+    cv::cuda::GpuMat g_img;
+    cv::cuda::GpuMat g_mask;
+    g_img.upload(img);
+    g_mask.upload(mask);
+    (*mSurf)(g_img, g_mask, keyPoints);
+  } catch (cv::Exception &e) {
+    msgError("SURF Detector error: %s", e.what());
+    return true;
+  }
+
+  return false;
+}
+
+bool SurfCudaDetectorDescriptor::extract(const cv::Mat &img,
+                                         std::vector<cv::KeyPoint> &keyPoints,
+                                         cv::Mat &descriptors)
+{
+
+  try {
+    cv::cuda::GpuMat g_img;
+    g_img.upload(img);
+    cv::cuda::GpuMat g_descriptors;
+    (*mSurf)(g_img, cv::cuda::GpuMat(), keyPoints, g_descriptors);
+    g_descriptors.download(descriptors);
+  } catch (cv::Exception &e) {
+    msgError("SURF Descriptor error: %s", e.what());
+    return true;
+  }
+
+  return false;
+}
+
+void SurfCudaDetectorDescriptor::setHessianThreshold(double hessianThreshold)
+{
+  SurfProperties::setHessianThreshold(hessianThreshold);
+  mSurf->hessianThreshold = hessianThreshold;
+}
+
+void SurfCudaDetectorDescriptor::setOctaves(int octaves)
+{
+  SurfProperties::setOctaves(octaves);
+  mSurf->nOctaves = octaves;
+}
+
+void SurfCudaDetectorDescriptor::setOctaveLayers(int octaveLayers)
+{
+  SurfProperties::setOctaveLayers(octaveLayers);
+  mSurf->nOctaveLayers = octaveLayers;
+}
+
+void SurfCudaDetectorDescriptor::setExtendedDescriptor(bool extendedDescriptor)
+{
+  SurfProperties::setExtendedDescriptor(extendedDescriptor);
+  mSurf->extended = extendedDescriptor;
+}
+
+void SurfCudaDetectorDescriptor::setRotatedFeatures(bool rotatedFeatures)
+{
+  SurfProperties::setRotatedFeatures(rotatedFeatures);
+  mSurf->upright = rotatedFeatures;
+}
+
+void SurfCudaDetectorDescriptor::reset()
+{
+  SurfProperties::reset();
+  mSurf->hessianThreshold = SurfProperties::hessianThreshold();
+  mSurf->nOctaves = SurfProperties::octaves();
+  mSurf->nOctaveLayers = SurfProperties::octaveLayers();
+  mSurf->extended = SurfProperties::extendedDescriptor();
+  mSurf->upright = SurfProperties::rotatedFeatures();
+}
+
+
+#endif // HAVE_CUDA
+
+#endif // OPENCV_ENABLE_NONFREE
 
 } // namespace fme
 

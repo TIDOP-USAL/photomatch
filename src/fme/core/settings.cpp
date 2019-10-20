@@ -45,6 +45,8 @@ namespace fme
 Settings::Settings()
   : ISettings(),
     mHistoyMaxSize(10),
+    mKeypointsFormat("Binary"),
+    mMatchesFormat("Binary"),
     mAcebsf(new AcebsfProperties),
     mClahe(new ClaheProperties),
     mCmbfhe(new CmbfheProperties),
@@ -75,6 +77,7 @@ Settings::Settings()
     mSift(new SiftProperties),
     mStar(new StarProperties),
     mSurf(new SurfProperties),
+    mMatchMethod("Flann Based Matching"),
     mFlannMatcher(new FlannMatcherProperties),
     mBruteForceMatcher(new BruteForceMatcherProperties),
     mRobustMatcherRefinement(new RobustMatcherProperties)
@@ -289,6 +292,26 @@ int Settings::historyMaxSize() const
 void Settings::setHistoryMaxSize(int maxSize)
 {
   mHistoyMaxSize = maxSize;
+}
+
+QString Settings::keypointsFormat() const
+{
+  return mKeypointsFormat;
+}
+
+void Settings::setKeypointsFormat(const QString &format)
+{
+  mKeypointsFormat = format;
+}
+
+QString Settings::matchesFormat() const
+{
+  return mMatchesFormat;
+}
+
+void Settings::setMatchesFormat(const QString &format)
+{
+  mMatchesFormat = format;
 }
 
 IAcebsf *Settings::acebsf()
@@ -591,6 +614,16 @@ const ISurf *Settings::surf() const
   return mSurf;
 }
 
+QString Settings::matchMethod() const
+{
+  return mMatchMethod;
+}
+
+void Settings::setMatchMethod(const QString &matchingMethod)
+{
+  mMatchMethod = matchingMethod;
+}
+
 IFlannMatcher *Settings::flannMatcher()
 {
   return mFlannMatcher;
@@ -628,6 +661,8 @@ void Settings::reset()
 
   mHistoyMaxSize = 10;
   mHistory.clear();
+  mKeypointsFormat = "Binary";
+  mMatchesFormat = "Binary";
 
   mAcebsf->reset();
   mClahe->reset();
@@ -661,6 +696,7 @@ void Settings::reset()
   mStar->reset();
   mSurf->reset();
 
+  mMatchMethod = "Flann Based Matching";
   mFlannMatcher->reset();
   mBruteForceMatcher->reset();
   mRobustMatcherRefinement->reset();
@@ -697,6 +733,9 @@ void SettingsRW::read(ISettings &settings)
   for(auto &prj : history){
     settings.addToHistory(prj);
   }
+
+  settings.setKeypointsFormat(mSettingsRW->value("MATCH/KeypointsFormat", settings.keypointsFormat()).toString());
+  settings.setMatchMethod(mSettingsRW->value("MATCH/MatchMethod", settings.matchesFormat()).toString());
 
   /* CLAHE */
   settings.clahe()->setClipLimit(mSettingsRW->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
@@ -875,12 +914,14 @@ void SettingsRW::read(ISettings &settings)
   settings.surf()->setExtendedDescriptor(mSettingsRW->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
 
   /* Matching */
+  settings.setMatchMethod(mSettingsRW->value("MATCH/MatchMethod", settings.matchMethod()).toString());
   int normType = mSettingsRW->value("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType())).toInt();
   settings.bruteForceMatcher()->setNormType(static_cast<IBruteForceMatcher::Norm>(normType));
   settings.robustMatcherRefinement()->setRatio(mSettingsRW->value("MATCH/RefinementRatio", settings.robustMatcherRefinement()->ratio()).toDouble());
   settings.robustMatcherRefinement()->setDistance(mSettingsRW->value("MATCH/RefinementDistance", settings.robustMatcherRefinement()->distance()).toDouble());
   settings.robustMatcherRefinement()->setConfidence(mSettingsRW->value("MATCH/RefinementConfidence", settings.robustMatcherRefinement()->confidence()).toDouble());
   settings.robustMatcherRefinement()->setCrossCheck(mSettingsRW->value("MATCH/RefinementCrossCheck", settings.robustMatcherRefinement()->crossCheck()).toBool());
+  settings.robustMatcherRefinement()->setMaxIters(mSettingsRW->value("MATCH/RefinementMaxIters", settings.robustMatcherRefinement()->maxIter()).toInt());
   int geometricTest = mSettingsRW->value("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcherRefinement()->geometricTest())).toInt();
   settings.robustMatcherRefinement()->setGeometricTest(static_cast<IRobustMatcherRefinement::GeometricTest>(geometricTest));
   int homographyComputeMethod = mSettingsRW->value("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->homographyComputeMethod())).toInt();
@@ -897,6 +938,9 @@ void SettingsRW::write(const ISettings &settings)
 
   mSettingsRW->setValue("HISTORY/MaxSize", settings.historyMaxSize());
   mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
+
+  mSettingsRW->setValue("MATCH/KeypointsFormat", settings.keypointsFormat());
+  mSettingsRW->setValue("MATCH/MatchMethod", settings.matchesFormat());
 
   /* CLAHE */
   mSettingsRW->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());
@@ -1074,11 +1118,13 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
 
   /* Matching */
+  mSettingsRW->setValue("MATCH/MatchMethod", settings.matchMethod());
   mSettingsRW->setValue("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType()));
   mSettingsRW->setValue("MATCH/RefinementRatio", settings.robustMatcherRefinement()->ratio());
   mSettingsRW->setValue("MATCH/RefinementDistance", settings.robustMatcherRefinement()->distance());
   mSettingsRW->setValue("MATCH/RefinementConfidence", settings.robustMatcherRefinement()->confidence());
   mSettingsRW->setValue("MATCH/RefinementCrossCheck", settings.robustMatcherRefinement()->crossCheck());
+  mSettingsRW->setValue("MATCH/RefinementMaxIters", settings.robustMatcherRefinement()->maxIter());
   mSettingsRW->setValue("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcherRefinement()->geometricTest()));
   mSettingsRW->setValue("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->homographyComputeMethod()));
   mSettingsRW->setValue("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->fundamentalComputeMethod()));
