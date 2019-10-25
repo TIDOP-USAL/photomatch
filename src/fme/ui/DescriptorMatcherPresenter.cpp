@@ -362,7 +362,7 @@ void DescriptorMatcherPresenter::run()
 
   }
 
-  mProjectModel->clearMatches();
+  //mProjectModel->clearMatches();
 
   connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));

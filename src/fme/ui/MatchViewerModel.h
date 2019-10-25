@@ -26,7 +26,8 @@ public:
 
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual std::vector<std::tuple<QPointF, QPointF, float>> loadMatches(const QString &imgName1, const QString &imgName2) const = 0;
+  virtual std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> loadMatches(const QString &imgName1, const QString &imgName2) const = 0;
+  virtual void deleteMatch(const QString &imgName1, const QString &imgName2, int query_id, int train_id) = 0;
 
 public slots:
 
@@ -56,7 +57,8 @@ public:
 
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
-  std::vector<std::tuple<QPointF, QPointF, float> > loadMatches(const QString &imgName1, const QString &imgName2) const override;
+  std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float> > loadMatches(const QString &imgName1, const QString &imgName2) const override;
+  void deleteMatch(const QString &imgName1, const QString &imgName2, int query_id, int train_id) override;
 
 protected:
 

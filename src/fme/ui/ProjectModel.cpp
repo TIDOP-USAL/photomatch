@@ -233,9 +233,21 @@ void ProjectModel::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
   bUnsavedChanges = true;
 }
 
+void ProjectModel::deletePreprocess()
+{
+  this->currentSession()->setPreprocess(nullptr);
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::setDetector(const std::shared_ptr<Feature> &detector)
 {
   this->currentSession()->setDetector(detector);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::deleteDetector()
+{
+  this->currentSession()->setDetector(nullptr);
   bUnsavedChanges = true;
 }
 
@@ -245,9 +257,21 @@ void ProjectModel::setDescriptor(const std::shared_ptr<Feature> &descriptor)
   bUnsavedChanges = true;
 }
 
+void ProjectModel::deleteDescriptor()
+{
+  this->currentSession()->setDescriptor(nullptr);
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::setMatcher(const std::shared_ptr<Match> &matcher)
 {
   this->currentSession()->setMatcher(matcher);
+  bUnsavedChanges = true;
+}
+
+void ProjectModel::deleteMatcher()
+{
+  this->currentSession()->setMatcher(nullptr);
   bUnsavedChanges = true;
 }
 

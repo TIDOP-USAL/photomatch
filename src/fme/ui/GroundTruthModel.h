@@ -9,6 +9,7 @@ namespace fme
 {
 
 class IProjectModel;
+class GroundTruth;
 
 class IGroundTruthModel
   : public IModel
@@ -21,13 +22,16 @@ public:
   IGroundTruthModel(){}
   virtual ~IGroundTruthModel() override {}
 
+  virtual void loadGroundTruth() = 0;
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
+  virtual std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const = 0;
+  virtual QTransform transform(const QString &imgName1, const QString &imgName2) const = 0;
+  virtual void saveGroundTruth() = 0;
 
 public slots:
 
-  virtual size_t addPoint(const QString &image, const QPointF &pt) = 0;
-  virtual void addCorrespondence(const QString &image1, size_t idPt1, const QString &image2, size_t idPt2) = 0;
+  virtual void addHomologusPoints(const QString &image1, QPointF pt1, const QString &image2, QPointF pt2) = 0;
 
 };
 
@@ -41,7 +45,7 @@ class GroundTruthModel
 public:
 
   GroundTruthModel(IProjectModel *mProjectModel);
-  ~GroundTruthModel() override {}
+  ~GroundTruthModel() override;
 
 // IModel interface
 
@@ -53,19 +57,21 @@ private:
 
 public:
 
+  void loadGroundTruth() override;
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
+  std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const override;
+  QTransform transform(const QString &imgName1, const QString &imgName2) const override;
+  void saveGroundTruth() override;
 
 public slots:
 
-  size_t addPoint(const QString &image, const QPointF &pt) override;
-  void addCorrespondence(const QString &image1, size_t idPt1, const QString &image2, size_t idPt2) override;
+  void addHomologusPoints(const QString &image1, QPointF pt1, const QString &image2, QPointF pt2) override;
 
 protected:
 
   IProjectModel *mProjectModel;
-  std::map<QString, std::vector<QPointF>> mPoints;
-  std::map<QString, std::map<QString, std::vector<std::pair<size_t, size_t>>>> mControlPointsCorrespondences;
+  GroundTruth *mGroundTruth;
 
 };
 

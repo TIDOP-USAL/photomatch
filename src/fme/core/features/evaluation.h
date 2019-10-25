@@ -428,8 +428,8 @@ void PRCurve<T>::compute(size_t steeps)
 
     double recall = truePositiveRate(confussionMatrix[PRCurve<T>::Classification::tp], this->mPositives);
     double precision = positivePredictiveValue(confussionMatrix[PRCurve<T>::Classification::tp],
-                                               confussionMatrix[PRCurve<T>::Classification::fp]);
-    this->mCurve.push_back(QPointF(recall, precision));
+                                               confussionMatrix[PRCurve<T>::Classification::tp] + confussionMatrix[PRCurve<T>::Classification::fp]);
+    this->mCurve.push_back(QPointF(recall, 1-precision));
     threshold += step;
   }
 
@@ -447,7 +447,6 @@ void PRCurve<T>::compute(size_t steeps)
       point1 = point2;
     }
   }
-
 
 }
 
@@ -470,7 +469,6 @@ ROCCurve<T>::ROCCurve(const std::vector<std::pair<T, int>> &data, size_t steeps)
 template<typename T> inline
 void ROCCurve<T>::compute(size_t steeps)
 {
-  //std::vector<QPointF> rocCurve;
 
   T min = this->mData.front().first;
   T max = this->mData.back().first;
@@ -487,7 +485,21 @@ void ROCCurve<T>::compute(size_t steeps)
     threshold += step;
   }
 
-  //return rocCurve;
+  /// AUC
+  size_t size = this->mCurve.size();
+  this->mAuc = 0.0;
+
+  if (size > 2) {
+    QPointF point1 = this->mCurve[0];
+    QPointF point2;
+
+    for(size_t i = 1; i < size; i++){
+      point2 = this->mCurve[i];
+      this->mAuc += sqrt(pow( (1-point1.x() + 1-point2.x()) / 2. * (point1.y() - point2.y()), 2));
+      point1 = point2;
+    }
+  }
+
 }
 
 /*------------------------------------------------------------------------------------*/
@@ -506,7 +518,6 @@ DETCurve<T>::DETCurve(const std::vector<std::pair<T, int>> &data, size_t steeps)
 template<typename T> inline
 void DETCurve<T>::compute(size_t steeps)
 {
-  //std::vector<QPointF> detCurve;
 
   T min = this->mData.front().first;
   T max = this->mData.back().first;
@@ -523,7 +534,20 @@ void DETCurve<T>::compute(size_t steeps)
     threshold += step;
   }
 
-  //return detCurve;
+  /// AUC
+  size_t size = this->mCurve.size();
+  this->mAuc = 0.0;
+
+  if (size > 2) {
+    QPointF point1 = this->mCurve[0];
+    QPointF point2;
+
+    for(size_t i = 1; i < size; i++){
+      point2 = this->mCurve[i];
+      this->mAuc += sqrt(pow( (1-point1.x() + 1-point2.x()) / 2. * (point1.y() - point2.y()), 2));
+      point1 = point2;
+    }
+  }
 }
 
 

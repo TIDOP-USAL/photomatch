@@ -105,6 +105,7 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
         cv::Mat aux(static_cast<int>(rows), static_cast<int>(cols), type);
         std::fread(aux.data, sizeof(float), rows*cols, fp);
         aux.copyTo(descriptors);
+        aux.release();
         std::fclose(fp);
       } else {
         //msgError("No pudo leer archivo %s", fname.c_str());

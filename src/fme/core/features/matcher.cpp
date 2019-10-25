@@ -671,17 +671,25 @@ void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches, 
     FILE* fp = std::fopen(matches_file, "wb");
     if (fp) {
       // Cabecera
-      int size = static_cast<int>(matches.size());
+      uint64_t size = matches.size();
+      uint64_t size_wm = wrongMatches.size();
       std::fwrite("TIDOPLIB-Matching-#01", sizeof("TIDOPLIB-Matching-#01"), 1, fp);
-      std::fwrite(&size, sizeof(int32_t), 1, fp);
+      std::fwrite(&size, sizeof(uint64_t), 1, fp);
+      std::fwrite(&size_wm, sizeof(uint64_t), 1, fp);
       char extraHead[100]; // Reserva de espacio para futuros usos
       std::fwrite(&extraHead, sizeof(char), 100, fp);
       //Cuerpo
-      for (size_t i = 0; i < matches.size(); i++) {
+      for (size_t i = 0; i < size; i++) {
         std::fwrite(&matches[i].queryIdx, sizeof(int32_t), 1, fp);
         std::fwrite(&matches[i].trainIdx, sizeof(int32_t), 1, fp);
         std::fwrite(&matches[i].imgIdx, sizeof(int32_t), 1, fp);
         std::fwrite(&matches[i].distance, sizeof(float), 1, fp);
+      }
+      for (size_t i = 0; i < size_wm; i++) {
+        std::fwrite(&wrongMatches[i].queryIdx, sizeof(int32_t), 1, fp);
+        std::fwrite(&wrongMatches[i].trainIdx, sizeof(int32_t), 1, fp);
+        std::fwrite(&wrongMatches[i].imgIdx, sizeof(int32_t), 1, fp);
+        std::fwrite(&wrongMatches[i].distance, sizeof(float), 1, fp);
       }
       std::fclose(fp);
     } else {
@@ -709,10 +717,12 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> *matches, std::ve
       if (FILE* fp = std::fopen(feat_file, "rb")) {
         //cabecera
         char h[22];
-        int size;
+        uint64_t size;
+        uint64_t size_wm;
         char extraHead[100];
         std::fread(h, sizeof(char), 22, fp);
-        std::fread(&size, sizeof(int32_t), 1, fp);
+        std::fread(&size, sizeof(uint64_t), 1, fp);
+        std::fread(&size_wm, sizeof(uint64_t), 1, fp);
         std::fread(&extraHead, sizeof(char), 100, fp);
         //Cuerpo
         if (matches){
@@ -723,10 +733,19 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> *matches, std::ve
             std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
             std::fread(&match.distance, sizeof(float), 1, fp);
           }
+        } else {
+          std::fseek(fp, sizeof(int32_t)*3*sizeof(float)*size, SEEK_CUR);
+        }
+        if (wrongMatches){
+          wrongMatches->resize(static_cast<size_t>(size_wm));
+          for (auto &match : *wrongMatches) {
+            std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+            std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+            std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+            std::fread(&match.distance, sizeof(float), 1, fp);
+          }
         }
 
-        /// TODO: wrong matches
-        /// ....
         std::fclose(fp);
       } /*else
         msgError("No pudo leer archivo %s", fname);*/

@@ -43,8 +43,11 @@ void CurvesViewerPresenter::loadRightImage(const QString &image)
 
 void CurvesViewerPresenter::drawCurve(const QString &session, const QString &detector, const QString &descriptor)
 {
-  std::vector<QPointF> curve = mModel->computeCurve(session, detector, descriptor);
-  mView->setCurve(session, curve);
+  std::vector<QPointF> curve;
+  double auc = mModel->computeCurve(session, detector, descriptor, curve);
+  QString title = session;
+  title.append(" [AUC=").append(QString::number(auc, 'g', 3)).append("]");
+  mView->setCurve(title, curve);
 }
 
 void CurvesViewerPresenter::deleteCurve(const QString &session)

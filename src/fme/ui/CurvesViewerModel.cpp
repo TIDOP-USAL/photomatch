@@ -94,14 +94,20 @@ ROCCurvesViewerModel::~ROCCurvesViewerModel()
 std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const
 {
   std::vector<QPointF> curve;
+  this->computeCurve(session, imgLeft, imgRight, curve);
+  return curve;
+}
 
+double ROCCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const
+{
+  double auc = 0.0;
   msgInfo("Compute Curve for session %s", session.toStdString().c_str());
 
   QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
   QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
 
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
-    return curve;
+    return auc;
 
   QString groundTruth = mProjectModel->groundTruth();
   std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
@@ -178,7 +184,7 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
             std::vector<cv::KeyPoint> key2;
             key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
             key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
-            
+
             float repeteability = 0;
             int corres = 0;
             cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
@@ -190,15 +196,15 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
 
 
           ROCCurve<double> rocCurve(matchClassification);
-          //curve = rocCurve.compute(100);
           curve = rocCurve.curve();
+          auc = rocCurve.auc();
 
           break;
         }
       }
     }
   }
-  return curve;
+  return auc;
 }
 
 
@@ -216,6 +222,13 @@ PRCurvesViewerModel::~PRCurvesViewerModel()
 std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const
 {
   std::vector<QPointF> curve;
+  this->computeCurve(session, imgLeft, imgRight, curve);
+  return curve;
+}
+
+double PRCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const
+{
+  double auc = 0.0;
 
   msgInfo("Compute Curve for session %s", session.toStdString().c_str());
 
@@ -223,7 +236,7 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
   QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
 
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
-    return curve;
+    return auc;
 
   QString groundTruth = mProjectModel->groundTruth();
   std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
@@ -299,7 +312,7 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
             std::vector<cv::KeyPoint> key2;
             key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
             key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
-           
+
             float repeteability = 0;
             int corres = 0;
             cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
@@ -310,15 +323,14 @@ std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, c
           }
 
           PRCurve<double> prCurve(matchClassification);
-          //curve = prCurve.compute(100);
           curve = prCurve.curve();
-
+          auc = prCurve.auc();
           break;
         }
       }
     }
   }
-  return curve;
+  return auc;
 }
 
 
@@ -336,6 +348,13 @@ DETCurvesViewerModel::~DETCurvesViewerModel()
 std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const
 {
   std::vector<QPointF> curve;
+  this->computeCurve(session, imgLeft, imgRight, curve);
+  return curve;
+}
+
+double DETCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const
+{
+  double auc = 0.0;
 
   msgInfo("Compute Curve for session %s", session.toStdString().c_str());
 
@@ -343,7 +362,7 @@ std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, 
   QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
 
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
-    return curve;
+    return auc;
 
   QString groundTruth = mProjectModel->groundTruth();
   std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
@@ -419,7 +438,7 @@ std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, 
             std::vector<cv::KeyPoint> key2;
             key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
             key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
-           
+
             float repeteability = 0;
             int corres = 0;
             cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
@@ -430,15 +449,16 @@ std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, 
           }
 
           DETCurve<double> detCurve(matchClassification);
-          //curve = detCurve.compute(100);
           curve = detCurve.curve();
+          auc = detCurve.auc();
 
           break;
         }
       }
     }
   }
-  return curve;
+
+  return auc;
 }
 
 

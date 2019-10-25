@@ -23,6 +23,7 @@ public:
   explicit IMatchViewerView(QWidget *parent = nullptr,
                             Qt::WindowFlags f = Qt::WindowFlags())
     : IDialogView(parent, f) {}
+
   virtual ~IMatchViewerView() = default;
 
   /*!
@@ -49,14 +50,15 @@ public:
    */
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
-  virtual void setMatches(const std::vector<std::tuple<QPointF, QPointF, float>> &matches) = 0;
+  virtual void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) = 0;
+  //virtual void deleteMatch(int id) = 0;
 
 signals:
 
   void leftImageChange(QString);
   void rightImageChange(QString);
   void loadMatches(QString, QString);
-
+  void deleteMatch(QString, QString, int, int);
 };
 
 class MatchViewerView
@@ -78,6 +80,7 @@ protected slots :
   void onTreeWidgetMatchesItemSelectionChanged();
   void onGraphicsViewLeftSelectionChanged();
   void onGraphicsViewRightSelectionChanged();
+  void onPushButtonDeleteMatchClicked();
 
 // IMatchViewerView interface
 
@@ -87,7 +90,8 @@ public:
   void setRightImage(const QString &rightImage) override;
   void setLeftImageList(const std::vector<QString> &leftImageList) override;
   void setRightImageList(const std::vector<QString> &rightImageList) override;
-  void setMatches(const std::vector<std::tuple<QPointF, QPointF, float>> &matches) override;
+  void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) override;
+  //void deleteMatch(int id) override;
 
 // IDialogView interface
 
@@ -111,6 +115,9 @@ protected:
   QComboBox  *mComboBoxRightImage;
   GraphicViewer *mGraphicsViewRight;
   GraphicViewer *mGraphicsViewLeft;
+  QPushButton *mPushButtonDeleteMatch;
+  //QPushButton *mPushButtonSaveMatches;
+  bool bUnsavedChanges;
 
 };
 

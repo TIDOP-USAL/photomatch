@@ -371,7 +371,7 @@ void DescriptorMatcherWidget::init()
   filteringTestLayout->addWidget(new QLabel(tr("Geometric Test:")), 2, 0);
   mGeometricTest->addItem("Homography Matrix");
   mGeometricTest->addItem("Fundamental Matrix");
-  mGeometricTest->addItem("Essential Matrix");
+  //mGeometricTest->addItem("Essential Matrix");  /// Desactivada matriz esencial porque se necesitaria calibración de la cámara y no es el objetivo de la herramienta
   filteringTestLayout->addWidget(mGeometricTest, 2, 1);
 
   mHComputeMethodLabel = new QLabel(tr("Compute method:"));

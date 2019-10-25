@@ -79,38 +79,38 @@ void MatchingProcess::run()
   emit statusChangedNext();
 
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
 /// Para sacar automaticamente una verdad terreno para las pruebas
 /// TODO: Borrar una vez se terminen las pruebas
 
-  std::string ground_truth("C:\\Users\\Tido\\Documents\\fme\\Projects\\Test\\GroundTruth.txt");
+//  std::string ground_truth("C:\\Users\\Tido\\Documents\\fme\\Projects\\isprs\\Nadir\\GroundTruth.txt");
 
-  QString idImg1 = QFileInfo(mQueryDescriptors).baseName();
-  QString idImg2 = QFileInfo(mTrainDescriptors).baseName();
-  QByteArray ba2 = idImg1.toLocal8Bit();
-  const char *c_idImg1 = ba2.data();
-  QByteArray ba3 = idImg2.toLocal8Bit();
-  const char *c_idImg2 = ba3.data();
+//  QString idImg1 = QFileInfo(mQueryDescriptors).baseName();
+//  QString idImg2 = QFileInfo(mTrainDescriptors).baseName();
+//  QByteArray ba2 = idImg1.toLocal8Bit();
+//  const char *c_idImg1 = ba2.data();
+//  QByteArray ba3 = idImg2.toLocal8Bit();
+//  const char *c_idImg2 = ba3.data();
 
-  std::ofstream ofs(ground_truth, std::ofstream::app);
-  if (ofs.is_open()){
+//  std::ofstream ofs(ground_truth, std::ofstream::app);
+//  if (ofs.is_open()){
 
-    std::vector<cv::Point2f> pts_query;
-    std::vector<cv::Point2f> pts_train;
-    for (size_t i = 0; i < filter_matches.size(); i++){
-      size_t query_id = static_cast<size_t>(filter_matches[i].queryIdx);
-      size_t train_id = static_cast<size_t>(filter_matches[i].trainIdx);
-      pts_query.push_back(keyPoints1[query_id].pt);
-      pts_train.push_back(keyPoints2[train_id].pt);
-      ofs << c_idImg1 << ";" << c_idImg2 << ";" <<
-             keyPoints1[query_id].pt.x << ";" << keyPoints1[query_id].pt.y << ";" <<
-             keyPoints2[train_id].pt.x << ";" << keyPoints2[train_id].pt.y << std::endl;
-    }
+//    std::vector<cv::Point2f> pts_query;
+//    std::vector<cv::Point2f> pts_train;
+//    for (size_t i = 0; i < filter_matches.size(); i++){
+//      size_t query_id = static_cast<size_t>(filter_matches[i].queryIdx);
+//      size_t train_id = static_cast<size_t>(filter_matches[i].trainIdx);
+//      pts_query.push_back(keyPoints1[query_id].pt);
+//      pts_train.push_back(keyPoints2[train_id].pt);
+//      ofs << c_idImg1 << ";" << c_idImg2 << ";" <<
+//             keyPoints1[query_id].pt.x << ";" << keyPoints1[query_id].pt.y << ";" <<
+//             keyPoints2[train_id].pt.x << ";" << keyPoints2[train_id].pt.y << std::endl;
+//    }
 
-    ofs.close();
-  }
+//    ofs.close();
+//  }
 
-#endif // _DEBUG
+//#endif // _DEBUG
 
 }
 

@@ -10,6 +10,7 @@ class QDialogButtonBox;
 class QTabWidget;
 class QGridLayout;
 class QSpinBox;
+class QLineEdit;
 
 namespace fme
 {
@@ -109,7 +110,11 @@ protected:
   QGridLayout *mGridLayoutPreprocess;
   QGridLayout *mGridLayoutFeatures;
   QGridLayout *mGridLayoutMatcher;
-
+  QLineEdit *mLineEditImageViewerBGcolor;
+  QSpinBox *mSpinBoxKeypointSymbolSize;
+  QPushButton *mPushButtonImageViewerBGcolor;
+  QLineEdit *mLineEditMatchesKeypointSimbolColor;
+  QPushButton *mPushButtonKeypointSimbolColor;
   QListWidget *mListWidgetPreprocess;
   QListWidget *mListWidgetFeatures;
   //QListWidget *mListWidgetMatching;

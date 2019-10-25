@@ -105,7 +105,7 @@ void CurvesViewerView::setRightImageList(const std::vector<QString> &rightImageL
   }
 }
 
-void CurvesViewerView::setCurve(const QString &session, const std::vector<QPointF> &curve)
+void CurvesViewerView::setCurve(const QString &title, const std::vector<QPointF> &curve)
 {
   QLineSeries *series = new QLineSeries(this);
 
@@ -113,7 +113,7 @@ void CurvesViewerView::setCurve(const QString &session, const std::vector<QPoint
     series->append(curve[i]);
   }
 
-  series->setName(session);
+  series->setName(title);
   mChart->addSeries(series);
   series->attachAxis(mAxisX);
   series->attachAxis(mAxisY);
@@ -123,7 +123,8 @@ void CurvesViewerView::eraseCurve(const QString &session)
 {
   QList<QAbstractSeries *> series = mChart->series();
   for (int i = 0; i < series.size(); i++) {
-    if (series[i]->name().compare(session) == 0) {
+    QStringList list = series[i]->name().split(" [");
+    if (list[0].compare(session) == 0) {
       mChart->removeSeries(series[i]);
       break;
     }

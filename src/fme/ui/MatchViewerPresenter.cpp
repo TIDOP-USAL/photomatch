@@ -24,6 +24,9 @@ MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
   connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
   connect(mView, SIGNAL(loadMatches(QString, QString)),    this, SLOT(loadMatches(QString, QString)));
 
+  connect(mView, SIGNAL(deleteMatch(QString, QString, int, int)),
+          this,  SLOT(deleteMatch(QString, QString, int, int)));
+
   //connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   //connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
@@ -52,8 +55,13 @@ void MatchViewerPresenter::loadRightImage(const QString &image)
 
 void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
 {
-  std::vector<std::tuple<QPointF, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
+  std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
   mView->setMatches(matches);
+}
+
+void MatchViewerPresenter::deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id)
+{
+  mModel->deleteMatch(imageLeft, imageRight, query_id, train_id);
 }
 
 void MatchViewerPresenter::help()
@@ -74,21 +82,7 @@ void MatchViewerPresenter::open()
   /// el QGraphicView no tiene el tamaño adecuado
   std::vector<QString> imagesLeft = mModel->images();
   if (imagesLeft.empty() == false) {
-
-    /// Listado de imagenes
     mView->setLeftImageList(imagesLeft);
-
-//    /// Se activa la primera imagen
-//    mView->setLeftImage(imagesLeft[0]);
-
-//    // Se recuperan los pares de la primera imagen
-//    std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(imagesLeft[0]).baseName());
-//    if (imagesRight.empty() == false){
-//      mView->setRightImageList(imagesRight);
-//      mView->setRightImage(imagesRight[0]);
-//      loadMatches(imagesLeft[0], imagesRight[0]);
-//    }
-
     loadLeftImage(imagesLeft[0]);
   }
 

@@ -20,6 +20,9 @@ GraphicViewer::GraphicViewer(QWidget *parent)
     mZoomCtrlFactor(DEFAULT_ZOOM_CTRL_FACTOR)
 {
   init();
+
+  connect(mScene, SIGNAL(selectionChanged()), this, SIGNAL(selectionChanged()));
+
 }
 
 GraphicViewer::~GraphicViewer()

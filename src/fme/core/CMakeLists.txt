@@ -58,6 +58,8 @@ add_library(libcore ${LIB_TYPE}
             features/matcher.cpp
             features/matcher.h
             features/evaluation.h
+            features/groundtruth.cpp
+            features/groundtruth.h
             preprocess/preprocess.h
             #preprocess/downsample.cpp
             #preprocess/downsample.h

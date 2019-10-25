@@ -199,10 +199,11 @@ private:
   void init();
 
 signals:
-	
+
   void mousePosition(QPoint);
   void mouseClicked(QPoint);
   void mouseClicked(QPointF);
+  void selectionChanged();
 
 protected:
 

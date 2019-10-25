@@ -81,8 +81,8 @@ protected slots:
   /* Quality Control */
 
   void openMatchesViewer();
-  void createGroundTruth();
-  void importGroundTruth();
+  void groundTruthEditor();
+  //void importGroundTruth();
   void openHomographyViewer();
   void openRepeatability();
   void openPRCurvesViewer();
@@ -127,6 +127,10 @@ protected slots:
   void updateFeatures();
   void updateMatches();
   void loadKeyPoints(const QString &image);
+  void deleteSession(const QString &sessionName);
+  void deletePreprocess();
+  void deleteFeatures();
+  void deleteMatches();
 
   void processFinish();
   void processRunning();
@@ -179,7 +183,7 @@ private:
    */
   void initMatchesViewer();
 
-  void initCreateGroundTruth();
+  void initGroundTruthEditor();
 
   /*!
    * \brief Inicializa el visor de homografía

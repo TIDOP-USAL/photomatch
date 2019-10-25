@@ -122,8 +122,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   /* Quality Control */
 
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
-  connect(mView,  SIGNAL(createGroundTruth()),        this, SLOT(createGroundTruth()));
-  connect(mView,  SIGNAL(importGroundTruth()),        this, SLOT(importGroundTruth()));
+  connect(mView,  SIGNAL(groundTruthEditor()),        this, SLOT(groundTruthEditor()));
   connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
   connect(mView,  SIGNAL(repeatability()),            this, SLOT(openRepeatability()));
   connect(mView,  SIGNAL(prCurves()),                 this, SLOT(openPRCurvesViewer()));
@@ -165,6 +164,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
 
   connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
+  connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -568,27 +568,27 @@ void MainWindowPresenter::openMatchesViewer()
   mMatchesViewerPresenter->open();
 }
 
-void MainWindowPresenter::createGroundTruth()
+void MainWindowPresenter::groundTruthEditor()
 {
-  initCreateGroundTruth();
+  initGroundTruthEditor();
   mGroundTruthPresenter->open();
 }
 
-void MainWindowPresenter::importGroundTruth()
-{
-  QString file = QFileDialog::getOpenFileName(Q_NULLPTR,
-                                              tr("Import Ground Truth"),
-                                              mProjectModel->path(),
-                                              tr("Ground Truth (*.txt)"));
-  if (!file.isEmpty()) {
+//void MainWindowPresenter::importGroundTruth()
+//{
+//  QString file = QFileDialog::getOpenFileName(Q_NULLPTR,
+//                                              tr("Import Ground Truth"),
+//                                              mProjectModel->path(),
+//                                              tr("Ground Truth (*.txt)"));
+//  if (!file.isEmpty()) {
 
-    mProjectModel->setGroundTruth(file);
+//    mProjectModel->setGroundTruth(file);
 
-    mView->setFlag(MainWindowView::Flag::ground_truth, true);
-    mView->setFlag(MainWindowView::Flag::project_modified, true);
+//    mView->setFlag(MainWindowView::Flag::ground_truth, true);
+//    mView->setFlag(MainWindowView::Flag::project_modified, true);
 
-  }
-}
+//  }
+//}
 
 void MainWindowPresenter::openHomographyViewer()
 {
@@ -710,7 +710,7 @@ void MainWindowPresenter::loadProject()
     mView->setFlag(MainWindowView::Flag::images_added, true);
   }
 
-  if (mProjectModel->currentSession() == nullptr){
+  if (mProjectModel->sessionCount() > 0 && mProjectModel->currentSession() == nullptr){
     auto it = mProjectModel->sessionBegin();
     mProjectModel->setCurrentSession((*it)->name());
   }
@@ -764,8 +764,10 @@ void MainWindowPresenter::activeImages(const QStringList &images)
 void MainWindowPresenter::deleteImages(const QStringList &images)
 {
   mProjectModel->deleteImages(images);
+  TL_TODO("Se tienen que eliminar del proyecto las imagenes procesadas, y los ficheros de keypoints y de matches")
   for (const auto &image : images){
     mView->deleteImage(image);
+    TL_TODO("Se tienen que eliminar de la vista las imagenes procesadas, y los ficheros de keypoints y de matches")
   }
   mView->setFlag(MainWindowView::Flag::project_modified, true);
 
@@ -1148,35 +1150,6 @@ void MainWindowPresenter::openImageMatches(const QString &sessionName, const QSt
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
     return;
 
-//  /// Una escala para cada imagen por si tienen tamaño diferente
-//  double scale1 = 1.;
-//  double scale2 = 1.;
-//  if (mProjectModel->fullImageSize() == false){
-//    int maxSize = mProjectModel->maxImageSize();
-//    QImageReader imageReader1(imgPath1);
-//    QSize size = imageReader1.size();
-//    int w = size.width();
-//    int h = size.height();
-//    if (w > h){
-//      scale1 = w / static_cast<double>(maxSize);
-//    } else {
-//      scale1 = h / static_cast<double>(maxSize);
-//    }
-//    if (scale1 < 1.) scale1 = 1.;
-
-//    QImageReader imageReader2(imgPath2);
-//    size = imageReader2.size();
-//    w = size.width();
-//    h = size.height();
-//    if (w > h){
-//      scale2 = w / static_cast<double>(maxSize);
-//    } else {
-//      scale2 = h / static_cast<double>(maxSize);
-//    }
-//    if (scale2 < 1.) scale2 = 1.;
-
-//  }
-
   if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
 
     std::vector<std::pair<QString, QString>> pairs = session->matches(imgName1);
@@ -1184,11 +1157,6 @@ void MainWindowPresenter::openImageMatches(const QString &sessionName, const QSt
       for (auto &pair : pairs){
         if (pair.first.compare(imgName2) == 0){
           matches = mModel->loadMatches(pair.second, session->features(imgName1), session->features(imgName2));
-
-//          for (size_t i = 0; i < matches.size(); i++){
-//            matches[i].first *= scale1;
-//            matches[i].second *= scale2;
-//          }
 
           break;
         }
@@ -1232,29 +1200,11 @@ void MainWindowPresenter::updateMatches()
 void MainWindowPresenter::loadKeyPoints(const QString &image)
 {
   QFileInfo fileInfo(image);
-  QString features = fileInfo.path();
-  features.append("\\").append(mProjectModel->currentSession()->name());
-  features.append("\\features\\");
-  features.append(fileInfo.fileName()).append(".xml");
+  QString features = mProjectModel->currentSession()->features(fileInfo.baseName());
 
   std::vector<std::tuple<QPointF, double, double>> keyPoints = mModel->loadKeyPoints(features);
 
   if (keyPoints.size() > 0){
-
-//    double scale = 1.;
-//    if (mProjectModel->fullImageSize() == false){
-//      int maxSize = mProjectModel->maxImageSize();
-//      QImageReader imageReader(image);
-//      QSize size = imageReader.size();
-//      int w = size.width();
-//      int h = size.height();
-//      if (w > h){
-//        scale = w / static_cast<double>(maxSize);
-//      } else {
-//        scale = h / static_cast<double>(maxSize);
-//      }
-//      if (scale < 1.) scale = 1.;
-//    }
 
     for (size_t i = 0; i < keyPoints.size(); i++){
       QPointF point;
@@ -1266,6 +1216,68 @@ void MainWindowPresenter::loadKeyPoints(const QString &image)
 
   }
 
+}
+
+void MainWindowPresenter::deleteSession(const QString &sessionName)
+{
+  mProjectModel->deleteSession(sessionName);
+  mView->deleteSession(sessionName);
+  mView->setFlag(MainWindowView::Flag::project_modified, true);
+}
+
+void MainWindowPresenter::deletePreprocess()
+{
+  if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+
+    for (auto &preprocess : session->preprocessImages()){
+      mView->deletePreprocess(session->name(), preprocess);
+      QFile::remove(preprocess);
+    }
+
+    mProjectModel->clearPreprocessedImages();
+
+    this->deleteFeatures();
+
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+    mView->setFlag(MainWindowView::Flag::feature_extraction, false);
+  }
+}
+
+void MainWindowPresenter::deleteFeatures()
+{
+  if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+    
+    for (auto &feat : session->features()) {
+      mView->deleteFeatures(session->name(), feat);
+      QFile::remove(feat);
+    }
+    mProjectModel->clearFeatures();
+
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+
+    this->deleteMatches();
+
+    mProjectModel->deleteMatcher();
+    mView->setFlag(MainWindowView::Flag::feature_matching, false);
+  }
+}
+
+void MainWindowPresenter::deleteMatches()
+{
+  if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+
+    for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+      std::vector<std::pair<QString, QString>> pairs = session->matches((*it)->name());
+      if (!pairs.empty()){
+        for (auto &pair : pairs){
+          mView->deleteMatches(session->name(), pair.second);
+          QFile::remove(pair.second);
+        }
+      }
+    }
+
+    mProjectModel->clearMatches();
+  }
 }
 
 void MainWindowPresenter::processFinish()
@@ -1336,6 +1348,7 @@ void MainWindowPresenter::initPreprocessDialog()
     mPreprocessPresenter = new PreprocessPresenter(preprocessView, mPreprocessModel, mProjectModel, mSettingsModel);
 
     connect(mPreprocessPresenter, SIGNAL(running()),   this, SLOT(processRunning()));
+    connect(mPreprocessPresenter, SIGNAL(running()),   this, SLOT(deletePreprocess()));
     connect(mPreprocessPresenter, SIGNAL(finished()),  this, SLOT(processFinish()));
     connect(mPreprocessPresenter, SIGNAL(imagePreprocessed(QString)),  this, SLOT(updatePreprocess()));
 
@@ -1356,6 +1369,7 @@ void MainWindowPresenter::initFeatureExtractionDialog()
     mFeatureExtractorPresenter = new FeatureExtractorPresenter(featureExtractorView, mFeatureExtractorModel, mProjectModel, mSettingsModel);
 
     connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
+    connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(deleteFeatures()));
     connect(mFeatureExtractorPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
     connect(mFeatureExtractorPresenter, SIGNAL(featuresExtracted(QString)), this, SLOT(updateFeatures()));
 
@@ -1373,6 +1387,7 @@ void MainWindowPresenter::initFeatureMatching()
     mDescriptorMatcherPresenter = new DescriptorMatcherPresenter(descriptorMatcherView, mDescriptorMatcherModel, mProjectModel, mSettingsModel);
 
     connect(mDescriptorMatcherPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
+    connect(mDescriptorMatcherPresenter, SIGNAL(running()),  this, SLOT(deleteMatches()));
     connect(mDescriptorMatcherPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
     connect(mDescriptorMatcherPresenter, SIGNAL(matchCompute(QString)), this, SLOT(updateMatches()));
 
@@ -1417,7 +1432,7 @@ void MainWindowPresenter::initMatchesViewer()
   }
 }
 
-void MainWindowPresenter::initCreateGroundTruth()
+void MainWindowPresenter::initGroundTruthEditor()
 {
   if (mGroundTruthPresenter == nullptr){
     mGroundTruthModel = new GroundTruthModel(mProjectModel);

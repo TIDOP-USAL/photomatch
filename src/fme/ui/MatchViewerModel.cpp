@@ -49,49 +49,15 @@ std::vector<QString> MatchViewerModel::imagePairs(const QString &imageName) cons
   return pairs;
 }
 
-std::vector<std::tuple<QPointF, QPointF, float>> MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) const
+std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) const
 {
-  std::vector<std::tuple<QPointF, QPointF, float>> r_matches;
+  std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> r_matches;
 
   QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();
   QString imgPath2 = mProjectModel->findImageByName(imgName2)->path();
 
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
     return r_matches;
-
-//  /// Una escala para cada imagen por si tienen tamaño diferente
-//  double scale1 = 1.;
-//  double scale2 = 1.;
-//  if (mProjectModel->fullImageSize() == false){
-//    int maxSize = mProjectModel->maxImageSize();
-//    QImageReader imageReader1(imgPath1);
-//    QSize size = imageReader1.size();
-//    int w = size.width();
-//    int h = size.height();
-//    if (w > h){
-//      scale1 = w / static_cast<double>(maxSize);
-//    } else {
-//      scale1 = h / static_cast<double>(maxSize);
-//    }
-//    if (scale1 < 1.) scale1 = 1.;
-
-//    QImageReader imageReader2(imgPath2);
-//    size = imageReader2.size();
-//    w = size.width();
-//    h = size.height();
-//    if (w > h){
-//      scale2 = w / static_cast<double>(maxSize);
-//    } else {
-//      scale2 = h / static_cast<double>(maxSize);
-//    }
-//    if (scale2 < 1.) scale2 = 1.;
-
-////    if (scale1 > 1.) {
-////      for (size_t i = 0; i < keyPoints.size(); i++){
-////        keyPoints[i]*= scale;
-////      }
-////    }
-//  }
 
   if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
     std::vector<std::pair<QString, QString>> matches = session->matches(imgName1);
@@ -117,7 +83,7 @@ std::vector<std::tuple<QPointF, QPointF, float>> MatchViewerModel::loadMatches(c
             QPointF pt_train(static_cast<double>(keyPoints2[train_id].pt.x) /** scale2*/,
                              static_cast<double>(keyPoints2[train_id].pt.y) /** scale2*/);
 
-            r_matches.push_back(std::make_tuple(pt_query, pt_train, match[i].distance));
+            r_matches.push_back(std::make_tuple(query_id, pt_query, train_id, pt_train, match[i].distance));
           }
 
           break;
@@ -127,6 +93,41 @@ std::vector<std::tuple<QPointF, QPointF, float>> MatchViewerModel::loadMatches(c
   }
 
   return r_matches;
+}
+
+void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgName2, int query_id, int train_id)
+{
+  QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();
+  QString imgPath2 = mProjectModel->findImageByName(imgName2)->path();
+
+  if (QFileInfo(imgPath1).exists() == true && QFileInfo(imgPath2).exists() == true) {
+    if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+      std::vector<std::pair<QString, QString>> matches = session->matches(imgName1);
+
+      if (!matches.empty()){
+        for (auto &m : matches){
+          if (m.first.compare(imgName2) == 0){
+            std::vector<cv::DMatch> good_matches;
+            std::vector<cv::DMatch> wrong_matches;
+            matchesRead(m.second, &good_matches, &wrong_matches);
+
+            for (size_t i = 0; i < good_matches.size(); i++){
+              if (good_matches[i].queryIdx == query_id &&
+                  good_matches[i].trainIdx == train_id){
+                wrong_matches.push_back(good_matches[i]);
+                good_matches.erase(good_matches.begin()+static_cast<long long>(i));
+                break;
+              }
+            }
+
+            matchesWrite(m.second, good_matches, wrong_matches);
+
+            break;
+          }
+        }
+      }
+    }
+  }
 }
 
 } // namespace fme

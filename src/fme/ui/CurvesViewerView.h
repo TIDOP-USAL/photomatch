@@ -66,7 +66,7 @@ public:
    */
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
-  virtual void setCurve(const QString &session, const std::vector<QPointF> &curve) = 0;
+  virtual void setCurve(const QString &title, const std::vector<QPointF> &curve) = 0;
   virtual void eraseCurve(const QString &session) = 0;
 
 signals:
@@ -103,7 +103,7 @@ private slots:
   virtual void setRightImage(const QString &rightImage) override;
   virtual void setLeftImageList(const std::vector<QString> &leftImageList) override;
   virtual void setRightImageList(const std::vector<QString> &rightImageList) override;
-  virtual void setCurve(const QString &session, const std::vector<QPointF> &curve) override;
+  virtual void setCurve(const QString &title, const std::vector<QPointF> &curve) override;
   virtual void eraseCurve(const QString &session) override;
 
 // IDialogView interface

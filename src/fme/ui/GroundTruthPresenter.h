@@ -29,10 +29,13 @@ protected slots:
 
   virtual void loadLeftImage(const QString &image) = 0;
   virtual void loadRightImage(const QString &image) = 0;
-  virtual void markedLeftPoint(const QPointF &pt) = 0;
-  virtual void markedRightPoint(const QPointF &pt) = 0;
+  virtual void loadGroundTruth(const QString &imageLeft, const QString &imageRight) = 0;
+  //virtual void markedLeftPoint(const QPointF &pt) = 0;
+  //virtual void markedRightPoint(const QPointF &pt) = 0;
   virtual void addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
 
+  virtual void save() = 0;
+  virtual void discart() = 0;
 };
 
 class GroundTruthPresenter
@@ -53,9 +56,13 @@ protected slots:
 
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
-  void markedLeftPoint(const QPointF &pt) override;
-  void markedRightPoint(const QPointF &pt) override;
+  void loadGroundTruth(const QString &imageLeft, const QString &imageRight) override;
+  //void markedLeftPoint(const QPointF &pt) override;
+  //void markedRightPoint(const QPointF &pt) override;
   void addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
+
+  void save() override;
+  void discart() override;
 
 // IPresenter interface
 

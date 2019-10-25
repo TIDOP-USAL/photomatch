@@ -33,7 +33,7 @@ protected slots:
   virtual void loadLeftImage(const QString &image) = 0;
   virtual void loadRightImage(const QString &image) = 0;
   virtual void loadMatches(const QString &imageLeft, const QString &imageRight) = 0;
-
+  virtual void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) = 0;
 };
 
 
@@ -54,6 +54,7 @@ protected slots:
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
   void loadMatches(const QString &imageLeft, const QString &imageRight) override;
+  void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) override;
 
   //void save();
   //void discart();

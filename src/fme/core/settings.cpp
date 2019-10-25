@@ -45,8 +45,8 @@ namespace fme
 Settings::Settings()
   : ISettings(),
     mHistoyMaxSize(10),
-    mKeypointsFormat("Binary"),
-    mMatchesFormat("Binary"),
+    mKeypointsFormat("XML"),
+    mMatchesFormat("XML"),
     mAcebsf(new AcebsfProperties),
     mClahe(new ClaheProperties),
     mCmbfhe(new CmbfheProperties),
@@ -661,8 +661,8 @@ void Settings::reset()
 
   mHistoyMaxSize = 10;
   mHistory.clear();
-  mKeypointsFormat = "Binary";
-  mMatchesFormat = "Binary";
+  mKeypointsFormat = "XML";
+  mMatchesFormat = "XML";
 
   mAcebsf->reset();
   mClahe->reset();
@@ -710,7 +710,7 @@ SettingsRW::SettingsRW()
   : ISettingsRW(),
     mSettingsRW(nullptr)
 {
-  mSettingsRW = new QSettings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "FME");
+  mSettingsRW = new QSettings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "PhotoMatch");
 }
 
 SettingsRW::~SettingsRW()
@@ -735,7 +735,7 @@ void SettingsRW::read(ISettings &settings)
   }
 
   settings.setKeypointsFormat(mSettingsRW->value("MATCH/KeypointsFormat", settings.keypointsFormat()).toString());
-  settings.setMatchMethod(mSettingsRW->value("MATCH/MatchMethod", settings.matchesFormat()).toString());
+  settings.setMatchesFormat(mSettingsRW->value("MATCH/MatchesFormat", settings.matchesFormat()).toString());
 
   /* CLAHE */
   settings.clahe()->setClipLimit(mSettingsRW->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
@@ -940,7 +940,7 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
 
   mSettingsRW->setValue("MATCH/KeypointsFormat", settings.keypointsFormat());
-  mSettingsRW->setValue("MATCH/MatchMethod", settings.matchesFormat());
+  mSettingsRW->setValue("MATCH/MatchFormat", settings.matchesFormat());
 
   /* CLAHE */
   mSettingsRW->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());

@@ -64,10 +64,9 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionExportMatchesToCvYml(new QAction(this)),
     mActionExportMatchesToTxt(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
-    mActionCreateGroundTruth(new QAction(this)),
-    mActionImportGroundTruth(new QAction(this)),
+    mActionGroundTruthEditor(new QAction(this)),
     mActionHomography(new QAction(this)),
-    mActionRepeatability(new QAction(this)),
+    //mActionRepeatability(new QAction(this)),
     mActionPRCurves(new QAction(this)),
     mActionROCCurves(new QAction(this)),
     mActionDETCurves(new QAction(this)),
@@ -78,6 +77,8 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionZoomExtend(new QAction(this)),
     mActionZoom11(new QAction(this)),
     mActionShowKeyPoints(new QAction(this)),
+    mActionSetSession(new QAction(this)),
+    mActionDeleteSession(new QAction(this)),
     mGraphicViewer(nullptr),
     mComboBoxActiveSession(new QComboBox(this)),
     ui(new Ui::MainWindowView)
@@ -118,10 +119,9 @@ MainWindowView::MainWindowView(QWidget *parent)
   /* Quality Control */
 
   connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(matchesViewer()));
-  connect(mActionCreateGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(createGroundTruth()));
-  connect(mActionImportGroundTruth,  SIGNAL(triggered(bool)),   this,   SIGNAL(importGroundTruth()));
+  connect(mActionGroundTruthEditor,  SIGNAL(triggered(bool)),   this,   SIGNAL(groundTruthEditor()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
-  connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
+  //connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
   connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
   connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
   connect(mActionDETCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(detCurves()));
@@ -167,7 +167,7 @@ MainWindowView::~MainWindowView()
 
 void MainWindowView::clear()
 {
-  setWindowTitle(QString("FME"));
+  setWindowTitle(QString("PhotoMatch"));
   const QSignalBlocker blockerTreeWidgetProject(mTreeWidgetProject);
   mTreeWidgetProject->clear();
   const QSignalBlocker blockerThumbnailsWidget(mThumbnailsWidget);
@@ -188,7 +188,7 @@ void MainWindowView::clear()
 
 void MainWindowView::setProjectTitle(const QString &title)
 {
-  this->setWindowTitle(QString("FME - ").append(title));
+  this->setWindowTitle(QString("PhotoMatch - ").append(title));
 
   QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0);
   if (itemProject == nullptr) {
@@ -237,8 +237,6 @@ void MainWindowView::addImages(const QStringList &images)
 
         /* Se añade el fotograma al árbol del proyecto */
         QTreeWidgetItem *itemPhotogram = new QTreeWidgetItem();
-        //itemPhotogram->setExpanded(true);
-        //itemPhotogram->setCheckState(0, Qt::CheckState::Checked);
         itemPhotogram->setText(0, QFileInfo(image).baseName());
         itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_image_48px.png"));
         itemPhotogram->setToolTip(0, image);
@@ -325,9 +323,6 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
   if (id == -1){
     mComboBoxActiveSession->addItem(sessionName);
   }
-//  if (activeSession){
-//    mComboBoxActiveSession->setCurrentText(sessionName);
-//  }
 
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
@@ -353,9 +348,6 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
     }
 
     QTreeWidgetItem *itemSession = new QTreeWidgetItem();
-//    QFont font;
-//    font.setBold(activeSession);
-//    itemSession->setFont(0, font);
     itemSession->setData(0, Qt::UserRole, fme::session);
     itemSession->setText(0, sessionName);
     itemSession->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_list_48px.png"));
@@ -397,13 +389,6 @@ void MainWindowView::addPreprocess(const QString &sessionName,
                   itemPreprocess = itemSession->child(i);
                   break;
                 }
-//                QStringList l = temp->text(0).split(":");
-//                if (l.size() == 2){
-//                  if (l.at(0).compare(tr("Preprocess")) == 0) {
-//                    itemPreprocess = itemSession->child(i);
-//                    break;
-//                  }
-//                }
               }
             }
 
@@ -413,8 +398,6 @@ void MainWindowView::addPreprocess(const QString &sessionName,
               itemPreprocess->setData(0, Qt::UserRole, fme::preprocess);
               itemSession->addChild(itemPreprocess);
             }
-
-            //itemPreprocess->setText(0, QString("Preprocess: ").append(preprocess));
 
             update();
             break;
@@ -445,12 +428,6 @@ void MainWindowView::addPreprocess(const QString &sessionName,
         }
 
         for (auto image : preprocessImages){
-//          QTreeWidgetItem *itemPhotogram = new QTreeWidgetItem();
-//          itemPhotogram->setText(0, QFileInfo(image).baseName());
-//          itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_image_48px.png"));
-//          itemPhotogram->setToolTip(0, image);
-//          itemPhotogram->setData(0, Qt::UserRole, fme::preprocess_image);
-//          itemImages->addChild(itemPhotogram);
 
           QTreeWidgetItem *itemPhotogram = nullptr;
           for (int i = 0; i < itemImages->childCount(); i++) {
@@ -591,16 +568,9 @@ void MainWindowView::addFeatures(const QString &sessionName, const QString &dete
           itemImagesFeatures->setFlags(itemImagesFeatures->flags() | Qt::ItemIsTristate);
           itemImagesFeatures->setData(0, Qt::UserRole, fme::features_images);
           itemFeatures->addChild(itemImagesFeatures);
-          //itemImagesFeatures->setExpanded(true);
         }
 
         for (auto &image_features : features) {
-//          QTreeWidgetItem *itemPhotogram = new QTreeWidgetItem();
-//          itemPhotogram->setText(0, QFileInfo(image_features).baseName());
-//          itemPhotogram->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_xml_48px.png"));
-//          itemPhotogram->setToolTip(0, image_features);
-//          itemPhotogram->setData(0, Qt::UserRole, fme::features_image);
-//          itemImagesFeatures->addChild(itemPhotogram);
 
           QTreeWidgetItem *itemImageFeatures = nullptr;
           for (int i = 0; i < itemImagesFeatures->childCount(); i++) {
@@ -619,7 +589,6 @@ void MainWindowView::addFeatures(const QString &sessionName, const QString &dete
             itemImageFeatures->setFlags(itemImageFeatures->flags() | Qt::ItemIsTristate);
             itemImageFeatures->setData(0, Qt::UserRole, fme::features_image);
             itemImagesFeatures->addChild(itemImageFeatures);
-            //itemImageFeatures->setExpanded(true);
           }
 
         }
@@ -759,58 +728,8 @@ void MainWindowView::addMatches(const QString &sessionName, const QString &match
           itemRightImage->setFlags(itemRightImage->flags() | Qt::ItemIsTristate);
           itemRightImage->setData(0, Qt::UserRole, fme::pair_right);
           itemLeftImage->addChild(itemRightImage);
-          //itemRightImage->setExpanded(false);
         }
 
-//        for (auto &image_features : matches) {
-//          QFileInfo fi(image_features);
-//          QString name = fi.baseName();
-//          QStringList l = name.split("_");
-//          if (l.size() == 2){
-//            QString left = l[0];
-//            QString right = l[0];
-
-//            QTreeWidgetItem *itemLeftImage = nullptr;
-//            for (int i = 0; i < itemImagePairs->childCount(); i++) {
-//              QTreeWidgetItem *temp = itemImagePairs->child(i);
-//              if (temp && temp->text(0).compare(left) == 0) {
-//                itemLeftImage = itemImagePairs->child(i);
-//                break;
-//              }
-//            }
-
-//            if (itemLeftImage == nullptr) {
-//              itemLeftImage = new QTreeWidgetItem();
-//              itemLeftImage->setText(0, left);
-//              itemLeftImage->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_stack_of_photos_48px.png"));
-//              itemLeftImage->setFlags(itemLeftImage->flags() | Qt::ItemIsTristate);
-//              itemLeftImage->setData(0, Qt::UserRole, fme::pair_left);
-//              itemImagePairs->addChild(itemLeftImage);
-//              itemLeftImage->setExpanded(true);
-//            }
-
-//            QTreeWidgetItem *itemRightImage = nullptr;
-//            for (int i = 0; i < itemLeftImage->childCount(); i++) {
-//              QTreeWidgetItem *temp = itemLeftImage->child(i);
-//              if (temp && temp->text(0).compare(right) == 0) {
-//                itemRightImage = itemLeftImage->child(i);
-//                break;
-//              }
-//            }
-
-//            if (itemRightImage == nullptr) {
-//              itemRightImage = new QTreeWidgetItem();
-//              itemRightImage->setText(0, right);
-//              itemRightImage->setToolTip(0, name);
-//              itemRightImage->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_image_48px.png"));
-//              itemRightImage->setFlags(itemRightImage->flags() | Qt::ItemIsTristate);
-//              itemRightImage->setData(0, Qt::UserRole, fme::pair_right);
-//              itemLeftImage->addChild(itemRightImage);
-//              itemRightImage->setExpanded(false);
-//            }
-
-//          }
-//        }
       }
 
     }
@@ -912,6 +831,274 @@ void MainWindowView::deleteImage(const QString &file)
   mThumbnailsWidget->deleteThumbnail(file);
 }
 
+void MainWindowView::deleteSession(const QString &session)
+{
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+    if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+      QTreeWidgetItem *itemSessions = nullptr;
+      for (int i = 0; i < itemProject->childCount(); i++) {
+        if (QTreeWidgetItem *temp = itemProject->child(i)){
+          if (temp->text(0).compare(tr("Sessions")) == 0) {
+            itemSessions = itemProject->child(i);
+            break;
+          }
+        }
+      }
+
+      if (itemSessions != nullptr) {
+        QTreeWidgetItem *itemPreprocess = nullptr;
+        for (int i = 0; i < itemSessions->childCount(); i++) {
+          if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
+            if (itemSession->text(0).compare(session) == 0){
+              delete itemSession;
+              itemSession = nullptr;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+void MainWindowView::deletePreprocess(const QString &session, const QString &preprocess)
+{
+
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      if (QTreeWidgetItem *temp = itemProject->child(i)){
+        if (temp->text(0).compare(tr("Sessions")) == 0) {
+          itemSessions = itemProject->child(i);
+          break;
+        }
+      }
+    }
+
+    if (itemSessions != nullptr) {
+
+      QTreeWidgetItem *itemPreprocess = nullptr;
+      for (int i = 0; i < itemSessions->childCount(); i++) {
+        if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
+          if (itemSession->text(0).compare(session) == 0){
+
+            for (int i = 0; i < itemSession->childCount(); i++) {
+              if (QTreeWidgetItem *temp = itemSession->child(i)) {
+                if (temp->text(0).compare(tr("Preprocess")) == 0) {
+                  itemPreprocess = itemSession->child(i);
+                  break;
+                }
+              }
+            }
+
+            break;
+          }
+        }
+      }
+
+      if (itemPreprocess != nullptr){
+
+        QTreeWidgetItem *itemImages = nullptr;
+        for (int i = 0; i < itemPreprocess->childCount(); i++) {
+          if (QTreeWidgetItem *temp = itemPreprocess->child(i)){
+            if (temp->text(0).compare(tr("Images")) == 0) {
+              itemImages = itemPreprocess->child(i);
+              break;
+            }
+          }
+        }
+
+        if (itemImages != nullptr) {
+
+          QTreeWidgetItem *itemPhotogram = nullptr;
+          for (int i = 0; i < itemImages->childCount(); i++) {
+            if (QTreeWidgetItem *temp = itemImages->child(i)){
+              if (temp->toolTip(0).compare(preprocess) == 0) {
+                itemPhotogram = itemImages->child(i);
+                break;
+              }
+            }
+          }
+
+          if (itemPhotogram != nullptr) {
+            delete itemPhotogram;
+            itemPhotogram = nullptr;
+            if (itemImages->childCount() == 0){
+              delete itemImages;
+              itemImages = nullptr;
+            }
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+}
+
+void MainWindowView::deleteFeatures(const QString &session, const QString &feat)
+{
+
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      if (QTreeWidgetItem *temp = itemProject->child(i)){
+        if (temp->text(0).compare(tr("Sessions")) == 0) {
+          itemSessions = itemProject->child(i);
+          break;
+        }
+      }
+    }
+
+    if (itemSessions != nullptr) {
+
+      QTreeWidgetItem *itemFeatures = nullptr;
+      for (int i = 0; i < itemSessions->childCount(); i++) {
+        if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
+          if (itemSession->text(0).compare(session) == 0){
+
+            for (int i = 0; i < itemSession->childCount(); i++) {
+              if (QTreeWidgetItem *temp = itemSession->child(i)){
+                if (temp->text(0).compare(tr("Features")) == 0) {
+                  itemFeatures = itemSession->child(i);
+                  break;
+                }
+              }
+            }
+
+            break;
+
+          }
+        }
+      }
+
+      if (itemFeatures != nullptr) {
+
+        
+        QTreeWidgetItem *itemImagesFeatures = nullptr;
+        for (int i = 0; i < itemFeatures->childCount(); i++) {
+          QTreeWidgetItem *temp = itemFeatures->child(i);
+          if (temp && temp->text(0).compare(tr("Keypoints")) == 0) {
+            itemImagesFeatures = itemFeatures->child(i);
+            break;
+          }
+        }
+
+        if (itemImagesFeatures != nullptr) {
+
+          QTreeWidgetItem *itemImageFeatures = nullptr;
+          for (int i = 0; i < itemImagesFeatures->childCount(); i++) {
+            QTreeWidgetItem *temp = itemImagesFeatures->child(i);
+            if (temp->toolTip(0).compare(feat) == 0) {
+              itemImageFeatures = itemImagesFeatures->child(i);
+              delete itemImageFeatures;
+              itemImageFeatures = nullptr;
+              break;
+            }
+          }
+
+        }
+
+      }
+    
+    }
+
+  }
+}
+
+void MainWindowView::deleteMatches(const QString &session, const QString &matches)
+{
+
+  if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
+
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      if (QTreeWidgetItem *temp = itemProject->child(i)){
+        if (temp->text(0).compare(tr("Sessions")) == 0) {
+          itemSessions = itemProject->child(i);
+          break;
+        }
+      }
+    }
+
+    if (itemSessions != nullptr) {
+
+      QTreeWidgetItem *itemMatches = nullptr;
+      for (int i = 0; i < itemSessions->childCount(); i++) {
+        if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
+          if (itemSession->text(0).compare(session) == 0){
+
+            for (int i = 0; i < itemSession->childCount(); i++) {
+              if (QTreeWidgetItem *temp = itemSession->child(i)){
+                if (temp->text(0).compare(tr("Matches")) == 0) {
+                  itemMatches = itemSession->child(i);
+                  break;
+                }
+              }
+            }
+
+            break;
+
+          }
+        }
+      }
+
+      if (itemMatches != nullptr) {
+
+
+        /* Image pairs */
+
+        QTreeWidgetItem *itemImagePairs = nullptr;
+        for (int i = 0; i < itemMatches->childCount(); i++) {
+          QTreeWidgetItem *temp = itemMatches->child(i);
+          if (temp && temp->text(0).compare(tr("Image Pairs")) == 0) {
+            itemImagePairs = itemMatches->child(i);
+            break;
+          }
+        }
+
+        if (itemImagePairs != nullptr) {
+          QTreeWidgetItem *itemLeftImage = nullptr;
+          for (int i = 0; i < itemImagePairs->childCount(); i++) {
+            itemLeftImage = itemImagePairs->child(i);
+            if (itemLeftImage != nullptr) {
+
+              QTreeWidgetItem *itemRightImage = nullptr;
+              for (int i = 0; i < itemLeftImage->childCount(); i++) {
+                QTreeWidgetItem *temp = itemLeftImage->child(i);
+                if (temp && temp->toolTip(0).compare(matches) == 0) {
+                  itemRightImage = itemLeftImage->child(i);
+                  break;
+                }
+              }
+
+              if (itemRightImage != nullptr) {
+                delete itemRightImage;
+                itemRightImage = nullptr;
+                if (itemLeftImage->childCount() == 0){
+                  delete itemLeftImage;
+                  itemLeftImage = nullptr;
+                }
+                break;
+              }
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+  }
+}
+
 void MainWindowView::showImage(const QString &file)
 {
   const QSignalBlocker blocker(ui->tabWidget);
@@ -1007,7 +1194,7 @@ void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
 {
   QColor color;
   color.setNamedColor(QString("#00FF00"));
-  QPen pen(color, 1.);
+  QPen pen(color, 2.);
   QBrush brush;
   brush = QBrush(Qt::NoBrush);
   //int symbol = 0;
@@ -1113,7 +1300,7 @@ void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRig
     QPen pen = painter.pen();
     QBrush brush = painter.brush();
     QPen point_pen(QColor(0, 255, 0), 2.);
-    QPen line_pen(QColor(0, 0, 255), 2.);
+    QPen line_pen(QColor(229, 9, 127), 2.);
     QBrush _brush = QBrush(Qt::NoBrush);
     painter.setBrush(_brush);
     for (size_t i = 0; i < matches.size(); i++){
@@ -1225,8 +1412,7 @@ void MainWindowView::update()
   mActionCloseProject->setEnabled(bProjectExists);
 
   mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
-  mActionCreateGroundTruth->setEnabled(mFlags.isActive(Flag::images_added));
-  mActionImportGroundTruth->setEnabled(mFlags.isActive(Flag::images_added));
+  mActionGroundTruthEditor->setEnabled(mFlags.isActive(Flag::images_added));
   mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added) && !bProcessing);
   //mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
@@ -1240,7 +1426,7 @@ void MainWindowView::update()
   mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
-  mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
+  //mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionROCCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionDETCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
@@ -1255,6 +1441,9 @@ void MainWindowView::update()
   mActionZoom11->setEnabled(bImageOpen);
   mActionShowKeyPoints->setEnabled(bImageOpen && mFlags.isActive(Flag::feature_extraction));
 
+  mComboBoxActiveSession->setDisabled(bProcessing);
+  mActionSetSession->setDisabled(bProcessing);
+  mActionDeleteSession->setDisabled(bProcessing);
 }
 
 void MainWindowView::openFromHistory()
@@ -1488,18 +1677,18 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     QAction *selectedItem = menu.exec(globalPos);
   } else if (item->data(0, Qt::UserRole) == fme::session){
     QMenu menu;
-    menu.addAction(tr("Set as current session"));
-    menu.addAction(tr("Delete session"));
-    menu.addSeparator();
-    menu.addAction(mActionPreprocess);
-    menu.addAction(mActionFeatureExtraction);
-    menu.addAction(mActionFeatureMatching);
+    menu.addAction(mActionSetSession);
+    menu.addAction(mActionDeleteSession);
+//    menu.addSeparator();
+//    menu.addAction(mActionPreprocess);
+//    menu.addAction(mActionFeatureExtraction);
+//    menu.addAction(mActionFeatureMatching);
 
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("Set as current session")) {
         emit activeSessionChange(item->text(0));
       } else if (selectedItem->text() == tr("Delete session")) {
-        emit deleteSession(item->text(0));
+        emit delete_session(item->text(0));
       }
     }
   } else if (item->data(0, Qt::UserRole) == fme::preprocess){
@@ -1509,6 +1698,9 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
   } else if (item->data(0, Qt::UserRole) == fme::features_images){
 
   } else if (item->data(0, Qt::UserRole) == fme::features_image){
+    /// TODO: el visualizar la imagen si no es la sesion activa...
+//    QMenu menu;
+//    menu.addAction(tr("View keypoints"));
 
   } else if (item->data(0, Qt::UserRole) == fme::detector){
 
@@ -1560,7 +1752,7 @@ void MainWindowView::onTabWidgetContextMenu(const QPoint &point)
 
 void MainWindowView::init()
 {
-  setWindowTitle(QString("FME"));
+  setWindowTitle(QString("PhotoMatch"));
 
   mActionNewProject->setText(QApplication::translate("MainWindowView", "New Project", nullptr));
 #ifndef QT_NO_SHORTCUT
@@ -1696,13 +1888,11 @@ void MainWindowView::init()
 
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
 
-  mActionCreateGroundTruth->setText(QApplication::translate("MainWindowView", "Create Ground Truth", nullptr));
-
-  mActionImportGroundTruth->setText(QApplication::translate("MainWindowView", "Import Ground Truth", nullptr));
+  mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
 
   mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
 
-  mActionRepeatability->setText(QApplication::translate("MainWindowView", "Repeatability", nullptr));
+  //mActionRepeatability->setText(QApplication::translate("MainWindowView", "Repeatability", nullptr));
 
   mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
   QIcon iconPRCurves;
@@ -1752,6 +1942,10 @@ void MainWindowView::init()
   iconZoomShowKeyPoints.addFile(QStringLiteral(":/ico/24/img/material/24/keypoints.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionShowKeyPoints->setIcon(iconZoomShowKeyPoints);
   mActionShowKeyPoints->setCheckable(true);
+
+  mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
+
+  mActionDeleteSession->setText(QApplication::translate("MainWindowView", "Delete session", nullptr));
 
   /* Árbol de proyecto */
   //ui->dockWidgetContentsProject->setContentsMargins(0, 0, 0, 0);
@@ -1817,6 +2011,7 @@ void MainWindowView::init()
   menuPanels->addAction(ui->dockWidgetProject->toggleViewAction());
   menuPanels->addAction(ui->dockWidgetProperties->toggleViewAction());
   menuPanels->addAction(ui->dockWidgetConsole->toggleViewAction());
+  menuPanels->addAction(ui->dockWidgetThumb->toggleViewAction());
   ui->menuView->addMenu(menuPanels);
 
   ui->menuView->addSeparator();
@@ -1825,6 +2020,7 @@ void MainWindowView::init()
   menuToolBar->addAction(ui->mainToolBar->toggleViewAction());
   menuToolBar->addAction(ui->toolBarTools->toggleViewAction());
   menuToolBar->addAction(ui->toolBarView->toggleViewAction());
+  menuToolBar->addAction(ui->toolBarQualityControl->toggleViewAction());
   ui->menuView->addMenu(menuToolBar);
 
   ui->menuView->addSeparator();
@@ -1847,12 +2043,11 @@ void MainWindowView::init()
 
   ui->menuQualityControl->addAction(mActionMatchesViewer);
   ui->menuQualityControl->addSeparator();
-  ui->menuQualityControl->addAction(mActionCreateGroundTruth);
-  ui->menuQualityControl->addAction(mActionImportGroundTruth);
+  ui->menuQualityControl->addAction(mActionGroundTruthEditor);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionHomography);
-  ui->menuQualityControl->addAction(mActionRepeatability);
-  ui->menuQualityControl->addAction(mActionPRCurves);
+  //ui->menuQualityControl->addAction(mActionRepeatability);
+  //ui->menuQualityControl->addAction(mActionPRCurves);
   ui->menuQualityControl->addAction(mActionROCCurves);
   ui->menuQualityControl->addAction(mActionDETCurves);
 
@@ -1888,7 +2083,7 @@ void MainWindowView::init()
   ui->toolBarView->addSeparator();
   ui->toolBarView->addAction(mActionShowKeyPoints);
 
-  ui->toolBarQualityControl->addAction(mActionPRCurves);
+  //ui->toolBarQualityControl->addAction(mActionPRCurves);
   ui->toolBarQualityControl->addAction(mActionROCCurves);
   ui->toolBarQualityControl->addAction(mActionDETCurves);
 
@@ -1908,7 +2103,7 @@ void MainWindowView::init()
 
 void MainWindowView::closeEvent(QCloseEvent *event)
 {
-  QSettings settings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "FME");
+  QSettings settings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "PhotoMatch");
   settings.setValue("geometry", saveGeometry());
   settings.setValue("windowState", saveState());
   QMainWindow::closeEvent(event);

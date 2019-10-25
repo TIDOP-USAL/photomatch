@@ -62,16 +62,25 @@ public slots:
   virtual void setPointLeft(const QPointF &pt) = 0;
   virtual void setPointRight(const QPointF &pt) = 0;
 
-  virtual void addHomologousPoints(const QPointF &pt1, const QPointF &pt2) = 0;
+  virtual void setHomologousPoints(const std::vector<std::pair<QPointF,QPointF>> &points) = 0;
+  virtual void addHomologousPoint(const QPointF &pt1, const QPointF &pt2) = 0;
 
+  virtual void setUnsavedChanges(bool value) = 0;
+
+  virtual void clickedPointLeft(const QPointF &pt) = 0;
+  virtual void clickedPointRight(const QPointF &pt) = 0;
+
+  virtual void setTransform(const QTransform &trf) = 0;
 
 signals:
 
   void leftImageChange(QString);
   void rightImageChange(QString);
   void addPoint(QString, QPointF, QString,  QPointF);
-  void markedLeftPoint(QPointF);
-  void markedRightPoint(QPointF);
+//  void markedLeftPoint(QPointF);
+//  void markedRightPoint(QPointF);
+  void loadHomologousPoints(QString, QString);
+  void deleteHomologousPoint(QString, QString, int);
 };
 
 
@@ -96,8 +105,9 @@ protected slots :
   void onGraphicsViewLeftSelectionChanged();
   void onGraphicsViewRightSelectionChanged();
   void onPushButtonAddPoints(bool active);
-  void onPushButtonDeletePoints(bool active);
+  //void onPushButtonDeletePoints(bool active);
   void onPushButtonAddPointClicked();
+  void onPushButtonLockViewsToggled(bool active);
 
 // IGroundTruthView interface
 
@@ -109,7 +119,12 @@ public slots:
   void setRightImageList(const std::vector<QString> &rightImageList) override;
   void setPointLeft(const QPointF &pt) override;
   void setPointRight(const QPointF &pt) override;
-  void addHomologousPoints(const QPointF &pt1, const QPointF &pt2) override;
+  void setHomologousPoints(const std::vector<std::pair<QPointF,QPointF>> &points) override;
+  void addHomologousPoint(const QPointF &pt1, const QPointF &pt2) override;
+  void setUnsavedChanges(bool value) override;
+  void clickedPointLeft(const QPointF &pt) override;
+  void clickedPointRight(const QPointF &pt) override;
+  void setTransform(const QTransform &trf) override;
 
 // IDialogView interface
 
@@ -141,10 +156,14 @@ protected:
   QLabel *mLabelDetailRight;
   QPushButton *mPushButtonAddPoint;
   QPushButton *mPushButtonDelete;
+  QPushButton *mPushButtonLockViews;
   QAction *mAddPoints;
-  QAction *mDeletePoints;
+  //QAction *mDeletePoints;
   CrossGraphicItem *mCrossGraphicItem1;
   CrossGraphicItem *mCrossGraphicItem2;
+  bool bUnsavedChanges;
+  QTransform mTrf;
+  bool bLockViews;
 };
 
 } // namespace fme

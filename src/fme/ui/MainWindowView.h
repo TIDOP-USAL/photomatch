@@ -90,11 +90,16 @@ public slots:
    */
   void deleteHistory();
 
+  void deleteSession(const QString &session);
+
   /*!
    * \brief Elimina una imagen
    * \param[in] file
    */
   void deleteImage(const QString &file);
+  void deletePreprocess(const QString &session, const QString &preprocess);
+  void deleteFeatures(const QString &session, const QString &feat);
+  void deleteMatches(const QString &session, const QString &matches);
 
   /*!
    * \brief Abre una imagen
@@ -146,8 +151,7 @@ signals:
   /* Quality Control */
 
   void matchesViewer();
-  void createGroundTruth();
-  void importGroundTruth();
+  void groundTruthEditor();
   void homography();
   void repeatability();
   void prCurves();
@@ -178,7 +182,7 @@ signals:
   void openImageMatches(QString, QString, QString);
 
   void activeSessionChange(QString);
-  void deleteSession(QString);
+  void delete_session(QString);
 
 protected:
 
@@ -234,10 +238,9 @@ protected:
   QAction *mActionExportMatchesToCvYml;
   QAction *mActionExportMatchesToTxt;
   QAction *mActionMatchesViewer;
-  QAction *mActionCreateGroundTruth;
-  QAction *mActionImportGroundTruth;
+  QAction *mActionGroundTruthEditor;
   QAction *mActionHomography;
-  QAction *mActionRepeatability;
+  //QAction *mActionRepeatability;
   QAction *mActionPRCurves;
   QAction *mActionROCCurves;
   QAction *mActionDETCurves;
@@ -248,6 +251,8 @@ protected:
   QAction *mActionZoomExtend;
   QAction *mActionZoom11;
   QAction *mActionShowKeyPoints;
+  QAction *mActionSetSession;
+  QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;
   QMenu *mMenuExport;
   QMenu *mMenuExportTiePoints;

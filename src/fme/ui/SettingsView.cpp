@@ -11,6 +11,7 @@
 #include <QScrollArea>
 #include <QSpacerItem>
 #include <QSpinBox>
+#include <QLineEdit>
 
 namespace fme
 {
@@ -91,7 +92,7 @@ void SettingsView::init()
 
   mListWidget->setMaximumSize(QSize(250, 16777215));
   mListWidget->addItem(tr("General"));
-  mListWidget->addItem(tr("Viewer"));
+  mListWidget->addItem(tr("Image Viewer"));
   mListWidget->addItem(tr("Tools"));
   layout->addWidget(mListWidget, 0, 0, 1, 1);
 
@@ -116,10 +117,57 @@ void SettingsView::init()
   mStackedWidget->addWidget(pageGeneral);
 
   /* Viewer */
-  QWidget *pageViewer = new QWidget(this);
-  QGridLayout *gridLayoutViewer = new QGridLayout(pageViewer);
+  QWidget *pageImageViewer = new QWidget(this);
+  QGridLayout *gridLayoutViewer = new QGridLayout(pageImageViewer);
+  gridLayoutViewer->setContentsMargins(0, 0, 0, 0);
 
-  mStackedWidget->addWidget(pageViewer);
+  QTabWidget *tabWidgetImageViewer = new QTabWidget(pageImageViewer);
+
+  QWidget *tabImageViewerGeneral = new QWidget(this);
+  QGridLayout *gridLayoutTabImageViewerGeneral = new QGridLayout(tabImageViewerGeneral);
+  gridLayoutTabImageViewerGeneral->setContentsMargins(0, 0, 0, 0);
+  QScrollArea *scrollAreaImageViewerGeneral = new QScrollArea(tabImageViewerGeneral);
+  scrollAreaImageViewerGeneral->setWidgetResizable(true);
+  scrollAreaImageViewerGeneral->setFrameShape(QFrame::Shape::NoFrame);
+  QWidget *scrollAreaWidgetContentsImageViewerGeneral = new QWidget(this);
+  QGridLayout *gridLayoutContentsImageViewerGeneral = new QGridLayout(scrollAreaWidgetContentsImageViewerGeneral);
+  gridLayoutContentsImageViewerGeneral->addWidget(new QLabel(tr("Background Color:")), 0, 0, 1, 1);
+  mLineEditImageViewerBGcolor = new QLineEdit(tabImageViewerGeneral);
+  gridLayoutContentsImageViewerGeneral->addWidget(mLineEditImageViewerBGcolor, 0, 1, 1, 1);
+  mPushButtonImageViewerBGcolor = new QPushButton(tr("..."), tabImageViewerGeneral);
+  mPushButtonImageViewerBGcolor->setMaximumSize(QSize(23, 23));
+  gridLayoutContentsImageViewerGeneral->addWidget(mPushButtonImageViewerBGcolor, 0, 2, 1, 1);
+
+  scrollAreaImageViewerGeneral->setWidget(scrollAreaWidgetContentsImageViewerGeneral);
+  gridLayoutTabImageViewerGeneral->addWidget(scrollAreaImageViewerGeneral);
+
+  gridLayoutViewer->addWidget(tabWidgetImageViewer, 0, 0, 1, 1);
+  tabWidgetImageViewer->addTab(tabImageViewerGeneral, QString(tr("General")));
+
+  QWidget *tabImageViewerKeypoints = new QWidget(this);
+  QGridLayout *gridLayoutTabImageViewerKeypoints = new QGridLayout(tabImageViewerKeypoints);
+  gridLayoutTabImageViewerKeypoints->setContentsMargins(0, 0, 0, 0);
+  QScrollArea *scrollAreaImageViewerKeypoints = new QScrollArea(tabImageViewerKeypoints);
+  scrollAreaImageViewerKeypoints->setWidgetResizable(true);
+  scrollAreaImageViewerKeypoints->setFrameShape(QFrame::Shape::NoFrame);
+  QWidget *scrollAreaWidgetContentsImageViewerKeypoints = new QWidget(this);
+  QGridLayout *gridLayoutContentsImageViewerKeypoints = new QGridLayout(scrollAreaWidgetContentsImageViewerKeypoints);
+  gridLayoutContentsImageViewerKeypoints->addWidget(new QLabel(tr("Symbol Size:")), 0, 0, 1, 1);
+  mSpinBoxKeypointSymbolSize = new QSpinBox(tabImageViewerKeypoints);
+  gridLayoutContentsImageViewerKeypoints->addWidget(mSpinBoxKeypointSymbolSize, 0, 1, 1, 1);
+  gridLayoutContentsImageViewerKeypoints->addWidget(new QLabel(tr("Symbol Color:")), 1, 0, 1, 1);
+  mLineEditMatchesKeypointSimbolColor = new QLineEdit(tabImageViewerKeypoints);
+  gridLayoutContentsImageViewerKeypoints->addWidget(mLineEditMatchesKeypointSimbolColor, 1, 1, 1, 1);
+  mPushButtonKeypointSimbolColor = new QPushButton(tr("..."), tabImageViewerKeypoints);
+  mPushButtonKeypointSimbolColor->setMaximumSize(QSize(23, 23));
+  gridLayoutContentsImageViewerKeypoints->addWidget(mPushButtonKeypointSimbolColor, 1, 2, 1, 1);
+  scrollAreaImageViewerKeypoints->setWidget(scrollAreaWidgetContentsImageViewerKeypoints);
+  gridLayoutTabImageViewerKeypoints->addWidget(scrollAreaImageViewerKeypoints);
+
+  gridLayoutViewer->addWidget(tabWidgetImageViewer, 0, 0, 1, 1);
+  tabWidgetImageViewer->addTab(tabImageViewerKeypoints, QString(tr("Keypoints")));
+
+  mStackedWidget->addWidget(pageImageViewer);
 
   /* Tools */
   QWidget *pageTools = new QWidget(this);
