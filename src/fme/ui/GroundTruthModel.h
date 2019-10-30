@@ -28,6 +28,9 @@ public:
   virtual std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const = 0;
   virtual QTransform transform(const QString &imgName1, const QString &imgName2) const = 0;
   virtual void saveGroundTruth() = 0;
+  virtual void setGroundTruth(const QString &file) = 0;
+  virtual bool existGroundTruth() const = 0;
+  virtual QString projectPath() const = 0;
 
 public slots:
 
@@ -63,6 +66,9 @@ public:
   std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const override;
   QTransform transform(const QString &imgName1, const QString &imgName2) const override;
   void saveGroundTruth() override;
+  void setGroundTruth(const QString &file) override;
+  bool existGroundTruth() const override;
+  QString projectPath() const override;
 
 public slots:
 

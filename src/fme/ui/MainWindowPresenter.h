@@ -82,7 +82,6 @@ protected slots:
 
   void openMatchesViewer();
   void groundTruthEditor();
-  //void importGroundTruth();
   void openHomographyViewer();
   void openRepeatability();
   void openPRCurvesViewer();
@@ -131,6 +130,7 @@ protected slots:
   void deletePreprocess();
   void deleteFeatures();
   void deleteMatches();
+  void groundTruthAdded();
 
   void processFinish();
   void processRunning();

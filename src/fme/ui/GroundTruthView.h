@@ -33,6 +33,9 @@ public:
 
   virtual ~IGroundTruthView() = default;
 
+  virtual QString imageLeft() const = 0;
+  virtual QString imageRight() const = 0;
+
 public slots:
 
   /*!
@@ -81,6 +84,7 @@ signals:
 //  void markedRightPoint(QPointF);
   void loadHomologousPoints(QString, QString);
   void deleteHomologousPoint(QString, QString, int);
+  void importGroundTruth();
 };
 
 
@@ -96,7 +100,10 @@ public:
   GroundTruthView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
   ~GroundTruthView() override;
 
-protected slots :
+  QString imageLeft() const override;
+  QString imageRight() const override;
+
+protected slots:
 
   void onComboBoxLeftImageIndexChanged(int idx);
   void onComboBoxRightImageIndexChanged(int idx);
@@ -157,6 +164,7 @@ protected:
   QPushButton *mPushButtonAddPoint;
   QPushButton *mPushButtonDelete;
   QPushButton *mPushButtonLockViews;
+  QAction *mImportGroundTruth;
   QAction *mAddPoints;
   //QAction *mDeletePoints;
   CrossGraphicItem *mCrossGraphicItem1;

@@ -33,9 +33,15 @@ protected slots:
   //virtual void markedLeftPoint(const QPointF &pt) = 0;
   //virtual void markedRightPoint(const QPointF &pt) = 0;
   virtual void addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
+  virtual void importGroundTruth() = 0;
 
   virtual void save() = 0;
   virtual void discart() = 0;
+
+signals:
+
+  void groundTruthAdded();
+
 };
 
 class GroundTruthPresenter
@@ -60,6 +66,7 @@ protected slots:
   //void markedLeftPoint(const QPointF &pt) override;
   //void markedRightPoint(const QPointF &pt) override;
   void addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
+  void importGroundTruth() override;
 
   void save() override;
   void discart() override;

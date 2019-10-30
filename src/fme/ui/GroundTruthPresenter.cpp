@@ -5,6 +5,7 @@
 
 #include <QStandardPaths>
 #include <QDir>
+#include <QFileDialog>
 
 namespace fme
 {
@@ -28,6 +29,7 @@ GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
   connect(mView, SIGNAL(loadHomologousPoints(QString, QString)),    this, SLOT(loadGroundTruth(QString, QString)));
 //  connect(mView, SIGNAL(deleteHomologousPoint(QString, QString, int)),
 //          this,  SLOT(deleteMatch(QString, QString, int, int)));
+  connect(mView, SIGNAL(importGroundTruth()), this, SLOT(importGroundTruth()));
 
   connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
@@ -43,11 +45,11 @@ GroundTruthPresenter::~GroundTruthPresenter()
 void GroundTruthPresenter::loadLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
-  std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
+  std::vector<QString> imagesRight = mModel->imagePairs(image);
   if (imagesRight.empty() == false){
     mView->setRightImageList(imagesRight);
     mView->setRightImage(imagesRight[0]);
-    loadGroundTruth(image, imagesRight[0]);
+    loadGroundTruth(image, QFileInfo(imagesRight[0]).baseName());
   }
 }
 
@@ -58,10 +60,10 @@ void GroundTruthPresenter::loadRightImage(const QString &image)
 
 void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QString &imageRight)
 {
-  std::vector<std::pair<QPointF, QPointF>> homologousPoints = mModel->groundTruth(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
+  std::vector<std::pair<QPointF, QPointF>> homologousPoints = mModel->groundTruth(imageLeft, imageRight);
 
   mView->setHomologousPoints(homologousPoints);
-  QTransform trf = mModel->transform(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
+  QTransform trf = mModel->transform(imageLeft, imageRight);
   mView->setTransform(trf);
 }
 
@@ -83,9 +85,26 @@ void GroundTruthPresenter::addPoint(const QString &image1, const QPointF &pt1, c
   mView->setUnsavedChanges(true);
 }
 
+void GroundTruthPresenter::importGroundTruth()
+{
+  QString file = QFileDialog::getOpenFileName(Q_NULLPTR,
+                                              tr("Import Ground Truth"),
+                                              mModel->projectPath(),
+                                              tr("Ground Truth (*.txt)"));
+  if (!file.isEmpty()) {
+
+    mModel->setGroundTruth(file);
+  }
+
+  loadGroundTruth(mView->imageLeft(), mView->imageRight());
+
+  emit groundTruthAdded();
+}
+
 void GroundTruthPresenter::save()
 {
   mView->setUnsavedChanges(false);
+  if (mModel->existGroundTruth()) emit groundTruthAdded();
   mModel->saveGroundTruth();
 }
 
@@ -112,7 +131,7 @@ void GroundTruthPresenter::open()
   std::vector<QString> imagesLeft = mModel->images();
   if (imagesLeft.empty() == false) {
     mView->setLeftImageList(imagesLeft);
-    loadLeftImage(imagesLeft[0]);
+    loadLeftImage(QFileInfo(imagesLeft[0]).baseName());
   }
 }
 

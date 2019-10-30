@@ -54,15 +54,28 @@ GroundTruthView::~GroundTruthView()
   }
 }
 
+QString GroundTruthView::imageLeft() const
+{
+  return mComboBoxLeftImage->currentText();
+}
+
+QString GroundTruthView::imageRight() const
+{
+  return mComboBoxRightImage->currentText();
+}
+
 void GroundTruthView::onComboBoxLeftImageIndexChanged(int idx)
 {
-  emit leftImageChange(mComboBoxLeftImage->itemData(idx).toString());
+  //emit leftImageChange(mComboBoxLeftImage->itemData(idx).toString());
+  emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
 void GroundTruthView::onComboBoxRightImageIndexChanged(int idx)
 {
-  QString image_right(mComboBoxRightImage->itemData(idx).toString());
-  QString image_left(mComboBoxLeftImage->currentData().toString());
+  //QString image_right(mComboBoxRightImage->itemData(idx).toString());
+  //QString image_left(mComboBoxLeftImage->currentData().toString());
+  QString image_right(mComboBoxRightImage->itemText(idx));
+  QString image_left(mComboBoxLeftImage->currentText());
   emit rightImageChange(image_right);
   emit loadHomologousPoints(image_left, image_right);
 }
@@ -269,19 +282,27 @@ void GroundTruthView::onPushButtonLockViewsToggled(bool active)
 void GroundTruthView::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
-  QFileInfo file_info(leftImage);
-  mComboBoxLeftImage->setCurrentText(file_info.baseName());
+  //QFileInfo file_info(leftImage);
+  //mComboBoxLeftImage->setCurrentText(file_info.baseName());
+  mComboBoxLeftImage->setCurrentText(leftImage);
+  QString image_path = mComboBoxLeftImage->currentData().toString();
   mGraphicsViewLeft->scene()->clearSelection();
-  mGraphicsViewLeft->setImage(QImage(leftImage));
+  mGraphicsViewLeft->setImage(QImage(image_path));
+
+  update();
 }
 
 void GroundTruthView::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
-  QFileInfo file_info(rightImage);
-  mComboBoxRightImage->setCurrentText(file_info.baseName());
+  //QFileInfo file_info(rightImage);
+  //mComboBoxRightImage->setCurrentText(file_info.baseName());
+  mComboBoxRightImage->setCurrentText(rightImage);
+  QString image_path = mComboBoxRightImage->currentData().toString();
   mGraphicsViewRight->scene()->clearSelection();
-  mGraphicsViewRight->setImage(QImage(rightImage));
+  mGraphicsViewRight->setImage(QImage(image_path));
+
+  update();
 }
 
 void GroundTruthView::setLeftImageList(const std::vector<QString> &leftImageList)
@@ -475,6 +496,13 @@ void GroundTruthView::init()
   gridLayout->addWidget(mComboBoxLeftImage, 1, 0, 1, 1);
 
   QToolBar *toolBar = new QToolBar(this);
+  mImportGroundTruth = new QAction(QIcon(":/ico/48/img/material/48/icons8_opened_folder_48px.png"), tr("Import Ground Truth"), this);
+  mImportGroundTruth->setStatusTip(tr("Import Ground Truth"));
+  connect(mImportGroundTruth, SIGNAL(triggered(bool)), this, SIGNAL(importGroundTruth()));
+  toolBar->addAction(mImportGroundTruth);
+
+  toolBar->addSeparator();
+  
   mAddPoints = new QAction(QIcon(":/ico/48/img/material/48/icons8_define_location_48px.png"), tr("Add Points"), this);
   mAddPoints->setStatusTip(tr("Add Points"));
   mAddPoints->setCheckable(true);
@@ -503,6 +531,7 @@ void GroundTruthView::init()
   mPushButtonLockViews->setIconSize(QSize(24,24));
   mPushButtonLockViews->setMaximumSize(30, 30);
   gridLayoutGraphicsView->addWidget(mPushButtonLockViews, 0, 1, 1, 1);
+  //mPushButtonLockViews->setVisible(false);
 
   mGraphicsViewRight = new GraphicViewer(this);
   mGraphicsViewRight->setMinimumSize(QSize(200, 200));
@@ -609,8 +638,25 @@ void GroundTruthView::init()
 
 void GroundTruthView::clear()
 {
+  const QSignalBlocker blocker1(mComboBoxLeftImage);
+  const QSignalBlocker blocker2(mComboBoxRightImage);
+  const QSignalBlocker blocker3(mTreeWidget);
+  const QSignalBlocker blocker4(mAddPoints);
+
   mComboBoxLeftImage->clear();
-  mComboBoxLeftImage->clear();
+  mComboBoxRightImage->clear();
+  mLineEditLeftX->clear();
+  mLineEditLeftY->clear();
+  mLabelDetailLeft->clear();
+  mLineEditRightX->clear();
+  mLineEditRightY->clear();
+  mLabelDetailRight->clear();
+
+  mTrf.reset();
+
+  mAddPoints->setChecked(false);
+  mPushButtonAddPoint->setEnabled(false);
+  mPushButtonDelete->setEnabled(false);
 }
 
 void GroundTruthView::update()
@@ -650,10 +696,10 @@ void GroundTruthView::clickedPointLeft(const QPointF &pt)
   mCrossGraphicItem1->setSize(20);
   mGraphicsViewLeft->scene()->addItem(mCrossGraphicItem1);
 
-//  if (mTrf.isIdentity() == false && bLockViews == true){
-//    QPointF trf_point = mTrf.map(pt);
-//    mGraphicsViewRight->centerOn(trf_point);
-//  }
+  if (mTrf.isIdentity() == false && bLockViews == true){
+    QPointF trf_point = mTrf.map(pt);
+    mGraphicsViewRight->centerOn(trf_point);
+  }
 
   update();
 }
@@ -675,10 +721,11 @@ void GroundTruthView::clickedPointRight(const QPointF &pt)
   mCrossGraphicItem2->setSize(20);
   mGraphicsViewRight->scene()->addItem(mCrossGraphicItem2);
 
-//  if (mTrf.isIdentity() == false && bLockViews == true){
-//    QPointF trf_point = mTrf.map(pt);
-//    mGraphicsViewLeft->centerOn(trf_point);
-//  }
+  if (mTrf.isIdentity() == false && bLockViews == true){
+    QTransform trf_inv = mTrf.inverted();
+    QPointF trf_point = trf_inv.map(pt);
+    mGraphicsViewLeft->centerOn(trf_point);
+  }
 
   update();
 }

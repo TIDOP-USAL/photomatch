@@ -574,22 +574,6 @@ void MainWindowPresenter::groundTruthEditor()
   mGroundTruthPresenter->open();
 }
 
-//void MainWindowPresenter::importGroundTruth()
-//{
-//  QString file = QFileDialog::getOpenFileName(Q_NULLPTR,
-//                                              tr("Import Ground Truth"),
-//                                              mProjectModel->path(),
-//                                              tr("Ground Truth (*.txt)"));
-//  if (!file.isEmpty()) {
-
-//    mProjectModel->setGroundTruth(file);
-
-//    mView->setFlag(MainWindowView::Flag::ground_truth, true);
-//    mView->setFlag(MainWindowView::Flag::project_modified, true);
-
-//  }
-//}
-
 void MainWindowPresenter::openHomographyViewer()
 {
   initHomographyViewer();
@@ -1280,6 +1264,12 @@ void MainWindowPresenter::deleteMatches()
   }
 }
 
+void MainWindowPresenter::groundTruthAdded()
+{
+  mView->setFlag(MainWindowView::Flag::ground_truth, true);
+  mView->setFlag(MainWindowView::Flag::project_modified, true);
+}
+
 void MainWindowPresenter::processFinish()
 {
   mView->setFlag(MainWindowView::Flag::processing, false);
@@ -1439,6 +1429,8 @@ void MainWindowPresenter::initGroundTruthEditor()
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     IGroundTruthView *groundTruthView = new GroundTruthView(mView, f);
     mGroundTruthPresenter = new GroundTruthPresenter(groundTruthView, mGroundTruthModel);
+
+    connect(mGroundTruthPresenter, SIGNAL(groundTruthAdded()), this, SLOT(groundTruthAdded()));
   }
 }
 

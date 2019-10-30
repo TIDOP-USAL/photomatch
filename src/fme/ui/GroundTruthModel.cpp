@@ -62,22 +62,45 @@ std::vector<QString> GroundTruthModel::imagePairs(const QString &imageName) cons
 std::vector<std::pair<QPointF, QPointF> > GroundTruthModel::groundTruth(const QString &imgName1, const QString &imgName2) const
 {
   std::vector<std::pair<QPointF,QPointF>> r_ground_truth;
+
   std::shared_ptr<HomologusPoints> ground_truth = mGroundTruth->findPair(imgName1, imgName2);
   if (ground_truth){
     r_ground_truth = ground_truth->homologusPoints();
   }
+
+  std::shared_ptr<HomologusPoints> ground_truth_inv = mGroundTruth->findPair(imgName2, imgName1);
+  if (ground_truth_inv){
+    for (auto &homologusPoint : ground_truth_inv->homologusPoints()){
+      r_ground_truth.push_back(std::make_pair(homologusPoint.second, homologusPoint.first)); /// .....
+    }
+  }
+
   return r_ground_truth;
 }
 
 QTransform GroundTruthModel::transform(const QString &imgName1, const QString &imgName2) const
 {
   QTransform trf;
-  std::shared_ptr<HomologusPoints> ground_truth = mGroundTruth->findPair(imgName1, imgName2);
-  cv::Mat h = ground_truth->homography();
-  if (h.empty() == false){
-    trf.setMatrix(h.at<float>(0, 0), h.at<float>(0, 1), h.at<float>(0, 2),
-                  h.at<float>(1, 0), h.at<float>(1, 1), h.at<float>(1, 2),
-                  h.at<float>(2, 0), h.at<float>(2, 1), h.at<float>(2, 2));
+  HomologusPoints homologusPoints(imgName1, imgName2);
+  if (std::shared_ptr<HomologusPoints> ground_truth_direct = mGroundTruth->findPair(imgName1, imgName2)){
+    for (auto &homolPoint : ground_truth_direct->homologusPoints()){
+      homologusPoints.push_back(homolPoint);
+    }
+  }
+
+  if (std::shared_ptr<HomologusPoints> ground_truth_inverse = mGroundTruth->findPair(imgName2, imgName1)){
+    for (auto &homolPoint : ground_truth_inverse->homologusPoints()){
+      homologusPoints.addPoints(homolPoint.second, homolPoint.first);
+    }
+  }
+
+  if (homologusPoints.empty() == false) {
+    cv::Mat h = homologusPoints.homography();
+    if (h.empty() == false){
+      trf.setMatrix(h.at<double>(0, 0), h.at<double>(1, 0), h.at<double>(2, 0),
+                    h.at<double>(0, 1), h.at<double>(1, 1), h.at<double>(2, 1),
+                    h.at<double>(0, 2), h.at<double>(1, 2), h.at<double>(2, 2));
+    }
   }
 
   return trf;
@@ -93,10 +116,27 @@ void GroundTruthModel::saveGroundTruth()
   mGroundTruth->write(mProjectModel->groundTruth());
 }
 
+void GroundTruthModel::setGroundTruth(const QString &file)
+{
+  mProjectModel->setGroundTruth(file);
+  this->loadGroundTruth();
+}
+
+bool GroundTruthModel::existGroundTruth() const
+{
+  return !mProjectModel->groundTruth().isEmpty();
+}
+
+QString GroundTruthModel::projectPath() const
+{
+  return mProjectModel->projectFolder();
+}
+
 void GroundTruthModel::addHomologusPoints(const QString &image1, QPointF pt1, const QString &image2, QPointF pt2)
 {
   std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(image1, image2);
-  homologus->addPoints(pt1, pt2);
+  if (homologus)
+    homologus->addPoints(pt1, pt2);
 }
 
 

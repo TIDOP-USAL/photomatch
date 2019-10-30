@@ -118,6 +118,7 @@ cv::Mat HomologusPoints::homography() const
   std::vector<cv::Point2f> pts_query;
   std::vector<cv::Point2f> pts_train;
 
+
   for (size_t i = 0; i < mHomologusPoints.size(); i++){
     pts_query.push_back(cv::Point(mHomologusPoints[i].first.x(), mHomologusPoints[i].first.y()));
     pts_train.push_back(cv::Point(mHomologusPoints[i].second.x(), mHomologusPoints[i].second.y()));
@@ -130,7 +131,7 @@ cv::Mat HomologusPoints::homography() const
   } catch (cv::Exception &e){
     /// ...
   }
-
+  /// TODO: Ver si interesa... cv::correctMatches
   return H;
 }
 
@@ -233,7 +234,7 @@ std::shared_ptr<HomologusPoints> GroundTruth::findPair(const QString &idImg1, co
 std::shared_ptr<HomologusPoints> GroundTruth::pair(const QString &idImg1, const QString &idImg2)
 {
   std::shared_ptr<HomologusPoints> homologus = this->findPair(idImg1, idImg2);
-  if (homologus != nullptr){
+  if (homologus == nullptr){
     homologus = std::make_shared<HomologusPoints>(idImg1, idImg2);
     mHomologusPoints.push_back(homologus);
   }
