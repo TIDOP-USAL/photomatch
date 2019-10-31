@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/NoshpWidget.h"
+#include "photomatch/widgets/NoshpWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 
 class TestNoshpWidgetSignals : public NoshpWidget

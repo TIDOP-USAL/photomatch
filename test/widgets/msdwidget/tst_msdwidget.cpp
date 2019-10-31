@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/MsdWidget.h"
+#include "photomatch/widgets/MsdWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMsdWidget : public QObject
 {

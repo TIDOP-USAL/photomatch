@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/mser.h"
+#include "photomatch/core/features/mser.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMserDetector
   : public QObject

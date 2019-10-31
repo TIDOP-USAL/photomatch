@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/MsdWidget.h"
+#include "photomatch/widgets/MsdWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMsdWidgetSignals : public MsdWidget
 {

@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/MsrcpWidget.h"
+#include "photomatch/widgets/MsrcpWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMsrcpWidgetSignals : public MsrcpWidget
 {

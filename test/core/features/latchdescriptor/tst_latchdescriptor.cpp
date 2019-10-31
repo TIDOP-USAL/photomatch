@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/latch.h"
+#include "photomatch/core/features/latch.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLatchDescriptor
   : public QObject

@@ -1,8 +1,8 @@
 #include <QtTest>
 
-#include "fme/ui/SettingsModel.h"
+#include "photomatch/ui/SettingsModel.h"
 
-using namespace fme;
+using namespace photomatch;
 
 
 class SettingsRWFake

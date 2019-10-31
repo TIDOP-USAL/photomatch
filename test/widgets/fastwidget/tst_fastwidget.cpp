@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/FastWidget.h"
+#include "photomatch/widgets/FastWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFastWidget : public QObject
 {

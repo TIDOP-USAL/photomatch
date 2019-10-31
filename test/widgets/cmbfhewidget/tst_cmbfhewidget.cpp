@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/CmbfheWidget.h"
+#include "photomatch/widgets/CmbfheWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestCmbfheWidget : public QObject
 {

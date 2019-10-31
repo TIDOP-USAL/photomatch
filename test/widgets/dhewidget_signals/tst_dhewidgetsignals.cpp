@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/DheWidget.h"
+#include "photomatch/widgets/DheWidget.h"
 
 #include <QSpinBox>
 #include <QRadioButton>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestDheWidgetSignals : public DheWidget
 {

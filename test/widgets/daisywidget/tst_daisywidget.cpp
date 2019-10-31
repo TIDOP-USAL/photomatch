@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/DaisyWidget.h"
+#include "photomatch/widgets/DaisyWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestDaisyWidget : public QObject
 {

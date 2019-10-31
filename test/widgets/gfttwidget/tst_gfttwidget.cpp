@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/GfttWidget.h"
+#include "photomatch/widgets/GfttWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestGfttWidget : public QObject
 {

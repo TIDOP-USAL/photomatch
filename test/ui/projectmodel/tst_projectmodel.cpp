@@ -1,9 +1,9 @@
 #include <QtTest>
 
-#include "fme/core/project.h"
-#include "fme/ui/ProjectModel.h"
+#include "photomatch/core/project.h"
+#include "photomatch/ui/ProjectModel.h"
 
-using namespace fme;
+using namespace photomatch;
 
 ///TODO: completar
 
@@ -16,21 +16,21 @@ public:
   ProjectRWFake()
   {
     mProjectFileText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                       "<FME version=\"1.0\">"
+                       "<PhotoMatch version=\"1.0\">"
                        "    <General>"
                        "        <Name>prj001</Name>"
-                       "        <ProjectFolder>C:/Users/User01/Documents/fme/Projects/prj001</ProjectFolder>"
+                       "        <ProjectFolder>C:/Users/User01/Documents/photomatch/Projects/prj001</ProjectFolder>"
                        "        <Description>Project example</Description>"
                        "    </General>"
                        "    <Images>"
                        "        <Image>"
-                       "            <File>C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png</File>"
+                       "            <File>C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png</File>"
                        "            <LongitudeExif>0.5</LongitudeExif>"
                        "            <LatitudeExif>2.3</LatitudeExif>"
                        "            <AltitudeExif>10.2</AltitudeExif>"
                        "        </Image>"
                        "        <Image>"
-                       "            <File>C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png</File>"
+                       "            <File>C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png</File>"
                        "            <LongitudeExif>0.51</LongitudeExif>"
                        "            <LatitudeExif>2.3</LatitudeExif>"
                        "            <AltitudeExif>10.1</AltitudeExif>"
@@ -46,7 +46,7 @@ public:
                        "            <Description>Session 2</Description>"
                        "        </Session>"
                        "    </Sessions>"
-                       "</FME>";
+                       "</PhotoMatch>";
   }
 
   ~ProjectRWFake() override {}
@@ -61,7 +61,7 @@ public:
     xmlReader.addData(mProjectFileText);
 
     if (xmlReader.readNextStartElement()) {
-      if (xmlReader.name() == "FME") {
+      if (xmlReader.name() == "PhotoMatch") {
         while (xmlReader.readNextStartElement()) {
           if (xmlReader.name() == "General") {
             while (xmlReader.readNextStartElement()) {
@@ -217,7 +217,7 @@ TestProjectModel::~TestProjectModel()
 void TestProjectModel::initTestCase()
 {
   /// reading simulation
-  mProjectModel->load("C:/Users/User01/Documents/fme/Projects/prj001/prj001.xml");
+  mProjectModel->load("C:/Users/User01/Documents/photomatch/Projects/prj001/prj001.xml");
 }
 
 void TestProjectModel::cleanupTestCase()
@@ -249,11 +249,11 @@ void TestProjectModel::testConstructor()
 
   QCOMPARE(QString("prj001"), mProjectModel->name());
   QCOMPARE(QString("Project example"), mProjectModel->description());
-  QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001"), mProjectModel->projectFolder());
+  QCOMPARE(QString("C:/Users/User01/Documents/photomatch/Projects/prj001"), mProjectModel->projectFolder());
   QCOMPARE(QString("1.0"), mProjectModel->version());
   QCOMPARE(2, mProjectModel->imagesCount());
   QCOMPARE(2, mProjectModel->sessionCount());
-  QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001/prj001.xml"), mProjectModel->path());
+  QCOMPARE(QString("C:/Users/User01/Documents/photomatch/Projects/prj001/prj001.xml"), mProjectModel->path());
   QCOMPARE(false, mProjectModel->checkUnsavedChanges());
   //QCOMPARE(false, mProjectModel->checkOldVersion());
 
@@ -307,8 +307,8 @@ void TestProjectModel::test_projectFolder_data()
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
 
-  QTest::newRow("Folder_prj_01") << "C:\\Users\\User01\\Documents\\fme\\Projects\\prj001" << "C:\\Users\\User01\\Documents\\fme\\Projects\\prj001";
-  QTest::newRow("Folder_prj_02") << "C:/Users/User01/Documents/fme/Projects/prj002" << "C:/Users/User01/Documents/fme/Projects/prj002";
+  QTest::newRow("Folder_prj_01") << "C:\\Users\\User01\\Documents\\photomatch\\Projects\\prj001" << "C:\\Users\\User01\\Documents\\photomatch\\Projects\\prj001";
+  QTest::newRow("Folder_prj_02") << "C:/Users/User01/Documents/photomatch/Projects/prj002" << "C:/Users/User01/Documents/photomatch/Projects/prj002";
 }
 
 void TestProjectModel::test_projectFolder()
@@ -325,13 +325,13 @@ void TestProjectModel::test_projectFolder()
 
 void TestProjectModel::test_findImage()
 {
-  std::shared_ptr<Image> img = mProjectModel->findImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png");
+  std::shared_ptr<Image> img = mProjectModel->findImage("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png");
   QCOMPARE("img001", img->name());
   QCOMPARE(0.5, img->longitudeExif());
   QCOMPARE(2.3, img->latitudeExif());
   QCOMPARE(10.2, img->altitudeExif());
 
-  std::shared_ptr<Image> img2 = mProjectModel->findImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png");
+  std::shared_ptr<Image> img2 = mProjectModel->findImage("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png");
   QCOMPARE("img002", img2->name());
   QCOMPARE(0.51, img2->longitudeExif());
   QCOMPARE(2.3, img2->latitudeExif());
@@ -343,9 +343,9 @@ void TestProjectModel::test_findImageId_data()
   QTest::addColumn<QString>("value");
   QTest::addColumn<size_t>("result");
 
-  QTest::newRow("img001") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png" << size_t{0};
-  QTest::newRow("img002") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png" << size_t{1};
-  QTest::newRow("img003") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img005.png" << std::numeric_limits<size_t>().max();
+  QTest::newRow("img001") << "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png" << size_t{0};
+  QTest::newRow("img002") << "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png" << size_t{1};
+  QTest::newRow("img003") << "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img005.png" << std::numeric_limits<size_t>().max();
 }
 
 void TestProjectModel::test_findImageId()
@@ -364,13 +364,13 @@ void TestProjectModel::test_imageIterator()
 
     if (i == 0){
       QCOMPARE("img001", (*it)->name());
-      QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png", (*it)->path());
+      QCOMPARE("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png", (*it)->path());
       QCOMPARE(0.5, (*it)->longitudeExif());
       QCOMPARE(2.3, (*it)->latitudeExif());
       QCOMPARE(10.2, (*it)->altitudeExif());
     } else {
       QCOMPARE("img002", (*it)->name());
-      QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png", (*it)->path());
+      QCOMPARE("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png", (*it)->path());
       QCOMPARE(0.51, (*it)->longitudeExif());
       QCOMPARE(2.3, (*it)->latitudeExif());
       QCOMPARE(10.1, (*it)->altitudeExif());
@@ -380,25 +380,25 @@ void TestProjectModel::test_imageIterator()
 
 void TestProjectModel::test_addImage_deleteImage()
 {
-  std::shared_ptr<Image> img(new Image("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png"));
+  std::shared_ptr<Image> img(new Image("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png"));
   mProjectModel->addImage(img);
 
   QCOMPARE(3, mProjectModel->imagesCount());
 
-  mProjectModel->deleteImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png");
+  mProjectModel->deleteImage("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png");
   QCOMPARE(2, mProjectModel->imagesCount());
   mProjectModel->save();
 }
 
 void TestProjectModel::test_addImages_deleteImages()
 {
-  mProjectModel->addImages({"C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png",
-                            "C:/Users/User01/Documents/fme/Projects/prj001/images/img004.png"});
+  mProjectModel->addImages({"C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png",
+                            "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img004.png"});
 
   QCOMPARE(4, mProjectModel->imagesCount());
 
-  mProjectModel->deleteImages({"C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png",
-                               "C:/Users/User01/Documents/fme/Projects/prj001/images/img004.png"});
+  mProjectModel->deleteImages({"C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png",
+                               "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img004.png"});
   QCOMPARE(2, mProjectModel->imagesCount());
   mProjectModel->save();
 }

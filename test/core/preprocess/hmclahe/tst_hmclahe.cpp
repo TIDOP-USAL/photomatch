@@ -1,10 +1,10 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/fme_global.h"
-#include "fme/core/preprocess/hmclahe.h"
+#include "photomatch/photomatch_global.h"
+#include "photomatch/core/preprocess/hmclahe.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestHmclahe
   : public QObject

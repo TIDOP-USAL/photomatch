@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/PoheWidget.h"
+#include "photomatch/widgets/PoheWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 
 class TestPoheWidgetSignals : public PoheWidget

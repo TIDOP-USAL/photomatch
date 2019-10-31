@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/lucid.h"
+#include "photomatch/core/features/lucid.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLucidDescriptor : public QObject
 {

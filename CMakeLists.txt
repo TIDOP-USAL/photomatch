@@ -1,8 +1,8 @@
 # Minimum version required CMAKE
 cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 
-# FME (Feature Matching Evaluation)
-project(fme CXX)
+# PhotoMatch
+project(photomatch CXX)
 
 
 
@@ -248,11 +248,11 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 # Configuration header file
-configure_file("${PROJECT_SOURCE_DIR}/cmake/config_fme.h.in" "${PROJECT_BINARY_DIR}/config_fme.h")
+configure_file("${PROJECT_SOURCE_DIR}/cmake/config_photomatch.h.in" "${PROJECT_BINARY_DIR}/config_photomatch.h")
 include_directories("${PROJECT_BINARY_DIR}")
 
 # resources
-set(FME_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/res.qrc)
+set(PHOTOMATCH_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/res.qrc)
 
 add_subdirectory(third_party)
 add_subdirectory(src)

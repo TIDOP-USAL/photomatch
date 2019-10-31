@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/LatchWidget.h"
+#include "photomatch/widgets/LatchWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLatchWidgetSignals : public LatchWidget
 {

@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/BriskWidget.h"
+#include "photomatch/widgets/BriskWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestBriskWidget : public QObject
 {

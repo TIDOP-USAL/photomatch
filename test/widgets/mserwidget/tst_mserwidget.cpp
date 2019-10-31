@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/MserWidget.h"
+#include "photomatch/widgets/MserWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMserWidget : public QObject
 {

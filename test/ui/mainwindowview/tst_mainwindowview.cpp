@@ -1,15 +1,15 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/ui/MainWindowView.h"
-#include "fme/widgets/ThumbnailsWidget.h"
+#include "photomatch/ui/MainWindowView.h"
+#include "photomatch/widgets/ThumbnailsWidget.h"
 
 #include <QTreeWidgetItem>
 #include <QAction>
 
 //#include "ui_MainWindowView.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMainWindowView
   : public MainWindowView
@@ -84,9 +84,9 @@ TestMainWindowView::~TestMainWindowView()
 void TestMainWindowView::initTestCase()
 {
   QStringList history{
-    QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba1\\Prueba1.xml"),
-    QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba2\\Prueba2.xml"),
-    QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba3\\Prueba3.xml")
+    QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba1\\Prueba1.xml"),
+    QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba2\\Prueba2.xml"),
+    QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba3\\Prueba3.xml")
   };
   this->updateHistory(history);
 
@@ -110,7 +110,7 @@ void TestMainWindowView::cleanupTestCase()
 void TestMainWindowView::test_setProjectTitle()
 {
   this->setProjectTitle("Example");
-  QCOMPARE("FME - Example", this->windowTitle());
+  QCOMPARE("PhotoMatch - Example", this->windowTitle());
   QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0);
   QCOMPARE("Project: Example", itemProject->text(0));
 }
@@ -130,7 +130,8 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(false, mActionPreprocess->isEnabled());
   QCOMPARE(false, mActionFeatureExtraction->isEnabled());
   QCOMPARE(false, mActionFeatureMatching->isEnabled());
-  QCOMPARE(true, mActionSettings->isEnabled());
+  QCOMPARE(true, mActionToolSettings->isEnabled());
+  QCOMPARE(true, mActionViewSettings->isEnabled());
   QCOMPARE(true, mActionHelp->isEnabled());
   QCOMPARE(true, mActionAbout->isEnabled());
   QCOMPARE(false, mActionExportTiePointsCvXml->isEnabled());
@@ -139,8 +140,7 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(false, mActionExportMatchesToCvYml->isEnabled());
   QCOMPARE(false, mActionExportMatchesToTxt->isEnabled());
   QCOMPARE(false, mActionMatchesViewer->isEnabled());
-  QCOMPARE(false, mActionCreateGroundTruth->isEnabled());
-  QCOMPARE(false, mActionImportGroundTruth->isEnabled());
+  QCOMPARE(false, mActionGroundTruthEditor->isEnabled());
   QCOMPARE(false, mActionHomography->isEnabled());
   //QCOMPARE(false, mActionRepeteability->isEnabled());
   QCOMPARE(false, mActionPRCurves->isEnabled());
@@ -156,8 +156,7 @@ void TestMainWindowView::test_setFlag()
   /// Imagenes añadidas
   setFlag(MainWindowView::Flag::images_added, true);
   QCOMPARE(true, mActionNewSession->isEnabled());
-  QCOMPARE(true, mActionCreateGroundTruth->isEnabled());
-  QCOMPARE(true, mActionImportGroundTruth->isEnabled());
+  QCOMPARE(true, mActionGroundTruthEditor->isEnabled());
 
   /// Procesamiento, sesion o test (no se muy bien como llamarlo todavía)
   setFlag(MainWindowView::Flag::session_created, true);
@@ -192,7 +191,7 @@ void TestMainWindowView::test_setFlag()
 void TestMainWindowView::test_clear()
 {
   this->clear();
-  QCOMPARE("FME", this->windowTitle());
+  QCOMPARE("PhotoMatch", this->windowTitle());
 
   QCOMPARE(false, mFlags.isActive(Flag::project_exists));
   QCOMPARE(false, mFlags.isActive(Flag::project_exists));
@@ -211,8 +210,8 @@ void TestMainWindowView::test_updateHistory()
   QCOMPARE(false, mActionNotRecentProjects->isVisible());
   QCOMPARE(true, mActionClearHistory->isEnabled());
   QCOMPARE(QString("&1 Prueba1.xml"), mHistory[0]->text());
-  QCOMPARE(QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba1\\Prueba1.xml"), mHistory[0]->data());
-  QCOMPARE(QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba1\\Prueba1.xml"), mHistory[0]->toolTip());
+  QCOMPARE(QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba1\\Prueba1.xml"), mHistory[0]->data());
+  QCOMPARE(QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba1\\Prueba1.xml"), mHistory[0]->toolTip());
 }
 
 void TestMainWindowView::test_deleteHistory()
@@ -225,9 +224,9 @@ void TestMainWindowView::test_deleteHistory()
 
   /// Se recupera el historial para evitar problemas con otras pruebas
   QStringList history{
-    QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba1\\Prueba1.xml"),
-    QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba2\\Prueba2.xml"),
-    QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba3\\Prueba3.xml")
+    QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba1\\Prueba1.xml"),
+    QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba2\\Prueba2.xml"),
+    QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba3\\Prueba3.xml")
   };
   this->updateHistory(history);
 
@@ -280,7 +279,7 @@ void TestMainWindowView::test_openFromHistory()
   emit mHistory[0]->triggered(true);
   QCOMPARE(spy_openProjectFromHistory.count(), 1);
   QList<QVariant> args = spy_openProjectFromHistory.takeFirst();
-  QCOMPARE(args.at(0).toString(), QString("C:\\Users\\Tido\\Documents\\fme\\Projects\\Prueba1\\Prueba1.xml"));
+  QCOMPARE(args.at(0).toString(), QString("C:\\Users\\Tido\\Documents\\photomatch\\Projects\\Prueba1\\Prueba1.xml"));
 }
 
 void TestMainWindowView::test_clearHistory()
@@ -365,10 +364,15 @@ void TestMainWindowView::test_openFeatureMatching()
 
 void TestMainWindowView::test_openSettings()
 {
-  QSignalSpy spy_openSettings(this, &MainWindowView::openSettings);
+  QSignalSpy spy_openSettings(this, &MainWindowView::openToolSettings);
 
-  emit mActionSettings->triggered(true);
+  emit mActionToolSettings->triggered(true);
   QCOMPARE(spy_openSettings.count(), 1);
+
+  QSignalSpy spy_openViewSettings(this, &MainWindowView::openViewSettings);
+
+  emit mActionViewSettings->triggered(true);
+  QCOMPARE(spy_openViewSettings.count(), 1);
 }
 
 void TestMainWindowView::test_openHelpDialog()

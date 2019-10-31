@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/LceBsescsWidget.h"
+#include "photomatch/widgets/LceBsescsWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLceBsescsWidget : public QObject
 {

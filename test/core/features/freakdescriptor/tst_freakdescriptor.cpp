@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/freak.h"
+#include "photomatch/core/features/freak.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFreakDescriptor
   : public QObject

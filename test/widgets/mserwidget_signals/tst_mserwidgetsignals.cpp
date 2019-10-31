@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/MserWidget.h"
+#include "photomatch/widgets/MserWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMserWidgetSignals : public MserWidget
 {

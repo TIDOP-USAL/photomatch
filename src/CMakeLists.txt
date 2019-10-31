@@ -1,6 +1,6 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-add_subdirectory(fme/core)
-add_subdirectory(fme/widgets)
-add_subdirectory(fme/process)
-add_subdirectory(fme/ui)
+add_subdirectory(photomatch/core)
+add_subdirectory(photomatch/widgets)
+add_subdirectory(photomatch/process)
+add_subdirectory(photomatch/ui)

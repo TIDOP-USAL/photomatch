@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/FaheWidget.h"
+#include "photomatch/widgets/FaheWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFaheWidget : public QObject
 {

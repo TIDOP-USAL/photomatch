@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/orb.h"
+#include "photomatch/core/features/orb.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestOrbDetectorDescriptor
   : public QObject,

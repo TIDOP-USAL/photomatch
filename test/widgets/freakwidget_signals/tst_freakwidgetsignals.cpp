@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/FreakWidget.h"
+#include "photomatch/widgets/FreakWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFreakWidgetSignals : public FreakWidget
 {

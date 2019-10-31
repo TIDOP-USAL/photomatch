@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/daisy.h"
+#include "photomatch/core/features/daisy.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestDaisyDescriptor
   : public QObject

@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/StarWidget.h"
+#include "photomatch/widgets/StarWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestStarWidgetSignals : public StarWidget
 {

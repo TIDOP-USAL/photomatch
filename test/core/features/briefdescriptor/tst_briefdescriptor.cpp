@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/brief.h"
+#include "photomatch/core/features/brief.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestBriefDescriptor
   : public QObject

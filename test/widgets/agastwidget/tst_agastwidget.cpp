@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/AgastWidget.h"
+#include "photomatch/widgets/AgastWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAgastWidget : public QObject
 {

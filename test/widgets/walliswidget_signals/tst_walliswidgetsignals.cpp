@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/WallisWidget.h"
+#include "photomatch/widgets/WallisWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestWallisWidgetSignals : public WallisWidget
 {

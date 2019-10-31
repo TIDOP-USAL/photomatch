@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/ui/NewSessionView.h"
+#include "photomatch/ui/NewSessionView.h"
 
 #include <QLineEdit>
 #include <QCheckBox>
@@ -9,7 +9,7 @@
 #include <QDialogButtonBox>
 #include <QTextEdit>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestNewSessionView
   : public NewSessionView

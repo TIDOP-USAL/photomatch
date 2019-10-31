@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/SurfWidget.h"
+#include "photomatch/widgets/SurfWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSurfWidgetSignals : public SurfWidget
 {

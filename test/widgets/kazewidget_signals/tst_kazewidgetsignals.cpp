@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/KazeWidget.h"
+#include "photomatch/widgets/KazeWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestKazeWidgetSignals : public KazeWidget
 {

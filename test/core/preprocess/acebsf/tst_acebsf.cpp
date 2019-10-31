@@ -1,10 +1,10 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/fme_global.h"
-#include "fme/core/preprocess/acebsf.h"
+#include "photomatch/photomatch_global.h"
+#include "photomatch/core/preprocess/acebsf.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAcebsf 
   : public QObject

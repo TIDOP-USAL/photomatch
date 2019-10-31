@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/ClaheWidget.h"
+#include "photomatch/widgets/ClaheWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestClaheWidget : public QObject
 {

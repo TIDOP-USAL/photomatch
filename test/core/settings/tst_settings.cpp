@@ -1,8 +1,8 @@
 #include <QtTest>
 
-#include "fme/core/settings.h"
+#include "photomatch/core/settings.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSettings : public QObject
 {

@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/DescriptorMatcherWidget.h"
+#include "photomatch/widgets/DescriptorMatcherWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestDescriptorMatcherWidget : public QObject
 {
@@ -215,8 +215,11 @@ void TestDescriptorMatcherWidget::test_geometricTest_data()
 
   QTest::newRow("Homography Matrix") << "Homography Matrix" << "Homography Matrix";
   QTest::newRow("Fundamental Matrix") << "Fundamental Matrix" << "Fundamental Matrix";
-  QTest::newRow("Essential Matrix") << "Essential Matrix" << "Essential Matrix";
-  QTest::newRow("bad_value") << "bad_value" << "Essential Matrix";
+  QTest::newRow("bad_value") << "bad_value" << "Fundamental Matrix";
+
+  /// Quitado por ahora
+  //QTest::newRow("Essential Matrix") << "Essential Matrix" << "Essential Matrix";
+  //QTest::newRow("bad_value") << "bad_value" << "Essential Matrix";
 }
 
 void TestDescriptorMatcherWidget::test_geometricTest()

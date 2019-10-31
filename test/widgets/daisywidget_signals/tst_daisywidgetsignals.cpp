@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/DaisyWidget.h"
+#include "photomatch/widgets/DaisyWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestDaisyWidgetSignals : public DaisyWidget
 {

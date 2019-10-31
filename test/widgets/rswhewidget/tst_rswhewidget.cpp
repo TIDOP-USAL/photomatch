@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/RswheWidget.h"
+#include "photomatch/widgets/RswheWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestRswheWidget : public QObject
 {

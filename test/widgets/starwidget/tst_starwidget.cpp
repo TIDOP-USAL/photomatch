@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/StarWidget.h"
+#include "photomatch/widgets/StarWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestStarWidget : public QObject
 {

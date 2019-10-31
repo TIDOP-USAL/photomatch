@@ -1,10 +1,10 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/fme_global.h"
-#include "fme/core/preprocess/cmbfhe.h"
+#include "photomatch/photomatch_global.h"
+#include "photomatch/core/preprocess/cmbfhe.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestCmbfhe
   : public QObject

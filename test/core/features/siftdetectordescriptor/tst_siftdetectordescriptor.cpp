@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/sift.h"
+#include "photomatch/core/features/sift.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSiftDetectorDescriptor : public QObject
 {

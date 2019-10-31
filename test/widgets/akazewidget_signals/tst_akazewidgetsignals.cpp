@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/AkazeWidget.h"
+#include "photomatch/widgets/AkazeWidget.h"
 
 #include <QSpinBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAkazeWidgetSignals : public AkazeWidget
 {

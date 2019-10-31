@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/msd.h"
+#include "photomatch/core/features/msd.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMsdDetector 
   : public QObject, 
-    public fme::MsdDetector
+    public photomatch::MsdDetector
 {
   Q_OBJECT
 
@@ -51,7 +51,7 @@ private slots:
 };
 
 TestMsdDetector::TestMsdDetector()
-  : fme::MsdDetector()
+  : photomatch::MsdDetector()
 {
 
 }

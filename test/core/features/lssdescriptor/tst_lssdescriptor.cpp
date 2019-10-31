@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/lss.h"
+#include "photomatch/core/features/lss.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLssDescriptor : public QObject
 {

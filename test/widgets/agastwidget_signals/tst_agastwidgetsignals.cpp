@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/AgastWidget.h"
+#include "photomatch/widgets/AgastWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAgastWidgetSignals : public AgastWidget
 {

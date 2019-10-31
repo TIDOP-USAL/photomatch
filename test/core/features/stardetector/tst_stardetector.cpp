@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/star.h"
+#include "photomatch/core/features/star.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestStarDetector : public QObject
 {

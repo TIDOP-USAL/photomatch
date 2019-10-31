@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/fast.h"
+#include "photomatch/core/features/fast.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFastDetector
   : public QObject,

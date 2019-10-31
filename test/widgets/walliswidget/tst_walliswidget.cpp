@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/WallisWidget.h"
+#include "photomatch/widgets/WallisWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestWallisWidget : public QObject
 {

@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/ui/SettingsView.h"
+#include "photomatch/ui/SettingsView.h"
 
 #include <QComboBox>
 #include <QPushButton>
 #include <QDialogButtonBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSettingsView : public SettingsView
 {

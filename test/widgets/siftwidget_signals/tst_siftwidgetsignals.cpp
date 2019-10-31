@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/SiftWidget.h"
+#include "photomatch/widgets/SiftWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSiftWidgetSignals : public SiftWidget
 {

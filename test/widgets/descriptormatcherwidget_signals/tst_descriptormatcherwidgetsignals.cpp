@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/DescriptorMatcherWidget.h"
+#include "photomatch/widgets/DescriptorMatcherWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
@@ -9,7 +9,7 @@
 #include <QGroupBox>
 #include <QLabel>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestDescriptorMatcherWidgetSignals : public DescriptorMatcherWidget
 {
@@ -356,6 +356,7 @@ void TestDescriptorMatcherWidgetSignals::test_update()
   QCOMPARE(true, this->mConfidence->isVisible());
   QCOMPARE(true, this->mConfidenceLabel->isVisible());
 
+  QSKIP("Por ahora no se usa la matriz esencial");
   this->setGeometricTest("Essential Matrix");
   QCOMPARE(false, this->mHComputeMethod->isVisible());
   QCOMPARE(false, this->mHComputeMethodLabel->isVisible());

@@ -1,27 +1,27 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/ui/PreprocessView.h"
+#include "photomatch/ui/PreprocessView.h"
 
-#include "fme/widgets/AcebsfWidget.h"
-#include "fme/widgets/CLAHEWidget.h"
-#include "fme/widgets/CmbfheWidget.h"
-#include "fme/widgets/CmbfheWidget.h"
-#include "fme/widgets/DheWidget.h"
-#include "fme/widgets/FaheWidget.h"
-#include "fme/widgets/HmclaheWidget.h"
-#include "fme/widgets/LceBsescsWidget.h"
-#include "fme/widgets/MsrcpWidget.h"
-#include "fme/widgets/NoshpWidget.h"
-#include "fme/widgets/PoheWidget.h"
-#include "fme/widgets/RswheWidget.h"
-#include "fme/widgets/WallisWidget.h"
+#include "photomatch/widgets/AcebsfWidget.h"
+#include "photomatch/widgets/CLAHEWidget.h"
+#include "photomatch/widgets/CmbfheWidget.h"
+#include "photomatch/widgets/CmbfheWidget.h"
+#include "photomatch/widgets/DheWidget.h"
+#include "photomatch/widgets/FaheWidget.h"
+#include "photomatch/widgets/HmclaheWidget.h"
+#include "photomatch/widgets/LceBsescsWidget.h"
+#include "photomatch/widgets/MsrcpWidget.h"
+#include "photomatch/widgets/NoshpWidget.h"
+#include "photomatch/widgets/PoheWidget.h"
+#include "photomatch/widgets/RswheWidget.h"
+#include "photomatch/widgets/WallisWidget.h"
 
 #include <QComboBox>
 #include <QPushButton>
 #include <QDialogButtonBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestPreprocessView : public PreprocessView
 {

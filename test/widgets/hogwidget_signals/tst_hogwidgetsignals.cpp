@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/HogWidget.h"
+#include "photomatch/widgets/HogWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestHogWidgetSignals : public HogWidget
 {

@@ -1,10 +1,10 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/fme_global.h"
-#include "fme/core/features/matcher.h"
+#include "photomatch/photomatch_global.h"
+#include "photomatch/core/features/matcher.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestBruteForceMatcher 
   : public QObject

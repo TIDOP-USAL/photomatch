@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/surf.h"
+#include "photomatch/core/features/surf.h"
 
 
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSurfDetectorDescriptor : public QObject
 #ifdef OPENCV_ENABLE_NONFREE

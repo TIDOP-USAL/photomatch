@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/akaze.h"
+#include "photomatch/core/features/akaze.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAkazeDetectorDescriptor
   : public QObject,

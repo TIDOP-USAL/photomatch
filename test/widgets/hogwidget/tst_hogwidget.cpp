@@ -2,9 +2,9 @@
 #include <QCoreApplication>
 #include <QSize>
 
-#include "fme/widgets/HogWidget.h"
+#include "photomatch/widgets/HogWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestHogWidget
   : public QObject

@@ -1,11 +1,11 @@
 #include <QtTest>
 
-#include "fme/widgets/BriefWidget.h"
+#include "photomatch/widgets/BriefWidget.h"
 
 #include <QCheckBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestBriefWidgetsSignals : public BriefWidget
 {

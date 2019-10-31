@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/HmclaheWidget.h"
+#include "photomatch/widgets/HmclaheWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestHmclaheWidgetSignals : public HmclaheWidget
 {

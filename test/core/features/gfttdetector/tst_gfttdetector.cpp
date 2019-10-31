@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/gftt.h"
+#include "photomatch/core/features/gftt.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestGfttDetector
   : public QObject,

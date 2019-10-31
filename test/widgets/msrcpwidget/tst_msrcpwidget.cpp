@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/MsrcpWidget.h"
+#include "photomatch/widgets/MsrcpWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestMsrcpWidget : public QObject
 {

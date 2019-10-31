@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/RswheWidget.h"
+#include "photomatch/widgets/RswheWidget.h"
 
 #include <QSpinBox>
 #include <QRadioButton>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestRswheWidgetSignals : public RswheWidget
 {

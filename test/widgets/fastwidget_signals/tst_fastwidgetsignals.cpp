@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/FastWidget.h"
+#include "photomatch/widgets/FastWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFastWidgetSignals : public FastWidget
 {

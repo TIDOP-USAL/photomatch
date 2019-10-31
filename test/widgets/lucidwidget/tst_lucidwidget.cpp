@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/LucidWidget.h"
+#include "photomatch/widgets/LucidWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLucidWidget : public QObject
 {

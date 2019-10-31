@@ -11,13 +11,13 @@ set(test_KIND TEST)
 set(the_target "${test_kind}_${test_name}")
 add_executable(${the_target}
     ${test_filename}
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/MainWindowView.cpp
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/MainWindowView.h
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/MainWindowView.ui
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/utils/GraphicViewer.cpp
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/utils/GraphicViewer.h
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/utils/KeyPointGraphicsItem.cpp
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/utils/KeyPointGraphicsItem.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/MainWindowView.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/MainWindowView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/MainWindowView.ui
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/KeyPointGraphicsItem.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/KeyPointGraphicsItem.h
     )
 
 target_link_libraries(${the_target} PRIVATE

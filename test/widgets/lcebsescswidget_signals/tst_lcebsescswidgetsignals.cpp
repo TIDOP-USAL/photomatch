@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/LceBsescsWidget.h"
+#include "photomatch/widgets/LceBsescsWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 
 class TestLceBsescsWidgetSignals : public LceBsescsWidget

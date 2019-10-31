@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/LucidWidget.h"
+#include "photomatch/widgets/LucidWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLucidWidgetSignals : public LucidWidget
 {

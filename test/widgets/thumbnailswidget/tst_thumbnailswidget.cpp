@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/ThumbnailsWidget.h"
+#include "photomatch/widgets/ThumbnailsWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestThumbnailsWidget : public QObject
 {

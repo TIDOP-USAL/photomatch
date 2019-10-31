@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/brisk.h"
+#include "photomatch/core/features/brisk.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestBriskDetectorDescriptor
   : public QObject

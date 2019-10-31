@@ -1,8 +1,8 @@
 #include <QtTest>
 
-#include "fme/core/session.h"
+#include "photomatch/core/session.h"
 
-using namespace fme;
+using namespace photomatch;
 
 
 class TestSession : public QObject

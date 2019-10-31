@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/hog.h"
+#include "photomatch/core/features/hog.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestHogDescriptor
   : public QObject

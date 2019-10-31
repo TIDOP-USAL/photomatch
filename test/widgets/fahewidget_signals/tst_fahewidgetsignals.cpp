@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/FaheWidget.h"
+#include "photomatch/widgets/FaheWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 
 class TestFaheWidgetSignals : public FaheWidget

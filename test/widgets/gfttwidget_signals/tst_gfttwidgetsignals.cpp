@@ -1,12 +1,12 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/GfttWidget.h"
+#include "photomatch/widgets/GfttWidget.h"
 
 #include <QSpinBox>
 #include <QCheckBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestGfttWidgetSignals : public GfttWidget
 {

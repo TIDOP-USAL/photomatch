@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/SiftWidget.h"
+#include "photomatch/widgets/SiftWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSiftWidget : public QObject
 {

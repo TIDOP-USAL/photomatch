@@ -1,13 +1,13 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/OrbWidget.h"
+#include "photomatch/widgets/OrbWidget.h"
 
 #include <QSpinBox>
 #include <QList>
 #include <QComboBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestOrbWidgetSignals : public OrbWidget
 {

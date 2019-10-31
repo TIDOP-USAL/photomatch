@@ -1,10 +1,10 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/fme_global.h"
-#include "fme/core/preprocess/wallis.h"
+#include "photomatch/photomatch_global.h"
+#include "photomatch/core/preprocess/wallis.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestWallis
   : public QObject

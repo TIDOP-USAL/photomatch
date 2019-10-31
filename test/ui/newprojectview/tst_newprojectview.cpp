@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/ui/NewProjectView.h"
+#include "photomatch/ui/NewProjectView.h"
 
 #include <QLineEdit>
 #include <QCheckBox>
@@ -9,7 +9,7 @@
 #include <QDialogButtonBox>
 #include <QTextEdit>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestNewProjectView : public NewProjectView
 {
@@ -66,8 +66,8 @@ void TestNewProjectView::test_projectPath_data()
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
 
-  QTest::newRow("C:/Users/Tido/Documents/fme/Projects") << "C:/Users/Tido/Documents/fme/Projects" << "C:/Users/Tido/Documents/fme/Projects";
-  QTest::newRow("C:/Users/user1/Documents/fme/Projects") << "C:/Users/user1/Documents/fme/Projects" << "C:/Users/user1/Documents/fme/Projects";
+  QTest::newRow("C:/Users/Tido/Documents/photomatch/Projects") << "C:/Users/Tido/Documents/photomatch/Projects" << "C:/Users/Tido/Documents/photomatch/Projects";
+  QTest::newRow("C:/Users/user1/Documents/photomatch/Projects") << "C:/Users/user1/Documents/photomatch/Projects" << "C:/Users/user1/Documents/photomatch/Projects";
 }
 
 void TestNewProjectView::test_projectPath()
@@ -90,8 +90,8 @@ void TestNewProjectView::test_projectPath_signals()
   QCOMPARE(this->projectPath(), project_path.append("_"));
 
   this->mLineEditProjectPath->clear();
-  QTest::keyClicks(this->mLineEditProjectPath, "C:/Users/user1/Documents/fme/Projects");
-  QCOMPARE(this->projectPath(), QString("C:/Users/user1/Documents/fme/Projects"));
+  QTest::keyClicks(this->mLineEditProjectPath, "C:/Users/user1/Documents/photomatch/Projects");
+  QCOMPARE(this->projectPath(), QString("C:/Users/user1/Documents/photomatch/Projects"));
 }
 
 void TestNewProjectView::test_lineEditProjectFile()
@@ -101,7 +101,7 @@ void TestNewProjectView::test_lineEditProjectFile()
 
 
   this->mLineEditProjectPath->clear();
-  QTest::keyClicks(this->mLineEditProjectPath, "C:/Users/user1/Documents/fme/Projects");
+  QTest::keyClicks(this->mLineEditProjectPath, "C:/Users/user1/Documents/photomatch/Projects");
 
   this->mLineEditProjectName->clear();
   QTest::keyClicks(this->mLineEditProjectName, "project_name");

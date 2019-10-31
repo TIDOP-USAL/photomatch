@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/core/features/agast.h"
+#include "photomatch/core/features/agast.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAgastDetector
   : public QObject,

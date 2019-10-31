@@ -1,41 +1,41 @@
 #include <QtTest>
 
-#include "fme/core/project.h"
-#include "fme/core/settings.h"
+#include "photomatch/core/project.h"
+#include "photomatch/core/settings.h"
 
-#include "fme/core/features/agast.h"
-#include "fme/core/features/akaze.h"
-#include "fme/core/features/brief.h"
-#include "fme/core/features/brisk.h"
-#include "fme/core/features/daisy.h"
-#include "fme/core/features/fast.h"
-#include "fme/core/features/freak.h"
-#include "fme/core/features/gftt.h"
-#include "fme/core/features/hog.h"
-#include "fme/core/features/latch.h"
-#include "fme/core/features/lucid.h"
-#include "fme/core/features/msd.h"
-#include "fme/core/features/mser.h"
-#include "fme/core/features/kaze.h"
-#include "fme/core/features/orb.h"
-#include "fme/core/features/sift.h"
-#include "fme/core/features/star.h"
-#include "fme/core/features/surf.h"
+#include "photomatch/core/features/agast.h"
+#include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/brief.h"
+#include "photomatch/core/features/brisk.h"
+#include "photomatch/core/features/daisy.h"
+#include "photomatch/core/features/fast.h"
+#include "photomatch/core/features/freak.h"
+#include "photomatch/core/features/gftt.h"
+#include "photomatch/core/features/hog.h"
+#include "photomatch/core/features/latch.h"
+#include "photomatch/core/features/lucid.h"
+#include "photomatch/core/features/msd.h"
+#include "photomatch/core/features/mser.h"
+#include "photomatch/core/features/kaze.h"
+#include "photomatch/core/features/orb.h"
+#include "photomatch/core/features/sift.h"
+#include "photomatch/core/features/star.h"
+#include "photomatch/core/features/surf.h"
 
-#include "fme/core/preprocess/acebsf.h"
-#include "fme/core/preprocess/clahe.h"
-#include "fme/core/preprocess/cmbfhe.h"
-#include "fme/core/preprocess/dhe.h"
-#include "fme/core/preprocess/fahe.h"
-#include "fme/core/preprocess/hmclahe.h"
-#include "fme/core/preprocess/lce_bsescs.h"
-#include "fme/core/preprocess/msrcp.h"
-#include "fme/core/preprocess/noshp.h"
-#include "fme/core/preprocess/pohe.h"
-#include "fme/core/preprocess/rswhe.h"
-#include "fme/core/preprocess/wallis.h"
+#include "photomatch/core/preprocess/acebsf.h"
+#include "photomatch/core/preprocess/clahe.h"
+#include "photomatch/core/preprocess/cmbfhe.h"
+#include "photomatch/core/preprocess/dhe.h"
+#include "photomatch/core/preprocess/fahe.h"
+#include "photomatch/core/preprocess/hmclahe.h"
+#include "photomatch/core/preprocess/lce_bsescs.h"
+#include "photomatch/core/preprocess/msrcp.h"
+#include "photomatch/core/preprocess/noshp.h"
+#include "photomatch/core/preprocess/pohe.h"
+#include "photomatch/core/preprocess/rswhe.h"
+#include "photomatch/core/preprocess/wallis.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class ProjectRWFake
   : public ProjectRW
@@ -46,27 +46,27 @@ public:
   ProjectRWFake()
   {
     mProjectFileText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                       "<FME version=\"1.0\">"
+                       "<PhotoMatch version=\"1.0\">"
                        "    <General>"
                        "        <Name>prj001</Name>"
-                       "        <ProjectFolder>C:/Users/User01/Documents/fme/Projects/prj001</ProjectFolder>"
+                       "        <ProjectFolder>C:/Users/User01/Documents/photomatch/Projects/prj001</ProjectFolder>"
                        "        <Description>Project example</Description>"
                        "    </General>"
                        "    <Images>"
                        "        <Image>"
-                       "            <File>C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png</File>"
+                       "            <File>C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png</File>"
                        "            <LongitudeExif>0.5</LongitudeExif>"
                        "            <LatitudeExif>2.3</LatitudeExif>"
                        "            <AltitudeExif>10.2</AltitudeExif>"
                        "        </Image>"
                        "        <Image>"
-                       "            <File>C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png</File>"
+                       "            <File>C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png</File>"
                        "            <LongitudeExif>0.51</LongitudeExif>"
                        "            <LatitudeExif>2.3</LatitudeExif>"
                        "            <AltitudeExif>10.1</AltitudeExif>"
                        "        </Image>"
                        "    </Images>"
-                       "    <GroundTruth>C:/Users/User01/Documents/fme/Projects/prj001/GroundTruth.txt</GroundTruth>"
+                       "    <GroundTruth>C:/Users/User01/Documents/photomatch/Projects/prj001/GroundTruth.txt</GroundTruth>"
                        "    <Sessions>"
                        "        <Session active=\"true\">"
                        "            <Name>session001</Name>"
@@ -228,7 +228,7 @@ public:
                        "            </Preprocess>"
                        "        </Session>"
                        "    </Sessions>"
-                       "</FME>";
+                       "</PhotoMatch>";
   }
 
   ~ProjectRWFake() override {}
@@ -243,7 +243,7 @@ public:
     stream.addData(mProjectFileText);
 
     if (stream.readNextStartElement()) {
-      if (stream.name() == "FME") {
+      if (stream.name() == "PhotoMatch") {
         while (stream.readNextStartElement()) {
           if (stream.name() == "General") {
             while (stream.readNextStartElement()) {
@@ -501,7 +501,7 @@ public:
 //    stream.setAutoFormatting(true);
 //    stream.writeStartDocument();
 
-//    stream.writeStartElement("FME");
+//    stream.writeStartElement("PhotoMatch");
 //    {
 
 //      stream.writeAttribute("version", prj.version());
@@ -532,7 +532,7 @@ public:
 //      }
 //      stream.writeEndElement();  // Images
 //    }
-//    stream.writeEndElement(); // Fme
+//    stream.writeEndElement(); // PhotoMatch
 
     return false;
   }
@@ -547,7 +547,7 @@ public:
 //      xmlReader.setDevice(&input);
 
 //      if (xmlReader.readNextStartElement()) {
-//        if (xmlReader.name() == "FME") {
+//        if (xmlReader.name() == "PhotoMatch") {
 //          QString version = "0";
 //          for (auto &attr : xmlReader.attributes()) {
 //            if (attr.name().compare(QString("version")) == 0) {
@@ -555,7 +555,7 @@ public:
 //              break;
 //            }
 //          }
-//          if (version.compare(FME_PROJECT_FILE_VERSION) < 0) {
+//          if (version.compare(PHOTOMATCH_PROJECT_FILE_VERSION) < 0) {
 //            // Es una versión mas antigua
 //            bUpdateVersion = true;
 //          }
@@ -647,7 +647,7 @@ TestProject::~TestProject()
 
 void TestProject::initTestCase()
 {
-  mProjectIOFake->read("C:/Users/User01/Documents/fme/Projects/prj001/prj001.xml", *mProjectXml);
+  mProjectIOFake->read("C:/Users/User01/Documents/photomatch/Projects/prj001/prj001.xml", *mProjectXml);
 }
 
 void TestProject::cleanupTestCase()
@@ -667,11 +667,11 @@ void TestProject::testConstructor()
 
   QCOMPARE(QString("prj001"), mProjectXml->name());
   QCOMPARE(QString("Project example"), mProjectXml->description());
-  QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001"), mProjectXml->projectFolder());
+  QCOMPARE(QString("C:/Users/User01/Documents/photomatch/Projects/prj001"), mProjectXml->projectFolder());
   QCOMPARE(QString("1.0"), mProjectXml->version());
   QCOMPARE(2, mProjectXml->imagesCount());
   QCOMPARE(11, mProjectXml->sessionCount());
-  QCOMPARE(QString("C:/Users/User01/Documents/fme/Projects/prj001/GroundTruth.txt"), mProjectXml->groundTruth());
+  QCOMPARE(QString("C:/Users/User01/Documents/photomatch/Projects/prj001/GroundTruth.txt"), mProjectXml->groundTruth());
 }
 
 void TestProject::test_name_data()
@@ -716,8 +716,8 @@ void TestProject::test_projectFolder_data()
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
 
-  QTest::newRow("Folder_prj_01") << "C:\\Users\\User01\\Documents\\fme\\Projects\\prj001" << "C:\\Users\\User01\\Documents\\fme\\Projects\\prj001";
-  QTest::newRow("Folder_prj_02") << "C:/Users/User01/Documents/fme/Projects/prj002" << "C:/Users/User01/Documents/fme/Projects/prj002";
+  QTest::newRow("Folder_prj_01") << "C:\\Users\\User01\\Documents\\photomatch\\Projects\\prj001" << "C:\\Users\\User01\\Documents\\photomatch\\Projects\\prj001";
+  QTest::newRow("Folder_prj_02") << "C:/Users/User01/Documents/photomatch/Projects/prj002" << "C:/Users/User01/Documents/photomatch/Projects/prj002";
 }
 
 void TestProject::test_projectFolder()
@@ -731,16 +731,16 @@ void TestProject::test_projectFolder()
 
 void TestProject::test_findImage()
 {
-  std::shared_ptr<Image> img = mProjectXml->findImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png");
+  std::shared_ptr<Image> img = mProjectXml->findImage("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png");
   QCOMPARE("img001", img->name());
-  QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png", img->path());
+  QCOMPARE("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png", img->path());
   QCOMPARE(0.5, img->longitudeExif());
   QCOMPARE(2.3, img->latitudeExif());
   QCOMPARE(10.2, img->altitudeExif());
 
-  std::shared_ptr<Image> img2 = mProjectXml->findImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png");
+  std::shared_ptr<Image> img2 = mProjectXml->findImage("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png");
   QCOMPARE("img002", img2->name());
-  QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png", img2->path());
+  QCOMPARE("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png", img2->path());
   QCOMPARE(0.51, img2->longitudeExif());
   QCOMPARE(2.3, img2->latitudeExif());
   QCOMPARE(10.1, img2->altitudeExif());
@@ -751,9 +751,9 @@ void TestProject::test_findImageId_data()
   QTest::addColumn<QString>("value");
   QTest::addColumn<size_t>("result");
 
-  QTest::newRow("img001") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png" << size_t{0};
-  QTest::newRow("img002") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png" << size_t{1};
-  QTest::newRow("img003") << "C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png" << std::numeric_limits<size_t>().max();
+  QTest::newRow("img001") << "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png" << size_t{0};
+  QTest::newRow("img002") << "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png" << size_t{1};
+  QTest::newRow("img003") << "C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png" << std::numeric_limits<size_t>().max();
 }
 
 void TestProject::test_findImageId()
@@ -772,13 +772,13 @@ void TestProject::test_imageIterator()
 
     if (i == 0){
       QCOMPARE("img001", (*it)->name());
-      QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img001.png", (*it)->path());
+      QCOMPARE("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img001.png", (*it)->path());
       QCOMPARE(0.5, (*it)->longitudeExif());
       QCOMPARE(2.3, (*it)->latitudeExif());
       QCOMPARE(10.2, (*it)->altitudeExif());
     } else {
       QCOMPARE("img002", (*it)->name());
-      QCOMPARE("C:/Users/User01/Documents/fme/Projects/prj001/images/img002.png", (*it)->path());
+      QCOMPARE("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img002.png", (*it)->path());
       QCOMPARE(0.51, (*it)->longitudeExif());
       QCOMPARE(2.3, (*it)->latitudeExif());
       QCOMPARE(10.1, (*it)->altitudeExif());
@@ -788,13 +788,13 @@ void TestProject::test_imageIterator()
 
 void TestProject::test_addImage_deleteImage()
 {
-  std::shared_ptr<Image> img(new Image("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png"));
+  std::shared_ptr<Image> img(new Image("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png"));
 
   mProjectXml->addImage(img);
 
   QCOMPARE(3, mProjectXml->imagesCount());
 
-  mProjectXml->deleteImage("C:/Users/User01/Documents/fme/Projects/prj001/images/img003.png");
+  mProjectXml->deleteImage("C:/Users/User01/Documents/photomatch/Projects/prj001/images/img003.png");
   QCOMPARE(2, mProjectXml->imagesCount());
 }
 

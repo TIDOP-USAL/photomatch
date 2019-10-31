@@ -1,8 +1,8 @@
 #include <QtTest>
 
-#include "fme/core/image.h"
+#include "photomatch/core/image.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestImage
   : public QObject

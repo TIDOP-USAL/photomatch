@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/AcebsfWidget.h"
+#include "photomatch/widgets/AcebsfWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestAcebsfWidgetSignals : public AcebsfWidget
 {

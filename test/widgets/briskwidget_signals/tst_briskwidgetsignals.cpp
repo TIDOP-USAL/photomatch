@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/BriskWidget.h"
+#include "photomatch/widgets/BriskWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 class TestBriskWidgetSignals : public BriskWidget
 {

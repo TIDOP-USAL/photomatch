@@ -1,11 +1,11 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/ClaheWidget.h"
+#include "photomatch/widgets/ClaheWidget.h"
 
 #include <QSpinBox>
 
-using namespace fme;
+using namespace photomatch;
 
 
 class TestClaheWidgetSignals : public ClaheWidget

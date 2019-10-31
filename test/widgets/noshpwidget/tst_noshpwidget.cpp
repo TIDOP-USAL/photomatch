@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/NoshpWidget.h"
+#include "photomatch/widgets/NoshpWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestNoshpWidget : public QObject
 {

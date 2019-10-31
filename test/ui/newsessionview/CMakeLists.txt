@@ -9,9 +9,9 @@ set(test_KIND TEST)
 set(the_target "${test_kind}_${test_name}")
 add_executable(${the_target}
     ${test_filename}
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/NewSessionView.cpp
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/NewSessionView.h
-    ${CMAKE_SOURCE_DIR}/src/fme/ui/mvp.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/NewSessionView.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/NewSessionView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 
 target_link_libraries(${the_target} PRIVATE Qt5::Core Qt5::Widgets Qt5::Test)

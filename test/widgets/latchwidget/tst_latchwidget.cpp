@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/LatchWidget.h"
+#include "photomatch/widgets/LatchWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLatchWidget : public QObject
 {

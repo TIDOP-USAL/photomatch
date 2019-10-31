@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/FreakWidget.h"
+#include "photomatch/widgets/FreakWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestFreakWidget : public QObject
 {

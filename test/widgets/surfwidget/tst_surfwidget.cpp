@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/SurfWidget.h"
+#include "photomatch/widgets/SurfWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestSurfWidget : public QObject
 {

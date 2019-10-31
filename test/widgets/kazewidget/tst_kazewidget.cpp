@@ -1,9 +1,9 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/widgets/KazeWidget.h"
+#include "photomatch/widgets/KazeWidget.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestKazeWidget : public QObject
 {

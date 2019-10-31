@@ -1,10 +1,10 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "fme/fme_global.h"
-#include "fme/core/preprocess/lce_bsescs.h"
+#include "photomatch/photomatch_global.h"
+#include "photomatch/core/preprocess/lce_bsescs.h"
 
-using namespace fme;
+using namespace photomatch;
 
 class TestLceBsescs
   : public QObject
