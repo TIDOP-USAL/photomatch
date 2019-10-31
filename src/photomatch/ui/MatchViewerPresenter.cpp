@@ -74,6 +74,7 @@ void MatchViewerPresenter::help()
 void MatchViewerPresenter::open()
 {
   mView->clear();
+  mView->setSessionName(mModel->sessionName());
   mView->show();
 
   /// Se cargan las imágenes despues de mostrar el Dialog porque si se hace antes

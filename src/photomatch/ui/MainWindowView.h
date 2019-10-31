@@ -150,6 +150,7 @@ signals:
 
   /* Quality Control */
 
+  void featuresViewer();
   void matchesViewer();
   void groundTruthEditor();
   void homography();
@@ -183,6 +184,8 @@ signals:
 
   void activeSessionChange(QString);
   void delete_session(QString);
+
+  void openFeatures(QString, QString);
 
 protected:
 
@@ -237,6 +240,7 @@ protected:
   QAction *mActionExportMatchesToCvXml;
   QAction *mActionExportMatchesToCvYml;
   QAction *mActionExportMatchesToTxt;
+  QAction *mActionFeaturesViewer;
   QAction *mActionMatchesViewer;
   QAction *mActionGroundTruthEditor;
   QAction *mActionHomography;

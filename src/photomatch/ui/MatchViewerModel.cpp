@@ -19,6 +19,11 @@ void MatchViewerModel::init()
 {
 }
 
+QString MatchViewerModel::sessionName() const
+{
+  return mProjectModel->currentSession()->name();
+}
+
 std::vector<QString> MatchViewerModel::images() const
 {
   std::vector<QString> images;

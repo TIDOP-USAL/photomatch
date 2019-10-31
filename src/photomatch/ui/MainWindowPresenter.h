@@ -35,6 +35,8 @@ class IGroundTruthModel;
 class IGroundTruthPresenter;
 class IRepeatabilityModel;
 class IRepeatabilityPresenter;
+class IFeaturesViewerModel;
+class IFeaturesViewerPresenter;
 class ProgressHandler;
 class IProgressDialog;
 class AboutDialog;
@@ -80,6 +82,8 @@ protected slots:
 
   /* Quality Control */
 
+  void openKeypointsViewer();
+  void openKeypointsViewer(const QString &session, const QString &image);
   void openMatchesViewer();
   void groundTruthEditor();
   void openHomographyViewer();
@@ -179,6 +183,11 @@ private:
   void initProgress();
 
   /*!
+   * \brief Inicializa el visor de puntos de interés
+   */
+  void initFeaturesViewer();
+
+  /*!
    * \brief Inicializa el visor de matches
    */
   void initMatchesViewer();
@@ -226,6 +235,9 @@ protected:
 
   IDescriptorMatcherModel *mDescriptorMatcherModel;
   IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
+
+  IFeaturesViewerPresenter *mFeaturesViewerPresenter;
+  IFeaturesViewerModel *mFeaturesViewerModel;
 
   IMatchViewerPresenter *mMatchesViewerPresenter;
   IMatchViewerModel *mMatchesViewerModel;

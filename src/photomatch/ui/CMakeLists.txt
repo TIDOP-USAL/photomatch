@@ -39,6 +39,9 @@ set(PHOTOMATCH_SOURCES
     FeatureExtractorView.cpp
     FeatureExtractorModel.cpp
     FeatureExtractorPresenter.cpp
+    FeaturesViewerView.cpp
+    FeaturesViewerModel.cpp
+    FeaturesViewerPresenter.cpp
     DescriptorMatcherView.cpp
     DescriptorMatcherModel.cpp
     DescriptorMatcherPresenter.cpp
@@ -86,6 +89,9 @@ set(PHOTOMATCH_HEADERS
     FeatureExtractorView.h
     FeatureExtractorModel.h
     FeatureExtractorPresenter.h
+    FeaturesViewerView.h
+    FeaturesViewerModel.h
+    FeaturesViewerPresenter.h
     DescriptorMatcherView.h
     DescriptorMatcherModel.h
     DescriptorMatcherPresenter.h

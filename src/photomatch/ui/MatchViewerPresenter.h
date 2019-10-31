@@ -91,4 +91,4 @@ private:
 
 } // namespace photomatch
 
-#endif // MATCHVIEWERPRESENTER_H
+#endif // PHOTOMATCH_MATCH_VIEWER_PRESENTER_H

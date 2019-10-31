@@ -219,6 +219,9 @@ void MatchViewerView::init()
 
 void MatchViewerView::clear()
 {
+  const QSignalBlocker blocker1(mComboBoxLeftImage);
+  const QSignalBlocker blocker2(mComboBoxLeftImage);
+
   mComboBoxLeftImage->clear();
   mComboBoxLeftImage->clear();
 }
@@ -305,6 +308,10 @@ void MatchViewerView::onGraphicsViewLeftSelectionChanged()
           item->setSelected(true);
           QPointF train_point(item->text(5).toDouble(), item->text(6).toDouble());
           mGraphicsViewRight->centerOn(train_point);
+
+          QModelIndex index = mTreeWidgetMatches->model()->index(j, 0);
+          mTreeWidgetMatches->scrollTo(index);
+
           break;
         }
       }
@@ -345,6 +352,10 @@ void MatchViewerView::onGraphicsViewRightSelectionChanged()
           itemProject->setSelected(true);
           QPointF query_point(itemProject->text(2).toDouble(), itemProject->text(3).toDouble());
           mGraphicsViewLeft->centerOn(query_point);
+
+          QModelIndex index = mTreeWidgetMatches->model()->index(j, 0);
+          mTreeWidgetMatches->scrollTo(index);
+
           break;
         }
       }

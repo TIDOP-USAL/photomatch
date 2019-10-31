@@ -83,13 +83,24 @@ QRectF KeyPointGraphicsItem::boundingRect() const
 QPainterPath KeyPointGraphicsItem::shape() const
 {
   QPainterPath path;
-  double r = mSize / 2.;
+  double r = 5/*mSize*/ / 2.;
   path.addRect(mCenter.x() - r, mCenter.y() - r, mSize, mSize);
   return path;
 }
 
 void KeyPointGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+  if (this->isSelected()) {
+    //TODO: no hace nada....
+    QPen pen = mPen;
+    pen.setWidth(mPen.width() * 2);
+    QColor color;
+    color.setNamedColor(QString("#FF0000"));
+    pen.setColor(color);
+    painter->setPen(pen);
+  } else {
+    painter->setPen(mPen);
+  }
   painter->setPen(mPen);
   painter->setBrush(mBrush);
   double r = mSize / 2.;

@@ -24,6 +24,9 @@
 #include "photomatch/ui/DescriptorMatcherModel.h"  ///TODO: por ahora no tiene ninguna utilidad
 #include "photomatch/ui/DescriptorMatcherView.h"
 #include "photomatch/ui/DescriptorMatcherPresenter.h"
+#include "photomatch/ui/FeaturesViewerModel.h"
+#include "photomatch/ui/FeaturesViewerView.h"
+#include "photomatch/ui/FeaturesViewerPresenter.h"
 #include "photomatch/ui/MatchViewerModel.h"
 #include "photomatch/ui/MatchViewerView.h"
 #include "photomatch/ui/MatchViewerPresenter.h"
@@ -77,6 +80,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mFeatureExtractorPresenter(nullptr),
     mDescriptorMatcherModel(nullptr),
     mDescriptorMatcherPresenter(nullptr),
+    mFeaturesViewerPresenter(nullptr),
+    mFeaturesViewerModel(nullptr),
     mMatchesViewerPresenter(nullptr),
     mMatchesViewerModel(nullptr),
     mGroundTruthPresenter(nullptr),
@@ -121,6 +126,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   /* Quality Control */
 
+  connect(mView,  SIGNAL(featuresViewer()),           this, SLOT(openKeypointsViewer()));
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
   connect(mView,  SIGNAL(groundTruthEditor()),        this, SLOT(groundTruthEditor()));
   connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
@@ -165,6 +171,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
   connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
+
+  connect(mView, SIGNAL(openFeatures(QString, QString)),      this, SLOT(openKeypointsViewer(QString, QString)));
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -247,6 +255,16 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mProgressDialog){
     delete mProgressDialog;
     mProgressDialog = nullptr;
+  }
+
+  if (mFeaturesViewerPresenter){
+    delete mFeaturesViewerPresenter;
+    mFeaturesViewerPresenter = nullptr;
+  }
+
+  if (mFeaturesViewerModel){
+    delete mFeaturesViewerModel;
+    mFeaturesViewerModel = nullptr;
   }
 
   if (mMatchesViewerPresenter){
@@ -560,6 +578,21 @@ void MainWindowPresenter::openViewSettings()
 {
   initSettingsDialog();
   mSettingsPresenter->openPage(1);
+}
+
+void MainWindowPresenter::openKeypointsViewer()
+{
+  initFeaturesViewer();
+  mFeaturesViewerPresenter->open();
+}
+
+void MainWindowPresenter::openKeypointsViewer(const QString &session, const QString &image)
+{
+  initFeaturesViewer();
+  mFeaturesViewerPresenter->setSession(session);
+  mFeaturesViewerPresenter->open();
+  mFeaturesViewerPresenter->setImageActive(image);
+  
 }
 
 void MainWindowPresenter::openMatchesViewer()
@@ -1408,6 +1441,17 @@ void MainWindowPresenter::initProgress()
     connect(mProgressHandler, SIGNAL(initialized()),              statusBarProgress, SLOT(show()));
     connect(mProgressHandler, SIGNAL(finished()),                 statusBarProgress, SLOT(hide()));
 
+  }
+}
+
+void MainWindowPresenter::initFeaturesViewer()
+{
+  if (mFeaturesViewerPresenter == nullptr) {
+    mFeaturesViewerModel = new FeaturesViewerModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    IFeaturesViewerView *featuresViewerView = new FeaturesViewerView(mView, f);
+    mFeaturesViewerPresenter = new FeaturesViewerPresenter(featuresViewerView, mFeaturesViewerModel);
+    //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }
 

@@ -63,6 +63,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionExportMatchesToCvXml(new QAction(this)),
     mActionExportMatchesToCvYml(new QAction(this)),
     mActionExportMatchesToTxt(new QAction(this)),
+    mActionFeaturesViewer(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
     mActionGroundTruthEditor(new QAction(this)),
     mActionHomography(new QAction(this)),
@@ -118,6 +119,7 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   /* Quality Control */
 
+  connect(mActionFeaturesViewer,     SIGNAL(triggered(bool)),   this,   SIGNAL(featuresViewer()));
   connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(matchesViewer()));
   connect(mActionGroundTruthEditor,  SIGNAL(triggered(bool)),   this,   SIGNAL(groundTruthEditor()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
@@ -1356,6 +1358,7 @@ void MainWindowView::update()
   //mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   mActionExportTiePointsCvYml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionFeaturesViewer->setEnabled(mFlags.isActive(Flag::feature_extraction));
   mActionMatchesViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionExportMatchesToCvYml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
@@ -1524,6 +1527,9 @@ void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
   } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
     QString session = item->parent()->parent()->parent()->parent()->text(0);
     emit openImageMatches(session, item->parent()->text(0), item->text(column));
+  } else if (item->data(0, Qt::UserRole) == photomatch::features_image){
+    QString session = item->parent()->parent()->parent()->text(0);
+    emit openFeatures(session, QFileInfo(item->text(column)).baseName());
   }
 }
 
@@ -1821,6 +1827,8 @@ void MainWindowView::init()
   //mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export Tie Points", nullptr));
   //mActionExportTiePoints->setObjectName(QStringLiteral("actionExportTiePoints"));
 
+  mActionFeaturesViewer->setText(QApplication::translate("MainWindowView", "Keypoints Viewer", nullptr));
+
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
 
   mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
@@ -1976,6 +1984,7 @@ void MainWindowView::init()
 
   /* Menu Quality Control */
 
+  ui->menuQualityControl->addAction(mActionFeaturesViewer);
   ui->menuQualityControl->addAction(mActionMatchesViewer);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionGroundTruthEditor);
