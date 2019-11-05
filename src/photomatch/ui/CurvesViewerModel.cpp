@@ -139,6 +139,11 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
 
   }
 
+  if (pts_query.size() == 0) {
+    msgWarning("Ground Truth not available for these images");
+    return 0.0;
+  }
+
   cv::Mat H = cv::findHomography(pts_query, pts_train);
 
   cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());

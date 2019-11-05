@@ -32,7 +32,6 @@ void CurvesViewerPresenter::loadLeftImage(const QString &image)
   if (imagesRight.empty() == false){
     mView->setRightImageList(imagesRight);
     mView->setRightImage(imagesRight[0]);
-    //homography(QFileInfo(image).baseName(), QFileInfo(imagesRight[0]).baseName());
   }
 }
 

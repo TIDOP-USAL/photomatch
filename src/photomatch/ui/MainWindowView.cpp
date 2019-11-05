@@ -1521,15 +1521,17 @@ void MainWindowView::tabChanged(int id)
 
 void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
 {
-  if (item->data(0, Qt::UserRole) == photomatch::image ||
+  if (item){
+    if (item->data(0, Qt::UserRole) == photomatch::image ||
       item->data(0, Qt::UserRole) == photomatch::preprocess_image){
-    emit openImage(item->toolTip(column));
-  } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
-    QString session = item->parent()->parent()->parent()->parent()->text(0);
-    emit openImageMatches(session, item->parent()->text(0), item->text(column));
-  } else if (item->data(0, Qt::UserRole) == photomatch::features_image){
-    QString session = item->parent()->parent()->parent()->text(0);
-    emit openFeatures(session, QFileInfo(item->text(column)).baseName());
+     emit openImage(item->toolTip(column));
+   } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
+     QString session = item->parent()->parent()->parent()->parent()->text(0);
+     emit openImageMatches(session, item->parent()->text(0), item->text(column));
+   } else if (item->data(0, Qt::UserRole) == photomatch::features_image){
+     QString session = item->parent()->parent()->parent()->text(0);
+     emit openFeatures(session, QFileInfo(item->text(column)).baseName());
+   }
   }
 }
 

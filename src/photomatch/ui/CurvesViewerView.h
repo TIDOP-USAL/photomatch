@@ -90,8 +90,10 @@ public:
 
   virtual ~CurvesViewerView() override;
 
-private slots:
+protected slots :
 
+  void onComboBoxLeftImageIndexChanged(int idx);
+  void onComboBoxRightImageIndexChanged(int idx);
   void onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item,int column);
 
 // ICurvesViewerView interface

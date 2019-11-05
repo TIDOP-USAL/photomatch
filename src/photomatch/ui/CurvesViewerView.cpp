@@ -19,8 +19,8 @@ CurvesViewerView::CurvesViewerView(QWidget *parent, Qt::WindowFlags f)
 {
   init();
 
-  //connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
-  //connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
+  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
+  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
   connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
 
   connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
@@ -38,14 +38,46 @@ CurvesViewerView::~CurvesViewerView()
 
 }
 
+void CurvesViewerView::onComboBoxLeftImageIndexChanged(int idx)
+{
+  QString image_left(mComboBoxLeftImage->itemText(idx));
+  emit leftImageChange(image_left);
+  QString image_right(mComboBoxRightImage->itemText(idx));
+  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
+    QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i);
+    bool checked = item->checkState(0);
+    if (checked){
+      QString session = item->text(0);
+      emit deleteCurve(item->text(0));
+      emit drawCurve(session, image_left, image_right);
+    }
+  }
+}
+
+void CurvesViewerView::onComboBoxRightImageIndexChanged(int idx)
+{
+  QString image_right(mComboBoxRightImage->itemText(idx));
+  QString image_left(mComboBoxLeftImage->currentText());
+  emit rightImageChange(image_right);
+  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
+    QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i);
+    bool checked = item->checkState(0);
+    if (checked){
+      QString session = item->text(0);
+      emit deleteCurve(item->text(0));
+      emit drawCurve(session, image_left, image_right);
+    }
+  }
+}
+
 void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
 {
   bool checked = item->checkState(column);
   if (checked) {
     QString session = item->text(0);
-    QString detector = mComboBoxLeftImage->currentText();
-    QString descriptor = mComboBoxRightImage->currentText();
-    emit drawCurve(session, detector, descriptor);
+    QString image_left = mComboBoxLeftImage->currentText();
+    QString image_right = mComboBoxRightImage->currentText();
+    emit drawCurve(session, image_left, image_right);
   } else {
     emit deleteCurve(item->text(0));
   }
