@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/GroundTruthModel.h"
 #include "photomatch/ui/GroundTruthView.h"
+#include "photomatch/ui/SettingsModel.h"
 
 #include <QStandardPaths>
 #include <QDir>
@@ -11,10 +12,12 @@ namespace photomatch
 {
 
 GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
-                                           IGroundTruthModel *model)
+                                           IGroundTruthModel *model,
+                                           ISettingsModel *settings)
   : IGroundTruthPresenter(),
     mView(view),
-    mModel(model)/*,
+    mModel(model),
+    mSettingsModel(settings)/*,
     mHelp(nullptr)*/
 {
   init();
@@ -80,7 +83,8 @@ void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QStri
 void GroundTruthPresenter::addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
 {
   mModel->addHomologusPoints(image1, pt1, image2, pt2);
-
+  QTransform trf = mModel->transform(image1, image2);
+  mView->setTransform(trf);
   mView->addHomologousPoint(pt1, pt2);
   mView->setUnsavedChanges(true);
 }
@@ -121,6 +125,12 @@ void GroundTruthPresenter::help()
 void GroundTruthPresenter::open()
 {
   mView->clear();
+
+  mView->setBGColor(mSettingsModel->matchesViewerBGColor());
+  mView->setMarkerStyle(mSettingsModel->matchesViewerMarkerColor(),
+                        mSettingsModel->matchesViewerMarkerWidth(),
+                        mSettingsModel->matchesViewerMarkerType(),
+                        mSettingsModel->matchesViewerMarkerSize());
   mView->show();
 
   mModel->loadGroundTruth();

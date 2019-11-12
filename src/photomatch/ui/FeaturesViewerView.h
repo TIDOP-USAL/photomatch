@@ -48,6 +48,9 @@ public:
    */
   virtual void setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints) = 0;
 
+  virtual void setBGColor(const QString &bgColor) = 0;
+  virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
+
 signals:
 
   void imageChange(QString);
@@ -80,6 +83,8 @@ protected slots:
   void setImageList(const std::vector<QString> &imageList) override;
   void setCurrentImage(const QString &leftImage) override;
   void setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints) override;
+  void setBGColor(const QString &bgColor) override;
+  void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
 
 // IDialogView interface
 
@@ -101,6 +106,10 @@ protected:
   QComboBox *mComboBoxImages;
   GraphicViewer *mGraphicView;
   QTreeWidget *mTreeWidget;
+  QString mMarkerColor;
+  int mMarkerType;
+  int mMarkerSize;
+  int mMarkerWidth;
 };
 
 

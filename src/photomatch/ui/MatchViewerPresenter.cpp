@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/MatchViewerModel.h"
 #include "photomatch/ui/MatchViewerView.h"
+#include "photomatch/ui/SettingsModel.h"
 
 //#include "ui/help.h"
 
@@ -12,10 +13,12 @@ namespace photomatch
 {
 
 MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
-                                           IMatchViewerModel *model)
+                                           IMatchViewerModel *model,
+                                           ISettingsModel *settings)
   : IMatchViewerPresenter(),
     mView(view),
-    mModel(model)/*,
+    mModel(model),
+    mSettingsModel(settings)/*,
     mHelp(nullptr)*/
 {
   init();
@@ -74,7 +77,16 @@ void MatchViewerPresenter::help()
 void MatchViewerPresenter::open()
 {
   mView->clear();
+
   mView->setSessionName(mModel->sessionName());
+  mView->setBGColor(mSettingsModel->matchesViewerBGColor());
+  mView->setMarkerStyle(mSettingsModel->matchesViewerMarkerColor(),
+                        mSettingsModel->matchesViewerMarkerWidth(),
+                        mSettingsModel->matchesViewerMarkerType(),
+                        mSettingsModel->matchesViewerMarkerSize());
+  mView->setLineStyle(mSettingsModel->matchesViewerLineColor(),
+                      mSettingsModel->matchesViewerLineWidth());
+
   mView->show();
 
   /// Se cargan las imágenes despues de mostrar el Dialog porque si se hace antes

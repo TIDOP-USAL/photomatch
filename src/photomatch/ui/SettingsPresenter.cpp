@@ -20,6 +20,11 @@
 /* Feature detector/extractor */
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/widgets/BoostWidget.h"
+#endif
+#endif
 #include "photomatch/widgets/BriefWidget.h"
 #include "photomatch/widgets/BriskWidget.h"
 #include "photomatch/widgets/DaisyWidget.h"
@@ -33,10 +38,13 @@
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
+#ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SiftWidget.h"
+#endif
 #include "photomatch/widgets/StarWidget.h"
+#ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
-
+#endif
 /* Descriptor Matcher */
 #include "photomatch/widgets/DescriptorMatcherWidget.h"
 
@@ -64,6 +72,11 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mWallis(new WallisWidget),
     mAgast(new AgastWidget),
     mAkaze(new AkazeWidget),
+    #if CV_VERSION_MAJOR >= 3
+    #  if CV_VERSION_MINOR > 2
+    mBoost(new BoostWidget),
+    #  endif
+    #endif
     mBrief(new BriefWidget),
     mBrisk(new BriskWidget),
     mDaisy(new DaisyWidget),
@@ -77,16 +90,23 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mMsd(new MsdWidget),
     mMser(new MserWidget),
     mOrb(new OrbWidget),
+#ifdef OPENCV_ENABLE_NONFREE
     mSift(new SiftWidget),
+#endif
     mStar(new StarWidget),
+#ifdef OPENCV_ENABLE_NONFREE
     mSurf(new SurfWidget),
+#endif
     mMatcher(new DescriptorMatcherWidget)
 {
   init();
 
   connect(mView, SIGNAL(languageChange(QString)),        this,   SLOT(setLanguage(QString)));
+  connect(mView, SIGNAL(historyMaxSizeChange(int)),      mModel, SLOT(setHistoryMaxSize(int)));
   connect(mView, SIGNAL(keypointsFormatChange(QString)), mModel, SLOT(setKeypointsFormat(QString)));
   connect(mView, SIGNAL(matchesFormatChange(QString)),   mModel, SLOT(setMatchesFormat(QString)));
+
+  connect(mView, SIGNAL(imageViewerBGColorChange(QString)),  mModel, SLOT(setImageViewerBGcolor(QString)));
 
   connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   connect(mView, SIGNAL(applyChanges()), this, SLOT(save()));
@@ -157,6 +177,15 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mAkaze, SIGNAL(octavesChange(int)),                mModel, SLOT(setAkazeOctaves(int)));
   connect(mAkaze, SIGNAL(octaveLayersChange(int)),           mModel, SLOT(setAkazeOctaveLayers(int)));
   connect(mAkaze, SIGNAL(diffusivityChange(QString)),        mModel, SLOT(setAkazeDiffusivity(QString)));
+
+  /* BOOST */
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  connect(mBoost, SIGNAL(descriptorTypeChange(QString)),     mModel, SLOT(setBoostDescriptorType(QString)));
+  connect(mBoost, SIGNAL(useOrientationChange(bool)),        mModel, SLOT(setBoostUseOrientation(bool)));
+  connect(mBoost, SIGNAL(scaleFactorChange(double)),         mModel, SLOT(setBoostScaleFactor(double)));
+#  endif
+#endif
 
   /* BRIEF */
   connect(mBrief, SIGNAL(bytesChange(QString)),              mModel, SLOT(setBriefBytes(QString)));
@@ -255,11 +284,13 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mOrb, SIGNAL(fastThresholdChange(int)),            mModel, SLOT(setOrbFastThreshold(int)));
 
   /* SIFT */
+#ifdef OPENCV_ENABLE_NONFREE
   connect(mSift, SIGNAL(featuresNumberChange(int)),          mModel, SLOT(setSiftFeaturesNumber(int)));
   connect(mSift, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setSiftOctaveLayers(int)));
   connect(mSift, SIGNAL(contrastThresholdChange(double)),    mModel, SLOT(setSiftContrastThreshold(double)));
   connect(mSift, SIGNAL(edgeThresholdChange(double)),        mModel, SLOT(setSiftEdgeThreshold(double)));
   connect(mSift, SIGNAL(sigmaChange(double)),                mModel, SLOT(setSiftSigma(double)));
+#endif
 
   /* STAR */
   connect(mStar, SIGNAL(maxSizeChange(int)),                 mModel, SLOT(setStarMaxSize(int)));
@@ -269,11 +300,13 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mStar, SIGNAL(suppressNonmaxSizeChange(int)),      mModel, SLOT(setStarSuppressNonmaxSize(int)));
 
   /* SURF */
+#ifdef OPENCV_ENABLE_NONFREE
   connect(mSurf, SIGNAL(hessianThresholdChange(double)),     mModel, SLOT(setSurfHessianThreshold(double)));
   connect(mSurf, SIGNAL(octavesChange(int)),                 mModel, SLOT(setSurfOctaves(int)));
   connect(mSurf, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setSurfOctaveLayers(int)));
   connect(mSurf, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setSurfExtendedDescriptor(bool)));
   connect(mSurf, SIGNAL(rotatedFeaturesChange(bool)),        mModel, SLOT(setSurfRotatedFeatures(bool)));
+#endif
 
   connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMethod(QString)));
   connect(mMatcher, SIGNAL(normTypeChange(QString)),         mModel, SLOT(setMatchNormType(QString)));
@@ -286,6 +319,29 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mMatcher, SIGNAL(homographyComputeMethodChange(QString)),  mModel, SLOT(setMatchHomographyComputeMethod(QString)));
   connect(mMatcher, SIGNAL(fundamentalComputeMethodChange(QString)), mModel, SLOT(setMatchFundamentalComputeMethod(QString)));
   connect(mMatcher, SIGNAL(essentialComputeMethodChange(QString)),   mModel, SLOT(setMatchEssentialComputeMethod(QString)));
+
+
+  /* Keypoints Viewer */
+  connect(mView, SIGNAL(keypointsViewerBGColorChange(QString)),      mModel, SLOT(setKeypointsViewerBGColor(QString)));
+  connect(mView, SIGNAL(keypointsViewerMarkerTypeChange(int)),       mModel, SLOT(setKeypointsViewerMarkerType(int)));
+  connect(mView, SIGNAL(keypointsViewerMarkerSizeChange(int)),       mModel, SLOT(setKeypointsViewerMarkerSize(int)));
+  connect(mView, SIGNAL(keypointsViewerMarkerWidthChange(int)),      mModel, SLOT(setKeypointsViewerMarkerWidth(int)));
+  connect(mView, SIGNAL(keypointsViewerMarkerColorChange(QString)),  mModel, SLOT(setKeypointsViewerMarkerColor(QString)));
+
+  /* Matches Viewer */
+  connect(mView, SIGNAL(matchesViewerBGColorChange(QString)),      mModel, SLOT(setMatchesViewerBGColor(QString)));
+  connect(mView, SIGNAL(matchesViewerMarkerTypeChange(int)),       mModel, SLOT(setMatchesViewerMarkerType(int)));
+  connect(mView, SIGNAL(matchesViewerMarkerSizeChange(int)),       mModel, SLOT(setMatchesViewerMarkerSize(int)));
+  connect(mView, SIGNAL(matchesViewerMarkerWidthChange(int)),      mModel, SLOT(setMatchesViewerMarkerWidth(int)));
+  connect(mView, SIGNAL(matchesViewerLineWidthChange(int)),        mModel, SLOT(setMatchesViewerLineWidth(int)));
+  connect(mView, SIGNAL(matchesViewerMarkerColorChange(QString)),  mModel, SLOT(setMatchesViewerLineColor(QString)));
+  connect(mView, SIGNAL(matchesViewerLineColorChange(QString)),    mModel, SLOT(setMatchesViewerMarkerColor(QString)));
+
+  /* Ground Truth Editor */
+  connect(mView, SIGNAL(groundTruthEditorBGColorChange(QString)),      mModel, SLOT(setGroundTruthEditorBGColor(QString)));
+  connect(mView, SIGNAL(groundTruthEditorMarkerSizeChange(int)),       mModel, SLOT(setGroundTruthEditorMarkerSize(int)));
+  connect(mView, SIGNAL(groundTruthEditorMarkerWidthChange(int)),      mModel, SLOT(setGroundTruthEditorMarkerWidth(int)));
+  connect(mView, SIGNAL(groundTruthEditorMarkerColorChange(QString)),  mModel, SLOT(setGroundTruthEditorMarkerColor(QString)));
 
 }
 
@@ -356,6 +412,15 @@ SettingsPresenter::~SettingsPresenter()
     mAkaze = nullptr;
   }
 
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  if (mBoost){
+    delete mBoost;
+    mBoost = nullptr;
+  }
+#  endif
+#endif
+
   if (mBrief){
     delete mBrief;
     mBrief = nullptr;
@@ -420,20 +485,24 @@ SettingsPresenter::~SettingsPresenter()
     mOrb = nullptr;
   }
 
+#ifdef OPENCV_ENABLE_NONFREE
   if (mSift){
     delete mSift;
     mSift = nullptr;
   }
+#endif
 
   if (mStar){
     delete mStar;
     mStar = nullptr;
   }
 
+#ifdef OPENCV_ENABLE_NONFREE
   if (mSurf){
     delete mSurf;
     mSurf = nullptr;
   }
+#endif
 
   if (mMatcher){
     delete mMatcher;
@@ -527,6 +596,14 @@ void SettingsPresenter::open()
   mAkaze->setDescriptorType(mModel->akazeDescriptorType());
   mAkaze->setDescriptorChannels(mModel->akazeDescriptorChannels());
 
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mBoost->setDescriptorType(mModel->boostDescriptorType());
+  mBoost->setUseOrientation(mModel->boostUseOrientation());
+  mBoost->setScaleFactor(mModel->boostScaleFactor());
+#  endif
+#endif
+
   mBrief->setBytes(mModel->briefBytes());
   mBrief->setUseOrientation(mModel->briefUseOrientation());
 
@@ -610,11 +687,13 @@ void SettingsPresenter::open()
   mOrb->setPatchSize(mModel->orbPatchSize());
   mOrb->setFastThreshold(mModel->orbFastThreshold());
 
+#ifdef OPENCV_ENABLE_NONFREE
   mSift->setSigma(mModel->siftSigma());
   mSift->setOctaveLayers(mModel->siftOctaveLayers());
   mSift->setEdgeThreshold(mModel->siftEdgeThreshold());
   mSift->setFeaturesNumber(mModel->siftFeaturesNumber());
   mSift->setContrastThreshold(mModel->siftContrastThreshold());
+#endif
 
   mStar->setMaxSize(mModel->starMaxSize());
   mStar->setResponseThreshold(mModel->starResponseThreshold());
@@ -622,11 +701,13 @@ void SettingsPresenter::open()
   mStar->setLineThresholdBinarized(mModel->starLineThresholdBinarized());
   mStar->setSuppressNonmaxSize(mModel->starSuppressNonmaxSize());
 
+#ifdef OPENCV_ENABLE_NONFREE
   mSurf->setOctaves(mModel->surfOctaves());
   mSurf->setOctaveLayers(mModel->surfOctaveLayers());
   mSurf->setRotatedFeatures(mModel->surfRotatedFeatures());
   mSurf->setHessianThreshold(mModel->surfHessianThreshold());
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
+#endif
 
   mMatcher->setMatchingMethod(mModel->matchMethod());
   mMatcher->setNormType(mModel->matchNormType());
@@ -639,6 +720,25 @@ void SettingsPresenter::open()
   mMatcher->setHomographyComputeMethod(mModel->matchHomographyComputeMethod());
   mMatcher->setFundamentalComputeMethod(mModel->matchFundamentalComputeMethod());
   mMatcher->setEssentialComputeMethod(mModel->matchEssentialComputeMethod());
+
+  mView->setKeypointsViewerBGColor(mModel->keypointsViewerBGColor());
+  mView->setKeypointsViewerMarkerType(mModel->keypointsViewerMarkerType());
+  mView->setKeypointsViewerMarkerSize(mModel->keypointsViewerMarkerSize());
+  mView->setKeypointsViewerMarkerWidth(mModel->keypointsViewerMarkerWidth());
+  mView->setKeypointsViewerMarkerColor(mModel->keypointsViewerMarkerColor());
+
+  mView->setMatchesViewerBGColor(mModel->matchesViewerBGColor());
+  mView->setMatchesViewerMarkerType(mModel->matchesViewerMarkerType());
+  mView->setMatchesViewerMarkerSize(mModel->matchesViewerMarkerSize());
+  mView->setMatchesViewerMarkerWidth(mModel->matchesViewerMarkerWidth());
+  mView->setMatchesViewerMarkerColor(mModel->matchesViewerMarkerColor());
+  mView->setMatchesViewerLineColor(mModel->matchesViewerLineColor());
+  mView->setMatchesViewerLineWidth(mModel->matchesViewerLineWidth());
+
+  mView->setGroundTruthEditorBGColor(mModel->groundTruthEditorBGColor());
+  mView->setGroundTruthEditorMarkerSize(mModel->groundTruthEditorMarkerSize());
+  mView->setGroundTruthEditorMarkerColor(mModel->groundTruthEditorMarkerColor());
+  mView->setGroundTruthEditorMarkerWidth(mModel->groundTruthEditorMarkerWidth());
 
   mView->exec();
 }
@@ -658,11 +758,18 @@ void SettingsPresenter::init()
   mView->addPreprocess(mRSWHE);
   mView->addPreprocess(mWallis);
 
+#ifdef OPENCV_ENABLE_NONFREE
   mView->addFeatureDetectorMethod(mSift);
   mView->addFeatureDetectorMethod(mSurf);
+#endif
   mView->addFeatureDetectorMethod(mOrb);
   mView->addFeatureDetectorMethod(mAgast);
   mView->addFeatureDetectorMethod(mAkaze);
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mView->addFeatureDetectorMethod(mBoost);
+#  endif
+#endif
   mView->addFeatureDetectorMethod(mBrief);
   mView->addFeatureDetectorMethod(mBrisk);
   mView->addFeatureDetectorMethod(mDaisy);

@@ -3,6 +3,11 @@
 #include "photomatch/core/features/features.h"
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/core/features/boost.h"
+#endif
+#endif
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
 #include "photomatch/core/features/daisy.h"
@@ -29,6 +34,11 @@
 
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/widgets/BoostWidget.h"
+#endif
+#endif
 #include "photomatch/widgets/BriefWidget.h"
 #include "photomatch/widgets/BriskWidget.h"
 #include "photomatch/widgets/DaisyWidget.h"
@@ -43,10 +53,13 @@
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
+#ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SiftWidget.h"
+#endif
 #include "photomatch/widgets/StarWidget.h"
+#ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
-
+#endif
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/features/FeatureExtractorProcess.h"
 
@@ -85,6 +98,11 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mSurfDetector(new SurfWidget),
 #endif
     mAkazeDescriptor(new AkazeWidget),
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+    mBoostDescriptor(new BoostWidget),
+#endif
+#endif
     mBriefDescriptor(new BriefWidget),
     mBriskDescriptor(new BriskWidget),
     mDaisyDescriptor(new DaisyWidget),
@@ -182,6 +200,15 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     delete mAkazeDescriptor;
     mAkazeDescriptor = nullptr;
   }
+
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+  if (mBoostDescriptor){
+    delete mBoostDescriptor;
+    mBoostDescriptor = nullptr;
+  }
+#endif
+#endif
 
   if (mBriefDescriptor){
     delete mBriefDescriptor;
@@ -319,6 +346,23 @@ void FeatureExtractorPresenter::open()
   mAkazeDescriptor->setDescriptorChannels(descriptor && descriptor->type() == Feature::Type::akaze ?
                                           dynamic_cast<IAkaze *>(descriptor)->descriptorChannels() :
                                           mSettingsModel->akazeDescriptorChannels());
+
+  /* Boost */
+
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mBoostDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::boost ?
+                                        dynamic_cast<IBoost *>(descriptor)->descriptorType() :
+                                        mSettingsModel->boostDescriptorType());
+  mBoostDescriptor->setUseOrientation(descriptor && descriptor->type() == Feature::Type::boost ?
+                                        dynamic_cast<IBoost *>(descriptor)->useOrientation() :
+                                        mSettingsModel->boostUseOrientation());
+
+  mBoostDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::boost ?
+                                     dynamic_cast<IBoost *>(descriptor)->scaleFactor() :
+                                     mSettingsModel->boostScaleFactor());
+#  endif
+#endif
 
   /* BRIEF */
 
@@ -736,6 +780,11 @@ void FeatureExtractorPresenter::init()
 #endif
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mView->addDescriptorExtractor(mBoostDescriptor);
+#  endif
+#endif
   mView->addDescriptorExtractor(mBriefDescriptor);
   mView->addDescriptorExtractor(mBriskDescriptor);
   mView->addDescriptorExtractor(mDaisyDescriptor);
@@ -910,7 +959,17 @@ void FeatureExtractorPresenter::run()
                                                                       mAkazeDescriptor->octaveLayers(),
                                                                       mAkazeDescriptor->diffusivity());
     }
-  } else if (currentDescriptorExtractor.compare("BRIEF") == 0){
+  }
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  else if (currentDescriptorExtractor.compare("BOOST") == 0){
+    descriptorExtractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
+                                                            mBoostDescriptor->useOrientation(),
+                                                            mBoostDescriptor->scaleFactor());
+  }
+#  endif
+#endif
+  else if (currentDescriptorExtractor.compare("BRIEF") == 0){
     descriptorExtractor = std::make_shared<BriefDescriptor>(mBriefDescriptor->bytes(),
                                                             mBriefDescriptor->useOrientation());
   } else if (currentDescriptorExtractor.compare("BRISK") == 0){
@@ -1098,51 +1157,103 @@ void FeatureExtractorPresenter::run()
   mMultiProcess->start();
 }
 
-void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &featureExtractor)
+void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &keypointDetector)
 {
-  mView->setCurrentKeypointDetector(featureExtractor);
+  mView->setCurrentKeypointDetector(keypointDetector);
 
   mView->disableDescriptorExtractor("AKAZE");
   mView->disableDescriptorExtractor("KAZE");
   mView->enableDescriptorExtractor("ORB");
   mView->enableDescriptorExtractor("HOG");
 
-  if (featureExtractor.compare("AGAST") == 0){
+  if (keypointDetector.compare("AGAST") == 0){
+#ifdef OPENCV_ENABLE_NONFREE
     mView->setCurrentDescriptorExtractor("SIFT");
-  } else if (featureExtractor.compare("AKAZE") == 0){
+#else
+    mView->setCurrentDescriptorExtractor("ORB");
+#endif
+  } else if (keypointDetector.compare("AKAZE") == 0){
     mView->setCurrentDescriptorExtractor("AKAZE");
     mView->enableDescriptorExtractor("AKAZE");
     mView->enableDescriptorExtractor("KAZE");
-  } else if (featureExtractor.compare("BRISK") == 0){
+  } else if (keypointDetector.compare("BRISK") == 0){
     mView->setCurrentDescriptorExtractor("BRISK");
     mView->disableDescriptorExtractor("HOG");
-  } else if (featureExtractor.compare("FAST") == 0){
+  } else if (keypointDetector.compare("FAST") == 0){
+#ifdef OPENCV_ENABLE_NONFREE
     mView->setCurrentDescriptorExtractor("SIFT");
-  } else if (featureExtractor.compare("GFTT") == 0){
+#else
+    mView->setCurrentDescriptorExtractor("ORB");
+#endif
+  } else if (keypointDetector.compare("GFTT") == 0){
+#ifdef OPENCV_ENABLE_NONFREE
     mView->setCurrentDescriptorExtractor("SIFT");
-  } else if (featureExtractor.compare("KAZE") == 0){
+#else
+    mView->setCurrentDescriptorExtractor("ORB");
+#endif
+  } else if (keypointDetector.compare("KAZE") == 0){
     mView->setCurrentDescriptorExtractor("KAZE");
     mView->enableDescriptorExtractor("AKAZE");
     mView->enableDescriptorExtractor("KAZE");
-  } else if (featureExtractor.compare("MSD") == 0){
+  } else if (keypointDetector.compare("MSD") == 0){
+#ifdef OPENCV_ENABLE_NONFREE
     mView->setCurrentDescriptorExtractor("SIFT");
-  } else if (featureExtractor.compare("MSER") == 0){
-    mView->setCurrentDescriptorExtractor("SIFT");
-  } else if (featureExtractor.compare("ORB") == 0){
+#else
     mView->setCurrentDescriptorExtractor("ORB");
-  } else if (featureExtractor.compare("SIFT") == 0){
+#endif
+  } else if (keypointDetector.compare("MSER") == 0){
+#ifdef OPENCV_ENABLE_NONFREE
+    mView->setCurrentDescriptorExtractor("SIFT");
+#else
+    mView->setCurrentDescriptorExtractor("ORB");
+#endif
+  } else if (keypointDetector.compare("ORB") == 0){
+    mView->setCurrentDescriptorExtractor("ORB");
+  }
+#ifdef OPENCV_ENABLE_NONFREE
+  else if (keypointDetector.compare("SIFT") == 0){
     mView->setCurrentDescriptorExtractor("SIFT");
     mView->disableDescriptorExtractor("ORB");
-  } else if (featureExtractor.compare("STAR") == 0){
+  }
+#endif
+  else if (keypointDetector.compare("STAR") == 0){
+#ifdef OPENCV_ENABLE_NONFREE
     mView->setCurrentDescriptorExtractor("SIFT");
-  } else if (featureExtractor.compare("SURF") == 0){
+#else
+    mView->setCurrentDescriptorExtractor("ORB");
+#endif
+  }
+#ifdef OPENCV_ENABLE_NONFREE
+  else if (keypointDetector.compare("SURF") == 0){
     mView->setCurrentDescriptorExtractor("SURF");
   }
-
+#endif
 }
 
 void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
 {
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  if (descriptorExtractor.compare("BOOST") == 0){
+    QString keypointDetector = mView->currentKeypointDetector();
+    if (keypointDetector.compare("AGAST") == 0 ||
+        keypointDetector.compare("AKAZE") == 0 ||
+        keypointDetector.compare("BRISK") == 0 ||
+        keypointDetector.compare("FAST") == 0 ||
+        keypointDetector.compare("MSD") == 0){
+      mBoostDescriptor->setScaleFactor(5.0);
+    } else if (keypointDetector.compare("KAZE") == 0 ||
+               keypointDetector.compare("SURF") == 0) {
+      mBoostDescriptor->setScaleFactor(6.25);
+    } else if (keypointDetector.compare("SIFT") == 0) {
+     mBoostDescriptor->setScaleFactor(6.75);
+   } else if (keypointDetector.compare("ORB") == 0) {
+      mBoostDescriptor->setScaleFactor(1.50);
+   }
+
+  }
+#  endif
+#endif
   mView->setCurrentDescriptorExtractor(descriptorExtractor);
 }
 

@@ -55,6 +55,10 @@ public:
   virtual void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) = 0;
   //virtual void deleteMatch(int id) = 0;
 
+  virtual void setBGColor(const QString &bgColor) = 0;
+  virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
+  virtual void setLineStyle(const QString &color, int width) = 0;
+
 signals:
 
   void leftImageChange(QString);
@@ -94,7 +98,9 @@ public:
   void setLeftImageList(const std::vector<QString> &leftImageList) override;
   void setRightImageList(const std::vector<QString> &rightImageList) override;
   void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) override;
-  //void deleteMatch(int id) override;
+  void setBGColor(const QString &bgColor) override;
+  void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
+  void setLineStyle(const QString &color, int width) override;
 
 // IDialogView interface
 
@@ -121,7 +127,12 @@ protected:
   QPushButton *mPushButtonDeleteMatch;
   //QPushButton *mPushButtonSaveMatches;
   bool bUnsavedChanges;
-
+  QString mMarkerColor;
+  int mMarkerSize;
+  int mMarkerWidth;
+  int mMarkerType;
+  QString mLineColor;
+  int mLineWidth;
 };
 
 } // namespace photomatch

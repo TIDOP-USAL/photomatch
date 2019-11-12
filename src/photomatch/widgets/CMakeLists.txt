@@ -7,6 +7,8 @@ add_library(libwidgets ${LIB_TYPE}
             AgastWidget.h
             AkazeWidget.cpp
             AkazeWidget.h
+            BoostWidget.cpp
+            BoostWidget.h
             BriefWidget.cpp
             BriefWidget.h
             BriskWidget.cpp

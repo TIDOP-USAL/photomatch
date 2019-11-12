@@ -21,30 +21,45 @@ public:
   ISettingsModel(QObject *parent = nullptr) : IModel(parent) {}
 
   /*!
-   * \brief Listado de idiomas disponibles
+   * \brief List of available languages
    * \return
    */
   virtual QStringList languages() const = 0;
 
   /*!
-   * \brief Idioma actual
-   * \return
+   * \brief Current language
+   * \return Current language
    */
   virtual QString language() const = 0;
 
   /*!
-   * \brief Historial del proyectos recientes
-   * \return Listado con los proyectos recientes
+   * \brief Recent history projects
+   * \return List of recent projects
    */
   virtual QStringList history() const = 0;
 
   /*!
-   * \brief Historial del proyectos recientes
-   * \return Listado con los proyectos recientes
+   * \brief Maximum history size
+   * \return Maximum history size
    */
   virtual int historyMaxSize() const = 0;
 
+  /*!
+   * \brief Image viewer Background color
+   * \return Hex value
+   */
+  virtual QString imageViewerBGcolor() const = 0;
+
+  /*!
+   * \brief Keypoints format
+   * \return "Binary", "XML" or "YML"
+   */
   virtual QString keypointsFormat() const = 0;
+
+  /*!
+   * \brief Matches format
+   * \return "Binary", "XML" or "YML"
+   */
   virtual QString matchesFormat() const = 0;
 
   virtual QSize acebsfBlockSize() const = 0;
@@ -95,6 +110,10 @@ public:
   virtual int akazeOctaves() const = 0;
   virtual int akazeOctaveLayers() const = 0;
   virtual QString akazeDiffusivity() const = 0;
+
+  virtual QString boostDescriptorType() const = 0;
+  virtual bool boostUseOrientation() const = 0;
+  virtual double boostScaleFactor() const = 0;
 
   virtual QString briefBytes() const = 0;
   virtual bool briefUseOrientation() const = 0;
@@ -209,6 +228,25 @@ public:
   virtual QString matchFundamentalComputeMethod() const = 0;
   virtual QString matchEssentialComputeMethod() const = 0;
 
+  virtual QString keypointsViewerBGColor() const = 0;
+  virtual int keypointsViewerMarkerType() const = 0;
+  virtual int keypointsViewerMarkerSize() const = 0;
+  virtual int keypointsViewerMarkerWidth() const = 0;
+  virtual QString keypointsViewerMarkerColor() const = 0;
+
+  virtual QString matchesViewerBGColor() const = 0;
+  virtual int matchesViewerMarkerType() const = 0;
+  virtual int matchesViewerMarkerSize() const = 0;
+  virtual int matchesViewerMarkerWidth() const = 0;
+  virtual QString matchesViewerMarkerColor() const = 0;
+  virtual QString matchesViewerLineColor() const = 0;
+  virtual int matchesViewerLineWidth() const = 0;
+
+  virtual QString groundTruthEditorBGColor() const = 0;
+  virtual int groundTruthEditorMarkerSize() const = 0;
+  virtual int groundTruthEditorMarkerWidth() const = 0;
+  virtual QString groundTruthEditorMarkerColor() const = 0;
+
   /*!
    * \brief read
    * \return
@@ -230,29 +268,44 @@ public:
 public slots:
 
   /*!
-   * \brief Establece el idioma del programa
-   * \param[in] language Idioma
+   * \brief Set the language
+   * \param[in] language GUI language
    */
   virtual void setLanguage(const QString &language) = 0;
 
   /*!
-   * \brief Añade un proyecto al historial
-   * \param[in] project Fichero de proyecto
+   * \brief Add a project to the history
+   * \param[in] project Project path
    */
   virtual void addToHistory(const QString &project) = 0;
 
   /*!
-   * \brief Borra el historial de proyectos recientes
+   * \brief Clear the history of recent projects
    */
   virtual void clearHistory() = 0;
 
   /*!
-   * \brief Establece el tamaño máximo de elementos del historial
-   * \param[in] maxSize Tamaño máximo del historial
+   * \brief Set the size number of history items
+   * \param[in] maxSize History size
    */
   virtual void setHistoryMaxSize(int maxSize) = 0;
 
+  /*!
+   * \brief Set Image Viewer background color
+   * \param bgColor Hex value
+   */
+  virtual void setImageViewerBGcolor(const QString &bgColor) = 0;
+
+  /*!
+   * \brief Set Keypoints format
+   * \param[in] format Supported formats: "Binary", "XML" or "YML"
+   */
   virtual void setKeypointsFormat(const QString &format) = 0;
+
+  /*!
+   * \brief Set Matches format
+   * \param[in] format Supported formats: "Binary", "XML" or "YML"
+   */
   virtual void setMatchesFormat(const QString &format) = 0;
 
   virtual void setAcebsfBlockSize(const QSize &blockSize) = 0;
@@ -303,6 +356,10 @@ public slots:
   virtual void setAkazeOctaves(int octaves) = 0;
   virtual void setAkazeOctaveLayers(int octaveLayers) = 0;
   virtual void setAkazeDiffusivity(const QString &diffusivity) = 0;
+
+  virtual void setBoostDescriptorType(const QString &descriptorType) = 0;
+  virtual void setBoostUseOrientation(bool useOrientation) = 0;
+  virtual void setBoostScaleFactor(double scaleFactor) = 0;
 
   virtual void setBriefBytes(const QString &bytes) = 0;
   virtual void setBriefUseOrientation(bool useOrientation) = 0;
@@ -417,12 +474,34 @@ public slots:
   virtual void setMatchFundamentalComputeMethod(const QString &computeMethod) = 0;
   virtual void setMatchEssentialComputeMethod(const QString &computeMethod) = 0;
 
+  virtual void setKeypointsViewerBGColor(const QString &color) = 0;
+  virtual void setKeypointsViewerMarkerType(int type) = 0;
+  virtual void setKeypointsViewerMarkerSize(int size) = 0;
+  virtual void setKeypointsViewerMarkerWidth(int width) = 0;
+  virtual void setKeypointsViewerMarkerColor(const QString &color) = 0;
+
+  virtual void setMatchesViewerBGColor(const QString &color) = 0;
+  virtual void setMatchesViewerMarkerType(int type) = 0;
+  virtual void setMatchesViewerMarkerSize(int size) = 0;
+  virtual void setMatchesViewerMarkerWidth(int width) = 0;
+  virtual void setMatchesViewerMarkerColor(const QString &color) = 0;
+  virtual void setMatchesViewerLineColor(const QString &color) = 0;
+  virtual void setMatchesViewerLineWidth(int width) = 0;
+
+  virtual void setGroundTruthEditorBGColor(const QString &bgColor) = 0;
+  virtual void setGroundTruthEditorMarkerSize(int size) = 0;
+  virtual void setGroundTruthEditorMarkerWidth(int width) = 0;
+  virtual void setGroundTruthEditorMarkerColor(const QString &color) = 0;
+
   virtual void reset() = 0;
 
 signals:
 
   void unsavedChanges(bool);
 };
+
+
+
 
 class SettingsModel
   : public ISettingsModel
@@ -443,6 +522,9 @@ public:
   QString language() const override;
   QStringList history() const override;
   int historyMaxSize() const override;
+
+  QString imageViewerBGcolor() const override;
+
   QString keypointsFormat() const override;
   QString matchesFormat() const override;
 
@@ -494,6 +576,10 @@ public:
   int akazeOctaves() const override;
   int akazeOctaveLayers() const override;
   QString akazeDiffusivity() const override;
+
+  QString boostDescriptorType() const override;
+  bool boostUseOrientation() const override;
+  double boostScaleFactor() const override;
 
   QString briefBytes() const override;
   bool briefUseOrientation() const override;
@@ -608,6 +694,25 @@ public:
   QString matchFundamentalComputeMethod() const override;
   QString matchEssentialComputeMethod() const override;
 
+  QString keypointsViewerBGColor() const override;
+  int keypointsViewerMarkerType() const override;
+  int keypointsViewerMarkerSize() const override;
+  int keypointsViewerMarkerWidth() const override;
+  QString keypointsViewerMarkerColor() const override;
+
+  QString matchesViewerBGColor() const override;
+  int matchesViewerMarkerType() const override;
+  int matchesViewerMarkerSize() const override;
+  int matchesViewerMarkerWidth() const override;
+  QString matchesViewerMarkerColor() const override;
+  QString matchesViewerLineColor() const override;
+  int matchesViewerLineWidth() const override;
+
+  QString groundTruthEditorBGColor() const override;
+  int groundTruthEditorMarkerSize() const override;
+  int groundTruthEditorMarkerWidth() const override;
+  QString groundTruthEditorMarkerColor() const override;
+
   QStringList languages() const override;
   void read() override;
   void write() override;
@@ -619,6 +724,9 @@ public slots:
   void addToHistory(const QString &project) override;
   void clearHistory() override;
   void setHistoryMaxSize(int maxSize) override;
+
+  void setImageViewerBGcolor(const QString &bgColor) override;
+
   void setKeypointsFormat(const QString &format) override;
   void setMatchesFormat(const QString &format) override;
 
@@ -670,6 +778,10 @@ public slots:
   void setAkazeOctaves(int octaves) override;
   void setAkazeOctaveLayers(int octaveLayers) override;
   void setAkazeDiffusivity(const QString &diffusivity) override;
+
+  void setBoostDescriptorType(const QString &descriptorType) override;
+  void setBoostUseOrientation(bool useOrientation) override;
+  void setBoostScaleFactor(double scaleFactor) override;
 
   void setBriefBytes(const QString &bytes) override;
   void setBriefUseOrientation(bool useOrientation) override;
@@ -783,6 +895,25 @@ public slots:
   void setMatchHomographyComputeMethod(const QString &computeMethod) override;
   void setMatchFundamentalComputeMethod(const QString &computeMethod) override;
   void setMatchEssentialComputeMethod(const QString &computeMethod) override;
+
+  void setKeypointsViewerBGColor(const QString &color) override;
+  void setKeypointsViewerMarkerType(int type) override;
+  void setKeypointsViewerMarkerSize(int size) override;
+  void setKeypointsViewerMarkerWidth(int width) override;
+  void setKeypointsViewerMarkerColor(const QString &color) override;
+
+  void setMatchesViewerBGColor(const QString &color) override;
+  void setMatchesViewerMarkerType(int type) override;
+  void setMatchesViewerMarkerSize(int size) override;
+  void setMatchesViewerMarkerWidth(int width) override;
+  void setMatchesViewerMarkerColor(const QString &color) override;
+  void setMatchesViewerLineColor(const QString &color) override;
+  void setMatchesViewerLineWidth(int width) override;
+
+  void setGroundTruthEditorBGColor(const QString &bgColor) override;
+  void setGroundTruthEditorMarkerSize(int size) override;
+  void setGroundTruthEditorMarkerWidth(int width) override;
+  void setGroundTruthEditorMarkerColor(const QString &color) override;
 
   void reset() override;
 

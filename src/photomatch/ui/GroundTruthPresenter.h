@@ -12,6 +12,7 @@ namespace photomatch
 
 class IGroundTruthView;
 class IGroundTruthModel;
+class ISettingsModel;
 class Help;
 
 class IGroundTruthPresenter
@@ -53,7 +54,8 @@ class GroundTruthPresenter
 public:
 
   GroundTruthPresenter(IGroundTruthView *view,
-                       IGroundTruthModel *model);
+                       IGroundTruthModel *model,
+                       ISettingsModel *settings);
   ~GroundTruthPresenter() override;
 
 // IGroundTruthPresenter interface
@@ -86,6 +88,7 @@ private:
 
   IGroundTruthView *mView;
   IGroundTruthModel *mModel;
+  ISettingsModel *mSettingsModel;
   std::shared_ptr<Help> mHelp;
 
 };

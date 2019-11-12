@@ -219,6 +219,7 @@ private slots:
   void test_surfOctaveLayers();
   void test_surfExtendedDescriptor();
   void test_surfRotatedFeatures();
+
   void test_siftFeaturesNumber();
   void test_siftOctaveLayers();
   void test_siftContrastThreshold();
@@ -237,6 +238,25 @@ private slots:
   void test_matchDistance();
   void test_matchConfidence();
   void test_matchCrossMatching();
+
+  void test_keypointsViewerBGColor();
+  void test_keypointsViewerMarkerType();
+  void test_keypointsViewerMarkerSize();
+  void test_keypointsViewerMarkerWidth();
+  void test_keypointsViewerMarkerColor();
+
+  void test_matchesViewerBGColor();
+  void test_matchesViewerMarkerType();
+  void test_matchesViewerMarkerSize();
+  void test_matchesViewerMarkerWidth();
+  void test_matchesViewerMarkerColor();
+  void test_matchesViewerLineColor();
+  void test_matchesViewerLineWidth();
+
+  void test_groundTruthEditorBGColor();
+  void test_groundTruthEditorMarkerSize();
+  void test_groundTruthEditorMarkerWidth();
+  void test_groundTruthEditorMarkerColor();
 
   void test_reset();
 
@@ -447,6 +467,20 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(10, settingsModel.starLineThresholdProjected());
   QCOMPARE(8, settingsModel.starLineThresholdBinarized());
   QCOMPARE(5, settingsModel.starSuppressNonmaxSize());
+
+  QCOMPARE("#dcdcdc", settingsModel.keypointsViewerBGColor());
+  QCOMPARE(0, settingsModel.keypointsViewerMarkerType());
+  QCOMPARE(20, settingsModel.keypointsViewerMarkerSize());
+  QCOMPARE(2, settingsModel.keypointsViewerMarkerWidth());
+  QCOMPARE("#e5097e", settingsModel.keypointsViewerMarkerColor());
+
+  QCOMPARE("#dcdcdc", settingsModel.matchesViewerBGColor());
+  QCOMPARE(0, settingsModel.matchesViewerMarkerType());
+  QCOMPARE(20, settingsModel.matchesViewerMarkerSize());
+  QCOMPARE(2, settingsModel.matchesViewerMarkerWidth());
+  QCOMPARE("#e5097e", settingsModel.matchesViewerMarkerColor());
+  QCOMPARE("#e5097e", settingsModel.matchesViewerLineColor());
+  QCOMPARE(2, settingsModel.matchesViewerLineWidth());
 }
 
 void TestSettingsModel::test_language()
@@ -461,7 +495,7 @@ void TestSettingsModel::test_languages()
 {
   /// Sólo se chequea el valor por defecto (si no existen ficheros de idioma)
   QStringList languages = mSettingsModel->languages();
-  QCOMPARE("fme_en.qm", languages[0]);
+  QCOMPARE("photomatch_en.qm", languages[0]);
 }
 
 void TestSettingsModel::test_history()
@@ -1296,7 +1330,103 @@ void TestSettingsModel::test_matchConfidence()
 void TestSettingsModel::test_matchCrossMatching()
 {
 //  mSettingsModel->setMatchCrossMatching(false);
-//  QCOMPARE(false, mSettingsModel->matchCrossMatching());
+  //  QCOMPARE(false, mSettingsModel->matchCrossMatching());
+}
+
+void TestSettingsModel::test_keypointsViewerBGColor()
+{
+  mSettingsModel->setKeypointsViewerBGColor("#FF00FF");
+  QCOMPARE("#FF00FF", mSettingsModel->keypointsViewerBGColor());
+}
+
+void TestSettingsModel::test_keypointsViewerMarkerType()
+{
+  mSettingsModel->setKeypointsViewerMarkerType(2);
+  QCOMPARE(2, mSettingsModel->keypointsViewerMarkerType());
+}
+
+void TestSettingsModel::test_keypointsViewerMarkerSize()
+{
+  mSettingsModel->setKeypointsViewerMarkerSize(30);
+  QCOMPARE(30, mSettingsModel->keypointsViewerMarkerSize());
+}
+
+void TestSettingsModel::test_keypointsViewerMarkerWidth()
+{
+  mSettingsModel->setKeypointsViewerMarkerWidth(3);
+  QCOMPARE(3, mSettingsModel->keypointsViewerMarkerWidth());
+}
+
+void TestSettingsModel::test_keypointsViewerMarkerColor()
+{
+  mSettingsModel->setKeypointsViewerMarkerColor("#0000FF");
+  QCOMPARE("#0000FF", mSettingsModel->keypointsViewerMarkerColor());
+}
+
+void TestSettingsModel::test_matchesViewerBGColor()
+{
+  mSettingsModel->setMatchesViewerBGColor("#FF0055");
+  QCOMPARE("#FF0055", mSettingsModel->matchesViewerBGColor());
+}
+
+void TestSettingsModel::test_matchesViewerMarkerType()
+{
+  mSettingsModel->setMatchesViewerMarkerType(2);
+  QCOMPARE(2, mSettingsModel->matchesViewerMarkerType());
+}
+
+void TestSettingsModel::test_matchesViewerMarkerSize()
+{
+  mSettingsModel->setMatchesViewerMarkerSize(30);
+  QCOMPARE(30, mSettingsModel->matchesViewerMarkerSize());
+}
+
+void TestSettingsModel::test_matchesViewerMarkerWidth()
+{
+  mSettingsModel->setMatchesViewerMarkerWidth(3);
+  QCOMPARE(3, mSettingsModel->matchesViewerMarkerWidth());
+}
+
+void TestSettingsModel::test_matchesViewerMarkerColor()
+{
+  mSettingsModel->setMatchesViewerMarkerColor("#330055");
+  QCOMPARE("#330055", mSettingsModel->matchesViewerMarkerColor());
+}
+
+void TestSettingsModel::test_matchesViewerLineColor()
+{
+  mSettingsModel->setMatchesViewerLineColor("#340155");
+  QCOMPARE("#340155", mSettingsModel->matchesViewerLineColor());
+}
+
+void TestSettingsModel::test_matchesViewerLineWidth()
+{
+  mSettingsModel->setMatchesViewerLineWidth(3);
+  QCOMPARE(3, mSettingsModel->matchesViewerLineWidth());
+}
+
+void TestSettingsModel::test_groundTruthEditorBGColor()
+{
+  mSettingsModel->setGroundTruthEditorBGColor("#FF0055");
+  QCOMPARE("#FF0055", mSettingsModel->groundTruthEditorBGColor());
+}
+
+void TestSettingsModel::test_groundTruthEditorMarkerSize()
+{
+  mSettingsModel->setGroundTruthEditorMarkerSize(30);
+  QCOMPARE(30, mSettingsModel->groundTruthEditorMarkerSize());
+}
+
+void TestSettingsModel::test_groundTruthEditorMarkerWidth()
+{
+  mSettingsModel->setGroundTruthEditorMarkerWidth(3);
+  QCOMPARE(3, mSettingsModel->groundTruthEditorMarkerWidth());
+}
+
+void TestSettingsModel::test_groundTruthEditorMarkerColor()
+{
+  mSettingsModel->setGroundTruthEditorMarkerColor("#330055");
+  QCOMPARE("#330055", mSettingsModel->groundTruthEditorMarkerColor());
 }
 
 void TestSettingsModel::test_reset()
@@ -1423,6 +1553,22 @@ void TestSettingsModel::test_reset()
   mSettingsModel->setStarLineThresholdProjected(5);
   mSettingsModel->setStarLineThresholdBinarized(4);
   mSettingsModel->setStarSuppressNonmaxSize(10);
+  mSettingsModel->setKeypointsViewerBGColor("#ffffff");
+  mSettingsModel->setKeypointsViewerMarkerType(2);
+  mSettingsModel->setKeypointsViewerMarkerSize(30);
+  mSettingsModel->setKeypointsViewerMarkerWidth(5);
+  mSettingsModel->setKeypointsViewerMarkerColor("#ffffff");
+  mSettingsModel->setMatchesViewerBGColor("#ffffff");
+  mSettingsModel->setMatchesViewerMarkerType(2);
+  mSettingsModel->setMatchesViewerMarkerSize(25);
+  mSettingsModel->setMatchesViewerMarkerWidth(5);
+  mSettingsModel->setMatchesViewerMarkerColor("#ffffff");
+  mSettingsModel->setMatchesViewerLineColor("#ffffff");
+  mSettingsModel->setMatchesViewerLineWidth(5);
+  mSettingsModel->setGroundTruthEditorBGColor("#ffffff");
+  mSettingsModel->setGroundTruthEditorMarkerSize(25);
+  mSettingsModel->setGroundTruthEditorMarkerWidth(5);
+  mSettingsModel->setGroundTruthEditorMarkerColor("#ffffff");
 
   mSettingsModel->reset();
 
@@ -1577,6 +1723,25 @@ void TestSettingsModel::test_reset()
   QCOMPARE(10, mSettingsModel->starLineThresholdProjected());
   QCOMPARE(8, mSettingsModel->starLineThresholdBinarized());
   QCOMPARE(5, mSettingsModel->starSuppressNonmaxSize());
+
+  QCOMPARE("#dcdcdc", mSettingsModel->keypointsViewerBGColor());
+  QCOMPARE(0, mSettingsModel->keypointsViewerMarkerType());
+  QCOMPARE(20, mSettingsModel->keypointsViewerMarkerSize());
+  QCOMPARE(2, mSettingsModel->keypointsViewerMarkerWidth());
+  QCOMPARE("#e5097e", mSettingsModel->keypointsViewerMarkerColor());
+
+  QCOMPARE("#dcdcdc", mSettingsModel->matchesViewerBGColor());
+  QCOMPARE(0, mSettingsModel->matchesViewerMarkerType());
+  QCOMPARE(20, mSettingsModel->matchesViewerMarkerSize());
+  QCOMPARE(2, mSettingsModel->matchesViewerMarkerWidth());
+  QCOMPARE("#e5097e", mSettingsModel->matchesViewerMarkerColor());
+  QCOMPARE("#e5097e", mSettingsModel->matchesViewerLineColor());
+  QCOMPARE(2, mSettingsModel->matchesViewerLineWidth());
+
+  QCOMPARE("#dcdcdc", mSettingsModel->groundTruthEditorBGColor());
+  QCOMPARE(20, mSettingsModel->groundTruthEditorMarkerSize());
+  QCOMPARE(2, mSettingsModel->groundTruthEditorMarkerWidth());
+  QCOMPARE("#e5097e", mSettingsModel->groundTruthEditorMarkerColor());
 }
 
 QTEST_MAIN(TestSettingsModel)

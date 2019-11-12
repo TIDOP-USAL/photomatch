@@ -12,6 +12,7 @@ namespace photomatch
 
 class IMatchViewerView;
 class IMatchViewerModel;
+class ISettingsModel;
 class Help;
 
 /*!
@@ -45,7 +46,8 @@ class MatchViewerPresenter
 public:
 
   MatchViewerPresenter(IMatchViewerView *view,
-                       IMatchViewerModel *model);
+                       IMatchViewerModel *model,
+                       ISettingsModel *settings);
 
   ~MatchViewerPresenter() override;
 
@@ -84,7 +86,7 @@ private:
   IMatchViewerView *mView;
   IMatchViewerModel *mModel;
 //  IProjectModel *mProjectModel;
-//  ISettingsModel *mSettingsModel;
+  ISettingsModel *mSettingsModel;
   std::shared_ptr<Help> mHelp;
 
 };

@@ -22,6 +22,7 @@ public:
   {
     agast,
     akaze,
+    boost,
     brief,
     brisk,
     daisy,
@@ -279,6 +280,53 @@ public:
 
 
 /*----------------------------------------------------------------*/
+
+
+class PHOTOMATCH_EXPORT IBoost
+  : public Feature
+{
+
+public:
+
+  IBoost() : Feature(Feature::Type::boost){}
+  virtual ~IBoost() = default;
+
+  virtual QString descriptorType() const = 0;
+
+  /*!
+   * \brief useOrientation
+   * \return
+   */
+  virtual bool useOrientation() const = 0;
+
+  /*!
+   * \brief scaleFactor
+   * \return
+   */
+  virtual double scaleFactor() const = 0;
+
+  /*!
+   * \brief set Descriptor Type
+   * \param[in] descriptorType
+   */
+  virtual void setDescriptorType(const QString &descriptorType) = 0;
+
+  /*!
+   * \brief setUseOrientation
+   * \param[in] useOrientation
+   */
+  virtual void setUseOrientation(bool useOrientation) = 0;
+
+  /*!
+   * \brief setScaleFactor
+   * \param[in] scaleFactor
+   */
+  virtual void setScaleFactor(double scaleFactor) = 0;
+};
+
+
+/*----------------------------------------------------------------*/
+
 
 
 /*!

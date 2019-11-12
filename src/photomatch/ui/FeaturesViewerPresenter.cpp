@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/FeaturesViewerModel.h"
 #include "photomatch/ui/FeaturesViewerView.h"
+#include "photomatch/ui/SettingsModel.h"
 
 #include <QFileInfo>
 
@@ -9,10 +10,12 @@ namespace photomatch
 {
 
 FeaturesViewerPresenter::FeaturesViewerPresenter(photomatch::IFeaturesViewerView *view,
-                                                 photomatch::IFeaturesViewerModel *model)
+                                                 photomatch::IFeaturesViewerModel *model,
+                                                 ISettingsModel *settingsModel)
   : IFeaturesViewerPresenter(),
     mView(view),
-    mModel(model)/*,
+    mModel(model),
+    mSettingsModel(settingsModel)/*,
     mHelp(nullptr)*/
 {
   init();
@@ -39,7 +42,14 @@ void FeaturesViewerPresenter::help()
 void FeaturesViewerPresenter::open()
 {
   mView->clear();
+
   mView->setSessionName(mModel->sessionName());
+  mView->setBGColor(mSettingsModel->keypointsViewerBGColor());
+  mView->setMarkerStyle(mSettingsModel->keypointsViewerMarkerColor(),
+                        mSettingsModel->keypointsViewerMarkerWidth(),
+                        mSettingsModel->keypointsViewerMarkerType(),
+                        mSettingsModel->keypointsViewerMarkerSize());
+
   mView->show();
 
   std::vector<QString> images = mModel->images();
@@ -70,6 +80,11 @@ void FeaturesViewerPresenter::setImageActive(const QString &image)
 {
   mView->setCurrentImage(image);
   loadKeypoints(image);
+}
+
+void FeaturesViewerPresenter::setPointStyle(const QPen &pen, int size)
+{
+
 }
 
 //void FeaturesViewerPresenter::activeImage(const QString &image)

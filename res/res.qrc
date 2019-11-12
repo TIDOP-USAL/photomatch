@@ -136,6 +136,13 @@
         <file>img/material/96/pr_curve_96px.png</file>
         <file>img/material/96/roc_curve_96px.png</file>
         <file>img/material/96/icons8_web_lock_96px.png</file>
+        <file>img/material/96/icons8_circled_96px.png</file>
+        <file>img/material/96/icons8_left2_96px.png</file>
+        <file>img/material/96/icons8_plus_math_96px.png</file>
+        <file>img/material/96/icons8_rhombus_96px.png</file>
+        <file>img/material/96/icons8_triangle_stroked_96px.png</file>
+        <file>img/material/96/icons8_unchecked_checkbox_96px.png</file>
+        <file>img/material/96/keypoint.png</file>
     </qresource>
     <qresource prefix="/img/logos">
         <file>img/isprs_logo.jpg</file>

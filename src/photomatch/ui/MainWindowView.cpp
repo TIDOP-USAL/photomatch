@@ -71,13 +71,14 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionPRCurves(new QAction(this)),
     mActionROCCurves(new QAction(this)),
     mActionDETCurves(new QAction(this)),
+    mActionQualityControlSettings(new QAction(this)),
     mActionNotRecentProjects(new QAction(this)),
     mActionClearHistory(new QAction(this)),
     mActionZoomIn(new QAction(this)),
     mActionZoomOut(new QAction(this)),
     mActionZoomExtend(new QAction(this)),
     mActionZoom11(new QAction(this)),
-    mActionShowKeyPoints(new QAction(this)),
+    //mActionShowKeyPoints(new QAction(this)),
     mActionSetSession(new QAction(this)),
     mActionDeleteSession(new QAction(this)),
     mGraphicViewer(nullptr),
@@ -127,6 +128,8 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
   connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
   connect(mActionDETCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(detCurves()));
+  connect(mActionQualityControlSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openQualityControlSettings()));
+
 
   /* Menú Ayuda */
 
@@ -148,7 +151,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(ui->tabWidget, SIGNAL(currentChanged(int)),    this, SLOT(tabChanged(int)));
   connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTabWidgetContextMenu(const QPoint &)));
 
-  connect(mActionShowKeyPoints, SIGNAL(toggled(bool)), this, SLOT(onShowKeyPoints(bool)));
+  //connect(mActionShowKeyPoints, SIGNAL(toggled(bool)), this, SLOT(onShowKeyPoints(bool)));
 
   /* Start Page */
   connect(ui->commandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
@@ -160,6 +163,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(ui->listWidgetRecentProjects,      SIGNAL(currentTextChanged(QString)), this, SIGNAL(openProjectFromHistory(QString)));
 
   connect(mComboBoxActiveSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(activeSessionChange(QString)));
+
 }
 
 MainWindowView::~MainWindowView()
@@ -1149,8 +1153,8 @@ void MainWindowView::showImage(const QString &file)
     contextMenu->addAction(mActionZoomOut);
     contextMenu->addAction(mActionZoomExtend);
     contextMenu->addAction(mActionZoom11);
-    contextMenu->addSeparator();
-    contextMenu->addAction(mActionShowKeyPoints);
+    //contextMenu->addSeparator();
+    //contextMenu->addAction(mActionShowKeyPoints);
     mGraphicViewer->setContextMenu(contextMenu);
   }
 
@@ -1166,10 +1170,10 @@ void MainWindowView::showImage(const QString &file)
   update();
 }
 
-bool MainWindowView::showKeyPoints() const
-{
-  return mActionShowKeyPoints->isChecked();
-}
+//bool MainWindowView::showKeyPoints() const
+//{
+//  return mActionShowKeyPoints->isChecked();
+//}
 
 void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
 {
@@ -1189,7 +1193,8 @@ void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
     mGraphicViewer->scene()->addItem(item);
 }
 
-void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF> > &matches)
+void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRight,
+                                 const std::vector<std::pair<QPointF, QPointF> > &matches)
 {
   const QSignalBlocker blocker(ui->tabWidget);
 
@@ -1230,27 +1235,26 @@ void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRig
     QImage imageRight(pairRight);
     int height = imageLeft.height() > imageRight.height() ? imageLeft.height() : imageRight.height();
     QImage pair(imageLeft.width() + imageRight.width(), height, imageLeft.format());
+
     QPainter painter;
     painter.begin(&pair);
     painter.drawImage(0, 0, imageLeft);
     painter.drawImage(imageLeft.width(), 0, imageRight);
-    QPen pen = painter.pen();
-    QBrush brush = painter.brush();
-    QPen point_pen(QColor(0, 255, 0), 2.);
+    QPen point_pen(QColor(0, 0, 255), 2.);
+    point_pen.setCosmetic(true);
     QPen line_pen(QColor(229, 9, 127), 2.);
-    QBrush _brush = QBrush(Qt::NoBrush);
-    painter.setBrush(_brush);
-    for (size_t i = 0; i < matches.size(); i++){
-      painter.setPen(line_pen);
-      painter.drawLine(matches[i].first.x(), matches[i].first.y(), imageLeft.width() + matches[i].second.x(), matches[i].second.y());
-      painter.setPen(point_pen);
-      painter.drawEllipse(matches[i].first.x() - 5, matches[i].first.y() - 5, 10, 10);
-      painter.drawEllipse(imageLeft.width()+matches[i].second.x() - 5, matches[i].second.y() - 5, 10, 10);
-    }
-    painter.setPen(pen);
-    painter.setBrush(brush);
+    line_pen.setCosmetic(true);
     painter.end();
+
     mGraphicViewer->setImage(pair);
+
+    for (size_t i = 0; i < matches.size(); i++){
+      mGraphicViewer->scene()->addLine(matches[i].first.x(), matches[i].first.y(),
+                                       imageLeft.width() + matches[i].second.x(),
+                                       matches[i].second.y(), line_pen);
+      mGraphicViewer->scene()->addEllipse(matches[i].first.x() - 5, matches[i].first.y() - 5, 10, 10, point_pen);
+    }
+
     id = ui->tabWidget->addTab(mGraphicViewer, name);
     ui->tabWidget->setCurrentIndex(id);
     ui->tabWidget->setTabToolTip(id, name);
@@ -1377,7 +1381,7 @@ void MainWindowView::update()
   mActionZoomOut->setEnabled(bImageOpen);
   mActionZoomExtend->setEnabled(bImageOpen);
   mActionZoom11->setEnabled(bImageOpen);
-  mActionShowKeyPoints->setEnabled(bImageOpen && mFlags.isActive(Flag::feature_extraction));
+  //mActionShowKeyPoints->setEnabled(bImageOpen && mFlags.isActive(Flag::feature_extraction));
 
   mComboBoxActiveSession->setDisabled(bProcessing);
   mActionSetSession->setDisabled(bProcessing);
@@ -1562,27 +1566,27 @@ void MainWindowView::onCommandLinkButtonGitHubClicked()
   QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
 }
 
-void MainWindowView::onShowKeyPoints(bool show)
-{
-  if (show){
-    // emitir señal con la imagen activa.
-    if (ui->tabWidget->count() > 0){
-      GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(ui->tabWidget->currentWidget());
+//void MainWindowView::onShowKeyPoints(bool show)
+//{
+//  if (show){
+//    // emitir señal con la imagen activa.
+//    if (ui->tabWidget->count() > 0){
+//      GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(ui->tabWidget->currentWidget());
 
-      if (graphicViewer){
-        QString file_name = ui->tabWidget->tabToolTip(ui->tabWidget->currentIndex());
-        emit loadKeyPoints(file_name);
-      }
-    }
-  } else {
-    for (auto &item : mGraphicViewer->scene()->items()) {
-      KeyPointGraphicsItem *kp = dynamic_cast<KeyPointGraphicsItem *>(item);
-      if (kp){
-        mGraphicViewer->scene()->removeItem(item);
-      }
-    }
-  }
-}
+//      if (graphicViewer){
+//        QString file_name = ui->tabWidget->tabToolTip(ui->tabWidget->currentIndex());
+//        emit loadKeyPoints(file_name);
+//      }
+//    }
+//  } else {
+//    for (auto &item : mGraphicViewer->scene()->items()) {
+//      KeyPointGraphicsItem *kp = dynamic_cast<KeyPointGraphicsItem *>(item);
+//      if (kp){
+//        mGraphicViewer->scene()->removeItem(item);
+//      }
+//    }
+//  }
+//}
 
 void MainWindowView::onTreeContextMenu(const QPoint &point)
 {
@@ -1854,6 +1858,11 @@ void MainWindowView::init()
   iconDETCurves.addFile(QStringLiteral(":/ico/24/img/material/24/det_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionDETCurves->setIcon(iconDETCurves);
 
+  mActionQualityControlSettings->setText(QApplication::translate("MainWindowView", "Quality Control Settings", nullptr));
+  QIcon iconQualityControlSettings;
+  iconQualityControlSettings.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionQualityControlSettings->setIcon(iconQualityControlSettings);
+
   mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
   mActionNotRecentProjects->setEnabled(false);
 
@@ -1882,11 +1891,11 @@ void MainWindowView::init()
   iconZoom11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionZoom11->setIcon(iconZoom11);
 
-  mActionShowKeyPoints->setText(QApplication::translate("MainWindowView", "Show Keypoints", nullptr));
-  QIcon iconZoomShowKeyPoints;
-  iconZoomShowKeyPoints.addFile(QStringLiteral(":/ico/24/img/material/24/keypoints.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionShowKeyPoints->setIcon(iconZoomShowKeyPoints);
-  mActionShowKeyPoints->setCheckable(true);
+//  mActionShowKeyPoints->setText(QApplication::translate("MainWindowView", "Show Keypoints", nullptr));
+//  QIcon iconZoomShowKeyPoints;
+//  iconZoomShowKeyPoints.addFile(QStringLiteral(":/ico/24/img/material/24/keypoints.png"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionShowKeyPoints->setIcon(iconZoomShowKeyPoints);
+//  mActionShowKeyPoints->setCheckable(true);
 
   mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
 
@@ -1996,6 +2005,8 @@ void MainWindowView::init()
   //ui->menuQualityControl->addAction(mActionPRCurves);
   ui->menuQualityControl->addAction(mActionROCCurves);
   ui->menuQualityControl->addAction(mActionDETCurves);
+  ui->menuQualityControl->addSeparator();
+  ui->menuQualityControl->addAction(mActionQualityControlSettings);
 
   /* Menu Help */
 
@@ -2026,8 +2037,8 @@ void MainWindowView::init()
   ui->toolBarView->addAction(mActionZoomOut);
   ui->toolBarView->addAction(mActionZoom11);
   ui->toolBarView->addAction(mActionZoomExtend);
-  ui->toolBarView->addSeparator();
-  ui->toolBarView->addAction(mActionShowKeyPoints);
+  //ui->toolBarView->addSeparator();
+  //ui->toolBarView->addAction(mActionShowKeyPoints);
 
   //ui->toolBarQualityControl->addAction(mActionPRCurves);
   ui->toolBarQualityControl->addAction(mActionROCCurves);

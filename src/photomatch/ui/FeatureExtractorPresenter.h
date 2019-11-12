@@ -5,6 +5,8 @@
 
 #include <QObject>
 
+#include <opencv2/core.hpp>
+
 #include "mvp.h"
 
 class MultiProcess;
@@ -19,6 +21,7 @@ class ISettingsModel;
 
 class IAgastWidget;
 class IAkazeWidget;
+class IBoostWidget;
 class IBriefWidget;
 class IBriskWidget;
 class IDaisyWidget;
@@ -63,7 +66,7 @@ public slots:
 private slots:
 
   virtual void run() = 0;
-  virtual void setCurrentkeypointDetector(const QString &featureExtractor) = 0;
+  virtual void setCurrentkeypointDetector(const QString &keypointDetector) = 0;
   virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
 
 };
@@ -103,7 +106,7 @@ public slots:
 private slots:
 
   void run() override;
-  void setCurrentkeypointDetector(const QString &featureExtractor) override;
+  void setCurrentkeypointDetector(const QString &keypointDetector) override;
   void setCurrentDescriptorExtractor(const QString &descriptorExtractor) override;
 
   void onError(int code, const QString &msg);
@@ -126,11 +129,20 @@ protected:
   IMsdWidget *mMsdDetector;
   IMserWidget *mMserDetector;
   IOrbWidget *mOrbDetector;
+#ifdef OPENCV_ENABLE_NONFREE
   ISiftWidget *mSiftDetector;
+#endif
   IStarWidget *mStarDetector;
+#ifdef OPENCV_ENABLE_NONFREE
   ISurfWidget *mSurfDetector;
+#endif
 
   IAkazeWidget *mAkazeDescriptor;
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  IBoostWidget *mBoostDescriptor;
+#  endif
+#endif
   IBriefWidget *mBriefDescriptor;
   IBriskWidget *mBriskDescriptor;
   IDaisyWidget *mDaisyDescriptor;
@@ -141,8 +153,10 @@ protected:
   ILucidWidget *mLucidDescriptor;
   ILssWidget *mLssDescriptor;
   IOrbWidget *mOrbDescriptor;
+#ifdef OPENCV_ENABLE_NONFREE
   ISiftWidget *mSiftDescriptor;
   ISurfWidget *mSurfDescriptor;
+#endif
   MultiProcess *mMultiProcess;
 
   ProgressHandler *mProgressHandler;

@@ -75,6 +75,9 @@ public slots:
 
   virtual void setTransform(const QTransform &trf) = 0;
 
+  virtual void setBGColor(const QString &bgColor) = 0;
+  virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
+
 signals:
 
   void leftImageChange(QString);
@@ -132,6 +135,8 @@ public slots:
   void clickedPointLeft(const QPointF &pt) override;
   void clickedPointRight(const QPointF &pt) override;
   void setTransform(const QTransform &trf) override;
+  void setBGColor(const QString &bgColor) override;
+  void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
 
 // IDialogView interface
 
@@ -172,6 +177,10 @@ protected:
   bool bUnsavedChanges;
   QTransform mTrf;
   bool bLockViews;
+  QString mMarkerColor;
+  int mMarkerSize;
+  int mMarkerWidth;
+  int mMarkerType;
 };
 
 } // namespace photomatch

@@ -12,6 +12,7 @@ namespace photomatch
 
 class IFeaturesViewerView;
 class IFeaturesViewerModel;
+class ISettingsModel;
 class Help;
 
 
@@ -30,6 +31,7 @@ public slots:
 
   virtual void setSession(const QString &session) = 0;
   virtual void setImageActive(const QString &image) = 0;
+  virtual void setPointStyle(const QPen &pen, int size) = 0;
 
 protected slots:
 
@@ -47,7 +49,8 @@ class FeaturesViewerPresenter
 public:
 
   FeaturesViewerPresenter(IFeaturesViewerView *view,
-                          IFeaturesViewerModel *model);
+                          IFeaturesViewerModel *model,
+                          ISettingsModel *settingsModel);
   ~FeaturesViewerPresenter() override;
 
 // IPresenter interface
@@ -67,6 +70,7 @@ public slots:
 
   void setSession(const QString &session) override;
   void setImageActive(const QString &image) override;
+  void setPointStyle(const QPen &pen, int size) override;
 
 protected slots:
 
@@ -77,6 +81,7 @@ private:
 
   IFeaturesViewerView *mView;
   IFeaturesViewerModel *mModel;
+  ISettingsModel *mSettingsModel;
   std::shared_ptr<Help> mHelp;
 };
 

@@ -5,6 +5,8 @@
 
 #include <QObject>
 
+#include <opencv2/core.hpp>
+
 #include "mvp.h"
 
 namespace photomatch
@@ -30,6 +32,7 @@ class IWallisWidget;
 /* Feature detector/extractor */
 class IAgastWidget;
 class IAkazeWidget;
+class IBoostWidget;
 class IBriefWidget;
 class IBriskWidget;
 class IDaisyWidget;
@@ -137,6 +140,11 @@ protected:
 
   IAgastWidget *mAgast;
   IAkazeWidget *mAkaze;
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  IBoostWidget *mBoost;
+#  endif
+#endif
   IBriefWidget *mBrief;
   IBriskWidget *mBrisk;
   IDaisyWidget *mDaisy;
@@ -150,9 +158,13 @@ protected:
   IMsdWidget *mMsd;
   IMserWidget *mMser;
   IOrbWidget *mOrb;
+#ifdef OPENCV_ENABLE_NONFREE
   ISiftWidget *mSift;
+#endif
   IStarWidget *mStar;
+#ifdef OPENCV_ENABLE_NONFREE
   ISurfWidget *mSurf;
+#endif
 
   IDescriptorMatcherWidget *mMatcher;
 

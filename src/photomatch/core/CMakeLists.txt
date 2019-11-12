@@ -21,6 +21,8 @@ add_library(libcore ${LIB_TYPE}
             features/agast.cpp
             features/akaze.h
             features/akaze.cpp
+            features/boost.h
+            features/boost.cpp
             features/brief.h
             features/brief.cpp
             features/brisk.h

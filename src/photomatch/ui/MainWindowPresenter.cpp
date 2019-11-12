@@ -57,6 +57,7 @@
 #include <QMessageBox>
 #include <QImageReader>
 #include <QProgressBar>
+#include <QMenu>
 
 namespace photomatch
 {
@@ -134,6 +135,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView,  SIGNAL(prCurves()),                 this, SLOT(openPRCurvesViewer()));
   connect(mView,  SIGNAL(rocCurves()),                this, SLOT(openROCCurvesViewer()));
   connect(mView,  SIGNAL(detCurves()),                this, SLOT(openDETCurvesViewer()));
+  connect(mView,  SIGNAL(openQualityControlSettings()),
+          this,   SLOT(openQualityControlSettings()));
 
   /* Menú herramientas */
 
@@ -637,6 +640,11 @@ void MainWindowPresenter::openDETCurvesViewer()
   mCurvesDETViewerPresenter->open();
 }
 
+void MainWindowPresenter::openQualityControlSettings()
+{
+  initSettingsDialog();
+  mSettingsPresenter->openPage(3);
+}
 
 void MainWindowPresenter::loadImages()
 {
@@ -761,9 +769,9 @@ void MainWindowPresenter::updateProject()
 void MainWindowPresenter::openImage(const QString &image)
 {
   mView->showImage(image);
-  if (mView->showKeyPoints()){
-    this->loadKeyPoints(image);
-  }
+//  if (mView->showKeyPoints()){
+//    this->loadKeyPoints(image);
+//  }
 }
 
 void MainWindowPresenter::activeImage(const QString &image)
@@ -1426,6 +1434,14 @@ void MainWindowPresenter::initProgress()
     mProgressDialog = new ProgressDialog;
 
     QProgressBar *statusBarProgress = mView->progressBar();
+//    QAction *mAction = new QAction(tr(""), statusBarProgress);
+//    QMenu *contextMenuProgressBar = new QMenu(statusBarProgress);
+//    contextMenuProgressBar->addAction(mAction);
+//    statusBarProgress->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+//    statusBarProgress->setContextMenu(contextMenuProgressBar);
+
+//    connect(mAction, SIGNAL(triggered(bool)),   statusBarProgress,   SLOT(hide()));
+//    connect(mAction, SIGNAL(triggered(bool)),   mProgressDialog,     SLOT(show()));
 
     mProgressHandler = new ProgressHandler;
 
@@ -1450,7 +1466,7 @@ void MainWindowPresenter::initFeaturesViewer()
     mFeaturesViewerModel = new FeaturesViewerModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     IFeaturesViewerView *featuresViewerView = new FeaturesViewerView(mView, f);
-    mFeaturesViewerPresenter = new FeaturesViewerPresenter(featuresViewerView, mFeaturesViewerModel);
+    mFeaturesViewerPresenter = new FeaturesViewerPresenter(featuresViewerView, mFeaturesViewerModel, mSettingsModel);
     //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }
@@ -1461,7 +1477,7 @@ void MainWindowPresenter::initMatchesViewer()
     mMatchesViewerModel = new MatchViewerModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     IMatchViewerView *matchViewerView = new MatchViewerView(mView, f);
-    mMatchesViewerPresenter = new MatchViewerPresenter(matchViewerView, mMatchesViewerModel);
+    mMatchesViewerPresenter = new MatchViewerPresenter(matchViewerView, mMatchesViewerModel, mSettingsModel);
     //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }
@@ -1472,7 +1488,7 @@ void MainWindowPresenter::initGroundTruthEditor()
     mGroundTruthModel = new GroundTruthModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     IGroundTruthView *groundTruthView = new GroundTruthView(mView, f);
-    mGroundTruthPresenter = new GroundTruthPresenter(groundTruthView, mGroundTruthModel);
+    mGroundTruthPresenter = new GroundTruthPresenter(groundTruthView, mGroundTruthModel, mSettingsModel);
 
     connect(mGroundTruthPresenter, SIGNAL(groundTruthAdded()), this, SLOT(groundTruthAdded()));
   }

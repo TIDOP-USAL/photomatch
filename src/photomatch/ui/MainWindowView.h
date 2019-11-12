@@ -107,7 +107,7 @@ public slots:
    */
   void showImage(const QString &file);
 
-  bool showKeyPoints() const;
+  //bool showKeyPoints() const;
   //void setKeyPoints(const std::vector<QPointF> &keyPoints);
   //void setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints);
   void addKeyPoint(const QPointF &pt, double size, double angle);
@@ -158,6 +158,7 @@ signals:
   void prCurves();
   void rocCurves();
   void detCurves();
+  void openQualityControlSettings();
 
   /* Menú Ayuda */
 
@@ -201,7 +202,7 @@ private slots:
   void onItemDoubleClicked(QTreeWidgetItem *item, int column);
   void openStartPage();
   void onCommandLinkButtonGitHubClicked();
-  void onShowKeyPoints(bool show);
+  //void onShowKeyPoints(bool show);
   void onTreeContextMenu(const QPoint &point);
   void onTabWidgetContextMenu(const QPoint &point);
 
@@ -248,13 +249,14 @@ protected:
   QAction *mActionPRCurves;
   QAction *mActionROCCurves;
   QAction *mActionDETCurves;
+  QAction *mActionQualityControlSettings;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
   QAction *mActionZoomIn;
   QAction *mActionZoomOut;
   QAction *mActionZoomExtend;
   QAction *mActionZoom11;
-  QAction *mActionShowKeyPoints;
+  //QAction *mActionShowKeyPoints;
   QAction *mActionSetSession;
   QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;

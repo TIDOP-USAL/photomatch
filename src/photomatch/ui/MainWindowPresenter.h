@@ -91,6 +91,7 @@ protected slots:
   void openPRCurvesViewer();
   void openROCCurvesViewer();
   void openDETCurvesViewer();
+  void openQualityControlSettings();
 
   /* Menú herramientas */
 

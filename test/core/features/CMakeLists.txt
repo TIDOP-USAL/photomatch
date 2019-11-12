@@ -1,5 +1,6 @@
 add_subdirectory(agastdetector)
 add_subdirectory(akazedetectordescriptor)
+add_subdirectory(boostdescriptor)
 add_subdirectory(briskdetectordescriptor)
 add_subdirectory(briefdescriptor)
 add_subdirectory(daisydescriptor)

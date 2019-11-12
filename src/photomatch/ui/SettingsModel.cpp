@@ -2,6 +2,7 @@
 
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/boost.h"
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
 #include "photomatch/core/features/daisy.h"
@@ -68,6 +69,11 @@ QStringList SettingsModel::history() const
 int SettingsModel::historyMaxSize() const
 {
   return mSettings->historyMaxSize();
+}
+
+QString SettingsModel::imageViewerBGcolor() const
+{
+  return mSettings->imageViewerBGcolor();
 }
 
 QString SettingsModel::keypointsFormat() const
@@ -253,6 +259,21 @@ int SettingsModel::akazeOctaveLayers() const
 QString SettingsModel::akazeDiffusivity() const
 {
   return mSettings->akaze()->diffusivity();
+}
+
+QString SettingsModel::boostDescriptorType() const
+{
+  return mSettings->boost()->descriptorType();
+}
+
+bool SettingsModel::boostUseOrientation() const
+{
+  return mSettings->boost()->useOrientation();
+}
+
+double SettingsModel::boostScaleFactor() const
+{
+  return mSettings->boost()->scaleFactor();
 }
 
 QString SettingsModel::briefBytes() const
@@ -785,6 +806,86 @@ QString SettingsModel::matchEssentialComputeMethod() const
   return essentialComputeMethod;
 }
 
+QString SettingsModel::keypointsViewerBGColor() const
+{
+  return mSettings->keypointsViewerBGColor();
+}
+
+int SettingsModel::keypointsViewerMarkerType() const
+{
+  return mSettings->keypointsViewerMarkerType();
+}
+
+int SettingsModel::keypointsViewerMarkerSize() const
+{
+  return mSettings->keypointsViewerMarkerSize();
+}
+
+int SettingsModel::keypointsViewerMarkerWidth() const
+{
+  return mSettings->keypointsViewerMarkerWidth();
+}
+
+QString SettingsModel::keypointsViewerMarkerColor() const
+{
+  return mSettings->keypointsViewerMarkerColor();
+}
+
+QString SettingsModel::matchesViewerBGColor() const
+{
+  return mSettings->matchesViewerBGColor();
+}
+
+int SettingsModel::matchesViewerMarkerType() const
+{
+  return mSettings->matchesViewerMarkerType();
+}
+
+int SettingsModel::matchesViewerMarkerSize() const
+{
+  return mSettings->matchesViewerMarkerSize();
+}
+
+int SettingsModel::matchesViewerMarkerWidth() const
+{
+  return mSettings->matchesViewerMarkerWidth();
+}
+
+QString SettingsModel::matchesViewerMarkerColor() const
+{
+  return mSettings->matchesViewerMarkerColor();
+}
+
+QString SettingsModel::matchesViewerLineColor() const
+{
+  return mSettings->matchesViewerLineColor();
+}
+
+int SettingsModel::matchesViewerLineWidth() const
+{
+  return mSettings->matchesViewerLineWidth();
+}
+
+QString SettingsModel::groundTruthEditorBGColor() const
+{
+  return mSettings->groundTruthEditorBGColor();
+}
+
+int SettingsModel::groundTruthEditorMarkerSize() const
+{
+  return mSettings->groundTruthEditorMarkerSize();
+}
+
+int SettingsModel::groundTruthEditorMarkerWidth() const
+{
+  return mSettings->groundTruthEditorMarkerWidth();
+}
+
+QString SettingsModel::groundTruthEditorMarkerColor() const
+{
+  return mSettings->groundTruthEditorMarkerColor();
+}
+
 void SettingsModel::setLanguage(const QString &language)
 {
   mSettings->setLanguage(language);
@@ -806,6 +907,12 @@ void SettingsModel::clearHistory()
 void SettingsModel::setHistoryMaxSize(int maxSize)
 {
   mSettings->setHistoryMaxSize(maxSize);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setImageViewerBGcolor(const QString &bgColor)
+{
+  mSettings->setImageViewerBGcolor(bgColor);
   emit unsavedChanges(true);
 }
 
@@ -1028,6 +1135,24 @@ void SettingsModel::setAkazeOctaveLayers(int octaveLayers)
 void SettingsModel::setAkazeDiffusivity(const QString &diffusivity)
 {
   mSettings->akaze()->setDiffusivity(diffusivity);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBoostDescriptorType(const QString &descriptorType)
+{
+  mSettings->boost()->setDescriptorType(descriptorType);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBoostUseOrientation(bool useOrientation)
+{
+  mSettings->boost()->setUseOrientation(useOrientation);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setBoostScaleFactor(double scaleFactor)
+{
+  mSettings->boost()->setScaleFactor(scaleFactor);
   emit unsavedChanges(true);
 }
 
@@ -1648,6 +1773,102 @@ void SettingsModel::setMatchEssentialComputeMethod(const QString &computeMethod)
     essentialComputeMethod = IRobustMatcherRefinement::EssentialComputeMethod::lmeds;
   }
   mSettings->robustMatcherRefinement()->setEssentialComputeMethod(essentialComputeMethod);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsViewerBGColor(const QString &color)
+{
+  mSettings->setKeypointsViewerBGColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsViewerMarkerType(int type)
+{
+  mSettings->setKeypointsViewerMarkerType(type);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsViewerMarkerSize(int size)
+{
+  mSettings->setKeypointsViewerMarkerSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsViewerMarkerWidth(int width)
+{
+  mSettings->setKeypointsViewerMarkerWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsViewerMarkerColor(const QString &color)
+{
+  mSettings->setKeypointsViewerMarkerColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerBGColor(const QString &color)
+{
+  mSettings->setMatchesViewerBGColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerMarkerType(int type)
+{
+  mSettings->setMatchesViewerMarkerType(type);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerMarkerSize(int size)
+{
+  mSettings->setMatchesViewerMarkerSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerMarkerWidth(int width)
+{
+  mSettings->setMatchesViewerMarkerWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerMarkerColor(const QString &color)
+{
+  mSettings->setMatchesViewerMarkerColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerLineColor(const QString &color)
+{
+  mSettings->setMatchesViewerLineColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerLineWidth(int width)
+{
+  mSettings->setMatchesViewerLineWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGroundTruthEditorBGColor(const QString &bgColor)
+{
+  mSettings->setGroundTruthEditorBGColor(bgColor);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGroundTruthEditorMarkerSize(int size)
+{
+  mSettings->setGroundTruthEditorMarkerSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGroundTruthEditorMarkerWidth(int width)
+{
+  mSettings->setGroundTruthEditorMarkerWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGroundTruthEditorMarkerColor(const QString &color)
+{
+  mSettings->setGroundTruthEditorMarkerColor(color);
   emit unsavedChanges(true);
 }
 
