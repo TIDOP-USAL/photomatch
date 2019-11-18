@@ -57,6 +57,8 @@ add_library(libcore ${LIB_TYPE}
             features/surf.cpp
             features/orb.h
             features/orb.cpp
+            features/vgg.h
+            features/vgg.cpp
             features/matcher.cpp
             features/matcher.h
             features/evaluation.h

@@ -39,11 +39,10 @@ public:
     orb,
     sift,
     star,
-    surf
+    surf,
+    vgg
   };
 ///TODO: GLOH -> https://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/mikolajczyk_pami2004.pdf
-///      cv::xfeatures2d::BoostDesc
-///      cv::xfeatures2d::VGG
 
 public:
 
@@ -1224,6 +1223,60 @@ public:
 
 };
 
+/*----------------------------------------------------------------*/
+
+/*!
+ * \brief The IVgg class
+ * K. Simonyan, A. Vedaldi, and A. Zisserman. Learning local feature
+ * descriptors using convex optimisation. IEEE Transactions on Pattern
+ * Analysis and Machine Intelligence, 2014.
+ */
+class PHOTOMATCH_EXPORT IVgg
+  : public Feature
+{
+public:
+
+  IVgg() : Feature(Feature::Type::vgg) {}
+  virtual ~IVgg() = default;
+
+  /*!
+   * \brief Type of descriptor to use
+   * Available types are VGG_120 (default), VGG_80, VGG_64, VGG_48
+   * \return Type of descriptor
+   */
+  virtual QString descriptorType() const = 0;
+
+  /*!
+   * \brief Set the type of descriptor to use
+   * Available types are VGG_120 (default), VGG_80, VGG_64, VGG_48
+   * \param[in] descriptorType Type of descriptor to use.
+   */
+  virtual void setDescriptorType(const QString &descriptorType) = 0;
+
+  virtual double scaleFactor() const = 0;
+  virtual void 	setScaleFactor(double scaleFactor) = 0;
+
+  /*!
+   * \brief Gaussian kernel value for image blur
+   * \return Gaussian kernel value
+   */
+  virtual double sigma() const = 0;
+
+  /*!
+   * \brief Set gaussian kernel value for image blur (default is 1.4f)
+   * \param[in] sigma
+   */
+  virtual void 	setSigma(double sigma) = 0;
+
+  virtual bool 	useNormalizeDescriptor() const = 0;
+  virtual void 	setUseNormalizeDescriptor(bool useNormalizeDescriptor) = 0;
+
+  virtual bool 	useNormalizeImage() const = 0;
+  virtual void 	setUseNormalizeImage(bool useNormalizeImage) = 0;
+
+  virtual bool 	useScaleOrientation() const = 0;
+  virtual void 	setUseScaleOrientation(bool useScaleOrientation) = 0;
+};
 
 /*----------------------------------------------------------------*/
 
