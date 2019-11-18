@@ -73,12 +73,11 @@ void DiagonalCrossGraphicItem::paint(QPainter *painter, const QStyleOptionGraphi
   } else {
     painter->setPen(mPen);
   }  
-  int halfSize = static_cast<int>(mSize / 2);
-  int x = static_cast<int>(mCenter.x());
-  int y = static_cast<int>(mCenter.y());
-  painter->drawLine(x - halfSize, y - halfSize, x + halfSize, y + halfSize);
-  painter->drawLine(x - halfSize, y + halfSize, x + halfSize, y - halfSize);
-
+  double halfSize = mSize / 2.;
+  double x = mCenter.x();
+  double y = mCenter.y();
+  painter->drawLine(QPointF(x - halfSize, y - halfSize), QPointF(x + halfSize, y + halfSize));
+  painter->drawLine(QPointF(x - halfSize, y + halfSize), QPointF(x + halfSize, y - halfSize));
 }
 
 } // namespace photomatch

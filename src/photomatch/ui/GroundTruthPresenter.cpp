@@ -24,17 +24,20 @@ GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
 
   connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
   connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
-  //connect(mView, SIGNAL(markedLeftPoint(QPointF)),         this, SLOT(markedLeftPoint(QPointF)));
-  //connect(mView, SIGNAL(markedRightPoint(QPointF)),        this, SLOT(markedRightPoint(QPointF)));
-  connect(mView, SIGNAL(addPoint(QString,QPointF,QString,QPointF)),
-          this, SLOT(addPoint(QString,QPointF,QString,QPointF)));
-
+  connect(mView, SIGNAL(addHomologousPoints(QString,QPointF,QString,QPointF)),
+          this, SLOT(addHomologousPoints(QString,QPointF,QString,QPointF)));
   connect(mView, SIGNAL(loadHomologousPoints(QString, QString)),    this, SLOT(loadGroundTruth(QString, QString)));
-//  connect(mView, SIGNAL(deleteHomologousPoint(QString, QString, int)),
-//          this,  SLOT(deleteMatch(QString, QString, int, int)));
+  connect(mView, SIGNAL(deleteHomologous(QString, QString, int)), this,  SLOT(deleteHomologous(QString, QString, int)));
   connect(mView, SIGNAL(importGroundTruth()), this, SLOT(importGroundTruth()));
+  connect(mView, SIGNAL(saveGroundTruth()),   this, SLOT(save()));
+  connect(mView, SIGNAL(selectHomologous(QString, QString, int)), this, SLOT(selectHomologous(QString, QString, int)));
+  connect(mView, SIGNAL(leftPointClicked(QString, QString, QPointF)), this, SLOT(leftPointClicked(QString, QString, QPointF)));
+  connect(mView, SIGNAL(rightPointClicked(QString, QString, QPointF)), this, SLOT(rightPointClicked(QString, QString, QPointF)));
+  connect(mView, SIGNAL(findLeftPoint(QString, QString, QPointF)), this, SLOT(findLeftPoint(QString, QString, QPointF)));
+  connect(mView, SIGNAL(findRightPoint(QString, QString, QPointF)), this, SLOT(findRightPoint(QString, QString, QPointF)));
 
-  connect(mView, SIGNAL(accepted()), this, SLOT(save()));
+
+  //connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 
@@ -66,8 +69,19 @@ void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QStri
   std::vector<std::pair<QPointF, QPointF>> homologousPoints = mModel->groundTruth(imageLeft, imageRight);
 
   mView->setHomologousPoints(homologousPoints);
-  QTransform trf = mModel->transform(imageLeft, imageRight);
-  mView->setTransform(trf);
+
+  std::vector<double> distances;
+  double rmse;
+  QTransform trf = mModel->transform(imageLeft, imageRight, &distances, &rmse);
+  if (!trf.isIdentity()){
+    for(size_t i = 0; i < distances.size(); i++){
+      if (distances[i] >= 0)
+        mView->setHomologousDistance(static_cast<int>(i+1), distances[i]);
+    }
+    mView->enableLockView(true);
+  } else {
+    mView->enableLockView(false);
+  }
 }
 
 //void GroundTruthPresenter::markedLeftPoint(const QPointF &pt)
@@ -80,12 +94,54 @@ void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QStri
 //  mView->setPointRight(pt);
 //}
 
-void GroundTruthPresenter::addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
+void GroundTruthPresenter::addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
 {
-  mModel->addHomologusPoints(image1, pt1, image2, pt2);
-  QTransform trf = mModel->transform(image1, image2);
-  mView->setTransform(trf);
-  mView->addHomologousPoint(pt1, pt2);
+  // Se añade el punto al modelo
+  mModel->addHomologus(image1, pt1, image2, pt2);
+
+  // Se añade el punto a la vista
+  mView->addHomologous(pt1, pt2);
+  mView->unselectHomologous();
+
+  // Se actualiza la transformación y los errores
+  std::vector<double> distances;
+  double rmse;
+  QTransform trf = mModel->transform(image1, image2, &distances, &rmse);
+  if (!trf.isIdentity()){
+    for(size_t i = 0; i < distances.size(); i++){
+      if (distances[i] >= 0)
+        mView->setHomologousDistance(static_cast<int>(i+1), distances[i]);
+    }
+    mView->enableLockView(true);
+  } else {
+    mView->enableLockView(false);
+  }
+
+  mView->setUnsavedChanges(true);
+}
+
+void GroundTruthPresenter::deleteHomologous(const QString &image1, const QString &image2, int pointId)
+{
+  // Se borra el punto en el modelo
+  mModel->deleteHomologus(image1, image2, pointId);
+
+  // Se borra el punto en la vista
+  mView->deleteHomologous(pointId);
+
+  // Se actualiza la transformación y los errores
+  std::vector<double> distances;
+  double rmse;
+  QTransform trf = mModel->transform(image1, image2, &distances, &rmse);
+  if (!trf.isIdentity()){
+    for(size_t i = 0; i < distances.size(); i++){
+      if (distances[i] >= 0)
+        mView->setHomologousDistance(static_cast<int>(i+1), distances[i]);
+    }
+    mView->enableLockView(true);
+  } else {
+    mView->enableLockView(false);
+  }
+
   mView->setUnsavedChanges(true);
 }
 
@@ -96,13 +152,52 @@ void GroundTruthPresenter::importGroundTruth()
                                               mModel->projectPath(),
                                               tr("Ground Truth (*.txt)"));
   if (!file.isEmpty()) {
-
     mModel->setGroundTruth(file);
   }
 
-  loadGroundTruth(mView->imageLeft(), mView->imageRight());
+  loadGroundTruth(mView->leftImage(), mView->rightImage());
 
   emit groundTruthAdded();
+}
+
+void GroundTruthPresenter::selectHomologous(const QString &image1,
+                                                 const QString &image2,
+                                                 int pointId)
+{
+  std::pair<QPointF, QPointF> homologus = mModel->homologus(image1, image2, pointId);
+  mView->setSelectedHomologous(homologus.first, homologus.second);
+}
+
+void GroundTruthPresenter::leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
+{
+  mView->setSelectLeftPoint(pt, true);
+}
+
+void GroundTruthPresenter::rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
+{
+  mView->setSelectedRightPoint(pt, true);
+}
+
+void GroundTruthPresenter::findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
+{
+  QPointF point_left = mModel->findLeftPoint(image1, image2, pt);
+  mView->setSelectLeftPoint(point_left, true);
+  if (point_left.isNull()) {
+    mView->setCenterLeftViewer(mModel->findProjectedLeftPoint(image1, image2, pt));
+  } else {
+    mView->setCenterLeftViewer(point_left);
+  }
+}
+
+void GroundTruthPresenter::findRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
+{
+  QPointF point_right = mModel->findRightPoint(image1, image2, pt);
+  mView->setSelectedRightPoint(point_right, true);
+  if (point_right.isNull()) {
+    mView->setCenterRightViewer(mModel->findProjectedRightPoint(image1, image2, pt));
+  } else {
+    mView->setCenterRightViewer(point_right);
+  }
 }
 
 void GroundTruthPresenter::save()
@@ -126,11 +221,11 @@ void GroundTruthPresenter::open()
 {
   mView->clear();
 
-  mView->setBGColor(mSettingsModel->matchesViewerBGColor());
-  mView->setMarkerStyle(mSettingsModel->matchesViewerMarkerColor(),
-                        mSettingsModel->matchesViewerMarkerWidth(),
-                        mSettingsModel->matchesViewerMarkerType(),
-                        mSettingsModel->matchesViewerMarkerSize());
+  mView->setBGColor(mSettingsModel->groundTruthEditorBGColor());
+  mView->setMarkerStyle(mSettingsModel->groundTruthEditorMarkerColor(),
+                        mSettingsModel->groundTruthEditorMarkerWidth(),
+                        2,
+                        mSettingsModel->groundTruthEditorMarkerSize());
   mView->show();
 
   mModel->loadGroundTruth();

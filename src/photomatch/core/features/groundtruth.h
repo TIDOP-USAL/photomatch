@@ -33,7 +33,7 @@ public:
 
   HomologusPoints(const QString &idImg1, const QString &idImg2);
 
-  void addPoints(const QPointF &pt1, QPointF &pt2);
+  void addPoints(const QPointF &pt1, const QPointF &pt2);
 
   iterator begin();
   const_iterator begin() const;

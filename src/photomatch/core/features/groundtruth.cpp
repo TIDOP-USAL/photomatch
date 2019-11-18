@@ -13,7 +13,7 @@ HomologusPoints::HomologusPoints(const QString &idImg1, const QString &idImg2)
     mHomologusPoints(0)
 {}
 
-void HomologusPoints::addPoints(const QPointF &pt1, QPointF &pt2)
+void HomologusPoints::addPoints(const QPointF &pt1, const QPointF &pt2)
 {
   mHomologusPoints.push_back(std::make_pair(pt1, pt2));
 }
@@ -120,13 +120,14 @@ cv::Mat HomologusPoints::homography() const
 
 
   for (size_t i = 0; i < mHomologusPoints.size(); i++){
-    pts_query.push_back(
+    if (!mHomologusPoints[i].first.isNull() && !mHomologusPoints[i].second.isNull()){
+      pts_query.push_back(
           cv::Point2f(static_cast<float>(mHomologusPoints[i].first.x()),
                       static_cast<float>(mHomologusPoints[i].first.y())));
-    pts_train.push_back(
+      pts_train.push_back(
           cv::Point2f(static_cast<float>(mHomologusPoints[i].second.x()),
                       static_cast<float>(mHomologusPoints[i].second.y())));
-
+    }
   }
 
   cv::Mat H;
@@ -136,6 +137,7 @@ cv::Mat HomologusPoints::homography() const
     /// ...
   }
   /// TODO: Ver si interesa... cv::correctMatches
+
   return H;
 }
 
@@ -202,7 +204,6 @@ void GroundTruth::read(const QString &gtFile)
 
 void GroundTruth::write(const QString &gtFile)
 {
-
   std::ofstream ofs(gtFile.toStdString(), std::ofstream::trunc);
   if (ofs.is_open()){
 

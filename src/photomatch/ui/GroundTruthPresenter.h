@@ -33,8 +33,14 @@ protected slots:
   virtual void loadGroundTruth(const QString &imageLeft, const QString &imageRight) = 0;
   //virtual void markedLeftPoint(const QPointF &pt) = 0;
   //virtual void markedRightPoint(const QPointF &pt) = 0;
-  virtual void addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
+  virtual void addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
+  virtual void deleteHomologous(const QString &image1, const QString &image2, int pointId) = 0;
   virtual void importGroundTruth() = 0;
+  virtual void selectHomologous(const QString &image1, const QString &image2, int pointId) = 0;
+  virtual void leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt) = 0;
+  virtual void rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt) = 0;
+  virtual void findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
+  virtual void findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
 
   virtual void save() = 0;
   virtual void discart() = 0;
@@ -67,8 +73,14 @@ protected slots:
   void loadGroundTruth(const QString &imageLeft, const QString &imageRight) override;
   //void markedLeftPoint(const QPointF &pt) override;
   //void markedRightPoint(const QPointF &pt) override;
-  void addPoint(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
+  void addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
+  void deleteHomologous(const QString &image1, const QString &image2, int pointId) override;
   void importGroundTruth() override;
+  void selectHomologous(const QString &image1, const QString &image2, int pointId) override;
+  void leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt) override;
+  void rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt) override;
+  void findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
+  void findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
 
   void save() override;
   void discart() override;
