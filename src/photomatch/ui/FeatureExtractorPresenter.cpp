@@ -25,6 +25,7 @@
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
+#include "photomatch/core/features/vgg.h"
 
 #include "photomatch/ui/FeatureExtractorModel.h"
 #include "photomatch/ui/FeatureExtractorView.h"
@@ -59,6 +60,11 @@
 #include "photomatch/widgets/StarWidget.h"
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
+#endif
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/widgets/VggWidget.h"
+#endif
 #endif
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/features/FeatureExtractorProcess.h"
@@ -116,6 +122,11 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
 #ifdef OPENCV_ENABLE_NONFREE
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
+#endif
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+    mVggDescriptor(new VggWidget),
+#endif
 #endif
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
@@ -270,6 +281,15 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     delete mSurfDescriptor;
     mSurfDescriptor = nullptr;
   }
+#endif
+
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+  if (mVggDescriptor){
+    delete mVggDescriptor;
+    mVggDescriptor = nullptr;
+  }
+#endif
 #endif
 
   if (mMultiProcess){
@@ -756,6 +776,31 @@ void FeatureExtractorPresenter::open()
 
 #endif
 
+  /* Vgg */
+
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mVggDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->descriptorType() :
+                                        mSettingsModel->vggDescriptorType());
+  mVggDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                     dynamic_cast<IVgg *>(descriptor)->scaleFactor() :
+                                     mSettingsModel->vggScaleFactor());
+  mVggDescriptor->setSigma(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->sigma() :
+                                        mSettingsModel->vggSigma());
+  mVggDescriptor->setUseNormalizeDescriptor(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->useNormalizeDescriptor() :
+                                        mSettingsModel->vggUseNormalizeDescriptor());
+  mVggDescriptor->setUseNormalizeImage(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->useNormalizeImage() :
+                                        mSettingsModel->vggUseNormalizeImage());
+  mVggDescriptor->setUseScaleOrientation(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                     dynamic_cast<IVgg *>(descriptor)->useScaleOrientation() :
+                                     mSettingsModel->vggUseScaleOrientation());
+#  endif
+#endif
+
   mView->setSessionName(mProjectModel->currentSession()->name());
   mView->exec();
 }
@@ -795,6 +840,11 @@ void FeatureExtractorPresenter::init()
   mView->addDescriptorExtractor(mLucidDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mView->addDescriptorExtractor(mVggDescriptor);
+#  endif
+#endif
 #ifdef OPENCV_ENABLE_NONFREE
   mView->addDescriptorExtractor(mSiftDescriptor);
   mView->addDescriptorExtractor(mSurfDescriptor);
@@ -1073,6 +1123,18 @@ void FeatureExtractorPresenter::run()
     }
   } 
 #endif
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  else if (currentDescriptorExtractor.compare("VGG") == 0){
+    descriptorExtractor = std::make_shared<VggDescriptor>(mVggDescriptor->descriptorType(),
+                                                          mVggDescriptor->scaleFactor(),
+                                                          mVggDescriptor->sigma(),
+                                                          mVggDescriptor->useNormalizeDescriptor(),
+                                                          mVggDescriptor->useNormalizeImage(),
+                                                          mVggDescriptor->useScaleOrientation());
+  }
+#  endif
+#endif
   else {
     ///TODO: error
     return;
@@ -1234,7 +1296,8 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
 {
 #if CV_VERSION_MAJOR >= 3
 #  if CV_VERSION_MINOR > 2
-  if (descriptorExtractor.compare("BOOST") == 0){
+  if (descriptorExtractor.compare("BOOST") == 0 ||
+      descriptorExtractor.compare("VGG") == 0){
     QString keypointDetector = mView->currentKeypointDetector();
     if (keypointDetector.compare("AGAST") == 0 ||
         keypointDetector.compare("AKAZE") == 0 ||
@@ -1250,7 +1313,6 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
    } else if (keypointDetector.compare("ORB") == 0) {
       mBoostDescriptor->setScaleFactor(1.50);
    }
-
   }
 #  endif
 #endif

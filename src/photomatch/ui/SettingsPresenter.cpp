@@ -45,6 +45,12 @@
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
 #endif
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/widgets/VggWidget.h"
+#endif
+#endif
+
 /* Descriptor Matcher */
 #include "photomatch/widgets/DescriptorMatcherWidget.h"
 
@@ -96,6 +102,11 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mStar(new StarWidget),
 #ifdef OPENCV_ENABLE_NONFREE
     mSurf(new SurfWidget),
+#endif
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+    mVgg(new VggWidget),
+#  endif
 #endif
     mMatcher(new DescriptorMatcherWidget)
 {
@@ -308,6 +319,18 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mSurf, SIGNAL(rotatedFeaturesChange(bool)),        mModel, SLOT(setSurfRotatedFeatures(bool)));
 #endif
 
+  /* VGG */
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  connect(mVgg, SIGNAL(descriptorTypeChange(QString)),        mModel, SLOT(setVggDescriptorType(QString)));
+  connect(mVgg, SIGNAL(scaleFactorChange(double)),            mModel, SLOT(setVggScaleFactor(double)));
+  connect(mVgg, SIGNAL(sigmaChange(double)),                  mModel, SLOT(setVggSigma(double)));
+  connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseNormalizeDescriptor(bool)));
+  connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseNormalizeImage(bool)));
+  connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseScaleOrientation(bool)));
+#  endif
+#endif
+
   connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMethod(QString)));
   connect(mMatcher, SIGNAL(normTypeChange(QString)),         mModel, SLOT(setMatchNormType(QString)));
   connect(mMatcher, SIGNAL(ratioChange(double)),             mModel, SLOT(setMatchRatio(double)));
@@ -502,6 +525,15 @@ SettingsPresenter::~SettingsPresenter()
     delete mSurf;
     mSurf = nullptr;
   }
+#endif
+
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  if (mVgg){
+    delete mVgg;
+    mVgg = nullptr;
+  }
+#  endif
 #endif
 
   if (mMatcher){
@@ -709,6 +741,17 @@ void SettingsPresenter::open()
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
 #endif
 
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mVgg->setDescriptorType(mModel->boostDescriptorType());
+  mVgg->setScaleFactor(mModel->boostScaleFactor());
+  mVgg->setSigma(mModel->vggSigma());
+  mVgg->setUseNormalizeDescriptor(mModel->vggUseNormalizeDescriptor());
+  mVgg->setUseNormalizeImage(mModel->vggUseNormalizeImage());
+  mVgg->setUseScaleOrientation(mModel->vggUseScaleOrientation());
+#  endif
+#endif
+
   mMatcher->setMatchingMethod(mModel->matchMethod());
   mMatcher->setNormType(mModel->matchNormType());
   mMatcher->setRatio(mModel->matchRatio());
@@ -784,6 +827,11 @@ void SettingsPresenter::init()
   mView->addFeatureDetectorMethod(mMser);
   mView->addFeatureDetectorMethod(mStar);
   mView->addFeatureDetectorMethod(mHog);
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mView->addFeatureDetectorMethod(mVgg);
+#  endif
+#endif
 
   mView->addDescriptorMatcher(mMatcher);
 }

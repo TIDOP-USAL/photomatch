@@ -100,6 +100,12 @@ private slots:
 
   void update() override;
 
+// QWidget interface
+
+protected:
+
+  void closeEvent(QCloseEvent *event) override;
+
 protected:
 
   QDialogButtonBox *mButtonBox;

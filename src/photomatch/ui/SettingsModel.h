@@ -216,6 +216,13 @@ public:
   virtual bool surfExtendedDescriptor() const = 0;
   virtual bool surfRotatedFeatures() const = 0;
 
+  virtual QString vggDescriptorType() const = 0;
+  virtual double vggScaleFactor() const = 0;
+  virtual double vggSigma() const = 0;
+  virtual bool vggUseNormalizeDescriptor() const = 0;
+  virtual bool vggUseNormalizeImage() const = 0;
+  virtual bool vggUseScaleOrientation() const = 0;
+
   virtual QString matchMethod() const = 0;
   virtual QString matchNormType() const = 0;
   virtual double matchRatio() const = 0;
@@ -462,6 +469,13 @@ public slots:
   virtual void setSurfExtendedDescriptor(bool extendedDescriptor) = 0;
   virtual void setSurfRotatedFeatures(bool rotatedFeatures) = 0;
 
+  virtual void setVggDescriptorType(const QString &descriptorType) = 0;
+  virtual void setVggScaleFactor(double scaleFactor) = 0;
+  virtual void setVggSigma(double sigma) = 0;
+  virtual void setVggUseNormalizeDescriptor(bool useNormalizeDescriptor) = 0;
+  virtual void setVggUseNormalizeImage(bool useNormalizeImage) = 0;
+  virtual void setVggUseScaleOrientation(bool useScaleOrientation) = 0;
+
   virtual void setMatchMethod(const QString &matchingMethod) = 0;
   virtual void setMatchNormType(const QString &normType) = 0;
   virtual void setMatchRatio(double ratio) = 0;
@@ -682,6 +696,13 @@ public:
   bool surfExtendedDescriptor() const override;
   bool surfRotatedFeatures() const override;
 
+  QString vggDescriptorType() const override;
+  double vggScaleFactor() const override;
+  double vggSigma() const override;
+  bool vggUseNormalizeDescriptor() const override;
+  bool vggUseNormalizeImage() const override;
+  bool vggUseScaleOrientation() const override;
+
   QString matchMethod() const override;
   QString matchNormType() const override;
   double matchRatio() const override;
@@ -883,6 +904,13 @@ public slots:
   void setSurfOctaveLayers(int octaveLayers) override;
   void setSurfExtendedDescriptor(bool extendedDescriptor) override;
   void setSurfRotatedFeatures(bool rotatedFeatures) override;
+
+  void setVggDescriptorType(const QString &descriptorType) override;
+  void setVggScaleFactor(double scaleFactor) override;
+  void setVggSigma(double sigma) override;
+  void setVggUseNormalizeDescriptor(bool useNormalizeDescriptor) override;
+  void setVggUseNormalizeImage(bool useNormalizeImage) override;
+  void setVggUseScaleOrientation(bool useScaleOrientation) override;
 
   void setMatchMethod(const QString &matchingMethod) override;
   void setMatchNormType(const QString &normType) override;

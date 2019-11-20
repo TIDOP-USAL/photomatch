@@ -19,6 +19,7 @@
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
+#include "photomatch/core/features/vgg.h"
 #include "photomatch/core/features/matcher.h"
 
 #include "photomatch/core/preprocess/acebsf.h"
@@ -699,6 +700,36 @@ bool SettingsModel::surfExtendedDescriptor() const
 bool SettingsModel::surfRotatedFeatures() const
 {
   return mSettings->surf()->rotatedFeatures();
+}
+
+QString SettingsModel::vggDescriptorType() const
+{
+  return mSettings->vgg()->descriptorType();
+}
+
+double SettingsModel::vggScaleFactor() const
+{
+  return mSettings->vgg()->scaleFactor();
+}
+
+double SettingsModel::vggSigma() const
+{
+  return mSettings->vgg()->sigma();
+}
+
+bool SettingsModel::vggUseNormalizeDescriptor() const
+{
+  return mSettings->vgg()->useNormalizeDescriptor();
+}
+
+bool SettingsModel::vggUseNormalizeImage() const
+{
+  return mSettings->vgg()->useNormalizeImage();
+}
+
+bool SettingsModel::vggUseScaleOrientation() const
+{
+  return mSettings->vgg()->useScaleOrientation();
 }
 
 QString SettingsModel::matchMethod() const
@@ -1663,6 +1694,42 @@ void SettingsModel::setSurfExtendedDescriptor(bool extendedDescriptor)
 void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
 {
   mSettings->surf()->setRotatedFeatures(rotatedFeatures);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setVggDescriptorType(const QString &descriptorType)
+{
+  mSettings->vgg()->setDescriptorType(descriptorType);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setVggScaleFactor(double scaleFactor)
+{
+  mSettings->vgg()->setScaleFactor(scaleFactor);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setVggSigma(double sigma)
+{
+  mSettings->vgg()->setSigma(sigma);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setVggUseNormalizeDescriptor(bool useNormalizeDescriptor)
+{
+  mSettings->vgg()->setUseNormalizeDescriptor(useNormalizeDescriptor);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setVggUseNormalizeImage(bool useNormalizeImage)
+{
+  mSettings->vgg()->setUseNormalizeImage(useNormalizeImage);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setVggUseScaleOrientation(bool useScaleOrientation)
+{
+  mSettings->vgg()->setUseScaleOrientation(useScaleOrientation);
   emit unsavedChanges(true);
 }
 

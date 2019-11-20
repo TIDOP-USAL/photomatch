@@ -30,12 +30,28 @@ CurvesViewerView::CurvesViewerView(QWidget *parent, Qt::WindowFlags f)
 
 CurvesViewerView::~CurvesViewerView()
 {
-
+  QList<QAbstractSeries *> series = mChart->series();
+  for (int i = 0; i < series.size(); i++) {
+    if (QAbstractSeries *serie = series[i]){
+      mChart->removeSeries(serie);
+      delete serie;
+      serie = nullptr;
+    }
+  }
   if (mChart) {
     delete mChart;
     mChart = nullptr;
   }
 
+  if (mAxisX){
+    delete mAxisX;
+    mAxisX = nullptr;
+  }
+
+  if (mAxisY){
+    delete mAxisY;
+    mAxisY = nullptr;
+  }
 }
 
 void CurvesViewerView::onComboBoxLeftImageIndexChanged(int idx)
@@ -155,10 +171,14 @@ void CurvesViewerView::eraseCurve(const QString &session)
 {
   QList<QAbstractSeries *> series = mChart->series();
   for (int i = 0; i < series.size(); i++) {
-    QStringList list = series[i]->name().split(" [");
-    if (list[0].compare(session) == 0) {
-      mChart->removeSeries(series[i]);
-      break;
+    if (QAbstractSeries *serie = series[i]){
+      QStringList list = serie->name().split(" [");
+      if (list[0].compare(session) == 0) {
+        mChart->removeSeries(serie);
+        delete serie;
+        serie = nullptr;
+        break;
+      }
     }
   }
 }
