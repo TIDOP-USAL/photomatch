@@ -858,3 +858,4 @@ void SettingsView::setUnsavedChanges(bool unsaveChanges)
 }
 
 } // namespace photomatch
+

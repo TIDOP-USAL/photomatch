@@ -220,6 +220,11 @@ MainWindowPresenter::~MainWindowPresenter()
     mSettingsModel = nullptr;
   }
 
+  if (mSettingsPresenter){
+    delete mSettingsPresenter;
+    mSettingsPresenter = nullptr;
+  }
+
   if (mPreprocessModel){
     delete mPreprocessModel;
     mPreprocessModel = nullptr;
@@ -1365,7 +1370,7 @@ void MainWindowPresenter::initSettingsDialog()
 {
   if (mSettingsPresenter == nullptr){
     ISettingsView *view = new SettingsView(mView);
-    //mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
+    mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
     mSettingsPresenter = new SettingsPresenter(view, mSettingsModel);
     //mSettingsPresenter->setHelp(mHelp);
   }

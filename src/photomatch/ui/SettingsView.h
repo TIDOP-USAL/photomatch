@@ -305,6 +305,7 @@ protected:
   bool bUnsaveChanges;
 };
 
+
 } // namespace photomatch
 
 #endif // PHOTOMATCH_SETTINGS_VIEW_H
