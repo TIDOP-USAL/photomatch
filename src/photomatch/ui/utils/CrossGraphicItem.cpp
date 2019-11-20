@@ -73,12 +73,14 @@ void CrossGraphicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
     painter->setPen(pen);
   } else {
     painter->setPen(mPen);
-  }  
-  int halfSize = static_cast<int>(mSize / 2);
-  int x = static_cast<int>(mCenter.x());
-  int y = static_cast<int>(mCenter.y());
-  painter->drawLine(x - halfSize, y, x + halfSize, y);
-  painter->drawLine(x, y - halfSize, x, y + halfSize);
+  }
+  double halfSize = mSize / 2.;
+  double x = mCenter.x();
+  double y = mCenter.y();
+  painter->drawLine(QPointF(x - halfSize, y), QPointF(x + halfSize, y));
+  painter->drawLine(QPointF(x, y - halfSize), QPointF(x, y + halfSize));
+  //painter->drawLine(x - halfSize, y, x + halfSize, y);
+  //painter->drawLine(x, y - halfSize, x, y + halfSize);
 }
 
 } // namespace photomatch
