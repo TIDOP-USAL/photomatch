@@ -1,5 +1,7 @@
 #include "wallis.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -118,39 +120,47 @@ WallisPreprocess::~WallisPreprocess()
 
 }
 
-cv::Mat WallisPreprocess::process(const cv::Mat &img)
+bool WallisPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat color_boost;
-  cv::Mat temp;
-  if (img.channels() >= 3) {
-    cv::decolor(img, temp, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(temp);
+
+  try {
+    cv::Mat color_boost;
+    cv::Mat temp;
+    if (imgIn.channels() >= 3) {
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    temp.convertTo(temp, CV_32F);
+
+    cv::Mat localMean;
+    cv::blur(temp, localMean, cv::Size(WallisProperties::kernelSize(), WallisProperties::kernelSize())); //Easier to compute this way
+    cv::Mat differentialImage;
+    cv::blur(temp.mul(temp), differentialImage, cv::Size(WallisProperties::kernelSize(), WallisProperties::kernelSize()));
+    cv::Mat localStandardDeviation;
+    cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
+    differentialImage.release();
+
+    cv::Mat r1 = static_cast<double>(WallisProperties::contrast() * WallisProperties::imposedLocalStdDev())
+                 / (localStandardDeviation + (1. - static_cast<double>(WallisProperties::contrast())));
+    localStandardDeviation.release();
+    cv::Mat r0 = static_cast<double>(WallisProperties::brightness() * WallisProperties::imposedAverage())
+                 + localMean.mul(1. - static_cast<double>(WallisProperties::brightness()) - r1);
+    localMean.release();
+    imgOut = temp.mul(r1) + r0;
+    temp.release();
+    r0.release();
+    r1.release();
+
+  } catch (cv::Exception &e) {
+    msgError("WALLIS Image preprocess error: %s", e.what());
+    return true;
   }
 
-  temp.convertTo(temp, CV_32F);
 
-  cv::Mat localMean;
-  cv::blur(temp, localMean, cv::Size(WallisProperties::kernelSize(), WallisProperties::kernelSize())); //Easier to compute this way
-  cv::Mat differentialImage;
-  cv::blur(temp.mul(temp), differentialImage, cv::Size(WallisProperties::kernelSize(), WallisProperties::kernelSize()));
-  cv::Mat localStandardDeviation;
-  cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
-  differentialImage.release();
-
-  cv::Mat r1 = static_cast<double>(WallisProperties::contrast() * WallisProperties::imposedLocalStdDev())
-               / (localStandardDeviation + (1. - static_cast<double>(WallisProperties::contrast())));
-  localStandardDeviation.release();
-  cv::Mat r0 = static_cast<double>(WallisProperties::brightness() * WallisProperties::imposedAverage())
-               + localMean.mul(1. - static_cast<double>(WallisProperties::brightness()) - r1);
-  localMean.release();
-  cv::Mat out = temp.mul(r1) + r0;
-  temp.release();
-  r0.release();
-  r1.release();
-
-  return out;
+  return false;
 }
 
 

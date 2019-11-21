@@ -1,5 +1,7 @@
 #include "hmclahe.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -85,25 +87,33 @@ HmclahePreprocess::~HmclahePreprocess()
 
 }
 
-cv::Mat HmclahePreprocess::process(const cv::Mat &img)
+bool HmclahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat temp;
-  cv::Mat color_boost;
-  if (img.channels() >= 3) {
-    cv::decolor(img, temp, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(temp);
+
+  try {
+
+    cv::Mat temp;
+    cv::Mat color_boost;
+    if (imgIn.channels() >= 3) {
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    pixkit::enhancement::local::Sundarami2011(temp, imgOut,
+                                              cv::Size(HmclaheProperties::blockSize().width(),
+                                              HmclaheProperties::blockSize().height()),
+                                              static_cast<float>(HmclaheProperties::l()),
+                                              static_cast<float>(HmclaheProperties::phi()));
+    temp.release();
+
+  } catch (cv::Exception &e) {
+    msgError("HMCLAHE image preprocess error: %s", e.what());
+    return true;
   }
 
-  cv::Mat img_out;
-  pixkit::enhancement::local::Sundarami2011(temp, img_out,
-                                            cv::Size(HmclaheProperties::blockSize().width(),
-                                            HmclaheProperties::blockSize().height()),
-                                            static_cast<float>(HmclaheProperties::l()),
-                                            static_cast<float>(HmclaheProperties::phi()));
-  temp.release();
-  return img_out;
+  return false;
 }
 
 } // namespace photomatch

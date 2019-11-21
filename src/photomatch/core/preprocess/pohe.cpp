@@ -1,5 +1,7 @@
 #include "pohe.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -61,25 +63,33 @@ PohePreprocess::~PohePreprocess()
 
 }
 
-cv::Mat PohePreprocess::process(const cv::Mat &img)
+bool PohePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat tmp;
-  if (img.channels() == 1)  cv::cvtColor(img, tmp, cv::COLOR_GRAY2BGR);
-  else img.copyTo(tmp);
+  try {
 
-  cv::Mat out;
-  pixkit::enhancement::local::MSRCP2014(tmp, out);
-  tmp.release();
+    cv::Mat tmp;
+    if (imgIn.channels() == 1)
+      cv::cvtColor(imgIn, tmp, cv::COLOR_GRAY2BGR);
+    else
+      imgIn.copyTo(tmp);
 
-  cv::Mat color_boost;
-  if (img.channels() >= 3) {
-    cv::decolor(out, out, color_boost);
-    color_boost.release();
-  } else {
-    cv::cvtColor(out, out, cv::COLOR_BGR2GRAY);
+    pixkit::enhancement::local::MSRCP2014(tmp, imgOut);
+    tmp.release();
+
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgOut, imgOut, color_boost);
+      color_boost.release();
+    } else {
+      cv::cvtColor(imgOut, imgOut, cv::COLOR_BGR2GRAY);
+    }
+
+  } catch (cv::Exception &e) {
+    msgError("POHE Image preprocess error: %s", e.what());
+    return true;
   }
 
-  return out;
+  return false;
 }
 
 

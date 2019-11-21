@@ -76,7 +76,8 @@ public:
 
 public:
 
-  cv::Mat process(const cv::Mat &img) override;
+  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
+
 };
 
 } // namespace photomatch

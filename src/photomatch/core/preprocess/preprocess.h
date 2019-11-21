@@ -72,10 +72,11 @@ public:
 
   /*!
    * \brief procesa una imagen
-   * \param[in] img Imagen
-   * \return Descriptores
+   * \param[in] imgIn Imagen
+   * \param[out] imgOut Imagen
+   * \return true if error
    */
-  virtual cv::Mat process(const cv::Mat &img) = 0;
+  virtual bool process(const cv::Mat &imgIn, cv::Mat &imgOut) = 0;
 
 };
 

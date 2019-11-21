@@ -1,5 +1,7 @@
 #include "rswhe.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -74,29 +76,35 @@ RswhePreprocess::~RswhePreprocess()
 
 }
 
-cv::Mat RswhePreprocess::process(const cv::Mat &img)
+bool RswhePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat color_boost;
-  cv::Mat temp;
-  if (img.channels() >= 3) {
-    cv::decolor(img, temp, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(temp);
+  try {
+
+    cv::Mat temp;
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    int histogram_cut;
+    if (RswheProperties::histogramCut() == HistogramCut::by_mean)
+      histogram_cut = 1;
+    else {
+      histogram_cut = 2;
+    }
+
+    pixkit::enhancement::global::MaryKim2008(temp, imgOut, histogram_cut, RswheProperties::histogramDivisions());
+    temp.release();
+
+  } catch (cv::Exception &e) {
+    msgError("RSWHE Image preprocess error: %s", e.what());
+    return true;
   }
 
-  int histogram_cut;
-  if (RswheProperties::histogramCut() == HistogramCut::by_mean)
-    histogram_cut = 1;
-  else {
-    histogram_cut = 2;
-  }
-
-  cv::Mat out;
-  pixkit::enhancement::global::MaryKim2008(temp, out, histogram_cut, RswheProperties::histogramDivisions());
-  temp.release();
-
-  return out;
+  return false;
 }
 
 

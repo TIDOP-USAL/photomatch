@@ -427,7 +427,7 @@ void PreprocessPresenter::onError(int code, const QString &msg)
     mProgressHandler->setRange(0,1);
     mProgressHandler->setValue(1);
     mProgressHandler->onFinish();
-    mProgressHandler->setDescription(tr("Feature detection and description error"));
+    mProgressHandler->setDescription(tr("Image preprocessing error"));
 
     disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
     disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));

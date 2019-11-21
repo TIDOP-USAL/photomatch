@@ -1,5 +1,7 @@
 #include "noshp.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -61,24 +63,32 @@ NoshpPreprocess::~NoshpPreprocess()
 
 }
 
-cv::Mat NoshpPreprocess::process(const cv::Mat &img)
+bool NoshpPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat color_boost;
-  cv::Mat  temp;
-  if (img.channels() >= 3) {
-    cv::decolor(img, temp, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(temp);
+
+  try {
+
+    cv::Mat  temp;
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    pixkit::enhancement::local::LiuJinChenLiuLi2011(temp, imgOut,
+                                                    cv::Size(NoshpProperties::blockSize().width(),
+                                                             NoshpProperties::blockSize().height()));
+    temp.release();
+
+  } catch (cv::Exception &e) {
+    msgError("NOSHP Image preprocess error: %s", e.what());
+    return true;
   }
 
-  cv::Mat out;
-  pixkit::enhancement::local::LiuJinChenLiuLi2011(temp, out,
-                                                  cv::Size(NoshpProperties::blockSize().width(),
-                                                           NoshpProperties::blockSize().height()));
-  temp.release();
 
-  return out;
+  return false;
 }
 
 

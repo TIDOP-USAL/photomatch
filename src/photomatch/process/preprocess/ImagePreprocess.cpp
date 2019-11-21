@@ -88,7 +88,12 @@ void ImagePreprocess::run()
 
   tl::Chrono chrono;
   chrono.run();
-  cv::Mat img_out = mPreprocess->process(img);
+  cv::Mat img_out;
+  bool err = mPreprocess->process(img, img_out);
+  if (err){
+    emit error(0, "Image preprocess error");
+    return;
+  }
   uint64_t time = chrono.stop();
   msgInfo("Preprocessed image %s [Time: %f seconds]", input_img, time / 1000.);
 

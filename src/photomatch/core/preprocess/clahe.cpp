@@ -1,5 +1,7 @@
 #include "clahe.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -94,20 +96,26 @@ void ClahePreprocess::setTilesGridSize(const QSize &tilesGridSize)
   mCvClahe->setTilesGridSize(cv::Size(tilesGridSize.width(), tilesGridSize.height()));
 }
 
-cv::Mat ClahePreprocess::process(const cv::Mat &img)
+bool ClahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat img_out;
-  cv::Mat color_boost;
-  if (img.channels() >= 3) {
-    cv::decolor(img, img_out, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(img_out);
+  try {
+
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, imgOut, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(imgOut);
+    }
+
+    mCvClahe->apply(imgOut, imgOut);
+
+  } catch (cv::Exception &e) {
+    msgError("CLAHE image preprocess error: %s", e.what());
+    return true;
   }
 
-  mCvClahe->apply(img_out, img_out);
-
-  return img_out;
+  return false;
 }
 
 } // namespace photomatch
