@@ -121,7 +121,7 @@ set(PHOTOMATCH_HEADERS
 )
 
 if(MSVC)
-  #list(APPEND PHOTOMATCH_SRC ui/resource.h ui/photomatch.rc)
+  list(APPEND PHOTOMATCH_SOURCES resource.h photomatch.rc)
 endif(MSVC)
 
 # forms

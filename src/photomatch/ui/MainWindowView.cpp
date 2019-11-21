@@ -346,7 +346,7 @@ void MainWindowView::addSession(const QString &sessionName, const QString &sessi
     if (itemSessions == nullptr) {
       itemSessions = new QTreeWidgetItem();
       itemSessions->setText(0, tr("Sessions"));
-      itemSessions->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_add_list_48px.png"));
+      itemSessions->setIcon(0, QIcon(":/ico/48/img/material/48/icons8_list_view_48px.png"));
       itemSessions->setFlags(itemSessions->flags() | Qt::ItemIsTristate);
       itemProject->addChild(itemSessions);
       itemSessions->setExpanded(true);
@@ -841,6 +841,12 @@ void MainWindowView::deleteImage(const QString &file)
 
 void MainWindowView::deleteSession(const QString &session)
 {
+
+  int id = mComboBoxActiveSession->findText(session);
+  if (id != -1){
+    mComboBoxActiveSession->removeItem(id);
+  }
+
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
     if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
@@ -1607,9 +1613,12 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
   } else if (item->data(0, Qt::UserRole) == photomatch::image ||
              item->data(0, Qt::UserRole) == photomatch::preprocess_image){
     QMenu menu;
-    menu.addAction(tr("Open Image"));
-    menu.addAction(tr("Delete Image"));
-
+    QAction *open_image = new QAction(QIcon(QStringLiteral(":/ico/24/img/material/24/icons8_image_file_24px.png")),
+                                       tr("Open Image"), this);
+    menu.addAction(open_image);
+    QAction *delete_image = new QAction(QIcon(QStringLiteral(":/ico/24/img/material/24/icons8_remove_image_24px.png")),
+                                       tr("Delete Image"), this);
+    menu.addAction(delete_image);
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("Open Image")) {
         emit openImage(item->toolTip(0));
@@ -1900,6 +1909,9 @@ void MainWindowView::init()
   mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
 
   mActionDeleteSession->setText(QApplication::translate("MainWindowView", "Delete session", nullptr));
+  QIcon iconDeleteSession;
+  iconDeleteSession.addFile(QStringLiteral(":/ico/24/img/material/24/delete_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionDeleteSession->setIcon(iconDeleteSession);
 
   /* Árbol de proyecto */
   //ui->dockWidgetContentsProject->setContentsMargins(0, 0, 0, 0);

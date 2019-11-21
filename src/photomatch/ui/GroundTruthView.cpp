@@ -552,6 +552,7 @@ void GroundTruthView::setSelectedHomologous(const QPointF &ptLeft, const QPointF
       }
     }
   }
+}
 
 void GroundTruthView::unselectHomologous()
 {

@@ -46,6 +46,8 @@
         <file>img/material/24/pr_curve_24px.png</file>
         <file>img/material/24/roc_curve_24px.png</file>
         <file>img/material/24/icons8_web_lock_24px.png</file>
+        <file>img/material/24/icons8_list_view_24px.png</file>
+        <file>img/material/24/delete_list_24px.png</file>
     </qresource>
     <qresource prefix="/ico/48">
         <file>img/material/48/icons8_add_list_48px.png</file>
@@ -91,6 +93,8 @@
         <file>img/material/48/pr_curve_48px.png</file>
         <file>img/material/48/roc_curve_48px.png</file>
         <file>img/material/48/icons8_web_lock_48px.png</file>
+        <file>img/material/48/icons8_list_view_48px.png</file>
+        <file>img/material/48/delete_list_48px.png</file>
     </qresource>
     <qresource prefix="/ico/96">
         <file>img/material/96/icons8_about_96px.png</file>
@@ -143,6 +147,8 @@
         <file>img/material/96/icons8_triangle_stroked_96px.png</file>
         <file>img/material/96/icons8_unchecked_checkbox_96px.png</file>
         <file>img/material/96/keypoint.png</file>
+        <file>img/material/96/icons8_list_view_96px.png</file>
+        <file>img/material/96/delete_list_96px.png</file>
     </qresource>
     <qresource prefix="/img/logos">
         <file>img/isprs_logo.jpg</file>

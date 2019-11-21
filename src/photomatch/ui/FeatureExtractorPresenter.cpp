@@ -74,6 +74,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QImageReader>
+#include <QMessageBox>
 
 namespace photomatch
 {
@@ -880,11 +881,22 @@ void FeatureExtractorPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
-  msgInfo("Processing has been canceled by the user");
+  msgWarning("Processing has been canceled by the user");
 }
 
 void FeatureExtractorPresenter::run()
 {
+  Feature *detector = mProjectModel->currentSession()->detector().get();
+  Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
+  if (detector && descriptor){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      return;
+    }
+  }
 
   mMultiProcess->clearProcessList();
 

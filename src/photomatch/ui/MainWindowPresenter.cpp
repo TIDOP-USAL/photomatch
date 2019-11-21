@@ -1252,6 +1252,11 @@ void MainWindowPresenter::deleteSession(const QString &sessionName)
 {
   mProjectModel->deleteSession(sessionName);
   mView->deleteSession(sessionName);
+  if (std::shared_ptr<Session> session = (*mProjectModel->sessionBegin())){
+    mView->setActiveSession(session->name());
+    mProjectModel->setCurrentSession(session->name());
+  }
+
   mView->setFlag(MainWindowView::Flag::project_modified, true);
 }
 
@@ -1318,6 +1323,18 @@ void MainWindowPresenter::groundTruthAdded()
 
 void MainWindowPresenter::processFinish()
 {
+  if (mPreprocessPresenter){
+    disconnect(mProgressDialog, SIGNAL(cancel()),     mPreprocessPresenter, SLOT(cancel()));
+  }
+
+  if (mFeatureExtractorPresenter){
+    disconnect(mProgressDialog, SIGNAL(cancel()),     mFeatureExtractorPresenter, SLOT(cancel()));
+  }
+
+  if (mDescriptorMatcherPresenter){
+    disconnect(mProgressDialog, SIGNAL(cancel()),     mDescriptorMatcherPresenter, SLOT(cancel()));
+  }
+
   mView->setFlag(MainWindowView::Flag::processing, false);
 }
 
@@ -1390,9 +1407,8 @@ void MainWindowPresenter::initPreprocessDialog()
 
     initProgress();
 
-    ///TODO: Esto aqui...
-    ///connect(mProgressHandler, SIGNAL(cancel()), mMultiProcess, SLOT(stop()));
-    //connect(mProgressDialog, SIGNAL(cancel()),     mPreprocessPresenter, SLOT(cancel()));
+    connect(mProgressDialog, SIGNAL(cancel()),     mPreprocessPresenter, SLOT(cancel()));
+
     mPreprocessPresenter->setProgressHandler(mProgressHandler);
   }
 }
@@ -1411,6 +1427,8 @@ void MainWindowPresenter::initFeatureExtractionDialog()
 
     initProgress();
 
+    connect(mProgressDialog, SIGNAL(cancel()),     mFeatureExtractorPresenter, SLOT(cancel()));
+
     mFeatureExtractorPresenter->setProgressHandler(mProgressHandler);
   }
 }
@@ -1428,6 +1446,8 @@ void MainWindowPresenter::initFeatureMatching()
     connect(mDescriptorMatcherPresenter, SIGNAL(matchCompute(QString)), this, SLOT(updateMatches()));
 
     initProgress();
+
+    connect(mProgressDialog, SIGNAL(cancel()),     mDescriptorMatcherPresenter, SLOT(cancel()));
 
     mDescriptorMatcherPresenter->setProgressHandler(mProgressHandler);
   }

@@ -14,6 +14,7 @@
 
 #include <QFileInfo>
 #include <QDir>
+#include <QMessageBox>
 
 namespace photomatch
 {
@@ -210,11 +211,23 @@ void DescriptorMatcherPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
-  msgInfo("Processing has been canceled by the user");
+  msgWarning("Processing has been canceled by the user");
 }
 
 void DescriptorMatcherPresenter::run()
 {
+
+  Match *matcher = mProjectModel->currentSession()->matcher().get();
+  if(matcher){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      return;
+    }
+  }
+
   mMultiProcess->clearProcessList();
 
   QString matchingMethod = mView->matchingMethod();
