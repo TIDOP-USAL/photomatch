@@ -13,15 +13,16 @@ namespace photomatch
 
 FeatureExtractor::FeatureExtractor(const QString &img, const QString &features, double scale,
                                    const std::shared_ptr<KeypointDetector> &keypointDetector,
-                                   const std::shared_ptr<DescriptorExtractor> &descriptorExtractor)
+                                   const std::shared_ptr<DescriptorExtractor> &descriptorExtractor,
+                                   const std::list<std::shared_ptr<KeyPointsFilterProcess>> &keyPointsFiltersProcess)
   : ProcessConcurrent(),
     mImage(img),
     mFeatures(features),
     mScale(scale),
     mKeypointDetector(keypointDetector),
-    mDescriptorExtractor(descriptorExtractor)
+    mDescriptorExtractor(descriptorExtractor),
+    mKeyPointsFiltersProcess(keyPointsFiltersProcess)
 {
-
 }
 
 QString FeatureExtractor::image() const
@@ -76,7 +77,10 @@ void FeatureExtractor::run()
   uint64_t time = chrono.stop();
   msgInfo("%i Keypoints detected in image %s [Time: %f seconds]", key_points.size(), img_file, time/1000.);
 
-
+  /// Filtrado de puntos
+  for(auto &filter : mKeyPointsFiltersProcess){
+    filter->filter(key_points, key_points);
+  }
 
   if (mDescriptorExtractor == nullptr) return;
 

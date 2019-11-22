@@ -19,6 +19,9 @@ KeypointsFilterWidget::KeypointsFilterWidget(QWidget *parent)
 {
   init();
 
+  connect(mCheckBoxPointsNumber,  SIGNAL(clicked(bool)),   this, SLOT(update()));
+  connect(mCheckBoxSize,          SIGNAL(clicked(bool)),   this, SLOT(update()));
+
   connect(mPointsNumber,  SIGNAL(valueChanged(int)),        this, SIGNAL(nPointsChange(int)));
   connect(mMinSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(minSizeChange(double)));
   connect(mMaxSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(maxSizeChange(double)));
@@ -44,6 +47,16 @@ double KeypointsFilterWidget::maxSize() const
   return mMaxSize->value();
 }
 
+bool KeypointsFilterWidget::isActiveFilterBest() const
+{
+  return bActiveFilterBest;
+}
+
+bool KeypointsFilterWidget::isActiveFilterSize() const
+{
+  return bActiveFilterSize;
+}
+
 void KeypointsFilterWidget::setNPoints(int nPoints)
 {
   const QSignalBlocker blockerNPoints(mPointsNumber);
@@ -66,9 +79,11 @@ void KeypointsFilterWidget::setMaxSize(double maxSize)
 
 void KeypointsFilterWidget::update()
 {
-  mPointsNumber->setEnabled(mCheckBoxPointsNumber->isChecked());
-  mMinSize->setEnabled(mCheckBoxSize->isChecked());
-  mMaxSize->setEnabled(mCheckBoxSize->isChecked());
+  bActiveFilterBest = mCheckBoxPointsNumber->isChecked();
+  bActiveFilterSize = mCheckBoxSize->isChecked();
+  mPointsNumber->setEnabled(bActiveFilterBest);
+  mMinSize->setEnabled(bActiveFilterSize);
+  mMaxSize->setEnabled(bActiveFilterSize);
 }
 
 void KeypointsFilterWidget::reset()
@@ -97,24 +112,27 @@ void KeypointsFilterWidget::init()
   QGroupBox *groupBox = new QGroupBox(tr("Keypoints Filters"), this);
   layout->addWidget(groupBox);
 
+  QGridLayout *propertiesLayout = new QGridLayout();
+  groupBox->setLayout(propertiesLayout);
+
   mCheckBoxPointsNumber->setText(tr("N Best"));
   mCheckBoxPointsNumber->setChecked(false);
-  layout->addWidget(mCheckBoxPointsNumber, 0, 0, 1, 1);
+  propertiesLayout->addWidget(mCheckBoxPointsNumber, 0, 0, 1, 1);
 
   mPointsNumber->setRange(0, 100000);
-  layout->addWidget(mPointsNumber, 0, 1, 1, 4);
+  propertiesLayout->addWidget(mPointsNumber, 0, 1, 1, 4);
 
   mCheckBoxSize->setText(tr("Keypoints Size"));
   mCheckBoxSize->setChecked(false);
-  layout->addWidget(mCheckBoxPointsNumber, 1, 0, 1, 1);
+  propertiesLayout->addWidget(mCheckBoxSize, 1, 0, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Min:")), 1, 1, 1, 1);
+  propertiesLayout->addWidget(new QLabel(tr("Min:")), 1, 1, 1, 1);
   mMinSize->setRange(0., 99.);
-  layout->addWidget(mMinSize, 1, 2, 1, 1);
+  propertiesLayout->addWidget(mMinSize, 1, 2, 1, 1);
 
-  layout->addWidget(new QLabel(tr("Max:")), 3, 1, 1, 1);
+  propertiesLayout->addWidget(new QLabel(tr("Max:")), 1, 3, 1, 1);
   mMaxSize->setRange(0., 99.);
-  layout->addWidget(mMaxSize, 1, 4, 1, 1);
+  propertiesLayout->addWidget(mMaxSize, 1, 4, 1, 1);
 
   reset();
   update();

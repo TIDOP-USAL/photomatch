@@ -40,6 +40,7 @@ class ISiftWidget;
 class IStarWidget;
 class ISurfWidget;
 class IVggWidget;
+class IKeypointsFilterWidget;
 
 class ProgressHandler;
 
@@ -164,8 +165,8 @@ protected:
   IVggWidget *mVggDescriptor;
 #  endif
 #endif
+  IKeypointsFilterWidget *mKeypointsFilterWidget;
   MultiProcess *mMultiProcess;
-
   ProgressHandler *mProgressHandler;
 };
 

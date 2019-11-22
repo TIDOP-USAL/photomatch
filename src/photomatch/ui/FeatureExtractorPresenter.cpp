@@ -66,6 +66,8 @@
 #include "photomatch/widgets/VggWidget.h"
 #endif
 #endif
+#include "photomatch/widgets/KeypointsFilterWidget.h"
+
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/features/FeatureExtractorProcess.h"
 
@@ -129,6 +131,7 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mVggDescriptor(new VggWidget),
 #endif
 #endif
+    mKeypointsFilterWidget(new KeypointsFilterWidget),
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
@@ -292,6 +295,11 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
   }
 #endif
 #endif
+
+  if (mKeypointsFilterWidget){
+    delete mKeypointsFilterWidget;
+    mKeypointsFilterWidget = nullptr;
+  }
 
   if (mMultiProcess){
     delete mMultiProcess;
@@ -802,6 +810,11 @@ void FeatureExtractorPresenter::open()
 #  endif
 #endif
 
+  ///TODO: guardar en proyecto y configuración y recuperarlo desde aqui
+  //mKeypointsFilterWidget->setNPoints();
+  //mKeypointsFilterWidget->setMinSize();
+  //mKeypointsFilterWidget->setMaxSize();
+
   mView->setSessionName(mProjectModel->currentSession()->name());
   mView->exec();
 }
@@ -855,6 +868,7 @@ void FeatureExtractorPresenter::init()
   setCurrentkeypointDetector(mOrbDescriptor->windowTitle());
 #endif
 
+  mView->addKeypointsFilter(mKeypointsFilterWidget);
   
 }
 
@@ -1155,6 +1169,16 @@ void FeatureExtractorPresenter::run()
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
 
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+  if (mKeypointsFilterWidget->isActiveFilterBest()){
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+    keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+  }
+  if (mKeypointsFilterWidget->isActiveFilterSize()){
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->maxSize(), mKeypointsFilterWidget->minSize());
+    keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+  }
+
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString fileName = (*it)->name();
@@ -1196,7 +1220,8 @@ void FeatureExtractorPresenter::run()
                                                                         features,
                                                                         scale,
                                                                         keypointDetector,
-                                                                        descriptorExtractor));
+                                                                        descriptorExtractor,
+                                                                        keyPointsFiltersProcess));
     connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
     mMultiProcess->appendProcess(feat_extract);
   }
