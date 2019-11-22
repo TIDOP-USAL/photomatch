@@ -157,11 +157,6 @@ bool AcebsfPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 
   try {
 
-//    cv::Mat tmp;
-//    if (imgIn.channels() == 1)
-//      cv::cvtColor(imgIn, tmp, cv::COLOR_GRAY2BGR);
-//    else
-//      imgIn.copyTo(tmp);
     cv::Mat temp;
     if (imgIn.channels() >= 3) {
       cv::Mat color_boost;
@@ -177,14 +172,6 @@ bool AcebsfPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
                                         static_cast<float>(AcebsfProperties::l()),
                                         static_cast<float>(AcebsfProperties::k1()),
                                         static_cast<float>(AcebsfProperties::k2()));
-//    cv::Mat color_boost;
-//    if (imgIn.channels() >= 3) {
-//      cv::decolor(tmp, imgOut, color_boost);
-//    } else {
-//      cv::cvtColor(tmp, imgOut, cv::COLOR_BGR2GRAY);
-//    }
-//    color_boost.release();
-//    tmp.release();
 
   } catch (cv::Exception &e) {
     msgError("ACEBSF Image preprocess error: %s", e.what());

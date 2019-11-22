@@ -66,7 +66,7 @@ QPointF GroundTruthModel::findPoint(const QString &image1, const QString &image2
 
     /// - se aplica la transformación proyectiva a la imagen y se utiliza como template
     cv::Mat templ1 = qImageToCvMat(qImage1);
-    cv::cvtColor(templ1, templ1, cv::COLOR_BGR2GRAY);
+    //cv::cvtColor(templ1, templ1, cv::COLOR_BGR2GRAY);
     //cv::Mat warp_templ1;
     //cv::Size size(trf_pt_br.x() - trf_pt_tl.x(), trf_pt_br.y() - trf_pt_tl.y());
     //cv::warpPerspective(templ1, warp_templ1, h, templ1.size());
@@ -77,7 +77,7 @@ QPointF GroundTruthModel::findPoint(const QString &image1, const QString &image2
     reader2.setClipRect(rect2);
     QImage qImage2 = reader2.read();
     cv::Mat search_mat = qImageToCvMat(qImage2);
-    cv::cvtColor(search_mat, search_mat, cv::COLOR_BGR2GRAY);
+    //cv::cvtColor(search_mat, search_mat, cv::COLOR_BGR2GRAY);
 
     cv::Mat result(search_mat.rows - templ1.rows + 1, search_mat.cols - templ1.cols + 1, CV_32FC1);
 

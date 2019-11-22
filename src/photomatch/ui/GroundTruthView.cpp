@@ -501,57 +501,24 @@ void GroundTruthView::setSelectedHomologous(const QPointF &ptLeft, const QPointF
   this->setSelectLeftPoint(ptLeft);
   this->setSelectedRightPoint(ptRight);
 
-  mTreeWidget->clear();
+  const QSignalBlocker blocker2(mTreeWidget);
 
-  for (auto &item : mGraphicsViewLeft->scene()->items()) {
-    if (mMarkerType == 0){
-      // Circle
-      if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
-        mGraphicsViewLeft->scene()->removeItem(item);
-        delete keyPoint;
-        keyPoint = nullptr;
+  QList<QGraphicsItem *> items = mGraphicsViewLeft->items();
+  for (int i = 0; i < items.size(); i++) {
+    if (items[i]->isSelected() == true) {
+      mTreeWidget->selectionModel()->clearSelection();
+      for (int j = 0; j < mTreeWidget->topLevelItemCount(); j++){
+        QTreeWidgetItem *item = mTreeWidget->topLevelItem(j);
+        if (item && item->text(0).compare(items[i]->toolTip()) == 0){
+          item->setSelected(true);
+          break;
+        }
       }
-    } else if (mMarkerType == 1){
-      // Cross
-      if (CrossGraphicItem *keyPoint = dynamic_cast<CrossGraphicItem *>(item)){
-        mGraphicsViewLeft->scene()->removeItem(item);
-        delete keyPoint;
-        keyPoint = nullptr;
-      }
-    } else if (mMarkerType == 2){
-      // Diagonal cross
-      if (DiagonalCrossGraphicItem *keyPoint = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
-        mGraphicsViewLeft->scene()->removeItem(item);
-        delete keyPoint;
-        keyPoint = nullptr;
-      }
+      break;
     }
   }
 
-  for (auto &item : mGraphicsViewRight->scene()->items()) {
-    if (mMarkerType == 0){
-      // Circle
-      if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
-        mGraphicsViewRight->scene()->removeItem(item);
-        delete keyPoint;
-        keyPoint = nullptr;
-      }
-    } else if (mMarkerType == 1){
-      // Cross
-      if (CrossGraphicItem *keyPoint = dynamic_cast<CrossGraphicItem *>(item)){
-        mGraphicsViewRight->scene()->removeItem(item);
-        delete keyPoint;
-        keyPoint = nullptr;
-      }
-    } else if (mMarkerType == 2){
-      // Diagonal cross
-      if (DiagonalCrossGraphicItem *keyPoint = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
-        mGraphicsViewRight->scene()->removeItem(item);
-        delete keyPoint;
-        keyPoint = nullptr;
-      }
-    }
-  }
+  update();
 }
 
 void GroundTruthView::unselectHomologous()

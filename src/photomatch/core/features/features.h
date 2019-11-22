@@ -64,7 +64,9 @@ protected:
 };
 ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
 
+
 /*----------------------------------------------------------------*/
+
 
 class PHOTOMATCH_EXPORT KeypointDetector
 {

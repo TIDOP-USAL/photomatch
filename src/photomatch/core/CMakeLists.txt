@@ -64,6 +64,8 @@ add_library(libcore ${LIB_TYPE}
             features/evaluation.h
             features/groundtruth.cpp
             features/groundtruth.h
+            features/keypointsfilter.h
+            features/keypointsfilter.cpp
             preprocess/preprocess.h
             #preprocess/downsample.cpp
             #preprocess/downsample.h
