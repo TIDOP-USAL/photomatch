@@ -233,6 +233,39 @@ void FeaturesViewerView::setBGColor(const QString &bgColor)
 
 void FeaturesViewerView::setMarkerStyle(const QString &color, int width, int type, int size)
 {
+  if (mMarkerType != type){
+    for (auto &item : mGraphicView->scene()->items()) {
+      if (mMarkerType == 0){
+        if (KeyPointGraphicsItem *keyPoint = dynamic_cast<KeyPointGraphicsItem *>(item)){
+          mGraphicView->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 1){
+        // Circle
+        if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
+          mGraphicView->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 2){
+        // Cross
+        if (CrossGraphicItem *keyPoint = dynamic_cast<CrossGraphicItem *>(item)){
+          mGraphicView->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 3){
+        // Diagonal cross
+        if (DiagonalCrossGraphicItem *keyPoint = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
+          mGraphicView->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      }
+    }
+  }
+
   mMarkerColor = color;
   mMarkerSize = size;
   mMarkerWidth = width;

@@ -57,6 +57,7 @@ bool KeyPointsFilterNBest::filter(const std::vector<cv::KeyPoint> &keypoins, std
   try {
     filteredKeypoins = keypoins;
     cv::KeyPointsFilter::retainBest(filteredKeypoins, KeyPointsFilterNBestProperties::nPoints());
+    //msgInfo("Filtered retaining %i best keypoints", KeyPointsFilterNBestProperties::nPoints());
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
     return true;
@@ -139,9 +140,12 @@ bool KeyPointsFilterBySize::filter(const std::vector<cv::KeyPoint> &keypoins, st
 {
   try {
     filteredKeypoins = keypoins;
-    cv::KeyPointsFilter::runByKeypointSize(filteredKeypoins,
-                                           static_cast<float>(KeyPointsFilterBySizeProperties::minSize()),
-                                           static_cast<float>(KeyPointsFilterBySizeProperties::maxSize()));
+    int size = keypoins.size();
+    float min_size = static_cast<float>(KeyPointsFilterBySizeProperties::minSize());
+    float max_size = static_cast<float>(KeyPointsFilterBySizeProperties::maxSize());
+    cv::KeyPointsFilter::runByKeypointSize(filteredKeypoins, min_size, max_size);
+    //int new_size = filteredKeypoins.size();
+    //msgInfo("Filtered keypoints by size (min=%f,max=%f): %s", min_size, max_size, size - new_size);
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
     return true;
@@ -154,6 +158,26 @@ void KeyPointsFilterBySize::reset()
   KeyPointsFilterBySizeProperties::reset();
 }
 
+
+/*----------------------------------------------------------------*/
+
+
+KeyPointsFilterRemoveDuplicated::KeyPointsFilterRemoveDuplicated()
+  : KeyPointsFilterProcess()
+{
+}
+
+bool KeyPointsFilterRemoveDuplicated::filter(const std::vector<cv::KeyPoint>& keypoins, std::vector<cv::KeyPoint>& filteredKeypoins)
+{
+  try {
+    filteredKeypoins = keypoins;
+    cv::KeyPointsFilter::removeDuplicated(filteredKeypoins);
+  } catch (cv::Exception &e) {
+    msgError("Filtered keypoints error: %s", e.what());
+    return true;
+  }
+  return false;
+}
 
 } // namespace photomatch
 

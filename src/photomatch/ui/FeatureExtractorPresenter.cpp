@@ -1169,15 +1169,15 @@ void FeatureExtractorPresenter::run()
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
 
-  std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
-  if (mKeypointsFilterWidget->isActiveFilterBest()){
-    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
-    keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
-  }
-  if (mKeypointsFilterWidget->isActiveFilterSize()){
-    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->maxSize(), mKeypointsFilterWidget->minSize());
-    keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
-  }
+  //std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+  //if (mKeypointsFilterWidget->isActiveFilterBest()){
+  //  std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+  //  keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+  //}
+  //if (mKeypointsFilterWidget->isActiveFilterSize()){
+  //  std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize(), mKeypointsFilterWidget->maxSize());
+  //  keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+  //}
 
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -1214,6 +1214,22 @@ void FeatureExtractorPresenter::run()
         scale = h / static_cast<double>(maxSize);
       }
       if (scale < 1.) scale = 1.;
+    }
+
+    /// Se añade aqui porque se necesita la escala
+    std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+    if (mKeypointsFilterWidget->isActiveFilterBest()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+      keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+    }
+    if (mKeypointsFilterWidget->isActiveFilterSize()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize()/scale, 
+                                                                                                              mKeypointsFilterWidget->maxSize()/scale);
+      keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+    }
+    if (mKeypointsFilterWidget->isActiveRemoveDuplicated()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
+      keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
     }
 
     std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,

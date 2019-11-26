@@ -562,6 +562,8 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
     QPointF query_point = points[i].first;
     QPointF train_point = points[i].second;
 
+    if (query_point.isNull() && train_point.isNull()) continue;
+
     QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
     treeWidgetItem->setText(0, QString::number(i+1));
     treeWidgetItem->setText(1, QString::number(query_point.x()));

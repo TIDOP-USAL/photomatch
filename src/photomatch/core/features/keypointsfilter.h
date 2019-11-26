@@ -22,7 +22,7 @@ public:
   {
     n_best,
     size,
-    duplicated,
+    remove_duplicated,
     mask
   };
 
@@ -48,7 +48,7 @@ ALLOW_BITWISE_FLAG_OPERATIONS(KeyPointsFilter::Type)
 /*----------------------------------------------------------------*/
 
 
-class KeyPointsFilterProcess
+class PHOTOMATCH_EXPORT KeyPointsFilterProcess
 {
 
 public:
@@ -91,7 +91,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class KeyPointsFilterNBest
+class PHOTOMATCH_EXPORT KeyPointsFilterNBest
   : public KeyPointsFilterNBestProperties,
     public KeyPointsFilterProcess
 {
@@ -158,7 +158,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class KeyPointsFilterBySize
+class PHOTOMATCH_EXPORT KeyPointsFilterBySize
   : public KeyPointsFilterBySizeProperties,
     public KeyPointsFilterProcess
 {
@@ -187,6 +187,28 @@ public:
 public:
 
   void reset() override;
+
+};
+
+
+
+/*----------------------------------------------------------------*/
+
+
+class PHOTOMATCH_EXPORT KeyPointsFilterRemoveDuplicated
+  : public KeyPointsFilterProcess
+{
+
+public:
+
+  KeyPointsFilterRemoveDuplicated();
+  ~KeyPointsFilterRemoveDuplicated() override = default;
+
+// KeyPointsFilterProcess interface
+
+public:
+
+  bool filter(const std::vector<cv::KeyPoint> &keypoins, std::vector<cv::KeyPoint> &filteredKeypoins) override;
 
 };
 

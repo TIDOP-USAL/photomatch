@@ -26,6 +26,7 @@ public:
 
   virtual bool isActiveFilterBest() const = 0;
   virtual bool isActiveFilterSize() const = 0;
+  virtual bool isActiveRemoveDuplicated() const = 0;
 
 signals:
 
@@ -61,6 +62,7 @@ public:
   double maxSize() const override;
   bool isActiveFilterBest() const override;
   bool isActiveFilterSize() const override;
+  bool isActiveRemoveDuplicated() const override;
 
 public slots:
 
@@ -86,8 +88,10 @@ protected:
   QCheckBox *mCheckBoxSize;
   QDoubleSpinBox *mMinSize;
   QDoubleSpinBox *mMaxSize;
+  QCheckBox *mCheckBoxRemoveDuplicated;
   bool bActiveFilterBest;
   bool bActiveFilterSize;
+  bool bActiveRemoveDuplicated;
 };
 
 } // namespace photomatch
