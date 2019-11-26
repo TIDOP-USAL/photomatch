@@ -255,6 +255,11 @@ void CurvesViewerView::update()
 {
 }
 
+void CurvesViewerView::retranslate()
+{
+
+}
+
 /*----------------------------------------------------------------*/
 
 

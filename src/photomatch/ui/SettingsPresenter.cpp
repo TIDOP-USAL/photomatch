@@ -34,7 +34,7 @@
 #include "photomatch/widgets/HogWidget.h"
 #include "photomatch/widgets/KazeWidget.h"
 #include "photomatch/widgets/LatchWidget.h"
-#include "photomatch/widgets/LucidWidget.h"
+//#include "photomatch/widgets/LucidWidget.h"
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
@@ -92,7 +92,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mHog(new HogWidget),
     mKaze(new KazeWidget),
     mLatch(new LatchWidget),
-    mLucid(new LucidWidget),
+    //mLucid(new LucidWidget),
     mMsd(new MsdWidget),
     mMser(new MserWidget),
     mOrb(new OrbWidget),
@@ -257,8 +257,8 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mLatch, SIGNAL(halfSsdSizeChange(int)),            mModel, SLOT(setLatchHalfSsdSize(int)));
 
   /* LUCID */
-  connect(mLucid, SIGNAL(lucidKernelChange(int)),            mModel, SLOT(setLucidKernel(int)));
-  connect(mLucid, SIGNAL(blurKernelChange(int)),             mModel, SLOT(setLucidBlurKernel(int)));
+//  connect(mLucid, SIGNAL(lucidKernelChange(int)),            mModel, SLOT(setLucidKernel(int)));
+//  connect(mLucid, SIGNAL(blurKernelChange(int)),             mModel, SLOT(setLucidBlurKernel(int)));
 
   /* MSD */
   connect(mMsd, SIGNAL(thresholdSaliencyChange(double)),     mModel, SLOT(setMsdThresholdSaliency(double)));
@@ -488,10 +488,10 @@ SettingsPresenter::~SettingsPresenter()
     mLatch = nullptr;
   }
 
-  if (mLucid){
-    delete mLucid;
-    mLucid = nullptr;
-  }
+//  if (mLucid){
+//    delete mLucid;
+//    mLucid = nullptr;
+//  }
 
   if (mMsd){
     delete mMsd;
@@ -685,8 +685,8 @@ void SettingsPresenter::open()
   mLatch->setRotationInvariance(mModel->latchRotationInvariance());
   mLatch->setHalfSsdSize(mModel->latchHalfSsdSize());
 
-  mLucid->setLucidKernel(mModel->lucidKernel());
-  mLucid->setBlurKernel(mModel->lucidBlurKernel());
+//  mLucid->setLucidKernel(mModel->lucidKernel());
+//  mLucid->setBlurKernel(mModel->lucidBlurKernel());
 
   mMsd->setThresholdSaliency(mModel->msdThresholdSaliency());
   mMsd->setPatchRadius(mModel->msdPathRadius());
@@ -822,7 +822,7 @@ void SettingsPresenter::init()
   mView->addFeatureDetectorMethod(mHog);
   mView->addFeatureDetectorMethod(mKaze);
   mView->addFeatureDetectorMethod(mLatch);
-  mView->addFeatureDetectorMethod(mLucid);
+  //mView->addFeatureDetectorMethod(mLucid);
   mView->addFeatureDetectorMethod(mMsd);
   mView->addFeatureDetectorMethod(mMser);
   mView->addFeatureDetectorMethod(mStar);

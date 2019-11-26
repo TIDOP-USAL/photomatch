@@ -54,6 +54,11 @@ void PoheWidget::update()
 {
 }
 
+void PoheWidget::retranslate()
+{
+
+}
+
 void PoheWidget::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);

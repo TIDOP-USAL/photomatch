@@ -121,4 +121,9 @@ void RepeatabilityView::update()
 {
 }
 
+void RepeatabilityView::retranslate()
+{
+
+}
+
 } // namespace photomatch

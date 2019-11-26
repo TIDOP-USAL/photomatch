@@ -169,10 +169,10 @@ public:
   /*!
    * \brief Set the Detector Type
    * Suported types:
-   * - AGAST_5_8: AGAST-5 decision tree whith the 8 pixels mask
-   * - AGAST_7_12d: AGAST-7 decision tree whith the Diamond shaped 12 pixels mask
-   * - AGAST_7_12s: AGAST-7 decision tree whith the Squared shaped 12 pixels mask
-   * - OAST_9_16: OAST-9 (Optimal AST) decision tree whith the 16 pixels mask
+   * - AGAST_5_8: AGAST-5 decision tree with the 8 pixels mask
+   * - AGAST_7_12d: AGAST-7 decision tree with the Diamond shaped 12 pixels mask
+   * - AGAST_7_12s: AGAST-7 decision tree with the Squared shaped 12 pixels mask
+   * - OAST_9_16: OAST-9 (Optimal AST) decision tree with the 16 pixels mask
    *
    * \param[in] detectorType Detector Type (Default = OAST_9_16)
    */

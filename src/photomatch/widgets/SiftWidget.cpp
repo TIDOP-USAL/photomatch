@@ -19,6 +19,8 @@ SiftWidget::SiftWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
 
   connect(mFeaturesNumber,    SIGNAL(valueChanged(int)),    this, SIGNAL(featuresNumberChange(int)));
@@ -92,6 +94,17 @@ void SiftWidget::setSigma(double sigma)
 void SiftWidget::update()
 {
 
+}
+
+void SiftWidget::retranslate()
+{
+#ifndef QT_NO_WHATSTHIS
+  mFeaturesNumber->setWhatsThis(tr("<html><head/><body><p>The number of best features to retain.</p></body></html>"));
+  mOctaveLayers->setWhatsThis(tr("<html><head/><body><p>The number of layers in each octave. 3 is the value used in D. Lowe paper. The number of octaves is computed automatically from the image resolution.</p></body></html>"));
+  mContrastThreshold->setWhatsThis(tr("<html><head/><body><p>The contrast threshold used to filter out weak features in semi-uniform (low-contrast) regions</p></body></html>"));
+  mEdgeThreshold->setWhatsThis(tr("<html><head/><body><p>The threshold used to filter out edge-like features. Note that the its meaning is different from the contrastThreshold, i.e. the larger the edgeThreshold, the less features are filtered out (more features are retained).</p></body></html>"));
+  mSigma->setWhatsThis(tr("<html><head/><body><p>The sigma of the Gaussian applied to the input image at the octave 0</p></body></html>"));
+#endif // QT_NO_WHATSTHIS
 }
 
 void SiftWidget::reset()

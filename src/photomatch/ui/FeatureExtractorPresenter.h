@@ -31,7 +31,7 @@ class IGfttWidget;
 class IHogWidget;
 class IKazeWidget;
 class ILatchWidget;
-class ILucidWidget;
+//class ILucidWidget;
 class ILssWidget;
 class IMsdWidget;
 class IMserWidget;
@@ -153,7 +153,7 @@ protected:
   IHogWidget *mHogDescriptor;
   IKazeWidget *mKazeDescriptor;
   ILatchWidget *mLatchDescriptor;
-  ILucidWidget *mLucidDescriptor;
+  //ILucidWidget *mLucidDescriptor;
   ILssWidget *mLssDescriptor;
   IOrbWidget *mOrbDescriptor;
 #ifdef OPENCV_ENABLE_NONFREE

@@ -90,6 +90,11 @@ void WallisWidget::update()
 {
 }
 
+void WallisWidget::retranslate()
+{
+
+}
+
 void WallisWidget::reset()
 {
   const QSignalBlocker blockerContrast(mContrast);

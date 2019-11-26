@@ -51,6 +51,11 @@ void BriefWidget::update()
 {
 }
 
+void BriefWidget::retranslate()
+{
+
+}
+
 void BriefWidget::reset()
 {
   const QSignalBlocker blockerBytes(mBytes);

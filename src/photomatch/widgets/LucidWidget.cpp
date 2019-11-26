@@ -52,6 +52,11 @@ void LucidWidget::update()
 {
 }
 
+void LucidWidget::retranslate()
+{
+
+}
+
 void LucidWidget::reset()
 {
   const QSignalBlocker blockerLucidKernel(mLucidKernel);

@@ -117,6 +117,11 @@ void DaisyWidget::update()
 {
 }
 
+void DaisyWidget::retranslate()
+{
+
+}
+
 void DaisyWidget::reset()
 {
   const QSignalBlocker blockerRadius(mRadius);

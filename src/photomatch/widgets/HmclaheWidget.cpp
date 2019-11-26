@@ -79,6 +79,11 @@ void HmclaheWidget::update()
 {
 }
 
+void HmclaheWidget::retranslate()
+{
+
+}
+
 void HmclaheWidget::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);

@@ -76,6 +76,11 @@ void FreakWidget::update()
 {
 }
 
+void FreakWidget::retranslate()
+{
+
+}
+
 void FreakWidget::reset()
 {
   const QSignalBlocker blockerPatternScale(mPatternScale);

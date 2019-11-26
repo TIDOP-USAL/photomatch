@@ -99,6 +99,11 @@ void KeypointsFilterWidget::update()
   mMinSize->setMaximum(mMaxSize->value());
 }
 
+void KeypointsFilterWidget::retranslate()
+{
+
+}
+
 void KeypointsFilterWidget::reset()
 {
   const QSignalBlocker blockerNPoints(mPointsNumber);

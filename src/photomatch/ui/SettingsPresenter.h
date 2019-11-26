@@ -42,7 +42,7 @@ class IGfttWidget;
 class IHogWidget;
 class IKazeWidget;
 class ILatchWidget;
-class ILucidWidget;
+//class ILucidWidget;
 class IMsdWidget;
 class IMserWidget;
 class IOrbWidget;
@@ -155,7 +155,7 @@ protected:
   IHogWidget *mHog;
   IKazeWidget *mKaze;
   ILatchWidget *mLatch;
-  ILucidWidget *mLucid;
+  //ILucidWidget *mLucid;
   IMsdWidget *mMsd;
   IMserWidget *mMser;
   IOrbWidget *mOrb;

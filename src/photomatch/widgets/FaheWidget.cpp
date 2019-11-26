@@ -54,6 +54,11 @@ void FaheWidget::update()
 {
 }
 
+void FaheWidget::retranslate()
+{
+
+}
+
 void FaheWidget::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);

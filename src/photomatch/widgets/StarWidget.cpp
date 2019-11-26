@@ -91,6 +91,11 @@ void StarWidget::update()
 {
 }
 
+void StarWidget::retranslate()
+{
+
+}
+
 void StarWidget::reset()
 {
   const QSignalBlocker blockerMaxSize(mMaxSize);

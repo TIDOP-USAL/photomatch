@@ -104,6 +104,11 @@ void KazeWidget::update()
 {
 }
 
+void KazeWidget::retranslate()
+{
+
+}
+
 void KazeWidget::reset()
 {
   const QSignalBlocker blockerHessianThreshold(mThreshold);

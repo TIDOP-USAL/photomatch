@@ -49,7 +49,7 @@
 #include "photomatch/widgets/HogWidget.h"
 #include "photomatch/widgets/KazeWidget.h"
 #include "photomatch/widgets/LatchWidget.h"
-#include "photomatch/widgets/LucidWidget.h"
+//#include "photomatch/widgets/LucidWidget.h"
 #include "photomatch/widgets/LssWidget.h"
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
@@ -119,7 +119,7 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mHogDescriptor(new HogWidget),
     mKazeDescriptor(new KazeWidget),
     mLatchDescriptor(new LatchWidget),
-    mLucidDescriptor(new LucidWidget),
+    //mLucidDescriptor(new LucidWidget),
     mLssDescriptor(new LssWidget),
     mOrbDescriptor(new OrbWidget),
 #ifdef OPENCV_ENABLE_NONFREE
@@ -260,10 +260,10 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     mLatchDescriptor = nullptr;
   }
 
-  if (mLucidDescriptor){
-    delete mLucidDescriptor;
-    mLucidDescriptor = nullptr;
-  }
+//  if (mLucidDescriptor){
+//    delete mLucidDescriptor;
+//    mLucidDescriptor = nullptr;
+//  }
 
   if (mLssDescriptor){
     delete mLssDescriptor;
@@ -569,14 +569,14 @@ void FeatureExtractorPresenter::open()
                                      dynamic_cast<ILatch *>(descriptor)->halfSsdSize() :
                                      mSettingsModel->latchHalfSsdSize());
 
-  /* LUCID */
+//  /* LUCID */
 
-  mLucidDescriptor->setLucidKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
-                                     dynamic_cast<ILucid *>(descriptor)->lucidKernel() :
-                                     mSettingsModel->lucidKernel());
-  mLucidDescriptor->setBlurKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
-                                    dynamic_cast<ILucid *>(descriptor)->blurKernel() :
-                                    mSettingsModel->lucidBlurKernel());
+//  mLucidDescriptor->setLucidKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
+//                                     dynamic_cast<ILucid *>(descriptor)->lucidKernel() :
+//                                     mSettingsModel->lucidKernel());
+//  mLucidDescriptor->setBlurKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
+//                                    dynamic_cast<ILucid *>(descriptor)->blurKernel() :
+//                                    mSettingsModel->lucidBlurKernel());
 
   /* MSD */
 
@@ -851,7 +851,7 @@ void FeatureExtractorPresenter::init()
   mView->addDescriptorExtractor(mHogDescriptor);
   mView->addDescriptorExtractor(mKazeDescriptor);
   mView->addDescriptorExtractor(mLatchDescriptor);
-  mView->addDescriptorExtractor(mLucidDescriptor);
+//  mView->addDescriptorExtractor(mLucidDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
 #if CV_VERSION_MAJOR >= 3
@@ -1092,10 +1092,10 @@ void FeatureExtractorPresenter::run()
     descriptorExtractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
                                                             mLatchDescriptor->rotationInvariance(),
                                                             mLatchDescriptor->halfSsdSize());
-  } else if (currentDescriptorExtractor.compare("LUCID") == 0){
+  } /* else if (currentDescriptorExtractor.compare("LUCID") == 0){
     descriptorExtractor = std::make_shared<LucidDescriptor>(mLucidDescriptor->lucidKernel(),
                                                             mLucidDescriptor->blurKernel());
-  } else if (currentDescriptorExtractor.compare("LSS") == 0){
+  }*/ else if (currentDescriptorExtractor.compare("LSS") == 0){
     descriptorExtractor = std::make_shared<LssDescriptor>();
   } else if (currentDescriptorExtractor.compare("ORB") == 0){
     if (currentKeypointDetector.compare("ORB") == 0){

@@ -73,6 +73,11 @@ void RswheWidget::update()
   }
 }
 
+void RswheWidget::retranslate()
+{
+
+}
+
 void RswheWidget::reset()
 {
   const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);

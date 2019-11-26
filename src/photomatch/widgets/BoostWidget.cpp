@@ -65,6 +65,11 @@ void BoostWidget::update()
 {
 }
 
+void BoostWidget::retranslate()
+{
+
+}
+
 void BoostWidget::reset()
 {
   const QSignalBlocker blockerBytes(mDescriptorType);

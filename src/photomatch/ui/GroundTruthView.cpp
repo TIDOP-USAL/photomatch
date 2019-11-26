@@ -919,6 +919,11 @@ void GroundTruthView::update()
   mPushButtonLockViews->setEnabled(bEnableLockViews);
 }
 
+void GroundTruthView::retranslate()
+{
+
+}
+
 void GroundTruthView::setUnsavedChanges(bool value)
 {
   bUnsavedChanges = value;

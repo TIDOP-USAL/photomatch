@@ -54,6 +54,11 @@ void NoshpWidget::update()
 {
 }
 
+void NoshpWidget::retranslate()
+{
+
+}
+
 void NoshpWidget::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);

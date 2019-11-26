@@ -166,6 +166,11 @@ void MsdWidget::update()
 {
 }
 
+void MsdWidget::retranslate()
+{
+
+}
+
 void MsdWidget::reset()
 {
   const QSignalBlocker blocker1(mThresholdSaliency);

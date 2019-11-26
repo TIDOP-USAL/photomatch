@@ -256,6 +256,11 @@ void ThumbnailsWidget::update()
   mDeleteImageAction->setEnabled(mListWidget->selectedItems().size() > 0);
 }
 
+void ThumbnailsWidget::retranslate()
+{
+
+}
+
 void ThumbnailsWidget::reset()
 {
   if (mFutureWatcherThumbnail->isRunning()) {

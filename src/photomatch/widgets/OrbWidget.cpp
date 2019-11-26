@@ -192,6 +192,11 @@ void OrbWidget::update()
 {
 }
 
+void OrbWidget::retranslate()
+{
+
+}
+
 void OrbWidget::reset()
 {
   const QSignalBlocker blockerFeaturesNumber(mFeaturesNumber);

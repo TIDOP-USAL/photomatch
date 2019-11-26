@@ -67,6 +67,11 @@ void ClaheWidget::update()
 {
 }
 
+void ClaheWidget::retranslate()
+{
+
+}
+
 void ClaheWidget::reset()
 {
   const QSignalBlocker blockerClipLimit(mClipLimit);

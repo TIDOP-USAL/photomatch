@@ -397,6 +397,11 @@ void FeaturesViewerView::update()
 
 }
 
+void FeaturesViewerView::retranslate()
+{
+
+}
+
 void FeaturesViewerView::closeEvent(QCloseEvent *event)
 {
   for (auto &item : mGraphicView->scene()->items()) {

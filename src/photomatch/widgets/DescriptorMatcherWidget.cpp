@@ -297,6 +297,11 @@ void DescriptorMatcherWidget::update()
   }
 }
 
+void DescriptorMatcherWidget::retranslate()
+{
+
+}
+
 void DescriptorMatcherWidget::reset()
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingMethod);

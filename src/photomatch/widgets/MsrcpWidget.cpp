@@ -59,6 +59,11 @@ void MsrcpWidget::update()
 {
 }
 
+void MsrcpWidget::retranslate()
+{
+
+}
+
 void MsrcpWidget::reset()
 {
   const QSignalBlocker blockerSmallScale(mSmallScale);

@@ -65,6 +65,11 @@ void BriskWidget::update()
 {
 }
 
+void BriskWidget::retranslate()
+{
+
+}
+
 void BriskWidget::reset()
 {
   const QSignalBlocker blockerThreshold(mThreshold);

@@ -65,6 +65,11 @@ void FastWidget::update()
 {
 }
 
+void FastWidget::retranslate()
+{
+
+}
+
 void FastWidget::reset()
 {
   const QSignalBlocker blockerFastThreshold(mThreshold);

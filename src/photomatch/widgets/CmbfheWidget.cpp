@@ -54,6 +54,11 @@ void CmbfheWidget::update()
 {
 }
 
+void CmbfheWidget::retranslate()
+{
+
+}
+
 void CmbfheWidget::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);

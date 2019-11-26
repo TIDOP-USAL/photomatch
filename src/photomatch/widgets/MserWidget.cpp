@@ -148,6 +148,11 @@ void MserWidget::update()
   //mMaxArea->setRange(mMinArea->value() + 1, 100000);
 }
 
+void MserWidget::retranslate()
+{
+
+}
+
 void MserWidget::reset()
 {
   const QSignalBlocker blockerDelta(mDelta);

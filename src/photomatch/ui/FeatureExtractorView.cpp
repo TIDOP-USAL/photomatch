@@ -180,4 +180,9 @@ void FeatureExtractorView::update()
 
 }
 
+void FeatureExtractorView::retranslate()
+{
+
+}
+
 } // namespace photomatch

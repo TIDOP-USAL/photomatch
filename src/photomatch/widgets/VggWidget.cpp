@@ -102,6 +102,11 @@ void VggWidget::update()
 {
 }
 
+void VggWidget::retranslate()
+{
+
+}
+
 void VggWidget::reset()
 {
   const QSignalBlocker blockerBytes(mDescriptorType);

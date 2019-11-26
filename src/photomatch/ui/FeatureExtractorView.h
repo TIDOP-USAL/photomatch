@@ -90,6 +90,7 @@ public slots:
 private slots:
 
   void update() override;
+  void retranslate() override;
 
 protected:
 

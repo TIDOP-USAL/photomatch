@@ -492,6 +492,11 @@ void MatchViewerView::update()
   mPushButtonDeleteMatch->setEnabled(mTreeWidgetMatches->selectedItems().size() > 0);
 }
 
+void MatchViewerView::retranslate()
+{
+
+}
+
 void MatchViewerView::onComboBoxLeftImageIndexChanged(int idx)
 {
   emit leftImageChange(mComboBoxLeftImage->itemData(idx).toString());

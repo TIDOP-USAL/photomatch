@@ -101,7 +101,12 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief Interface for ACEBSF (Adaptive contrast enhancement based on modified sigmoid function)
+ * S. Lal and M. Chandra, "Efficient algorithm for contrast enhancement of
+ * natural images," The International Arab Journal of Information Technology,
+ * vol. 11, no. 1, January 2014.
+ */
 class PHOTOMATCH_EXPORT IAcebsf
   : public Preprocess
 {
