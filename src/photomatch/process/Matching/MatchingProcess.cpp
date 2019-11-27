@@ -1,7 +1,6 @@
 #include "MatchingProcess.h"
 
 #include "photomatch/core/features/features.h"
-#include "photomatch/core/features/matcher.h"
 
 #include <tidop/core/messages.h>
 

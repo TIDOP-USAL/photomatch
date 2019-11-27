@@ -15,6 +15,8 @@ add_library(libprocess ${LIB_TYPE}
             preprocess/ImagePreprocess.h
             Matching/MatchingProcess.cpp
             Matching/MatchingProcess.h
+            Matching/PassPointsGroupingProcess.cpp
+            Matching/PassPointsGroupingProcess.h
            )
 
 set_property(TARGET libprocess PROPERTY FOLDER "lib")

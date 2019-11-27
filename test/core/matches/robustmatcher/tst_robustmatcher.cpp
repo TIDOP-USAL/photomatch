@@ -67,7 +67,7 @@ void TestRobustMatcher::test_defaultConstructor()
   RobustMatching robustMatcher(descriptorMatcher);
   QCOMPARE(0.8, robustMatcher.ratio());
   QCOMPARE(true, robustMatcher.crossCheck());
-  QCOMPARE(RobustMatcherProperties::GeometricTest::homography, robustMatcher.geometricTest());
+  QCOMPARE(RobustMatcherProperties::GeometricTest::fundamental, robustMatcher.geometricTest());
   QCOMPARE(RobustMatcherProperties::HomographyComputeMethod::ransac, robustMatcher.homographyComputeMethod());
   QCOMPARE(RobustMatcherProperties::FundamentalComputeMethod::ransac, robustMatcher.fundamentalComputeMethod());
   QCOMPARE(RobustMatcherProperties::EssentialComputeMethod::ransac, robustMatcher.essentialComputeMethod());
@@ -272,7 +272,7 @@ void TestRobustMatcher::test_reset()
 {
   mRobustMatcher->setRatio(0.5);
   mRobustMatcher->setCrossCheck(false);
-  mRobustMatcher->setGeometricTest(RobustMatcherProperties::GeometricTest::fundamental);
+  mRobustMatcher->setGeometricTest(RobustMatcherProperties::GeometricTest::homography);
   mRobustMatcher->setHomographyComputeMethod(RobustMatcherProperties::HomographyComputeMethod::rho);
   mRobustMatcher->setFundamentalComputeMethod(RobustMatcherProperties::FundamentalComputeMethod::lmeds);
   mRobustMatcher->setEssentialComputeMethod(RobustMatcherProperties::EssentialComputeMethod::lmeds);
@@ -284,7 +284,7 @@ void TestRobustMatcher::test_reset()
 
   QCOMPARE(0.8, mRobustMatcher->ratio());
   QCOMPARE(true, mRobustMatcher->crossCheck());
-  QCOMPARE(RobustMatcherProperties::GeometricTest::homography, mRobustMatcher->geometricTest());
+  QCOMPARE(RobustMatcherProperties::GeometricTest::fundamental, mRobustMatcher->geometricTest());
   QCOMPARE(RobustMatcherProperties::HomographyComputeMethod::ransac, mRobustMatcher->homographyComputeMethod());
   QCOMPARE(RobustMatcherProperties::FundamentalComputeMethod::ransac, mRobustMatcher->fundamentalComputeMethod());
   QCOMPARE(RobustMatcherProperties::EssentialComputeMethod::ransac, mRobustMatcher->essentialComputeMethod());
