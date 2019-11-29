@@ -145,7 +145,7 @@ void NewProjectView::clear()
 void NewProjectView::update()
 {
   bool bSave = !mLineEditProjectName->text().isEmpty() &&
-    !mLineEditProjectPath->text().isEmpty();
+               !mLineEditProjectPath->text().isEmpty();
   mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave);
 
   if (bSave){

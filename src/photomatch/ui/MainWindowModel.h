@@ -30,6 +30,7 @@ public:
   std::vector<std::pair<QPointF, QPointF>> loadMatches(const QString &fileMatches,
                                                        const QString &fileKeyPoints1,
                                                        const QString &fileKeyPoints2) const;
+  void exportTiePointsCvXml(const QString &dir);
 
 signals:
 

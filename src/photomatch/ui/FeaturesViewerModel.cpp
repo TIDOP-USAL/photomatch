@@ -45,23 +45,23 @@ std::vector<std::tuple<QPointF, double, double> > FeaturesViewerModel::loadKeypo
 {
   std::vector<std::tuple<QPointF, double, double>> keyPoints;
 
-  //std::shared_ptr<Session> session = mProjectModel->currentSession();
-  std::shared_ptr<Session> session = mProjectModel->findSession(mSession);
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
 
-  std::vector<cv::KeyPoint> cvKeyPoints;
-  cv::Mat descriptors;
-  
-  featuresRead(session->features(image), cvKeyPoints, descriptors);
+    std::vector<cv::KeyPoint> cvKeyPoints;
+    cv::Mat descriptors;
+    featuresRead(session->features(image), cvKeyPoints, descriptors);
 
-  if (cvKeyPoints.size() > 0){
+    if (cvKeyPoints.size() > 0){
 
-    for (size_t i = 0; i < cvKeyPoints.size(); i++){
-      QPointF pt(static_cast<qreal>(cvKeyPoints[i].pt.x),
-                static_cast<qreal>(cvKeyPoints[i].pt.y));
-      keyPoints.push_back(std::make_tuple(pt, static_cast<double>(cvKeyPoints[i].size), static_cast<double>(cvKeyPoints[i].angle)));
+      for (size_t i = 0; i < cvKeyPoints.size(); i++){
+        QPointF pt(static_cast<qreal>(cvKeyPoints[i].pt.x),
+                  static_cast<qreal>(cvKeyPoints[i].pt.y));
+        keyPoints.push_back(std::make_tuple(pt, static_cast<double>(cvKeyPoints[i].size), static_cast<double>(cvKeyPoints[i].angle)));
+      }
+
     }
-
   }
+
 
   return keyPoints;
 }

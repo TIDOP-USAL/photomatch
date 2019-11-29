@@ -37,6 +37,10 @@ class IRepeatabilityModel;
 class IRepeatabilityPresenter;
 class IFeaturesViewerModel;
 class IFeaturesViewerPresenter;
+class IExportFeaturesModel;
+class IExportFeaturesPresenter;
+class IExportMatchesModel;
+class IExportMatchesPresenter;
 class ProgressHandler;
 class IProgressDialog;
 class AboutDialog;
@@ -65,11 +69,13 @@ protected slots:
   void deleteHistory();
   void saveProject();
   void saveProjectAs();
-  void exportTiePointsCvXml();
-  void exportTiePointsCvYml();
-  void exportMatchesCvYml();
-  void exportMatchesCvXml();
-  void exportMatchesTxt();
+  void exportFeatures();
+  void exportMatches();
+//  void exportTiePointsCvXml();
+//  void exportTiePointsCvYml();
+//  void exportMatchesCvYml();
+//  void exportMatchesCvXml();
+//  void exportMatchesTxt();
 
   void closeProject();
   void exit();
@@ -161,6 +167,9 @@ private:
    */
   void initNewSessionDialog();
 
+  void initExportFeaturesDialog();
+  void initExportMatchesDialog();
+
   /*!
    * \brief Inicializa la herramienta de configuración de la aplicación
    */
@@ -222,6 +231,12 @@ protected:
   INewProjectPresenter *mNewProjectPresenter;
 
   INewSessionPresenter *mNewSessionPresenter;
+
+  IExportFeaturesPresenter *mExportFeaturesPresenter;
+  IExportFeaturesModel *mExportFeaturesModel;
+
+  IExportMatchesPresenter *mExportMatchesPresenter;
+  IExportMatchesModel *mExportMatchesModel;
 
   ISettings *mSettings;
   ISettingsRW *mSettingsRW;
