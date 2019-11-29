@@ -6,6 +6,9 @@
 #include "photomatch/core/preprocess/preprocess.h"
 
 #include <opencv2/photo.hpp>
+#ifdef HAVE_CUDA
+#include <opencv2/cudaimgproc.hpp>
+#endif // HAVE_CUDA
 
 #include <QString>
 
@@ -86,6 +89,48 @@ protected:
   cv::Ptr<cv::CLAHE> mCvClahe;
 
 };
+
+/*----------------------------------------------------------------*/
+
+#ifdef HAVE_CUDA
+
+class PHOTOMATCH_EXPORT ClahePreprocessCuda
+  : public ClaheProperties,
+    public ImageProcess
+{
+
+public:
+
+  ClahePreprocessCuda();
+  ClahePreprocessCuda(double clipLimit, const QSize &tilesGridSize);
+  ~ClahePreprocessCuda() override;
+
+// Preprocess interface
+
+public:
+
+  void reset() override;
+
+// IClahe interface
+
+public:
+
+  void setClipLimit(double clipLimit) override;
+  void setTilesGridSize(const QSize &tilesGridSize) override;
+
+// ImageProcess interface
+
+public:
+
+  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
+
+protected:
+
+  cv::Ptr<cv::cuda::CLAHE> mCvClahe;
+
+};
+
+#endif // HAVE_CUDA
 
 } // namespace photomatch
 

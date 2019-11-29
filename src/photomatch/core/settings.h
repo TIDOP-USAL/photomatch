@@ -141,6 +141,9 @@ public:
    */
   virtual void setMatchesFormat(const QString &format) = 0;
 
+  virtual bool useCuda() const = 0;
+  virtual void setUseCuda(bool active) = 0;
+
   virtual IAcebsf *acebsf() = 0;
   virtual const IAcebsf *acebsf() const = 0;
   virtual IClahe *clahe() = 0;
@@ -336,6 +339,9 @@ public:
   QString matchesFormat() const override;
   void setMatchesFormat(const QString &format) override;
 
+  bool useCuda() const override;
+  void setUseCuda(bool active) override;
+
   IAcebsf *acebsf() override;
   const IAcebsf *acebsf() const override;
   IClahe *clahe() override;
@@ -468,6 +474,7 @@ protected:
 
   QString mKeypointsFormat;
   QString mMatchesFormat;
+  bool mUseCuda;
 
   IAcebsf *mAcebsf;
   IClahe *mClahe;

@@ -52,6 +52,7 @@ Settings::Settings()
     mImageViewerBGcolor("#dcdcdc"),
     mKeypointsFormat("XML"),
     mMatchesFormat("XML"),
+    mUseCuda(false),
     mAcebsf(new AcebsfProperties),
     mClahe(new ClaheProperties),
     mCmbfhe(new CmbfheProperties),
@@ -374,6 +375,16 @@ QString Settings::matchesFormat() const
 void Settings::setMatchesFormat(const QString &format)
 {
   mMatchesFormat = format;
+}
+
+bool Settings::useCuda() const
+{
+  return mUseCuda;
+}
+
+void Settings::setUseCuda(bool active)
+{
+  mUseCuda = active;
 }
 
 IAcebsf *Settings::acebsf()
@@ -947,6 +958,7 @@ void Settings::reset()
 
   mKeypointsFormat = "XML";
   mMatchesFormat = "XML";
+  mUseCuda = false;
 
   mAcebsf->reset();
   mClahe->reset();
@@ -1052,6 +1064,8 @@ void SettingsRW::read(ISettings &settings)
 
   settings.setKeypointsFormat(mSettingsRW->value("MATCH/KeypointsFormat", settings.keypointsFormat()).toString());
   settings.setMatchesFormat(mSettingsRW->value("MATCH/MatchesFormat", settings.matchesFormat()).toString());
+
+  settings.setUseCuda(mSettingsRW->value("General/UseCuda", settings.useCuda()).toBool());
 
   /* CLAHE */
   settings.clahe()->setClipLimit(mSettingsRW->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
@@ -1295,6 +1309,8 @@ void SettingsRW::write(const ISettings &settings)
 
   mSettingsRW->setValue("MATCH/KeypointsFormat", settings.keypointsFormat());
   mSettingsRW->setValue("MATCH/MatchFormat", settings.matchesFormat());
+
+  mSettingsRW->setValue("General/UseCuda", settings.useCuda());
 
   /* CLAHE */
   mSettingsRW->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());

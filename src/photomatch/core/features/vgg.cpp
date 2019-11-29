@@ -153,15 +153,13 @@ void VggDescriptor::update()
     descriptor_type = cv::xfeatures2d::VGG::VGG_48;
   }
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mVGG = cv::xfeatures2d::VGG::create(descriptor_type,
                                       static_cast<float>(VggProperties::sigma()),
                                       VggProperties::useNormalizeImage(),
                                       VggProperties::useScaleOrientation(),
                                       static_cast<float>(VggProperties::scaleFactor()),
                                       VggProperties::useNormalizeDescriptor());
-#  endif
 #endif
 }
 
@@ -209,8 +207,7 @@ void VggDescriptor::setUseScaleOrientation(bool useScaleOrientation)
 
 bool VggDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
 {
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   try {
     mVGG->compute(img, keyPoints, descriptors);
   } catch (cv::Exception &e) {
@@ -223,8 +220,7 @@ bool VggDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPo
   msg.append(CV_VERSION);
   QByteArray ba = msg.toLocal8Bit();
   const char *cmsg = ba.data();
-  TL_COMPILER_WARNING(cmsg);
-#  endif
+  TL_COMPILER_WARNING(cmsg)
 #endif
   return false;
 }

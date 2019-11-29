@@ -9,6 +9,7 @@
 #include <QSpinBox>
 #include <QLineEdit>
 #include <QListWidget>
+#include <QCheckBox>
 
 using namespace photomatch;
 
@@ -41,6 +42,9 @@ private slots:
   void test_matchesFormat_data();
   void test_matchesFormat();
   void test_matchesFormatChange();
+
+  void test_useCuda();
+  void test_useCudaChange();
 
   void test_keypointsViewerBGColor_data();
   void test_keypointsViewerBGColor();
@@ -265,6 +269,37 @@ void TestSettingsView::test_matchesFormatChange()
 
   this->setMatchesFormat("Binary");
   QCOMPARE(spy_matchesFormatChange.count(), 0);
+}
+
+void TestSettingsView::test_useCuda()
+{
+  this->setUseCuda(false);
+  QCOMPARE(false, this->useCuda());
+
+  this->setUseCuda(true);
+  QCOMPARE(true, this->useCuda());
+
+  this->setCudaEnabled(false);
+  QCOMPARE(false, this->useCuda());
+
+  this->setCudaEnabled(true);
+  QCOMPARE(true, this->useCuda());
+}
+
+void TestSettingsView::test_useCudaChange()
+{
+
+  QSignalSpy spy_useCudaChange(this, &SettingsView::useCudaChange);
+
+  QTest::mouseClick(this->mCheckBoxUseCuda, Qt::MouseButton::LeftButton);
+
+  QCOMPARE(spy_useCudaChange.count(), 1);
+
+  QList<QVariant> args = spy_useCudaChange.takeFirst();
+  QCOMPARE(args.at(0).toBool(), true);
+
+  this->setUseCuda(true);
+  QCOMPARE(spy_useCudaChange.count(), 0);
 }
 
 void TestSettingsView::test_keypointsViewerBGColor_data()

@@ -134,11 +134,8 @@ void TestMainWindowView::test_setFlag()
   QCOMPARE(true, mActionViewSettings->isEnabled());
   QCOMPARE(true, mActionHelp->isEnabled());
   QCOMPARE(true, mActionAbout->isEnabled());
-  QCOMPARE(false, mActionExportTiePointsCvXml->isEnabled());
-  QCOMPARE(false, mActionExportTiePointsCvYml->isEnabled());
-  QCOMPARE(false, mActionExportMatchesToCvXml->isEnabled());
-  QCOMPARE(false, mActionExportMatchesToCvYml->isEnabled());
-  QCOMPARE(false, mActionExportMatchesToTxt->isEnabled());
+  QCOMPARE(false, mActionExportTiePoints->isEnabled());
+  QCOMPARE(false, mActionExportMatches->isEnabled());
   QCOMPARE(false, mActionMatchesViewer->isEnabled());
   QCOMPARE(false, mActionGroundTruthEditor->isEnabled());
   QCOMPARE(false, mActionHomography->isEnabled());
@@ -169,8 +166,7 @@ void TestMainWindowView::test_setFlag()
   /// Extracción de caracteristicas
   setFlag(MainWindowView::Flag::feature_extraction, true);
   QCOMPARE(true, mActionFeatureMatching->isEnabled());
-  QCOMPARE(true, mActionExportTiePointsCvXml->isEnabled());
-  QCOMPARE(true, mActionExportTiePointsCvYml->isEnabled());
+  QCOMPARE(true, mActionExportTiePoints->isEnabled());
 
   ///Matching
   setFlag(MainWindowView::Flag::feature_matching, true);
@@ -179,9 +175,7 @@ void TestMainWindowView::test_setFlag()
   //QCOMPARE(true, mActionRepeteability->isEnabled());
   QCOMPARE(false, mActionPRCurves->isEnabled());
   QCOMPARE(false, mActionROCCurves->isEnabled());
-  QCOMPARE(true, mActionExportMatchesToCvXml->isEnabled());
-  QCOMPARE(true, mActionExportMatchesToCvYml->isEnabled());
-  QCOMPARE(true, mActionExportMatchesToTxt->isEnabled());
+  QCOMPARE(true, mActionExportMatches->isEnabled());
 
   setFlag(MainWindowView::Flag::ground_truth, true);
   QCOMPARE(true, mActionPRCurves->isEnabled());

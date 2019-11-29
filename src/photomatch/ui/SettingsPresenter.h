@@ -141,10 +141,8 @@ protected:
 
   IAgastWidget *mAgast;
   IAkazeWidget *mAkaze;
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   IBoostWidget *mBoost;
-#  endif
 #endif
   IBriefWidget *mBrief;
   IBriskWidget *mBrisk;
@@ -166,10 +164,8 @@ protected:
 #ifdef OPENCV_ENABLE_NONFREE
   ISurfWidget *mSurf;
 #endif
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   IVggWidget *mVgg;
-#  endif
 #endif
   IDescriptorMatcherWidget *mMatcher;
 

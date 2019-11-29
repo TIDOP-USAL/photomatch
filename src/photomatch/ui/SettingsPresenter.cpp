@@ -20,10 +20,8 @@
 /* Feature detector/extractor */
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/BoostWidget.h"
-#endif
 #endif
 #include "photomatch/widgets/BriefWidget.h"
 #include "photomatch/widgets/BriskWidget.h"
@@ -45,10 +43,8 @@
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
 #endif
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/VggWidget.h"
-#endif
 #endif
 
 /* Descriptor Matcher */
@@ -78,10 +74,8 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mWallis(new WallisWidget),
     mAgast(new AgastWidget),
     mAkaze(new AkazeWidget),
-    #if CV_VERSION_MAJOR >= 3
-    #  if CV_VERSION_MINOR > 2
+    #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
     mBoost(new BoostWidget),
-    #  endif
     #endif
     mBrief(new BriefWidget),
     mBrisk(new BriskWidget),
@@ -103,10 +97,8 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 #ifdef OPENCV_ENABLE_NONFREE
     mSurf(new SurfWidget),
 #endif
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
     mVgg(new VggWidget),
-#  endif
 #endif
     mMatcher(new DescriptorMatcherWidget)
 {
@@ -116,6 +108,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mView, SIGNAL(historyMaxSizeChange(int)),      mModel, SLOT(setHistoryMaxSize(int)));
   connect(mView, SIGNAL(keypointsFormatChange(QString)), mModel, SLOT(setKeypointsFormat(QString)));
   connect(mView, SIGNAL(matchesFormatChange(QString)),   mModel, SLOT(setMatchesFormat(QString)));
+  connect(mView, SIGNAL(useCudaChange(bool)),            mModel, SLOT(setUseCuda(bool)));
 
   connect(mView, SIGNAL(imageViewerBGColorChange(QString)),  mModel, SLOT(setImageViewerBGcolor(QString)));
 
@@ -190,12 +183,10 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mAkaze, SIGNAL(diffusivityChange(QString)),        mModel, SLOT(setAkazeDiffusivity(QString)));
 
   /* BOOST */
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   connect(mBoost, SIGNAL(descriptorTypeChange(QString)),     mModel, SLOT(setBoostDescriptorType(QString)));
   connect(mBoost, SIGNAL(useOrientationChange(bool)),        mModel, SLOT(setBoostUseOrientation(bool)));
   connect(mBoost, SIGNAL(scaleFactorChange(double)),         mModel, SLOT(setBoostScaleFactor(double)));
-#  endif
 #endif
 
   /* BRIEF */
@@ -320,15 +311,13 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 #endif
 
   /* VGG */
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   connect(mVgg, SIGNAL(descriptorTypeChange(QString)),        mModel, SLOT(setVggDescriptorType(QString)));
   connect(mVgg, SIGNAL(scaleFactorChange(double)),            mModel, SLOT(setVggScaleFactor(double)));
   connect(mVgg, SIGNAL(sigmaChange(double)),                  mModel, SLOT(setVggSigma(double)));
   connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseNormalizeDescriptor(bool)));
   connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseNormalizeImage(bool)));
   connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseScaleOrientation(bool)));
-#  endif
 #endif
 
   connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMethod(QString)));
@@ -435,13 +424,11 @@ SettingsPresenter::~SettingsPresenter()
     mAkaze = nullptr;
   }
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (mBoost){
     delete mBoost;
     mBoost = nullptr;
   }
-#  endif
 #endif
 
   if (mBrief){
@@ -527,13 +514,11 @@ SettingsPresenter::~SettingsPresenter()
   }
 #endif
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (mVgg){
     delete mVgg;
     mVgg = nullptr;
   }
-#  endif
 #endif
 
   if (mMatcher){
@@ -575,6 +560,14 @@ void SettingsPresenter::open()
   mView->setLanguages(langs);
 
   mView->setHistoryMaxSize(mModel->historyMaxSize());
+  mView->setUseCuda(mModel->useCuda());
+  mView->setCudaEnabled(false);
+#ifdef HAVE_CUDA
+  mView->setCudaEnabled(true);
+#else
+  mView->setCudaEnabled(false);
+#endif //HAVE_CUDA
+
   mView->setKeypointsFormat(mModel->keypointsFormat());
   mView->setMatchesFormat(mModel->matchesFormat());
 
@@ -628,12 +621,10 @@ void SettingsPresenter::open()
   mAkaze->setDescriptorType(mModel->akazeDescriptorType());
   mAkaze->setDescriptorChannels(mModel->akazeDescriptorChannels());
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mBoost->setDescriptorType(mModel->boostDescriptorType());
   mBoost->setUseOrientation(mModel->boostUseOrientation());
   mBoost->setScaleFactor(mModel->boostScaleFactor());
-#  endif
 #endif
 
   mBrief->setBytes(mModel->briefBytes());
@@ -741,15 +732,13 @@ void SettingsPresenter::open()
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
 #endif
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mVgg->setDescriptorType(mModel->boostDescriptorType());
   mVgg->setScaleFactor(mModel->boostScaleFactor());
   mVgg->setSigma(mModel->vggSigma());
   mVgg->setUseNormalizeDescriptor(mModel->vggUseNormalizeDescriptor());
   mVgg->setUseNormalizeImage(mModel->vggUseNormalizeImage());
   mVgg->setUseScaleOrientation(mModel->vggUseScaleOrientation());
-#  endif
 #endif
 
   mMatcher->setMatchingMethod(mModel->matchMethod());
@@ -808,10 +797,8 @@ void SettingsPresenter::init()
   mView->addFeatureDetectorMethod(mOrb);
   mView->addFeatureDetectorMethod(mAgast);
   mView->addFeatureDetectorMethod(mAkaze);
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mView->addFeatureDetectorMethod(mBoost);
-#  endif
 #endif
   mView->addFeatureDetectorMethod(mBrief);
   mView->addFeatureDetectorMethod(mBrisk);
@@ -827,10 +814,8 @@ void SettingsPresenter::init()
   mView->addFeatureDetectorMethod(mMser);
   mView->addFeatureDetectorMethod(mStar);
   mView->addFeatureDetectorMethod(mHog);
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mView->addFeatureDetectorMethod(mVgg);
-#  endif
 #endif
 
   mView->addDescriptorMatcher(mMatcher);

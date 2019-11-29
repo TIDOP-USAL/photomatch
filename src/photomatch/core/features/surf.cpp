@@ -244,10 +244,8 @@ bool SurfCudaDetectorDescriptor::detect(const cv::Mat &img,
 {
 
   try {
-    cv::cuda::GpuMat g_img;
-    cv::cuda::GpuMat g_mask;
-    g_img.upload(img);
-    g_mask.upload(mask);
+    cv::cuda::GpuMat g_img(img);
+    cv::cuda::GpuMat g_mask(mask);
     (*mSurf)(g_img, g_mask, keyPoints);
   } catch (cv::Exception &e) {
     msgError("SURF Detector error: %s", e.what());
@@ -263,8 +261,7 @@ bool SurfCudaDetectorDescriptor::extract(const cv::Mat &img,
 {
 
   try {
-    cv::cuda::GpuMat g_img;
-    g_img.upload(img);
+    cv::cuda::GpuMat g_img(img);
     cv::cuda::GpuMat g_descriptors;
     (*mSurf)(g_img, cv::cuda::GpuMat(), keyPoints, g_descriptors);
     g_descriptors.download(descriptors);

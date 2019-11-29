@@ -141,10 +141,8 @@ protected:
 #endif
 
   IAkazeWidget *mAkazeDescriptor;
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   IBoostWidget *mBoostDescriptor;
-#  endif
 #endif
   IBriefWidget *mBriefDescriptor;
   IBriskWidget *mBriskDescriptor;
@@ -160,10 +158,8 @@ protected:
   ISiftWidget *mSiftDescriptor;
   ISurfWidget *mSurfDescriptor;
 #endif
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   IVggWidget *mVggDescriptor;
-#  endif
 #endif
   IKeypointsFilterWidget *mKeypointsFilterWidget;
   MultiProcess *mMultiProcess;

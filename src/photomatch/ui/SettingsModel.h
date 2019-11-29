@@ -64,6 +64,8 @@ public:
    */
   virtual QString matchesFormat() const = 0;
 
+  virtual bool useCuda() const = 0;
+
   virtual QSize acebsfBlockSize() const = 0;
   virtual double acebsfL() const = 0;
   virtual double acebsfK1() const = 0;
@@ -317,6 +319,8 @@ public slots:
    */
   virtual void setMatchesFormat(const QString &format) = 0;
 
+  virtual void setUseCuda(bool active) = 0;
+
   virtual void setAcebsfBlockSize(const QSize &blockSize) = 0;
   virtual void setAcebsfL(double) = 0;
   virtual void setAcebsfK1(double) = 0;
@@ -544,6 +548,8 @@ public:
   QString keypointsFormat() const override;
   QString matchesFormat() const override;
 
+  bool useCuda() const override;
+
   QSize acebsfBlockSize() const override;
   double acebsfL() const override;
   double acebsfK1() const override;
@@ -761,6 +767,8 @@ public slots:
   void setDheX(int x) override;
 
   void setFaheBlockSize(const QSize &size) override;
+
+  void setUseCuda(bool active) override;
 
   void setAcebsfBlockSize(const QSize &blockSize) override;
   void setAcebsfL(double l) override;

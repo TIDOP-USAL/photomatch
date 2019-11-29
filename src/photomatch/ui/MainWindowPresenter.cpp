@@ -703,7 +703,7 @@ void MainWindowPresenter::loadImages()
   QStringList fileNames = QFileDialog::getOpenFileNames(Q_NULLPTR,
                                                         tr("Add images"),
                                                         mProjectModel->projectFolder(),
-                                                        tr("Image files (*.tif *.jpg *.png);;TIFF (*.tif);;png (*.png);;JPEG (*.jpg)"));
+                                                        tr("Image files (*.tif *.tiff *.jpg *.png);;TIFF (*.tif *.tiff);;png (*.png);;JPEG (*.jpg)"));
   if (fileNames.size() > 0) {
 
     mProjectModel->addImages(fileNames);
@@ -1590,7 +1590,7 @@ void MainWindowPresenter::initHomographyViewer()
     mHomographyViewerModel = new HomographyViewerModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     IHomographyViewerView *homographyViewerView = new HomographyViewerView(mView, f);
-    mHomographyViewerPresenter = new HomographyViewerPresenter(homographyViewerView, mHomographyViewerModel);
+    mHomographyViewerPresenter = new HomographyViewerPresenter(homographyViewerView, mHomographyViewerModel, mSettingsModel);
     //mMatchesViewerPresenter->setHelp(mHelp);
   }
 }

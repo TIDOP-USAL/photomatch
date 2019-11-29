@@ -46,6 +46,7 @@ SettingsView::SettingsView(QWidget *parent)
 
   connect(mKeypointsFormat, SIGNAL(currentTextChanged(QString)),  this, SIGNAL(keypointsFormatChange(QString)));
   connect(mMatchesFormat,   SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchesFormatChange(QString)));
+  connect(mCheckBoxUseCuda, SIGNAL(clicked(bool)),                this, SIGNAL(useCudaChange(bool)));
 
   connect(mLineEditKeypointViewerBGColor,       SIGNAL(textChanged(QString)), this,  SIGNAL(keypointsViewerBGColorChange(QString)));
   connect(mPushButtonKeypointViewerBGColor,     SIGNAL(clicked(bool)),        this,  SLOT(onPushButtonKeypointViewerBGColorClicked()));
@@ -202,9 +203,12 @@ void SettingsView::init()
   mHistoryMaxSize->setValue(10);
   gridLayoutGeneral->addWidget(mHistoryMaxSize, 1, 1, 1, 1);
 
+  gridLayoutGeneral->addWidget(new QLabel(tr("Use Cuda")), 2, 0, 1, 1);
+  gridLayoutGeneral->addWidget(mCheckBoxUseCuda, 2, 1, 1, 1);
+
   QSpacerItem *verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-  gridLayoutGeneral->addItem(verticalSpacer, 2, 0, 1, 1);
+  gridLayoutGeneral->addItem(verticalSpacer, 3, 0, 1, 1);
 
   mStackedWidget->addWidget(pageGeneral);
 
@@ -267,8 +271,6 @@ void SettingsView::init()
   mMatchesFormat->addItem("YML");
   mMatchesFormat->setCurrentText("XML");
   gridLayoutContentsToolsGeneral->addWidget(mMatchesFormat, 1, 1, 1, 1);
-  gridLayoutContentsToolsGeneral->addWidget(new QLabel(tr("Use Cuda")), 2, 0, 1, 1);
-  gridLayoutContentsToolsGeneral->addWidget(mCheckBoxUseCuda, 2, 1, 1, 1);
   gridLayoutContentsToolsGeneral->addItem(new QSpacerItem(1,1, QSizePolicy::Fixed, QSizePolicy::Expanding), 2, 1, 1, 2);
   scrollAreaToolsGeneral->setWidget(scrollAreaWidgetContentsToolsGeneral);
   gridLayoutTabToolsGeneral->addWidget(scrollAreaToolsGeneral, 0, 0, 1, 1);

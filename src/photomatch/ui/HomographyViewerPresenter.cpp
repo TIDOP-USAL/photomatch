@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/HomographyViewerModel.h"
 #include "photomatch/ui/HomographyViewerView.h"
+#include "photomatch/ui/SettingsModel.h"
 
 #include <QFileInfo>
 #include <QImageReader>
@@ -10,10 +11,12 @@ namespace photomatch
 {
 
 HomographyViewerPresenter::HomographyViewerPresenter(IHomographyViewerView *view,
-                                                     IHomographyViewerModel *model)
+                                                     IHomographyViewerModel *model,
+                                                     ISettingsModel *settings)
   : IHomographyViewerPresenter(),
     mView(view),
-    mModel(model)/*,
+    mModel(model),
+    mSettingsModel(settings)/*,
     mHelp(nullptr)*/
 {
   init();
@@ -21,7 +24,6 @@ HomographyViewerPresenter::HomographyViewerPresenter(IHomographyViewerView *view
   connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
   connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
   connect(mView, SIGNAL(homography(QString, QString)),     this, SLOT(homography(QString, QString)));
-
 
   //connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   //connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
@@ -52,6 +54,7 @@ void HomographyViewerPresenter::open()
 
 void HomographyViewerPresenter::init()
 {
+  mModel->setUseCuda(mSettingsModel->useCuda());
 }
 
 void HomographyViewerPresenter::loadLeftImage(const QString &image)

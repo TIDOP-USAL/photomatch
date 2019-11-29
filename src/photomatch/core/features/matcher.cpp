@@ -231,12 +231,15 @@ void BruteForceMatcherCuda::update()
 }
 
 bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
-                              cv::InputArray &trainDescriptors,
-                              std::vector<std::vector<cv::DMatch>> &matches,
-                              cv::InputArray mask)
+                                  cv::InputArray &trainDescriptors,
+                                  std::vector<std::vector<cv::DMatch>> &matches,
+                                  cv::InputArray mask)
 {
   try {
-    mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
+    cv::cuda::GpuMat gQueryDescriptors(queryDescriptors);
+    cv::cuda::GpuMat gTrainDescriptors(trainDescriptors);
+    cv::cuda::GpuMat gMask(mask);
+    mBFMatcher->knnMatch(gQueryDescriptors, gTrainDescriptors, matches, 2, gMask);
   } catch (cv::Exception &e) {
     msgError("Brute-force Matcher error: %s", e.what());
     return true;

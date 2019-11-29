@@ -212,6 +212,8 @@ void DescriptorMatcherPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
+  emit finished();
+
   msgWarning("Processing has been canceled by the user");
 }
 
@@ -247,7 +249,15 @@ void DescriptorMatcherPresenter::run()
 
   std::shared_ptr<DescriptorMatcher> descriptorMatcher;
   if (matchingMethod.compare("Brute-Force") == 0){
-    descriptorMatcher = std::make_shared<BruteForceMatcher>(norm);
+#ifdef HAVE_CUDA
+    if (mSettingsModel->useCuda()){
+      descriptorMatcher = std::make_shared<BruteForceMatcherCuda>(norm);
+    } else {
+#endif // HAVE_CUDA
+      descriptorMatcher = std::make_shared<BruteForceMatcher>(norm);
+#ifdef HAVE_CUDA
+    }
+#endif // HAVE_CUDA
   } else if (matchingMethod.compare("FLANN") == 0){
 
     FlannMatcher::Index index;

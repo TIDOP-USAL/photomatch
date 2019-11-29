@@ -56,8 +56,8 @@ public:
   KeyPointsFilterProcess() {}
   virtual ~KeyPointsFilterProcess() = default;
 
-  virtual bool filter(const std::vector<cv::KeyPoint> &keypoins,
-                      std::vector<cv::KeyPoint> &filteredKeypoins) = 0;
+  virtual bool filter(const std::vector<cv::KeyPoint> &keypoints,
+                      std::vector<cv::KeyPoint> &filteredKeypoints) = 0;
 };
 
 
@@ -118,7 +118,7 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoins, std::vector<cv::KeyPoint> &filteredKeypoins) override;
+  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
 };
 
@@ -180,7 +180,7 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoins, std::vector<cv::KeyPoint> &filteredKeypoins) override;
+  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
 // KeyPointsFilter interface
 
@@ -208,7 +208,7 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoins, std::vector<cv::KeyPoint> &filteredKeypoins) override;
+  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
 };
 

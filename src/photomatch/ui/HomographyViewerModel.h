@@ -25,6 +25,7 @@ public:
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
   virtual QImage homography(const QString &imgName1, const QString &imgName2) const = 0;
+  virtual void setUseCuda(bool active) = 0;
 
 };
 
@@ -43,10 +44,11 @@ public:
 
 public:
 
-  QString currentSession() const;
+  QString currentSession() const override;
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
   QImage homography(const QString &imgName1, const QString &imgName2) const override;
+  void setUseCuda(bool active) override;
 
 // IModel interface
 
@@ -57,9 +59,7 @@ private:
 protected:
 
   IProjectModel *mProjectModel;
-
-
-
+  bool bUseCuda;
 };
 
 

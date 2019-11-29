@@ -87,6 +87,11 @@ QString SettingsModel::matchesFormat() const
   return mSettings->matchesFormat();
 }
 
+bool SettingsModel::useCuda() const
+{
+  return mSettings->useCuda();
+}
+
 QSize SettingsModel::acebsfBlockSize() const
 {
   return mSettings->acebsf()->blockSize();
@@ -986,6 +991,12 @@ void SettingsModel::setDheX(int x)
 void SettingsModel::setFaheBlockSize(const QSize &size)
 {
   mSettings->fahe()->setBlockSize(size);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setUseCuda(bool active)
+{
+  mSettings->setUseCuda(active);
   emit unsavedChanges(true);
 }
 

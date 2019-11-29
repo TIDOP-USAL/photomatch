@@ -20,12 +20,13 @@ namespace photomatch
 
 HomographyViewerModel::HomographyViewerModel(IProjectModel *mProjectModel)
   : IHomographyViewerModel(),
-    mProjectModel(mProjectModel)
+    mProjectModel(mProjectModel),
+    bUseCuda(false)
 {
   init();
 }
 
-photomatch::HomographyViewerModel::~HomographyViewerModel()
+HomographyViewerModel::~HomographyViewerModel()
 {
 
 }
@@ -108,13 +109,31 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
           ba = imgPath2.toLocal8Bit();
           const char *img_right = ba.data();
           cv::Mat imgRight = cv::imread(img_right, cv::IMREAD_IGNORE_ORIENTATION | cv::IMREAD_COLOR);
-          cv::Mat out;
-          cv::warpPerspective(imgLeft, out, H, imgRight.size(), cv::INTER_LINEAR);
-          imgLeft.release();
-          ///cv::cuda::warpPerspective
 
           cv::Mat merged;
-          cv::addWeighted(imgRight, 0.5, out, 0.3, 0.0, merged);
+#ifdef HAVE_CUDA
+          if (bUseCuda){
+            cv::cuda::GpuMat gpuImgLeft(imgLeft);
+            imgLeft.release();
+            cv::cuda::GpuMat gpuOut;
+            cv::cuda::GpuMat gpuH(H);
+            cv::cuda::warpPerspective(gpuImgLeft, gpuOut, gpuH, gpuImgLeft.size(), cv::INTER_LINEAR);
+            cv::cuda::GpuMat gpuImgRight(imgRight);
+            cv::cuda::GpuMat gpuMerged;
+            cv::cuda::addWeighted(imgRight, 0.5, gpuOut, 0.3, 0.0, gpuMerged);
+            gpuMerged.download(merged);
+          } else {
+#endif
+            cv::Mat out;
+            cv::warpPerspective(imgLeft, out, H, imgRight.size(), cv::INTER_LINEAR);
+            imgLeft.release();
+            cv::addWeighted(imgRight, 0.5, out, 0.3, 0.0, merged);
+#ifdef HAVE_CUDA
+          }
+#endif
+          ///cv::cuda::warpPerspective
+
+
           imgRight.release();
           ///cv::cuda::addWeighted
 
@@ -126,6 +145,11 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
   }
 
   return image;
+}
+
+void HomographyViewerModel::setUseCuda(bool active)
+{
+  bUseCuda = active;
 }
 
 void HomographyViewerModel::init()

@@ -117,12 +117,10 @@ void BoostDescriptor::update()
     descriptor_type = cv::xfeatures2d::BoostDesc::BINBOOST_256;
   }
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mBoost = cv::xfeatures2d::BoostDesc::create(descriptor_type,
                                               BoostProperties::useOrientation(),
                                               static_cast<float>(BoostProperties::scaleFactor()));
-#  endif
 #endif
 
 }
@@ -154,8 +152,7 @@ void BoostDescriptor::setScaleFactor(double scaleFactor)
 bool BoostDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
 {
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   try {
     mBoost->compute(img, keyPoints, descriptors);
   } catch (cv::Exception &e) {
@@ -168,8 +165,7 @@ bool BoostDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &key
   msg.append(CV_VERSION);
   QByteArray ba = msg.toLocal8Bit();
   const char *cmsg = ba.data();
-  TL_COMPILER_WARNING(cmsg);
-#  endif
+  TL_COMPILER_WARNING(cmsg)
 #endif
   return false;
 }

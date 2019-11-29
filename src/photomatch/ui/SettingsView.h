@@ -127,6 +127,7 @@ signals:
   void imageViewerBGColorChange(QString);
   void keypointsFormatChange(QString);
   void matchesFormatChange(QString);
+  void useCudaChange(bool);
   void applyChanges();
 
   void keypointsViewerBGColorChange(QString);

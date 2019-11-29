@@ -349,7 +349,7 @@ void OrbCudaDetectorDescriptor::update()
   }
 
   mOrb = cv::cuda::ORB::create(OrbProperties::featuresNumber(),
-                               OrbProperties::scaleFactor(),
+                               static_cast<float>(OrbProperties::scaleFactor()),
                                OrbProperties::levelsNumber(),
                                OrbProperties::edgeThreshold(),
                                0,
@@ -365,7 +365,9 @@ bool OrbCudaDetectorDescriptor::detect(const cv::Mat &img,
 {
 
   try {
-    mOrb->detect(img, keyPoints, mask);
+    cv::cuda::GpuMat g_img(img);
+    cv::cuda::GpuMat g_mask(mask);
+    mOrb->detect(g_img, keyPoints, g_mask);
   } catch (cv::Exception &e) {
     msgError("ORB Detector error: %s", e.what());
     return true;
@@ -380,7 +382,10 @@ bool OrbCudaDetectorDescriptor::extract(const cv::Mat &img,
 {
 
   try {
-    mOrb->compute(img, keyPoints, descriptors);
+    cv::cuda::GpuMat g_img(img);
+    cv::cuda::GpuMat g_descriptors;
+    mOrb->compute(g_img, keyPoints, g_descriptors);
+    g_descriptors.download(descriptors);
   } catch (cv::Exception &e) {
     msgError("ORB Descriptor error: %s", e.what());
     return true;

@@ -12,6 +12,7 @@ namespace photomatch
 
 class IHomographyViewerView;
 class IHomographyViewerModel;
+class ISettingsModel;
 class Help;
 
 
@@ -43,7 +44,8 @@ class HomographyViewerPresenter
 public:
 
   HomographyViewerPresenter(IHomographyViewerView *view,
-                            IHomographyViewerModel *model);
+                            IHomographyViewerModel *model,
+                            ISettingsModel *settings);
   ~HomographyViewerPresenter() override;
 
 // IPresenter interface
@@ -69,6 +71,7 @@ private:
 
   IHomographyViewerView *mView;
   IHomographyViewerModel *mModel;
+  ISettingsModel *mSettingsModel;
   std::shared_ptr<Help> mHelp;
 };
 

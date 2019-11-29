@@ -3,10 +3,8 @@
 #include "photomatch/core/features/features.h"
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/core/features/boost.h"
-#endif
 #endif
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
@@ -35,10 +33,8 @@
 
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/BoostWidget.h"
-#endif
 #endif
 #include "photomatch/widgets/BriefWidget.h"
 #include "photomatch/widgets/BriskWidget.h"
@@ -61,10 +57,8 @@
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
 #endif
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/VggWidget.h"
-#endif
 #endif
 #include "photomatch/widgets/KeypointsFilterWidget.h"
 
@@ -107,10 +101,8 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mSurfDetector(new SurfWidget),
 #endif
     mAkazeDescriptor(new AkazeWidget),
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
     mBoostDescriptor(new BoostWidget),
-#endif
 #endif
     mBriefDescriptor(new BriefWidget),
     mBriskDescriptor(new BriskWidget),
@@ -126,10 +118,8 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
 #endif
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
     mVggDescriptor(new VggWidget),
-#endif
 #endif
     mKeypointsFilterWidget(new KeypointsFilterWidget),
     mMultiProcess(new MultiProcess(true)),
@@ -216,13 +206,11 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     mAkazeDescriptor = nullptr;
   }
 
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (mBoostDescriptor){
     delete mBoostDescriptor;
     mBoostDescriptor = nullptr;
   }
-#endif
 #endif
 
   if (mBriefDescriptor){
@@ -287,13 +275,11 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
   }
 #endif
 
-#if CV_VERSION_MAJOR >= 3
-#if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (mVggDescriptor){
     delete mVggDescriptor;
     mVggDescriptor = nullptr;
   }
-#endif
 #endif
 
   if (mKeypointsFilterWidget){
@@ -378,8 +364,7 @@ void FeatureExtractorPresenter::open()
 
   /* Boost */
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mBoostDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::boost ?
                                         dynamic_cast<IBoost *>(descriptor)->descriptorType() :
                                         mSettingsModel->boostDescriptorType());
@@ -390,7 +375,6 @@ void FeatureExtractorPresenter::open()
   mBoostDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::boost ?
                                      dynamic_cast<IBoost *>(descriptor)->scaleFactor() :
                                      mSettingsModel->boostScaleFactor());
-#  endif
 #endif
 
   /* BRIEF */
@@ -787,8 +771,7 @@ void FeatureExtractorPresenter::open()
 
   /* Vgg */
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mVggDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::vgg ?
                                         dynamic_cast<IVgg *>(descriptor)->descriptorType() :
                                         mSettingsModel->vggDescriptorType());
@@ -807,7 +790,6 @@ void FeatureExtractorPresenter::open()
   mVggDescriptor->setUseScaleOrientation(descriptor && descriptor->type() == Feature::Type::vgg ?
                                      dynamic_cast<IVgg *>(descriptor)->useScaleOrientation() :
                                      mSettingsModel->vggUseScaleOrientation());
-#  endif
 #endif
 
   ///TODO: guardar en proyecto y configuración y recuperarlo desde aqui
@@ -839,10 +821,8 @@ void FeatureExtractorPresenter::init()
 #endif
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mBoostDescriptor);
-#  endif
 #endif
   mView->addDescriptorExtractor(mBriefDescriptor);
   mView->addDescriptorExtractor(mBriskDescriptor);
@@ -854,10 +834,8 @@ void FeatureExtractorPresenter::init()
 //  mView->addDescriptorExtractor(mLucidDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mVggDescriptor);
-#  endif
 #endif
 #ifdef OPENCV_ENABLE_NONFREE
   mView->addDescriptorExtractor(mSiftDescriptor);
@@ -894,6 +872,8 @@ void FeatureExtractorPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
+
+  emit finished();
 
   msgWarning("Processing has been canceled by the user");
 }
@@ -977,14 +957,30 @@ void FeatureExtractorPresenter::run()
                                                       mMserDetector->minMargin(),
                                                       mMserDetector->edgeBlurSize());
   } else if (currentKeypointDetector.compare("ORB") == 0){
-    keypointDetector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
-                                                               mOrbDetector->scaleFactor(),
-                                                               mOrbDetector->levelsNumber(),
-                                                               mOrbDetector->edgeThreshold(),
-                                                               mOrbDetector->wta_k(),
-                                                               mOrbDetector->scoreType(),
-                                                               mOrbDetector->patchSize(),
-                                                               mOrbDetector->fastThreshold());
+#ifdef HAVE_CUDA
+    if (mSettingsModel->useCuda()){
+      keypointDetector = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDetector->featuresNumber(),
+                                                                     mOrbDetector->scaleFactor(),
+                                                                     mOrbDetector->levelsNumber(),
+                                                                     mOrbDetector->edgeThreshold(),
+                                                                     mOrbDetector->wta_k(),
+                                                                     mOrbDetector->scoreType(),
+                                                                     mOrbDetector->patchSize(),
+                                                                     mOrbDetector->fastThreshold());
+    } else {
+#endif // HAVE_CUDA
+      keypointDetector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
+                                                                 mOrbDetector->scaleFactor(),
+                                                                 mOrbDetector->levelsNumber(),
+                                                                 mOrbDetector->edgeThreshold(),
+                                                                 mOrbDetector->wta_k(),
+                                                                 mOrbDetector->scoreType(),
+                                                                 mOrbDetector->patchSize(),
+                                                                 mOrbDetector->fastThreshold());
+
+#ifdef HAVE_CUDA
+    }
+#endif // HAVE_CUDA
   } 
 #ifdef OPENCV_ENABLE_NONFREE
   else if (currentKeypointDetector.compare("SIFT") == 0){
@@ -1004,11 +1000,24 @@ void FeatureExtractorPresenter::run()
   } 
 #ifdef OPENCV_ENABLE_NONFREE
   else if (currentKeypointDetector.compare("SURF") == 0){
+#ifdef HAVE_CUDA
+    if (mSettingsModel->useCuda()){
+      keypointDetector = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+                                                                      mSurfDetector->octaves(),
+                                                                      mSurfDetector->octaveLayers(),
+                                                                      mSurfDetector->extendedDescriptor(),
+                                                                      mSurfDetector->rotatedFeatures());
+    } else {
+#endif // HAVE_CUDA
+
     keypointDetector = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                 mSurfDetector->octaves(),
                                                                 mSurfDetector->octaveLayers(),
                                                                 mSurfDetector->extendedDescriptor(),
                                                                 mSurfDetector->rotatedFeatures());
+#ifdef HAVE_CUDA
+    }
+#endif // HAVE_CUDA
   } 
 #endif
   else {
@@ -1036,14 +1045,12 @@ void FeatureExtractorPresenter::run()
                                                                       mAkazeDescriptor->diffusivity());
     }
   }
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   else if (currentDescriptorExtractor.compare("BOOST") == 0){
     descriptorExtractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
                                                             mBoostDescriptor->useOrientation(),
                                                             mBoostDescriptor->scaleFactor());
   }
-#  endif
 #endif
   else if (currentDescriptorExtractor.compare("BRIEF") == 0){
     descriptorExtractor = std::make_shared<BriefDescriptor>(mBriefDescriptor->bytes(),
@@ -1098,25 +1105,51 @@ void FeatureExtractorPresenter::run()
   }*/ else if (currentDescriptorExtractor.compare("LSS") == 0){
     descriptorExtractor = std::make_shared<LssDescriptor>();
   } else if (currentDescriptorExtractor.compare("ORB") == 0){
-    if (currentKeypointDetector.compare("ORB") == 0){
-      descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
-                                                                    mOrbDetector->scaleFactor(),
-                                                                    mOrbDetector->levelsNumber(),
-                                                                    mOrbDetector->edgeThreshold(),
-                                                                    mOrbDetector->wta_k(),
-                                                                    mOrbDetector->scoreType(),
-                                                                    mOrbDetector->patchSize(),
-                                                                    mOrbDetector->fastThreshold());
+#ifdef HAVE_CUDA
+    if (mSettingsModel->useCuda()){
+      if (currentKeypointDetector.compare("ORB") == 0){
+        descriptorExtractor = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDetector->featuresNumber(),
+                                                                          mOrbDetector->scaleFactor(),
+                                                                          mOrbDetector->levelsNumber(),
+                                                                          mOrbDetector->edgeThreshold(),
+                                                                          mOrbDetector->wta_k(),
+                                                                          mOrbDetector->scoreType(),
+                                                                          mOrbDetector->patchSize(),
+                                                                          mOrbDetector->fastThreshold());
+      } else {
+        descriptorExtractor = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
+                                                                          mOrbDescriptor->scaleFactor(),
+                                                                          mOrbDescriptor->levelsNumber(),
+                                                                          mOrbDescriptor->edgeThreshold(),
+                                                                          mOrbDescriptor->wta_k(),
+                                                                          mOrbDescriptor->scoreType(),
+                                                                          mOrbDescriptor->patchSize(),
+                                                                          mOrbDescriptor->fastThreshold());
+      }
     } else {
-      descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
-                                                                    mOrbDescriptor->scaleFactor(),
-                                                                    mOrbDescriptor->levelsNumber(),
-                                                                    mOrbDescriptor->edgeThreshold(),
-                                                                    mOrbDescriptor->wta_k(),
-                                                                    mOrbDescriptor->scoreType(),
-                                                                    mOrbDescriptor->patchSize(),
-                                                                    mOrbDescriptor->fastThreshold());
+#endif // HAVE_CUDA
+      if (currentKeypointDetector.compare("ORB") == 0){
+        descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
+                                                                      mOrbDetector->scaleFactor(),
+                                                                      mOrbDetector->levelsNumber(),
+                                                                      mOrbDetector->edgeThreshold(),
+                                                                      mOrbDetector->wta_k(),
+                                                                      mOrbDetector->scoreType(),
+                                                                      mOrbDetector->patchSize(),
+                                                                      mOrbDetector->fastThreshold());
+      } else {
+        descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
+                                                                      mOrbDescriptor->scaleFactor(),
+                                                                      mOrbDescriptor->levelsNumber(),
+                                                                      mOrbDescriptor->edgeThreshold(),
+                                                                      mOrbDescriptor->wta_k(),
+                                                                      mOrbDescriptor->scoreType(),
+                                                                      mOrbDescriptor->patchSize(),
+                                                                      mOrbDescriptor->fastThreshold());
+      }
+#ifdef HAVE_CUDA
     }
+#endif // HAVE_CUDA
   } 
 #ifdef OPENCV_ENABLE_NONFREE
   else if (currentDescriptorExtractor.compare("SIFT") == 0){
@@ -1134,23 +1167,42 @@ void FeatureExtractorPresenter::run()
                                                                      mSiftDescriptor->sigma());
     }
   } else if (currentDescriptorExtractor.compare("SURF") == 0){
-    if (currentKeypointDetector.compare("SURF") == 0){
-      descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
-                                                                     mSurfDetector->octaves(),
-                                                                     mSurfDetector->octaveLayers(),
-                                                                     mSurfDetector->extendedDescriptor(),
-                                                                     mSurfDetector->rotatedFeatures());
+#ifdef HAVE_CUDA
+    if (mSettingsModel->useCuda()){
+      if (currentKeypointDetector.compare("SURF") == 0){
+        descriptorExtractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+                                                                           mSurfDetector->octaves(),
+                                                                           mSurfDetector->octaveLayers(),
+                                                                           mSurfDetector->extendedDescriptor(),
+                                                                           mSurfDetector->rotatedFeatures());
+      } else {
+        descriptorExtractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
+                                                                           mSurfDescriptor->octaves(),
+                                                                           mSurfDescriptor->octaveLayers(),
+                                                                           mSurfDescriptor->extendedDescriptor(),
+                                                                           mSurfDescriptor->rotatedFeatures());
+      }
     } else {
-      descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
-                                                                     mSurfDescriptor->octaves(),
-                                                                     mSurfDescriptor->octaveLayers(),
-                                                                     mSurfDescriptor->extendedDescriptor(),
-                                                                     mSurfDescriptor->rotatedFeatures());
+#endif // HAVE_CUDA
+      if (currentKeypointDetector.compare("SURF") == 0){
+        descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+                                                                       mSurfDetector->octaves(),
+                                                                       mSurfDetector->octaveLayers(),
+                                                                       mSurfDetector->extendedDescriptor(),
+                                                                       mSurfDetector->rotatedFeatures());
+      } else {
+        descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
+                                                                       mSurfDescriptor->octaves(),
+                                                                       mSurfDescriptor->octaveLayers(),
+                                                                       mSurfDescriptor->extendedDescriptor(),
+                                                                       mSurfDescriptor->rotatedFeatures());
+      }
+#ifdef HAVE_CUDA
     }
+#endif // HAVE_CUDA
   } 
 #endif
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   else if (currentDescriptorExtractor.compare("VGG") == 0){
     descriptorExtractor = std::make_shared<VggDescriptor>(mVggDescriptor->descriptorType(),
                                                           mVggDescriptor->scaleFactor(),
@@ -1159,7 +1211,6 @@ void FeatureExtractorPresenter::run()
                                                           mVggDescriptor->useNormalizeImage(),
                                                           mVggDescriptor->useScaleOrientation());
   }
-#  endif
 #endif
   else {
     ///TODO: error
@@ -1347,8 +1398,7 @@ void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &keypoi
 
 void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
 {
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (descriptorExtractor.compare("BOOST") == 0 ||
       descriptorExtractor.compare("VGG") == 0){
     QString keypointDetector = mView->currentKeypointDetector();
@@ -1367,7 +1417,6 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
       mBoostDescriptor->setScaleFactor(1.50);
    }
   }
-#  endif
 #endif
   mView->setCurrentDescriptorExtractor(descriptorExtractor);
 }

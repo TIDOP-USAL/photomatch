@@ -296,6 +296,8 @@ void PreprocessPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
+  emit finished();
+
   msgWarning("Processing has been canceled by the user");
 }
 
@@ -326,8 +328,17 @@ void PreprocessPresenter::run()
                                                       mACEBSF->k1(),
                                                       mACEBSF->k2());
   } else if (currentPreprocess.compare("CLAHE") == 0) {
-    imageProcess = std::make_shared<ClahePreprocess>(mCLAHE->clipLimit(),
-                                                     mCLAHE->tileGridSize());
+#ifdef HAVE_CUDA
+    if (mSettingsModel->useCuda()){
+       imageProcess = std::make_shared<ClahePreprocessCuda>(mCLAHE->clipLimit(),
+                                                            mCLAHE->tileGridSize());
+    } else {
+#endif // HAVE_CUDA
+      imageProcess = std::make_shared<ClahePreprocess>(mCLAHE->clipLimit(),
+                                                       mCLAHE->tileGridSize());
+#ifdef HAVE_CUDA
+    }
+#endif // HAVE_CUDA
   } else if (currentPreprocess.compare("CMBFHE") == 0) {
     imageProcess = std::make_shared<CmbfhePreprocess>(mCMBFHE->blockSize());
   } else if (currentPreprocess.compare("Decolorization") == 0) {

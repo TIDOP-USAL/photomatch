@@ -89,10 +89,8 @@ public:
 
 protected:
 
-#if CV_VERSION_MAJOR >= 3
-#  if CV_VERSION_MINOR > 2
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   cv::Ptr<cv::xfeatures2d::BoostDesc> mBoost;
-#  endif
 #endif
 
 };
