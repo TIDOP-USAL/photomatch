@@ -41,6 +41,7 @@ public:
 
   virtual QString keypointsFormat() const = 0;
   virtual QString matchesFormat() const = 0;
+  virtual bool useCuda() const = 0;
 
   virtual QString keypointsViewerBGColor() const = 0;
   virtual int keypointsViewerMarkerType() const = 0;
@@ -91,6 +92,8 @@ public slots:
 
   virtual void setKeypointsFormat(const QString &format) = 0;
   virtual void setMatchesFormat(const QString &format) = 0;
+  virtual void setUseCuda(bool active) = 0;
+  virtual void setCudaEnabled(bool enabled) = 0;
 
   virtual void addPreprocess(QWidget *preprocess) = 0;
   virtual void addFeatureDetectorMethod(QWidget *detector) = 0;
@@ -196,6 +199,7 @@ public:
 
   QString keypointsFormat() const override;
   QString matchesFormat() const override;
+  bool useCuda() const override;
 
   QString keypointsViewerBGColor() const override;
   int keypointsViewerMarkerType() const override;
@@ -229,6 +233,8 @@ public slots:
 
   void setKeypointsFormat(const QString &format) override;
   void setMatchesFormat(const QString &format) override;
+  void setUseCuda(bool active) override;
+  void setCudaEnabled(bool enabled) override;
 
   void addPreprocess(QWidget *preprocess) override;
   void addFeatureDetectorMethod(QWidget *detector) override;

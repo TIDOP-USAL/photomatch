@@ -564,6 +564,7 @@ void SettingsView::clear()
 
   mKeypointsFormat->setCurrentText("XML");
   mMatchesFormat->setCurrentText("XML");
+  mCheckBoxUseCuda->setChecked(false);
 
   mLineEditKeypointViewerBGColor->setText("#dcdcdc");
   mListWidgetKeypointsViewerMarkerType->setCurrentRow(0);
@@ -620,6 +621,11 @@ QString SettingsView::keypointsFormat() const
 QString SettingsView::matchesFormat() const
 {
   return mMatchesFormat->currentText();
+}
+
+bool SettingsView::useCuda() const
+{
+  return mCheckBoxUseCuda->isEnabled() && mCheckBoxUseCuda->isChecked();
 }
 
 QString SettingsView::keypointsViewerBGColor() const
@@ -743,6 +749,16 @@ void SettingsView::setMatchesFormat(const QString &format)
 {
   const QSignalBlocker blocker(mMatchesFormat);
   mMatchesFormat->setCurrentText(format);
+}
+
+void SettingsView::setUseCuda(bool active)
+{
+  mCheckBoxUseCuda->setChecked(active);
+}
+
+void SettingsView::setCudaEnabled(bool enabled)
+{
+  mCheckBoxUseCuda->setEnabled(enabled);
 }
 
 void SettingsView::addPreprocess(QWidget *preprocess)
