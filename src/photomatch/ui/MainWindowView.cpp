@@ -54,6 +54,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionPreprocess(new QAction(this)),
     mActionFeatureExtraction(new QAction(this)),
     mActionFeatureMatching(new QAction(this)),
+    mActionBatch(new QAction(this)),
     mActionViewSettings(new QAction(this)),
     mActionToolSettings(new QAction(this)),
     mActionHelp(new QAction(this)),
@@ -120,6 +121,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
   connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
   connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
+  connect(mActionBatch,              SIGNAL(triggered(bool)),   this,   SIGNAL(openBatch()));
   connect(mActionToolSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openToolSettings()));
 
   /* Quality Control */
@@ -770,6 +772,11 @@ QProgressBar *MainWindowView::progressBar()
   return mProgressBar;
 }
 
+QTabWidget *MainWindowView::tabWidget()
+{
+  return ui->tabWidget;
+}
+
 void MainWindowView::updateHistory(const QStringList &history)
 {
   int n = history.size();
@@ -1369,6 +1376,7 @@ void MainWindowView::update()
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionBatch->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   mActionExportMatches->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   //mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
@@ -1837,6 +1845,8 @@ void MainWindowView::init()
   iconFeatureMatching.addFile(QStringLiteral(":/ico/24/img/material/24/match_view.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionFeatureMatching->setIcon(iconFeatureMatching);
 
+  mActionBatch->setText(QApplication::translate("MainWindowView", "Batch", nullptr));
+
   mActionToolSettings->setText(QApplication::translate("MainWindowView", "Tools Settings", nullptr));
   QIcon iconSettings;
   iconSettings.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -2018,6 +2028,8 @@ void MainWindowView::init()
   ui->menuTools->addAction(mActionFeatureExtraction);
   ui->menuTools->addAction(mActionFeatureMatching);
   ui->menuTools->addSeparator();
+  ui->menuTools->addAction(mActionBatch);
+  ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionToolSettings);
 
   /* Menu Quality Control */
@@ -2059,6 +2071,8 @@ void MainWindowView::init()
   ui->toolBarTools->addAction(mActionPreprocess);
   ui->toolBarTools->addAction(mActionFeatureExtraction);
   ui->toolBarTools->addAction(mActionFeatureMatching);
+//  ui->toolBarTools->addSeparator();
+//  ui->toolBarTools->addAction(mActionBatch);
 
   ui->toolBarView->addAction(mActionZoomIn);
   ui->toolBarView->addAction(mActionZoomOut);

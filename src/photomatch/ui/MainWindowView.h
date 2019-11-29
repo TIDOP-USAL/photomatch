@@ -76,6 +76,7 @@ public:
   void setProperties(const std::list<std::pair<QString, QString> > &properties);
 
   QProgressBar *progressBar();
+  QTabWidget *tabWidget();
 
 public slots:
 
@@ -148,6 +149,7 @@ signals:
   void openPreprocess();
   void openFeatureExtraction();
   void openFeatureMatching();
+  void openBatch();
   void openToolSettings();
 
   /* Quality Control */
@@ -234,6 +236,7 @@ protected:
   QAction *mActionPreprocess;
   QAction *mActionFeatureExtraction;
   QAction *mActionFeatureMatching;
+  QAction *mActionBatch;
   QAction *mActionViewSettings;
   QAction *mActionToolSettings;
   QAction *mActionHelp;

@@ -12,6 +12,8 @@ ExportFeaturesPresenter::ExportFeaturesPresenter(IExportFeaturesView *view,
     mView(view),
     mModel(model)
 {
+  init();
+
   connect(mView, SIGNAL(sessionChange(QString)),   this, SLOT(sessionChange(QString)));
   connect(mView, SIGNAL(accepted()),               this, SLOT(save()));
 
