@@ -59,9 +59,13 @@ public slots:
 
 // PhotoMatchWidget interface
 
-public slots:
+protected slots:
 
   void update() override;
+  void retranslate() override;
+
+public slots:
+
   void reset() override;
 
 private:

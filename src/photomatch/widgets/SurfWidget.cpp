@@ -89,6 +89,11 @@ void SurfWidget::update()
 {
 }
 
+void SurfWidget::retranslate()
+{
+
+}
+
 void SurfWidget::reset()
 {
   const QSignalBlocker blockerHessianThreshold(mHessianThreshold);

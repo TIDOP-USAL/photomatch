@@ -1,5 +1,7 @@
 #include "acebsf.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -150,29 +152,33 @@ AcebsfPreprocess::~AcebsfPreprocess()
 
 }
 
-cv::Mat AcebsfPreprocess::process(const cv::Mat &img)
+bool AcebsfPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat tmp;
-  if (img.channels() == 1)  cv::cvtColor(img, tmp, cv::COLOR_GRAY2BGR);
-  else img.copyTo(tmp);
 
-  pixkit::enhancement::local::Lal2014(tmp, tmp,
-                                      cv::Size(AcebsfProperties::blockSize().width(),
-                                               AcebsfProperties::blockSize().height()),
-                                      static_cast<float>(AcebsfProperties::l()),
-                                      static_cast<float>(AcebsfProperties::k1()),
-                                      static_cast<float>(AcebsfProperties::k2()));
-  cv::Mat color_boost;
-  cv::Mat img_out;
-  if (img.channels() >= 3) {
-    cv::decolor(tmp, img_out, color_boost);
-  } else {
-    cv::cvtColor(tmp, img_out, cv::COLOR_BGR2GRAY);
+  try {
+
+    cv::Mat temp;
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    pixkit::enhancement::local::Lal2014(temp, imgOut,
+                                        cv::Size(AcebsfProperties::blockSize().width(),
+                                                 AcebsfProperties::blockSize().height()),
+                                        static_cast<float>(AcebsfProperties::l()),
+                                        static_cast<float>(AcebsfProperties::k1()),
+                                        static_cast<float>(AcebsfProperties::k2()));
+
+  } catch (cv::Exception &e) {
+    msgError("ACEBSF Image preprocess error: %s", e.what());
+    return true;
   }
-  color_boost.release();
-  tmp.release();
 
-  return img_out;
+  return false;
 }
 
 QString AcebsfProperties::name() const

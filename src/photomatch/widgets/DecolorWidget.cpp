@@ -22,6 +22,11 @@ void DecolorWidget::update()
 {
 }
 
+void DecolorWidget::retranslate()
+{
+
+}
+
 void DecolorWidget::reset()
 {
 }

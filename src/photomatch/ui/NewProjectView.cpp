@@ -145,7 +145,7 @@ void NewProjectView::clear()
 void NewProjectView::update()
 {
   bool bSave = !mLineEditProjectName->text().isEmpty() &&
-    !mLineEditProjectPath->text().isEmpty();
+               !mLineEditProjectPath->text().isEmpty();
   mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave);
 
   if (bSave){
@@ -156,7 +156,12 @@ void NewProjectView::update()
     file.append(QDir::separator()).append(mLineEditProjectName->text()).append(".xml");
     mLineEditProjectFile->setText(QDir::cleanPath(file));
   } else 
-	  mLineEditProjectFile->setText("");
+    mLineEditProjectFile->setText("");
+}
+
+void NewProjectView::retranslate()
+{
+
 }
 
 } // namespace photomatch

@@ -1,6 +1,8 @@
 #ifndef PHOTOMATCH_DECOLOR_H
 #define PHOTOMATCH_DECOLOR_H
 
+#include <tidop/core/messages.h>
+
 #include "photomatch/photomatch_global.h"
 
 #include "photomatch/core/preprocess/preprocess.h"
@@ -48,7 +50,7 @@ public:
 
 public:
 
-  cv::Mat process(const cv::Mat &img) override;
+  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
 
 };
 

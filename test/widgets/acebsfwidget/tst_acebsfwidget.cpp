@@ -109,7 +109,7 @@ void TestAcebsfWidget::test_k1_data()
 
   QTest::newRow("10.0") << 10.0 << 10.0;
   QTest::newRow("20.0") << 20.0 << 20.0;
-  QTest::newRow("Out of range value") << 26. << 25.;
+  QTest::newRow("Out of range value") << 101. << 100.;
 }
 
 void TestAcebsfWidget::test_k1()

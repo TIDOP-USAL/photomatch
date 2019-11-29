@@ -244,6 +244,11 @@ void HogWidget::update()
 {
 }
 
+void HogWidget::retranslate()
+{
+
+}
+
 void HogWidget::reset()
 {
   const QSignalBlocker blockerWinSizeHeight(mWinSizeHeight);

@@ -57,11 +57,15 @@ add_library(libcore ${LIB_TYPE}
             features/surf.cpp
             features/orb.h
             features/orb.cpp
+            features/vgg.h
+            features/vgg.cpp
             features/matcher.cpp
             features/matcher.h
             features/evaluation.h
             features/groundtruth.cpp
             features/groundtruth.h
+            features/keypointsfilter.h
+            features/keypointsfilter.cpp
             preprocess/preprocess.h
             #preprocess/downsample.cpp
             #preprocess/downsample.h

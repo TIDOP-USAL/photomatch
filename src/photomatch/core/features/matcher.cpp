@@ -264,7 +264,7 @@ RobustMatcherProperties::RobustMatcherProperties()
   : IRobustMatcherRefinement(),
     mRatio(0.8),
     mCrossCheck(true),
-    mGeometricTest(GeometricTest::homography),
+    mGeometricTest(GeometricTest::fundamental),
     mHomographyComputeMethod(HomographyComputeMethod::ransac),
     mFundamentalComputeMethod(FundamentalComputeMethod::ransac),
     mEssentialComputeMethod(EssentialComputeMethod::ransac),
@@ -368,7 +368,7 @@ void RobustMatcherProperties::reset()
 {
   mRatio = 0.8;
   mCrossCheck = true;
-  mGeometricTest = GeometricTest::homography;
+  mGeometricTest = GeometricTest::fundamental;
   mHomographyComputeMethod = HomographyComputeMethod::ransac;
   mFundamentalComputeMethod = FundamentalComputeMethod::ransac;
   mEssentialComputeMethod = EssentialComputeMethod::ransac;

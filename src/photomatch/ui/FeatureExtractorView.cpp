@@ -39,14 +39,14 @@ void FeatureExtractorView::setSessionName(const QString &name)
 void FeatureExtractorView::addKeypointDetector(QWidget *keypointDetector)
 {
   mComboBoxKeypointDetector->addItem(keypointDetector->windowTitle());
-  mGridLayoutKeypointDetector->addWidget(keypointDetector, 2, 0, 1, 2);
+  mGridLayoutKeypointDetector->addWidget(keypointDetector, 0, 0, 1, 2);
   keypointDetector->setVisible(false);
 }
 
 void FeatureExtractorView::addDescriptorExtractor(QWidget *descriptorExtractor)
 {
   mComboBoxDescriptorExtractor->addItem(descriptorExtractor->windowTitle());
-  mGridLayoutDescriptorExtractor->addWidget(descriptorExtractor, 4, 0, 1, 2);
+  mGridLayoutDescriptorExtractor->addWidget(descriptorExtractor, 0, 0, 1, 2);
   descriptorExtractor->setVisible(false);
 }
 
@@ -58,6 +58,11 @@ QString FeatureExtractorView::currentKeypointDetector() const
 QString FeatureExtractorView::currentDescriptorExtractor() const
 {
   return mCurrentDescriptorExtractor;
+}
+
+void FeatureExtractorView::addKeypointsFilter(QWidget *keypointsFilter)
+{
+  mGridLayoutKeypointsFilter->addWidget(keypointsFilter, 0, 0, 1, 2);
 }
 
 void FeatureExtractorView::setCurrentKeypointDetector(const QString &keypointDetector)
@@ -146,12 +151,19 @@ void FeatureExtractorView::init()
   mGridLayoutDescriptorExtractor->setContentsMargins(0, 0, 0, 0);
   gridLayout->addWidget(widgetDescriptorExtractor, 3, 0, 1, 2);
 
+  QWidget *widgetKeypointsFilter = new QWidget();
+  mGridLayoutKeypointsFilter = new QGridLayout(widgetKeypointsFilter);
+  mGridLayoutKeypointsFilter->setContentsMargins(0, 0, 0, 0);
+  gridLayout->addWidget(widgetKeypointsFilter, 4, 0, 1, 2);
+
+  gridLayout->addItem(new QSpacerItem(1,1, QSizePolicy::Fixed, QSizePolicy::Expanding), 5, 0, 1, 2);
+
   mButtonBox->setOrientation(Qt::Orientation::Horizontal);
   mButtonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
   mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
   mButtonBox->button(QDialogButtonBox::Apply)->setText("Run");
   mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
-  gridLayout->addWidget(mButtonBox, 4, 0, 1, 2);
+  gridLayout->addWidget(mButtonBox, 6, 0, 1, 2);
 
 
   update();
@@ -164,6 +176,11 @@ void FeatureExtractorView::clear()
 }
 
 void FeatureExtractorView::update()
+{
+
+}
+
+void FeatureExtractorView::retranslate()
 {
 
 }

@@ -504,7 +504,7 @@ void GroundTruthView::setSelectedHomologous(const QPointF &ptLeft, const QPointF
   const QSignalBlocker blocker2(mTreeWidget);
 
   QList<QGraphicsItem *> items = mGraphicsViewLeft->items();
-  for (int i = 0; i < items.size(); i++){
+  for (int i = 0; i < items.size(); i++) {
     if (items[i]->isSelected() == true) {
       mTreeWidget->selectionModel()->clearSelection();
       for (int j = 0; j < mTreeWidget->topLevelItemCount(); j++){
@@ -561,6 +561,8 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
 
     QPointF query_point = points[i].first;
     QPointF train_point = points[i].second;
+
+    if (query_point.isNull() && train_point.isNull()) continue;
 
     QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
     treeWidgetItem->setText(0, QString::number(i+1));
@@ -917,6 +919,11 @@ void GroundTruthView::update()
   mPushButtonLockViews->setEnabled(bEnableLockViews);
 }
 
+void GroundTruthView::retranslate()
+{
+
+}
+
 void GroundTruthView::setUnsavedChanges(bool value)
 {
   bUnsavedChanges = value;
@@ -1012,7 +1019,55 @@ void GroundTruthView::setBGColor(const QString &bgColor)
 void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, int size)
 {
   if (mMarkerType != type){
-    this->removeHomologousPointsInGraphicsViews();
+    for (auto &item : mGraphicsViewLeft->scene()->items()) {
+      if (mMarkerType == 0){
+        // Circle
+        if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
+          mGraphicsViewLeft->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 1){
+        // Cross
+        if (CrossGraphicItem *keyPoint = dynamic_cast<CrossGraphicItem *>(item)){
+          mGraphicsViewLeft->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 2){
+        // Diagonal cross
+        if (DiagonalCrossGraphicItem *keyPoint = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
+          mGraphicsViewLeft->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      }
+    }
+
+    for (auto &item : mGraphicsViewRight->scene()->items()) {
+      if (mMarkerType == 0){
+        // Circle
+        if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
+          mGraphicsViewRight->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 1){
+        // Cross
+        if (CrossGraphicItem *keyPoint = dynamic_cast<CrossGraphicItem *>(item)){
+          mGraphicsViewRight->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      } else if (mMarkerType == 2){
+        // Diagonal cross
+        if (DiagonalCrossGraphicItem *keyPoint = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
+          mGraphicsViewRight->scene()->removeItem(item);
+          delete keyPoint;
+          keyPoint = nullptr;
+        }
+      }
+    }
   }
 
   mMarkerColor = color;

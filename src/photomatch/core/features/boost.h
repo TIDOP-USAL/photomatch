@@ -8,10 +8,6 @@
 #include <QString>
 
 #include <opencv2/xfeatures2d.hpp>
-#ifdef HAVE_CUDA
-#include <opencv2/cudafeatures2d.hpp>
-#include "opencv2/xfeatures2d/cuda.hpp"
-#endif // HAVE_CUDA
 
 namespace photomatch
 {
@@ -23,7 +19,7 @@ class BoostProperties
 public:
 
   BoostProperties();
-  ~BoostProperties() override;
+  virtual ~BoostProperties() override;
 
 // IBoost interface
 

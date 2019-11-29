@@ -60,6 +60,12 @@ set(PHOTOMATCH_SOURCES
     RepeatabilityModel.cpp
     RepeatabilityView.cpp
     RepeatabilityPresenter.cpp
+    ExportFeaturesModel.cpp
+    ExportFeaturesView.cpp
+    ExportFeaturesPresenter.cpp
+    ExportMatchesModel.cpp
+    ExportMatchesView.cpp
+    ExportMatchesPresenter.cpp
     AboutDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
@@ -110,6 +116,12 @@ set(PHOTOMATCH_HEADERS
     RepeatabilityModel.h
     RepeatabilityView.h
     RepeatabilityPresenter.h
+    ExportFeaturesModel.h
+    ExportFeaturesView.h
+    ExportFeaturesPresenter.h
+    ExportMatchesModel.h
+    ExportMatchesView.h
+    ExportMatchesPresenter.h
     AboutDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
@@ -121,7 +133,7 @@ set(PHOTOMATCH_HEADERS
 )
 
 if(MSVC)
-  #list(APPEND PHOTOMATCH_SRC ui/resource.h ui/photomatch.rc)
+  list(APPEND PHOTOMATCH_SOURCES resource.h photomatch.rc)
 endif(MSVC)
 
 # forms

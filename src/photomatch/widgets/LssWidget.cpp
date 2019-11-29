@@ -25,6 +25,11 @@ void LssWidget::update()
 {
 }
 
+void LssWidget::retranslate()
+{
+
+}
+
 void LssWidget::reset()
 {
 }

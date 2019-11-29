@@ -192,4 +192,9 @@ void DescriptorMatcherView::update()
 
 }
 
+void DescriptorMatcherView::retranslate()
+{
+
+}
+
 } // namespace photomatch

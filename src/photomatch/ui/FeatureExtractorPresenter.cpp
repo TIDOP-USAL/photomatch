@@ -25,6 +25,7 @@
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
+#include "photomatch/core/features/vgg.h"
 
 #include "photomatch/ui/FeatureExtractorModel.h"
 #include "photomatch/ui/FeatureExtractorView.h"
@@ -48,7 +49,7 @@
 #include "photomatch/widgets/HogWidget.h"
 #include "photomatch/widgets/KazeWidget.h"
 #include "photomatch/widgets/LatchWidget.h"
-#include "photomatch/widgets/LucidWidget.h"
+//#include "photomatch/widgets/LucidWidget.h"
 #include "photomatch/widgets/LssWidget.h"
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
@@ -60,6 +61,13 @@
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
 #endif
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/widgets/VggWidget.h"
+#endif
+#endif
+#include "photomatch/widgets/KeypointsFilterWidget.h"
+
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/features/FeatureExtractorProcess.h"
 
@@ -68,6 +76,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QImageReader>
+#include <QMessageBox>
 
 namespace photomatch
 {
@@ -110,13 +119,19 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mHogDescriptor(new HogWidget),
     mKazeDescriptor(new KazeWidget),
     mLatchDescriptor(new LatchWidget),
-    mLucidDescriptor(new LucidWidget),
+    //mLucidDescriptor(new LucidWidget),
     mLssDescriptor(new LssWidget),
     mOrbDescriptor(new OrbWidget),
 #ifdef OPENCV_ENABLE_NONFREE
     mSiftDescriptor(new SiftWidget),
     mSurfDescriptor(new SurfWidget),
 #endif
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+    mVggDescriptor(new VggWidget),
+#endif
+#endif
+    mKeypointsFilterWidget(new KeypointsFilterWidget),
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
@@ -245,10 +260,10 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     mLatchDescriptor = nullptr;
   }
 
-  if (mLucidDescriptor){
-    delete mLucidDescriptor;
-    mLucidDescriptor = nullptr;
-  }
+//  if (mLucidDescriptor){
+//    delete mLucidDescriptor;
+//    mLucidDescriptor = nullptr;
+//  }
 
   if (mLssDescriptor){
     delete mLssDescriptor;
@@ -271,6 +286,20 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
     mSurfDescriptor = nullptr;
   }
 #endif
+
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+  if (mVggDescriptor){
+    delete mVggDescriptor;
+    mVggDescriptor = nullptr;
+  }
+#endif
+#endif
+
+  if (mKeypointsFilterWidget){
+    delete mKeypointsFilterWidget;
+    mKeypointsFilterWidget = nullptr;
+  }
 
   if (mMultiProcess){
     delete mMultiProcess;
@@ -540,14 +569,14 @@ void FeatureExtractorPresenter::open()
                                      dynamic_cast<ILatch *>(descriptor)->halfSsdSize() :
                                      mSettingsModel->latchHalfSsdSize());
 
-  /* LUCID */
+//  /* LUCID */
 
-  mLucidDescriptor->setLucidKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
-                                     dynamic_cast<ILucid *>(descriptor)->lucidKernel() :
-                                     mSettingsModel->lucidKernel());
-  mLucidDescriptor->setBlurKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
-                                    dynamic_cast<ILucid *>(descriptor)->blurKernel() :
-                                    mSettingsModel->lucidBlurKernel());
+//  mLucidDescriptor->setLucidKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
+//                                     dynamic_cast<ILucid *>(descriptor)->lucidKernel() :
+//                                     mSettingsModel->lucidKernel());
+//  mLucidDescriptor->setBlurKernel(descriptor && descriptor->type() == Feature::Type::lucid ?
+//                                    dynamic_cast<ILucid *>(descriptor)->blurKernel() :
+//                                    mSettingsModel->lucidBlurKernel());
 
   /* MSD */
 
@@ -756,6 +785,36 @@ void FeatureExtractorPresenter::open()
 
 #endif
 
+  /* Vgg */
+
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mVggDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->descriptorType() :
+                                        mSettingsModel->vggDescriptorType());
+  mVggDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                     dynamic_cast<IVgg *>(descriptor)->scaleFactor() :
+                                     mSettingsModel->vggScaleFactor());
+  mVggDescriptor->setSigma(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->sigma() :
+                                        mSettingsModel->vggSigma());
+  mVggDescriptor->setUseNormalizeDescriptor(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->useNormalizeDescriptor() :
+                                        mSettingsModel->vggUseNormalizeDescriptor());
+  mVggDescriptor->setUseNormalizeImage(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                        dynamic_cast<IVgg *>(descriptor)->useNormalizeImage() :
+                                        mSettingsModel->vggUseNormalizeImage());
+  mVggDescriptor->setUseScaleOrientation(descriptor && descriptor->type() == Feature::Type::vgg ?
+                                     dynamic_cast<IVgg *>(descriptor)->useScaleOrientation() :
+                                     mSettingsModel->vggUseScaleOrientation());
+#  endif
+#endif
+
+  ///TODO: guardar en proyecto y configuración y recuperarlo desde aqui
+  //mKeypointsFilterWidget->setNPoints();
+  //mKeypointsFilterWidget->setMinSize();
+  //mKeypointsFilterWidget->setMaxSize();
+
   mView->setSessionName(mProjectModel->currentSession()->name());
   mView->exec();
 }
@@ -792,9 +851,14 @@ void FeatureExtractorPresenter::init()
   mView->addDescriptorExtractor(mHogDescriptor);
   mView->addDescriptorExtractor(mKazeDescriptor);
   mView->addDescriptorExtractor(mLatchDescriptor);
-  mView->addDescriptorExtractor(mLucidDescriptor);
+//  mView->addDescriptorExtractor(mLucidDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mView->addDescriptorExtractor(mVggDescriptor);
+#  endif
+#endif
 #ifdef OPENCV_ENABLE_NONFREE
   mView->addDescriptorExtractor(mSiftDescriptor);
   mView->addDescriptorExtractor(mSurfDescriptor);
@@ -804,6 +868,7 @@ void FeatureExtractorPresenter::init()
   setCurrentkeypointDetector(mOrbDescriptor->windowTitle());
 #endif
 
+  mView->addKeypointsFilter(mKeypointsFilterWidget);
   
 }
 
@@ -830,11 +895,22 @@ void FeatureExtractorPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
-  msgInfo("Processing has been canceled by the user");
+  msgWarning("Processing has been canceled by the user");
 }
 
 void FeatureExtractorPresenter::run()
 {
+  Feature *detector = mProjectModel->currentSession()->detector().get();
+  Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
+  if (detector && descriptor){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      return;
+    }
+  }
 
   mMultiProcess->clearProcessList();
 
@@ -1016,10 +1092,10 @@ void FeatureExtractorPresenter::run()
     descriptorExtractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
                                                             mLatchDescriptor->rotationInvariance(),
                                                             mLatchDescriptor->halfSsdSize());
-  } else if (currentDescriptorExtractor.compare("LUCID") == 0){
+  } /* else if (currentDescriptorExtractor.compare("LUCID") == 0){
     descriptorExtractor = std::make_shared<LucidDescriptor>(mLucidDescriptor->lucidKernel(),
                                                             mLucidDescriptor->blurKernel());
-  } else if (currentDescriptorExtractor.compare("LSS") == 0){
+  }*/ else if (currentDescriptorExtractor.compare("LSS") == 0){
     descriptorExtractor = std::make_shared<LssDescriptor>();
   } else if (currentDescriptorExtractor.compare("ORB") == 0){
     if (currentKeypointDetector.compare("ORB") == 0){
@@ -1073,6 +1149,18 @@ void FeatureExtractorPresenter::run()
     }
   } 
 #endif
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  else if (currentDescriptorExtractor.compare("VGG") == 0){
+    descriptorExtractor = std::make_shared<VggDescriptor>(mVggDescriptor->descriptorType(),
+                                                          mVggDescriptor->scaleFactor(),
+                                                          mVggDescriptor->sigma(),
+                                                          mVggDescriptor->useNormalizeDescriptor(),
+                                                          mVggDescriptor->useNormalizeImage(),
+                                                          mVggDescriptor->useScaleOrientation());
+  }
+#  endif
+#endif
   else {
     ///TODO: error
     return;
@@ -1080,6 +1168,16 @@ void FeatureExtractorPresenter::run()
 
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+
+  //std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+  //if (mKeypointsFilterWidget->isActiveFilterBest()){
+  //  std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+  //  keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+  //}
+  //if (mKeypointsFilterWidget->isActiveFilterSize()){
+  //  std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize(), mKeypointsFilterWidget->maxSize());
+  //  keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+  //}
 
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -1118,11 +1216,28 @@ void FeatureExtractorPresenter::run()
       if (scale < 1.) scale = 1.;
     }
 
+    /// Se añade aqui porque se necesita la escala
+    std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+    if (mKeypointsFilterWidget->isActiveFilterBest()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+      keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+    }
+    if (mKeypointsFilterWidget->isActiveFilterSize()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize()/scale, 
+                                                                                                              mKeypointsFilterWidget->maxSize()/scale);
+      keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+    }
+    if (mKeypointsFilterWidget->isActiveRemoveDuplicated()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
+      keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
+    }
+
     std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
                                                                         features,
                                                                         scale,
                                                                         keypointDetector,
-                                                                        descriptorExtractor));
+                                                                        descriptorExtractor,
+                                                                        keyPointsFiltersProcess));
     connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
     mMultiProcess->appendProcess(feat_extract);
   }
@@ -1234,7 +1349,8 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
 {
 #if CV_VERSION_MAJOR >= 3
 #  if CV_VERSION_MINOR > 2
-  if (descriptorExtractor.compare("BOOST") == 0){
+  if (descriptorExtractor.compare("BOOST") == 0 ||
+      descriptorExtractor.compare("VGG") == 0){
     QString keypointDetector = mView->currentKeypointDetector();
     if (keypointDetector.compare("AGAST") == 0 ||
         keypointDetector.compare("AKAZE") == 0 ||
@@ -1250,7 +1366,6 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
    } else if (keypointDetector.compare("ORB") == 0) {
       mBoostDescriptor->setScaleFactor(1.50);
    }
-
   }
 #  endif
 #endif

@@ -122,6 +122,11 @@ void LogWidget::update()
   mClearAction->setEnabled(mListWidget->count() > 0);
 }
 
+void LogWidget::retranslate()
+{
+
+}
+
 void LogWidget::reset()
 {
   std::lock_guard<std::mutex> lck(LogWidget::mtx);

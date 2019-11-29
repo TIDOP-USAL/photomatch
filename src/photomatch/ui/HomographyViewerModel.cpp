@@ -86,61 +86,36 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
           cv::Mat descriptors;
           featuresRead(session->features(imgName1), keyPoints1, descriptors);
           featuresRead(session->features(imgName2), keyPoints2, descriptors);
+          descriptors.release();
 
           /// Un tanto artificioso.... Revisar
           QString nameMatchesFile = QFileInfo(m.second).baseName();
           int idx = nameMatchesFile.indexOf(imgName1);
           std::vector<cv::Point2f> pts_query;
           std::vector<cv::Point2f> pts_train;
-//          std::vector<cv::KeyPoint> kps1;
-//          std::vector<cv::KeyPoint> kps2;
           for (size_t i = 0; i < match.size(); i++){
             size_t query_id = (idx == 0) ? static_cast<size_t>(match[i].queryIdx) : static_cast<size_t>(match[i].trainIdx);
             size_t train_id = (idx == 0) ? static_cast<size_t>(match[i].trainIdx) : static_cast<size_t>(match[i].queryIdx);
-            pts_query.push_back(keyPoints1[query_id].pt /** scale1*/);
-            pts_train.push_back(keyPoints2[train_id].pt/* * scale2*/);
-//            cv::KeyPoint kp1 = keyPoints1[query_id];
-//            cv::KeyPoint kp2 = keyPoints2[train_id];
-//            kp1.pt *= scale1;
-//            kp2.pt *= scale2;
-//            kps1.push_back(kp1);
-//            kps2.push_back(kp2);
+            pts_query.push_back(keyPoints1[query_id].pt);
+            pts_train.push_back(keyPoints2[train_id].pt);
           }
 
           cv::Mat H = cv::findHomography(pts_query, pts_train);
 
-//          /// RMS
-//          size_t n = pts_query.size();
-//          std::vector<cv::Point2f> pts_out(n);
-//          std::vector<double> err(n);
-//          double sumErr = 0.;
-//          cv::perspectiveTransform(pts_query, pts_out, H);
-//          for (size_t i = 0; i < n; i++) {
-//            pts_out[i] -= pts_train[i];
-//            err[i] = static_cast<double>(pts_out[i].x * pts_out[i].x + pts_out[i].y * pts_out[i].y);
-//            sumErr += err[i];
-//          }
-//          double rms = sqrt(sumErr/(2 * (n - 4)));
-//          msgInfo("Homography transformation RMS: %f", rms);
-
           QByteArray ba = imgPath1.toLocal8Bit();
           const char *img_left = ba.data();
-          cv::Mat imgLeft = cv::imread(img_left, cv::IMREAD_IGNORE_ORIENTATION);
+          cv::Mat imgLeft = cv::imread(img_left, cv::IMREAD_IGNORE_ORIENTATION | cv::IMREAD_COLOR);
           ba = imgPath2.toLocal8Bit();
           const char *img_right = ba.data();
-          cv::Mat imgRight = cv::imread(img_right, cv::IMREAD_IGNORE_ORIENTATION);
+          cv::Mat imgRight = cv::imread(img_right, cv::IMREAD_IGNORE_ORIENTATION | cv::IMREAD_COLOR);
           cv::Mat out;
           cv::warpPerspective(imgLeft, out, H, imgRight.size(), cv::INTER_LINEAR);
+          imgLeft.release();
           ///cv::cuda::warpPerspective
-
-//          float repeatability;
-//          int corrCounter;
-//          cv::evaluateFeatureDetector(imgLeft, imgRight, H, &kps1, &kps2, repeatability, corrCounter);
-//          msgInfo("Repeatability: %f", repeatability);
-//          msgInfo("Correspondence: %i", corrCounter);
 
           cv::Mat merged;
           cv::addWeighted(imgRight, 0.5, out, 0.3, 0.0, merged);
+          imgRight.release();
           ///cv::cuda::addWeighted
 
           image = cvMatToQImage(merged);

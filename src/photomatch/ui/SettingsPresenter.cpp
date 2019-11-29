@@ -34,7 +34,7 @@
 #include "photomatch/widgets/HogWidget.h"
 #include "photomatch/widgets/KazeWidget.h"
 #include "photomatch/widgets/LatchWidget.h"
-#include "photomatch/widgets/LucidWidget.h"
+//#include "photomatch/widgets/LucidWidget.h"
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
@@ -45,6 +45,12 @@
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
 #endif
+#if CV_VERSION_MAJOR >= 3
+#if CV_VERSION_MINOR > 2
+#include "photomatch/widgets/VggWidget.h"
+#endif
+#endif
+
 /* Descriptor Matcher */
 #include "photomatch/widgets/DescriptorMatcherWidget.h"
 
@@ -86,7 +92,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mHog(new HogWidget),
     mKaze(new KazeWidget),
     mLatch(new LatchWidget),
-    mLucid(new LucidWidget),
+    //mLucid(new LucidWidget),
     mMsd(new MsdWidget),
     mMser(new MserWidget),
     mOrb(new OrbWidget),
@@ -96,6 +102,11 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mStar(new StarWidget),
 #ifdef OPENCV_ENABLE_NONFREE
     mSurf(new SurfWidget),
+#endif
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+    mVgg(new VggWidget),
+#  endif
 #endif
     mMatcher(new DescriptorMatcherWidget)
 {
@@ -246,8 +257,8 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mLatch, SIGNAL(halfSsdSizeChange(int)),            mModel, SLOT(setLatchHalfSsdSize(int)));
 
   /* LUCID */
-  connect(mLucid, SIGNAL(lucidKernelChange(int)),            mModel, SLOT(setLucidKernel(int)));
-  connect(mLucid, SIGNAL(blurKernelChange(int)),             mModel, SLOT(setLucidBlurKernel(int)));
+//  connect(mLucid, SIGNAL(lucidKernelChange(int)),            mModel, SLOT(setLucidKernel(int)));
+//  connect(mLucid, SIGNAL(blurKernelChange(int)),             mModel, SLOT(setLucidBlurKernel(int)));
 
   /* MSD */
   connect(mMsd, SIGNAL(thresholdSaliencyChange(double)),     mModel, SLOT(setMsdThresholdSaliency(double)));
@@ -306,6 +317,18 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mSurf, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setSurfOctaveLayers(int)));
   connect(mSurf, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setSurfExtendedDescriptor(bool)));
   connect(mSurf, SIGNAL(rotatedFeaturesChange(bool)),        mModel, SLOT(setSurfRotatedFeatures(bool)));
+#endif
+
+  /* VGG */
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  connect(mVgg, SIGNAL(descriptorTypeChange(QString)),        mModel, SLOT(setVggDescriptorType(QString)));
+  connect(mVgg, SIGNAL(scaleFactorChange(double)),            mModel, SLOT(setVggScaleFactor(double)));
+  connect(mVgg, SIGNAL(sigmaChange(double)),                  mModel, SLOT(setVggSigma(double)));
+  connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseNormalizeDescriptor(bool)));
+  connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseNormalizeImage(bool)));
+  connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseScaleOrientation(bool)));
+#  endif
 #endif
 
   connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMethod(QString)));
@@ -465,10 +488,10 @@ SettingsPresenter::~SettingsPresenter()
     mLatch = nullptr;
   }
 
-  if (mLucid){
-    delete mLucid;
-    mLucid = nullptr;
-  }
+//  if (mLucid){
+//    delete mLucid;
+//    mLucid = nullptr;
+//  }
 
   if (mMsd){
     delete mMsd;
@@ -502,6 +525,15 @@ SettingsPresenter::~SettingsPresenter()
     delete mSurf;
     mSurf = nullptr;
   }
+#endif
+
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  if (mVgg){
+    delete mVgg;
+    mVgg = nullptr;
+  }
+#  endif
 #endif
 
   if (mMatcher){
@@ -653,8 +685,8 @@ void SettingsPresenter::open()
   mLatch->setRotationInvariance(mModel->latchRotationInvariance());
   mLatch->setHalfSsdSize(mModel->latchHalfSsdSize());
 
-  mLucid->setLucidKernel(mModel->lucidKernel());
-  mLucid->setBlurKernel(mModel->lucidBlurKernel());
+//  mLucid->setLucidKernel(mModel->lucidKernel());
+//  mLucid->setBlurKernel(mModel->lucidBlurKernel());
 
   mMsd->setThresholdSaliency(mModel->msdThresholdSaliency());
   mMsd->setPatchRadius(mModel->msdPathRadius());
@@ -707,6 +739,17 @@ void SettingsPresenter::open()
   mSurf->setRotatedFeatures(mModel->surfRotatedFeatures());
   mSurf->setHessianThreshold(mModel->surfHessianThreshold());
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
+#endif
+
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mVgg->setDescriptorType(mModel->boostDescriptorType());
+  mVgg->setScaleFactor(mModel->boostScaleFactor());
+  mVgg->setSigma(mModel->vggSigma());
+  mVgg->setUseNormalizeDescriptor(mModel->vggUseNormalizeDescriptor());
+  mVgg->setUseNormalizeImage(mModel->vggUseNormalizeImage());
+  mVgg->setUseScaleOrientation(mModel->vggUseScaleOrientation());
+#  endif
 #endif
 
   mMatcher->setMatchingMethod(mModel->matchMethod());
@@ -779,11 +822,16 @@ void SettingsPresenter::init()
   mView->addFeatureDetectorMethod(mHog);
   mView->addFeatureDetectorMethod(mKaze);
   mView->addFeatureDetectorMethod(mLatch);
-  mView->addFeatureDetectorMethod(mLucid);
+  //mView->addFeatureDetectorMethod(mLucid);
   mView->addFeatureDetectorMethod(mMsd);
   mView->addFeatureDetectorMethod(mMser);
   mView->addFeatureDetectorMethod(mStar);
   mView->addFeatureDetectorMethod(mHog);
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  mView->addFeatureDetectorMethod(mVgg);
+#  endif
+#endif
 
   mView->addDescriptorMatcher(mMatcher);
 }

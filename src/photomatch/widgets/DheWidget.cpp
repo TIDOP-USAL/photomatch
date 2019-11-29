@@ -41,6 +41,11 @@ void DheWidget::update()
 
 }
 
+void DheWidget::retranslate()
+{
+
+}
+
 void DheWidget::reset()
 {
   const QSignalBlocker blockerX(mX);

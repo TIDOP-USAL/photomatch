@@ -39,11 +39,10 @@ public:
     orb,
     sift,
     star,
-    surf
+    surf,
+    vgg
   };
 ///TODO: GLOH -> https://www.robots.ox.ac.uk/~vgg/research/affine/det_eval_files/mikolajczyk_pami2004.pdf
-///      cv::xfeatures2d::BoostDesc
-///      cv::xfeatures2d::VGG
 
 public:
 
@@ -65,7 +64,9 @@ protected:
 };
 ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
 
+
 /*----------------------------------------------------------------*/
+
 
 class PHOTOMATCH_EXPORT KeypointDetector
 {
@@ -168,10 +169,10 @@ public:
   /*!
    * \brief Set the Detector Type
    * Suported types:
-   * - AGAST_5_8: AGAST-5 decision tree whith the 8 pixels mask
-   * - AGAST_7_12d: AGAST-7 decision tree whith the Diamond shaped 12 pixels mask
-   * - AGAST_7_12s: AGAST-7 decision tree whith the Squared shaped 12 pixels mask
-   * - OAST_9_16: OAST-9 (Optimal AST) decision tree whith the 16 pixels mask
+   * - AGAST_5_8: AGAST-5 decision tree with the 8 pixels mask
+   * - AGAST_7_12d: AGAST-7 decision tree with the Diamond shaped 12 pixels mask
+   * - AGAST_7_12s: AGAST-7 decision tree with the Squared shaped 12 pixels mask
+   * - OAST_9_16: OAST-9 (Optimal AST) decision tree with the 16 pixels mask
    *
    * \param[in] detectorType Detector Type (Default = OAST_9_16)
    */
@@ -1224,6 +1225,60 @@ public:
 
 };
 
+/*----------------------------------------------------------------*/
+
+/*!
+ * \brief The IVgg class
+ * K. Simonyan, A. Vedaldi, and A. Zisserman. Learning local feature
+ * descriptors using convex optimisation. IEEE Transactions on Pattern
+ * Analysis and Machine Intelligence, 2014.
+ */
+class PHOTOMATCH_EXPORT IVgg
+  : public Feature
+{
+public:
+
+  IVgg() : Feature(Feature::Type::vgg) {}
+  virtual ~IVgg() = default;
+
+  /*!
+   * \brief Type of descriptor to use
+   * Available types are VGG_120 (default), VGG_80, VGG_64, VGG_48
+   * \return Type of descriptor
+   */
+  virtual QString descriptorType() const = 0;
+
+  /*!
+   * \brief Set the type of descriptor to use
+   * Available types are VGG_120 (default), VGG_80, VGG_64, VGG_48
+   * \param[in] descriptorType Type of descriptor to use.
+   */
+  virtual void setDescriptorType(const QString &descriptorType) = 0;
+
+  virtual double scaleFactor() const = 0;
+  virtual void 	setScaleFactor(double scaleFactor) = 0;
+
+  /*!
+   * \brief Gaussian kernel value for image blur
+   * \return Gaussian kernel value
+   */
+  virtual double sigma() const = 0;
+
+  /*!
+   * \brief Set gaussian kernel value for image blur (default is 1.4f)
+   * \param[in] sigma
+   */
+  virtual void 	setSigma(double sigma) = 0;
+
+  virtual bool 	useNormalizeDescriptor() const = 0;
+  virtual void 	setUseNormalizeDescriptor(bool useNormalizeDescriptor) = 0;
+
+  virtual bool 	useNormalizeImage() const = 0;
+  virtual void 	setUseNormalizeImage(bool useNormalizeImage) = 0;
+
+  virtual bool 	useScaleOrientation() const = 0;
+  virtual void 	setUseScaleOrientation(bool useScaleOrientation) = 0;
+};
 
 /*----------------------------------------------------------------*/
 

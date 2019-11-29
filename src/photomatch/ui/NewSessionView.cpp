@@ -71,6 +71,11 @@ void NewSessionView::update()
   mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave && !bNameExist);
 }
 
+void NewSessionView::retranslate()
+{
+
+}
+
 QString NewSessionView::sessionName() const
 {
   return mLineEditSessionName->text();

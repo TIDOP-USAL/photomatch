@@ -118,6 +118,11 @@ void AkazeWidget::update()
 
 }
 
+void AkazeWidget::retranslate()
+{
+
+}
+
 void AkazeWidget::reset()
 {
   const QSignalBlocker blockerDescriptorType(mDescriptorType);

@@ -19,6 +19,7 @@
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
+#include "photomatch/core/features/vgg.h"
 #include "photomatch/core/features/matcher.h"
 
 #include "photomatch/core/preprocess/acebsf.h"
@@ -82,6 +83,7 @@ Settings::Settings()
     mSift(new SiftProperties),
     mStar(new StarProperties),
     mSurf(new SurfProperties),
+    mVgg(new VggProperties),
     mMatchMethod("Flann Based Matching"),
     mFlannMatcher(new FlannMatcherProperties),
     mBruteForceMatcher(new BruteForceMatcherProperties),
@@ -267,6 +269,11 @@ Settings::~Settings()
   if (mSurf){
     delete mSurf;
     mSurf = nullptr;
+  }
+
+  if (mVgg){
+    delete mVgg;
+    mVgg = nullptr;
   }
 
   if (mFlannMatcher){
@@ -679,6 +686,16 @@ const ISurf *Settings::surf() const
   return mSurf;
 }
 
+IVgg *Settings::vgg()
+{
+  return mVgg;
+}
+
+const IVgg *Settings::vgg() const
+{
+  return mVgg;
+}
+
 QString Settings::matchMethod() const
 {
   return mMatchMethod;
@@ -963,6 +980,7 @@ void Settings::reset()
   mSift->reset();
   mStar->reset();
   mSurf->reset();
+  mVgg->reset();
 
   mMatchMethod = "Flann Based Matching";
   mFlannMatcher->reset();
@@ -1216,6 +1234,14 @@ void SettingsRW::read(ISettings &settings)
   settings.surf()->setHessianThreshold(mSettingsRW->value("SURF/HessianThreshold", settings.surf()->hessianThreshold()).toDouble());
   settings.surf()->setExtendedDescriptor(mSettingsRW->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
 
+  /* VGG */
+  settings.vgg()->setDescriptorType(mSettingsRW->value("VGG/DescriptorType", settings.vgg()->descriptorType()).toString());
+  settings.vgg()->setScaleFactor(mSettingsRW->value("VGG/ScaleFactor", settings.vgg()->scaleFactor()).toDouble());
+  settings.vgg()->setSigma(mSettingsRW->value("VGG/Sigma", settings.vgg()->sigma()).toDouble());
+  settings.vgg()->setUseNormalizeDescriptor(mSettingsRW->value("VGG/UseNormalizeDescriptor", settings.vgg()->useNormalizeDescriptor()).toBool());
+  settings.vgg()->setUseNormalizeImage(mSettingsRW->value("VGG/UseNormalizeImage", settings.vgg()->useNormalizeImage()).toBool());
+  settings.vgg()->setUseScaleOrientation(mSettingsRW->value("VGG/UseScaleOrientation", settings.vgg()->useScaleOrientation()).toBool());
+
   /* Matching */
   settings.setMatchMethod(mSettingsRW->value("MATCH/MatchMethod", settings.matchMethod()).toString());
   int normType = mSettingsRW->value("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType())).toInt();
@@ -1449,6 +1475,14 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("SURF/RotatedFeatures", settings.surf()->rotatedFeatures());
   mSettingsRW->setValue("SURF/HessianThreshold", settings.surf()->hessianThreshold());
   mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
+
+  /* VGG */
+  mSettingsRW->setValue("VGG/DescriptorType", settings.vgg()->descriptorType());
+  mSettingsRW->setValue("VGG/ScaleFactor", settings.vgg()->scaleFactor());
+  mSettingsRW->setValue("VGG/Sigma", settings.vgg()->sigma());
+  mSettingsRW->setValue("VGG/UseNormalizeDescriptor", settings.vgg()->useNormalizeDescriptor());
+  mSettingsRW->setValue("VGG/UseNormalizeImage", settings.vgg()->useNormalizeImage());
+  mSettingsRW->setValue("VGG/UseScaleOrientation", settings.vgg()->useScaleOrientation());
 
   /* Matching */
   mSettingsRW->setValue("MATCH/MatchMethod", settings.matchMethod());

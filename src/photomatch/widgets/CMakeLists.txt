@@ -73,7 +73,11 @@ add_library(libwidgets ${LIB_TYPE}
             ThumbnailsWidget.cpp
             ThumbnailsWidget.h
             LogWidget.cpp
-            LogWidget.h)
+            LogWidget.h
+            VggWidget.cpp
+            VggWidget.h
+            KeypointsFilterWidget.cpp
+            KeypointsFilterWidget.h)
 
 set_property(TARGET libwidgets PROPERTY FOLDER "lib")
 

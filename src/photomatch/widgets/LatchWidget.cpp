@@ -66,6 +66,11 @@ void LatchWidget::update()
 {
 }
 
+void LatchWidget::retranslate()
+{
+
+}
+
 void LatchWidget::reset()
 {
   const QSignalBlocker blockerBytes(mBytes);

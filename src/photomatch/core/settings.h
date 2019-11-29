@@ -46,6 +46,7 @@ class IOrb;
 class ISift;
 class IStar;
 class ISurf;
+class IVgg;
 class IFlannMatcher;
 class IBruteForceMatcher;
 class IRobustMatcherRefinement;
@@ -203,6 +204,8 @@ public:
   virtual const IStar *star() const = 0;
   virtual ISurf *surf() = 0;
   virtual const ISurf *surf() const = 0;
+  virtual IVgg *vgg() = 0;
+  virtual const IVgg *vgg() const = 0;
 
   virtual QString matchMethod() const = 0;
   virtual void setMatchMethod(const QString &matchingMethod) = 0;
@@ -396,6 +399,8 @@ public:
   const IStar *star() const override;
   ISurf *surf() override;
   const ISurf *surf() const override;
+  virtual IVgg *vgg() override;
+  virtual const IVgg *vgg() const override;
 
   QString matchMethod() const override;
   void setMatchMethod(const QString &matchingMethod) override;
@@ -496,6 +501,7 @@ protected:
   ISift *mSift;
   IStar *mStar;
   ISurf *mSurf;
+  IVgg *mVgg;
 
   QString mMatchMethod;
   IFlannMatcher *mFlannMatcher;

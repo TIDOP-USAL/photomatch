@@ -54,6 +54,11 @@ void LceBsescsWidget::update()
 {
 }
 
+void LceBsescsWidget::retranslate()
+{
+
+}
+
 void LceBsescsWidget::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);

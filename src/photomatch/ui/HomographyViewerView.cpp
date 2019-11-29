@@ -142,4 +142,9 @@ void HomographyViewerView::update()
 {
 }
 
+void HomographyViewerView::retranslate()
+{
+
+}
+
 } // namespace photomatch

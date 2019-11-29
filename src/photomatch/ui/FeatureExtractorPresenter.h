@@ -31,7 +31,7 @@ class IGfttWidget;
 class IHogWidget;
 class IKazeWidget;
 class ILatchWidget;
-class ILucidWidget;
+//class ILucidWidget;
 class ILssWidget;
 class IMsdWidget;
 class IMserWidget;
@@ -39,6 +39,9 @@ class IOrbWidget;
 class ISiftWidget;
 class IStarWidget;
 class ISurfWidget;
+class IVggWidget;
+class IKeypointsFilterWidget;
+
 class ProgressHandler;
 
 class IFeatureExtractorPresenter
@@ -150,15 +153,20 @@ protected:
   IHogWidget *mHogDescriptor;
   IKazeWidget *mKazeDescriptor;
   ILatchWidget *mLatchDescriptor;
-  ILucidWidget *mLucidDescriptor;
+  //ILucidWidget *mLucidDescriptor;
   ILssWidget *mLssDescriptor;
   IOrbWidget *mOrbDescriptor;
 #ifdef OPENCV_ENABLE_NONFREE
   ISiftWidget *mSiftDescriptor;
   ISurfWidget *mSurfDescriptor;
 #endif
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  IVggWidget *mVggDescriptor;
+#  endif
+#endif
+  IKeypointsFilterWidget *mKeypointsFilterWidget;
   MultiProcess *mMultiProcess;
-
   ProgressHandler *mProgressHandler;
 };
 

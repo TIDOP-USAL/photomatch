@@ -83,6 +83,7 @@ public slots:
 private slots:
 
   void update() override;
+  void retranslate() override;
 
 protected:
 
@@ -92,6 +93,8 @@ protected:
   QSpinBox *mSpinBoxMaxImageSize;
   QDialogButtonBox *mButtonBox;
   QString mCurrentPreprocess;
+
+
 };
 
 } // namespace photomatch

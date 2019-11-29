@@ -17,9 +17,13 @@ public:
   PhotoMatchWidget(QWidget *parent = nullptr) : QWidget(parent){}
   ~PhotoMatchWidget() = default;
 
-public slots:
+protected slots:
 
   virtual void update() = 0;
+  virtual void retranslate() = 0;
+
+public slots:
+
   virtual void reset() = 0;
 
 private:

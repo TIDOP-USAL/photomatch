@@ -42,13 +42,14 @@ class IGfttWidget;
 class IHogWidget;
 class IKazeWidget;
 class ILatchWidget;
-class ILucidWidget;
+//class ILucidWidget;
 class IMsdWidget;
 class IMserWidget;
 class IOrbWidget;
 class ISiftWidget;
 class IStarWidget;
 class ISurfWidget;
+class IVggWidget;
 
 class IDescriptorMatcherWidget;
 
@@ -154,7 +155,7 @@ protected:
   IHogWidget *mHog;
   IKazeWidget *mKaze;
   ILatchWidget *mLatch;
-  ILucidWidget *mLucid;
+  //ILucidWidget *mLucid;
   IMsdWidget *mMsd;
   IMserWidget *mMser;
   IOrbWidget *mOrb;
@@ -165,7 +166,11 @@ protected:
 #ifdef OPENCV_ENABLE_NONFREE
   ISurfWidget *mSurf;
 #endif
-
+#if CV_VERSION_MAJOR >= 3
+#  if CV_VERSION_MINOR > 2
+  IVggWidget *mVgg;
+#  endif
+#endif
   IDescriptorMatcherWidget *mMatcher;
 
   std::map<QString, QString> mLang;

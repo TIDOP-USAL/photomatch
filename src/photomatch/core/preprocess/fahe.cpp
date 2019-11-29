@@ -1,5 +1,7 @@
 #include "fahe.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -56,23 +58,31 @@ FahePreprocess::~FahePreprocess()
 
 }
 
-cv::Mat FahePreprocess::process(const cv::Mat &img)
+bool FahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat temp;
-  cv::Mat color_boost;
-  if (img.channels() >= 3) {
-    cv::decolor(img, temp, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(temp);
+
+  try {
+
+    cv::Mat temp;
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    pixkit::enhancement::local::FAHE2006(temp, imgOut,
+                                         cv::Size(FaheProperties::blockSize().width(),
+                                                  FaheProperties::blockSize().height()));
+    temp.release();
+
+  } catch (cv::Exception &e) {
+    msgError("FAHE image preprocess error: %s", e.what());
+    return true;
   }
 
-  cv::Mat img_out;
-  pixkit::enhancement::local::FAHE2006(temp, img_out,
-                                       cv::Size(FaheProperties::blockSize().width(),
-                                                FaheProperties::blockSize().height()));
-  temp.release();
-  return img_out;
+  return false;
 }
 
 } // namespace photomatch

@@ -104,6 +104,11 @@ void GfttWidget::update()
 {
 }
 
+void GfttWidget::retranslate()
+{
+
+}
+
 void GfttWidget::reset()
 {
   const QSignalBlocker blocker1(mMaxFeatures);

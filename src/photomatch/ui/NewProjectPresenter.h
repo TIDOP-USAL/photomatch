@@ -27,7 +27,7 @@ public:
 
   INewProjectPresenter(){}
 
-  virtual ~INewProjectPresenter() {}
+  virtual ~INewProjectPresenter() override = default;
 
 signals:
 

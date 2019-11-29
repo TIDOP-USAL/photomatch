@@ -592,6 +592,11 @@ void SettingsView::update()
   mSpinBoxKeypointViewerMarkerSize->setDisabled(mListWidgetKeypointsViewerMarkerType->currentRow() == 0);
 }
 
+void SettingsView::retranslate()
+{
+
+}
+
 QString SettingsView::activeLanguage() const
 {
   return mLanguages->currentText();
@@ -862,3 +867,4 @@ void SettingsView::setUnsavedChanges(bool unsaveChanges)
 }
 
 } // namespace photomatch
+

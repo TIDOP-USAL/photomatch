@@ -28,6 +28,7 @@ public:
   virtual void addDescriptorExtractor(QWidget *descriptorExtractor) = 0;
   virtual QString currentKeypointDetector() const = 0;
   virtual QString currentDescriptorExtractor() const = 0;
+  virtual void addKeypointsFilter(QWidget *keypointsFilter) = 0;
 
 signals:
 
@@ -67,6 +68,7 @@ public:
   void addDescriptorExtractor(QWidget *descriptorExtractor) override;
   QString currentKeypointDetector() const override;
   QString currentDescriptorExtractor() const override;
+  void addKeypointsFilter(QWidget *keypointsFilter) override;
 
 public slots:
 
@@ -88,11 +90,13 @@ public slots:
 private slots:
 
   void update() override;
+  void retranslate() override;
 
 protected:
 
   QGridLayout *mGridLayoutKeypointDetector;
   QGridLayout *mGridLayoutDescriptorExtractor;
+  QGridLayout *mGridLayoutKeypointsFilter;
   QComboBox *mComboBoxKeypointDetector;
   QComboBox *mComboBoxDescriptorExtractor;
   QDialogButtonBox *mButtonBox;

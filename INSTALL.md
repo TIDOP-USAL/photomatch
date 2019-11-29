@@ -11,8 +11,12 @@ CMAKE:
 
 ### [Boost](https://www.boost.org)
 
+https://sourceforge.net/projects/boost/files/boost-binaries/
 
-
+Microsoft Visual Studio 2013 - msvc-12.0 - Update 5
+Microsoft Visual Studio 2015 - msvc-14.0 - Update 3
+Microsoft Visual Studio 2017 - msvc-14.1 - VS 15.9.12
+Microsoft Visual Studio 2019 - msvc-14.2 - VS 16.1.1
 
 #CMAKE
 

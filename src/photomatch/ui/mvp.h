@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDialog>
+#include <QEvent>
 
 namespace photomatch
 {
@@ -23,7 +24,7 @@ public:
   {
   }
 
-  virtual ~IWidgetView(){}
+  virtual ~IWidgetView() override {}
 
 private:
 
@@ -45,6 +46,23 @@ private slots:
    * \brief Actualización de los controles  del Widget
    */
   virtual void update() = 0;
+
+  /*!
+   * \brief Retranslate
+   */
+  virtual void retranslate() = 0;
+
+// QWidget interface
+
+protected:
+
+  void changeEvent(QEvent *event) override
+  {
+    if (event->type() == QEvent::LanguageChange){
+      retranslate();
+    }
+  }
+
 };
 
 /*!
@@ -62,7 +80,7 @@ public:
   {
   }
 
-  virtual ~IDialogView(){}
+  virtual ~IDialogView() override = default;
 
 private:
 
@@ -89,7 +107,25 @@ private slots:
    * \brief Actualización de los controles  del dialogo
    */
   virtual void update() = 0;
+
+  /*!
+   * \brief Retranslate
+   */
+  virtual void retranslate() = 0;
+
+// QWidget interface
+
+protected:
+
+  void changeEvent(QEvent *event) override
+  {
+    if (event->type() == QEvent::LanguageChange){
+      retranslate();
+    }
+  }
 };
+
+
 
 class IModel
   : public QObject
@@ -120,7 +156,7 @@ class IPresenter
 public:
 
   IPresenter() : QObject(){}
-  virtual ~IPresenter(){}
+  virtual ~IPresenter() = default;
 
 public slots:
 

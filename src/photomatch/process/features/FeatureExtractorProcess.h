@@ -3,6 +3,7 @@
 
 #include "photomatch/process/ProcessConcurrent.h"
 #include "photomatch/core/features/features.h"
+#include "photomatch/core/features/keypointsfilter.h"
 
 namespace photomatch
 {
@@ -19,7 +20,8 @@ public:
                    const QString &features,
                    double scale,
                    const std::shared_ptr<KeypointDetector> &keypointDetector,
-                   const std::shared_ptr<DescriptorExtractor> &descriptorExtractor);
+                   const std::shared_ptr<DescriptorExtractor> &descriptorExtractor,
+                   const std::list<std::shared_ptr<KeyPointsFilterProcess>> &keyPointsFiltersProcess);
 
 
   QString image() const;
@@ -48,7 +50,7 @@ protected:
   double mScale;
   std::shared_ptr<KeypointDetector> mKeypointDetector;
   std::shared_ptr<DescriptorExtractor> mDescriptorExtractor;
-
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> mKeyPointsFiltersProcess;
 };
 
 

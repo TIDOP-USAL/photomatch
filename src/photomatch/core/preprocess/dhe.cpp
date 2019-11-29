@@ -1,5 +1,7 @@
 #include "dhe.h"
 
+#include <tidop/core/messages.h>
+
 #include <pixkit-image.hpp>
 
 #include <opencv2/photo.hpp>
@@ -56,21 +58,29 @@ DhePreprocess::~DhePreprocess()
 
 }
 
-cv::Mat DhePreprocess::process(const cv::Mat &img)
+bool DhePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat temp;
-  cv::Mat color_boost;
-  if (img.channels() >= 3) {
-    cv::decolor(img, temp, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(temp);
+
+  try {
+
+    cv::Mat temp;
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, temp, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(temp);
+    }
+
+    pixkit::enhancement::global::WadudKabirDewanChae2007(temp, imgOut, DheProperties::x());
+    temp.release();
+
+  } catch (cv::Exception &e) {
+    msgError("DHE image preprocess error: %s", e.what());
+    return true;
   }
 
-  cv::Mat img_out;
-  pixkit::enhancement::global::WadudKabirDewanChae2007(temp, img_out, DheProperties::x());
-  temp.release();
-  return img_out;
+  return false;
 }
 
 } // namespace photomatch

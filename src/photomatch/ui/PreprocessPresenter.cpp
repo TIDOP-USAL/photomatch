@@ -42,7 +42,7 @@
 
 #include <QFileInfo>
 #include <QDir>
-
+#include <QMessageBox>
 
 namespace photomatch
 {
@@ -296,11 +296,22 @@ void PreprocessPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
-  msgInfo("Processing has been canceled by the user");
+  msgWarning("Processing has been canceled by the user");
 }
 
 void PreprocessPresenter::run()
 {
+
+  if(std::shared_ptr<Preprocess> preprocess = mProjectModel->currentSession()->preprocess()){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      return;
+    }
+  }
+
   ///TODO: se crean los procesos
   /// - Se recorren todas las imagenes y se añaden los procesos
 
@@ -416,7 +427,7 @@ void PreprocessPresenter::onError(int code, const QString &msg)
     mProgressHandler->setRange(0,1);
     mProgressHandler->setValue(1);
     mProgressHandler->onFinish();
-    mProgressHandler->setDescription(tr("Feature detection and description error"));
+    mProgressHandler->setDescription(tr("Image preprocessing error"));
 
     disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
     disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));

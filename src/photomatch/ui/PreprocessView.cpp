@@ -17,6 +17,8 @@ PreprocessView::PreprocessView(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   connect(mComboBoxPreprocess,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(preprocessChange(QString)));
   connect(mCheckBoxFullImage,   SIGNAL(clicked(bool)),               this, SLOT(onCheckBoxFullImageChange()));
 
@@ -52,6 +54,7 @@ void PreprocessView::setCurrentPreprocess(const QString &preprocess)
   mCurrentPreprocess = preprocess;
 
   const QSignalBlocker blocker(mComboBoxPreprocess);
+  mComboBoxPreprocess->setCurrentText(preprocess);
   for (int idx = 0; idx < mGridLayoutPreprocess->count(); idx++){
     QLayoutItem * const item = mGridLayoutPreprocess->itemAt(idx);
     if(dynamic_cast<QWidgetItem *>(item)){
@@ -125,7 +128,6 @@ void PreprocessView::init()
   mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
   gridLayout->addWidget(mButtonBox, 4, 0, 1, 2);
 
-
   update();
 }
 
@@ -139,4 +141,18 @@ void PreprocessView::update()
 
 }
 
+void PreprocessView::retranslate()
+{
+  ///TODO: mover aqui todos los textos
+
+#ifndef QT_NO_WHATSTHIS
+  mCheckBoxFullImage->setWhatsThis(tr("<html><head/><body><p>If checked, use the full image size</p></body></html>"));
+  mSpinBoxMaxImageSize->setWhatsThis(tr("<html><head/><body><p>Select maximun image size</p></body></html>"));
+  mComboBoxPreprocess->setWhatsThis(tr("<html><head/><body><p>Select preprocesing method</p></body></html>"));
+#endif // QT_NO_WHATSTHIS
+
+}
+
 } // namespace photomatch
+
+

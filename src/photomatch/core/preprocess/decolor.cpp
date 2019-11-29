@@ -35,18 +35,25 @@ DecolorPreprocess::~DecolorPreprocess()
 {
 }
 
-cv::Mat DecolorPreprocess::process(const cv::Mat &img)
+bool DecolorPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-  cv::Mat img_out;
-  cv::Mat color_boost;
-  if (img.channels() >= 3) {
-    cv::decolor(img, img_out, color_boost);
-    color_boost.release();
-  } else {
-    img.copyTo(img_out);
+
+  try {
+
+    if (imgIn.channels() >= 3) {
+      cv::Mat color_boost;
+      cv::decolor(imgIn, imgOut, color_boost);
+      color_boost.release();
+    } else {
+      imgIn.copyTo(imgOut);
+    }
+
+  } catch (cv::Exception &e) {
+    msgError("Decolor image preprocess error: %s", e.what());
+    return true;
   }
 
-  return img_out;
+  return false;
 }
 
 

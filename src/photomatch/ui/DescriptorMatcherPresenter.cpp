@@ -9,11 +9,13 @@
 
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/Matching/MatchingProcess.h"
+#include "photomatch/process/Matching/PassPointsGroupingProcess.h"
 
 #include <tidop/core/messages.h>
 
 #include <QFileInfo>
 #include <QDir>
+#include <QMessageBox>
 
 namespace photomatch
 {
@@ -210,11 +212,23 @@ void DescriptorMatcherPresenter::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
-  msgInfo("Processing has been canceled by the user");
+  msgWarning("Processing has been canceled by the user");
 }
 
 void DescriptorMatcherPresenter::run()
 {
+
+  Match *matcher = mProjectModel->currentSession()->matcher().get();
+  if(matcher){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      return;
+    }
+  }
+
   mMultiProcess->clearProcessList();
 
   QString matchingMethod = mView->matchingMethod();
@@ -316,6 +330,9 @@ void DescriptorMatcherPresenter::run()
 
   mProjectModel->setRobustMatcherRefinement(robustMatching);
 
+  /// Listado con los ficheros de puntos de interés de un par de fotogramas y el de las correspondencias entre ellos
+  std::list<std::tuple<QString,QString,QString>> pairs;
+
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
 
     auto it2 = it;
@@ -347,11 +364,20 @@ void DescriptorMatcherPresenter::run()
       connect(matcher.get(), SIGNAL(matchCompute(QString,QString,QString)), this, SLOT(onMatchCompute(QString,QString,QString)));
       mMultiProcess->appendProcess(matcher);
 
+      pairs.push_back(std::make_tuple(features1, features2, matches));
     }
 
   }
 
-  //mProjectModel->clearMatches();
+  /// Se identifican los puntos de paso entre todas las imagenes
+
+  QString pass_points_ids = mProjectModel->projectFolder();
+  pass_points_ids.append("\\").append(mProjectModel->currentSession()->name());
+  pass_points_ids.append("\\matches\\pass_points_ids.txt");
+
+  std::shared_ptr<PassPointsGroupingProcess> passPointsGroupingProcess(new PassPointsGroupingProcess(pairs, pass_points_ids));
+  mMultiProcess->appendProcess(passPointsGroupingProcess);
+  ///
 
   connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
