@@ -46,7 +46,12 @@
 #include "photomatch/ui/utils/Progress.h"
 #include "photomatch/ui/utils/ProgressDialog.h"
 #include "photomatch/ui/utils/KeyPointGraphicsItem.h"
-
+#include "photomatch/ui/ExportFeaturesModel.h"
+#include "photomatch/ui/ExportFeaturesView.h"
+#include "photomatch/ui/ExportFeaturesPresenter.h"
+#include "photomatch/ui/ExportMatchesModel.h"
+#include "photomatch/ui/ExportMatchesView.h"
+#include "photomatch/ui/ExportMatchesPresenter.h"
 #include "photomatch/core/project.h"
 
 /* TidopLib */
@@ -71,6 +76,10 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mProjectModel(nullptr),
     mNewProjectPresenter(nullptr),
     mNewSessionPresenter(nullptr),
+    mExportFeaturesPresenter(nullptr),
+    mExportFeaturesModel(nullptr),
+    mExportMatchesPresenter(nullptr),
+    mExportMatchesModel(nullptr),
     mSettings(new Settings),
     mSettingsRW(new SettingsRW),
     mSettingsModel(nullptr),
@@ -109,12 +118,13 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(openProject()),                   this, SLOT(openProject()));
   connect(mView, SIGNAL(openProjectFromHistory(QString)), this, SLOT(openFromHistory(QString)));  ///TODO: falta test señal
   connect(mView, SIGNAL(clearHistory()),                  this, SLOT(deleteHistory()));
-  //connect(mView, SIGNAL(exportTiePoints()),               this, SLOT(exportTiePoints()));
-  connect(mView, SIGNAL(exportTiePointsCvXml()),          this, SLOT(exportTiePointsCvXml()));
-  connect(mView, SIGNAL(exportTiePointsCvYml()),          this, SLOT(exportTiePointsCvYml()));
-  connect(mView, SIGNAL(exportMatchesCvYml()),            this, SLOT(exportMatchesCvYml()));
-  connect(mView, SIGNAL(exportMatchesCvXml()),            this, SLOT(exportMatchesCvXml()));
-  connect(mView, SIGNAL(exportMatchesTxt()),              this, SLOT(exportMatchesTxt()));
+  connect(mView, SIGNAL(exportTiePoints()),               this, SLOT(exportFeatures()));
+  connect(mView, SIGNAL(exportMatches()),                 this, SLOT(exportMatches()));
+//  connect(mView, SIGNAL(exportTiePointsCvXml()),          this, SLOT(exportTiePointsCvXml()));
+//  connect(mView, SIGNAL(exportTiePointsCvYml()),          this, SLOT(exportTiePointsCvYml()));
+//  connect(mView, SIGNAL(exportMatchesCvYml()),            this, SLOT(exportMatchesCvYml()));
+//  connect(mView, SIGNAL(exportMatchesCvXml()),            this, SLOT(exportMatchesCvXml()));
+//  connect(mView, SIGNAL(exportMatchesTxt()),              this, SLOT(exportMatchesTxt()));
   connect(mView, SIGNAL(saveProject()),                   this, SLOT(saveProject()));
   connect(mView, SIGNAL(saveProjectAs()),                 this, SLOT(saveProjectAs()));
   connect(mView, SIGNAL(closeProject()),                  this, SLOT(closeProject()));
@@ -203,6 +213,26 @@ MainWindowPresenter::~MainWindowPresenter()
   if (mNewSessionPresenter){
     delete mNewSessionPresenter;
     mNewSessionPresenter = nullptr;
+  }
+
+  if (mExportFeaturesModel){
+    delete mExportFeaturesModel;
+    mExportFeaturesModel = nullptr;
+  }
+
+  if (mExportFeaturesPresenter){
+    delete mExportFeaturesPresenter;
+    mExportFeaturesPresenter = nullptr;
+  }
+
+  if (mExportMatchesModel){
+    delete mExportMatchesModel;
+    mExportMatchesModel = nullptr;
+  }
+
+  if (mExportMatchesPresenter){
+    delete mExportMatchesPresenter;
+    mExportMatchesPresenter = nullptr;
   }
 
   if (mSettings){
@@ -475,65 +505,82 @@ void MainWindowPresenter::saveProjectAs()
   }
 }
 
-void MainWindowPresenter::exportTiePointsCvXml()
+void MainWindowPresenter::exportFeatures()
 {
-  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-                                                       tr("Export directory"),
-                                                       "",
-                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+  initExportFeaturesDialog();
 
-  if (!pathName.isEmpty()) {
-
-  }
+  mExportFeaturesPresenter->open();
 }
 
-void MainWindowPresenter::exportTiePointsCvYml()
+void MainWindowPresenter::exportMatches()
 {
-  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-                                                       tr("Export directory"),
-                                                       "",
-                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+  initExportMatchesDialog();
 
-  if (!pathName.isEmpty()) {
-
-  }
+  mExportMatchesPresenter->open();
 }
 
-void MainWindowPresenter::exportMatchesCvYml()
-{
-  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-                                                       tr("Export directory"),
-                                                       "",
-                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+//void MainWindowPresenter::exportTiePointsCvXml()
+//{
+//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+//                                                       tr("Export directory"),
+//                                                       "",
+//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-  if (!pathName.isEmpty()) {
+//  if (!pathName.isEmpty()) {
 
-  }
-}
+//    TL_TODO("Permitir exportar otras sesiones a parte de la activa")
+//    //mModel->exportTiePointsCvXml(pathName);
 
-void MainWindowPresenter::exportMatchesCvXml()
-{
-  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-                                                       tr("Export directory"),
-                                                       "",
-                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+//  }
+//}
 
-  if (!pathName.isEmpty()) {
+//void MainWindowPresenter::exportTiePointsCvYml()
+//{
+//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+//                                                       tr("Export directory"),
+//                                                       "",
+//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-  }
-}
+//  if (!pathName.isEmpty()) {
 
-void MainWindowPresenter::exportMatchesTxt()
-{
-  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-                                                       tr("Export directory"),
-                                                       "",
-                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+//  }
+//}
 
-  if (!pathName.isEmpty()) {
+//void MainWindowPresenter::exportMatchesCvYml()
+//{
+//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+//                                                       tr("Export directory"),
+//                                                       "",
+//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-  }
-}
+//  if (!pathName.isEmpty()) {
+
+//  }
+//}
+
+//void MainWindowPresenter::exportMatchesCvXml()
+//{
+//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+//                                                       tr("Export directory"),
+//                                                       "",
+//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+//  if (!pathName.isEmpty()) {
+
+//  }
+//}
+
+//void MainWindowPresenter::exportMatchesTxt()
+//{
+//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
+//                                                       tr("Export directory"),
+//                                                       "",
+//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+//  if (!pathName.isEmpty()) {
+
+//  }
+//}
 
 void MainWindowPresenter::closeProject()
 {
@@ -1380,6 +1427,24 @@ void MainWindowPresenter::initNewSessionDialog()
 
     connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(loadSession(QString)));
     connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(activeSession(QString)));
+  }
+}
+
+void MainWindowPresenter::initExportFeaturesDialog()
+{
+  if (mExportFeaturesPresenter == nullptr){
+    IExportFeaturesView *exportFeaturesView = new ExportFeaturesView(mView);
+    mExportFeaturesModel = new ExportFeaturesModel(mProjectModel);
+    mExportFeaturesPresenter = new ExportFeaturesPresenter(exportFeaturesView, mExportFeaturesModel);
+  }
+}
+
+void MainWindowPresenter::initExportMatchesDialog()
+{
+  if (mExportMatchesPresenter == nullptr){
+    IExportMatchesView *exportMatchesView = new ExportMatchesView(mView);
+    mExportMatchesModel = new ExportMatchesModel(mProjectModel);
+    mExportMatchesPresenter = new ExportMatchesPresenter(exportMatchesView, mExportMatchesModel);
   }
 }
 

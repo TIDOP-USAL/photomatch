@@ -80,7 +80,7 @@ public:
   {
   }
 
-  virtual ~IDialogView() override {}
+  virtual ~IDialogView() override = default;
 
 private:
 
@@ -156,7 +156,7 @@ class IPresenter
 public:
 
   IPresenter() : QObject(){}
-  virtual ~IPresenter(){}
+  virtual ~IPresenter() = default;
 
 public slots:
 

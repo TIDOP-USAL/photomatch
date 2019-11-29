@@ -24,7 +24,7 @@ class INewProjectView
 public:
 
   INewProjectView(QWidget *parent) : IDialogView(parent) {}
-  virtual ~INewProjectView() {}
+  virtual ~INewProjectView() override = default;
 
   /*!
    * \brief Devuelve el nombre del proyecto

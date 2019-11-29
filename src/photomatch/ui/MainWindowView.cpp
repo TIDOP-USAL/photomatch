@@ -58,11 +58,13 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionToolSettings(new QAction(this)),
     mActionHelp(new QAction(this)),
     mActionAbout(new QAction(this)),
-    mActionExportTiePointsCvXml(new QAction(this)),
-    mActionExportTiePointsCvYml(new QAction(this)),
-    mActionExportMatchesToCvXml(new QAction(this)),
-    mActionExportMatchesToCvYml(new QAction(this)),
-    mActionExportMatchesToTxt(new QAction(this)),
+    mActionExportTiePoints(new QAction(this)),
+    mActionExportMatches(new QAction(this)),
+//    mActionExportTiePointsCvXml(new QAction(this)),
+//    mActionExportTiePointsCvYml(new QAction(this)),
+//    mActionExportMatchesToCvXml(new QAction(this)),
+//    mActionExportMatchesToCvYml(new QAction(this)),
+//    mActionExportMatchesToTxt(new QAction(this)),
     mActionFeaturesViewer(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
     mActionGroundTruthEditor(new QAction(this)),
@@ -96,11 +98,13 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionClearHistory,         SIGNAL(triggered(bool)), this,   SIGNAL(clearHistory()));
   connect(mActionSaveProject,          SIGNAL(triggered(bool)), this,   SIGNAL(saveProject()));
   connect(mActionSaveProjectAs,        SIGNAL(triggered(bool)), this,   SIGNAL(saveProjectAs()));
-  connect(mActionExportTiePointsCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvXml()));
-  connect(mActionExportTiePointsCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvYml()));
-  connect(mActionExportMatchesToCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvYml()));
-  connect(mActionExportMatchesToCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvXml()));
-  connect(mActionExportMatchesToTxt,   SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesTxt()));
+  connect(mActionExportTiePoints,      SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePoints()));
+  connect(mActionExportMatches,        SIGNAL(triggered(bool)), this,   SIGNAL(exportMatches()));
+//  connect(mActionExportTiePointsCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvXml()));
+//  connect(mActionExportTiePointsCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvYml()));
+//  connect(mActionExportMatchesToCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvYml()));
+//  connect(mActionExportMatchesToCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvXml()));
+//  connect(mActionExportMatchesToTxt,   SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesTxt()));
   connect(mActionCloseProject,         SIGNAL(triggered(bool)), this,   SIGNAL(closeProject()));
   connect(mActionExit,                 SIGNAL(triggered(bool)), this,   SIGNAL(exit()));
 
@@ -1365,14 +1369,15 @@ void MainWindowView::update()
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  //mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  mActionExportTiePointsCvYml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionExportMatches->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
+  //mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  //mActionExportTiePointsCvYml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   mActionFeaturesViewer->setEnabled(mFlags.isActive(Flag::feature_extraction));
   mActionMatchesViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
-  mActionExportMatchesToCvYml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
-  mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
-  mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
+  //mActionExportMatchesToCvYml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
+  //mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
+  //mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
   //mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
@@ -1742,35 +1747,43 @@ void MainWindowView::init()
   iconSaveProjectAs.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_save_as_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionSaveProjectAs->setIcon(iconSaveProjectAs);
 
-  mActionExportTiePointsCvXml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV XML", nullptr));
-  mActionExportTiePointsCvXml->setObjectName(QStringLiteral("actionExportTiePointsCvXml"));
-  QIcon iconExportTiePointsCvXml;
-  iconExportTiePointsCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionExportTiePointsCvXml->setIcon(iconExportTiePointsCvXml);
+  mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export tie points", nullptr));
+//  QIcon iconExportTiePointsCvXml;
+//  iconExportTiePointsCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionExportTiePoints->setIcon(iconExportTiePointsCvXml);
 
-  mActionExportTiePointsCvYml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV YML", nullptr));
-  mActionExportTiePointsCvYml->setObjectName(QStringLiteral("actionExportTiePointsCvYml"));
-  QIcon iconExportTiePointsCvYml;
-  iconExportTiePointsCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionExportTiePointsCvYml->setIcon(iconExportTiePointsCvYml);
+  mActionExportMatches->setText(QApplication::translate("MainWindowView", "Export Matches", nullptr));
 
-  mActionExportMatchesToCvXml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV XML", nullptr));
-  mActionExportMatchesToCvXml->setObjectName(QStringLiteral("actionExportMatchesToCvXml"));
-  QIcon iconExportMatchesToCvXml;
-  iconExportMatchesToCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionExportMatchesToCvXml->setIcon(iconExportMatchesToCvXml);
 
-  mActionExportMatchesToCvYml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV YML", nullptr));
-  mActionExportMatchesToCvYml->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
-  QIcon iconExportMatchesToCvYml;
-  iconExportMatchesToCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionExportMatchesToCvYml->setIcon(iconExportMatchesToCvYml);
+//  mActionExportTiePointsCvXml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV XML", nullptr));
+//  mActionExportTiePointsCvXml->setObjectName(QStringLiteral("actionExportTiePointsCvXml"));
+//  QIcon iconExportTiePointsCvXml;
+//  iconExportTiePointsCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionExportTiePointsCvXml->setIcon(iconExportTiePointsCvXml);
 
-  mActionExportMatchesToTxt->setText(QApplication::translate("MainWindowView", "Export matches to txt", nullptr));
-  mActionExportMatchesToTxt->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
-  QIcon iconExportMatchesToTxt;
-  iconExportMatchesToTxt.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_txt_24px"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionExportMatchesToTxt->setIcon(iconExportMatchesToTxt);
+//  mActionExportTiePointsCvYml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV YML", nullptr));
+//  mActionExportTiePointsCvYml->setObjectName(QStringLiteral("actionExportTiePointsCvYml"));
+//  QIcon iconExportTiePointsCvYml;
+//  iconExportTiePointsCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionExportTiePointsCvYml->setIcon(iconExportTiePointsCvYml);
+
+//  mActionExportMatchesToCvXml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV XML", nullptr));
+//  mActionExportMatchesToCvXml->setObjectName(QStringLiteral("actionExportMatchesToCvXml"));
+//  QIcon iconExportMatchesToCvXml;
+//  iconExportMatchesToCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionExportMatchesToCvXml->setIcon(iconExportMatchesToCvXml);
+
+//  mActionExportMatchesToCvYml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV YML", nullptr));
+//  mActionExportMatchesToCvYml->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
+//  QIcon iconExportMatchesToCvYml;
+//  iconExportMatchesToCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionExportMatchesToCvYml->setIcon(iconExportMatchesToCvYml);
+
+//  mActionExportMatchesToTxt->setText(QApplication::translate("MainWindowView", "Export matches to txt", nullptr));
+//  mActionExportMatchesToTxt->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
+//  QIcon iconExportMatchesToTxt;
+//  iconExportMatchesToTxt.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_txt_24px"), QSize(), QIcon::Normal, QIcon::Off);
+//  mActionExportMatchesToTxt->setIcon(iconExportMatchesToTxt);
 
   mActionCloseProject->setText(QApplication::translate("MainWindowView", "Close Project", nullptr));
   QIcon icon4;
@@ -1953,18 +1966,20 @@ void MainWindowView::init()
   ui->menuFile->addAction(mActionSaveProject);
   ui->menuFile->addAction(mActionSaveProjectAs);
   ui->menuFile->addSeparator();
-//  mMenuExport = new QMenu(tr("Export"), this);
-//  mMenuExportTiePoints = new QMenu(tr("Tie Points"), this);
-//  mMenuExportMatches = new QMenu(tr("Matches"), this);
-//  mMenuExportTiePoints->addAction(mActionExportTiePointsCvXml);
-//  mMenuExportTiePoints->addAction(mActionExportTiePointsCvYml);
-//  mMenuExportMatches->addAction(mActionExportMatchesToCvXml);
-//  mMenuExportMatches->addAction(mActionExportMatchesToCvYml);
-//  mMenuExportMatches->addAction(mActionExportMatchesToTxt);
-//  mMenuExport->addMenu(mMenuExportTiePoints);
-//  mMenuExport->addMenu(mMenuExportMatches);
-//  ui->menuFile->addMenu(mMenuExport);
-//  ui->menuFile->addSeparator();
+  mMenuExport = new QMenu(tr("Export"), this);
+  mMenuExport->addAction(mActionExportTiePoints);
+  mMenuExport->addAction(mActionExportMatches);
+  //mMenuExportTiePoints = new QMenu(tr("Tie Points"), this);
+  //mMenuExportMatches = new QMenu(tr("Matches"), this);
+  //mMenuExportTiePoints->addAction(mActionExportTiePointsCvXml);
+  //mMenuExportTiePoints->addAction(mActionExportTiePointsCvYml);
+  //mMenuExportMatches->addAction(mActionExportMatchesToCvXml);
+  //mMenuExportMatches->addAction(mActionExportMatchesToCvYml);
+  //mMenuExportMatches->addAction(mActionExportMatchesToTxt);
+  //mMenuExport->addMenu(mMenuExportTiePoints);
+  //mMenuExport->addMenu(mMenuExportMatches);
+  ui->menuFile->addMenu(mMenuExport);
+  ui->menuFile->addSeparator();
   ui->menuFile->addAction(mActionCloseProject);
   ui->menuFile->addSeparator();
   ui->menuFile->addAction(mActionExit);
