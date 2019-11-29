@@ -14,6 +14,7 @@
 #include <QLineEdit>
 #include <QColorDialog>
 #include <QGroupBox>
+#include <QCheckBox>
 
 namespace photomatch
 {
@@ -27,6 +28,7 @@ SettingsView::SettingsView(QWidget *parent)
     mTabWidgetTools(nullptr),
     mKeypointsFormat(new QComboBox(this)),
     mMatchesFormat(new QComboBox(this)),
+    mCheckBoxUseCuda(new QCheckBox(this)),
     mListWidgetPreprocess(nullptr),
     mListWidgetFeatures(nullptr),
     mButtonBox(new QDialogButtonBox(this)),
@@ -265,6 +267,8 @@ void SettingsView::init()
   mMatchesFormat->addItem("YML");
   mMatchesFormat->setCurrentText("XML");
   gridLayoutContentsToolsGeneral->addWidget(mMatchesFormat, 1, 1, 1, 1);
+  gridLayoutContentsToolsGeneral->addWidget(new QLabel(tr("Use Cuda")), 2, 0, 1, 1);
+  gridLayoutContentsToolsGeneral->addWidget(mCheckBoxUseCuda, 2, 1, 1, 1);
   gridLayoutContentsToolsGeneral->addItem(new QSpacerItem(1,1, QSizePolicy::Fixed, QSizePolicy::Expanding), 2, 1, 1, 2);
   scrollAreaToolsGeneral->setWidget(scrollAreaWidgetContentsToolsGeneral);
   gridLayoutTabToolsGeneral->addWidget(scrollAreaToolsGeneral, 0, 0, 1, 1);

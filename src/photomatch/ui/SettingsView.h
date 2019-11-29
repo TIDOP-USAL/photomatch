@@ -11,6 +11,7 @@ class QTabWidget;
 class QGridLayout;
 class QSpinBox;
 class QLineEdit;
+class QCheckBox;
 
 namespace photomatch
 {
@@ -263,6 +264,7 @@ protected:
   QTabWidget *mTabQualityControl;
   QComboBox *mKeypointsFormat;
   QComboBox *mMatchesFormat;
+  QCheckBox *mCheckBoxUseCuda;
   QGridLayout *mGridLayoutPreprocess;
   QGridLayout *mGridLayoutFeatures;
   QGridLayout *mGridLayoutMatcher;
