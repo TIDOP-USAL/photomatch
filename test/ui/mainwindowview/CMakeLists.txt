@@ -16,8 +16,8 @@ add_executable(${the_target}
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/MainWindowView.ui
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.cpp
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.h
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/KeyPointGraphicsItem.cpp
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/KeyPointGraphicsItem.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicItem.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicItem.h
     )
 
 target_link_libraries(${the_target} PRIVATE

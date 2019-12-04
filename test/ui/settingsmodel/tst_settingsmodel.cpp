@@ -314,6 +314,13 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(10, settingsModel.historyMaxSize());
   QCOMPARE(QStringList(), settingsModel.history());
 
+  QCOMPARE(QString("#dcdcdc"), settingsModel.imageViewerBGcolor());
+
+  QCOMPARE(QString("XML"), settingsModel.keypointsFormat());
+  QCOMPARE(QString("XML"), settingsModel.matchesFormat());
+
+  QCOMPARE(false, settingsModel.useCuda());
+
   QCOMPARE(QSize(8, 8), settingsModel.acebsfBlockSize());
   QCOMPARE(0.03, settingsModel.acebsfL());
   QCOMPARE(10., settingsModel.acebsfK1());
@@ -323,10 +330,6 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(QSize(8, 8), settingsModel.claheTilesGridSize());
 
   QCOMPARE(QSize(11,11), settingsModel.cmbfheBlockSize());
-
-  QCOMPARE(QSize(17,17), settingsModel.hmclaheBlockSize());
-  QCOMPARE(0.03, settingsModel.hmclaheL());
-  QCOMPARE(0.5, settingsModel.hmclahePhi());
 
   QCOMPARE(1, settingsModel.dheX());
 
@@ -366,6 +369,10 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(4, settingsModel.akazeOctaves());
   QCOMPARE(4, settingsModel.akazeOctaveLayers());
   QCOMPARE("DIFF_PM_G2", settingsModel.akazeDiffusivity());
+
+  QCOMPARE("BINBOOST_256", settingsModel.boostDescriptorType());
+  QCOMPARE(true, settingsModel.boostUseOrientation());
+  QCOMPARE(6.25, settingsModel.boostScaleFactor());
 
   QCOMPARE("32", settingsModel.briefBytes());
   QCOMPARE(false, settingsModel.briefUseOrientation());
@@ -468,19 +475,38 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(8, settingsModel.starLineThresholdBinarized());
   QCOMPARE(5, settingsModel.starSuppressNonmaxSize());
 
+  QCOMPARE("VGG_120", settingsModel.vggDescriptorType());
+  QCOMPARE(6.25, settingsModel.vggScaleFactor());
+  QCOMPARE(1.4, settingsModel.vggSigma());
+  QCOMPARE(false, settingsModel.vggUseNormalizeDescriptor());
+  QCOMPARE(true, settingsModel.vggUseNormalizeImage());
+  QCOMPARE(true, settingsModel.vggUseScaleOrientation());
+
   QCOMPARE("#dcdcdc", settingsModel.keypointsViewerBGColor());
   QCOMPARE(0, settingsModel.keypointsViewerMarkerType());
   QCOMPARE(20, settingsModel.keypointsViewerMarkerSize());
   QCOMPARE(2, settingsModel.keypointsViewerMarkerWidth());
-  QCOMPARE("#e5097e", settingsModel.keypointsViewerMarkerColor());
+  QCOMPARE("#00aa00", settingsModel.keypointsViewerMarkerColor());
+  QCOMPARE(2, settingsModel.keypointsViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", settingsModel.keypointsViewerSelectMarkerColor());
 
   QCOMPARE("#dcdcdc", settingsModel.matchesViewerBGColor());
   QCOMPARE(0, settingsModel.matchesViewerMarkerType());
   QCOMPARE(20, settingsModel.matchesViewerMarkerSize());
   QCOMPARE(2, settingsModel.matchesViewerMarkerWidth());
-  QCOMPARE("#e5097e", settingsModel.matchesViewerMarkerColor());
-  QCOMPARE("#e5097e", settingsModel.matchesViewerLineColor());
+  QCOMPARE("#00aa00", settingsModel.matchesViewerMarkerColor());
+  QCOMPARE("#0000ff", settingsModel.matchesViewerLineColor());
   QCOMPARE(2, settingsModel.matchesViewerLineWidth());
+  QCOMPARE(2, settingsModel.matchesViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", settingsModel.matchesViewerSelectMarkerColor());
+
+  QCOMPARE("#dcdcdc", settingsModel.groundTruthEditorBGColor());
+  QCOMPARE(20, settingsModel.groundTruthEditorMarkerSize());
+  QCOMPARE(2, settingsModel.groundTruthEditorMarkerWidth());
+  QCOMPARE("#00aa00", settingsModel.groundTruthEditorMarkerColor());
+  QCOMPARE(2, settingsModel.groundTruthEditorSelectMarkerWidth());
+  QCOMPARE("#e5097e", settingsModel.groundTruthEditorSelectMarkerColor());
+
 }
 
 void TestSettingsModel::test_language()
@@ -1432,6 +1458,14 @@ void TestSettingsModel::test_groundTruthEditorMarkerColor()
 void TestSettingsModel::test_reset()
 {
   mSettingsModel->setLanguage("es");
+  mSettingsModel->setHistoryMaxSize(20);
+  mSettingsModel->setImageViewerBGcolor("#ff00ff");
+
+  mSettingsModel->setKeypointsFormat("YML");
+  mSettingsModel->setMatchesFormat("YML");
+
+  mSettingsModel->setUseCuda(true);
+
   mSettingsModel->setAcebsfBlockSize(QSize(20, 20));
   mSettingsModel->setAcebsfL(0.05);
   mSettingsModel->setAcebsfK1(9.);
@@ -1457,7 +1491,6 @@ void TestSettingsModel::test_reset()
   mSettingsModel->setWallisImposedAverage(11);
   mSettingsModel->setWallisImposedLocalStdDev(25);
   mSettingsModel->setWallisKernelSize(20);
-
   mSettingsModel->setAgastThreshold(30);
   mSettingsModel->setAgastDetectorType("AGAST_7_12s");
   mSettingsModel->setAgastNonmaxSuppression(false);
@@ -1468,6 +1501,9 @@ void TestSettingsModel::test_reset()
   mSettingsModel->setAkazeDescriptorSize(32);
   mSettingsModel->setAkazeDescriptorType("MLDB_UPRIGHT");
   mSettingsModel->setAkazeDescriptorChannels(4);
+  mSettingsModel->setBoostDescriptorType("BINBOOST_64");
+  mSettingsModel->setBoostUseOrientation(false);
+  mSettingsModel->setBoostScaleFactor(5.);
   mSettingsModel->setBriefBytes("16");
   mSettingsModel->setBriefUseOrientation(true);
   mSettingsModel->setBriskThreshold(20);
@@ -1553,11 +1589,19 @@ void TestSettingsModel::test_reset()
   mSettingsModel->setStarLineThresholdProjected(5);
   mSettingsModel->setStarLineThresholdBinarized(4);
   mSettingsModel->setStarSuppressNonmaxSize(10);
+  mSettingsModel->setVggDescriptorType("VGG_80");
+  mSettingsModel->setVggScaleFactor(5.);
+  mSettingsModel->setVggSigma(1.1);
+  mSettingsModel->setVggUseNormalizeDescriptor(true);
+  mSettingsModel->setVggUseNormalizeImage(false);
+  mSettingsModel->setVggUseScaleOrientation(false);
   mSettingsModel->setKeypointsViewerBGColor("#ffffff");
   mSettingsModel->setKeypointsViewerMarkerType(2);
   mSettingsModel->setKeypointsViewerMarkerSize(30);
   mSettingsModel->setKeypointsViewerMarkerWidth(5);
   mSettingsModel->setKeypointsViewerMarkerColor("#ffffff");
+  mSettingsModel->setKeypointsViewerSelectMarkerWidth(1);
+  mSettingsModel->setKeypointsViewerSelectMarkerColor("#ffffff");
   mSettingsModel->setMatchesViewerBGColor("#ffffff");
   mSettingsModel->setMatchesViewerMarkerType(2);
   mSettingsModel->setMatchesViewerMarkerSize(25);
@@ -1565,14 +1609,28 @@ void TestSettingsModel::test_reset()
   mSettingsModel->setMatchesViewerMarkerColor("#ffffff");
   mSettingsModel->setMatchesViewerLineColor("#ffffff");
   mSettingsModel->setMatchesViewerLineWidth(5);
+  mSettingsModel->setMatchesViewerSelectMarkerWidth(3);
+  mSettingsModel->setMatchesViewerSelectMarkerColor("#ffffff");
   mSettingsModel->setGroundTruthEditorBGColor("#ffffff");
   mSettingsModel->setGroundTruthEditorMarkerSize(25);
   mSettingsModel->setGroundTruthEditorMarkerWidth(5);
   mSettingsModel->setGroundTruthEditorMarkerColor("#ffffff");
+  mSettingsModel->setGroundTruthEditorSelectMarkerWidth(4);
+  mSettingsModel->setGroundTruthEditorSelectMarkerColor("#ffffff");
 
   mSettingsModel->reset();
 
   QCOMPARE("en", mSettingsModel->language());
+
+  QCOMPARE(10, mSettingsModel->historyMaxSize());
+  QCOMPARE(QStringList(), mSettingsModel->history());
+
+  QCOMPARE(QString("#dcdcdc"), mSettingsModel->imageViewerBGcolor());
+
+  QCOMPARE(QString("XML"), mSettingsModel->keypointsFormat());
+  QCOMPARE(QString("XML"), mSettingsModel->matchesFormat());
+
+  QCOMPARE(false, mSettingsModel->useCuda());
 
   QCOMPARE(QSize(8, 8), mSettingsModel->acebsfBlockSize());
   QCOMPARE(0.03, mSettingsModel->acebsfL());
@@ -1625,6 +1683,10 @@ void TestSettingsModel::test_reset()
 
   QCOMPARE("32", mSettingsModel->briefBytes());
   QCOMPARE(false, mSettingsModel->briefUseOrientation());
+
+  QCOMPARE("BINBOOST_256", mSettingsModel->boostDescriptorType());
+  QCOMPARE(true, mSettingsModel->boostUseOrientation());
+  QCOMPARE(6.25, mSettingsModel->boostScaleFactor());
 
   QCOMPARE(30, mSettingsModel->briskThreshold());
   QCOMPARE(3, mSettingsModel->briskOctaves());
@@ -1724,24 +1786,37 @@ void TestSettingsModel::test_reset()
   QCOMPARE(8, mSettingsModel->starLineThresholdBinarized());
   QCOMPARE(5, mSettingsModel->starSuppressNonmaxSize());
 
+  QCOMPARE("VGG_120", mSettingsModel->vggDescriptorType());
+  QCOMPARE(6.25, mSettingsModel->vggScaleFactor());
+  QCOMPARE(1.4, mSettingsModel->vggSigma());
+  QCOMPARE(false, mSettingsModel->vggUseNormalizeDescriptor());
+  QCOMPARE(true, mSettingsModel->vggUseNormalizeImage());
+  QCOMPARE(true, mSettingsModel->vggUseScaleOrientation());
+
   QCOMPARE("#dcdcdc", mSettingsModel->keypointsViewerBGColor());
   QCOMPARE(0, mSettingsModel->keypointsViewerMarkerType());
   QCOMPARE(20, mSettingsModel->keypointsViewerMarkerSize());
   QCOMPARE(2, mSettingsModel->keypointsViewerMarkerWidth());
-  QCOMPARE("#e5097e", mSettingsModel->keypointsViewerMarkerColor());
+  QCOMPARE("#00aa00", mSettingsModel->keypointsViewerMarkerColor());
+  QCOMPARE(2, mSettingsModel->keypointsViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettingsModel->keypointsViewerSelectMarkerColor());
 
   QCOMPARE("#dcdcdc", mSettingsModel->matchesViewerBGColor());
   QCOMPARE(0, mSettingsModel->matchesViewerMarkerType());
   QCOMPARE(20, mSettingsModel->matchesViewerMarkerSize());
   QCOMPARE(2, mSettingsModel->matchesViewerMarkerWidth());
-  QCOMPARE("#e5097e", mSettingsModel->matchesViewerMarkerColor());
-  QCOMPARE("#e5097e", mSettingsModel->matchesViewerLineColor());
+  QCOMPARE("#00aa00", mSettingsModel->matchesViewerMarkerColor());
+  QCOMPARE("#0000ff", mSettingsModel->matchesViewerLineColor());
   QCOMPARE(2, mSettingsModel->matchesViewerLineWidth());
+  QCOMPARE(2, mSettingsModel->matchesViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettingsModel->matchesViewerSelectMarkerColor());
 
   QCOMPARE("#dcdcdc", mSettingsModel->groundTruthEditorBGColor());
   QCOMPARE(20, mSettingsModel->groundTruthEditorMarkerSize());
   QCOMPARE(2, mSettingsModel->groundTruthEditorMarkerWidth());
-  QCOMPARE("#e5097e", mSettingsModel->groundTruthEditorMarkerColor());
+  QCOMPARE("#00aa00", mSettingsModel->groundTruthEditorMarkerColor());
+  QCOMPARE(2, mSettingsModel->groundTruthEditorSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettingsModel->groundTruthEditorSelectMarkerColor());
 }
 
 QTEST_MAIN(TestSettingsModel)

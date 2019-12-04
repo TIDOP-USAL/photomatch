@@ -56,6 +56,7 @@ public:
   //virtual void deleteMatch(int id) = 0;
 
   virtual void setBGColor(const QString &bgColor) = 0;
+  virtual void setSelectedMarkerStyle(const QString &color, int width) = 0;
   virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
   virtual void setLineStyle(const QString &color, int width) = 0;
 
@@ -99,6 +100,7 @@ public:
   void setRightImageList(const std::vector<QString> &rightImageList) override;
   void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) override;
   void setBGColor(const QString &bgColor) override;
+  void setSelectedMarkerStyle(const QString &color, int width) override;
   void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
   void setLineStyle(const QString &color, int width) override;
 
@@ -140,6 +142,8 @@ protected:
   int mMarkerType;
   QString mLineColor;
   int mLineWidth;
+  QString mSelectedMarkerColor;
+  int mSelectedMarkerWidth;
 };
 
 } // namespace photomatch

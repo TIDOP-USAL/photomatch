@@ -244,12 +244,16 @@ public:
   virtual int keypointsViewerMarkerSize() const = 0;
   virtual int keypointsViewerMarkerWidth() const = 0;
   virtual QString keypointsViewerMarkerColor() const = 0;
+  virtual int keypointsViewerSelectMarkerWidth() const = 0;
+  virtual QString keypointsViewerSelectMarkerColor() const = 0;
 
   virtual QString matchesViewerBGColor() const = 0;
   virtual int matchesViewerMarkerType() const = 0;
   virtual int matchesViewerMarkerSize() const = 0;
   virtual int matchesViewerMarkerWidth() const = 0;
   virtual QString matchesViewerMarkerColor() const = 0;
+  virtual int matchesViewerSelectMarkerWidth() const = 0;
+  virtual QString matchesViewerSelectMarkerColor() const = 0;
   virtual QString matchesViewerLineColor() const = 0;
   virtual int matchesViewerLineWidth() const = 0;
 
@@ -257,6 +261,8 @@ public:
   virtual int groundTruthEditorMarkerSize() const = 0;
   virtual int groundTruthEditorMarkerWidth() const = 0;
   virtual QString groundTruthEditorMarkerColor() const = 0;
+  virtual int groundTruthEditorSelectMarkerWidth() const = 0;
+  virtual QString groundTruthEditorSelectMarkerColor() const = 0;
 
   /*!
    * \brief read
@@ -499,12 +505,16 @@ public slots:
   virtual void setKeypointsViewerMarkerSize(int size) = 0;
   virtual void setKeypointsViewerMarkerWidth(int width) = 0;
   virtual void setKeypointsViewerMarkerColor(const QString &color) = 0;
+  virtual void setKeypointsViewerSelectMarkerWidth(int width) = 0;
+  virtual void setKeypointsViewerSelectMarkerColor(const QString &color) = 0;
 
   virtual void setMatchesViewerBGColor(const QString &color) = 0;
   virtual void setMatchesViewerMarkerType(int type) = 0;
   virtual void setMatchesViewerMarkerSize(int size) = 0;
   virtual void setMatchesViewerMarkerWidth(int width) = 0;
   virtual void setMatchesViewerMarkerColor(const QString &color) = 0;
+  virtual void setMatchesViewerSelectMarkerWidth(int width) = 0;
+  virtual void setMatchesViewerSelectMarkerColor(const QString &color) = 0;
   virtual void setMatchesViewerLineColor(const QString &color) = 0;
   virtual void setMatchesViewerLineWidth(int width) = 0;
 
@@ -512,6 +522,8 @@ public slots:
   virtual void setGroundTruthEditorMarkerSize(int size) = 0;
   virtual void setGroundTruthEditorMarkerWidth(int width) = 0;
   virtual void setGroundTruthEditorMarkerColor(const QString &color) = 0;
+  virtual void setGroundTruthEditorSelectMarkerWidth(int width) = 0;
+  virtual void setGroundTruthEditorSelectMarkerColor(const QString &color) = 0;
 
   virtual void reset() = 0;
 
@@ -728,12 +740,16 @@ public:
   int keypointsViewerMarkerSize() const override;
   int keypointsViewerMarkerWidth() const override;
   QString keypointsViewerMarkerColor() const override;
+  int keypointsViewerSelectMarkerWidth() const override;
+  QString keypointsViewerSelectMarkerColor() const override;
 
   QString matchesViewerBGColor() const override;
   int matchesViewerMarkerType() const override;
   int matchesViewerMarkerSize() const override;
   int matchesViewerMarkerWidth() const override;
   QString matchesViewerMarkerColor() const override;
+  int matchesViewerSelectMarkerWidth() const override;
+  QString matchesViewerSelectMarkerColor() const override;
   QString matchesViewerLineColor() const override;
   int matchesViewerLineWidth() const override;
 
@@ -741,6 +757,8 @@ public:
   int groundTruthEditorMarkerSize() const override;
   int groundTruthEditorMarkerWidth() const override;
   QString groundTruthEditorMarkerColor() const override;
+  int groundTruthEditorSelectMarkerWidth() const override;
+  QString groundTruthEditorSelectMarkerColor() const override;
 
   QStringList languages() const override;
   void read() override;
@@ -939,12 +957,16 @@ public slots:
   void setKeypointsViewerMarkerSize(int size) override;
   void setKeypointsViewerMarkerWidth(int width) override;
   void setKeypointsViewerMarkerColor(const QString &color) override;
+  void setKeypointsViewerSelectMarkerWidth(int width) override;
+  void setKeypointsViewerSelectMarkerColor(const QString &color) override;
 
   void setMatchesViewerBGColor(const QString &color) override;
   void setMatchesViewerMarkerType(int type) override;
   void setMatchesViewerMarkerSize(int size) override;
   void setMatchesViewerMarkerWidth(int width) override;
   void setMatchesViewerMarkerColor(const QString &color) override;
+  void setMatchesViewerSelectMarkerWidth(int width) override;
+  void setMatchesViewerSelectMarkerColor(const QString &color) override;
   void setMatchesViewerLineColor(const QString &color) override;
   void setMatchesViewerLineWidth(int width) override;
 
@@ -952,6 +974,8 @@ public slots:
   void setGroundTruthEditorMarkerSize(int size) override;
   void setGroundTruthEditorMarkerWidth(int width) override;
   void setGroundTruthEditorMarkerColor(const QString &color) override;
+  void setGroundTruthEditorSelectMarkerWidth(int width) override;
+  void setGroundTruthEditorSelectMarkerColor(const QString &color) override;
 
   void reset() override;
 

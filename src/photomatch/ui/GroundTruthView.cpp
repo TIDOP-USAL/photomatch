@@ -1,8 +1,7 @@
 #include "GroundTruthView.h"
 
 #include "photomatch/ui/utils/GraphicViewer.h"
-#include "photomatch/ui/utils/CrossGraphicItem.h"
-#include "photomatch/ui/utils/DiagonalCrossGraphicItem.h"
+#include "photomatch/ui/utils/GraphicItem.h"
 
 #include <QPushButton>
 #include <QDialogButtonBox>
@@ -32,7 +31,9 @@ GroundTruthView::GroundTruthView(QWidget *parent, Qt::WindowFlags f)
     mMarkerSize(20),
     mMarkerWidth(1),
     mMarkerType(2),
-    mPointsCounter(0)
+    mPointsCounter(0),
+    mSelectedMarkerColor("#ff0000"),
+    mSelectedMarkerWidth(2)
 {
   init();
 
@@ -254,7 +255,7 @@ void GroundTruthView::removeHomologousPointInGraphicsViews(int id)
     if (item->toolTip().toInt() == id){
       if (mMarkerType == 0){
         // Circle
-        if (QGraphicsEllipseItem *keyPoints = dynamic_cast<QGraphicsEllipseItem *>(item)){
+        if (CircleGraphicItem *keyPoints = dynamic_cast<CircleGraphicItem *>(item)){
           mGraphicsViewLeft->scene()->removeItem(item);
         }
       } else if (mMarkerType == 1){
@@ -276,7 +277,7 @@ void GroundTruthView::removeHomologousPointInGraphicsViews(int id)
     if (item->toolTip().toInt() == id){
       if (mMarkerType == 0){
         // Circle
-        if (QGraphicsEllipseItem *keyPoints = dynamic_cast<QGraphicsEllipseItem *>(item)){
+        if (CircleGraphicItem *keyPoints = dynamic_cast<CircleGraphicItem *>(item)){
           mGraphicsViewRight->scene()->removeItem(item);
         }
       } else if (mMarkerType == 1){
@@ -301,7 +302,7 @@ void GroundTruthView::removeHomologousPointsInGraphicsViews()
   for (auto &item : mGraphicsViewLeft->scene()->items()) {
     if (mMarkerType == 0){
       // Circle
-      if (QGraphicsEllipseItem *keyPoints = dynamic_cast<QGraphicsEllipseItem *>(item)){
+      if (CircleGraphicItem *keyPoints = dynamic_cast<CircleGraphicItem *>(item)){
         mGraphicsViewLeft->scene()->removeItem(item);
       }
     } else if (mMarkerType == 1){
@@ -320,7 +321,7 @@ void GroundTruthView::removeHomologousPointsInGraphicsViews()
   for (auto &item : mGraphicsViewRight->scene()->items()) {
     if (mMarkerType == 0){
       // Circle
-      if (QGraphicsEllipseItem *keyPoints = dynamic_cast<QGraphicsEllipseItem *>(item)){
+      if (CircleGraphicItem *keyPoints = dynamic_cast<CircleGraphicItem *>(item)){
         mGraphicsViewRight->scene()->removeItem(item);
       }
     } else if (mMarkerType == 1){
@@ -427,9 +428,9 @@ void GroundTruthView::setSelectLeftPoint(const QPointF &pt, bool newPoint)
         mCrossGraphicItem1 = nullptr;
       }
 
-      mCrossGraphicItem1 = new CrossGraphicItem(pt);
+      mCrossGraphicItem1 = new CrossGraphicItem(pt, mMarkerSize);
       mCrossGraphicItem1->setPen(pen);
-      mCrossGraphicItem1->setSize(20);
+      //mCrossGraphicItem1->setSize(20);
       mGraphicsViewLeft->scene()->addItem(mCrossGraphicItem1);
     }
 
@@ -484,9 +485,9 @@ void GroundTruthView::setSelectedRightPoint(const QPointF &pt, bool newPoint)
         mCrossGraphicItem2 = nullptr;
       }
 
-      mCrossGraphicItem2 = new CrossGraphicItem(pt);
+      mCrossGraphicItem2 = new CrossGraphicItem(pt, mMarkerSize);
       mCrossGraphicItem2->setPen(pen);
-      mCrossGraphicItem2->setSize(20);
+      //mCrossGraphicItem2->setSize(20);
       mGraphicsViewRight->scene()->addItem(mCrossGraphicItem2);
 
     }
@@ -555,6 +556,8 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
 
   QPen pen(QColor(mMarkerColor), mMarkerWidth);
   pen.setCosmetic(true);
+  QPen select_pen(QColor(mSelectedMarkerColor), mSelectedMarkerWidth);
+  select_pen.setCosmetic(true);
 
   mPointsCounter = static_cast<int>(points.size());
   for (size_t i = 0; i < points.size(); i++){
@@ -574,39 +577,49 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
 
     if (mMarkerType == 0){
       // Circle
-      QGraphicsEllipseItem *itemLeft = mGraphicsViewLeft->scene()->addEllipse(query_point.x(), query_point.y(), mMarkerSize, mMarkerSize, pen);
+      CircleGraphicItem *itemLeft = new CircleGraphicItem(query_point, mMarkerSize); //mGraphicsViewLeft->scene()->addEllipse(query_point.x(), query_point.y(), mMarkerSize, mMarkerSize, pen);
+      itemLeft->setPen(pen);
       itemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
       itemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
-      QGraphicsEllipseItem *itemRight = mGraphicsViewRight->scene()->addEllipse(train_point.x(), train_point.y(), mMarkerSize, mMarkerSize, pen);
+      itemLeft->setSelectedPen(select_pen);
+      mGraphicsViewLeft->scene()->addItem(itemLeft);
+      CircleGraphicItem *itemRight = new CircleGraphicItem(train_point, mMarkerSize);  //mGraphicsViewRight->scene()->addEllipse(train_point.x(), train_point.y(), mMarkerSize, mMarkerSize, pen);
+      itemRight->setPen(pen);
       itemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
       itemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      itemRight->setSelectedPen(select_pen);
+      mGraphicsViewRight->scene()->addItem(itemRight);
     } else if (mMarkerType == 1){
       // Cross
-      CrossGraphicItem *crossGraphicItemLeft = new CrossGraphicItem(query_point);
+      CrossGraphicItem *crossGraphicItemLeft = new CrossGraphicItem(query_point, mMarkerSize);
       crossGraphicItemLeft->setPen(pen);
-      crossGraphicItemLeft->setSize(mMarkerSize);
+      //crossGraphicItemLeft->setSize(mMarkerSize);
       crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemLeft->setSelectedPen(select_pen);
       mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
-      CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(train_point);
+      CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(train_point, mMarkerSize);
       crossGraphicItemRight->setPen(pen);
-      crossGraphicItemRight->setSize(mMarkerSize);
+      //crossGraphicItemRight->setSize(mMarkerSize);
       crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemRight->setSelectedPen(select_pen);
       mGraphicsViewRight->scene()->addItem(crossGraphicItemRight);
     } else if (mMarkerType == 2){
       // Diagonal cross
-      DiagonalCrossGraphicItem *crossGraphicItemLeft = new DiagonalCrossGraphicItem(query_point);
+      DiagonalCrossGraphicItem *crossGraphicItemLeft = new DiagonalCrossGraphicItem(query_point, mMarkerSize);
       crossGraphicItemLeft->setPen(pen);
-      crossGraphicItemLeft->setSize(mMarkerSize);
+      //crossGraphicItemLeft->setSize(mMarkerSize);
       crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemLeft->setSelectedPen(select_pen);
       mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
-      DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(train_point);
+      DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(train_point, mMarkerSize);
       crossGraphicItemRight->setPen(pen);
-      crossGraphicItemRight->setSize(mMarkerSize);
+      //crossGraphicItemRight->setSize(mMarkerSize);
       crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemRight->setSelectedPen(select_pen);
       mGraphicsViewRight->scene()->addItem(crossGraphicItemRight);
     }
   }
@@ -627,42 +640,56 @@ void GroundTruthView::addHomologous(const QPointF &pt1, const QPointF &pt2)
 
   QPen pen(QColor(mMarkerColor), mMarkerWidth);
   pen.setCosmetic(true);
+  QPen select_pen(QColor(mSelectedMarkerColor), mSelectedMarkerWidth);
+  select_pen.setCosmetic(true);
 
   if (mMarkerType == 0){
     // Circle
-    QGraphicsEllipseItem *itemLeft = mGraphicsViewLeft->scene()->addEllipse(pt1.x(), pt1.y(), mMarkerSize, mMarkerSize, pen);
+    //QGraphicsEllipseItem *itemLeft = mGraphicsViewLeft->scene()->addEllipse(pt1.x(), pt1.y(), mMarkerSize, mMarkerSize, pen);
+    CircleGraphicItem *itemLeft = new CircleGraphicItem(pt1, mMarkerSize);
+    itemLeft->setPen(pen);
     itemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
     itemLeft->setToolTip(QString::number(mPointsCounter));
-    QGraphicsEllipseItem *itemRight = mGraphicsViewRight->scene()->addEllipse(pt2.x(), pt2.y(), mMarkerSize, mMarkerSize, pen);
+    itemLeft->setSelectedPen(select_pen);
+    mGraphicsViewLeft->scene()->addItem(itemLeft);
+    //QGraphicsEllipseItem *itemRight = mGraphicsViewRight->scene()->addEllipse(pt2.x(), pt2.y(), mMarkerSize, mMarkerSize, pen);
+    CircleGraphicItem *itemRight = new CircleGraphicItem(pt2, mMarkerSize);
+    itemRight->setPen(pen);
     itemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
     itemRight->setToolTip(QString::number(mPointsCounter));
+    itemRight->setSelectedPen(select_pen);
+    mGraphicsViewLeft->scene()->addItem(itemRight);
   } else if (mMarkerType == 1){
     // Cross
-    CrossGraphicItem *crossGraphicItemLeft = new CrossGraphicItem(pt1);
+    CrossGraphicItem *crossGraphicItemLeft = new CrossGraphicItem(pt1, mMarkerSize);
     crossGraphicItemLeft->setPen(pen);
-    crossGraphicItemLeft->setSize(mMarkerSize);
+    //crossGraphicItemLeft->setSize(mMarkerSize);
     crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemLeft->setToolTip(QString::number(mPointsCounter));
+    crossGraphicItemLeft->setSelectedPen(select_pen);
     mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
-    CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(pt2);
+    CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(pt2, mMarkerSize);
     crossGraphicItemRight->setPen(pen);
-    crossGraphicItemRight->setSize(mMarkerSize);
+    //crossGraphicItemRight->setSize(mMarkerSize);
     crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemRight->setToolTip(QString::number(mPointsCounter));
+    crossGraphicItemRight->setSelectedPen(select_pen);
     mGraphicsViewRight->scene()->addItem(crossGraphicItemRight);
   } else if (mMarkerType == 2){
     // Diagonal cross
-    DiagonalCrossGraphicItem *crossGraphicItemLeft = new DiagonalCrossGraphicItem(pt1);
+    DiagonalCrossGraphicItem *crossGraphicItemLeft = new DiagonalCrossGraphicItem(pt1, mMarkerSize);
     crossGraphicItemLeft->setPen(pen);
-    crossGraphicItemLeft->setSize(mMarkerSize);
+    //crossGraphicItemLeft->setSize(mMarkerSize);
     crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemLeft->setToolTip(QString::number(mPointsCounter));
+    crossGraphicItemLeft->setSelectedPen(select_pen);
     mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
-    DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(pt2);
+    DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(pt2, mMarkerSize);
     crossGraphicItemRight->setPen(pen);
-    crossGraphicItemRight->setSize(mMarkerSize);
+    //crossGraphicItemRight->setSize(mMarkerSize);
     crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemRight->setToolTip(QString::number(mPointsCounter));
+    crossGraphicItemRight->setSelectedPen(select_pen);
     mGraphicsViewRight->scene()->addItem(crossGraphicItemRight);
   }
 
@@ -1016,13 +1043,19 @@ void GroundTruthView::setBGColor(const QString &bgColor)
   mGraphicsViewRight->setBackgroundBrush(QBrush(QColor(bgColor)));
 }
 
+void GroundTruthView::setSelectedMarkerStyle(const QString &color, int width)
+{
+  mSelectedMarkerColor = color;
+  mSelectedMarkerWidth = width;
+}
+
 void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, int size)
 {
   if (mMarkerType != type){
     for (auto &item : mGraphicsViewLeft->scene()->items()) {
       if (mMarkerType == 0){
         // Circle
-        if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
+        if (CircleGraphicItem *keyPoint = dynamic_cast<CircleGraphicItem *>(item)){
           mGraphicsViewLeft->scene()->removeItem(item);
           delete keyPoint;
           keyPoint = nullptr;
@@ -1047,7 +1080,7 @@ void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, 
     for (auto &item : mGraphicsViewRight->scene()->items()) {
       if (mMarkerType == 0){
         // Circle
-        if (QGraphicsEllipseItem *keyPoint = dynamic_cast<QGraphicsEllipseItem *>(item)){
+        if (CircleGraphicItem *keyPoint = dynamic_cast<CircleGraphicItem *>(item)){
           mGraphicsViewRight->scene()->removeItem(item);
           delete keyPoint;
           keyPoint = nullptr;
@@ -1077,24 +1110,29 @@ void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, 
 
   QPen pen(QColor(mMarkerColor), mMarkerWidth);
   pen.setCosmetic(true);
+  QPen select_pen(QColor(mSelectedMarkerColor), mSelectedMarkerWidth);
+  select_pen.setCosmetic(true);
 
   for (auto &item : mGraphicsViewLeft->scene()->items()) {
     if (mMarkerType == 0){
       // Circle
-      if (QGraphicsEllipseItem *keyPoints = dynamic_cast<QGraphicsEllipseItem *>(item)){
+      if (CircleGraphicItem *keyPoints = dynamic_cast<CircleGraphicItem *>(item)){
         keyPoints->setPen(pen);
-        keyPoints->setRect(0,0,mMarkerSize,mMarkerSize);
+        keyPoints->setSelectedPen(select_pen);
+        keyPoints->setSize(mMarkerSize);
       }
     } else if (mMarkerType == 1){
       // Cross
       if (CrossGraphicItem *keyPoints = dynamic_cast<CrossGraphicItem *>(item)){
         keyPoints->setPen(pen);
+        keyPoints->setSelectedPen(select_pen);
         keyPoints->setSize(mMarkerSize);
       }
     } else if (mMarkerType == 2){
       // Diagonal cross
       if (DiagonalCrossGraphicItem *keyPoints = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
         keyPoints->setPen(pen);
+        keyPoints->setSelectedPen(select_pen);
         keyPoints->setSize(mMarkerSize);
       }
     }
@@ -1103,20 +1141,23 @@ void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, 
   for (auto &item : mGraphicsViewRight->scene()->items()) {
     if (mMarkerType == 0){
       // Circle
-      if (QGraphicsEllipseItem *keyPoints = dynamic_cast<QGraphicsEllipseItem *>(item)){
+      if (CircleGraphicItem *keyPoints = dynamic_cast<CircleGraphicItem *>(item)){
         keyPoints->setPen(pen);
-        keyPoints->setRect(0,0,mMarkerSize,mMarkerSize);
+        keyPoints->setSelectedPen(select_pen);
+        keyPoints->setSize(mMarkerSize);
       }
     } else if (mMarkerType == 1){
       // Cross
       if (CrossGraphicItem *keyPoints = dynamic_cast<CrossGraphicItem *>(item)){
         keyPoints->setPen(pen);
+        keyPoints->setSelectedPen(select_pen);
         keyPoints->setSize(mMarkerSize);
       }
     } else if (mMarkerType == 2){
       // Diagonal cross
       if (DiagonalCrossGraphicItem *keyPoints = dynamic_cast<DiagonalCrossGraphicItem *>(item)){
         keyPoints->setPen(pen);
+        keyPoints->setSelectedPen(select_pen);
         keyPoints->setSize(mMarkerSize);
       }
     }

@@ -226,6 +226,8 @@ void GroundTruthPresenter::open()
                         mSettingsModel->groundTruthEditorMarkerWidth(),
                         2,
                         mSettingsModel->groundTruthEditorMarkerSize());
+  mView->setSelectedMarkerStyle(mSettingsModel->groundTruthEditorSelectMarkerColor(),
+                                mSettingsModel->groundTruthEditorSelectMarkerWidth());
   mView->show();
 
   mModel->loadGroundTruth();
