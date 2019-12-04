@@ -4,7 +4,7 @@
 #include "photomatch/widgets/ThumbnailsWidget.h"
 #include "photomatch/widgets/LogWidget.h"
 #include "photomatch/ui/utils/GraphicViewer.h"
-#include "photomatch/ui/utils/KeyPointGraphicsItem.h"
+#include "photomatch/ui/utils/GraphicItem.h"
 
 #include <QTreeWidgetItem>
 #include <QFileInfo>
@@ -1200,11 +1200,8 @@ void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
   QBrush brush;
   brush = QBrush(Qt::NoBrush);
 
-  KeyPointGraphicsItem *item = new KeyPointGraphicsItem(pt);
+  KeyPointGraphicsItem *item = new KeyPointGraphicsItem(pt, size, angle);
   item->setPen(pen);
-  item->setBrush(brush);
-  item->setSize(size);
-  item->setAngle(angle);
   item->setToolTip(QString("Size: ").append(QString::number(size)).append("\nAngle: ").append(QString::number(angle)));
   if (mGraphicViewer) 
     mGraphicViewer->scene()->addItem(item);
@@ -1270,6 +1267,7 @@ void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRig
                                        imageLeft.width() + matches[i].second.x(),
                                        matches[i].second.y(), line_pen);
       mGraphicViewer->scene()->addEllipse(matches[i].first.x() - 5, matches[i].first.y() - 5, 10, 10, point_pen);
+      mGraphicViewer->scene()->addEllipse(imageLeft.width() + matches[i].second.x() - 5, matches[i].second.y() - 5, 10, 10, point_pen);
     }
 
     id = ui->tabWidget->addTab(mGraphicViewer, name);

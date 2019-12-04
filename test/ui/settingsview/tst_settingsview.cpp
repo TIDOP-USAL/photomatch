@@ -61,6 +61,12 @@ private slots:
   void test_keypointsViewerMarkerColor_data();
   void test_keypointsViewerMarkerColor();
   void test_keypointsViewerMarkerColorChange();
+  void test_keypointsViewerSelectMarkerWidth_data();
+  void test_keypointsViewerSelectMarkerWidth();
+  void test_keypointsViewerSelectMarkerWidthChange();
+  void test_keypointsViewerSelectMarkerColor_data();
+  void test_keypointsViewerSelectMarkerColor();
+  void test_keypointsViewerSelectMarkerColorChange();
 
   void test_matchesViewerBGColor_data();
   void test_matchesViewerBGColor();
@@ -77,6 +83,12 @@ private slots:
   void test_matchesViewerMarkerColor_data();
   void test_matchesViewerMarkerColor();
   void test_matchesViewerMarkerColorChange();
+  void test_matchesViewerSelectMarkerWidth_data();
+  void test_matchesViewerSelectMarkerWidth();
+  void test_matchesViewerSelectMarkerWidthChange();
+  void test_matchesViewerSelectMarkerColor_data();
+  void test_matchesViewerSelectMarkerColor();
+  void test_matchesViewerSelectMarkerColorChange();
   void test_matchesViewerLineColor_data();
   void test_matchesViewerLineColor();
   void test_matchesViewerLineColorChange();
@@ -96,6 +108,12 @@ private slots:
   void test_groundTruthEditorMarkerColor_data();
   void test_groundTruthEditorMarkerColor();
   void test_groundTruthEditorMarkerColorChange();
+  void test_groundTruthEditorSelectMarkerWidth_data();
+  void test_groundTruthEditorSelectMarkerWidth();
+  void test_groundTruthEditorSelectMarkerWidthChange();
+  void test_groundTruthEditorSelectMarkerColor_data();
+  void test_groundTruthEditorSelectMarkerColor();
+  void test_groundTruthEditorSelectMarkerColorChange();
 
   void test_dialogButtonBox();
   void test_setUnsavedChanges();
@@ -475,6 +493,76 @@ void TestSettingsView::test_keypointsViewerMarkerColorChange()
   QCOMPARE(spy_keypointsViewerMarkerColorChange.count(), 0);
 }
 
+void TestSettingsView::test_keypointsViewerSelectMarkerWidth_data()
+{
+  QTest::addColumn<int>("value");
+  QTest::addColumn<int>("result");
+
+  QTest::newRow("1") << 1 << 1;
+  QTest::newRow("5") << 5 << 5;
+  QTest::newRow("20") << 20 << 20;
+  QTest::newRow("Out of range value") << 51 << 50;
+}
+
+void TestSettingsView::test_keypointsViewerSelectMarkerWidth()
+{
+  QFETCH(int, value);
+  QFETCH(int, result);
+
+  this->setSelectKeypointsViewerMarkerWidth(value);
+  QCOMPARE(result, this->selectKeypointsViewerMarkerWidth());
+}
+
+void TestSettingsView::test_keypointsViewerSelectMarkerWidthChange()
+{
+  QSignalSpy spy_selectKeypointsViewerMarkerWidthChange(this, &SettingsView::selectKeypointsViewerMarkerWidthChange);
+
+  this->mSpinBoxSelectKeypointViewerMarkerWidth->setValue(30);
+
+  QCOMPARE(spy_selectKeypointsViewerMarkerWidthChange.count(), 1);
+
+  QList<QVariant> args = spy_selectKeypointsViewerMarkerWidthChange.takeFirst();
+  QCOMPARE(args.at(0).toInt(), 30);
+
+  this->setSelectKeypointsViewerMarkerWidth(20);
+  QCOMPARE(spy_selectKeypointsViewerMarkerWidthChange.count(), 0);
+}
+
+
+void TestSettingsView::test_keypointsViewerSelectMarkerColor_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("#FF00FF") << "#FF00FF" << "#FF00FF";
+  QTest::newRow("#253612") << "#253612" << "#253612";
+  QTest::newRow("#205060") << "#205060" << "#205060";
+}
+
+void TestSettingsView::test_keypointsViewerSelectMarkerColor()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  this->setSelectKeypointsViewerMarkerColor(value);
+  QCOMPARE(result, this->selectKeypointsViewerMarkerColor());
+}
+
+void TestSettingsView::test_keypointsViewerSelectMarkerColorChange()
+{
+  QSignalSpy spy_selectKeypointsViewerMarkerColorChange(this, &SettingsView::selectKeypointsViewerMarkerColorChange);
+
+  this->mLineEditSelectKeypointViewerMarkerColor->setText("#253612");
+
+  QCOMPARE(spy_selectKeypointsViewerMarkerColorChange.count(), 1);
+
+  QList<QVariant> args = spy_selectKeypointsViewerMarkerColorChange.takeFirst();
+  QCOMPARE(args.at(0).toString(), "#253612");
+
+  this->setSelectKeypointsViewerMarkerColor("FF00FF");
+  QCOMPARE(spy_selectKeypointsViewerMarkerColorChange.count(), 0);
+}
+
 void TestSettingsView::test_matchesViewerBGColor_data()
 {
   QTest::addColumn<QString>("value");
@@ -645,6 +733,75 @@ void TestSettingsView::test_matchesViewerMarkerColorChange()
 
   this->setMatchesViewerMarkerColor("FF00FF");
   QCOMPARE(spy_matchesViewerMarkerColorChange.count(), 0);
+}
+
+void TestSettingsView::test_matchesViewerSelectMarkerWidth_data()
+{
+  QTest::addColumn<int>("value");
+  QTest::addColumn<int>("result");
+
+  QTest::newRow("1") << 1 << 1;
+  QTest::newRow("5") << 5 << 5;
+  QTest::newRow("20") << 20 << 20;
+  QTest::newRow("Out of range value") << 51 << 50;
+}
+
+void TestSettingsView::test_matchesViewerSelectMarkerWidth()
+{
+  QFETCH(int, value);
+  QFETCH(int, result);
+
+  this->setSelectMatchesViewerMarkerWidth(value);
+  QCOMPARE(result, this->selectMatchesViewerMarkerWidth());
+}
+
+void TestSettingsView::test_matchesViewerSelectMarkerWidthChange()
+{
+  QSignalSpy spy_selectMatchesViewerMarkerWidthChange(this, &SettingsView::selectMatchesViewerMarkerWidthChange);
+
+  this->mSpinBoxSelectMatchesViewerMarkerWidth->setValue(5);
+
+  QCOMPARE(spy_selectMatchesViewerMarkerWidthChange.count(), 1);
+
+  QList<QVariant> args = spy_selectMatchesViewerMarkerWidthChange.takeFirst();
+  QCOMPARE(args.at(0).toInt(), 5);
+
+  this->setSelectMatchesViewerMarkerWidth(3);
+  QCOMPARE(spy_selectMatchesViewerMarkerWidthChange.count(), 0);
+}
+
+void TestSettingsView::test_matchesViewerSelectMarkerColor_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("#FF00FF") << "#FF00FF" << "#FF00FF";
+  QTest::newRow("#253612") << "#253612" << "#253612";
+  QTest::newRow("#205060") << "#205060" << "#205060";
+}
+
+void TestSettingsView::test_matchesViewerSelectMarkerColor()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  this->setSelectMatchesViewerMarkerColor(value);
+  QCOMPARE(result, this->selectMatchesViewerMarkerColor());
+}
+
+void TestSettingsView::test_matchesViewerSelectMarkerColorChange()
+{
+  QSignalSpy spy_selectMatchesViewerMarkerColorChange(this, &SettingsView::selectMatchesViewerMarkerColorChange);
+
+  this->mLineEditSelectMatchesViewerMarkerColor->setText("#253612");
+
+  QCOMPARE(spy_selectMatchesViewerMarkerColorChange.count(), 1);
+
+  QList<QVariant> args = spy_selectMatchesViewerMarkerColorChange.takeFirst();
+  QCOMPARE(args.at(0).toString(), "#253612");
+
+  this->setSelectMatchesViewerMarkerColor("FF00FF");
+  QCOMPARE(spy_selectMatchesViewerMarkerColorChange.count(), 0);
 }
 
 void TestSettingsView::test_matchesViewerLineColor_data()
@@ -852,6 +1009,75 @@ void TestSettingsView::test_groundTruthEditorMarkerColorChange()
 
   this->setGroundTruthEditorMarkerColor("FF00FF");
   QCOMPARE(spy_groundTruthEditorMarkerColorChange.count(), 0);
+}
+
+void TestSettingsView::test_groundTruthEditorSelectMarkerWidth_data()
+{
+  QTest::addColumn<int>("value");
+  QTest::addColumn<int>("result");
+
+  QTest::newRow("1") << 1 << 1;
+  QTest::newRow("5") << 5 << 5;
+  QTest::newRow("20") << 20 << 20;
+  QTest::newRow("Out of range value") << 51 << 50;
+}
+
+void TestSettingsView::test_groundTruthEditorSelectMarkerWidth()
+{
+  QFETCH(int, value);
+  QFETCH(int, result);
+
+  this->setSelectGroundTruthEditorMarkerWidth(value);
+  QCOMPARE(result, this->selectGroundTruthEditorMarkerWidth());
+}
+
+void TestSettingsView::test_groundTruthEditorSelectMarkerWidthChange()
+{
+    QSignalSpy spy_selectGroundTruthEditorMarkerWidthChange(this, &SettingsView::selectGroundTruthEditorMarkerWidthChange);
+
+  this->mSpinBoxSelectGTEditorMarkerWidth->setValue(5);
+
+  QCOMPARE(spy_selectGroundTruthEditorMarkerWidthChange.count(), 1);
+
+  QList<QVariant> args = spy_selectGroundTruthEditorMarkerWidthChange.takeFirst();
+  QCOMPARE(args.at(0).toInt(), 5);
+
+  this->setSelectGroundTruthEditorMarkerWidth(3);
+  QCOMPARE(spy_selectGroundTruthEditorMarkerWidthChange.count(), 0);
+}
+
+void TestSettingsView::test_groundTruthEditorSelectMarkerColor_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("#FF00FF") << "#FF00FF" << "#FF00FF";
+  QTest::newRow("#253612") << "#253612" << "#253612";
+  QTest::newRow("#205060") << "#205060" << "#205060";
+}
+
+void TestSettingsView::test_groundTruthEditorSelectMarkerColor()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  this->setSelectGroundTruthEditorMarkerColor(value);
+  QCOMPARE(result, this->selectGroundTruthEditorMarkerColor());
+}
+
+void TestSettingsView::test_groundTruthEditorSelectMarkerColorChange()
+{
+  QSignalSpy spy_selectGroundTruthEditorMarkerColorChange(this, &SettingsView::selectGroundTruthEditorMarkerColorChange);
+
+  this->mLineEditSelectGTEditorMarkerColor->setText("#253612");
+
+  QCOMPARE(spy_selectGroundTruthEditorMarkerColorChange.count(), 1);
+
+  QList<QVariant> args = spy_selectGroundTruthEditorMarkerColorChange.takeFirst();
+  QCOMPARE(args.at(0).toString(), "#253612");
+
+  this->setSelectGroundTruthEditorMarkerColor("FF00FF");
+  QCOMPARE(spy_selectGroundTruthEditorMarkerColorChange.count(), 0);
 }
 
 void TestSettingsView::test_dialogButtonBox()

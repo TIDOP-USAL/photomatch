@@ -98,18 +98,24 @@ Settings::Settings()
     mKeypointsViewerMarkerType(0),
     mKeypointViewerMarkerSize(20),
     mKeypointViewerMarkerWidth(2),
-    mKeypointViewerMarkerColor("#e5097e"),
+    mKeypointViewerMarkerColor("#00aa00"),
+    mKeypointViewerSelectMarkerWidth(2),
+    mKeypointViewerSelectMarkerColor("#e5097e"),
     mMatchesViewerBGColor("#dcdcdc"),
     mMatchesViewerMarkerType(0),
-    mMatchesViewerMarkerColor("#e5097e"),
+    mMatchesViewerMarkerColor("#00aa00"),
     mMatchesViewerMarkerSize(20),
     mMatchesViewerMarkerWidth(2),
-    mMatchesViewerLineColor("#e5097e"),
+    mMatchesViewerSelectMarkerWidth(2),
+    mMatchesViewerSelectMarkerColor("#e5097e"),
+    mMatchesViewerLineColor("#0000ff"),
     mMatchesViewerLineWidth(2),
     mGroundTruthEditorBGColor("#dcdcdc"),
-    mGroundTruthEditorMarkerColor("#e5097e"),
+    mGroundTruthEditorMarkerColor("#00aa00"),
     mGroundTruthEditorMarkerSize(20),
-    mGroundTruthEditorMarkerWidth(2)
+    mGroundTruthEditorMarkerWidth(2),
+    mGroundTruthEditorSelectMarkerWidth(2),
+    mGroundTruthEditorSelectMarkerColor("#e5097e")
 {
 
   reset();
@@ -797,6 +803,26 @@ void Settings::setKeypointsViewerMarkerColor(const QString &color)
   mKeypointViewerMarkerColor = color;
 }
 
+int Settings::keypointsViewerSelectMarkerWidth() const
+{
+  return mKeypointViewerSelectMarkerWidth;
+}
+
+void Settings::setKeypointsViewerSelectMarkerWidth(int width)
+{
+  mKeypointViewerSelectMarkerWidth = width;
+}
+
+QString Settings::keypointsViewerSelectMarkerColor() const
+{
+  return mKeypointViewerSelectMarkerColor;
+}
+
+void Settings::setKeypointsViewerSelectMarkerColor(const QString &color)
+{
+  mKeypointViewerSelectMarkerColor = color;
+}
+
 QString Settings::matchesViewerBGColor() const
 {
   return mMatchesViewerMarkerColor;
@@ -845,6 +871,26 @@ QString Settings::matchesViewerMarkerColor() const
 void Settings::setMatchesViewerMarkerColor(const QString &color)
 {
   mMatchesViewerLineColor = color;
+}
+
+int Settings::matchesViewerSelectMarkerWidth() const
+{
+  return mMatchesViewerSelectMarkerWidth;
+}
+
+void Settings::setMatchesViewerSelectMarkerWidth(int width)
+{
+  mMatchesViewerSelectMarkerWidth = width;
+}
+
+QString Settings::matchesViewerSelectMarkerColor() const
+{
+  return mMatchesViewerSelectMarkerColor;
+}
+
+void Settings::setMatchesViewerSelectMarkerColor(const QString &color)
+{
+  mMatchesViewerSelectMarkerColor = color;
 }
 
 QString Settings::matchesViewerLineColor() const
@@ -905,6 +951,26 @@ QString Settings::groundTruthEditorMarkerColor() const
 void Settings::setGroundTruthEditorMarkerColor(const QString &color)
 {
   mGroundTruthEditorMarkerColor = color;
+}
+
+int Settings::groundTruthEditorSelectMarkerWidth() const
+{
+  return mGroundTruthEditorSelectMarkerWidth;
+}
+
+void Settings::setGroundTruthEditorSelectMarkerWidth(int width)
+{
+  mGroundTruthEditorSelectMarkerWidth = width;
+}
+
+QString Settings::groundTruthEditorSelectMarkerColor() const
+{
+  return mGroundTruthEditorSelectMarkerColor;
+}
+
+void Settings::setGroundTruthEditorSelectMarkerColor(const QString &color)
+{
+  mGroundTruthEditorSelectMarkerColor = color;
 }
 
 //QPen *Settings::penKeypoints()
@@ -1012,18 +1078,24 @@ void Settings::reset()
   mKeypointsViewerMarkerType = 0;
   mKeypointViewerMarkerSize = 20;
   mKeypointViewerMarkerWidth = 2;
-  mKeypointViewerMarkerColor = "#e5097e";
+  mKeypointViewerMarkerColor = "#00aa00";
+  mKeypointViewerSelectMarkerWidth = 2;
+  mKeypointViewerSelectMarkerColor = "#e5097e";
   mMatchesViewerBGColor = "#dcdcdc";
   mMatchesViewerMarkerType = 0;
-  mMatchesViewerMarkerColor = "#dcdcdc";
+  mMatchesViewerMarkerColor = "#00aa00";
   mMatchesViewerMarkerSize = 20;
   mMatchesViewerMarkerWidth = 2;
-  mMatchesViewerLineColor = "#e5097e";
+  mMatchesViewerSelectMarkerWidth = 2;
+  mMatchesViewerSelectMarkerColor = "#e5097e";
+  mMatchesViewerLineColor = "#0000ff";
   mMatchesViewerLineWidth = 2;
   mGroundTruthEditorBGColor = "#dcdcdc";
-  mGroundTruthEditorMarkerColor = "#e5097e";
+  mGroundTruthEditorMarkerColor = "#00aa00";
   mGroundTruthEditorMarkerSize = 20;
   mGroundTruthEditorMarkerWidth = 2;
+  mGroundTruthEditorSelectMarkerWidth = 2;
+  mGroundTruthEditorSelectMarkerColor = "#e5097e";
 }
 
 
@@ -1280,6 +1352,8 @@ void SettingsRW::read(ISettings &settings)
   settings.setKeypointsViewerMarkerSize(mSettingsRW->value("KeypointsViewer/MarkerSize", settings.keypointsViewerMarkerSize()).toInt());
   settings.setKeypointsViewerMarkerWidth(mSettingsRW->value("KeypointsViewer/MarkerWidth", settings.keypointsViewerMarkerWidth()).toInt());
   settings.setKeypointsViewerMarkerColor(mSettingsRW->value("KeypointsViewer/MarkerColor", settings.keypointsViewerMarkerColor()).toString());
+  settings.setKeypointsViewerSelectMarkerWidth(mSettingsRW->value("KeypointsViewer/SelectMarkerWidth", settings.keypointsViewerSelectMarkerWidth()).toInt());
+  settings.setKeypointsViewerSelectMarkerColor(mSettingsRW->value("KeypointsViewer/SelectMarkerColor", settings.keypointsViewerSelectMarkerColor()).toString());
 
   /* Matches Viewer */
   settings.setMatchesViewerBGColor(mSettingsRW->value("MatchesViewer/BGColor", settings.matchesViewerBGColor()).toString());
@@ -1287,6 +1361,8 @@ void SettingsRW::read(ISettings &settings)
   settings.setMatchesViewerMarkerSize(mSettingsRW->value("MatchesViewer/MarkerSize", settings.matchesViewerMarkerSize()).toInt());
   settings.setMatchesViewerMarkerWidth(mSettingsRW->value("MatchesViewer/MarkerWidth", settings.matchesViewerMarkerWidth()).toInt());
   settings.setMatchesViewerMarkerColor(mSettingsRW->value("MatchesViewer/MarkerColor", settings.matchesViewerMarkerColor()).toString());
+  settings.setMatchesViewerSelectMarkerWidth(mSettingsRW->value("MatchesViewer/SelectMarkerWidth", settings.matchesViewerSelectMarkerWidth()).toInt());
+  settings.setMatchesViewerSelectMarkerColor(mSettingsRW->value("MatchesViewer/SelectMarkerColor", settings.matchesViewerSelectMarkerColor()).toString());
   settings.setMatchesViewerLineColor(mSettingsRW->value("MatchesViewer/LineColor", settings.matchesViewerLineColor()).toString());
   settings.setMatchesViewerLineWidth(mSettingsRW->value("MatchesViewer/LineWidth", settings.matchesViewerLineWidth()).toInt());
 
@@ -1295,6 +1371,8 @@ void SettingsRW::read(ISettings &settings)
   settings.setGroundTruthEditorMarkerSize(mSettingsRW->value("GroundTruthEditor/MarkerSize", settings.groundTruthEditorMarkerSize()).toInt());
   settings.setGroundTruthEditorMarkerWidth(mSettingsRW->value("GroundTruthEditor/MarkerWidth", settings.groundTruthEditorMarkerWidth()).toInt());
   settings.setGroundTruthEditorMarkerColor(mSettingsRW->value("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor()).toString());
+  settings.setGroundTruthEditorSelectMarkerWidth(mSettingsRW->value("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth()).toInt());
+  settings.setGroundTruthEditorSelectMarkerColor(mSettingsRW->value("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor()).toString());
 
 }
 
@@ -1519,6 +1597,8 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("KeypointsViewer/MarkerSize", settings.keypointsViewerMarkerSize());
   mSettingsRW->setValue("KeypointsViewer/MarkerWidth", settings.keypointsViewerMarkerWidth());
   mSettingsRW->setValue("KeypointsViewer/MarkerColor", settings.keypointsViewerMarkerColor());
+  mSettingsRW->setValue("KeypointsViewer/SelectMarkerWidth", settings.keypointsViewerSelectMarkerWidth());
+  mSettingsRW->setValue("KeypointsViewer/SelectMarkerColor", settings.keypointsViewerSelectMarkerColor());
 
   /* Matches Viewer */
   mSettingsRW->setValue("MatchesViewer/BGColor", settings.matchesViewerBGColor());
@@ -1526,6 +1606,8 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("MatchesViewer/MarkerSize", settings.matchesViewerMarkerSize());
   mSettingsRW->setValue("MatchesViewer/MarkerWidth", settings.matchesViewerMarkerWidth());
   mSettingsRW->setValue("MatchesViewer/MarkerColor", settings.matchesViewerMarkerColor());
+  mSettingsRW->setValue("MatchesViewer/SelectMarkerWidth", settings.matchesViewerSelectMarkerWidth());
+  mSettingsRW->setValue("MatchesViewer/SelectMarkerColor", settings.matchesViewerSelectMarkerColor());
   mSettingsRW->setValue("MatchesViewer/LineColor", settings.matchesViewerLineColor());
   mSettingsRW->setValue("MatchesViewer/LineWidth", settings.matchesViewerLineWidth());
 
@@ -1534,6 +1616,8 @@ void SettingsRW::write(const ISettings &settings)
   mSettingsRW->setValue("GroundTruthEditor/MarkerSize", settings.groundTruthEditorMarkerSize());
   mSettingsRW->setValue("GroundTruthEditor/MarkerWidth", settings.groundTruthEditorMarkerWidth());
   mSettingsRW->setValue("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor());
+  mSettingsRW->setValue("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth());
+  mSettingsRW->setValue("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor());
 }
 
 void SettingsRW::writeHistory(const ISettings &settings)

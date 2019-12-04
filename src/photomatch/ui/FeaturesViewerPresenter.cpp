@@ -45,6 +45,8 @@ void FeaturesViewerPresenter::open()
 
   mView->setSessionName(mModel->sessionName());
   mView->setBGColor(mSettingsModel->keypointsViewerBGColor());
+  mView->setSelectedMarkerStyle(mSettingsModel->keypointsViewerSelectMarkerColor(),
+                                mSettingsModel->keypointsViewerSelectMarkerWidth());
   mView->setMarkerStyle(mSettingsModel->keypointsViewerMarkerColor(),
                         mSettingsModel->keypointsViewerMarkerWidth(),
                         mSettingsModel->keypointsViewerMarkerType(),

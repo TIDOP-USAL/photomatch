@@ -45,7 +45,7 @@
 #include "photomatch/ui/AboutDialog.h"
 #include "photomatch/ui/utils/Progress.h"
 #include "photomatch/ui/utils/ProgressDialog.h"
-#include "photomatch/ui/utils/KeyPointGraphicsItem.h"
+//#include "photomatch/ui/utils/KeyPointGraphicsItem.h"
 #include "photomatch/ui/ExportFeaturesModel.h"
 #include "photomatch/ui/ExportFeaturesView.h"
 #include "photomatch/ui/ExportFeaturesPresenter.h"

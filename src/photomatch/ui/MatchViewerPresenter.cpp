@@ -80,6 +80,8 @@ void MatchViewerPresenter::open()
 
   mView->setSessionName(mModel->sessionName());
   mView->setBGColor(mSettingsModel->matchesViewerBGColor());
+  mView->setSelectedMarkerStyle(mSettingsModel->keypointsViewerSelectMarkerColor(),
+                                mSettingsModel->keypointsViewerSelectMarkerWidth());
   mView->setMarkerStyle(mSettingsModel->matchesViewerMarkerColor(),
                         mSettingsModel->matchesViewerMarkerWidth(),
                         mSettingsModel->matchesViewerMarkerType(),

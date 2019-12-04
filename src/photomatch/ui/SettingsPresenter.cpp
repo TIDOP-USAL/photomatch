@@ -334,26 +334,32 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
 
   /* Keypoints Viewer */
-  connect(mView, SIGNAL(keypointsViewerBGColorChange(QString)),      mModel, SLOT(setKeypointsViewerBGColor(QString)));
-  connect(mView, SIGNAL(keypointsViewerMarkerTypeChange(int)),       mModel, SLOT(setKeypointsViewerMarkerType(int)));
-  connect(mView, SIGNAL(keypointsViewerMarkerSizeChange(int)),       mModel, SLOT(setKeypointsViewerMarkerSize(int)));
-  connect(mView, SIGNAL(keypointsViewerMarkerWidthChange(int)),      mModel, SLOT(setKeypointsViewerMarkerWidth(int)));
-  connect(mView, SIGNAL(keypointsViewerMarkerColorChange(QString)),  mModel, SLOT(setKeypointsViewerMarkerColor(QString)));
+  connect(mView, SIGNAL(keypointsViewerBGColorChange(QString)),             mModel, SLOT(setKeypointsViewerBGColor(QString)));
+  connect(mView, SIGNAL(keypointsViewerMarkerTypeChange(int)),              mModel, SLOT(setKeypointsViewerMarkerType(int)));
+  connect(mView, SIGNAL(keypointsViewerMarkerSizeChange(int)),              mModel, SLOT(setKeypointsViewerMarkerSize(int)));
+  connect(mView, SIGNAL(keypointsViewerMarkerWidthChange(int)),             mModel, SLOT(setKeypointsViewerMarkerWidth(int)));
+  connect(mView, SIGNAL(keypointsViewerMarkerColorChange(QString)),         mModel, SLOT(setKeypointsViewerMarkerColor(QString)));
+  connect(mView, SIGNAL(selectKeypointsViewerMarkerWidthChange(int)),       mModel, SLOT(setKeypointsViewerSelectMarkerWidth(int)));
+  connect(mView, SIGNAL(selectKeypointsViewerMarkerColorChange(QString)),   mModel, SLOT(setKeypointsViewerSelectMarkerColor(QString)));
 
   /* Matches Viewer */
-  connect(mView, SIGNAL(matchesViewerBGColorChange(QString)),      mModel, SLOT(setMatchesViewerBGColor(QString)));
-  connect(mView, SIGNAL(matchesViewerMarkerTypeChange(int)),       mModel, SLOT(setMatchesViewerMarkerType(int)));
-  connect(mView, SIGNAL(matchesViewerMarkerSizeChange(int)),       mModel, SLOT(setMatchesViewerMarkerSize(int)));
-  connect(mView, SIGNAL(matchesViewerMarkerWidthChange(int)),      mModel, SLOT(setMatchesViewerMarkerWidth(int)));
-  connect(mView, SIGNAL(matchesViewerLineWidthChange(int)),        mModel, SLOT(setMatchesViewerLineWidth(int)));
-  connect(mView, SIGNAL(matchesViewerMarkerColorChange(QString)),  mModel, SLOT(setMatchesViewerLineColor(QString)));
-  connect(mView, SIGNAL(matchesViewerLineColorChange(QString)),    mModel, SLOT(setMatchesViewerMarkerColor(QString)));
+  connect(mView, SIGNAL(matchesViewerBGColorChange(QString)),               mModel, SLOT(setMatchesViewerBGColor(QString)));
+  connect(mView, SIGNAL(matchesViewerMarkerTypeChange(int)),                mModel, SLOT(setMatchesViewerMarkerType(int)));
+  connect(mView, SIGNAL(matchesViewerMarkerSizeChange(int)),                mModel, SLOT(setMatchesViewerMarkerSize(int)));
+  connect(mView, SIGNAL(matchesViewerMarkerWidthChange(int)),               mModel, SLOT(setMatchesViewerMarkerWidth(int)));
+  connect(mView, SIGNAL(matchesViewerMarkerColorChange(QString)),           mModel, SLOT(setMatchesViewerLineColor(QString)));
+  connect(mView, SIGNAL(selectMatchesViewerMarkerWidthChange(int)),         mModel, SLOT(setMatchesViewerSelectMarkerWidth(int)));
+  connect(mView, SIGNAL(selectMatchesViewerMarkerColorChange(QString)),     mModel, SLOT(setMatchesViewerSelectMarkerColor(QString)));
+  connect(mView, SIGNAL(matchesViewerLineWidthChange(int)),                 mModel, SLOT(setMatchesViewerLineWidth(int)));
+  connect(mView, SIGNAL(matchesViewerLineColorChange(QString)),             mModel, SLOT(setMatchesViewerLineColor(QString)));
 
   /* Ground Truth Editor */
-  connect(mView, SIGNAL(groundTruthEditorBGColorChange(QString)),      mModel, SLOT(setGroundTruthEditorBGColor(QString)));
-  connect(mView, SIGNAL(groundTruthEditorMarkerSizeChange(int)),       mModel, SLOT(setGroundTruthEditorMarkerSize(int)));
-  connect(mView, SIGNAL(groundTruthEditorMarkerWidthChange(int)),      mModel, SLOT(setGroundTruthEditorMarkerWidth(int)));
-  connect(mView, SIGNAL(groundTruthEditorMarkerColorChange(QString)),  mModel, SLOT(setGroundTruthEditorMarkerColor(QString)));
+  connect(mView, SIGNAL(groundTruthEditorBGColorChange(QString)),           mModel, SLOT(setGroundTruthEditorBGColor(QString)));
+  connect(mView, SIGNAL(groundTruthEditorMarkerSizeChange(int)),            mModel, SLOT(setGroundTruthEditorMarkerSize(int)));
+  connect(mView, SIGNAL(groundTruthEditorMarkerWidthChange(int)),           mModel, SLOT(setGroundTruthEditorMarkerWidth(int)));
+  connect(mView, SIGNAL(groundTruthEditorMarkerColorChange(QString)),       mModel, SLOT(setGroundTruthEditorMarkerColor(QString)));
+  connect(mView, SIGNAL(selectGroundTruthEditorMarkerWidthChange(int)),     mModel, SLOT(setGroundTruthEditorSelectMarkerWidth(int)));
+  connect(mView, SIGNAL(selectGroundTruthEditorMarkerColorChange(QString)), mModel, SLOT(setGroundTruthEditorSelectMarkerColor(QString)));
 
 }
 
@@ -758,12 +764,16 @@ void SettingsPresenter::open()
   mView->setKeypointsViewerMarkerSize(mModel->keypointsViewerMarkerSize());
   mView->setKeypointsViewerMarkerWidth(mModel->keypointsViewerMarkerWidth());
   mView->setKeypointsViewerMarkerColor(mModel->keypointsViewerMarkerColor());
+  mView->setSelectKeypointsViewerMarkerColor(mModel->keypointsViewerSelectMarkerColor());
+  mView->setSelectKeypointsViewerMarkerWidth(mModel->keypointsViewerSelectMarkerWidth());
 
   mView->setMatchesViewerBGColor(mModel->matchesViewerBGColor());
   mView->setMatchesViewerMarkerType(mModel->matchesViewerMarkerType());
   mView->setMatchesViewerMarkerSize(mModel->matchesViewerMarkerSize());
   mView->setMatchesViewerMarkerWidth(mModel->matchesViewerMarkerWidth());
   mView->setMatchesViewerMarkerColor(mModel->matchesViewerMarkerColor());
+  mView->setSelectMatchesViewerMarkerWidth(mModel->matchesViewerSelectMarkerWidth());
+  mView->setSelectMatchesViewerMarkerColor(mModel->matchesViewerSelectMarkerColor());
   mView->setMatchesViewerLineColor(mModel->matchesViewerLineColor());
   mView->setMatchesViewerLineWidth(mModel->matchesViewerLineWidth());
 
@@ -771,6 +781,8 @@ void SettingsPresenter::open()
   mView->setGroundTruthEditorMarkerSize(mModel->groundTruthEditorMarkerSize());
   mView->setGroundTruthEditorMarkerColor(mModel->groundTruthEditorMarkerColor());
   mView->setGroundTruthEditorMarkerWidth(mModel->groundTruthEditorMarkerWidth());
+  mView->setSelectGroundTruthEditorMarkerWidth(mModel->groundTruthEditorSelectMarkerWidth());
+  mView->setSelectGroundTruthEditorMarkerColor(mModel->groundTruthEditorSelectMarkerColor());
 
   mView->exec();
 }

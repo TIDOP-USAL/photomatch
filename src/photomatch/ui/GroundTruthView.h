@@ -128,7 +128,7 @@ public slots:
 
   virtual void setBGColor(const QString &bgColor) = 0;
   virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
-
+  virtual void setSelectedMarkerStyle(const QString &color, int width) = 0;
   virtual void setCenterLeftViewer(const QPointF &pt, bool zoom11 = true) = 0;
   virtual void setCenterRightViewer(const QPointF &pt, bool zoom11 = true) = 0;
 
@@ -209,6 +209,7 @@ public slots:
   void clickedPointRight(const QPointF &pt) override;
   //void setTransform(const QTransform &trf) override;
   void setBGColor(const QString &bgColor) override;
+  void setSelectedMarkerStyle(const QString &color, int width) override;
   void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
   void setCenterLeftViewer(const QPointF &pt, bool zoom11 = true) override;
   void setCenterRightViewer(const QPointF &pt, bool zoom11 = true) override;
@@ -260,6 +261,8 @@ protected:
   int mMarkerWidth;
   int mMarkerType;
   int mPointsCounter;
+  QString mSelectedMarkerColor;
+  int mSelectedMarkerWidth;
 };
 
 } // namespace photomatch

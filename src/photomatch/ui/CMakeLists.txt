@@ -73,9 +73,11 @@ set(PHOTOMATCH_SOURCES
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
     utils/Progress.cpp
-    utils/KeyPointGraphicsItem.cpp
-    utils/CrossGraphicItem.cpp
-    utils/DiagonalCrossGraphicItem.cpp
+    #utils/KeyPointGraphicsItem.cpp
+    #utils/CrossGraphicItem.cpp
+    #utils/DiagonalCrossGraphicItem.cpp
+    #utils/CircleGraphicItem.cpp
+    utils/GraphicItem.cpp
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
 )  
 
@@ -132,9 +134,11 @@ set(PHOTOMATCH_HEADERS
     utils/GraphicViewer.h
     utils/ProgressDialog.h
     utils/Progress.h
-    utils/KeyPointGraphicsItem.h
-    utils/CrossGraphicItem.h
-    utils/DiagonalCrossGraphicItem.h
+    #utils/KeyPointGraphicsItem.h
+    #utils/CrossGraphicItem.h
+    #utils/DiagonalCrossGraphicItem.h
+    #utils/CircleGraphicItem.h
+    utils/GraphicItem.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h
 )
 

@@ -867,6 +867,16 @@ QString SettingsModel::keypointsViewerMarkerColor() const
   return mSettings->keypointsViewerMarkerColor();
 }
 
+int SettingsModel::keypointsViewerSelectMarkerWidth() const
+{
+  return mSettings->keypointsViewerSelectMarkerWidth();
+}
+
+QString SettingsModel::keypointsViewerSelectMarkerColor() const
+{
+  return mSettings->keypointsViewerSelectMarkerColor();
+}
+
 QString SettingsModel::matchesViewerBGColor() const
 {
   return mSettings->matchesViewerBGColor();
@@ -890,6 +900,16 @@ int SettingsModel::matchesViewerMarkerWidth() const
 QString SettingsModel::matchesViewerMarkerColor() const
 {
   return mSettings->matchesViewerMarkerColor();
+}
+
+int SettingsModel::matchesViewerSelectMarkerWidth() const
+{
+  return mSettings->matchesViewerSelectMarkerWidth();
+}
+
+QString SettingsModel::matchesViewerSelectMarkerColor() const
+{
+  return mSettings->matchesViewerSelectMarkerColor();
 }
 
 QString SettingsModel::matchesViewerLineColor() const
@@ -920,6 +940,16 @@ int SettingsModel::groundTruthEditorMarkerWidth() const
 QString SettingsModel::groundTruthEditorMarkerColor() const
 {
   return mSettings->groundTruthEditorMarkerColor();
+}
+
+int SettingsModel::groundTruthEditorSelectMarkerWidth() const
+{
+  return mSettings->groundTruthEditorSelectMarkerWidth();
+}
+
+QString SettingsModel::groundTruthEditorSelectMarkerColor() const
+{
+  return mSettings->groundTruthEditorSelectMarkerColor();
 }
 
 void SettingsModel::setLanguage(const QString &language)
@@ -1884,6 +1914,18 @@ void SettingsModel::setKeypointsViewerMarkerColor(const QString &color)
   emit unsavedChanges(true);
 }
 
+void SettingsModel::setKeypointsViewerSelectMarkerWidth(int width)
+{
+  mSettings->setKeypointsViewerSelectMarkerWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setKeypointsViewerSelectMarkerColor(const QString &color)
+{
+  mSettings->setKeypointsViewerSelectMarkerColor(color);
+  emit unsavedChanges(true);
+}
+
 void SettingsModel::setMatchesViewerBGColor(const QString &color)
 {
   mSettings->setMatchesViewerBGColor(color);
@@ -1911,6 +1953,18 @@ void SettingsModel::setMatchesViewerMarkerWidth(int width)
 void SettingsModel::setMatchesViewerMarkerColor(const QString &color)
 {
   mSettings->setMatchesViewerMarkerColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerSelectMarkerWidth(int width)
+{
+  mSettings->setMatchesViewerSelectMarkerWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setMatchesViewerSelectMarkerColor(const QString &color)
+{
+  mSettings->setMatchesViewerSelectMarkerColor(color);
   emit unsavedChanges(true);
 }
 
@@ -1947,6 +2001,18 @@ void SettingsModel::setGroundTruthEditorMarkerWidth(int width)
 void SettingsModel::setGroundTruthEditorMarkerColor(const QString &color)
 {
   mSettings->setGroundTruthEditorMarkerColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGroundTruthEditorSelectMarkerWidth(int width)
+{
+  mSettings->setGroundTruthEditorSelectMarkerWidth(width);
+  emit unsavedChanges(true);
+}
+
+void SettingsModel::setGroundTruthEditorSelectMarkerColor(const QString &color)
+{
+  mSettings->setGroundTruthEditorSelectMarkerColor(color);
   emit unsavedChanges(true);
 }
 
