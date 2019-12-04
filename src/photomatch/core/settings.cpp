@@ -893,26 +893,6 @@ void Settings::setMatchesViewerSelectMarkerColor(const QString &color)
   mMatchesViewerSelectMarkerColor = color;
 }
 
-int Settings::matchesViewerSelectMarkerWidth() const
-{
-  return mMatchesViewerSelectMarkerWidth;
-}
-
-void Settings::setMatchesViewerSelectMarkerWidth(int width)
-{
-  mMatchesViewerSelectMarkerWidth = width;
-}
-
-QString Settings::matchesViewerSelectMarkerColor() const
-{
-  return mMatchesViewerSelectMarkerColor;
-}
-
-void Settings::setMatchesViewerSelectMarkerColor(const QString &color)
-{
-  mMatchesViewerSelectMarkerColor = color;
-}
-
 QString Settings::matchesViewerLineColor() const
 {
   return mMatchesViewerLineColor;
