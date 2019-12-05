@@ -13,7 +13,14 @@ FastProperties::FastProperties()
     mNonmaxSuppression(true),
     mDetectorType("TYPE_9_16")
 {
+}
 
+FastProperties::FastProperties(const FastProperties &fastProperties)
+  : IFast(),
+    mThreshold(fastProperties.mThreshold),
+    mNonmaxSuppression(fastProperties.mNonmaxSuppression),
+    mDetectorType(fastProperties.mDetectorType)
+{
 }
 
 FastProperties::~FastProperties()
@@ -68,30 +75,21 @@ QString FastProperties::name() const
 
 FastDetector::FastDetector()
   : FastProperties(),
-    KeypointDetector(),
-    mFast(cv::FastFeatureDetector::create())
+    KeypointDetector()
 {
-  mFast->setThreshold(FastProperties::threshold());
-  mFast->setNonmaxSuppression(FastProperties::nonmaxSuppression());
-  
-  
-#if CV_VERSION_MAJOR >= 4
-  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
-#else
-  int type = cv::FastFeatureDetector::TYPE_9_16;
-#endif
-
-  QString detectorType = FastProperties::detectorType();
-  if (detectorType.compare("TYPE_5_8") == 0){
-    type = cv::FastFeatureDetector::TYPE_5_8;
-  } else if (detectorType.compare("TYPE_7_12") == 0) {
-    type = cv::FastFeatureDetector::TYPE_7_12;
-  } else if (detectorType.compare("TYPE_9_16") == 0) {
-    type = cv::FastFeatureDetector::TYPE_9_16;
-  }
-  mFast->setType(type);
+  mFast = cv::FastFeatureDetector::create(FastProperties::threshold(),
+                                          FastProperties::nonmaxSuppression(),
+                                          convertDetectorType(FastProperties::detectorType()));
 }
 
+FastDetector::FastDetector(const FastDetector &fastDetector)
+  : FastProperties(fastDetector),
+    KeypointDetector()
+{
+  mFast = cv::FastFeatureDetector::create(FastProperties::threshold(),
+                                          FastProperties::nonmaxSuppression(),
+                                          convertDetectorType(FastProperties::detectorType()));
+}
 
 FastDetector::FastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType)
   : FastProperties(),
@@ -107,6 +105,40 @@ FastDetector::~FastDetector()
 {
 
 }
+
+#if CV_VERSION_MAJOR >= 4
+cv::FastFeatureDetector::DetectorType FastDetector::convertDetectorType(const QString &detectorType)
+{
+  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
+
+  if (detectorType.compare("TYPE_5_8") == 0){
+    type = cv::FastFeatureDetector::TYPE_5_8;
+  } else if (detectorType.compare("TYPE_7_12") == 0) {
+    type = cv::FastFeatureDetector::TYPE_7_12;
+  } else if (detectorType.compare("TYPE_9_16") == 0) {
+    type = cv::FastFeatureDetector::TYPE_9_16;
+  }
+
+  return type;
+}
+
+#else
+
+int FastDetector::convertDetectorType(const QString &detectorType)
+{
+  int type = cv::FastFeatureDetector::TYPE_9_16;
+
+  if (detectorType.compare("TYPE_5_8") == 0){
+    type = cv::FastFeatureDetector::TYPE_5_8;
+  } else if (detectorType.compare("TYPE_7_12") == 0) {
+    type = cv::FastFeatureDetector::TYPE_7_12;
+  } else if (detectorType.compare("TYPE_9_16") == 0) {
+    type = cv::FastFeatureDetector::TYPE_9_16;
+  }
+
+  return type;
+}
+#endif
 
 bool FastDetector::detect(const cv::Mat &img,
                           std::vector<cv::KeyPoint> &keyPoints,
@@ -138,30 +170,15 @@ void FastDetector::setNonmaxSuppression(bool nonmaxSuppression)
 void FastDetector::setDetectorType(QString detectorType)
 {
   FastProperties::setDetectorType(detectorType);
-
-#if CV_VERSION_MAJOR >= 4
-  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
-#else
-  int type = cv::FastFeatureDetector::TYPE_9_16;
-#endif
-
-  if (detectorType.compare("TYPE_5_8") == 0){
-    type = cv::FastFeatureDetector::TYPE_5_8;
-  } else if (detectorType.compare("TYPE_7_12") == 0) {
-    type = cv::FastFeatureDetector::TYPE_7_12;
-  } else if (detectorType.compare("TYPE_9_16") == 0) {
-    type = cv::FastFeatureDetector::TYPE_9_16;
-  }
-  mFast->setType(type);
+  mFast->setType(convertDetectorType(detectorType));
 }
 
 void FastDetector::reset()
 {
   FastProperties::reset();
-
   mFast->setThreshold(FastProperties::threshold());
   mFast->setNonmaxSuppression(FastProperties::nonmaxSuppression());
-  setDetectorType(FastProperties::detectorType());
+  mFast->setType(convertDetectorType(FastProperties::detectorType()));
 }
 
 

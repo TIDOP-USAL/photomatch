@@ -17,6 +17,7 @@ class PHOTOMATCH_EXPORT BriskProperties
 public:
 
   BriskProperties();
+  BriskProperties(const BriskProperties &briskProperties);
   ~BriskProperties() override;
 
 // IBrisk interface
@@ -57,6 +58,7 @@ class PHOTOMATCH_EXPORT BriskDetectorDescriptor
 public:
 
   BriskDetectorDescriptor();
+  BriskDetectorDescriptor(const BriskDetectorDescriptor &briskDetectorDescriptor);
   BriskDetectorDescriptor(int threshold,
                           int octaves,
                           double patternScale);

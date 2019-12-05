@@ -11,7 +11,16 @@ LatchProperties::LatchProperties()
     mBytes("32"),
     mRotationInvariance(true),
     mHalfSsdSize(3)
-{}
+{
+}
+
+LatchProperties::LatchProperties(const LatchProperties &latchProperties)
+  : ILatch(),
+    mBytes(latchProperties.mBytes),
+    mRotationInvariance(latchProperties.mRotationInvariance),
+    mHalfSsdSize(latchProperties.mHalfSsdSize)
+{
+}
 
 LatchProperties::~LatchProperties()
 {
@@ -74,6 +83,13 @@ QString LatchProperties::name() const
 
 LatchDescriptor::LatchDescriptor()
   : LatchProperties(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+LatchDescriptor::LatchDescriptor(const LatchDescriptor &latchDescriptor)
+  : LatchProperties(latchDescriptor),
     DescriptorExtractor()
 {
   update();

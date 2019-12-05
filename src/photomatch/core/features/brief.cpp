@@ -14,6 +14,13 @@ BriefProperties::BriefProperties()
 {
 }
 
+BriefProperties::BriefProperties(const BriefProperties &briefProperties)
+  : IBrief(),
+    mBytes(briefProperties.mBytes),
+    mUseOrientation(briefProperties.mUseOrientation)
+{
+}
+
 BriefProperties::~BriefProperties()
 {
 
@@ -60,6 +67,13 @@ QString BriefProperties::name() const
 
 BriefDescriptor::BriefDescriptor()
   : BriefProperties(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+BriefDescriptor::BriefDescriptor(const BriefDescriptor &briefDescriptor)
+  : BriefProperties(briefDescriptor),
     DescriptorExtractor()
 {
   update();

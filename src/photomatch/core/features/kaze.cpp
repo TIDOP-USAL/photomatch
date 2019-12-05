@@ -17,6 +17,16 @@ KazeProperties::KazeProperties()
     mDiffusivity("DIFF_PM_G2")
 {}
 
+KazeProperties::KazeProperties(const KazeProperties &kazeProperties)
+  : IKaze(),
+    mExtended(kazeProperties.mExtended),
+    mUpright(kazeProperties.mUpright),
+    mThreshold(kazeProperties.mThreshold),
+    mOctaves(kazeProperties.mOctaves),
+    mOctaveLayers(kazeProperties.mOctaveLayers),
+    mDiffusivity(kazeProperties.mDiffusivity)
+{}
+
 KazeProperties::~KazeProperties()
 {
 
@@ -112,12 +122,16 @@ KazeDetectorDescriptor::KazeDetectorDescriptor()
     DescriptorExtractor(),
     mKaze(cv::KAZE::create())
 {
-  setExtendedDescriptor(KazeProperties::extendedDescriptor());
-  setUpright(KazeProperties::upright());
-  setThreshold(KazeProperties::threshold());
-  setOctaves(KazeProperties::octaves());
-  setOctaveLayers(KazeProperties::octaveLayers());
-  setDiffusivity(KazeProperties::diffusivity());
+  this->updateCvKaze();
+}
+
+KazeDetectorDescriptor::KazeDetectorDescriptor(const KazeDetectorDescriptor &kazeDetectorDescriptor)
+  : KazeProperties(kazeDetectorDescriptor),
+    KeypointDetector(),
+    DescriptorExtractor(),
+    mKaze(cv::KAZE::create())
+{
+  this->updateCvKaze();
 }
 
 KazeDetectorDescriptor::KazeDetectorDescriptor(bool extendedDescriptor,
@@ -142,6 +156,48 @@ KazeDetectorDescriptor::KazeDetectorDescriptor(bool extendedDescriptor,
 KazeDetectorDescriptor::~KazeDetectorDescriptor()
 {
 
+}
+
+#if CV_VERSION_MAJOR >= 4
+cv::KAZE::DiffusivityType KazeDetectorDescriptor::convertDiffusivity(const QString &diffusivity)
+{
+  cv::KAZE::DiffusivityType diff = cv::KAZE::DIFF_PM_G1;
+  if (diffusivity.compare("DIFF_PM_G1") == 0){
+    diff = cv::KAZE::DIFF_PM_G1;
+  } else if (diffusivity.compare("DIFF_PM_G2") == 0){
+    diff = cv::KAZE::DIFF_PM_G2;
+  } else if (diffusivity.compare("DIFF_WEICKERT") == 0){
+    diff = cv::KAZE::DIFF_WEICKERT;
+  } else if (diffusivity.compare("DIFF_CHARBONNIER") == 0){
+    diff = cv::KAZE::DIFF_CHARBONNIER;
+  }
+  return diff;
+}
+#else
+int KazeDetectorDescriptor::convertDiffusivity(const QString &diffusivity)
+{
+  int diff = cv::KAZE::DIFF_PM_G1;
+  if (diffusivity.compare("DIFF_PM_G1") == 0){
+    diff = cv::KAZE::DIFF_PM_G1;
+  } else if (diffusivity.compare("DIFF_PM_G2") == 0){
+    diff = cv::KAZE::DIFF_PM_G2;
+  } else if (diffusivity.compare("DIFF_WEICKERT") == 0){
+    diff = cv::KAZE::DIFF_WEICKERT;
+  } else if (diffusivity.compare("DIFF_CHARBONNIER") == 0){
+    diff = cv::KAZE::DIFF_CHARBONNIER;
+  }
+  return diff;
+}
+#endif
+
+void KazeDetectorDescriptor::updateCvKaze()
+{
+  mKaze->setExtended(KazeProperties::extendedDescriptor());
+  mKaze->setUpright(KazeProperties::upright());
+  mKaze->setThreshold(KazeProperties::threshold());
+  mKaze->setNOctaves(KazeProperties::octaves());
+  mKaze->setNOctaveLayers(KazeProperties::octaveLayers());
+  mKaze->setDiffusivity(convertDiffusivity(KazeProperties::diffusivity()));
 }
 
 bool KazeDetectorDescriptor::detect(const cv::Mat &img,
@@ -207,34 +263,13 @@ void KazeDetectorDescriptor::setOctaveLayers(int octaveLayers)
 void KazeDetectorDescriptor::setDiffusivity(const QString &diffusivity)
 {
   KazeProperties::setDiffusivity(diffusivity);
-
-#if CV_VERSION_MAJOR >= 4  
-  cv::KAZE::DiffusivityType diff = cv::KAZE::DIFF_PM_G1;
-#else
-  int diff = cv::KAZE::DIFF_PM_G1;
-#endif
-
-  if (diffusivity.compare("DIFF_PM_G1") == 0){
-    diff = cv::KAZE::DIFF_PM_G1;
-  } else if (diffusivity.compare("DIFF_PM_G2") == 0){
-    diff = cv::KAZE::DIFF_PM_G2;
-  } else if (diffusivity.compare("DIFF_WEICKERT") == 0){
-    diff = cv::KAZE::DIFF_WEICKERT;
-  } else if (diffusivity.compare("DIFF_CHARBONNIER") == 0){
-    diff = cv::KAZE::DIFF_CHARBONNIER;
-  }
-  mKaze->setDiffusivity(diff);
+  mKaze->setDiffusivity(convertDiffusivity(diffusivity));
 }
 
 void KazeDetectorDescriptor::reset()
 {
   KazeProperties::reset();
-  mKaze->setExtended(KazeProperties::extendedDescriptor());
-  mKaze->setUpright(KazeProperties::upright());
-  mKaze->setThreshold(KazeProperties::threshold());
-  mKaze->setNOctaves(KazeProperties::octaves());
-  mKaze->setNOctaveLayers(KazeProperties::octaveLayers());
-  setDiffusivity(KazeProperties::diffusivity());
+  this->updateCvKaze();
 }
 
 

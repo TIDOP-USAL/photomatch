@@ -17,6 +17,7 @@ class PHOTOMATCH_EXPORT GfttProperties
 public:
 
   GfttProperties();
+  GfttProperties(const GfttProperties &gfttProperties);
   ~GfttProperties() override;
 
 // IGftt interface
@@ -66,6 +67,7 @@ class GfttDetector
 public:
 
   GfttDetector();
+  GfttDetector(const GfttDetector &gfttDetector);
   GfttDetector(int maxFeatures,
                double qualityLevel,
                double minDistance,

@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_featuresNumber_data();
@@ -28,6 +29,7 @@ private slots:
   void test_scaleFactor();
   void test_levelsNumber();
   void test_edgeThreshold();
+  void test_firstLevel();
   void test_wTA_K();
   void test_scoreType();
   void test_patchSize();
@@ -83,6 +85,21 @@ void TestOrbDetectorDescriptor::test_constructor()
   QCOMPARE(10, orbDetectorDescriptor.fastThreshold());
 }
 
+void TestOrbDetectorDescriptor::test_copy_constructor()
+{
+  OrbDetectorDescriptor orbDetectorDescriptor(4000, 1.5, 6, 11, 2, "FAST", 11, 10);
+  OrbDetectorDescriptor c(orbDetectorDescriptor);
+  QCOMPARE(4000, c.featuresNumber());
+  QCOMPARE(1.5, c.scaleFactor());
+  QCOMPARE(6, c.levelsNumber());
+  QCOMPARE(11, c.edgeThreshold());
+
+  QCOMPARE(2, c.wta_k());
+  QCOMPARE("FAST", c.scoreType());
+  QCOMPARE(11, c.patchSize());
+  QCOMPARE(10, c.fastThreshold());
+}
+
 void TestOrbDetectorDescriptor::test_type()
 {
   QCOMPARE(OrbDetectorDescriptor::Type::orb, this->type());
@@ -132,6 +149,13 @@ void TestOrbDetectorDescriptor::test_edgeThreshold()
   this->setEdgeThreshold(11);
   QCOMPARE(11, this->edgeThreshold());
   QCOMPARE(11, this->mOrb->getEdgeThreshold());
+}
+
+void TestOrbDetectorDescriptor::test_firstLevel()
+{
+  this->setFirstLevel(2);
+  QCOMPARE(2, this->firstLevel());
+  QCOMPARE(2, this->mOrb->getFirstLevel());
 }
 
 void TestOrbDetectorDescriptor::test_wTA_K()

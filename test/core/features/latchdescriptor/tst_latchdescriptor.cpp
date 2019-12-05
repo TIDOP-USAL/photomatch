@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_bytes_data();
@@ -75,6 +76,15 @@ void TestLatchDescriptor::test_constructor()
   QCOMPARE("16", latchDescriptor.bytes());
   QCOMPARE(false, latchDescriptor.rotationInvariance());
   QCOMPARE(2, latchDescriptor.halfSsdSize());
+}
+
+void TestLatchDescriptor::test_copy_constructor()
+{
+  LatchDescriptor latchDescriptor("16", false, 2);
+  LatchDescriptor c(latchDescriptor);
+  QCOMPARE("16", c.bytes());
+  QCOMPARE(false, c.rotationInvariance());
+  QCOMPARE(2, c.halfSsdSize());
 }
 
 void TestLatchDescriptor::test_type()

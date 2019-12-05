@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_descriptorType_data();
@@ -87,6 +88,18 @@ void TestVggDescriptor::test_constructor()
   QCOMPARE(true, vggDescriptor.useNormalizeDescriptor());
   QCOMPARE(false, vggDescriptor.useNormalizeImage());
   QCOMPARE(false, vggDescriptor.useScaleOrientation());
+}
+
+void TestVggDescriptor::test_copy_constructor()
+{
+  VggDescriptor vggDescriptor("VGG_80", 6.75, 1.6, true, false, false);
+  VggDescriptor c(vggDescriptor);
+  QCOMPARE("VGG_80", c.descriptorType());
+  QCOMPARE(6.75, c.scaleFactor());
+  QCOMPARE(1.6, c.sigma());
+  QCOMPARE(true, c.useNormalizeDescriptor());
+  QCOMPARE(false, c.useNormalizeImage());
+  QCOMPARE(false, c.useScaleOrientation());
 }
 
 void TestVggDescriptor::test_type()

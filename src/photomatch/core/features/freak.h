@@ -20,6 +20,7 @@ class PHOTOMATCH_EXPORT FreakProperties
 public:
 
   FreakProperties();
+  FreakProperties(const FreakProperties &freakProperties);
   ~FreakProperties() override;
 
 // IFreak interface
@@ -62,6 +63,7 @@ class PHOTOMATCH_EXPORT FreakDescriptor
 public:
 
   FreakDescriptor();
+  FreakDescriptor(const FreakDescriptor &freakDescriptor);
   FreakDescriptor(bool orientationNormalized,
                   bool scaleNormalized,
                   double patternScale,

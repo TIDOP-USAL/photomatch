@@ -18,11 +18,25 @@ MserProperties::MserProperties()
     mAreaThreshold(1.01),
     mMinMargin(0.003),
     mEdgeBlurSize(5)
-{}
+{
+}
+
+MserProperties::MserProperties(const MserProperties &mserProperties)
+  : IMser(),
+    mDelta(mserProperties.mDelta),
+    mMinArea(mserProperties.minArea()),
+    mMaxArea(mserProperties.mMaxArea),
+    mMaxVariation(mserProperties.mMaxVariation),
+    mMinDiversity(mserProperties.mMinDiversity),
+    mMaxEvolution(mserProperties.mMaxEvolution),
+    mAreaThreshold(mserProperties.mAreaThreshold),
+    mMinMargin(mserProperties.mMinMargin),
+    mEdgeBlurSize(mserProperties.mEdgeBlurSize)
+{
+}
 
 MserProperties::~MserProperties()
 {
-
 }
 
 int MserProperties::delta() const
@@ -139,6 +153,13 @@ QString MserProperties::name() const
 
 MserDetector::MserDetector()
   : MserProperties(),
+    KeypointDetector()
+{
+  update();
+}
+
+MserDetector::MserDetector(const MserDetector &mserDetector)
+  : MserProperties(mserDetector),
     KeypointDetector()
 {
   update();

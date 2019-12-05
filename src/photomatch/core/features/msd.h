@@ -21,6 +21,7 @@ class PHOTOMATCH_EXPORT MsdProperties
 public:
 
   MsdProperties();
+  MsdProperties(const MsdProperties &msdProperties);
   ~MsdProperties() override;
 
 // IMsd interface
@@ -86,6 +87,7 @@ class MsdDetector
 public:
 
   MsdDetector();
+  MsdDetector(const MsdDetector &msdDetector);
   MsdDetector(double thresholdSaliency,
               int patchRadius,
               int knn,
@@ -104,6 +106,7 @@ private:
   bool pointIsAcceptable(const cv::KeyPoint &vl_keypoint, int width, int height);
   void compensateAffineCoor1(float *x0, float *y0, int w1, int h1, float t1, float t2, float Rtheta);
   void affineSkew(double tilt, double phi, cv::Mat &img, cv::Mat &mask, cv::Mat &Ai);
+  void updateMSD();
 
 // KeypointDetector interface
 

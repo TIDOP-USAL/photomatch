@@ -17,6 +17,16 @@ SurfProperties::SurfProperties()
 {
 }
 
+SurfProperties::SurfProperties(const SurfProperties &surfProperties)
+  : ISurf(),
+    mHessianThreshold(surfProperties.mHessianThreshold),
+    mOctaves(surfProperties.octaves()),
+    mOctaveLayers(surfProperties.mOctaveLayers),
+    mExtendedDescriptor(surfProperties.mExtendedDescriptor),
+    mRotatedFeatures(surfProperties.mRotatedFeatures)
+{
+}
+
 SurfProperties::~SurfProperties()
 {
 }
@@ -93,14 +103,32 @@ QString SurfProperties::name() const
 SurfDetectorDescriptor::SurfDetectorDescriptor()
   : SurfProperties(),
     KeypointDetector(),
-    DescriptorExtractor(),
-    mSurf(cv::xfeatures2d::SURF::create())
+    DescriptorExtractor()/*,
+    mSurf(cv::xfeatures2d::SURF::create())*/
 {
-  mSurf->setHessianThreshold(SurfProperties::hessianThreshold());
-  mSurf->setNOctaves(SurfProperties::octaves());
-  mSurf->setNOctaveLayers(SurfProperties::octaveLayers());
-  mSurf->setExtended(SurfProperties::extendedDescriptor());
-  mSurf->setUpright(SurfProperties::rotatedFeatures());
+//  mSurf->setHessianThreshold(SurfProperties::hessianThreshold());
+//  mSurf->setNOctaves(SurfProperties::octaves());
+//  mSurf->setNOctaveLayers(SurfProperties::octaveLayers());
+//  mSurf->setExtended(SurfProperties::extendedDescriptor());
+//  mSurf->setUpright(SurfProperties::rotatedFeatures());
+  mSurf = cv::xfeatures2d::SURF::create(SurfProperties::hessianThreshold(),
+                                        SurfProperties::octaves(),
+                                        SurfProperties::octaveLayers(),
+                                        SurfProperties::extendedDescriptor(),
+                                        SurfProperties::rotatedFeatures());
+}
+
+SurfDetectorDescriptor::SurfDetectorDescriptor(const SurfDetectorDescriptor &surfDetectorDescriptor)
+  : SurfProperties(surfDetectorDescriptor),
+    KeypointDetector(),
+    DescriptorExtractor(),
+    mSurf(surfDetectorDescriptor.mSurf)
+{
+//  mSurf->setHessianThreshold(SurfProperties::hessianThreshold());
+//  mSurf->setNOctaves(SurfProperties::octaves());
+//  mSurf->setNOctaveLayers(SurfProperties::octaveLayers());
+//  mSurf->setExtended(SurfProperties::extendedDescriptor());
+//  mSurf->setUpright(SurfProperties::rotatedFeatures());
 }
 
 SurfDetectorDescriptor::SurfDetectorDescriptor(double hessianThreshold,
@@ -205,6 +233,19 @@ void SurfDetectorDescriptor::reset()
 
 SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor()
   : SurfProperties(),
+    KeypointDetector(),
+    DescriptorExtractor(),
+    mSurf(new cv::cuda::SURF_CUDA())
+{
+  mSurf->hessianThreshold = SurfProperties::hessianThreshold();
+  mSurf->nOctaves = SurfProperties::octaves();
+  mSurf->nOctaveLayers = SurfProperties::octaveLayers();
+  mSurf->extended = SurfProperties::extendedDescriptor();
+  mSurf->upright = SurfProperties::rotatedFeatures();
+}
+
+SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor(const SurfCudaDetectorDescriptor &surfDetectorDescriptor)
+  : SurfProperties(surfDetectorDescriptor),
     KeypointDetector(),
     DescriptorExtractor(),
     mSurf(new cv::cuda::SURF_CUDA())

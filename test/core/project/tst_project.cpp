@@ -599,6 +599,8 @@ private slots:
 //  void test_path();
   void test_projectFolder_data();
   void test_projectFolder();
+  void test_groundTruth_data();
+  void test_groundTruth();
   void test_findImage();
   void test_findImageId_data();
   void test_findImageId();
@@ -657,10 +659,12 @@ void TestProject::cleanupTestCase()
 
 void TestProject::testConstructor()
 {
+
   QCOMPARE(QString(), mProject->name());
   QCOMPARE(QString(), mProject->description());
   QCOMPARE(QString(), mProject->projectFolder());
   QCOMPARE(QString("1.0"), mProject->version());
+  QCOMPARE(QString(), mProject->groundTruth());
   QCOMPARE(0, mProject->imagesCount());
   QCOMPARE(0, mProject->sessionCount());
   QCOMPARE(QString(""), mProject->groundTruth());
@@ -727,6 +731,24 @@ void TestProject::test_projectFolder()
 
   mProject->setProjectFolder(value);
   QCOMPARE(result, mProject->projectFolder());
+}
+
+void TestProject::test_groundTruth_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("gt1") << "C:\\Users\\User01\\Documents\\photomatch\\Projects\\gt1.txt" << "C:\\Users\\User01\\Documents\\photomatch\\Projects\\gt1.txt";
+  QTest::newRow("gt2") << "C:/Users/User01/Documents/photomatch/Projects/gt2.txt" << "C:/Users/User01/Documents/photomatch/Projects/gt2.txt";
+}
+
+void TestProject::test_groundTruth()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mProject->setGroundTruth(value);
+  QCOMPARE(result, mProject->groundTruth());
 }
 
 void TestProject::test_findImage()
@@ -986,7 +1008,20 @@ void TestProject::test_currentSession()
 
 void TestProject::test_clear()
 {
+  mProject->setName("Proj01");
+  mProject->setDescription("Descripción del proyecto 1");
+  mProject->setProjectFolder("c://PhotoMatch/project01");
+  mProject->setGroundTruth("c://GroundTruth.txt");
 
+  mProject->clear();
+
+  QCOMPARE(QString(), mProject->name());
+  QCOMPARE(QString(), mProject->description());
+  QCOMPARE(QString(), mProject->projectFolder());
+  QCOMPARE(QString("1.0"), mProject->version());
+  QCOMPARE(QString(), mProject->groundTruth());
+  QCOMPARE(0, mProject->imagesCount());
+  QCOMPARE(0, mProject->sessionCount());
 }
 
 QTEST_APPLESS_MAIN(TestProject)

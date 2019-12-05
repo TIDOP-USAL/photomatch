@@ -22,6 +22,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_thresholdSaliency_data();
@@ -104,6 +105,23 @@ void TestMsdDetector::test_constructor()
   QCOMPARE(4, msdDetector.affineTilts());
 }
 
+void TestMsdDetector::test_copy_constructor()
+{
+  MsdDetector msdDetector(150, 5, 5, 5, 1.5, 2, 3, 1, true, true, 4);
+  MsdDetector c(msdDetector);
+  QCOMPARE(150, c.thresholdSaliency());
+  QCOMPARE(5, c.patchRadius());
+  QCOMPARE(5, c.knn());
+  QCOMPARE(5, c.searchAreaRadius());
+  QCOMPARE(1.5, c.scaleFactor());
+  QCOMPARE(2, c.NMSRadius());
+  QCOMPARE(3, c.nScales());
+  QCOMPARE(1, c.NMSScaleRadius());
+  QCOMPARE(true, c.computeOrientation());
+  QCOMPARE(true, c.affineMSD());
+  QCOMPARE(4, c.affineTilts());
+}
+
 void TestMsdDetector::test_type()
 {
   QCOMPARE(MsdDetector::Type::msd, this->type());
@@ -131,6 +149,7 @@ void TestMsdDetector::test_thresholdSaliency()
 
   this->setThresholdSaliency(value);
   QCOMPARE(result, this->thresholdSaliency());
+  QCOMPARE(result, this->mMSD->getThSaliency());
 }
 
 void TestMsdDetector::test_pathRadius_data()
@@ -150,6 +169,7 @@ void TestMsdDetector::test_pathRadius()
 
   this->setPatchRadius(value);
   QCOMPARE(result, this->patchRadius());
+  QCOMPARE(result, this->mMSD->getPatchRadius());
 }
 
 void TestMsdDetector::test_knn_data()
@@ -169,6 +189,7 @@ void TestMsdDetector::test_knn()
 
   this->setKNN(value);
   QCOMPARE(result, this->knn());
+  QCOMPARE(result, this->mMSD->getKNN());
 }
 
 void TestMsdDetector::test_areaRadius_data()
@@ -188,6 +209,7 @@ void TestMsdDetector::test_areaRadius()
 
   this->setSearchAreaRadius(value);
   QCOMPARE(result, this->searchAreaRadius());
+  QCOMPARE(result, this->mMSD->getSearchAreaRadius());
 }
 
 void TestMsdDetector::test_scaleFactor_data()
@@ -207,6 +229,7 @@ void TestMsdDetector::test_scaleFactor()
 
   this->setScaleFactor(value);
   QCOMPARE(result, this->scaleFactor());
+  QCOMPARE(result, this->mMSD->getScaleFactor());
 }
 
 void TestMsdDetector::test_NMSRadius_data()
@@ -226,6 +249,7 @@ void TestMsdDetector::test_NMSRadius()
 
   this->setNMSRadius(value);
   QCOMPARE(result, this->NMSRadius());
+  QCOMPARE(result, this->mMSD->getNMSRadius());
 }
 
 void TestMsdDetector::test_nScales_data()
@@ -245,6 +269,7 @@ void TestMsdDetector::test_nScales()
 
   this->setNScales(value);
   QCOMPARE(result, this->nScales());
+  QCOMPARE(result, this->mMSD->getNScales());
 }
 
 void TestMsdDetector::test_nmsScaleR_data()
@@ -264,6 +289,7 @@ void TestMsdDetector::test_nmsScaleR()
 
   this->setNMSScaleRadius(value);
   QCOMPARE(result, this->NMSScaleRadius());
+  QCOMPARE(result, this->mMSD->getNMSScaleRadius());
 }
 
 void TestMsdDetector::test_computeOrientations_data()
@@ -282,6 +308,7 @@ void TestMsdDetector::test_computeOrientations()
 
   this->setComputeOrientation(value);
   QCOMPARE(result, this->computeOrientation());
+  QCOMPARE(result, this->mMSD->getComputeOrientation());
 }
 
 void TestMsdDetector::test_affineMSD_data()
@@ -338,13 +365,21 @@ void TestMsdDetector::test_reset()
   this->reset();
 
   QCOMPARE(250, this->thresholdSaliency());
+  QCOMPARE(250, this->mMSD->getThSaliency());
   QCOMPARE(3, this->patchRadius());
+  QCOMPARE(3, this->mMSD->getPatchRadius());
   QCOMPARE(4, this->knn());
+  QCOMPARE(4, this->mMSD->getKNN());
   QCOMPARE(5, this->searchAreaRadius());
+  QCOMPARE(5, this->mMSD->getSearchAreaRadius());
   QCOMPARE(1.25, this->scaleFactor());
+  QCOMPARE(1.25, this->mMSD->getScaleFactor());
   QCOMPARE(5, this->NMSRadius());
+  QCOMPARE(5, this->mMSD->getNMSRadius());
   QCOMPARE(-1, this->nScales());
+  QCOMPARE(-1, this->mMSD->getNScales());
   QCOMPARE(0, this->NMSScaleRadius());
+  QCOMPARE(0, this->mMSD->getNMSScaleRadius());
   QCOMPARE(false, this->computeOrientation());
   QCOMPARE(false, this->affineMSD());
   QCOMPARE(3, this->affineTilts());

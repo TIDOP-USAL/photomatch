@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_winSize_data();
@@ -77,13 +78,6 @@ void TestHogDescriptor::test_defaultConstructor()
   QCOMPARE(QSize(2, 2), hogDescriptor.cellSize());
   QCOMPARE(9, hogDescriptor.nbins());
   QCOMPARE(1, hogDescriptor.derivAperture());
-//  QCOMPARE(-1, hogDescriptor.winSigma());
-//  QCOMPARE("L2Hys", hogDescriptor.histogramNormType());
-//  QCOMPARE(0.2, hogDescriptor.l2HysThreshold());
-//  QCOMPARE(true, hogDescriptor.gammaCorrection());
-//  QCOMPARE(-1., hogDescriptor.freeCoef());
-//  QCOMPARE(64, hogDescriptor.nlevels());
-  //  QCOMPARE(false, hogDescriptor.signedGradient());
 }
 
 void TestHogDescriptor::test_constructor()
@@ -96,6 +90,18 @@ void TestHogDescriptor::test_constructor()
   QCOMPARE(QSize(4, 4), hogDescriptor.cellSize());
   QCOMPARE(5, hogDescriptor.nbins());
   QCOMPARE(2, hogDescriptor.derivAperture());
+}
+
+void TestHogDescriptor::test_copy_constructor()
+{
+  HogDescriptor hogDescriptor(QSize(32, 32), QSize(8, 8), QSize(4, 4), QSize(4, 4), 5, 2);
+  HogDescriptor c(hogDescriptor);
+  QCOMPARE(QSize(32, 32), c.winSize());
+  QCOMPARE(QSize(8, 8), c.blockSize());
+  QCOMPARE(QSize(4, 4), c.blockStride());
+  QCOMPARE(QSize(4, 4), c.cellSize());
+  QCOMPARE(5, c.nbins());
+  QCOMPARE(2, c.derivAperture());
 }
 
 
@@ -238,13 +244,6 @@ void TestHogDescriptor::test_reset()
   QCOMPARE(QSize(2, 2), mHogDescriptor->cellSize());
   QCOMPARE(9, mHogDescriptor->nbins());
   QCOMPARE(1, mHogDescriptor->derivAperture());
-//  QCOMPARE(-1, mHogDescriptor->winSigma());
-//  QCOMPARE("L2Hys", mHogDescriptor->histogramNormType());
-//  QCOMPARE(0.2, mHogDescriptor->l2HysThreshold());
-//  QCOMPARE(true, mHogDescriptor->gammaCorrection());
-//  QCOMPARE(-1., mHogDescriptor->freeCoef());
-//  QCOMPARE(64, mHogDescriptor->nlevels());
-//  QCOMPARE(false, mHogDescriptor->signedGradient());
 }
 
 

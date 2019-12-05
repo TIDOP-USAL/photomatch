@@ -22,6 +22,7 @@ class PHOTOMATCH_EXPORT OrbProperties
 public:
 
   OrbProperties();
+  OrbProperties(const OrbProperties &orbProperties);
    ~OrbProperties() override;
 
 // IOrb interface
@@ -32,6 +33,7 @@ public:
   virtual double scaleFactor() const override;
   virtual int levelsNumber() const override;
   virtual int edgeThreshold() const override;
+  virtual int firstLevel() const override;
   virtual int wta_k() const override;
   virtual QString scoreType() const override;
   virtual int patchSize() const override;
@@ -40,6 +42,7 @@ public:
   virtual void setScaleFactor(double scaleFactor) override;
   virtual void setLevelsNumber(int levelsNumber) override;
   virtual void setEdgeThreshold(int edgeThreshold) override;
+  virtual void setFirstLevel(int firstLevel) override;
   virtual void setWTA_K(int WTA_K) override;
   virtual void setScoreType(const QString &scoreType) override;
   virtual void setPatchSize(int patchSize) override;
@@ -58,6 +61,7 @@ private:
   double mScaleFactor;
   int mLevelsNumber;
   int mEdgeThreshold;
+  int mFirstLevel;
   int mWTA_K;
   QString mScoreType;
   int mPatchSize;
@@ -77,6 +81,7 @@ class PHOTOMATCH_EXPORT OrbDetectorDescriptor
 public:
 
   OrbDetectorDescriptor();
+  OrbDetectorDescriptor(const OrbDetectorDescriptor &orbDetectorDescriptor);
   OrbDetectorDescriptor(int featuresNumber,
                         double scaleFactor,
                         int levelsNumber,
@@ -85,8 +90,15 @@ public:
                         QString scoreType,
                         int patchSize,
                         int fastThreshold);
-
   ~OrbDetectorDescriptor() override;
+
+private:
+
+#if CV_VERSION_MAJOR >= 4
+  cv::ORB::ScoreType convertScoreType(const QString &scoreType);
+#else
+  int convertScoreType(const QString &scoreType);
+#endif
 
 // KeypointDetector interface
 
@@ -112,6 +124,7 @@ public:
   void setScaleFactor(double scaleFactor) override;
   void setLevelsNumber(int levelsNumber) override;
   void setEdgeThreshold(int edgeThreshold) override;
+  void setFirstLevel(int firstLevel) override;
   void setWTA_K(int WTA_K) override;
   void setScoreType(const QString &scoreType) override;
   void setPatchSize(int patchSize) override;
@@ -143,6 +156,7 @@ class PHOTOMATCH_EXPORT OrbCudaDetectorDescriptor
 public:
 
   OrbCudaDetectorDescriptor();
+  OrbCudaDetectorDescriptor(const OrbCudaDetectorDescriptor &orbCudaDetectorDescriptor);
   OrbCudaDetectorDescriptor(int featuresNumber,
                             double scaleFactor,
                             int levelsNumber,
@@ -155,6 +169,12 @@ public:
   ~OrbCudaDetectorDescriptor() override;
 
 private:
+
+#if CV_VERSION_MAJOR >= 4
+  cv::ORB::ScoreType convertScoreType(const QString &scoreType);
+#else
+  int convertScoreType(const QString &scoreType);
+#endif
 
   void update();
 
@@ -182,6 +202,7 @@ public:
   void setScaleFactor(double scaleFactor) override;
   void setLevelsNumber(int levelsNumber) override;
   void setEdgeThreshold(int edgeThreshold) override;
+  void setFirstLevel(int firstLevel) override;
   void setWTA_K(int WTA_K) override;
   void setScoreType(const QString &scoreType) override;
   void setPatchSize(int patchSize) override;

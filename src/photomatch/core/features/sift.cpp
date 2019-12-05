@@ -14,9 +14,22 @@ SiftProperties::SiftProperties()
     mContrastThreshold(0.04),
     mEdgeThreshold(10.),
     mSigma(1.6)
-{}
+{
+}
 
-SiftProperties::~SiftProperties() {}
+SiftProperties::SiftProperties(const SiftProperties &siftProperties)
+  : ISift(),
+    mFeaturesNumber(siftProperties.mFeaturesNumber),
+    mOctaveLayers(siftProperties.mOctaveLayers),
+    mContrastThreshold(siftProperties.mContrastThreshold),
+    mEdgeThreshold(siftProperties.mEdgeThreshold),
+    mSigma(siftProperties.mSigma)
+{
+}
+
+SiftProperties::~SiftProperties()
+{
+}
 
 int SiftProperties::featuresNumber() const
 {
@@ -92,6 +105,14 @@ SiftDetectorDescriptor::SiftDetectorDescriptor()
     KeypointDetector(),
     DescriptorExtractor()
 { 
+  update();
+}
+
+SiftDetectorDescriptor::SiftDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor)
+  : SiftProperties(siftDetectorDescriptor),
+    KeypointDetector(),
+    DescriptorExtractor()
+{
   update();
 }
 

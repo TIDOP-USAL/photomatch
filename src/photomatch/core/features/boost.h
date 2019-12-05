@@ -19,6 +19,7 @@ class BoostProperties
 public:
 
   BoostProperties();
+  BoostProperties(const BoostProperties &boostProperties);
   virtual ~BoostProperties() override;
 
 // IBoost interface
@@ -58,6 +59,7 @@ class BoostDescriptor
 public:
 
   BoostDescriptor();
+  BoostDescriptor(const BoostDescriptor &boostDescriptor);
   BoostDescriptor(QString descriptorType,
                   bool useOrientation,
                   double scaleFactor);

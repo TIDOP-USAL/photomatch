@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_descriptorType_data();
@@ -76,6 +77,15 @@ void TestBoostDescriptor::test_constructor()
   QCOMPARE("BGM_BILINEAR", boostDescriptor.descriptorType());
   QCOMPARE(false, boostDescriptor.useOrientation());
   QCOMPARE(5.00, boostDescriptor.scaleFactor());
+}
+
+void TestBoostDescriptor::test_copy_constructor()
+{
+  BoostDescriptor obj("BGM_BILINEAR", false, 5.00);
+  BoostDescriptor copy(obj);
+  QCOMPARE("BGM_BILINEAR", copy.descriptorType());
+  QCOMPARE(false, copy.useOrientation());
+  QCOMPARE(5.00, copy.scaleFactor());
 }
 
 void TestBoostDescriptor::test_type()

@@ -19,6 +19,16 @@ HogProperties::HogProperties()
     mDerivAperture(1)
 {}
 
+HogProperties::HogProperties(const HogProperties &hogProperties)
+  : IHog(),
+    mWinSize(hogProperties.mWinSize),
+    mBlockSize(hogProperties.mBlockSize),
+    mBlockStride(hogProperties.mBlockStride),
+    mCellSize(hogProperties.mCellSize),
+    mNbins(hogProperties.mNbins),
+    mDerivAperture(hogProperties.mDerivAperture)
+{}
+
 HogProperties::~HogProperties()
 {
 
@@ -87,9 +97,9 @@ void HogProperties::setDerivAperture(int derivAperture)
 void HogProperties::reset()
 {
   mWinSize = QSize(16, 16);
-  mBlockSize = QSize(4, 4); //QSize(16,16);
-  mBlockStride = QSize(2, 2); //QSize(8,8);
-  mCellSize = QSize(2, 2);  //QSize(8,8);
+  mBlockSize = QSize(4, 4);
+  mBlockStride = QSize(2, 2);
+  mCellSize = QSize(2, 2);
   mNbins = 9;
   mDerivAperture = 1;
 }
@@ -105,6 +115,13 @@ QString HogProperties::name() const
 
 HogDescriptor::HogDescriptor()
   : HogProperties(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+HogDescriptor::HogDescriptor(const HogDescriptor &hogDescriptor)
+  : HogProperties(hogDescriptor),
     DescriptorExtractor()
 {
   update();

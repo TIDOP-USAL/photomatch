@@ -23,6 +23,21 @@ MsdProperties::MsdProperties()
     mAffineTilts(3)
 {}
 
+MsdProperties::MsdProperties(const MsdProperties &msdProperties)
+  : IMsd(),
+    mThresholdSaliency(msdProperties.mThresholdSaliency),
+    mPatchRadius(msdProperties.mPatchRadius),
+    mKNN(msdProperties.mKNN),
+    mAreaRadius(msdProperties.mAreaRadius),
+    mScaleFactor(msdProperties.mScaleFactor),
+    mNMSRadius(msdProperties.mNMSRadius),
+    mNScales(msdProperties.mNScales),
+    mNMSScaleR(msdProperties.mNMSScaleR),
+    mComputeOrientations(msdProperties.mComputeOrientations),
+    mAffineMSD(msdProperties.mAffineMSD),
+    mAffineTilts(msdProperties.mAffineTilts)
+{}
+
 MsdProperties::~MsdProperties()
 {
 
@@ -168,17 +183,16 @@ MsdDetector::MsdDetector()
     KeypointDetector()
 {
   mMSD = std::make_shared<::MsdDetector>();
-  mMSD->setThSaliency(static_cast<float>(MsdProperties::thresholdSaliency()));
-  mMSD->setPatchRadius(MsdProperties::patchRadius());
-  mMSD->setKNN(MsdProperties::knn());
-  mMSD->setSearchAreaRadius(MsdProperties::searchAreaRadius());
-  mMSD->setScaleFactor(static_cast<float>(MsdProperties::scaleFactor()));
-  mMSD->setNMSRadius(MsdProperties::NMSRadius());
-  mMSD->setNScales(MsdProperties::nScales());
-  mMSD->setNMSScaleRadius(MsdProperties::NMSScaleRadius());
-  mMSD->setComputeOrientation(MsdProperties::computeOrientation());
+  this->updateMSD();
 }
 
+MsdDetector::MsdDetector(const MsdDetector &msdDetector)
+  : MsdProperties(msdDetector),
+    KeypointDetector()
+{
+  mMSD = std::make_shared<::MsdDetector>();
+  this->updateMSD();
+}
 
 MsdDetector::MsdDetector(double thresholdSaliency,
                          int pathRadius,
@@ -195,17 +209,17 @@ MsdDetector::MsdDetector(double thresholdSaliency,
     KeypointDetector()
 {
   mMSD = std::make_shared<::MsdDetector>();
-  MsdProperties::setThresholdSaliency(thresholdSaliency);
-  MsdProperties::setPatchRadius(pathRadius);
-  MsdProperties::setKNN(knn);
-  MsdProperties::setSearchAreaRadius(areaRadius);
-  MsdProperties::setScaleFactor(scaleFactor);
-  MsdProperties::setNMSRadius(NMSRadius);
-  MsdProperties::setNScales(nScales);
-  MsdProperties::setNMSScaleRadius(NMSScaleR);
-  MsdProperties::setComputeOrientation(computeOrientations);
-  MsdProperties::setAffineMSD(affineMSD);
-  MsdProperties::setAffineTilts(affineTilts);
+  setThresholdSaliency(thresholdSaliency);
+  setPatchRadius(pathRadius);
+  setKNN(knn);
+  setSearchAreaRadius(areaRadius);
+  setScaleFactor(scaleFactor);
+  setNMSRadius(NMSRadius);
+  setNScales(nScales);
+  setNMSScaleRadius(NMSScaleR);
+  setComputeOrientation(computeOrientations);
+  setAffineMSD(affineMSD);
+  setAffineTilts(affineTilts);
 }
 
 MsdDetector::~MsdDetector()
@@ -275,10 +289,10 @@ bool MsdDetector::detect(const cv::Mat &img,
     }
 
   } catch (cv::Exception &e) {
-    msgError("AGAST Detector error: %s", e.what());
+    msgError("MSD Detector error: %s", e.what());
     return true;
   } catch (std::exception &e) {
-    msgError("AGAST Detector error: %s", e.what());
+    msgError("MSD Detector error: %s", e.what());
     return true;
   }
 
@@ -418,6 +432,19 @@ void MsdDetector::affineSkew(double tilt, double phi, cv::Mat &img, cv::Mat &mas
   invertAffineTransform(A, Ai);
 }
 
+void MsdDetector::updateMSD()
+{
+  mMSD->setThSaliency(static_cast<float>(MsdProperties::thresholdSaliency()));
+  mMSD->setPatchRadius(MsdProperties::patchRadius());
+  mMSD->setKNN(MsdProperties::knn());
+  mMSD->setSearchAreaRadius(MsdProperties::searchAreaRadius());
+  mMSD->setScaleFactor(static_cast<float>(MsdProperties::scaleFactor()));
+  mMSD->setNMSRadius(MsdProperties::NMSRadius());
+  mMSD->setNScales(MsdProperties::nScales());
+  mMSD->setNMSScaleRadius(MsdProperties::NMSScaleRadius());
+  mMSD->setComputeOrientation(MsdProperties::computeOrientation());
+}
+
 void MsdDetector::setThresholdSaliency(double thresholdSaliency)
 {
   MsdProperties::setThresholdSaliency(thresholdSaliency);
@@ -463,7 +490,7 @@ void MsdDetector::setNScales(int nScales)
 void MsdDetector::setNMSScaleRadius(int NMSScaleR)
 {
   MsdProperties::setNMSScaleRadius(NMSScaleR);
-  mMSD->setScaleFactor(NMSScaleR);
+  mMSD->setNMSScaleRadius(NMSScaleR);
 }
 
 void MsdDetector::setComputeOrientation(bool computeOrientations)
@@ -485,15 +512,7 @@ void MsdDetector::setAffineTilts(int tilts)
 void MsdDetector::reset()
 {
   MsdProperties::reset();
-  mMSD->setThSaliency(static_cast<float>(MsdProperties::thresholdSaliency()));
-  mMSD->setPatchRadius(MsdProperties::patchRadius());
-  mMSD->setKNN(MsdProperties::knn());
-  mMSD->setSearchAreaRadius(MsdProperties::searchAreaRadius());
-  mMSD->setScaleFactor(static_cast<float>(MsdProperties::scaleFactor()));
-  mMSD->setNMSRadius(MsdProperties::NMSRadius());
-  mMSD->setNScales(MsdProperties::nScales());
-  mMSD->setNMSScaleRadius(MsdProperties::NMSScaleRadius());
-  mMSD->setComputeOrientation(MsdProperties::computeOrientation());
+  this->updateMSD();
 }
 
 

@@ -18,6 +18,7 @@ class PHOTOMATCH_EXPORT MserProperties
 public:
 
   MserProperties();
+  MserProperties(const MserProperties &mserProperties);
    ~MserProperties() override;
 
 // IMser interface
@@ -75,6 +76,7 @@ class MserDetector
 public:
 
   MserDetector();
+  MserDetector(const MserDetector &mserDetector);
   MserDetector(int delta,
                int minArea,
                int maxArea,

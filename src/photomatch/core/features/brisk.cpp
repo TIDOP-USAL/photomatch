@@ -14,6 +14,13 @@ BriskProperties::BriskProperties()
     mPatternScale(1.0)
 {}
 
+BriskProperties::BriskProperties(const BriskProperties &briskProperties)
+  : IBrisk(),
+    mThreshold(briskProperties.mThreshold),
+    mOctaves(briskProperties.mOctaves),
+    mPatternScale(briskProperties.mPatternScale)
+{}
+
 BriskProperties::~BriskProperties()
 {
 
@@ -72,6 +79,15 @@ BriskDetectorDescriptor::BriskDetectorDescriptor()
 {
   update();
 }
+
+BriskDetectorDescriptor::BriskDetectorDescriptor(const BriskDetectorDescriptor &briskDetectorDescriptor)
+  : BriskProperties(briskDetectorDescriptor),
+    KeypointDetector(),
+    DescriptorExtractor()
+{
+  update();
+}
+
 
 BriskDetectorDescriptor::BriskDetectorDescriptor(int threshold,
                                                  int octaves,

@@ -21,6 +21,7 @@ class VggProperties
 public:
 
   VggProperties();
+  VggProperties(const VggProperties &vggProperties);
   virtual ~VggProperties() override;
 
 // IVgg interface
@@ -71,6 +72,7 @@ class VggDescriptor
 public:
 
   VggDescriptor();
+  VggDescriptor(const VggDescriptor &vggDescriptor);
   VggDescriptor(QString descriptorType,
                 double scaleFactor,
                 double sigma,

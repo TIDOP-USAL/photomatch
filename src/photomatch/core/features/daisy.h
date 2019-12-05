@@ -18,6 +18,7 @@ class PHOTOMATCH_EXPORT DaisyProperties
 public:
 
   DaisyProperties();
+  DaisyProperties(const DaisyProperties &daisyProperties);
   ~DaisyProperties() override;
 
 // IDaisy interface
@@ -69,6 +70,7 @@ class PHOTOMATCH_EXPORT DaisyDescriptor
 public:
 
   DaisyDescriptor();
+  DaisyDescriptor(const DaisyDescriptor &daisyDescriptor);
   DaisyDescriptor(double radius,
                   int qRadius,
                   int qTheta,

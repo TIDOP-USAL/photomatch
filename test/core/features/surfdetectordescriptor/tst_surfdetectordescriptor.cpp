@@ -25,6 +25,7 @@ private slots:
 #ifdef OPENCV_ENABLE_NONFREE
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_hessianThreshold_data();
@@ -82,6 +83,17 @@ void TestSurfDetectorDescriptor::test_constructor()
   QCOMPARE(5, surfDetectorDescriptor.octaveLayers());
   QCOMPARE(true, surfDetectorDescriptor.extendedDescriptor());
   QCOMPARE(true, surfDetectorDescriptor.rotatedFeatures());
+}
+
+void TestSurfDetectorDescriptor::test_copy_constructor()
+{
+  SurfDetectorDescriptor surfDetectorDescriptor(50., 2, 5, true, true);
+  SurfDetectorDescriptor c(surfDetectorDescriptor);
+  QCOMPARE(50., c.hessianThreshold());
+  QCOMPARE(2, c.octaves());
+  QCOMPARE(5, c.octaveLayers());
+  QCOMPARE(true, c.extendedDescriptor());
+  QCOMPARE(true, c.rotatedFeatures());
 }
 
 void TestSurfDetectorDescriptor::test_type()

@@ -17,6 +17,7 @@ class PHOTOMATCH_EXPORT FastProperties
 public:
 
   FastProperties();
+  FastProperties(const FastProperties &fastProperties);
   ~FastProperties() override;
 
 // IFast interface
@@ -56,9 +57,17 @@ class FastDetector
 public:
 
   FastDetector();
+  FastDetector(const FastDetector &fastDetector);
   FastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType);
   ~FastDetector() override;
 
+private:
+
+#if CV_VERSION_MAJOR >= 4
+  cv::FastFeatureDetector::DetectorType convertDetectorType(const QString &detectorType);
+#else
+  int convertDetectorType(const QString &detectorType);
+#endif
 // KeypointDetector interface
 
 public:

@@ -17,6 +17,7 @@ class PHOTOMATCH_EXPORT KazeProperties
 public:
 
   KazeProperties();
+  KazeProperties(const KazeProperties &kazeProperties);
   ~KazeProperties() override;
 
 // IKaze interface
@@ -67,6 +68,7 @@ class PHOTOMATCH_EXPORT KazeDetectorDescriptor
 public:
 
   KazeDetectorDescriptor();
+  KazeDetectorDescriptor(const KazeDetectorDescriptor &kazeDetectorDescriptor);
   KazeDetectorDescriptor(bool extendedDescriptor,
                          bool upright,
                          double threshold,
@@ -75,6 +77,15 @@ public:
                          QString diffusivity);
 
   ~KazeDetectorDescriptor() override;
+
+private:
+
+#if CV_VERSION_MAJOR >= 4
+  cv::KAZE::DiffusivityType convertDiffusivity(const QString &diffusivity);
+#else
+  int convertDiffusivity(const QString &diffusivity);
+#endif
+  void updateCvKaze();
 
 // KeypointDetector interface
 
