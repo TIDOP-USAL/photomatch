@@ -14,11 +14,21 @@ StarProperties::StarProperties()
     mLineThresholdProjected(10),
     mLineThresholdBinarized(8),
     mSuppressNonmaxSize(5)
-{}
+{
+}
+
+StarProperties::StarProperties(const StarProperties &starProperties)
+  : IStar(),
+    mMaxSize(starProperties.mMaxSize),
+    mResponseThreshold(starProperties.mResponseThreshold),
+    mLineThresholdProjected(starProperties.mLineThresholdProjected),
+    mLineThresholdBinarized(starProperties.mLineThresholdBinarized),
+    mSuppressNonmaxSize(starProperties.mSuppressNonmaxSize)
+{
+}
 
 StarProperties::~StarProperties()
 {
-
 }
 
 int StarProperties::maxSize() const
@@ -96,6 +106,12 @@ StarDetector::StarDetector()
   update();
 }
 
+StarDetector::StarDetector(const StarDetector &starDetector)
+  : StarProperties(starDetector),
+    KeypointDetector()
+{
+  update();
+}
 
 StarDetector::StarDetector(int maxSize,
                            int responseThreshold,

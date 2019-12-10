@@ -21,6 +21,7 @@ class PHOTOMATCH_EXPORT AkazeProperties
 public:
 
   AkazeProperties();
+  AkazeProperties(const AkazeProperties &akazeProperties);
   ~AkazeProperties() override;
 
 // IAkaze interface
@@ -74,6 +75,7 @@ class PHOTOMATCH_EXPORT AkazeDetectorDescriptor
 public:
 
   AkazeDetectorDescriptor();
+  AkazeDetectorDescriptor(const AkazeDetectorDescriptor &akazeDetectorDescriptor);
   AkazeDetectorDescriptor(const QString &descriptorType,
                           int descriptorSize,
                           int descriptorChannels,
@@ -83,6 +85,16 @@ public:
                           QString diffusivity);
 
   ~AkazeDetectorDescriptor() override;
+
+private:
+
+#if CV_VERSION_MAJOR >= 4
+  cv::AKAZE::DescriptorType convertDescriptorType(const QString &descriptorType);
+  cv::KAZE::DiffusivityType convertDiffusivity(const QString &descriptorType);
+#else
+  int convertDescriptorType(const QString &descriptorType);
+  int convertDiffusivity(const QString &diffusivity);
+#endif
 
 // KeypointDetector interface
 

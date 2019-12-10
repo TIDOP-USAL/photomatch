@@ -20,6 +20,7 @@ class PHOTOMATCH_EXPORT LatchProperties
 public:
 
   LatchProperties();
+  LatchProperties(const LatchProperties &latchProperties);
   ~LatchProperties() override;
 
 // ILatch interface
@@ -58,6 +59,7 @@ class PHOTOMATCH_EXPORT LatchDescriptor
 public:
 
   LatchDescriptor();
+  LatchDescriptor(const LatchDescriptor &latchDescriptor);
   LatchDescriptor(QString bytes,
                   bool rotationInvariance,
                   int halfSsdSize);

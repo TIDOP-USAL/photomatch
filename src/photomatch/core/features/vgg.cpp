@@ -15,7 +15,17 @@ VggProperties::VggProperties()
     bUseNormalizeImage(true),
     bUseScaleOrientation(true)
 {
+}
 
+VggProperties::VggProperties(const VggProperties &vggProperties)
+  : IVgg(),
+    mDescriptorType(vggProperties.mDescriptorType),
+    mScaleFactor(vggProperties.mScaleFactor),
+    mSigma(vggProperties.mSigma),
+    bUseNormalizeDescriptor(vggProperties.bUseNormalizeDescriptor),
+    bUseNormalizeImage(vggProperties.bUseNormalizeImage),
+    bUseScaleOrientation(vggProperties.bUseScaleOrientation)
+{
 }
 
 VggProperties::~VggProperties()
@@ -111,6 +121,13 @@ QString photomatch::VggProperties::name() const
 
 VggDescriptor::VggDescriptor()
   : VggProperties(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+VggDescriptor::VggDescriptor(const VggDescriptor &vggDescriptor)
+  : VggProperties(vggDescriptor),
     DescriptorExtractor()
 {
   update();

@@ -20,6 +20,7 @@ private slots:
 #ifdef OPENCV_ENABLE_NONFREE
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_featuresNumber_data();
@@ -90,6 +91,17 @@ void TestSiftDetectorDescriptor::test_constructor()
   QCOMPARE(0.5, siftDetectorDescriptor.contrastThreshold());
   QCOMPARE(20., siftDetectorDescriptor.edgeThreshold());
   QCOMPARE(3., siftDetectorDescriptor.sigma());
+}
+
+void TestSiftDetectorDescriptor::test_copy_constructor()
+{
+  SiftDetectorDescriptor siftDetectorDescriptor(500, 4, 0.5, 20., 3.);
+  SiftDetectorDescriptor c(siftDetectorDescriptor);
+  QCOMPARE(500, c.featuresNumber());
+  QCOMPARE(4, c.octaveLayers());
+  QCOMPARE(0.5, c.contrastThreshold());
+  QCOMPARE(20., c.edgeThreshold());
+  QCOMPARE(3., c.sigma());
 }
 
 void TestSiftDetectorDescriptor::test_type()

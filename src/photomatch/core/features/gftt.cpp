@@ -15,7 +15,17 @@ GfttProperties::GfttProperties()
     mHarrisDetector(false),
     mK(0.04)
 {
+}
 
+GfttProperties::GfttProperties(const GfttProperties &gfttProperties)
+  : IGftt(),
+    mMaxFeatures(gfttProperties.mMaxFeatures),
+    mQualityLevel(gfttProperties.mQualityLevel),
+    mMinDistance(gfttProperties.mMinDistance),
+    mBlockSize(gfttProperties.mBlockSize),
+    mHarrisDetector(gfttProperties.mHarrisDetector),
+    mK(gfttProperties.mK)
+{
 }
 
 GfttProperties::~GfttProperties()
@@ -104,15 +114,26 @@ QString GfttProperties::name() const
 
 GfttDetector::GfttDetector()
   : GfttProperties(),
-    KeypointDetector(),
-    mGFTT(cv::GFTTDetector::create())
+    KeypointDetector()
 {
-  mGFTT->setMaxFeatures(GfttProperties::maxFeatures());
-  mGFTT->setQualityLevel(GfttProperties::qualityLevel());
-  mGFTT->setMinDistance(GfttProperties::minDistance());
-  mGFTT->setBlockSize(GfttProperties::blockSize());
-  mGFTT->setHarrisDetector(GfttProperties::harrisDetector());
-  mGFTT->setK(GfttProperties::k());
+  mGFTT = cv::GFTTDetector::create(GfttProperties::maxFeatures(),
+                                   GfttProperties::qualityLevel(),
+                                   GfttProperties::minDistance(),
+                                   GfttProperties::blockSize(),
+                                   GfttProperties::harrisDetector(),
+                                   GfttProperties::k());
+}
+
+GfttDetector::GfttDetector(const GfttDetector &gfttDetector)
+  : GfttProperties(gfttDetector),
+    KeypointDetector()
+{
+  mGFTT = cv::GFTTDetector::create(GfttProperties::maxFeatures(),
+                                   GfttProperties::qualityLevel(),
+                                   GfttProperties::minDistance(),
+                                   GfttProperties::blockSize(),
+                                   GfttProperties::harrisDetector(),
+                                   GfttProperties::k());
 }
 
 GfttDetector::GfttDetector(int maxFeatures,

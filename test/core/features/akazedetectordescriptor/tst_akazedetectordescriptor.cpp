@@ -21,27 +21,28 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
-  void testDescriptorType_data();
-  void testDescriptorType();
-  void testDescriptorType2_data();
-  void testDescriptorType2();
-  void testDescriptorSize_data();
-  void testDescriptorSize();
-  void testDescriptorChannels_data();
-  void testDescriptorChannels();
-  void testThreshold_data();
-  void testThreshold();
-  void testOctaves_data();
-  void testOctaves();
-  void testOctaveLayers_data();
-  void testOctaveLayers();
-  void testDiffusivity_data();
-  void testDiffusivity();
-  void testDiffusivity2_data();
-  void testDiffusivity2();
-  void testReset();
+  void test_descriptorType_data();
+  void test_descriptorType();
+  void test_descriptorType2_data();
+  void test_descriptorType2();
+  void test_descriptorSize_data();
+  void test_descriptorSize();
+  void test_descriptorChannels_data();
+  void test_descriptorChannels();
+  void test_threshold_data();
+  void test_threshold();
+  void test_octaves_data();
+  void test_octaves();
+  void test_octaveLayers_data();
+  void test_octaveLayers();
+  void test_diffusivity_data();
+  void test_diffusivity();
+  void test_diffusivity2_data();
+  void test_diffusivity2();
+  void test_reset();
 };
 
 TestAkazeDetectorDescriptor::TestAkazeDetectorDescriptor()
@@ -94,6 +95,19 @@ void TestAkazeDetectorDescriptor::test_constructor()
   QCOMPARE("DIFF_WEICKERT", akazeDetectorDescriptor.diffusivity());
 }
 
+void TestAkazeDetectorDescriptor::test_copy_constructor()
+{
+  AkazeDetectorDescriptor akazeDetectorDescriptor("KAZE_UPRIGHT", 32, 4, 0.1, 3, 6, "DIFF_WEICKERT");
+  AkazeDetectorDescriptor copy(akazeDetectorDescriptor);
+  QCOMPARE("KAZE_UPRIGHT", copy.descriptorType());
+  QCOMPARE(32, copy.descriptorSize());
+  QCOMPARE(4, copy.descriptorChannels());
+  QCOMPARE(0.1, copy.threshold());
+  QCOMPARE(3, copy.octaves());
+  QCOMPARE(6, copy.octaveLayers());
+  QCOMPARE("DIFF_WEICKERT", copy.diffusivity());
+}
+
 void TestAkazeDetectorDescriptor::test_type()
 {
   QCOMPARE(AkazeDetectorDescriptor::Type::akaze, this->type());
@@ -104,7 +118,7 @@ void TestAkazeDetectorDescriptor::test_name()
   QCOMPARE("AKAZE", this->name());
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorType_data()
+void TestAkazeDetectorDescriptor::test_descriptorType_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -115,7 +129,7 @@ void TestAkazeDetectorDescriptor::testDescriptorType_data()
   QTest::newRow("MLDB_UPRIGHT") << "MLDB_UPRIGHT" << "MLDB_UPRIGHT";
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorType()
+void TestAkazeDetectorDescriptor::test_descriptorType()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -124,7 +138,7 @@ void TestAkazeDetectorDescriptor::testDescriptorType()
   QCOMPARE(result, this->descriptorType());
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorType2_data()
+void TestAkazeDetectorDescriptor::test_descriptorType2_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<int>("result");
@@ -135,7 +149,7 @@ void TestAkazeDetectorDescriptor::testDescriptorType2_data()
   QTest::newRow("MLDB_UPRIGHT") << "MLDB_UPRIGHT" << 4;
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorType2()
+void TestAkazeDetectorDescriptor::test_descriptorType2()
 {
   QFETCH(QString, value);
   QFETCH(int, result);
@@ -144,7 +158,7 @@ void TestAkazeDetectorDescriptor::testDescriptorType2()
   QCOMPARE(result, this->mAkaze->getDescriptorType());
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorSize_data()
+void TestAkazeDetectorDescriptor::test_descriptorSize_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -154,7 +168,7 @@ void TestAkazeDetectorDescriptor::testDescriptorSize_data()
   QTest::newRow("64") << 64 << 64;
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorSize()
+void TestAkazeDetectorDescriptor::test_descriptorSize()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -164,7 +178,7 @@ void TestAkazeDetectorDescriptor::testDescriptorSize()
   QCOMPARE(result, this->mAkaze->getDescriptorSize());
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorChannels_data()
+void TestAkazeDetectorDescriptor::test_descriptorChannels_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -174,7 +188,7 @@ void TestAkazeDetectorDescriptor::testDescriptorChannels_data()
   QTest::newRow("3") << 3 << 3;
 }
 
-void TestAkazeDetectorDescriptor::testDescriptorChannels()
+void TestAkazeDetectorDescriptor::test_descriptorChannels()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -184,7 +198,7 @@ void TestAkazeDetectorDescriptor::testDescriptorChannels()
   QCOMPARE(result, this->mAkaze->getDescriptorChannels());
 }
 
-void TestAkazeDetectorDescriptor::testThreshold_data()
+void TestAkazeDetectorDescriptor::test_threshold_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -194,7 +208,7 @@ void TestAkazeDetectorDescriptor::testThreshold_data()
   QTest::newRow("20.0") << 20.0 << 20.0;
 }
 
-void TestAkazeDetectorDescriptor::testThreshold()
+void TestAkazeDetectorDescriptor::test_threshold()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -204,7 +218,7 @@ void TestAkazeDetectorDescriptor::testThreshold()
   QCOMPARE(result, this->mAkaze->getThreshold());
 }
 
-void TestAkazeDetectorDescriptor::testOctaves_data()
+void TestAkazeDetectorDescriptor::test_octaves_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -213,7 +227,7 @@ void TestAkazeDetectorDescriptor::testOctaves_data()
   QTest::newRow("8") << 8 << 8;
 }
 
-void TestAkazeDetectorDescriptor::testOctaves()
+void TestAkazeDetectorDescriptor::test_octaves()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -223,7 +237,7 @@ void TestAkazeDetectorDescriptor::testOctaves()
   QCOMPARE(result, mAkaze->getNOctaves());
 }
 
-void TestAkazeDetectorDescriptor::testOctaveLayers_data()
+void TestAkazeDetectorDescriptor::test_octaveLayers_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -232,7 +246,7 @@ void TestAkazeDetectorDescriptor::testOctaveLayers_data()
   QTest::newRow("8") << 8 << 8;
 }
 
-void TestAkazeDetectorDescriptor::testOctaveLayers()
+void TestAkazeDetectorDescriptor::test_octaveLayers()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -242,7 +256,7 @@ void TestAkazeDetectorDescriptor::testOctaveLayers()
   QCOMPARE(result, this->mAkaze->getNOctaveLayers());
 }
 
-void TestAkazeDetectorDescriptor::testDiffusivity_data()
+void TestAkazeDetectorDescriptor::test_diffusivity_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -253,7 +267,7 @@ void TestAkazeDetectorDescriptor::testDiffusivity_data()
   QTest::newRow("DIFF_CHARBONNIER") << "DIFF_CHARBONNIER" << "DIFF_CHARBONNIER";
 }
 
-void TestAkazeDetectorDescriptor::testDiffusivity()
+void TestAkazeDetectorDescriptor::test_diffusivity()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -262,7 +276,7 @@ void TestAkazeDetectorDescriptor::testDiffusivity()
   QCOMPARE(result, this->diffusivity());
 }
 
-void TestAkazeDetectorDescriptor::testDiffusivity2_data()
+void TestAkazeDetectorDescriptor::test_diffusivity2_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<int>("result");
@@ -273,7 +287,7 @@ void TestAkazeDetectorDescriptor::testDiffusivity2_data()
   QTest::newRow("DIFF_CHARBONNIER") << "DIFF_CHARBONNIER" << 3;
 }
 
-void TestAkazeDetectorDescriptor::testDiffusivity2()
+void TestAkazeDetectorDescriptor::test_diffusivity2()
 {
   QFETCH(QString, value);
   QFETCH(int, result);
@@ -282,7 +296,7 @@ void TestAkazeDetectorDescriptor::testDiffusivity2()
   QCOMPARE(result, this->mAkaze->getDiffusivity());
 }
 
-void TestAkazeDetectorDescriptor::testReset()
+void TestAkazeDetectorDescriptor::test_reset()
 {
   this->setDescriptorType("KAZE");
   this->setDescriptorSize(32);

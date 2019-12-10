@@ -4,19 +4,19 @@
 
 #include <QFileInfo>
 
+
 namespace photomatch
 {
-
 
 void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoints, const cv::Mat &descriptors)
 {
   QByteArray ba = fname.toLocal8Bit();
   const char *feat_file = ba.data();
   QString ext = QFileInfo(fname).suffix();
-  int flags = 0;
-  if (ext.compare("xml") == 0) {
+  /*int flags = 0;
+  if (ext.compare("xml", Qt::CaseInsensitive) == 0) {
     flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_XML;
-  } else if (ext.compare("yml") == 0) {
+  } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
     flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_YAML;
   } else if (ext.compare("bin") == 0) {
 
@@ -25,8 +25,9 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
     const char *cext = ba.data();
     msgError("file extension '%s' not valid", cext);
     return;
-  }
-  if (ext.compare("bin") == 0) {
+  }*/
+  if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
+
     TL_TODO("Comprobar la escritura/lectura en ORB.")
     FILE* fp = std::fopen(feat_file, "wb");
     if (fp) {
@@ -59,7 +60,64 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
     } else {
       //msgError("No pudo escribir archivo %s", fname.c_str());
     }
-  } else {
+
+  } else if (ext.compare("txt", Qt::CaseInsensitive) == 0) {
+    
+    int32_t size = static_cast<int32_t>(keyPoints.size());
+    std::ofstream ofs(feat_file, std::ofstream::trunc);
+    if (ofs.is_open()) {
+      
+      int type = descriptors.type();
+
+      ofs << size << " " <<  descriptors.cols << " " << type << std::endl;
+
+      for (int r = 0; r < size; r++) {
+        cv::KeyPoint kp = keyPoints[r];
+        ofs << kp.pt.x << " " << kp.pt.y << " " << kp.size << " " << kp.angle;
+        for (int c = 0; c < descriptors.cols; c++) {
+          
+          switch (type) {
+            case CV_8U:
+              ofs << " " << descriptors.at<uchar>(r,c);
+              break;  
+            case CV_8S:
+              ofs << " "  << descriptors.at<schar>(r,c);
+              break;  
+            case CV_16U: 
+              ofs << " "  << descriptors.at<ushort>(r,c);
+              break; 
+            case CV_16S: 
+              ofs << " "  << descriptors.at<short>(r,c);
+              break; 
+            case CV_32S:
+              ofs << " "  << descriptors.at<int>(r,c);
+              break; 
+            case CV_32F:
+              ofs << " "  << descriptors.at<float>(r,c);
+              break; 
+            case CV_64F:
+              ofs << " "  << descriptors.at<double>(r,c);
+              break; 
+            default:   
+              ofs << " "  << -1;
+              break; 
+          }   
+        }
+        ofs << std::endl;
+      }
+
+      ofs.close();
+    }
+
+  } else if (ext.compare("xml", Qt::CaseInsensitive) == 0 || 
+             ext.compare("yml", Qt::CaseInsensitive) == 0) {
+
+    int flags = 0;
+    if (ext.compare("xml", Qt::CaseInsensitive) == 0) {
+      flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_XML;
+    } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
+      flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_YAML;
+    }
     cv::FileStorage fs(feat_file, flags);
     if (fs.isOpened()) {
       if (!keyPoints.empty()) write(fs, "keypoints", keyPoints);
@@ -68,6 +126,12 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
     } else {
       //msgError("No pudo escribir archivo %s", fname.c_str());
     }
+
+  } else {
+    ba = ext.toLocal8Bit();
+    const char *cext = ba.data();
+    msgError("file extension '%s' not valid", cext);
+    return;
   }
 }
 
@@ -77,7 +141,7 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
   const char *feat_file = ba.data();
   QString ext = QFileInfo(fname).suffix();
   if (ext.isEmpty() == false) {
-    if (ext.compare("bin") == 0) {
+    if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
       if (FILE* fp = std::fopen(feat_file, "rb")) {
         //cabecera
         char h[24];
@@ -111,7 +175,7 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
       } else {
         //msgError("No pudo leer archivo %s", fname.c_str());
       }
-    } else if (ext.compare("xml") == 0 || ext.compare("yml") == 0) {
+    } else if (ext.compare("xml", Qt::CaseInsensitive) == 0 || ext.compare("yml", Qt::CaseInsensitive) == 0) {
 
       cv::FileStorage fs(feat_file, cv::FileStorage::READ);
       if (fs.isOpened()) {

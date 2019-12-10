@@ -121,7 +121,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
   connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
   connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
-  connect(mActionBatch,              SIGNAL(triggered(bool)),   this,   SIGNAL(openBatch()));
+  //connect(mActionBatch,              SIGNAL(triggered(bool)),   this,   SIGNAL(openBatch()));
   connect(mActionToolSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openToolSettings()));
 
   /* Quality Control */
@@ -2026,8 +2026,8 @@ void MainWindowView::init()
   ui->menuTools->addAction(mActionFeatureExtraction);
   ui->menuTools->addAction(mActionFeatureMatching);
   ui->menuTools->addSeparator();
-  ui->menuTools->addAction(mActionBatch);
-  ui->menuTools->addSeparator();
+  //ui->menuTools->addAction(mActionBatch);
+  //ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionToolSettings);
 
   /* Menu Quality Control */

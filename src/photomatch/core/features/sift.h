@@ -23,6 +23,7 @@ class PHOTOMATCH_EXPORT SiftProperties
 public:
 
   SiftProperties();
+  SiftProperties(const SiftProperties &siftProperties);
   ~SiftProperties() override;
 
 // ISift interface
@@ -70,6 +71,7 @@ class PHOTOMATCH_EXPORT SiftDetectorDescriptor
 public:
 
   SiftDetectorDescriptor();
+  SiftDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor);
   SiftDetectorDescriptor(int featuresNumber,
                          int octaveLayers,
                          double contrastThreshold,

@@ -21,6 +21,7 @@ class PHOTOMATCH_EXPORT AgastProperties
 public:
 
   AgastProperties();
+  AgastProperties(const AgastProperties &agast);
   ~AgastProperties() override;
 
 // IAgast interface
@@ -61,8 +62,17 @@ class PHOTOMATCH_EXPORT AgastDetector
 public:
 
   AgastDetector();
+  AgastDetector(const AgastDetector &agastDetector);
   AgastDetector(int threshold, bool nonmaxSuppression, QString detectorType);
   ~AgastDetector() override;
+
+private:
+
+#if CV_VERSION_MAJOR >= 4
+  cv::AgastFeatureDetector::DetectorType convertDetectorType(const QString &detectorType);
+#else
+  int convertDetectorType(const QString &detectorType);
+#endif
 
 // KeypointDetector interface
 

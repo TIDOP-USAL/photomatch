@@ -82,8 +82,16 @@ public:
    */
   virtual QString version() const = 0;
 
+  /*!
+   * \brief Establece la verdad terreno
+   * \param[in] groundTruth Fichero con la verdad terreno
+   */
   virtual void setGroundTruth(const QString &groundTruth) = 0;
 
+  /*!
+   * \brief Fichero con la verdad terreno
+   * \return
+   */
   virtual QString groundTruth() const = 0;
 
   /*!

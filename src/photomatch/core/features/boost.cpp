@@ -14,6 +14,15 @@ BoostProperties::BoostProperties()
 
 }
 
+BoostProperties::BoostProperties(const BoostProperties &boostProperties)
+  : IBoost(),
+    mDescriptorType(boostProperties.mDescriptorType),
+    bUseOrientation(boostProperties.bUseOrientation),
+    mScaleFactor(boostProperties.mScaleFactor)
+{
+
+}
+
 BoostProperties::~BoostProperties()
 {
 
@@ -75,6 +84,13 @@ QString BoostProperties::name() const
 
 BoostDescriptor::BoostDescriptor()
   : BoostProperties(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+BoostDescriptor::BoostDescriptor(const BoostDescriptor &boostDescriptor)
+  : BoostProperties(boostDescriptor),
     DescriptorExtractor()
 {
   update();

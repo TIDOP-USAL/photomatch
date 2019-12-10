@@ -19,6 +19,7 @@ class PHOTOMATCH_EXPORT StarProperties
 public:
 
   StarProperties();
+  StarProperties(const StarProperties &starProperties);
   ~StarProperties() override;
 
 // IStar interface
@@ -65,6 +66,7 @@ class StarDetector
 public:
 
   StarDetector();
+  StarDetector(const StarDetector &starDetector);
   StarDetector(int maxSize,
                int responseThreshold,
                int lineThresholdProjected,

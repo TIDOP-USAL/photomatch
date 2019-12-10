@@ -41,6 +41,7 @@ QStringList ExportFeaturesModel::formats() const
   QStringList formats;
   formats.push_back("OpenCV XML");
   formats.push_back("OpenCV YML");
+  formats.push_back("Plain text");
   return formats;
 }
 
@@ -69,6 +70,8 @@ void ExportFeaturesModel::exportFeatures(const QStringList &features, const QStr
       ext = ".xml";
     } else if (format.compare("OpenCV YML") == 0) {
       ext = ".yml";
+    } else if (format.compare("Plain text") == 0) {
+      ext = ".txt";
     } else {
       /// Formato desconocido
       return;

@@ -21,6 +21,7 @@ class PHOTOMATCH_EXPORT HogProperties
 public:
 
   HogProperties();
+  HogProperties(const HogProperties &hogProperties);
   ~HogProperties() override;
 
 // IHog interface
@@ -69,6 +70,7 @@ class PHOTOMATCH_EXPORT HogDescriptor
 public:
 
   HogDescriptor();
+  HogDescriptor(const HogDescriptor &hogDescriptor);
   HogDescriptor(QSize winSize,
                 QSize blockSize,
                 QSize blockStride,

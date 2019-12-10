@@ -17,6 +17,17 @@ DaisyProperties::DaisyProperties()
     mUseOrientation(false)
 {}
 
+DaisyProperties::DaisyProperties(const DaisyProperties &daisyProperties)
+  : IDaisy(),
+    mRadius(daisyProperties.mRadius),
+    mQRadius(daisyProperties.mQRadius),
+    mQTheta(daisyProperties.mQTheta),
+    mQHist(daisyProperties.mQHist),
+    mNorm(daisyProperties.mNorm),
+    mInterpolation(daisyProperties.mInterpolation),
+    mUseOrientation(daisyProperties.mUseOrientation)
+{}
+
 DaisyProperties::~DaisyProperties()
 {
 
@@ -114,6 +125,13 @@ QString DaisyProperties::name() const
 
 DaisyDescriptor::DaisyDescriptor()
   : DaisyProperties(),
+    DescriptorExtractor()
+{
+  update();
+}
+
+DaisyDescriptor::DaisyDescriptor(const DaisyDescriptor &daisyDescriptor)
+  : DaisyProperties(daisyDescriptor),
     DescriptorExtractor()
 {
   update();

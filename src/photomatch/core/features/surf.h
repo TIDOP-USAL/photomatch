@@ -28,6 +28,7 @@ class PHOTOMATCH_EXPORT SurfProperties
 public:
 
   SurfProperties();
+  SurfProperties(const SurfProperties &surfProperties);
   ~SurfProperties() override;
 
   // ISurf interface
@@ -75,6 +76,7 @@ class PHOTOMATCH_EXPORT SurfDetectorDescriptor
 public:
 
   SurfDetectorDescriptor();
+  SurfDetectorDescriptor(const SurfDetectorDescriptor &surfDetectorDescriptor);
   SurfDetectorDescriptor(double hessianThreshold,
                          int octaves,
                          int octaveLayers,
@@ -134,6 +136,7 @@ class PHOTOMATCH_EXPORT SurfCudaDetectorDescriptor
 public:
 
   SurfCudaDetectorDescriptor();
+  SurfCudaDetectorDescriptor(const SurfCudaDetectorDescriptor &surfDetectorDescriptor);
   SurfCudaDetectorDescriptor(double hessianThreshold,
                              int octaves,
                              int octaveLayers,

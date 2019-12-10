@@ -15,6 +15,14 @@ AgastProperties::AgastProperties()
 {
 }
 
+AgastProperties::AgastProperties(const AgastProperties &agast)
+  : IAgast(),
+    mThreshold(agast.mThreshold),
+    mNonmaxSuppression(agast.nonmaxSuppression()),
+    mDetectorType(agast.mDetectorType)
+{
+}
+
 AgastProperties::~AgastProperties()
 {
 }
@@ -74,23 +82,18 @@ AgastDetector::AgastDetector()
   : AgastProperties(),
     KeypointDetector()
 {
-#if CV_VERSION_MAJOR >= 4
-  cv::AgastFeatureDetector::DetectorType detector_type = cv::AgastFeatureDetector::DetectorType::OAST_9_16;
-#else
-  int detector_type = cv::AgastFeatureDetector::OAST_9_16;
-#endif
-  QString detectorType = AgastProperties::detectorType();
-  if (detectorType.compare("AGAST_5_8") == 0 ) {
-    detector_type = cv::AgastFeatureDetector::AGAST_5_8;
-  } else if (detectorType.compare("AGAST_7_12d") == 0){
-    detector_type = cv::AgastFeatureDetector::AGAST_7_12d;
-  } else if (detectorType.compare("AGAST_7_12s") == 0){
-    detector_type = cv::AgastFeatureDetector::AGAST_7_12s;
-  }
-
   mAgast = cv::AgastFeatureDetector::create(AgastProperties::threshold(),
                                             AgastProperties::nonmaxSuppression(),
-                                            detector_type);
+                                            convertDetectorType(AgastProperties::detectorType()));
+}
+
+AgastDetector::AgastDetector(const AgastDetector &agastDetector)
+  : AgastProperties(agastDetector),
+    KeypointDetector()
+{
+  mAgast = cv::AgastFeatureDetector::create(AgastProperties::threshold(),
+                                            AgastProperties::nonmaxSuppression(),
+                                            convertDetectorType(AgastProperties::detectorType()));
 }
 
 AgastDetector::AgastDetector(int threshold, bool nonmaxSuppression, QString detectorType)
@@ -103,10 +106,40 @@ AgastDetector::AgastDetector(int threshold, bool nonmaxSuppression, QString dete
   setDetectorType(detectorType);
 }
 
+
+
 AgastDetector::~AgastDetector()
 {
 
 }
+
+#if CV_VERSION_MAJOR >= 4
+cv::AgastFeatureDetector::DetectorType AgastDetector::convertDetectorType(const QString &detectorType)
+{
+  cv::AgastFeatureDetector::DetectorType detector_type = cv::AgastFeatureDetector::DetectorType::OAST_9_16;
+  if (detectorType.compare("AGAST_5_8") == 0 ) {
+    detector_type = cv::AgastFeatureDetector::AGAST_5_8;
+  } else if (detectorType.compare("AGAST_7_12d") == 0){
+    detector_type = cv::AgastFeatureDetector::AGAST_7_12d;
+  } else if (detectorType.compare("AGAST_7_12s") == 0){
+    detector_type = cv::AgastFeatureDetector::AGAST_7_12s;
+  }
+  return detector_type;
+}
+#else
+int AgastDetector::convertDetectorType(const QString &detectorType)
+{
+  int detector_type = cv::AgastFeatureDetector::OAST_9_16;
+  if (detectorType.compare("AGAST_5_8") == 0 ) {
+    detector_type = cv::AgastFeatureDetector::AGAST_5_8;
+  } else if (detectorType.compare("AGAST_7_12d") == 0){
+    detector_type = cv::AgastFeatureDetector::AGAST_7_12d;
+  } else if (detectorType.compare("AGAST_7_12s") == 0){
+    detector_type = cv::AgastFeatureDetector::AGAST_7_12s;
+  }
+  return detector_type;
+}
+#endif
 
 bool AgastDetector::detect(const cv::Mat &img,
                            std::vector<cv::KeyPoint> &keyPoints,
@@ -138,19 +171,7 @@ void AgastDetector::setNonmaxSuppression(bool nonmaxSuppression)
 void AgastDetector::setDetectorType(const QString &detectorType)
 {
   AgastProperties::setDetectorType(detectorType);
-#if CV_VERSION_MAJOR >= 4
-  cv::AgastFeatureDetector::DetectorType detector_type = cv::AgastFeatureDetector::DetectorType::OAST_9_16;
-#else
-  int detector_type = cv::AgastFeatureDetector::OAST_9_16;
-#endif
-  if (detectorType.compare("AGAST_5_8") == 0 ) {
-    detector_type = cv::AgastFeatureDetector::AGAST_5_8;
-  } else if (detectorType.compare("AGAST_7_12d") == 0){
-    detector_type = cv::AgastFeatureDetector::AGAST_7_12d;
-  } else if (detectorType.compare("AGAST_7_12s") == 0){
-    detector_type = cv::AgastFeatureDetector::AGAST_7_12s;
-  }
-  mAgast->setType(detector_type);
+  mAgast->setType(convertDetectorType(AgastProperties::detectorType()));
 }
 
 void AgastDetector::reset()
@@ -159,7 +180,7 @@ void AgastDetector::reset()
 
   mAgast->setThreshold(AgastProperties::threshold());
   mAgast->setNonmaxSuppression(AgastProperties::nonmaxSuppression());
-  setDetectorType(AgastProperties::detectorType());
+  mAgast->setType(convertDetectorType(AgastProperties::detectorType()));
 }
 
 

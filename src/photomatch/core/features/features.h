@@ -115,7 +115,16 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief Agast Interface
+ * AGAST: Adaptive and Generic Corner Detection Based on the Accelerated Segment Test
+ *
+ * Mair E., Hager G.D., Burschka D., Suppa M., Hirzinger G. (2010) Adaptive and Generic
+ * Corner Detection Based on the Accelerated Segment Test. In: Daniilidis K., Maragos P.,
+ * Paragios N. (eds) Computer Vision – ECCV 2010. ECCV 2010.
+ * ecture Notes in Computer Science, vol 6312. Springer, Berlin, Heidelberg
+ * https://mediatum.ub.tum.de/doc/1287456/1287456.pdf
+ */
 class PHOTOMATCH_EXPORT IAgast
   : public Feature
 {
@@ -183,7 +192,9 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief The IAkaze class
+ */
 class PHOTOMATCH_EXPORT IAkaze
   : public Feature
 {
@@ -282,7 +293,9 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief The Boost class
+ */
 class PHOTOMATCH_EXPORT IBoost
   : public Feature
 {
@@ -292,35 +305,43 @@ public:
   IBoost() : Feature(Feature::Type::boost){}
   virtual ~IBoost() = default;
 
+  /*!
+   * \brief Type of descriptor used
+   * Available types are BINBOOST_256 (default), BGM, BGM_HARD,
+   * BGM_BILINEAR, LBGM, BINBOOST_64, BINBOOST_128, BINBOOST_256
+   * \return Descriptor type
+   */
   virtual QString descriptorType() const = 0;
 
   /*!
-   * \brief useOrientation
-   * \return
+   * \brief Sample patterns using keypoints orientation
+   * \return true if use keypoints orientation
    */
   virtual bool useOrientation() const = 0;
 
   /*!
-   * \brief scaleFactor
-   * \return
+   * \brief Scale factor for adjust the sampling window of detected keypoints
+   * \return Scale factor
    */
   virtual double scaleFactor() const = 0;
 
   /*!
-   * \brief set Descriptor Type
-   * \param[in] descriptorType
+   * \brief Set the type of descriptor to use
+   * Available types are BINBOOST_256 (default), BGM, BGM_HARD,
+   * BGM_BILINEAR, LBGM, BINBOOST_64, BINBOOST_128, BINBOOST_256
+   * \param[in] descriptorType Type of descriptor to use.
    */
   virtual void setDescriptorType(const QString &descriptorType) = 0;
 
   /*!
-   * \brief setUseOrientation
-   * \param[in] useOrientation
+   * \brief Sample patterns using keypoints orientation
+   * \param[in] useOrientation true for use keypoints orientation
    */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
   /*!
-   * \brief setScaleFactor
-   * \param[in] scaleFactor
+   * \brief Adjust the sampling window of detected keypoints
+   * \param[in] scaleFactor Scale factor
    */
   virtual void setScaleFactor(double scaleFactor) = 0;
 };
@@ -355,20 +376,20 @@ public:
   virtual QString bytes() const = 0;
 
   /*!
-   * \brief useOrientation
-   * \return
+   * \brief Sample patterns using keypoints orientation
+   * \return true if use keypoints orientation
    */
   virtual bool useOrientation() const = 0;
 
   /*!
-   * \brief Set the legth of the descriptor in bytes
-   * \param[in] bytes
+   * \brief Set the length of the descriptor in bytes
+   * \param[in] bytes Descriptor length
    */
   virtual void setBytes(const QString &bytes) = 0;
 
   /*!
-   * \brief setUseOrientation
-   * \param[in] useOrientation
+   * \brief Sample patterns using keypoints orientation
+   * \param[in] useOrientation true for use keypoints orientation
    */
   virtual void setUseOrientation(bool useOrientation) = 0;
 
@@ -557,7 +578,9 @@ public:
 
 /*!
  * \brief Interface for FAST class
- *
+ * Rosten E., Drummond T. (2006) Machine Learning for High-Speed Corner Detection.
+ * In: Leonardis A., Bischof H., Pinz A. (eds) Computer Vision – ECCV 2006. ECCV 2006.
+ * Lecture Notes in Computer Science, vol 3951. Springer, Berlin, Heidelberg
  */
 class PHOTOMATCH_EXPORT IFast
   : public Feature
@@ -1035,6 +1058,7 @@ public:
   virtual double scaleFactor() const = 0;
   virtual int levelsNumber() const = 0;
   virtual int edgeThreshold() const = 0;
+  virtual int firstLevel() const = 0;
   virtual int wta_k() const = 0;
   virtual QString scoreType() const = 0;
   virtual int patchSize() const = 0;
@@ -1044,6 +1068,7 @@ public:
   virtual void setFeaturesNumber(int featuresNumber) = 0;
   virtual void setLevelsNumber(int levelsNumber) = 0;
   virtual void setEdgeThreshold(int edgeThreshold) = 0;
+  virtual void setFirstLevel (int firstLevel) = 0;
   virtual void setWTA_K(int WTA_K) = 0;
   virtual void setScoreType(const QString &scoreType) = 0;
   virtual void setPatchSize(int patchSize) = 0;
@@ -1165,19 +1190,19 @@ public:
 
   /*!
    * \brief Threshold for hessian keypoint detector used in SURF
-   * \return
+   * \return Threshold
    */
   virtual double hessianThreshold() const = 0;
 
   /*!
    * \brief Threshold for hessian keypoint detector used in SURF
-   * \param[in] hessianThreshold
+   * \param[in] hessianThreshold Threshold for hessian keypoint detector
    */
   virtual void setHessianThreshold(double hessianThreshold) = 0;
 
   /*!
    * \brief Number of pyramid octaves the keypoint detector will use.
-   * \return
+   * \return Number of octaves
    */
   virtual int octaves() const = 0;
 

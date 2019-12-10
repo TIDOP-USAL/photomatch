@@ -19,6 +19,7 @@ class PHOTOMATCH_EXPORT BriefProperties
 public:
 
   BriefProperties();
+  BriefProperties(const BriefProperties &briefProperties);
   ~BriefProperties() override;
 
 // IBrief interface
@@ -55,6 +56,7 @@ class PHOTOMATCH_EXPORT BriefDescriptor
 public:
 
   BriefDescriptor();
+  BriefDescriptor(const BriefDescriptor &briefDescriptor);
   BriefDescriptor(QString bytes,
                   bool useOrientation);
 

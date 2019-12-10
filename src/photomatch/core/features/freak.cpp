@@ -15,6 +15,14 @@ FreakProperties::FreakProperties()
     mOctaves(4)
 {}
 
+FreakProperties::FreakProperties(const FreakProperties &freakProperties)
+  : IFreak(),
+    mOrientationNormalized(freakProperties.mOrientationNormalized),
+    mScaleNormalized(freakProperties.mScaleNormalized),
+    mPatternScale(freakProperties.mPatternScale),
+    mOctaves(freakProperties.mOctaves)
+{}
+
 FreakProperties::~FreakProperties()
 {
 
@@ -83,6 +91,14 @@ FreakDescriptor::FreakDescriptor()
 {
   update();
 }
+
+FreakDescriptor::FreakDescriptor(const FreakDescriptor &freakDescriptor)
+  : FreakProperties(freakDescriptor),
+    DescriptorExtractor()
+{
+  update();
+}
+
 
 FreakDescriptor::FreakDescriptor(bool orientationNormalized,
                                  bool scaleNormalized,

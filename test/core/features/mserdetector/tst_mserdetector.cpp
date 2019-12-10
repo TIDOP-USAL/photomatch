@@ -21,6 +21,7 @@ private slots:
   void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
+  void test_copy_constructor();
   void test_type();
   void test_name();
   void test_delta_data();
@@ -99,6 +100,21 @@ void TestMserDetector::test_constructor()
   QCOMPARE(1.1, mserDetector.areaThreshold());
   QCOMPARE(0.01, mserDetector.minMargin());
   QCOMPARE(6, mserDetector.edgeBlurSize());
+}
+
+void TestMserDetector::test_copy_constructor()
+{
+  MserDetector mserDetector(10, 50, 10000, 0.5, .3, 150, 1.1, 0.01, 6);
+  MserDetector c(mserDetector);
+  QCOMPARE(10, c.delta());
+  QCOMPARE(50, c.minArea());
+  QCOMPARE(10000, c.maxArea());
+  QCOMPARE(0.5, c.maxVariation());
+  QCOMPARE(.3, c.minDiversity());
+  QCOMPARE(150, c.maxEvolution());
+  QCOMPARE(1.1, c.areaThreshold());
+  QCOMPARE(0.01, c.minMargin());
+  QCOMPARE(6, c.edgeBlurSize());
 }
 
 void TestMserDetector::test_type()
