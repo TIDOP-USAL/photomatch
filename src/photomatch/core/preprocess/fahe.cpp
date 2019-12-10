@@ -16,6 +16,12 @@ FaheProperties::FaheProperties()
 {
 }
 
+FaheProperties::FaheProperties(const FaheProperties &faheProperties)
+  : IFahe(),
+    mBlockSize(faheProperties.mBlockSize)
+{
+}
+
 QSize FaheProperties::blockSize() const
 {
   return mBlockSize;
@@ -42,6 +48,12 @@ QString FaheProperties::name() const
 
 FahePreprocess::FahePreprocess()
   : FaheProperties(),
+    ImageProcess()
+{
+}
+
+FahePreprocess::FahePreprocess(const FahePreprocess &fahePreprocess)
+  : FaheProperties(fahePreprocess),
     ImageProcess()
 {
 }

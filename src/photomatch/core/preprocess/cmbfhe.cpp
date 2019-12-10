@@ -15,6 +15,11 @@ CmbfheProperties::CmbfheProperties()
     mBlockSize(11,11)
 {}
 
+CmbfheProperties::CmbfheProperties(const CmbfheProperties &cmbfheProperties)
+  : ICmbfhe(),
+    mBlockSize(cmbfheProperties.blockSize())
+{}
+
 QSize CmbfheProperties::blockSize() const
 {
   return mBlockSize;
@@ -41,6 +46,12 @@ QString CmbfheProperties::name() const
 
 CmbfhePreprocess::CmbfhePreprocess()
   : CmbfheProperties(),
+    ImageProcess()
+{
+}
+
+CmbfhePreprocess::CmbfhePreprocess(const CmbfhePreprocess &cmbfhePreprocess)
+  : CmbfheProperties(cmbfhePreprocess),
     ImageProcess()
 {
 }

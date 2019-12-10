@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void testThreshold_data();
   void testThreshold();
@@ -57,12 +57,13 @@ void TestAgastWidget::cleanupTestCase()
 
 }
 
-void TestAgastWidget::testDefaultConstructor()
+void TestAgastWidget::test_constructor()
 {
   /// Check default values
-  QCOMPARE(10, mAgastWidget->threshold());
-  QCOMPARE("OAST_9_16", mAgastWidget->detectorType());
-  QCOMPARE(true, mAgastWidget->nonmaxSuppression());
+  AgastWidget agastWidget;
+  QCOMPARE(10, agastWidget.threshold());
+  QCOMPARE("OAST_9_16", agastWidget.detectorType());
+  QCOMPARE(true, agastWidget.nonmaxSuppression());
 }
 
 void TestAgastWidget::test_windowTitle()

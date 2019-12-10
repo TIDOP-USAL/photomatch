@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -44,7 +44,7 @@ TestNoshp::~TestNoshp()
   }
 }
 
-void TestNoshp::testDefaultConstructor()
+void TestNoshp::test_constructors()
 {
   NoshpPreprocess noshpPreprocess;
   QCOMPARE(QSize(127, 127), noshpPreprocess.blockSize());

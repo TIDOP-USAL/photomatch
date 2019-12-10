@@ -19,8 +19,11 @@ namespace photomatch
 class PHOTOMATCH_EXPORT CmbfheProperties
   : public ICmbfhe
 {
+
 public:
+
   CmbfheProperties();
+  CmbfheProperties(const CmbfheProperties &cmbfheProperties);
   ~CmbfheProperties() override {}
 
 // ICmbfheProperties interface
@@ -54,6 +57,7 @@ class PHOTOMATCH_EXPORT CmbfhePreprocess
 public:
 
   CmbfhePreprocess();
+  CmbfhePreprocess(const CmbfhePreprocess &cmbfhePreprocess);
   CmbfhePreprocess(const QSize &blockSize);
   ~CmbfhePreprocess() override;
 

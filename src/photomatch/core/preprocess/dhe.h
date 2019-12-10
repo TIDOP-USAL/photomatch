@@ -20,6 +20,7 @@ class PHOTOMATCH_EXPORT DheProperties
 public:
 
   DheProperties();
+  DheProperties(const DheProperties &dheProperties);
   ~DheProperties() override = default;
 
 // IDhe interface
@@ -53,6 +54,7 @@ class PHOTOMATCH_EXPORT DhePreprocess
 public:
 
   DhePreprocess();
+  DhePreprocess(const DhePreprocess &dhePreprocess);
   DhePreprocess(int x);
   ~DhePreprocess() override;
 

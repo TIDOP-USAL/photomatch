@@ -219,16 +219,6 @@ public:
   virtual IRobustMatcherRefinement *robustMatcherRefinement() = 0;
   virtual const IRobustMatcherRefinement *robustMatcherRefinement() const = 0;
 
-//  /// Styles
-//  virtual QPen *penKeypoints() = 0;
-//  virtual const QPen *penKeypoints() const = 0;
-//  virtual int sizeKeypoints() const = 0;
-//  virtual QPen *penMatchesPoints() = 0;
-//  virtual const QPen *penMatchesPoints() const = 0;
-//  virtual int sizeMatchesPoints() const = 0;
-//  virtual QPen *penMatchesLines() = 0;
-//  virtual const QPen *penMatchesLines() const = 0;
-
   virtual QString keypointsViewerBGColor() const = 0;
   virtual void setKeypointsViewerBGColor(const QString &color) = 0;
   virtual int keypointsViewerMarkerType() const = 0;
@@ -429,16 +419,6 @@ public:
   IRobustMatcherRefinement *robustMatcherRefinement() override;
   const IRobustMatcherRefinement *robustMatcherRefinement() const override;
 
-//  QPen *penKeypoints() override;
-//  const QPen *penKeypoints() const override;
-//  int sizeKeypoints() const override;
-//  QPen *penMatchesPoints() override;
-//  const QPen *penMatchesPoints() const override;
-//  int sizeMatchesPoints() const override;
-//  QPen *penMatchesLines() override;
-//  const QPen *penMatchesLines() const override;
-
-
   QString keypointsViewerBGColor() const override;
   void setKeypointsViewerBGColor(const QString &color) override;
   int keypointsViewerMarkerType() const override;
@@ -565,11 +545,6 @@ protected:
   int mGroundTruthEditorSelectMarkerWidth;
   QString mGroundTruthEditorSelectMarkerColor;
 
-//  QPen *mPenKeypoints;
-//  int mSizeKeypoints;
-//  QPen *mPenMatchesPoints;
-//  int mSizeMatchesPoints;
-//  QPen *mPenMatchesLines;
 };
 
 

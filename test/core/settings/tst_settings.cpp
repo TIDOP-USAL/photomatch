@@ -1,6 +1,40 @@
 #include <QtTest>
 
 #include "photomatch/core/settings.h"
+#include "photomatch/core/features/agast.h"
+#include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/boost.h"
+#include "photomatch/core/features/brief.h"
+#include "photomatch/core/features/brisk.h"
+#include "photomatch/core/features/daisy.h"
+#include "photomatch/core/features/fast.h"
+#include "photomatch/core/features/freak.h"
+#include "photomatch/core/features/gftt.h"
+#include "photomatch/core/features/hog.h"
+#include "photomatch/core/features/latch.h"
+#include "photomatch/core/features/lucid.h"
+#include "photomatch/core/features/msd.h"
+#include "photomatch/core/features/mser.h"
+#include "photomatch/core/features/kaze.h"
+#include "photomatch/core/features/orb.h"
+#include "photomatch/core/features/sift.h"
+#include "photomatch/core/features/star.h"
+#include "photomatch/core/features/surf.h"
+#include "photomatch/core/features/vgg.h"
+#include "photomatch/core/features/matcher.h"
+
+#include "photomatch/core/preprocess/acebsf.h"
+#include "photomatch/core/preprocess/clahe.h"
+#include "photomatch/core/preprocess/cmbfhe.h"
+#include "photomatch/core/preprocess/dhe.h"
+#include "photomatch/core/preprocess/fahe.h"
+#include "photomatch/core/preprocess/hmclahe.h"
+#include "photomatch/core/preprocess/lce_bsescs.h"
+#include "photomatch/core/preprocess/msrcp.h"
+#include "photomatch/core/preprocess/noshp.h"
+#include "photomatch/core/preprocess/pohe.h"
+#include "photomatch/core/preprocess/rswhe.h"
+#include "photomatch/core/preprocess/wallis.h"
 
 using namespace photomatch;
 
@@ -14,18 +48,25 @@ public:
 
 private slots:
 
-  void test_defaultValues();
+  void test_constructors();
   void test_language_data();
   void test_language();
 
   void test_historyMaxSize_data();
   void test_historyMaxSize();
 
+  void test_imageViewerBGcolor_data();
+  void test_imageViewerBGcolor();
+
   void test_keypointsFormat_data();
   void test_keypointsFormat();
 
   void test_matchesFormat_data();
   void test_matchesFormat();
+
+  void test_useCuda();
+
+  void test_matchMethod();
 
   void test_keypointsViewerBGColor_data();
   void test_keypointsViewerBGColor();
@@ -89,7 +130,7 @@ TestSettings::~TestSettings()
 
 }
 
-void TestSettings::test_defaultValues()
+void TestSettings::test_constructors()
 {
   Settings settings;
   QCOMPARE("en", settings.language());
@@ -99,6 +140,7 @@ void TestSettings::test_defaultValues()
   QCOMPARE(QString("XML"), settings.keypointsFormat());
   QCOMPARE(QString("XML"), settings.matchesFormat());
   QCOMPARE(false, settings.useCuda());
+  QCOMPARE(QString("Flann Based Matching"), settings.matchMethod());
 
   QCOMPARE("#dcdcdc", settings.keypointsViewerBGColor());
   QCOMPARE(0, settings.keypointsViewerMarkerType());
@@ -163,6 +205,25 @@ void TestSettings::test_historyMaxSize()
   QCOMPARE(result, mSettings->historyMaxSize());
 }
 
+void TestSettings::test_imageViewerBGcolor_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("#FF00FF") << "#FF00FF" << "#FF00FF";
+  QTest::newRow("#253612") << "#253612" << "#253612";
+  QTest::newRow("#205060") << "#205060" << "#205060";
+}
+
+void TestSettings::test_imageViewerBGcolor()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mSettings->setImageViewerBGcolor(value);
+  QCOMPARE(result, mSettings->imageViewerBGcolor());
+}
+
 void TestSettings::test_keypointsFormat_data()
 {
   QTest::addColumn<QString>("value");
@@ -199,6 +260,24 @@ void TestSettings::test_matchesFormat()
 
   mSettings->setMatchesFormat(value);
   QCOMPARE(result, mSettings->matchesFormat());
+}
+
+void TestSettings::test_useCuda()
+{
+  mSettings->setUseCuda(true);
+  QCOMPARE(true, mSettings->useCuda());
+
+  mSettings->setUseCuda(false);
+  QCOMPARE(false, mSettings->useCuda());
+}
+
+void TestSettings::test_matchMethod()
+{
+  mSettings->setMatchMethod("Flann Based Matching");
+  QCOMPARE(QString("Flann Based Matching"), mSettings->matchMethod());
+
+  mSettings->setMatchMethod("Brute Force Matching");
+  QCOMPARE(QString("Brute Force Matching"), mSettings->matchMethod());
 }
 
 void TestSettings::test_keypointsViewerBGColor_data()
@@ -642,6 +721,18 @@ void TestSettings::test_reset()
   mSettings->setGroundTruthEditorSelectMarkerWidth(4);
   mSettings->setGroundTruthEditorSelectMarkerColor("#ffffff");
 
+  mSettings->acebsf()->setL(0.05);
+  mSettings->clahe()->setClipLimit(30.);
+  mSettings->cmbfhe()->setBlockSize(QSize(7,7));
+  mSettings->dhe()->setX(2);
+  mSettings->fahe()->setBlockSize(QSize(11,11));
+  mSettings->hmclahe()->setL(0.5);
+  mSettings->lceBsescs()->setBlockSize(QSize(33, 33));
+  mSettings->msrcp()->setMidScale(110.);
+  mSettings->noshp()->setBlockSize(QSize(111, 111));
+  mSettings->pohe()->setBlockSize(QSize(111, 111));
+  mSettings->rswhe()->setHistogramDivisions(4);
+  mSettings->wallis()->setContrast(0.5);
 
   mSettings->reset();
 
@@ -675,6 +766,21 @@ void TestSettings::test_reset()
   QCOMPARE("#00aa00", mSettings->groundTruthEditorMarkerColor());
   QCOMPARE(2, mSettings->groundTruthEditorSelectMarkerWidth());
   QCOMPARE("#e5097e", mSettings->groundTruthEditorSelectMarkerColor());
+
+  QCOMPARE(0.03, mSettings->acebsf()->l());
+  QCOMPARE(40., mSettings->clahe()->clipLimit());
+  QCOMPARE(QSize(11,11), mSettings->cmbfhe()->blockSize());
+  QCOMPARE(1, mSettings->dhe()->x());
+  QCOMPARE(QSize(11,11), mSettings->fahe()->blockSize());
+  QCOMPARE(0.03, mSettings->hmclahe()->l());
+  QCOMPARE(QSize(33, 33), mSettings->lceBsescs()->blockSize());
+  QCOMPARE(100., mSettings->msrcp()->midScale());
+  QCOMPARE(QSize(127, 127), mSettings->noshp()->blockSize());
+  QCOMPARE(QSize(127, 127), mSettings->pohe()->blockSize());
+  QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
+  QCOMPARE(1.0, mSettings->wallis()->contrast());
+
+
 }
 
 QTEST_APPLESS_MAIN(TestSettings)

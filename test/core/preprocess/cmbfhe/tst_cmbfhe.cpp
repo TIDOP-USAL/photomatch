@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -44,11 +44,16 @@ TestCmbfhe::~TestCmbfhe()
   }
 }
 
-void TestCmbfhe::testDefaultConstructor()
+void TestCmbfhe::test_constructors()
 {
   CmbfhePreprocess cmbfhePreprocess;
+  QCOMPARE(QSize(11, 11), cmbfhePreprocess.blockSize());
 
+  CmbfhePreprocess cmbfhePreprocess2(QSize(6, 6));
+  QCOMPARE(QSize(6, 6), cmbfhePreprocess2.blockSize());
 
+  CmbfhePreprocess copy(cmbfhePreprocess2);
+  QCOMPARE(QSize(6, 6), copy.blockSize());
 }
 
 void TestCmbfhe::test_type()

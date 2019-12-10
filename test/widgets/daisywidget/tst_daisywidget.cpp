@@ -17,7 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_radius_data();
   void test_radius();
@@ -64,16 +64,17 @@ void TestDaisyWidget::cleanupTestCase()
 
 }
 
-void TestDaisyWidget::testDefaultConstructor()
+void TestDaisyWidget::test_constructor()
 {
   /// Check default values
-  QCOMPARE(15., mDaisyWidget->radius());
-  QCOMPARE(3, mDaisyWidget->qRadius());
-  QCOMPARE(8, mDaisyWidget->qTheta());
-  QCOMPARE(8, mDaisyWidget->qHist());
-  QCOMPARE("NRM_NONE", mDaisyWidget->norm());
-  QCOMPARE(true, mDaisyWidget->interpolation());
-  QCOMPARE(false, mDaisyWidget->useOrientation());
+  DaisyWidget daisyWidget;
+  QCOMPARE(15., daisyWidget.radius());
+  QCOMPARE(3, daisyWidget.qRadius());
+  QCOMPARE(8, daisyWidget.qTheta());
+  QCOMPARE(8, daisyWidget.qHist());
+  QCOMPARE("NRM_NONE", daisyWidget.norm());
+  QCOMPARE(true, daisyWidget.interpolation());
+  QCOMPARE(false, daisyWidget.useOrientation());
 }
 
 void TestDaisyWidget::test_windowTitle()

@@ -16,7 +16,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_bytes_data();
   void test_bytes();
@@ -43,7 +43,7 @@ TestBriefWidget::~TestBriefWidget()
   }
 }
 
-void TestBriefWidget::testDefaultConstructor()
+void TestBriefWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE("32", mBriefWidget->bytes());

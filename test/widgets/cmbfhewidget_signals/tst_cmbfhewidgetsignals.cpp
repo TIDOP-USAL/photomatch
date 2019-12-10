@@ -38,7 +38,6 @@ void TestCmbfheWidgetSignals::testTilesGridSizeChange()
   QSignalSpy spy_blockSizeChange(this, &CmbfheWidget::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
-  //this->mTilesGridY->setValue(10);
 
   QCOMPARE(spy_blockSizeChange.count(), 1);
 

@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -44,7 +44,7 @@ TestFahe::~TestFahe()
   }
 }
 
-void TestFahe::testDefaultConstructor()
+void TestFahe::test_constructors()
 {
   FahePreprocess fahePreprocess;
   QCOMPARE(QSize(11, 11), fahePreprocess.blockSize());

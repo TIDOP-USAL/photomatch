@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_clipLimit_data();
   void test_clipLimit();
@@ -55,7 +55,7 @@ void TestClaheWidget::cleanupTestCase()
 
 }
 
-void TestClaheWidget::testDefaultConstructor()
+void TestClaheWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(40.0, mClaheWidget->clipLimit());

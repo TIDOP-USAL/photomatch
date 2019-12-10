@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void testConstructors();
   void test_type();
   void test_name();
   void test_blockSize_data();
@@ -50,7 +50,7 @@ TestAcebsf::~TestAcebsf()
   }
 }
 
-void TestAcebsf::testDefaultConstructor()
+void TestAcebsf::testConstructors()
 {
   AcebsfPreprocess acebsfPreprocess;
   QCOMPARE(QSize(8, 8), acebsfPreprocess.blockSize());

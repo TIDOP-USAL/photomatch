@@ -16,6 +16,12 @@ DheProperties::DheProperties()
 {
 }
 
+DheProperties::DheProperties(const DheProperties &dheProperties)
+  : IDhe(),
+    mX(dheProperties.mX)
+{
+}
+
 int DheProperties::x() const
 {
   return mX;
@@ -42,6 +48,12 @@ QString DheProperties::name() const
 
 DhePreprocess::DhePreprocess()
   : DheProperties(),
+    ImageProcess()
+{
+}
+
+DhePreprocess::DhePreprocess(const DhePreprocess &dhePreprocess)
+  : DheProperties(dhePreprocess),
     ImageProcess()
 {
 }

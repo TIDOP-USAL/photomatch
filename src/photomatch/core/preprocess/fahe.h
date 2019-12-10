@@ -23,6 +23,7 @@ class PHOTOMATCH_EXPORT FaheProperties
 public:
 
   FaheProperties();
+  FaheProperties(const FaheProperties &faheProperties);
   ~FaheProperties() override = default;
 
   virtual QSize blockSize() const override;
@@ -53,6 +54,7 @@ class PHOTOMATCH_EXPORT FahePreprocess
 public:
 
   FahePreprocess();
+  FahePreprocess(const FahePreprocess &fahePreprocess);
   FahePreprocess(const QSize &blockSize);
   ~FahePreprocess() override;
 

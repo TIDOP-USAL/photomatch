@@ -17,6 +17,13 @@ ClaheProperties::ClaheProperties()
 {
 }
 
+ClaheProperties::ClaheProperties(const ClaheProperties &claheProperties)
+  : IClahe(),
+    mClipLimit(claheProperties.mClipLimit),
+    mTilesGridSize(claheProperties.mTilesGridSize)
+{
+}
+
 double ClaheProperties::clipLimit() const
 {
   return mClipLimit;
@@ -54,15 +61,24 @@ QString ClaheProperties::name() const
 
 ClahePreprocess::ClahePreprocess()
   : ClaheProperties(),
-    ImageProcess(),
-    mCvClahe(cv::createCLAHE())
+    ImageProcess()
 {
-  mCvClahe->setClipLimit(ClaheProperties::clipLimit());
-  mCvClahe->setTilesGridSize(cv::Size(ClaheProperties::tilesGridSize().width(),
-                                      ClaheProperties::tilesGridSize().height()));
+  cv::Size size(ClaheProperties::tilesGridSize().width(),
+                ClaheProperties::tilesGridSize().height());
+  mCvClahe = cv::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
-ClahePreprocess::ClahePreprocess(double clipLimit, const QSize &tilesGridSize)
+ClahePreprocess::ClahePreprocess(const ClahePreprocess &clahePreprocess)
+  : ClaheProperties(clahePreprocess),
+    ImageProcess()
+{
+  cv::Size size(ClaheProperties::tilesGridSize().width(),
+                ClaheProperties::tilesGridSize().height());
+  mCvClahe = cv::createCLAHE(ClaheProperties::clipLimit(), size);
+}
+
+ClahePreprocess::ClahePreprocess(double clipLimit,
+                                 const QSize &tilesGridSize)
   : ClaheProperties(),
     ImageProcess(),
     mCvClahe(cv::createCLAHE())
@@ -79,9 +95,10 @@ ClahePreprocess::~ClahePreprocess()
 void ClahePreprocess::reset()
 {
   ClaheProperties::reset();
+  cv::Size size(ClaheProperties::tilesGridSize().width(),
+                ClaheProperties::tilesGridSize().height());
   mCvClahe->setClipLimit(ClaheProperties::clipLimit());
-  mCvClahe->setTilesGridSize(cv::Size(ClaheProperties::tilesGridSize().width(),
-                                      ClaheProperties::tilesGridSize().height()));
+  mCvClahe->setTilesGridSize(size);
 }
 
 void ClahePreprocess::setClipLimit(double clipLimit)
@@ -126,12 +143,20 @@ bool ClahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 
 ClahePreprocessCuda::ClahePreprocessCuda()
   : ClaheProperties(),
-    ImageProcess(),
-    mCvClahe(cv::cuda::createCLAHE())
+    ImageProcess()
 {
-  mCvClahe->setClipLimit(ClaheProperties::clipLimit());
-  mCvClahe->setTilesGridSize(cv::Size(ClaheProperties::tilesGridSize().width(),
-                                      ClaheProperties::tilesGridSize().height()));
+  cv::Size size(ClaheProperties::tilesGridSize().width(),
+                ClaheProperties::tilesGridSize().height());
+  mCvClahe = cv::cuda::createCLAHE(ClaheProperties::clipLimit(), size);
+}
+
+ClahePreprocessCuda::ClahePreprocessCuda(const ClahePreprocessCuda &clahePreprocessCuda)
+  : ClaheProperties(clahePreprocessCuda),
+    ImageProcess()
+{
+  cv::Size size(ClaheProperties::tilesGridSize().width(),
+                ClaheProperties::tilesGridSize().height());
+  mCvClahe = cv::cuda::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
 ClahePreprocessCuda::ClahePreprocessCuda(double clipLimit, const QSize &tilesGridSize)
@@ -151,9 +176,10 @@ ClahePreprocessCuda::~ClahePreprocessCuda()
 void ClahePreprocessCuda::reset()
 {
   ClaheProperties::reset();
+  cv::Size size(ClaheProperties::tilesGridSize().width(),
+                ClaheProperties::tilesGridSize().height());
   mCvClahe->setClipLimit(ClaheProperties::clipLimit());
-  mCvClahe->setTilesGridSize(cv::Size(ClaheProperties::tilesGridSize().width(),
-                                      ClaheProperties::tilesGridSize().height()));
+  mCvClahe->setTilesGridSize(size);
 }
 
 void ClahePreprocessCuda::setClipLimit(double clipLimit)

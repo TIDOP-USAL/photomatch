@@ -17,7 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void testDescriptorType_data();
   void testDescriptorType();
@@ -64,16 +64,17 @@ void TestAkazeWidget::cleanupTestCase()
 
 }
 
-void TestAkazeWidget::testDefaultConstructor()
+void TestAkazeWidget::test_constructor()
 {
   /// Check default values
-  QCOMPARE("MLDB", mAkazeWidget->descriptorType());
-  QCOMPARE(0, mAkazeWidget->descriptorSize());
-  QCOMPARE(3, mAkazeWidget->descriptorChannels());
-  QCOMPARE(0.001, mAkazeWidget->threshold());
-  QCOMPARE(4, mAkazeWidget->octaves());
-  QCOMPARE(4, mAkazeWidget->octaveLayers());
-  QCOMPARE("DIFF_PM_G2", mAkazeWidget->diffusivity());
+  AkazeWidget akazeWidget;
+  QCOMPARE("MLDB", akazeWidget.descriptorType());
+  QCOMPARE(0, akazeWidget.descriptorSize());
+  QCOMPARE(3, akazeWidget.descriptorChannels());
+  QCOMPARE(0.001, akazeWidget.threshold());
+  QCOMPARE(4, akazeWidget.octaves());
+  QCOMPARE(4, akazeWidget.octaveLayers());
+  QCOMPARE("DIFF_PM_G2", akazeWidget.diffusivity());
 }
 
 void TestAkazeWidget::test_windowTitle()

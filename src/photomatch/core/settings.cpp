@@ -89,11 +89,6 @@ Settings::Settings()
     mFlannMatcher(new FlannMatcherProperties),
     mBruteForceMatcher(new BruteForceMatcherProperties),
     mRobustMatcherRefinement(new RobustMatcherProperties),
-//    mPenKeypoints(new QPen),
-//    mSizeKeypoints(20),
-//    mPenMatchesPoints(new QPen),
-//    mSizeMatchesPoints(20),
-//    mPenMatchesLines(new QPen)
     mKeypointViewerBGColor("#dcdcdc"),
     mKeypointsViewerMarkerType(0),
     mKeypointViewerMarkerSize(20),
@@ -297,21 +292,6 @@ Settings::~Settings()
     delete mRobustMatcherRefinement;
     mRobustMatcherRefinement = nullptr;
   }
-
-//  if (mPenKeypoints){
-//    delete mPenKeypoints;
-//    mPenKeypoints = nullptr;
-//  }
-
-//  if (mPenMatchesPoints){
-//    delete mPenMatchesPoints;
-//    mPenMatchesPoints = nullptr;
-//  }
-
-//  if (mPenMatchesLines){
-//    delete mPenMatchesLines;
-//    mPenMatchesLines = nullptr;
-//  }
 }
 
 QString Settings::language() const
@@ -973,46 +953,6 @@ void Settings::setGroundTruthEditorSelectMarkerColor(const QString &color)
   mGroundTruthEditorSelectMarkerColor = color;
 }
 
-//QPen *Settings::penKeypoints()
-//{
-//  return mPenKeypoints;
-//}
-
-//const QPen *Settings::penKeypoints() const
-//{
-//  return mPenKeypoints;
-//}
-
-//int Settings::sizeKeypoints() const
-//{
-//  return mSizeKeypoints;
-//}
-
-//QPen *Settings::penMatchesPoints()
-//{
-//  return mPenMatchesPoints;
-//}
-
-//const QPen *Settings::penMatchesPoints() const
-//{
-//  return mPenMatchesPoints;
-//}
-
-//int Settings::sizeMatchesPoints() const
-//{
-//  return mSizeMatchesPoints;
-//}
-
-//QPen *Settings::penMatchesLines()
-//{
-//  return mPenMatchesLines;
-//}
-
-//const QPen *Settings::penMatchesLines() const
-//{
-//  return mPenMatchesLines;
-//}
-
 void Settings::reset()
 {
   mLanguage = "en";
@@ -1064,15 +1004,6 @@ void Settings::reset()
   mFlannMatcher->reset();
   mBruteForceMatcher->reset();
   mRobustMatcherRefinement->reset();
-
-//  delete mPenKeypoints;
-//  mPenKeypoints = new QPen;
-//  mSizeKeypoints = 20;
-//  delete mPenMatchesPoints;
-//  mPenMatchesPoints = new QPen;
-//  mSizeMatchesPoints = 20;
-//  delete mPenMatchesLines;
-//  mPenMatchesLines = new QPen;
 
   mKeypointViewerBGColor = "#dcdcdc";
   mKeypointsViewerMarkerType = 0;
@@ -1624,8 +1555,6 @@ void SettingsRW::writeHistory(const ISettings &settings)
 {
   mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
 }
-
-
 
 
 } // namespace photomatch

@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -44,7 +44,7 @@ TestLceBsescs::~TestLceBsescs()
   }
 }
 
-void TestLceBsescs::testDefaultConstructor()
+void TestLceBsescs::test_constructors()
 {
   LceBsescsPreprocess lceBsescsPreprocess;
   QCOMPARE(QSize(33, 33), lceBsescsPreprocess.blockSize());

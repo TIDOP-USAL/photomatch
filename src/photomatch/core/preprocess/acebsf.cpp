@@ -17,7 +17,6 @@ AcebsfProperties::AcebsfProperties()
     mK1(10.),
     mK2(0.5)
 {
-
 }
 
 AcebsfProperties::AcebsfProperties(const AcebsfProperties &acebsfProperties)

@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void testThreshold_data();
   void testThreshold();
@@ -55,7 +55,7 @@ void TestBriskWidget::cleanupTestCase()
 
 }
 
-void TestBriskWidget::testDefaultConstructor()
+void TestBriskWidget::test_constructor()
 {
   QCOMPARE(30, mBriskWidget->threshold());
   QCOMPARE(3, mBriskWidget->octaves());

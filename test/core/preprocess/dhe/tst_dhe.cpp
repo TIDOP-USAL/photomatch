@@ -18,7 +18,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructors();
   void test_type();
   void test_name();
   void test_x_data();
@@ -44,7 +44,7 @@ TestDhe::~TestDhe()
   }
 }
 
-void TestDhe::testDefaultConstructor()
+void TestDhe::test_constructors()
 {
   DhePreprocess dhePreprocess;
   QCOMPARE(1, dhePreprocess.x());

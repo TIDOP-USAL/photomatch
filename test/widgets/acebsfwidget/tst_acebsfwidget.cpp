@@ -16,7 +16,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
@@ -48,13 +48,13 @@ TestAcebsfWidget::~TestAcebsfWidget()
   }
 }
 
-void TestAcebsfWidget::testDefaultConstructor()
+void TestAcebsfWidget::test_constructor()
 {
-  QCOMPARE(QSize(8, 8), mAcebsfWidget->blockSize());
-  QCOMPARE(0.03, mAcebsfWidget->l());
-  QCOMPARE(10., mAcebsfWidget->k1());
-  QCOMPARE(0.5, mAcebsfWidget->k2());
-
+  AcebsfWidget acebsfWidget;
+  QCOMPARE(QSize(8, 8), acebsfWidget.blockSize());
+  QCOMPARE(0.03, acebsfWidget.l());
+  QCOMPARE(10., acebsfWidget.k1());
+  QCOMPARE(0.5, acebsfWidget.k2());
 }
 
 void TestAcebsfWidget::test_windowTitle()

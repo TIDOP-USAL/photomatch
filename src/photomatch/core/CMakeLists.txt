@@ -67,8 +67,6 @@ add_library(libcore ${LIB_TYPE}
             features/keypointsfilter.h
             features/keypointsfilter.cpp
             preprocess/preprocess.h
-            #preprocess/downsample.cpp
-            #preprocess/downsample.h
             preprocess/acebsf.cpp
             preprocess/acebsf.h
             preprocess/clahe.cpp

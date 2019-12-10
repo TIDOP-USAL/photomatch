@@ -16,7 +16,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_descriptorType_data();
   void test_descriptorType();
@@ -45,12 +45,13 @@ TestBoostWidget::~TestBoostWidget()
   }
 }
 
-void TestBoostWidget::testDefaultConstructor()
+void TestBoostWidget::test_constructor()
 {
   /// Check default values
-  QCOMPARE("BINBOOST_256", mBoostWidget->descriptorType());
-  QCOMPARE(true, mBoostWidget->useOrientation());
-  QCOMPARE(6.25, mBoostWidget->scaleFactor());
+  BoostWidget boostWidget;
+  QCOMPARE("BINBOOST_256", boostWidget.descriptorType());
+  QCOMPARE(true, boostWidget.useOrientation());
+  QCOMPARE(6.25, boostWidget.scaleFactor());
 }
 
 void TestBoostWidget::test_windowTitle()

@@ -26,6 +26,7 @@ class PHOTOMATCH_EXPORT ClaheProperties
 public:
 
   ClaheProperties();
+  ClaheProperties(const ClaheProperties &claheProperties);
   ~ClaheProperties() override = default;
 
 // IClahe interface
@@ -62,6 +63,7 @@ class PHOTOMATCH_EXPORT ClahePreprocess
 public:
 
   ClahePreprocess();
+  ClahePreprocess(const ClahePreprocess &clahePreprocess);
   ClahePreprocess(double clipLimit, const QSize &tilesGridSize);
   ~ClahePreprocess() override;
 
@@ -102,6 +104,7 @@ class PHOTOMATCH_EXPORT ClahePreprocessCuda
 public:
 
   ClahePreprocessCuda();
+  ClahePreprocessCuda(const ClahePreprocessCuda &clahePreprocessCuda);
   ClahePreprocessCuda(double clipLimit, const QSize &tilesGridSize);
   ~ClahePreprocessCuda() override;
 
