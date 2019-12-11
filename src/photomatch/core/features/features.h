@@ -1054,24 +1054,122 @@ public:
   IOrb() : Feature(Feature::Type::orb)  {}
   virtual ~IOrb() = default;
 
+  /*!
+   * \brief The maximum number of features to retain
+   * \return Number of features to retain
+   */
   virtual int featuresNumber() const = 0;
+
+  /*!
+   * \brief Pyramid decimation ratio
+   * ScaleFactor==2 means the classical pyramid, where each next
+   * level has 4x less pixels than the previous, but such a big
+   * scale factor will degrade feature matching scores dramatically.
+   * On the other hand, too close to 1 scale factor will mean that to
+   * cover certain scale range you will need more pyramid levels and
+   * so the speed will suffer.
+   * \return
+   */
   virtual double scaleFactor() const = 0;
+
+  /*!
+   * \brief Returns the number of pyramid levels
+   * The smallest level will have linear size equal to
+   * input_image_linear_size/pow(scaleFactor, nlevels - firstLevel)
+   * \return
+   */
   virtual int levelsNumber() const = 0;
+
+  /*!
+   * \brief Size of the border where the features are not detected
+   * \return
+   */
   virtual int edgeThreshold() const = 0;
+
+  /*!
+   * \brief The level of pyramid to put source image to
+   * \return
+   */
   virtual int firstLevel() const = 0;
+
+  /*!
+   * \brief The number of points that produce each element of the oriented BRIEF descriptor
+   * \return
+   */
   virtual int wta_k() const = 0;
+
+  /*!
+   * \brief scoreType
+   * \return
+   */
   virtual QString scoreType() const = 0;
+
+  /*!
+   * \brief Size of the patch used by the oriented BRIEF descriptor
+   * \return
+   */
   virtual int patchSize() const = 0;
+
+  /*!
+   * \brief Returns the fast threshold
+   * \return
+   */
   virtual int fastThreshold() const = 0;
 
+  /*!
+   * \brief setScaleFactor
+   * \param[in] scaleFactor
+   */
   virtual void setScaleFactor(double scaleFactor) = 0;
+
+  /*!
+   * \brief setFeaturesNumber
+   * \param[in] featuresNumber
+   */
   virtual void setFeaturesNumber(int featuresNumber) = 0;
+
+  /*!
+   * \brief Set the number of pyramid levels
+   * \param[in] levelsNumber Number of pyramid levels
+   */
   virtual void setLevelsNumber(int levelsNumber) = 0;
+
+  /*!
+   * \brief setEdgeThreshold
+   * \param[in] edgeThreshold
+   */
   virtual void setEdgeThreshold(int edgeThreshold) = 0;
+
+  /*!
+   * \brief Set the first level of pyramid
+   * \param[in] firstLevel First level
+   */
   virtual void setFirstLevel (int firstLevel) = 0;
+
+  /*!
+   * \brief Set the number of points that produce each element of the oriented BRIEF descriptor
+   * The default value 2 means the BRIEF where we take a random point pair and compare their
+   * brightnesses, so we get 0/1 response. Other possible values are 3 and 4.
+   * \param[in] WTA_K
+   */
   virtual void setWTA_K(int WTA_K) = 0;
+
+  /*!
+   * \brief Set HARRIS_SCORE (Harris algorithm) or FAST_SCORE
+   * \param[in] scoreType
+   */
   virtual void setScoreType(const QString &scoreType) = 0;
+
+  /*!
+   * \brief Set the size of the patch used by the oriented BRIEF descriptor.
+   * \param[in] patchSize
+   */
   virtual void setPatchSize(int patchSize) = 0;
+
+  /*!
+   * \brief Set the fast threshold
+   * \param[in] fastThreshold
+   */
   virtual void setFastThreshold(int fastThreshold) = 0;
 
 };
@@ -1088,62 +1186,70 @@ public:
   virtual ~ISift() = default;
 
   /*!
-   * \brief featuresNumber
+   * \brief The number of best features to retain
+   * The features are ranked by their scores (measured in
+   * SIFT algorithm as the local contrast)
    * \return
    */
   virtual int featuresNumber() const = 0;
 
   /*!
-   * \brief octaveLayers
+   * \brief The number of layers in each octave.
+   * 3 is the value used in D. Lowe paper. The number of octaves
+   * is computed automatically from the image resolution.
    * \return
    */
   virtual int octaveLayers() const = 0;
 
   /*!
-   * \brief contrastThreshold
+   * \brief The contrast threshold used to filter out weak features in semi-uniform (low-contrast) regions.
+   * The larger the threshold, the less features are produced by the detector.
    * \return
    */
   virtual double contrastThreshold() const = 0;
 
   /*!
-   * \brief edgeThreshold
+   * \brief The threshold used to filter out edge-like features
+   * Note that the its meaning is different from the contrastThreshold, i.e. the larger
+   * the edgeThreshold, the less features are filtered out (more features are retained).
    * \return
    */
   virtual double edgeThreshold() const = 0;
 
   /*!
-   * \brief sigma
+   * \brief The sigma of the Gaussian applied to the input image at the octave 0.
+   * If your image is captured with a weak camera with soft lenses, you might want to reduce the number.
    * \return
    */
   virtual double sigma() const = 0;
 
   /*!
-   * \brief setFeaturesNumber
-   * \param featuresNumber
+   * \brief Set the number of best features to retain
+   * \param[in] featuresNumber Number of features
    */
   virtual void setFeaturesNumber(int featuresNumber) = 0;
 
   /*!
-   * \brief setOctaveLayers
-   * \param octaveLayers
+   * \brief Set the number of layers in each octave
+   * \param[in] octaveLayers The number of layers in each octave (3 by default)
    */
   virtual void setOctaveLayers(int octaveLayers) = 0;
 
   /*!
-   * \brief setContrastThreshold
-   * \param contrastThreshold
+   * \brief Set the contrast threshold
+   * \param[in] contrastThreshold Contrast threshold
    */
   virtual void setContrastThreshold(double contrastThreshold) = 0;
 
   /*!
-   * \brief setEdgeThreshold
-   * \param edgeThreshold
+   * \brief Set the threshold used to filter out edge-like features
+   * \param[in] edgeThreshold Edge threshold
    */
   virtual void setEdgeThreshold(double edgeThreshold) = 0;
 
   /*!
-   * \brief setSigma
-   * \param sigma
+   * \brief Set sigma of the Gaussian
+   * \param[in] sigma Sigma of the Gaussian
    */
   virtual void setSigma(double sigma) = 0;
 

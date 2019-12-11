@@ -24,6 +24,7 @@
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
 #include "photomatch/core/features/vgg.h"
+#include "photomatch/core/preprocess/decolor.h"
 
 #include "photomatch/ui/FeatureExtractorModel.h"
 #include "photomatch/ui/FeatureExtractorView.h"
@@ -64,6 +65,7 @@
 
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/features/FeatureExtractorProcess.h"
+#include "photomatch/process/preprocess/ImagePreprocess.h"
 
 #include <tidop/core/messages.h>
 
@@ -880,6 +882,14 @@ void FeatureExtractorPresenter::cancel()
 
 void FeatureExtractorPresenter::run()
 {
+  std::shared_ptr<Preprocess> preprocess = mProjectModel->currentSession()->preprocess();
+  std::shared_ptr<ImageProcess> imageProcess;
+  if (preprocess == nullptr){
+    imageProcess = std::make_shared<DecolorPreprocess>();
+    mProjectModel->setMaxImageSize(2000);
+    mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
+  }
+
   Feature *detector = mProjectModel->currentSession()->detector().get();
   Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
   if (detector && descriptor){
@@ -1220,20 +1230,31 @@ void FeatureExtractorPresenter::run()
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
 
-  //std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
-  //if (mKeypointsFilterWidget->isActiveFilterBest()){
-  //  std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
-  //  keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
-  //}
-  //if (mKeypointsFilterWidget->isActiveFilterSize()){
-  //  std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize(), mKeypointsFilterWidget->maxSize());
-  //  keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
-  //}
-
   /// Hay que recuperar las imagenes de la carpeta de preprocesos
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString fileName = (*it)->name();
-    QString preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
+    QString preprocessed_image;
+
+    if (imageProcess){
+      QString file_in = (*it)->path();
+      QFileInfo fileInfo(file_in);
+      preprocessed_image = mProjectModel->projectFolder();
+      preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
+      preprocessed_image.append("\\preprocess\\");
+      QDir dir_out(preprocessed_image);
+      if (!dir_out.exists()) {
+        dir_out.mkpath(".");
+      }
+      preprocessed_image.append(fileInfo.fileName());
+      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
+                                                                      preprocessed_image,
+                                                                      imageProcess,
+                                                                      2000));
+      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+      mMultiProcess->appendProcess(preprocess);
+    } else {
+      preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
+    }
 
     QString features = mProjectModel->projectFolder();
     features.append("\\").append(mProjectModel->currentSession()->name());
@@ -1290,6 +1311,7 @@ void FeatureExtractorPresenter::run()
                                                                         descriptorExtractor,
                                                                         keyPointsFiltersProcess));
     connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
+
     mMultiProcess->appendProcess(feat_extract);
   }
 
@@ -1459,6 +1481,12 @@ void FeatureExtractorPresenter::onFinished()
   emit finished();
 
   msgInfo("Feature detection and description finished.");
+}
+
+void FeatureExtractorPresenter::onImagePreprocessed(const QString &image)
+{
+  mProjectModel->addPreprocessedImage(image);
+  emit imagePreprocessed(image);
 }
 
 void FeatureExtractorPresenter::onFeaturesExtracted(const QString &features)

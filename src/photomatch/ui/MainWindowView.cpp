@@ -1372,7 +1372,8 @@ void MainWindowView::update()
   mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added) && !bProcessing);
   //mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
-  mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
+  //mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
+  mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   //mActionBatch->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);

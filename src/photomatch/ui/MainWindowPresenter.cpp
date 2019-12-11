@@ -906,93 +906,96 @@ void MainWindowPresenter::activeSession(const QString &session)
 void MainWindowPresenter::selectPreprocess(const QString &session)
 {
   std::shared_ptr<Session> _session = mProjectModel->findSession(session);
-  std::shared_ptr<Preprocess> preprocess = _session->preprocess();
-
-  std::list<std::pair<QString, QString>> properties;
-  if (preprocess->type() == Preprocess::Type::acebsf){
-    IAcebsf *acebsf = dynamic_cast<IAcebsf *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), QString("ACEBSF")));
-    properties.push_back(std::make_pair(QString("Block Size"), QString::number(acebsf->blockSize().width()).append("x").append(QString::number(acebsf->blockSize().height()))));
-    properties.push_back(std::make_pair(QString("L"), QString::number(acebsf->l())));
-    properties.push_back(std::make_pair(QString("K1"), QString::number(acebsf->k1())));
-    properties.push_back(std::make_pair(QString("K2"), QString::number(acebsf->k2())));
-  } else if (preprocess->type() == Preprocess::Type::clahe){
-    IClahe *clahe = dynamic_cast<IClahe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), QString("CLAHE")));
-    properties.push_back(std::make_pair(QString("Clip Limit"), QString::number(clahe->clipLimit())));
-    properties.push_back(std::make_pair(QString("Grid Size"),
-                                        QString::number(clahe->tilesGridSize().width())
-                                        .append("x")
-                                        .append(QString::number(clahe->tilesGridSize().height()))));
-  } else if (preprocess->type() == Preprocess::Type::cmbfhe){
-    ICmbfhe *cmbfhe = dynamic_cast<ICmbfhe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "CMBFHE"));
-    properties.push_back(std::make_pair(QString("Block Size"),
-                                        QString::number(cmbfhe->blockSize().width()).append("x").append(QString::number(cmbfhe->blockSize().height()))));
-  } else if (preprocess->type() == Preprocess::Type::decolor){
-    properties.push_back(std::make_pair(QString("Name"), "Decolor"));
-  } else if (preprocess->type() == Preprocess::Type::dhe){
-    IDhe *dhe = dynamic_cast<IDhe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "DHE"));
-    properties.push_back(std::make_pair(QString("X"), QString::number(dhe->x())));
-  } else if (preprocess->type() == Preprocess::Type::fahe){
-    IFahe *fahe = dynamic_cast<IFahe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "FAHE"));
-    properties.push_back(std::make_pair(QString("Block Size"),
-                                        QString::number(fahe->blockSize().width())
-                                        .append("x")
-                                        .append(QString::number(fahe->blockSize().height()))));
-  } else if (preprocess->type() == Preprocess::Type::hmclahe){
-    IHmclahe *hmclahe = dynamic_cast<IHmclahe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "HMCLAHE"));
-    properties.push_back(std::make_pair(QString("Block Size"),
-                                        QString::number(hmclahe->blockSize().width())
-                                        .append("x")
-                                        .append(QString::number(hmclahe->blockSize().height()))));
-    properties.push_back(std::make_pair(QString("L"), QString::number(hmclahe->l())));
-    properties.push_back(std::make_pair(QString("Phi"), QString::number(hmclahe->phi())));
-  } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
-    ILceBsescs *lceBsescs = dynamic_cast<ILceBsescs *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "LCE_BSESCS"));
-    properties.push_back(std::make_pair(QString("Block Size"),
-                                        QString::number(lceBsescs->blockSize().width())
-                                        .append("x")
-                                        .append(QString::number(lceBsescs->blockSize().height()))));
-  } else if (preprocess->type() == Preprocess::Type::msrcp){
-    IMsrcp *msrcp = dynamic_cast<IMsrcp *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "MSRCP"));
-    properties.push_back(std::make_pair(QString("Small Scale"), QString::number(msrcp->smallScale())));
-    properties.push_back(std::make_pair(QString("Mid Scale"), QString::number(msrcp->midScale())));
-    properties.push_back(std::make_pair(QString("Large Scale"), QString::number(msrcp->largeScale())));
-  } else if (preprocess->type() == Preprocess::Type::noshp){
-    INoshp *noshp = dynamic_cast<INoshp *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "NOSHP"));
-    properties.push_back(std::make_pair(QString("Block Size"),
-                                        QString::number(noshp->blockSize().width())
-                                        .append("x")
-                                        .append(QString::number(noshp->blockSize().height()))));
-  } else if (preprocess->type() == Preprocess::Type::pohe){
-    IPohe *pohe = dynamic_cast<IPohe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "POHE"));
-    properties.push_back(std::make_pair(QString("Block Size"),
-                                        QString::number(pohe->blockSize().width())
-                                        .append("x")
-                                        .append(QString::number(pohe->blockSize().height()))));
-  } else if (preprocess->type() == Preprocess::Type::rswhe){
-    IRswhe *rswhe = dynamic_cast<IRswhe *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "RSWHE"));
-    properties.push_back(std::make_pair(QString("Histogram Divisions"), QString::number(rswhe->histogramDivisions())));
-    properties.push_back(std::make_pair(QString("Histogram Cut"), QString::number(static_cast<int>(rswhe->histogramCut()))));
-  } else if (preprocess->type() == Preprocess::Type::wallis){
-    IWallis *wallis = dynamic_cast<IWallis *>(preprocess.get());
-    properties.push_back(std::make_pair(QString("Name"), "WALLIS"));
-    properties.push_back(std::make_pair(QString("Contrast"), QString::number(wallis->contrast())));
-    properties.push_back(std::make_pair(QString("Brightness"), QString::number(wallis->brightness())));
-    properties.push_back(std::make_pair(QString("Imposed Average"), QString::number(wallis->imposedAverage())));
-    properties.push_back(std::make_pair(QString("Imposed Local Std Dev"), QString::number(wallis->imposedLocalStdDev())));
-    properties.push_back(std::make_pair(QString("Kernel Size"), QString::number(wallis->kernelSize())));
+  if (_session){
+    std::shared_ptr<Preprocess> preprocess = _session->preprocess();
+    if (preprocess){
+      std::list<std::pair<QString, QString>> properties;
+      if (preprocess->type() == Preprocess::Type::acebsf){
+        IAcebsf *acebsf = dynamic_cast<IAcebsf *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), QString("ACEBSF")));
+        properties.push_back(std::make_pair(QString("Block Size"), QString::number(acebsf->blockSize().width()).append("x").append(QString::number(acebsf->blockSize().height()))));
+        properties.push_back(std::make_pair(QString("L"), QString::number(acebsf->l())));
+        properties.push_back(std::make_pair(QString("K1"), QString::number(acebsf->k1())));
+        properties.push_back(std::make_pair(QString("K2"), QString::number(acebsf->k2())));
+      } else if (preprocess->type() == Preprocess::Type::clahe){
+        IClahe *clahe = dynamic_cast<IClahe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), QString("CLAHE")));
+        properties.push_back(std::make_pair(QString("Clip Limit"), QString::number(clahe->clipLimit())));
+        properties.push_back(std::make_pair(QString("Grid Size"),
+                                            QString::number(clahe->tilesGridSize().width())
+                                            .append("x")
+                                            .append(QString::number(clahe->tilesGridSize().height()))));
+      } else if (preprocess->type() == Preprocess::Type::cmbfhe){
+        ICmbfhe *cmbfhe = dynamic_cast<ICmbfhe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "CMBFHE"));
+        properties.push_back(std::make_pair(QString("Block Size"),
+                                            QString::number(cmbfhe->blockSize().width()).append("x").append(QString::number(cmbfhe->blockSize().height()))));
+      } else if (preprocess->type() == Preprocess::Type::decolor){
+        properties.push_back(std::make_pair(QString("Name"), "Decolor"));
+      } else if (preprocess->type() == Preprocess::Type::dhe){
+        IDhe *dhe = dynamic_cast<IDhe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "DHE"));
+        properties.push_back(std::make_pair(QString("X"), QString::number(dhe->x())));
+      } else if (preprocess->type() == Preprocess::Type::fahe){
+        IFahe *fahe = dynamic_cast<IFahe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "FAHE"));
+        properties.push_back(std::make_pair(QString("Block Size"),
+                                            QString::number(fahe->blockSize().width())
+                                            .append("x")
+                                            .append(QString::number(fahe->blockSize().height()))));
+      } else if (preprocess->type() == Preprocess::Type::hmclahe){
+        IHmclahe *hmclahe = dynamic_cast<IHmclahe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "HMCLAHE"));
+        properties.push_back(std::make_pair(QString("Block Size"),
+                                            QString::number(hmclahe->blockSize().width())
+                                            .append("x")
+                                            .append(QString::number(hmclahe->blockSize().height()))));
+        properties.push_back(std::make_pair(QString("L"), QString::number(hmclahe->l())));
+        properties.push_back(std::make_pair(QString("Phi"), QString::number(hmclahe->phi())));
+      } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
+        ILceBsescs *lceBsescs = dynamic_cast<ILceBsescs *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "LCE_BSESCS"));
+        properties.push_back(std::make_pair(QString("Block Size"),
+                                            QString::number(lceBsescs->blockSize().width())
+                                            .append("x")
+                                            .append(QString::number(lceBsescs->blockSize().height()))));
+      } else if (preprocess->type() == Preprocess::Type::msrcp){
+        IMsrcp *msrcp = dynamic_cast<IMsrcp *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "MSRCP"));
+        properties.push_back(std::make_pair(QString("Small Scale"), QString::number(msrcp->smallScale())));
+        properties.push_back(std::make_pair(QString("Mid Scale"), QString::number(msrcp->midScale())));
+        properties.push_back(std::make_pair(QString("Large Scale"), QString::number(msrcp->largeScale())));
+      } else if (preprocess->type() == Preprocess::Type::noshp){
+        INoshp *noshp = dynamic_cast<INoshp *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "NOSHP"));
+        properties.push_back(std::make_pair(QString("Block Size"),
+                                            QString::number(noshp->blockSize().width())
+                                            .append("x")
+                                            .append(QString::number(noshp->blockSize().height()))));
+      } else if (preprocess->type() == Preprocess::Type::pohe){
+        IPohe *pohe = dynamic_cast<IPohe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "POHE"));
+        properties.push_back(std::make_pair(QString("Block Size"),
+                                            QString::number(pohe->blockSize().width())
+                                            .append("x")
+                                            .append(QString::number(pohe->blockSize().height()))));
+      } else if (preprocess->type() == Preprocess::Type::rswhe){
+        IRswhe *rswhe = dynamic_cast<IRswhe *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "RSWHE"));
+        properties.push_back(std::make_pair(QString("Histogram Divisions"), QString::number(rswhe->histogramDivisions())));
+        properties.push_back(std::make_pair(QString("Histogram Cut"), QString::number(static_cast<int>(rswhe->histogramCut()))));
+      } else if (preprocess->type() == Preprocess::Type::wallis){
+        IWallis *wallis = dynamic_cast<IWallis *>(preprocess.get());
+        properties.push_back(std::make_pair(QString("Name"), "WALLIS"));
+        properties.push_back(std::make_pair(QString("Contrast"), QString::number(wallis->contrast())));
+        properties.push_back(std::make_pair(QString("Brightness"), QString::number(wallis->brightness())));
+        properties.push_back(std::make_pair(QString("Imposed Average"), QString::number(wallis->imposedAverage())));
+        properties.push_back(std::make_pair(QString("Imposed Local Std Dev"), QString::number(wallis->imposedLocalStdDev())));
+        properties.push_back(std::make_pair(QString("Kernel Size"), QString::number(wallis->kernelSize())));
+      }
+      mView->setProperties(properties);
+    }
   }
-  mView->setProperties(properties);
 }
 
 void MainWindowPresenter::selectFeatures(const QString &session)
@@ -1510,6 +1513,7 @@ void MainWindowPresenter::initFeatureExtractionDialog()
     connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
     connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(deleteFeatures()));
     connect(mFeatureExtractorPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
+    connect(mFeatureExtractorPresenter, SIGNAL(imagePreprocessed(QString)), this, SLOT(updatePreprocess()));
     connect(mFeatureExtractorPresenter, SIGNAL(featuresExtracted(QString)), this, SLOT(updateFeatures()));
 
     initProgress();
