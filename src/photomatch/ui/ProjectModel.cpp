@@ -321,6 +321,17 @@ void ProjectModel::clearMatches()
   bUnsavedChanges = true;
 }
 
+QString ProjectModel::passPoints() const
+{
+  return this->currentSession()->passPoints();
+}
+
+void ProjectModel::setPassPoints(const QString &passPoint)
+{
+  this->currentSession()->setPassPoints(passPoint);
+  bUnsavedChanges = true;
+}
+
 void ProjectModel::clear()
 {
   mProject->clear();

@@ -93,6 +93,8 @@ void PassPointsGroupingProcess::run()
     }
   }
 
+  TL_TODO("Llamar a passPointsWrite()")
+
   std::ofstream ofs(mPassPointsFile.toStdString(), std::ofstream::trunc);
   if (ofs.is_open()){
 

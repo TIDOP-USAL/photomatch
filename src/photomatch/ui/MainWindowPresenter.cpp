@@ -52,9 +52,9 @@
 #include "photomatch/ui/ExportMatchesModel.h"
 #include "photomatch/ui/ExportMatchesView.h"
 #include "photomatch/ui/ExportMatchesPresenter.h"
-#include "photomatch/ui/BatchModel.h"
-#include "photomatch/ui/BatchView.h"
-#include "photomatch/ui/BatchPresenter.h"
+//#include "photomatch/ui/BatchModel.h"
+//#include "photomatch/ui/BatchView.h"
+//#include "photomatch/ui/BatchPresenter.h"
 #include "photomatch/core/project.h"
 
 /* TidopLib */
@@ -93,8 +93,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mFeatureExtractorPresenter(nullptr),
     mDescriptorMatcherModel(nullptr),
     mDescriptorMatcherPresenter(nullptr),
-    mBatchmodel(nullptr),
-    mBatchPresenter(nullptr),
+    //mBatchmodel(nullptr),
+    //mBatchPresenter(nullptr),
     mFeaturesViewerPresenter(nullptr),
     mFeaturesViewerModel(nullptr),
     mMatchesViewerPresenter(nullptr),
@@ -160,7 +160,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView,   SIGNAL(openPreprocess()),          this, SLOT(openPreprocess()));
   connect(mView,   SIGNAL(openFeatureExtraction()),   this, SLOT(openFeatureExtraction()));
   connect(mView,   SIGNAL(openFeatureMatching()),     this, SLOT(openFeatureMatching()));
-  connect(mView,   SIGNAL(openBatch()),               this, SLOT(openBatch()));
+  //connect(mView,   SIGNAL(openBatch()),               this, SLOT(openBatch()));
   connect(mView,   SIGNAL(openToolSettings()),        this, SLOT(openToolSettings()));
 
   /* Menú Ayuda */
@@ -291,15 +291,15 @@ MainWindowPresenter::~MainWindowPresenter()
     mDescriptorMatcherPresenter = nullptr;
   }
 
-  if (mBatchmodel){
-    delete mBatchmodel;
-    mBatchmodel = nullptr;
-  }
+//  if (mBatchmodel){
+//    delete mBatchmodel;
+//    mBatchmodel = nullptr;
+//  }
 
-  if (mBatchPresenter){
-    delete mBatchPresenter;
-    mBatchPresenter = nullptr;
-  }
+//  if (mBatchPresenter){
+//    delete mBatchPresenter;
+//    mBatchPresenter = nullptr;
+//  }
 
   if (mProgressHandler){
     delete mProgressHandler;
@@ -758,11 +758,11 @@ void MainWindowPresenter::openFeatureMatching()
   mDescriptorMatcherPresenter->open();
 }
 
-void MainWindowPresenter::openBatch()
-{
-  initBatch();
-  mBatchPresenter->open();
-}
+//void MainWindowPresenter::openBatch()
+//{
+//  initBatch();
+//  mBatchPresenter->open();
+//}
 
 void MainWindowPresenter::openToolSettings()
 {
@@ -1540,14 +1540,14 @@ void MainWindowPresenter::initFeatureMatching()
   }
 }
 
-void MainWindowPresenter::initBatch()
-{
-  if (mBatchPresenter == nullptr){
-    mBatchmodel = new BatchModel;
-    IBatchView *descriptorMatcherView = new BatchView(mView);
-    mBatchPresenter = new BatchPresenter(descriptorMatcherView, mBatchmodel, mProjectModel, mSettingsModel);
-  }
-}
+//void MainWindowPresenter::initBatch()
+//{
+//  if (mBatchPresenter == nullptr){
+//    mBatchmodel = new BatchModel;
+//    IBatchView *descriptorMatcherView = new BatchView(mView);
+//    mBatchPresenter = new BatchPresenter(descriptorMatcherView, mBatchmodel, mProjectModel, mSettingsModel);
+//  }
+//}
 
 void MainWindowPresenter::initProgress()
 {

@@ -264,6 +264,8 @@ public:
   virtual void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
   virtual void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
   virtual void clearMatches() = 0;
+  virtual QString passPoints() const = 0;
+  virtual void setPassPoints(const QString &passPoint) = 0;
 
   /*!
    * \brief Limpia el proyecto
@@ -355,6 +357,8 @@ public:
   void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
   void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
   void clearMatches() override;
+  QString passPoints() const override;
+  void setPassPoints(const QString &passPoint) override;
 
   void clear() override;
 

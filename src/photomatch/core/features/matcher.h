@@ -696,7 +696,9 @@ protected:
  * \param[in] matches Correct matches
  * \param[in] wrongMatches Wrong matches
  */
-PHOTOMATCH_EXPORT void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches, const std::vector<cv::DMatch> &wrongMatches = std::vector<cv::DMatch>());
+PHOTOMATCH_EXPORT void matchesWrite(const QString &fname,
+                                    const std::vector<cv::DMatch> &matches,
+                                    const std::vector<cv::DMatch> &wrongMatches = std::vector<cv::DMatch>());
 
 /*!
  * \brief Matches read
@@ -704,7 +706,25 @@ PHOTOMATCH_EXPORT void matchesWrite(const QString &fname, const std::vector<cv::
  * \param[out] matches Correct matches
  * \param[out] wrongMatches Wrong matches
  */
-PHOTOMATCH_EXPORT void matchesRead(const QString &fname, std::vector<cv::DMatch> *matches, std::vector<cv::DMatch> *wrongMatches = nullptr);
+PHOTOMATCH_EXPORT void matchesRead(const QString &fname,
+                                   std::vector<cv::DMatch> *matches,
+                                   std::vector<cv::DMatch> *wrongMatches = nullptr);
+
+/*!
+ * \brief Pass Points write
+ * \param[in] fname File name
+ * \param[in] pass_points Pass Points
+ */
+PHOTOMATCH_EXPORT void passPointsWrite(const QString &fname,
+                                       const std::vector<std::vector<std::pair<QString,int>>> &pass_points);
+
+/*!
+ * \brief Pass Points read
+ * \param[in] fname File name
+ * \param[out] pass_points Pass Points
+ */
+PHOTOMATCH_EXPORT void passPointsRead(const QString &fname,
+                                      std::vector<std::vector<std::pair<QString,int>>> &pass_points);
 
 
 /*----------------------------------------------------------------*/

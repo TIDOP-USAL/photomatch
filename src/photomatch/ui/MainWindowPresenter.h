@@ -41,8 +41,8 @@ class IExportFeaturesModel;
 class IExportFeaturesPresenter;
 class IExportMatchesModel;
 class IExportMatchesPresenter;
-class IBatchModel;
-class IBatchPresenter;
+//class IBatchModel;
+//class IBatchPresenter;
 class ProgressHandler;
 class IProgressDialog;
 class AboutDialog;
@@ -108,7 +108,7 @@ protected slots:
   void openPreprocess();
   void openFeatureExtraction();
   void openFeatureMatching();
-  void openBatch();
+  //void openBatch();
   void openToolSettings();
 
   /* Menú Ayuda */
@@ -193,7 +193,7 @@ private:
    */
   void initFeatureMatching();
 
-  void initBatch();
+  //void initBatch();
 
   void initProgress();
 
@@ -257,8 +257,8 @@ protected:
   IDescriptorMatcherModel *mDescriptorMatcherModel;
   IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
 
-  IBatchModel *mBatchmodel;
-  IBatchPresenter *mBatchPresenter;
+  //IBatchModel *mBatchmodel;
+  //IBatchPresenter *mBatchPresenter;
 
   IFeaturesViewerPresenter *mFeaturesViewerPresenter;
   IFeaturesViewerModel *mFeaturesViewerModel;
