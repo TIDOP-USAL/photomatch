@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_maxFeatures_data();
   void test_maxFeatures();
@@ -61,7 +61,7 @@ void TestGfttWidget::cleanupTestCase()
 
 }
 
-void TestGfttWidget::testDefaultConstructor()
+void TestGfttWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(1000, mGfttWidget->maxFeatures());

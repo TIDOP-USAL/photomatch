@@ -13,10 +13,6 @@ class QDateTimeEdit;
 class QListWidget;
 class QGridLayout;
 
-//namespace Ui {
-//class WidgetLog;
-//}
-
 namespace photomatch
 {
 
@@ -32,12 +28,17 @@ public:
   ~LogWidget() override;
 
   /*!
-   * \brief Filtra los mensajes mostrados en la ventana de log
-   * \param level nivel de log
+   * \brief Filter the messages displayed in the console
+   * \param[in] level Log level
    */
   void filter(tl::MessageLevel level);
 
+  /*!
+   * \brief Set log level
+   * \param[in] level Log level
+   */
   void setLogLevel(tl::MessageLevel level);
+
   void print(const char *msg, const char *date, tl::MessageLevel level);
   void refresh();
 
@@ -45,7 +46,6 @@ public slots:
 
   virtual void clear();
 
-  
 private slots:
 
   void onPushButtonShowLogWarningToggled(bool active);
@@ -80,8 +80,6 @@ public:
   void onMsgError(const char *msg, const char *date) override;
 
 private:
-
-//  //Ui::WidgetLog *ui;
 
   static tl::EnumFlags<tl::MessageLevel> sLevel;
   static tl::EnumFlags<tl::MessageLevel> sFilterLevel;

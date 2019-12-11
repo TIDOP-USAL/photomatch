@@ -18,15 +18,15 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
-  void testThreshold_data();
-  void testThreshold();
-  void testNonmaxSuppression_data();
-  void testNonmaxSuppression();
-  void testDetectorType_data();
-  void testDetectorType();
-  void testReset();
+  void test_threshold_data();
+  void test_threshold();
+  void test_nonmaxSuppression_data();
+  void test_nonmaxSuppression();
+  void test_detectorType_data();
+  void test_detectorType();
+  void test_reset();
 
 private:
 
@@ -57,7 +57,7 @@ void TestFastWidget::cleanupTestCase()
 
 }
 
-void TestFastWidget::testDefaultConstructor()
+void TestFastWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(10, mFastWidget->threshold());
@@ -70,7 +70,7 @@ void TestFastWidget::test_windowTitle()
   QCOMPARE("FAST", mFastWidget->windowTitle());
 }
 
-void TestFastWidget::testThreshold_data()
+void TestFastWidget::test_threshold_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -82,7 +82,7 @@ void TestFastWidget::testThreshold_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestFastWidget::testThreshold()
+void TestFastWidget::test_threshold()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -91,7 +91,7 @@ void TestFastWidget::testThreshold()
   QCOMPARE(result, mFastWidget->threshold());
 }
 
-void TestFastWidget::testNonmaxSuppression_data()
+void TestFastWidget::test_nonmaxSuppression_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -100,7 +100,7 @@ void TestFastWidget::testNonmaxSuppression_data()
   QTest::newRow("false") << false << false;
 }
 
-void TestFastWidget::testNonmaxSuppression()
+void TestFastWidget::test_nonmaxSuppression()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -109,7 +109,7 @@ void TestFastWidget::testNonmaxSuppression()
   QCOMPARE(result, mFastWidget->nonmaxSuppression());
 }
 
-void TestFastWidget::testDetectorType_data()
+void TestFastWidget::test_detectorType_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -120,7 +120,7 @@ void TestFastWidget::testDetectorType_data()
   QTest::newRow("bad_value") << "bad_value" << "TYPE_9_16";
 }
 
-void TestFastWidget::testDetectorType()
+void TestFastWidget::test_detectorType()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -129,7 +129,7 @@ void TestFastWidget::testDetectorType()
   QCOMPARE(result, mFastWidget->detectorType());
 }
 
-void TestFastWidget::testReset()
+void TestFastWidget::test_reset()
 {
   mFastWidget->setThreshold(3);
   mFastWidget->setDetectorType("TYPE_7_12");

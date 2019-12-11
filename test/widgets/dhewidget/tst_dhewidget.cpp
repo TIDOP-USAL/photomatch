@@ -15,7 +15,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_x_data();
   void test_x();
@@ -40,7 +40,7 @@ TestDheWidget::~TestDheWidget()
   }
 }
 
-void TestDheWidget::testDefaultConstructor()
+void TestDheWidget::test_constructor()
 {
   QCOMPARE(1, mDheWidget->x());
 }

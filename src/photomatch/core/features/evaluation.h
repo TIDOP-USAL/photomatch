@@ -30,6 +30,7 @@ public:
 
   Curve(const std::vector<std::pair<T, int>> &data);
 
+  virtual ~Curve() = default;
   /*!
    * \brief Confussion matrix for the specified threshold
    * \param[in] threshold
@@ -51,9 +52,32 @@ public:
    */
   size_t negatives() const;
 
+  /*!
+   * \brief True Positives
+   * \param[in] threshold
+   * \return
+   */
   size_t truePositives(T threshold) const;
+
+  /*!
+   * \brief False Positives
+   * \param[in] threshold
+   * \return
+   */
   size_t falsePositives(T threshold) const;
+
+  /*!
+   * \brief True Negatives
+   * \param[in] threshold
+   * \return
+   */
   size_t trueNegatives(T threshold) const;
+
+  /*!
+   * \brief False Negatives
+   * \param[in] threshold
+   * \return
+   */
   size_t falseNegatives(T threshold) const;
 
   /*!
@@ -98,12 +122,25 @@ public:
    */
   double trueNegativeRate(T threshold) const;
 
+  /*!
+   * \brief False Negative Rate
+   * \param[in] threshold
+   * \return
+   */
   double falseNegativeRate(T threshold) const;
 
+  /*!
+   * \brief Compute curve
+   * \param[in] steeps number of steeps
+   */
   virtual void compute(size_t steeps) = 0;
 
   std::vector<QPointF> curve() const;
 
+  /*!
+   * \brief auc
+   * \return
+   */
   double auc() const;
 
   static double truePositiveRate(size_t tp, size_t positives);
@@ -138,6 +175,7 @@ class PRCurve
 public:
 
   PRCurve(const std::vector<std::pair<T, int>> &data, size_t steeps = 100);
+  ~PRCurve() override {}
 
   void compute(size_t steeps = 100) override;
 };
@@ -156,6 +194,7 @@ class ROCCurve
 public:
 
   ROCCurve(const std::vector<std::pair<T, int>> &data, size_t steeps = 100);
+  ~ROCCurve() override {}
 
   void compute(size_t steeps = 100) override;
 
@@ -175,7 +214,7 @@ class DETCurve
 public:
 
   DETCurve(const std::vector<std::pair<T, int>> &data, size_t steeps = 100);
-
+  ~DETCurve() override {}
   void compute(size_t steeps = 100) override;
 
 };

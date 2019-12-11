@@ -17,7 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_featuresNumber_data();
   void test_featuresNumber();
@@ -60,7 +60,7 @@ void TestSiftWidget::cleanupTestCase()
 
 }
 
-void TestSiftWidget::testDefaultConstructor()
+void TestSiftWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(5000, mSiftWidget->featuresNumber());

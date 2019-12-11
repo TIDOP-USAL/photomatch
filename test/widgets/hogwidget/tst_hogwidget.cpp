@@ -12,26 +12,28 @@ class TestHogWidget
   Q_OBJECT
 
 public:
+
   TestHogWidget();
   ~TestHogWidget();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
-  void testWinSize_data();
-  void testWinSize();
-  void testBlockSize_data();
-  void testBlockSize();
-  void testBlockStride_data();
-  void testBlockStride();
-  void testCellSize_data();
-  void testCellSize();
-  void testNbins_data();
-  void testNbins();
-  void testDerivAperture_data();
-  void testDerivAperture();
+  void test_winSize_data();
+  void test_winSize();
+  void test_blockSize_data();
+  void test_blockSize();
+  void test_blockStride_data();
+  void test_blockStride();
+  void test_cellSize_data();
+  void test_cellSize();
+  void test_nbins_data();
+  void test_nbins();
+  void test_derivAperture_data();
+  void test_derivAperture();
 //  void testWinSigma();
 //  void testHistogramNormType();
 //  void testL2HysThreshold();
@@ -39,7 +41,7 @@ private slots:
 //  void testFree_coef();
 //  void testNlevels();
 //  void testSignedGradient();
-  void testReset();
+  void test_reset();
 
 private:
 
@@ -70,7 +72,7 @@ void TestHogWidget::cleanupTestCase()
 
 }
 
-void TestHogWidget::testDefaultConstructor()
+void TestHogWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(QSize(64,128), mHogWidget->winSize());
@@ -93,7 +95,7 @@ void TestHogWidget::test_windowTitle()
   QCOMPARE("HOG", mHogWidget->windowTitle());
 }
 
-void TestHogWidget::testWinSize_data()
+void TestHogWidget::test_winSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -105,7 +107,7 @@ void TestHogWidget::testWinSize_data()
   QTest::newRow("Out of range value 2") << QSize(64,10001) << QSize(64,10000);
 }
 
-void TestHogWidget::testWinSize()
+void TestHogWidget::test_winSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
@@ -114,7 +116,7 @@ void TestHogWidget::testWinSize()
   QCOMPARE(result, mHogWidget->winSize());
 }
 
-void TestHogWidget::testBlockSize_data()
+void TestHogWidget::test_blockSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -126,7 +128,7 @@ void TestHogWidget::testBlockSize_data()
   QTest::newRow("Out of range value 2") << QSize(64,10001) << QSize(64,10000);
 }
 
-void TestHogWidget::testBlockSize()
+void TestHogWidget::test_blockSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
@@ -135,7 +137,7 @@ void TestHogWidget::testBlockSize()
   QCOMPARE(result, mHogWidget->blockSize());
 }
 
-void TestHogWidget::testBlockStride_data()
+void TestHogWidget::test_blockStride_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -147,7 +149,7 @@ void TestHogWidget::testBlockStride_data()
   QTest::newRow("Out of range value 2") << QSize(64,10001) << QSize(64,10000);
 }
 
-void TestHogWidget::testBlockStride()
+void TestHogWidget::test_blockStride()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
@@ -156,7 +158,7 @@ void TestHogWidget::testBlockStride()
   QCOMPARE(result, mHogWidget->blockStride());
 }
 
-void TestHogWidget::testCellSize_data()
+void TestHogWidget::test_cellSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -168,7 +170,7 @@ void TestHogWidget::testCellSize_data()
   QTest::newRow("Out of range value 2") << QSize(64,10001) << QSize(64,10000);
 }
 
-void TestHogWidget::testCellSize()
+void TestHogWidget::test_cellSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);
@@ -177,7 +179,7 @@ void TestHogWidget::testCellSize()
   QCOMPARE(result, mHogWidget->cellSize());
 }
 
-void TestHogWidget::testNbins_data()
+void TestHogWidget::test_nbins_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -187,7 +189,7 @@ void TestHogWidget::testNbins_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestHogWidget::testNbins()
+void TestHogWidget::test_nbins()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -196,7 +198,7 @@ void TestHogWidget::testNbins()
   QCOMPARE(result, mHogWidget->nbins());
 }
 
-void TestHogWidget::testDerivAperture_data()
+void TestHogWidget::test_derivAperture_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -206,7 +208,7 @@ void TestHogWidget::testDerivAperture_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestHogWidget::testDerivAperture()
+void TestHogWidget::test_derivAperture()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -250,7 +252,7 @@ void TestHogWidget::testDerivAperture()
 
 //}
 
-void TestHogWidget::testReset()
+void TestHogWidget::test_reset()
 {
   mHogWidget->setWinSize(QSize(64,64));
   mHogWidget->setBlockSize(QSize(64,64));

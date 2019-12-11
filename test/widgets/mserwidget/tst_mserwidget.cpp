@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_delta_data();
   void test_delta();
@@ -69,7 +69,7 @@ void TestMserWidget::cleanupTestCase()
 
 }
 
-void TestMserWidget::testDefaultConstructor()
+void TestMserWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(5, mMserWidget->delta());

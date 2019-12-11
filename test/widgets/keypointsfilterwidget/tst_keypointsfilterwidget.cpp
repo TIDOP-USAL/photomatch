@@ -17,7 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_nPoints_data();
   void test_nPoints();
@@ -25,7 +25,10 @@ private slots:
   void test_minSize();
   void test_maxSize_data();
   void test_maxSize();
-  void testReset();
+  void test_isActiveFilterBest();
+  void test_isActiveFilterSize();
+  void test_isActiveRemoveDuplicated();
+  void test_reset();
 
 private:
 
@@ -56,7 +59,7 @@ void TestKeypointsFilterWidget::cleanupTestCase()
 
 }
 
-void TestKeypointsFilterWidget::testDefaultConstructor()
+void TestKeypointsFilterWidget::test_constructor()
 {
   /// Check default values
   KeypointsFilterWidget keypointsFilterWidget;
@@ -130,11 +133,32 @@ void TestKeypointsFilterWidget::test_maxSize()
   QCOMPARE(result, mKeypointsFilterWidget->maxSize());
 }
 
-void TestKeypointsFilterWidget::testReset()
+void TestKeypointsFilterWidget::test_isActiveFilterBest()
+{
+  mKeypointsFilterWidget->setActiveFilterBest(true);
+  QCOMPARE(true, mKeypointsFilterWidget->isActiveFilterBest());
+}
+
+void TestKeypointsFilterWidget::test_isActiveFilterSize()
+{
+  mKeypointsFilterWidget->setActiveFilterSize(true);
+  QCOMPARE(true, mKeypointsFilterWidget->isActiveFilterSize());
+}
+
+void TestKeypointsFilterWidget::test_isActiveRemoveDuplicated()
+{
+  mKeypointsFilterWidget->setActiveRemoveDuplicated(true);
+  QCOMPARE(true, mKeypointsFilterWidget->isActiveRemoveDuplicated());
+}
+
+void TestKeypointsFilterWidget::test_reset()
 {
   mKeypointsFilterWidget->setMaxSize(50.);
   mKeypointsFilterWidget->setMinSize(0.5);
   mKeypointsFilterWidget->setNPoints(500);
+  mKeypointsFilterWidget->setActiveFilterBest(true);
+  mKeypointsFilterWidget->setActiveFilterSize(true);
+  mKeypointsFilterWidget->setActiveRemoveDuplicated(true);
 
   mKeypointsFilterWidget->reset();
 

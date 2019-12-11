@@ -42,7 +42,9 @@ TestNewSessionView::~TestNewSessionView()
 
 void TestNewSessionView::testDefaultConstructor()
 {
-
+  NewSessionView newSessionView;
+  QCOMPARE("", newSessionView.sessionName());
+  QCOMPARE("", newSessionView.sessionDescription());
 }
 
 void TestNewSessionView::test_sessionName()
@@ -60,9 +62,15 @@ void TestNewSessionView::test_sessionDescription()
 {
   /// Simulación de entrada por teclado
 
-  //QTest::keyClicks(this->mTextEditDescription, "Descripción del proyecto");
+  QString session_description = this->sessionDescription();
 
-//  QCOMPARE(this->projectDescription(), QString("Descripción del proyecto"));
+  QTest::keyClick(this->mTextEditSessionDescription, '_');
+  QCOMPARE(session_description.append("_"), this->sessionDescription());
+
+  this->mTextEditSessionDescription->clear();
+
+  QTest::keyClicks(this->mTextEditSessionDescription, "description");
+  QCOMPARE(QString("description"), this->sessionDescription());
 }
 
 void TestNewSessionView::test_dialogButtonBox()
@@ -71,10 +79,6 @@ void TestNewSessionView::test_dialogButtonBox()
   QSignalSpy spy_rejected(this, &NewSessionView::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
-
-//  QSignalSpy spy_accepted(this, &NewSessionView::accepted);
-//  QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Save), Qt::LeftButton);
-//  QCOMPARE(spy_accepted.count(), 1);
 
   QSignalSpy spy_help(this, &NewSessionView::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);

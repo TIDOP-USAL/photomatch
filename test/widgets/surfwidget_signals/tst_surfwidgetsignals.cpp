@@ -21,12 +21,12 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testHessianThresholdChange();
-  void testOctavesChange();
-  void testOctaveLayersChange();
-  void testExtendedDescriptorChange();
-  void testRotatedFeaturesChange();
-  void testReset();
+  void test_hessianThresholdChange();
+  void test_octavesChange();
+  void test_octaveLayersChange();
+  void test_extendedDescriptorChange();
+  void test_rotatedFeaturesChange();
+  void test_reset();
 };
 
 TestSurfWidgetSignals::TestSurfWidgetSignals()
@@ -49,7 +49,7 @@ void TestSurfWidgetSignals::cleanupTestCase()
 
 }
 
-void TestSurfWidgetSignals::testHessianThresholdChange()
+void TestSurfWidgetSignals::test_hessianThresholdChange()
 {
   QSignalSpy spyHessianThresholdChange(this, &SurfWidget::hessianThresholdChange);
 
@@ -64,7 +64,7 @@ void TestSurfWidgetSignals::testHessianThresholdChange()
   QCOMPARE(spyHessianThresholdChange.count(), 0);
 }
 
-void TestSurfWidgetSignals::testOctavesChange()
+void TestSurfWidgetSignals::test_octavesChange()
 {
   QSignalSpy spyOctavesChange(this, &SurfWidget::octavesChange);
 
@@ -79,7 +79,7 @@ void TestSurfWidgetSignals::testOctavesChange()
   QCOMPARE(spyOctavesChange.count(), 0);
 }
 
-void TestSurfWidgetSignals::testOctaveLayersChange()
+void TestSurfWidgetSignals::test_octaveLayersChange()
 {
   QSignalSpy spyOctaveLayersChange(this, &SurfWidget::octaveLayersChange);
 
@@ -94,7 +94,7 @@ void TestSurfWidgetSignals::testOctaveLayersChange()
   QCOMPARE(spyOctaveLayersChange.count(), 0);
 }
 
-void TestSurfWidgetSignals::testExtendedDescriptorChange()
+void TestSurfWidgetSignals::test_extendedDescriptorChange()
 {
   QSignalSpy spyExtendedDescriptorChange(this, &SurfWidget::extendedDescriptorChange);
 
@@ -109,7 +109,7 @@ void TestSurfWidgetSignals::testExtendedDescriptorChange()
   QCOMPARE(spyExtendedDescriptorChange.count(), 0);
 }
 
-void TestSurfWidgetSignals::testRotatedFeaturesChange()
+void TestSurfWidgetSignals::test_rotatedFeaturesChange()
 {
   QSignalSpy spyRotatedFeaturesChange(this, &SurfWidget::rotatedFeaturesChange);
 
@@ -124,7 +124,7 @@ void TestSurfWidgetSignals::testRotatedFeaturesChange()
   QCOMPARE(spyRotatedFeaturesChange.count(), 0);
 }
 
-void TestSurfWidgetSignals::testReset()
+void TestSurfWidgetSignals::test_reset()
 {
   QSignalSpy spyHessianThresholdChange(this, &SurfWidget::hessianThresholdChange);
   QSignalSpy spyOctavesChange(this, &SurfWidget::octavesChange);

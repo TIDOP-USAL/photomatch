@@ -35,6 +35,10 @@ private slots:
   void test_historyMaxSize();
   void test_historyMaxSizeChange();
 
+  void test_imageViewerBGColor_data();
+  void test_imageViewerBGColor();
+  void test_imageViewerBGColorChange();
+
   void test_keypointsFormat_data();
   void test_keypointsFormat();
   void test_keypointsFormatChange();
@@ -118,9 +122,10 @@ private slots:
   void test_dialogButtonBox();
   void test_setUnsavedChanges();
   void test_onFeatureDetectorDescriptorChange();
-  void test_addFeatureDetectorMethod();
-  void test_onPreprocessChange();
   void test_addPreprocess();
+  void test_addFeatureDetectorMethod();
+  void test_addDescriptorMatcher();
+  void test_onPreprocessChange();
 
 private:
 
@@ -219,6 +224,40 @@ void TestSettingsView::test_historyMaxSizeChange()
 
   this->setHistoryMaxSize(20);
   QCOMPARE(spy_historyMaxSizeChange.count(), 0);
+}
+
+void TestSettingsView::test_imageViewerBGColor_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("#FF00FF") << "#FF00FF" << "#FF00FF";
+  QTest::newRow("#253612") << "#253612" << "#253612";
+  QTest::newRow("#205060") << "#205060" << "#205060";
+}
+
+void TestSettingsView::test_imageViewerBGColor()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  this->setImageViewerBGcolor(value);
+  QCOMPARE(result, this->imageViewerBGColor());
+}
+
+void TestSettingsView::test_imageViewerBGColorChange()
+{
+  QSignalSpy spy_imageViewerBGColorChange(this, &SettingsView::imageViewerBGColorChange);
+
+  this->mLineEditImageViewerBGcolor->setText("#5625ff");
+
+  QCOMPARE(spy_imageViewerBGColorChange.count(), 1);
+
+  QList<QVariant> args = spy_imageViewerBGColorChange.takeFirst();
+  QCOMPARE(args.at(0).toString(), "#5625ff");
+
+  this->setImageViewerBGcolor("FF00FF");
+  QCOMPARE(spy_imageViewerBGColorChange.count(), 0);
 }
 
 void TestSettingsView::test_keypointsFormat_data()
@@ -1119,6 +1158,11 @@ void TestSettingsView::test_onFeatureDetectorDescriptorChange()
 void TestSettingsView::test_addFeatureDetectorMethod()
 {
   ///TODO: completar test
+}
+
+void TestSettingsView::test_addDescriptorMatcher()
+{
+
 }
 
 void TestSettingsView::test_onPreprocessChange()

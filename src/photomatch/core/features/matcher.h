@@ -41,7 +41,16 @@ public:
    */
   virtual void reset() = 0;
 
+  /*!
+   * \brief Type of match method (flann or brute force)
+   * \return
+   */
   Type type() const { return mMatchType.flags(); }
+
+  /*!
+   * \brief Name of match method
+   * \return
+   */
   virtual QString name() const = 0;
 
 protected:
@@ -69,7 +78,7 @@ public:
    * \brief Compute matching
    * \param[in] queryDescriptors Query descriptors
    * \param[in] trainDescriptors Train descriptors
-   * \param[out] matches
+   * \param[out] matches Matches
    * \param[in] mask
    * \return true if error
    */

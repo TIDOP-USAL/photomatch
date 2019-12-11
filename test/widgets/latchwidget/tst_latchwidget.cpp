@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_bytes_data();
   void test_bytes();
@@ -58,7 +58,7 @@ void TestLatchWidget::cleanupTestCase()
 
 }
 
-void TestLatchWidget::testDefaultConstructor()
+void TestLatchWidget::test_constructor()
 {
   QCOMPARE("32", mLatchWidget->bytes());
   QCOMPARE(true, mLatchWidget->rotationInvariance());

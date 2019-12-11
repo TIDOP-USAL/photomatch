@@ -10,27 +10,29 @@ class TestKazeWidget : public QObject
   Q_OBJECT
 
 public:
+
   TestKazeWidget();
   ~TestKazeWidget();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
-  void testExtendedDescriptor_data();
-  void testExtendedDescriptor();
-  void testUpright_data();
-  void testUpright();
-  void testThreshold_data();
-  void testThreshold();
-  void testOctaves_data();
-  void testOctaves();
-  void testOctaveLayers_data();
-  void testOctaveLayers();
-  void testDiffusivity_data();
-  void testDiffusivity();
-  void testReset();
+  void test_extendedDescriptor_data();
+  void test_extendedDescriptor();
+  void test_upright_data();
+  void test_upright();
+  void test_threshold_data();
+  void test_threshold();
+  void test_octaves_data();
+  void test_octaves();
+  void test_octaveLayers_data();
+  void test_octaveLayers();
+  void test_diffusivity_data();
+  void test_diffusivity();
+  void test_reset();
 
 private:
 
@@ -61,7 +63,7 @@ void TestKazeWidget::cleanupTestCase()
 
 }
 
-void TestKazeWidget::testDefaultConstructor()
+void TestKazeWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(false, mKazeWidget->extendedDescriptor());
@@ -77,7 +79,7 @@ void TestKazeWidget::test_windowTitle()
   QCOMPARE("KAZE", mKazeWidget->windowTitle());
 }
 
-void TestKazeWidget::testExtendedDescriptor_data()
+void TestKazeWidget::test_extendedDescriptor_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -86,7 +88,7 @@ void TestKazeWidget::testExtendedDescriptor_data()
   QTest::newRow("true") << true << true;
 }
 
-void TestKazeWidget::testExtendedDescriptor()
+void TestKazeWidget::test_extendedDescriptor()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -95,7 +97,7 @@ void TestKazeWidget::testExtendedDescriptor()
   QCOMPARE(result, mKazeWidget->extendedDescriptor());
 }
 
-void TestKazeWidget::testUpright_data()
+void TestKazeWidget::test_upright_data()
 {
   QTest::addColumn<bool>("value");
   QTest::addColumn<bool>("result");
@@ -104,7 +106,7 @@ void TestKazeWidget::testUpright_data()
   QTest::newRow("true") << true << true;
 }
 
-void TestKazeWidget::testUpright()
+void TestKazeWidget::test_upright()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
@@ -113,7 +115,7 @@ void TestKazeWidget::testUpright()
   QCOMPARE(result, mKazeWidget->upright());
 }
 
-void TestKazeWidget::testThreshold_data()
+void TestKazeWidget::test_threshold_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -124,7 +126,7 @@ void TestKazeWidget::testThreshold_data()
   QTest::newRow("Out of range value") << 100. << 99.99;
 }
 
-void TestKazeWidget::testThreshold()
+void TestKazeWidget::test_threshold()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -133,7 +135,7 @@ void TestKazeWidget::testThreshold()
   QCOMPARE(result, mKazeWidget->threshold());
 }
 
-void TestKazeWidget::testOctaves_data()
+void TestKazeWidget::test_octaves_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -143,7 +145,7 @@ void TestKazeWidget::testOctaves_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestKazeWidget::testOctaves()
+void TestKazeWidget::test_octaves()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -152,7 +154,7 @@ void TestKazeWidget::testOctaves()
   QCOMPARE(result, mKazeWidget->octaves());
 }
 
-void TestKazeWidget::testOctaveLayers_data()
+void TestKazeWidget::test_octaveLayers_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -162,7 +164,7 @@ void TestKazeWidget::testOctaveLayers_data()
   QTest::newRow("Out of range value") << 101 << 100;
 }
 
-void TestKazeWidget::testOctaveLayers()
+void TestKazeWidget::test_octaveLayers()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -171,7 +173,7 @@ void TestKazeWidget::testOctaveLayers()
   QCOMPARE(result, mKazeWidget->octaveLayers());
 }
 
-void TestKazeWidget::testDiffusivity_data()
+void TestKazeWidget::test_diffusivity_data()
 {
   QTest::addColumn<QString>("value");
   QTest::addColumn<QString>("result");
@@ -183,7 +185,7 @@ void TestKazeWidget::testDiffusivity_data()
   QTest::newRow("bad_value") << "bad_value" << "DIFF_CHARBONNIER";
 }
 
-void TestKazeWidget::testDiffusivity()
+void TestKazeWidget::test_diffusivity()
 {
   QFETCH(QString, value);
   QFETCH(QString, result);
@@ -192,7 +194,7 @@ void TestKazeWidget::testDiffusivity()
   QCOMPARE(result, mKazeWidget->diffusivity());
 }
 
-void TestKazeWidget::testReset()
+void TestKazeWidget::test_reset()
 {
   mKazeWidget->setThreshold(50.);
   mKazeWidget->setOctaves(2);

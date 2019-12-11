@@ -18,10 +18,10 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
-  void test_tilesGridSize_data();
-  void test_tilesGridSize();
+  void test_blockSize_data();
+  void test_blockSize();
   void test_reset();
 
 private:
@@ -53,7 +53,7 @@ void TestNoshpWidget::cleanupTestCase()
 
 }
 
-void TestNoshpWidget::testDefaultConstructor()
+void TestNoshpWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(QSize(127, 127), mNoshpWidget->blockSize());
@@ -64,7 +64,7 @@ void TestNoshpWidget::test_windowTitle()
   QCOMPARE("NOSHP", mNoshpWidget->windowTitle());
 }
 
-void TestNoshpWidget::test_tilesGridSize_data()
+void TestNoshpWidget::test_blockSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -75,7 +75,7 @@ void TestNoshpWidget::test_tilesGridSize_data()
   QTest::newRow("Out of range value y") << QSize(50, 1001) << QSize(50, 1000);
 }
 
-void TestNoshpWidget::test_tilesGridSize()
+void TestNoshpWidget::test_blockSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);

@@ -4,7 +4,7 @@
 #include "photomatch/ui/PreprocessView.h"
 
 #include "photomatch/widgets/AcebsfWidget.h"
-#include "photomatch/widgets/CLAHEWidget.h"
+#include "photomatch/widgets/ClaheWidget.h"
 #include "photomatch/widgets/CmbfheWidget.h"
 #include "photomatch/widgets/CmbfheWidget.h"
 #include "photomatch/widgets/DheWidget.h"
@@ -38,10 +38,10 @@ private slots:
   void cleanupTestCase();
   void test_dialogButtonBox();
   void test_preprocessChange();
+  void test_sessionName();
   void test_addPreprocess();
   void test_currentPreprocess_data();
   void test_currentPreprocess();
-  void test_setCurrentPreprocess();
   void test_maxImageSize();
   void test_isFullImageSize();
 
@@ -159,10 +159,6 @@ void TestPreprocessView::test_dialogButtonBox()
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
-//  QSignalSpy spy_accepted(this, &SettingsView::accepted);
-//  QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Ok), Qt::LeftButton);
-//  QCOMPARE(spy_accepted.count(), 1);
-
   QSignalSpy spy_applyChanges(this, &PreprocessView::run);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Apply), Qt::LeftButton);
   QCOMPARE(spy_applyChanges.count(), 1);
@@ -187,6 +183,12 @@ void TestPreprocessView::test_preprocessChange()
 
   this->setCurrentPreprocess("RSWHE");
   QCOMPARE(spy_preprocessChange.count(), 0);
+}
+
+void TestPreprocessView::test_sessionName()
+{
+  this->setSessionName("Session01");
+  QCOMPARE("Preprocess Session01", this->windowTitle());
 }
 
 void TestPreprocessView::test_addPreprocess()
@@ -222,12 +224,6 @@ void TestPreprocessView::test_currentPreprocess()
   this->setCurrentPreprocess(value);
 
   QCOMPARE(result, this->currentPreprocess());
-}
-
-void TestPreprocessView::test_setCurrentPreprocess()
-{
-//  this->setCurrentPreprocess("CLAHE");
-  //  QCOMPARE(true, this->mCLAHE->isVisible());
 }
 
 void TestPreprocessView::test_maxImageSize()

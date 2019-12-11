@@ -52,7 +52,7 @@ void TestRswheWidgetSignals::test_histogramDivisionsChange()
 
 void TestRswheWidgetSignals::test_histogramCutChange()
 {
-//  QSignalSpy spy_histogramCutChange(this, &RswheWidget::histogramCutChange);
+  QSignalSpy spy_histogramCutChange(this, &RswheWidget::histogramCutChange);
 
 //  QTest::mouseClick(mHistogramCutByMedian, Qt::MouseButton::LeftButton);
 

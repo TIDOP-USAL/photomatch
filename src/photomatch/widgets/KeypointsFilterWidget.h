@@ -40,6 +40,9 @@ public slots:
   virtual void setMinSize(double minSize) = 0;
   virtual void setMaxSize(double maxSize) = 0;
 
+  virtual void setActiveFilterBest(bool active) = 0;
+  virtual void setActiveFilterSize(bool active) = 0;
+  virtual void setActiveRemoveDuplicated(bool active) = 0;
 };
 
 
@@ -69,6 +72,9 @@ public slots:
   void setNPoints(int nPoints) override;
   void setMinSize(double minSize) override;
   void setMaxSize(double maxSize) override;
+  void setActiveFilterBest(bool active) override;
+  void setActiveFilterSize(bool active) override;
+  void setActiveRemoveDuplicated(bool active) override;
 
 // PhotoMatchWidget interface
 

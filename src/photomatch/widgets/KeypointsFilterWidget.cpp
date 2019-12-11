@@ -86,6 +86,24 @@ void KeypointsFilterWidget::setMaxSize(double maxSize)
   update();
 }
 
+void KeypointsFilterWidget::setActiveFilterBest(bool active)
+{
+  mCheckBoxPointsNumber->setChecked(active);
+  update();
+}
+
+void KeypointsFilterWidget::setActiveFilterSize(bool active)
+{
+  mCheckBoxSize->setChecked(active);
+  update();
+}
+
+void KeypointsFilterWidget::setActiveRemoveDuplicated(bool active)
+{
+  mCheckBoxRemoveDuplicated->setChecked(active);
+  update();
+}
+
 void KeypointsFilterWidget::update()
 {
   bActiveFilterBest = mCheckBoxPointsNumber->isChecked();

@@ -16,7 +16,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_descriptorType_data();
   void test_descriptorType();
@@ -51,7 +51,7 @@ TestVggWidget::~TestVggWidget()
   }
 }
 
-void TestVggWidget::testDefaultConstructor()
+void TestVggWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE("VGG_120", mVggWidget->descriptorType());

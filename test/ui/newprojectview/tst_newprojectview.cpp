@@ -22,7 +22,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_projectName();
   void test_projectPath_data();
   void test_projectPath();
@@ -45,9 +45,13 @@ TestNewProjectView::~TestNewProjectView()
 {
 }
 
-void TestNewProjectView::testDefaultConstructor()
+void TestNewProjectView::test_constructor()
 {
-
+  NewProjectView newProjectView;
+  QCOMPARE("", newProjectView.projectName());
+  QCOMPARE("", newProjectView.projectPath());
+  QCOMPARE("", newProjectView.projectDescription());
+  QCOMPARE(true, newProjectView.createProjectFolder());
 }
 
 void TestNewProjectView::test_projectName()
@@ -85,7 +89,6 @@ void TestNewProjectView::test_projectPath_signals()
 
   QString project_path = this->projectPath();
 
-  //this->mLineEditProjectPath->setFocus();
   QTest::keyClick(this->mLineEditProjectPath, '_');
   QCOMPARE(this->projectPath(), project_path.append("_"));
 
@@ -129,14 +132,24 @@ void TestNewProjectView::test_projectDescription()
 {
   /// Simulación de entrada por teclado
 
-  //QTest::keyClicks(this->mTextEditDescription, "Descripción del proyecto");
+  QString project_description = this->projectDescription();
 
-//  QCOMPARE(this->projectDescription(), QString("Descripción del proyecto"));
+  QTest::keyClick(this->mTextEditDescription, '_');
+  QCOMPARE(project_description.append("_"), this->projectDescription());
+
+  this->mTextEditDescription->clear();
+
+  QTest::keyClicks(this->mTextEditDescription, "description");
+  QCOMPARE(QString("description"), this->projectDescription());
 }
 
 void TestNewProjectView::test_createProjectFolder()
 {
+  mCheckBoxProjectFolder->setChecked(true);
+  QCOMPARE(true, this->createProjectFolder());
 
+  mCheckBoxProjectFolder->setChecked(false);
+  QCOMPARE(false, this->createProjectFolder());
 }
 
 void TestNewProjectView::test_pushButtonProjectPath()
@@ -169,6 +182,7 @@ void TestNewProjectView::test_clear()
   QCOMPARE(this->projectPath(), QString(""));
   QCOMPARE(this->mLineEditProjectFile->text(), QString(""));
   QCOMPARE(this->projectDescription(), QString(""));
+  QCOMPARE(true, this->createProjectFolder());
 }
 
 QTEST_MAIN(TestNewProjectView)

@@ -36,6 +36,10 @@ public:
    */
   virtual void reset() = 0;
 
+  /*!
+   * \brief type of keypoints filter
+   * \return filter type
+   */
   Type type() const { return mFilterType.flags(); }
 
 protected:
@@ -56,6 +60,12 @@ public:
   KeyPointsFilterProcess() {}
   virtual ~KeyPointsFilterProcess() = default;
 
+  /*!
+   * \brief filter
+   * \param[in] keypoints
+   * \param[out] filteredKeypoints
+   * \return
+   */
   virtual bool filter(const std::vector<cv::KeyPoint> &keypoints,
                       std::vector<cv::KeyPoint> &filteredKeypoints) = 0;
 };
@@ -73,7 +83,16 @@ public:
   KeyPointsFilterNBestProperties();
   ~KeyPointsFilterNBestProperties() override = default;
 
+  /*!
+   * \brief Number of points to retain
+   * \return Number of points
+   */
   virtual int nPoints() const;
+
+  /*!
+   * \brief Set the number of points to retain
+   * \param[in] nPoints number of points to retain
+   */
   virtual void setNPoints(int nPoints);
 
 // KeyPointsFilter interface
@@ -135,10 +154,28 @@ public:
   KeyPointsFilterBySizeProperties();
   ~KeyPointsFilterBySizeProperties() override = default;
 
+  /*!
+   * \brief Minimum size
+   * \return Minimum size
+   */
   virtual double minSize() const;
+
+  /*!
+   * \brief set minimum size
+   * \param[in] minSize
+   */
   virtual void setMinSize(double minSize);
 
+  /*!
+   * \brief maximum size
+   * \return maximum size
+   */
   virtual double maxSize() const;
+
+  /*!
+   * \brief Set maximum size
+   * \param[in] maxSize Maximum size
+   */
   virtual void setMaxSize(double maxSize);
 
 // KeyPointsFilter interface

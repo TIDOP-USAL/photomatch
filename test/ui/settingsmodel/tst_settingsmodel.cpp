@@ -130,13 +130,23 @@ private slots:
   void test_akazeDiffusivity_data();
   void test_akazeDiffusivity();
 
+  /* BOOST */
+  void test_boostDescriptorType_data();
+  void test_boostDescriptorType();
+  void test_boostUseOrientation();
+  void test_boostScaleFactor_data();
+  void test_boostScaleFactor();
+
+  /* BRIEF */
   void test_briefBytes();
   void test_briefUseOrientation();
 
+  /* BRISK */
   void test_briskThreshold();
   void test_briskOctaves();
   void test_briskPatternScale();
 
+  /* DAISY */
   void test_daisyRadius();
   void test_daisyQRadius();
   void test_daisyQTheta();
@@ -145,6 +155,7 @@ private slots:
   void test_daisyInterpolation();
   void test_daisyUseOrientation();
 
+  /* FAST */
   void test_fastThreshold();
   void test_fastNonmaxSuppression();
   void test_fastDetectorType();
@@ -482,6 +493,18 @@ void TestSettingsModel::test_defaultValues()
   QCOMPARE(true, settingsModel.vggUseNormalizeImage());
   QCOMPARE(true, settingsModel.vggUseScaleOrientation());
 
+  QCOMPARE("Flann Based Matching", settingsModel.matchMethod());
+  QCOMPARE("NORM_L2", settingsModel.matchNormType());
+  QCOMPARE(0.8, settingsModel.matchRatio());
+  QCOMPARE(0.7, settingsModel.matchDistance());
+  QCOMPARE(0.999, settingsModel.matchConfidence());
+  QCOMPARE(true, settingsModel.matchCrossMatching());
+  QCOMPARE(2000, settingsModel.matchMaxIters());
+  QCOMPARE("Fundamental Matrix", settingsModel.matchGeometricTest());
+  QCOMPARE("RANSAC", settingsModel.matchHomographyComputeMethod());
+  QCOMPARE("RANSAC", settingsModel.matchFundamentalComputeMethod());
+  QCOMPARE("RANSAC", settingsModel.matchEssentialComputeMethod());
+
   QCOMPARE("#dcdcdc", settingsModel.keypointsViewerBGColor());
   QCOMPARE(0, settingsModel.keypointsViewerMarkerType());
   QCOMPARE(20, settingsModel.keypointsViewerMarkerSize());
@@ -807,6 +830,60 @@ void TestSettingsModel::test_akazeDiffusivity()
 
   mSettingsModel->setAkazeDiffusivity(value);
   QCOMPARE(result, mSettingsModel->akazeDiffusivity());
+}
+
+void TestSettingsModel::test_boostDescriptorType_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("BGM") << "BGM" << "BGM";
+  QTest::newRow("BGM_HARD") << "BGM_HARD" << "BGM_HARD";
+  QTest::newRow("BGM_BILINEAR") << "BGM_BILINEAR" << "BGM_BILINEAR";
+  QTest::newRow("LBGM") << "LBGM" << "LBGM";
+  QTest::newRow("BINBOOST_64") << "BINBOOST_64" << "BINBOOST_64";
+  QTest::newRow("BINBOOST_128") << "BINBOOST_128" << "BINBOOST_128";
+  QTest::newRow("BINBOOST_256") << "BINBOOST_256" << "BINBOOST_256";
+  QTest::newRow("bad_value") << "bad_value" << "BINBOOST_256";
+}
+
+void TestSettingsModel::test_boostDescriptorType()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  mSettingsModel->setBoostDescriptorType(value);
+  QCOMPARE(result, mSettingsModel->boostDescriptorType());
+}
+
+void TestSettingsModel::test_boostUseOrientation()
+{
+  mSettingsModel->setBoostUseOrientation(true);
+  QCOMPARE(true, mSettingsModel->boostUseOrientation());
+
+  mSettingsModel->setBoostUseOrientation(false);
+  QCOMPARE(false, mSettingsModel->boostUseOrientation());
+}
+
+void TestSettingsModel::test_boostScaleFactor_data()
+{
+  QTest::addColumn<double>("value");
+  QTest::addColumn<double>("result");
+
+  QTest::newRow("6.75") << 6.75 << 6.75;
+  QTest::newRow("6.25") << 6.25 << 6.25;
+  QTest::newRow("5.00") << 5.00 << 5.00;
+  QTest::newRow("0.75") << 0.75 << 0.75;
+  QTest::newRow("1.50") << 1.50 << 1.50;
+}
+
+void TestSettingsModel::test_boostScaleFactor()
+{
+  QFETCH(double, value);
+  QFETCH(double, result);
+
+  mSettingsModel->setBoostScaleFactor(value);
+  QCOMPARE(result, mSettingsModel->boostScaleFactor());
 }
 
 void TestSettingsModel::test_briefBytes()

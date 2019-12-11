@@ -14,6 +14,7 @@ public:
   ~TestDescriptorMatcherWidget();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_defaultConstructor();

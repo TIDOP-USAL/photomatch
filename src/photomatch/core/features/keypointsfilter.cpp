@@ -57,6 +57,10 @@ bool KeyPointsFilterNBest::filter(const std::vector<cv::KeyPoint> &keypoints, st
   try {
     filteredKeypoints = keypoints;
     cv::KeyPointsFilter::retainBest(filteredKeypoints, KeyPointsFilterNBestProperties::nPoints());
+    if (filteredKeypoints.size() != static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints())){
+      /// Los keypoints no tienen 'response'. Por ahora...
+      filteredKeypoints.resize(static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints()));
+    }
     msgInfo("Filtered retaining %i best keypoints", KeyPointsFilterNBestProperties::nPoints());
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
@@ -140,11 +144,11 @@ bool KeyPointsFilterBySize::filter(const std::vector<cv::KeyPoint> &keypoints, s
 {
   try {
     filteredKeypoints = keypoints;
-    int size = keypoints.size();
-    float min_size = static_cast<float>(KeyPointsFilterBySizeProperties::minSize());
-    float max_size = static_cast<float>(KeyPointsFilterBySizeProperties::maxSize());
-    cv::KeyPointsFilter::runByKeypointSize(filteredKeypoints, min_size, max_size);
-    int new_size = filteredKeypoints.size();
+    size_t size = keypoints.size();
+    double min_size = KeyPointsFilterBySizeProperties::minSize();
+    double max_size = KeyPointsFilterBySizeProperties::maxSize();
+    cv::KeyPointsFilter::runByKeypointSize(filteredKeypoints, static_cast<float>(min_size), static_cast<float>(max_size));
+    size_t new_size = filteredKeypoints.size();
     msgInfo("Filtered keypoints by size (min=%f,max=%f): %i", min_size, max_size, size - new_size);
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
@@ -171,9 +175,9 @@ bool KeyPointsFilterRemoveDuplicated::filter(const std::vector<cv::KeyPoint>& ke
 {
   try {
     filteredKeypoints = keypoints;
-    int size = keypoints.size();
+    int size = static_cast<int>(keypoints.size());
     cv::KeyPointsFilter::removeDuplicated(filteredKeypoints);
-    int new_size = filteredKeypoints.size();
+    int new_size = static_cast<int>(filteredKeypoints.size());
     msgInfo("Remove duplicated keypoints: %i", size - new_size);
 
   } catch (cv::Exception &e) {

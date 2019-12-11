@@ -18,10 +18,10 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
-  void test_tilesGridSize_data();
-  void test_tilesGridSize();
+  void test_blockSize_data();
+  void test_blockSize();
   void test_reset();
 
 private:
@@ -53,7 +53,7 @@ void TestFaheWidget::cleanupTestCase()
 
 }
 
-void TestFaheWidget::testDefaultConstructor()
+void TestFaheWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(QSize(11, 11), mFaheWidget->blockSize());
@@ -65,7 +65,7 @@ void TestFaheWidget::test_windowTitle()
 }
 
 
-void TestFaheWidget::test_tilesGridSize_data()
+void TestFaheWidget::test_blockSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -76,7 +76,7 @@ void TestFaheWidget::test_tilesGridSize_data()
   QTest::newRow("Out of range value y") << QSize(50, 1001) << QSize(50, 1000);
 }
 
-void TestFaheWidget::test_tilesGridSize()
+void TestFaheWidget::test_blockSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);

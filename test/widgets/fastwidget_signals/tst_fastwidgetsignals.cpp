@@ -14,16 +14,18 @@ class TestFastWidgetSignals : public FastWidget
   Q_OBJECT
 
 public:
+
   TestFastWidgetSignals();
   ~TestFastWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
-  void testThresholdChange();
-  void testNonmaxSuppressionChange();
-  void testDetectorTypeChange();
-  void testReset();
+  void test_thresholdChange();
+  void test_nonmaxSuppressionChange();
+  void test_detectorTypeChange();
+  void test_reset();
 
 };
 
@@ -47,7 +49,7 @@ void TestFastWidgetSignals::cleanupTestCase()
 
 }
 
-void TestFastWidgetSignals::testThresholdChange()
+void TestFastWidgetSignals::test_thresholdChange()
 {
   QSignalSpy spyThreshold(this, &FastWidget::thresholdChange);
 
@@ -62,7 +64,7 @@ void TestFastWidgetSignals::testThresholdChange()
   QCOMPARE(spyThreshold.count(), 0);
 }
 
-void TestFastWidgetSignals::testNonmaxSuppressionChange()
+void TestFastWidgetSignals::test_nonmaxSuppressionChange()
 {
   QSignalSpy spyNonmaxSuppressionChange(this, &FastWidget::nonmaxSuppressionChange);
 
@@ -77,7 +79,7 @@ void TestFastWidgetSignals::testNonmaxSuppressionChange()
   QCOMPARE(spyNonmaxSuppressionChange.count(), 0);
 }
 
-void TestFastWidgetSignals::testDetectorTypeChange()
+void TestFastWidgetSignals::test_detectorTypeChange()
 {
   QSignalSpy spyDetectorTypeChange(this, &FastWidget::detectorTypeChange);
 
@@ -95,7 +97,7 @@ void TestFastWidgetSignals::testDetectorTypeChange()
   QCOMPARE(spyDetectorTypeChange.count(), 0);
 }
 
-void TestFastWidgetSignals::testReset()
+void TestFastWidgetSignals::test_reset()
 {
   QSignalSpy spyThreshold(this, &FastWidget::thresholdChange);
   QSignalSpy spyNonmaxSuppressionChange(this, &FastWidget::nonmaxSuppressionChange);
