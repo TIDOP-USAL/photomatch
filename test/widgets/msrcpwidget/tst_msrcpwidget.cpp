@@ -15,7 +15,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_smallScale_data();
   void test_smallScale();
@@ -44,7 +44,7 @@ TestMsrcpWidget::~TestMsrcpWidget()
   }
 }
 
-void TestMsrcpWidget::testDefaultConstructor()
+void TestMsrcpWidget::test_constructor()
 {
   QCOMPARE(10., mMsrcpWidget->smallScale());
   QCOMPARE(100., mMsrcpWidget->midScale());

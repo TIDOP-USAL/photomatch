@@ -15,7 +15,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_histogramDivisions_data();
   void test_histogramDivisions();
@@ -42,7 +42,7 @@ TestRswheWidget::~TestRswheWidget()
   }
 }
 
-void TestRswheWidget::testDefaultConstructor()
+void TestRswheWidget::test_constructor()
 {
   QCOMPARE(2, mRswheWidget->histogramDivisions());
   QCOMPARE(IRswheWidget::HistogramCut::by_mean, mRswheWidget->histogramCut());

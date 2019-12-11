@@ -24,6 +24,9 @@ protected slots:
 
 public slots:
 
+  /*!
+   * \brief Reset to initial status
+   */
   virtual void reset() = 0;
 
 private:

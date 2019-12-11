@@ -10,8 +10,7 @@ namespace photomatch
 {
 
 class ISettingsModel
-  : public IModel/*,
-    public ISettings*/
+  : public IModel
 {
 
   Q_OBJECT

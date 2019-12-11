@@ -20,12 +20,12 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testFeaturesNumberChange();
-  void testOctaveLayersChange();
-  void testContrastThresholdChange();
-  void testEdgeThresholdChange();
-  void testSigmaChange();
-  void testReset();
+  void test_featuresNumberChange();
+  void test_octaveLayersChange();
+  void test_contrastThresholdChange();
+  void test_edgeThresholdChange();
+  void test_sigmaChange();
+  void test_reset();
 };
 
 TestSiftWidgetSignals::TestSiftWidgetSignals()
@@ -49,7 +49,7 @@ void TestSiftWidgetSignals::cleanupTestCase()
 
 }
 
-void TestSiftWidgetSignals::testFeaturesNumberChange()
+void TestSiftWidgetSignals::test_featuresNumberChange()
 {
   QSignalSpy spyFeaturesNumber(this, &SiftWidget::featuresNumberChange);
 
@@ -64,7 +64,7 @@ void TestSiftWidgetSignals::testFeaturesNumberChange()
   QCOMPARE(spyFeaturesNumber.count(), 0);
 }
 
-void TestSiftWidgetSignals::testOctaveLayersChange()
+void TestSiftWidgetSignals::test_octaveLayersChange()
 {
   QSignalSpy spyOctaveLayers(this, &SiftWidget::octaveLayersChange);
 
@@ -79,7 +79,7 @@ void TestSiftWidgetSignals::testOctaveLayersChange()
   QCOMPARE(spyOctaveLayers.count(), 0);
 }
 
-void TestSiftWidgetSignals::testContrastThresholdChange()
+void TestSiftWidgetSignals::test_contrastThresholdChange()
 {
   QSignalSpy spyContrastThreshold(this, &SiftWidget::contrastThresholdChange);
 
@@ -94,7 +94,7 @@ void TestSiftWidgetSignals::testContrastThresholdChange()
   QCOMPARE(spyContrastThreshold.count(), 0);
 }
 
-void TestSiftWidgetSignals::testEdgeThresholdChange()
+void TestSiftWidgetSignals::test_edgeThresholdChange()
 {
   QSignalSpy spyEdgeThreshold(this, &SiftWidget::edgeThresholdChange);
 
@@ -109,7 +109,7 @@ void TestSiftWidgetSignals::testEdgeThresholdChange()
   QCOMPARE(spyEdgeThreshold.count(), 0);
 }
 
-void TestSiftWidgetSignals::testSigmaChange()
+void TestSiftWidgetSignals::test_sigmaChange()
 {
   QSignalSpy spySigma(this, &SiftWidget::sigmaChange);
 
@@ -124,7 +124,7 @@ void TestSiftWidgetSignals::testSigmaChange()
   QCOMPARE(spySigma.count(), 0);
 }
 
-void TestSiftWidgetSignals::testReset()
+void TestSiftWidgetSignals::test_reset()
 {
   QSignalSpy spyFeaturesNumber(this, &SiftWidget::featuresNumberChange);
   QSignalSpy spyOctaveLayers(this, &SiftWidget::octaveLayersChange);

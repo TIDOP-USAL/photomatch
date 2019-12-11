@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_featuresNumber_data();
   void test_featuresNumber();
@@ -59,7 +59,7 @@ void TestOrbWidget::cleanupTestCase()
 
 }
 
-void TestOrbWidget::testDefaultConstructor()
+void TestOrbWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(5000, mOrbWidget->featuresNumber());

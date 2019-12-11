@@ -17,7 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_thresholdSaliency_data();
   void test_thresholdSaliency();
@@ -41,7 +41,7 @@ private slots:
   void test_affineMSD();
   void test_tilts_data();
   void test_tilts();
-  void test_Reset();
+  void test_reset();
 
 protected:
 
@@ -71,7 +71,7 @@ void TestMsdWidget::cleanupTestCase()
 
 }
 
-void TestMsdWidget::testDefaultConstructor()
+void TestMsdWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(250, mMsdWidget->thresholdSaliency());
@@ -310,7 +310,7 @@ void TestMsdWidget::test_tilts()
   QCOMPARE(result, mMsdWidget->tilts());
 }
 
-void TestMsdWidget::test_Reset()
+void TestMsdWidget::test_reset()
 {
   mMsdWidget->setThresholdSaliency(200);
   mMsdWidget->setPatchRadius(4);

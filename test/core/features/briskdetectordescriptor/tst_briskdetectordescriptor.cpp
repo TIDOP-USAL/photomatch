@@ -78,7 +78,7 @@ void TestBriskDetectorDescriptor::test_constructor()
 void TestBriskDetectorDescriptor::test_copy_constructor()
 {
   BriskDetectorDescriptor briskDetectorDescriptor(15, 4, 2.);
-  BriskDetectorDescriptor copy;
+  BriskDetectorDescriptor copy(briskDetectorDescriptor);
   QCOMPARE(15, copy.threshold());
   QCOMPARE(4, copy.octaves());
   QCOMPARE(2.0, copy.patternScale());

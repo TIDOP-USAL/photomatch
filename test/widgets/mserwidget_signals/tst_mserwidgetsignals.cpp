@@ -20,16 +20,16 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDeltaChange();
-  void testMinAreaChange();
-  void testMaxAreaChange();
-  void testMaxVariationChange();
-  void testMinDiversityChange();
-  void testMaxEvolutionChange();
-  void testAreaThresholdChange();
-  void testMinMarginChange();
-  void testEdgeBlurSizeChange();
-  void testReset();
+  void test_deltaChange();
+  void test_minAreaChange();
+  void test_maxAreaChange();
+  void test_maxVariationChange();
+  void test_minDiversityChange();
+  void test_maxEvolutionChange();
+  void test_areaThresholdChange();
+  void test_minMarginChange();
+  void test_edgeBlurSizeChange();
+  void test_reset();
 };
 
 TestMserWidgetSignals::TestMserWidgetSignals()
@@ -53,7 +53,7 @@ void TestMserWidgetSignals::cleanupTestCase()
 
 }
 
-void TestMserWidgetSignals::testDeltaChange()
+void TestMserWidgetSignals::test_deltaChange()
 {
   QSignalSpy spyDeltaChange(this, &MserWidget::deltaChange);
 
@@ -68,7 +68,7 @@ void TestMserWidgetSignals::testDeltaChange()
   QCOMPARE(spyDeltaChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testMinAreaChange()
+void TestMserWidgetSignals::test_minAreaChange()
 {
   QSignalSpy spyMinAreaChange(this, &MserWidget::minAreaChange);
 
@@ -83,7 +83,7 @@ void TestMserWidgetSignals::testMinAreaChange()
   QCOMPARE(spyMinAreaChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testMaxAreaChange()
+void TestMserWidgetSignals::test_maxAreaChange()
 {
   QSignalSpy spyMaxAreaChange(this, &MserWidget::maxAreaChange);
 
@@ -98,7 +98,7 @@ void TestMserWidgetSignals::testMaxAreaChange()
   QCOMPARE(spyMaxAreaChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testMaxVariationChange()
+void TestMserWidgetSignals::test_maxVariationChange()
 {
   QSignalSpy spyMaxVariationChange(this, &MserWidget::maxVariationChange);
 
@@ -113,7 +113,7 @@ void TestMserWidgetSignals::testMaxVariationChange()
   QCOMPARE(spyMaxVariationChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testMinDiversityChange()
+void TestMserWidgetSignals::test_minDiversityChange()
 {
   QSignalSpy spyMinDiversityChange(this, &MserWidget::minDiversityChange);
 
@@ -128,7 +128,7 @@ void TestMserWidgetSignals::testMinDiversityChange()
   QCOMPARE(spyMinDiversityChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testMaxEvolutionChange()
+void TestMserWidgetSignals::test_maxEvolutionChange()
 {
   QSignalSpy spyMaxEvolutionChange(this, &MserWidget::maxEvolutionChange);
 
@@ -143,7 +143,7 @@ void TestMserWidgetSignals::testMaxEvolutionChange()
   QCOMPARE(spyMaxEvolutionChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testAreaThresholdChange()
+void TestMserWidgetSignals::test_areaThresholdChange()
 {
   QSignalSpy spyAreaThresholdChange(this, &MserWidget::areaThresholdChange);
 
@@ -158,7 +158,7 @@ void TestMserWidgetSignals::testAreaThresholdChange()
   QCOMPARE(spyAreaThresholdChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testMinMarginChange()
+void TestMserWidgetSignals::test_minMarginChange()
 {
   QSignalSpy spyMinMarginChange(this, &MserWidget::minMarginChange);
 
@@ -173,7 +173,7 @@ void TestMserWidgetSignals::testMinMarginChange()
   QCOMPARE(spyMinMarginChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testEdgeBlurSizeChange()
+void TestMserWidgetSignals::test_edgeBlurSizeChange()
 {
   QSignalSpy spyEdgeBlurSizeChange(this, &MserWidget::edgeBlurSizeChange);
 
@@ -188,7 +188,7 @@ void TestMserWidgetSignals::testEdgeBlurSizeChange()
   QCOMPARE(spyEdgeBlurSizeChange.count(), 0);
 }
 
-void TestMserWidgetSignals::testReset()
+void TestMserWidgetSignals::test_reset()
 {
   QSignalSpy spyDeltaChange(this, &MserWidget::deltaChange);
   QSignalSpy spyMinAreaChange(this, &MserWidget::minAreaChange);

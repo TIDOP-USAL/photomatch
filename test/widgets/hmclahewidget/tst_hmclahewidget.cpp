@@ -15,7 +15,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
@@ -44,7 +44,7 @@ TestHmclaheWidget::~TestHmclaheWidget()
   }
 }
 
-void TestHmclaheWidget::testDefaultConstructor()
+void TestHmclaheWidget::test_constructor()
 {
   HmclaheWidget hmclaheWidget;
   QCOMPARE(QSize(17, 17), hmclaheWidget.blockSize());

@@ -15,7 +15,7 @@ public:
 
 private slots:
 
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_maxSize_data();
   void test_maxSize();
@@ -47,7 +47,7 @@ TestStarWidget::~TestStarWidget()
   }
 }
 
-void TestStarWidget::testDefaultConstructor()
+void TestStarWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(45, mStarWidget->maxSize());

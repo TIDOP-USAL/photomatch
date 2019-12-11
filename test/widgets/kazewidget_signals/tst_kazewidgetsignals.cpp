@@ -22,13 +22,13 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testThresholdChange();
-  void testOctavesChange();
-  void testOctaveLayersChange();
-  void testExtendedDescriptorChange();
-  void testUprightChange();
-  void testDiffusivityChange();
-  void testReset();
+  void test_thresholdChange();
+  void test_octavesChange();
+  void test_octaveLayersChange();
+  void test_extendedDescriptorChange();
+  void test_uprightChange();
+  void test_diffusivityChange();
+  void test_reset();
 };
 
 TestKazeWidgetSignals::TestKazeWidgetSignals()
@@ -51,7 +51,7 @@ void TestKazeWidgetSignals::cleanupTestCase()
 
 }
 
-void TestKazeWidgetSignals::testThresholdChange()
+void TestKazeWidgetSignals::test_thresholdChange()
 {
   QSignalSpy spyThresholdChange(this, &KazeWidget::thresholdChange);
 
@@ -66,7 +66,7 @@ void TestKazeWidgetSignals::testThresholdChange()
   QCOMPARE(spyThresholdChange.count(), 0);
 }
 
-void TestKazeWidgetSignals::testOctavesChange()
+void TestKazeWidgetSignals::test_octavesChange()
 {
   QSignalSpy spyOctavesChange(this, &KazeWidget::octavesChange);
 
@@ -81,7 +81,7 @@ void TestKazeWidgetSignals::testOctavesChange()
   QCOMPARE(spyOctavesChange.count(), 0);
 }
 
-void TestKazeWidgetSignals::testOctaveLayersChange()
+void TestKazeWidgetSignals::test_octaveLayersChange()
 {
   QSignalSpy spyOctaveLayersChange(this, &KazeWidget::octaveLayersChange);
 
@@ -96,7 +96,7 @@ void TestKazeWidgetSignals::testOctaveLayersChange()
   QCOMPARE(spyOctaveLayersChange.count(), 0);
 }
 
-void TestKazeWidgetSignals::testExtendedDescriptorChange()
+void TestKazeWidgetSignals::test_extendedDescriptorChange()
 {
   QSignalSpy spyExtendedDescriptorChange(this, &KazeWidget::extendedDescriptorChange);
 
@@ -111,7 +111,7 @@ void TestKazeWidgetSignals::testExtendedDescriptorChange()
   QCOMPARE(spyExtendedDescriptorChange.count(), 0);
 }
 
-void TestKazeWidgetSignals::testUprightChange()
+void TestKazeWidgetSignals::test_uprightChange()
 {
   QSignalSpy spyUprightChange(this, &KazeWidget::uprightChange);
 
@@ -126,7 +126,7 @@ void TestKazeWidgetSignals::testUprightChange()
   QCOMPARE(spyUprightChange.count(), 0);
 }
 
-void TestKazeWidgetSignals::testDiffusivityChange()
+void TestKazeWidgetSignals::test_diffusivityChange()
 {
   QSignalSpy spyDiffusivityChange(this, &KazeWidget::diffusivityChange);
 
@@ -144,7 +144,7 @@ void TestKazeWidgetSignals::testDiffusivityChange()
   QCOMPARE(spyDiffusivityChange.count(), 0);
 }
 
-void TestKazeWidgetSignals::testReset()
+void TestKazeWidgetSignals::test_reset()
 {
   QSignalSpy spyThresholdChange(this, &KazeWidget::thresholdChange);
   QSignalSpy spyOctavesChange(this, &KazeWidget::octavesChange);

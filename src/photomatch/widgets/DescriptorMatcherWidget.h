@@ -20,7 +20,8 @@ class PHOTOMATCH_EXPORT IDescriptorMatcherWidget
 
 public:
 
-  IDescriptorMatcherWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  IDescriptorMatcherWidget(QWidget *parent = nullptr)
+    : PhotoMatchWidget(parent){}
   virtual ~IDescriptorMatcherWidget() = default;
 
   /*!
@@ -185,13 +186,6 @@ public:
 
   DescriptorMatcherWidget(QWidget *parent = nullptr);
   ~DescriptorMatcherWidget() override;
-
-private slots:
-
-//  void onMatchingMethodChanged(const QString &matchingMethod);
-//  void onHomographyComputeMethodChange(const QString &homographyComputeMethod);
-//  void onFundamentalComputeMethodChange(const QString &fundamentalComputeMethod);
-//  void onEssentialComputeMethodChange(const QString &essentialComputeMethod);
 
 // IDescriptorMatcherWidget interface
 

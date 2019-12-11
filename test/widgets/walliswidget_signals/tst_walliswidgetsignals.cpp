@@ -19,12 +19,12 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testContrast();
-  void testBrightnessChange();
-  void testImposedAverageChange();
-  void testImposedLocalStdDevChange();
-  void testKernelSizeChange();
-  void testReset();
+  void test_contrastChange();
+  void test_brightnessChange();
+  void test_imposedAverageChange();
+  void test_imposedLocalStdDevChange();
+  void test_kernelSizeChange();
+  void test_reset();
 };
 
 TestWallisWidgetSignals::TestWallisWidgetSignals()
@@ -48,7 +48,7 @@ void TestWallisWidgetSignals::cleanupTestCase()
 
 }
 
-void TestWallisWidgetSignals::testContrast()
+void TestWallisWidgetSignals::test_contrastChange()
 {
   QSignalSpy spyContrast(this, &WallisWidget::contrastChange);
 
@@ -63,7 +63,7 @@ void TestWallisWidgetSignals::testContrast()
   QCOMPARE(spyContrast.count(), 0);
 }
 
-void TestWallisWidgetSignals::testBrightnessChange()
+void TestWallisWidgetSignals::test_brightnessChange()
 {
   QSignalSpy spyBrightnessChange(this, &WallisWidget::brightnessChange);
 
@@ -78,7 +78,7 @@ void TestWallisWidgetSignals::testBrightnessChange()
   QCOMPARE(spyBrightnessChange.count(), 0);
 }
 
-void TestWallisWidgetSignals::testImposedAverageChange()
+void TestWallisWidgetSignals::test_imposedAverageChange()
 {
   QSignalSpy spyImposedAverageChange(this, &WallisWidget::imposedAverageChange);
 
@@ -93,7 +93,7 @@ void TestWallisWidgetSignals::testImposedAverageChange()
   QCOMPARE(spyImposedAverageChange.count(), 0);
 }
 
-void TestWallisWidgetSignals::testImposedLocalStdDevChange()
+void TestWallisWidgetSignals::test_imposedLocalStdDevChange()
 {
   QSignalSpy spyImposedLocalStdDevChange(this, &WallisWidget::imposedLocalStdDevChange);
 
@@ -108,7 +108,7 @@ void TestWallisWidgetSignals::testImposedLocalStdDevChange()
   QCOMPARE(spyImposedLocalStdDevChange.count(), 0);
 }
 
-void TestWallisWidgetSignals::testKernelSizeChange()
+void TestWallisWidgetSignals::test_kernelSizeChange()
 {
   QSignalSpy spyLocalStdDevChange(this, &WallisWidget::kernelSizeChange);
 
@@ -123,7 +123,7 @@ void TestWallisWidgetSignals::testKernelSizeChange()
   QCOMPARE(spyLocalStdDevChange.count(), 0);
 }
 
-void TestWallisWidgetSignals::testReset()
+void TestWallisWidgetSignals::test_reset()
 {
   QSignalSpy spyContrast(this, &WallisWidget::contrastChange);
   QSignalSpy spyBrightnessChange(this, &WallisWidget::brightnessChange);

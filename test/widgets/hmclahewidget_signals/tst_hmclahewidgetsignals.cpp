@@ -39,7 +39,6 @@ void TestHmclaheWidgetSignals::test_blockSizeChange()
   QSignalSpy spy_blockSizeChange(this, &HmclaheWidget::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
-  //this->mTilesGridY->setValue(10);
 
   QCOMPARE(spy_blockSizeChange.count(), 1);
 
@@ -76,7 +75,7 @@ void TestHmclaheWidgetSignals::test_phiChange()
   QList<QVariant> args = spy_phiChange.takeFirst();
   QCOMPARE(args.at(0).toDouble(), 0.4);
 
-  this->setPhi(.7f);
+  this->setPhi(.7);
   QCOMPARE(spy_phiChange.count(), 0);
 }
 
@@ -87,8 +86,8 @@ void TestHmclaheWidgetSignals::test_reset()
   QSignalSpy spy_phiChange(this, &HmclaheWidget::phiChange);
 
   this->setBlockSize(QSize(5, 7));
-  this->setL(0.5f);
-  this->setPhi(.7f);
+  this->setL(0.5);
+  this->setPhi(.7);
 
   this->reset();
 

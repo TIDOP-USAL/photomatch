@@ -40,10 +40,6 @@ DescriptorMatcherWidget::DescriptorMatcherWidget(QWidget *parent)
   connect(mFComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(fundamentalComputeMethodChange(QString)));
   connect(mEComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(essentialComputeMethodChange(QString)));
 
-//  connect(this, SIGNAL(matchingMethodChange(QString)), this, SLOT(onMatchingMethodChanged(QString)));
-//  connect(this, SIGNAL(homographyComputeMethodChange(QString)), this, SLOT(onHomographyComputeMethodChange(QString)));
-//  connect(this, SIGNAL(fundamentalComputeMethodChange(QString)), this, SLOT(onFundamentalComputeMethodChange(QString)));
-//  connect(this, SIGNAL(essentialComputeMethodChange(QString)), this, SLOT(onEssentialComputeMethodChange(QString)));
   connect(this, SIGNAL(matchingMethodChange(QString)),           this,  SLOT(update()));
   connect(this, SIGNAL(geometricTestChange(QString)),            this,  SLOT(update()));
   connect(this, SIGNAL(homographyComputeMethodChange(QString)),  this,  SLOT(update()));
@@ -115,7 +111,6 @@ void DescriptorMatcherWidget::setMatchingMethod(const QString &matchingMethod)
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
   mMatchingMethod->setCurrentText(matchingMethod);
-  //onMatchingMethodChanged(matchingMethod);
   update();
 }
 
@@ -424,54 +419,6 @@ void DescriptorMatcherWidget::init()
   reset(); /// set default values
 
 }
-
-//void DescriptorMatcherWidget::onMatchingMethodChanged(const QString &matchingMethod)
-//{
-//  if (matchingMethod.compare("FLANN") == 0){
-//    //mNormTypeLabel->hide();
-//    //mNormType->hide();
-//    mGroupBoxBFParameters->hide();
-//  } else {
-//    //mNormTypeLabel->show();
-//    //mNormType->show();
-//    mGroupBoxBFParameters->show();
-//  }
-//}
-
-//void DescriptorMatcherWidget::onHomographyComputeMethodChange(const QString &homographyComputeMethod)
-//{
-//  if (homographyComputeMethod.compare("All Points") == 0){
-
-//  } else if (homographyComputeMethod.compare("RANSAC") == 0){
-
-//  } else if (homographyComputeMethod.compare("LMEDS") == 0){
-
-//  } else if (homographyComputeMethod.compare("RHO") == 0){
-
-//  }
-//}
-
-//void DescriptorMatcherWidget::onFundamentalComputeMethodChange(const QString &fundamentalComputeMethod)
-//{
-//  if (fundamentalComputeMethod.compare("7-point algorithm") == 0){
-
-//  } else if (fundamentalComputeMethod.compare("8-point algorithm") == 0){
-
-//  } else if (fundamentalComputeMethod.compare("RANSAC") == 0){
-
-//  } else if (fundamentalComputeMethod.compare("LMedS") == 0){
-
-//  }
-//}
-
-//void DescriptorMatcherWidget::onEssentialComputeMethodChange(const QString &essentialComputeMethod)
-//{
-//  if (essentialComputeMethod.compare("RANSAC") == 0){
-//    mDistance->show();
-//  } else if (essentialComputeMethod.compare("LMedS") == 0){
-//    mDistance->hide();
-//  }
-//}
 
 
 } // namespace photomatch

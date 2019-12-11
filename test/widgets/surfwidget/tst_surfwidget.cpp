@@ -16,7 +16,7 @@ public:
 private slots:
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_hessianThreshold_data();
   void test_hessianThreshold();
@@ -59,7 +59,7 @@ void TestSurfWidget::cleanupTestCase()
 
 }
 
-void TestSurfWidget::testDefaultConstructor()
+void TestSurfWidget::test_constructor()
 {
   /// Check default values
   QCOMPARE(100, mSurfWidget->hessianThreshold());

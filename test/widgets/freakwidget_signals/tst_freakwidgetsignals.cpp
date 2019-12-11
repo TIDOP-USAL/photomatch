@@ -13,10 +13,12 @@ class TestFreakWidgetSignals : public FreakWidget
   Q_OBJECT
 
 public:
+
   TestFreakWidgetSignals();
   ~TestFreakWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_orientationNormalizedChange();

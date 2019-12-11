@@ -62,7 +62,6 @@ void LogWidget::print(const char *msg, const char *date, MessageLevel level)
   if (!sFilterLevel.isActive(level)) {
     mListWidget->setRowHidden(mListWidget->count() - 1, true);
   }
-  //update();
 }
 
 void LogWidget::refresh()
@@ -172,7 +171,7 @@ void LogWidget::init()
 
   connect(mListWidget->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)), this, SLOT(onRowsInserted(const QModelIndex &,int,int)));
   connect(mListWidget->model(), SIGNAL(rowsRemoved(const QModelIndex &,int,int)),  this, SLOT(onRowsRemoved(const QModelIndex &,int,int)));
-  //update();
+
 }
 
 void LogWidget::onMsgDebug(const char *msg, const char *date)

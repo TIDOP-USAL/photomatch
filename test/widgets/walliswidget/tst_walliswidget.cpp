@@ -17,19 +17,19 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void tes_constructor();
   void test_windowTitle();
-  void testContrast_data();
-  void testContrast();
-  void testBrightness_data();
-  void testBrightness();
-  void testImposedAverage_data();
-  void testImposedAverage();
-  void testImposedLocalStdDev_data();
-  void testImposedLocalStdDev();
-  void testKernelSize_data();
-  void testKernelSize();
-  void testReset();
+  void test_contrast_data();
+  void test_contrast();
+  void test_brightness_data();
+  void test_brightness();
+  void test_imposedAverage_data();
+  void test_imposedAverage();
+  void test_imposedLocalStdDev_data();
+  void test_imposedLocalStdDev();
+  void test_kernelSize_data();
+  void test_kernelSize();
+  void test_reset();
 
 private:
 
@@ -60,7 +60,7 @@ void TestWallisWidget::cleanupTestCase()
 
 }
 
-void TestWallisWidget::testDefaultConstructor()
+void TestWallisWidget::tes_constructor()
 {
   /// Check default values
   WallisWidget wallisWidget;
@@ -76,7 +76,7 @@ void TestWallisWidget::test_windowTitle()
   QCOMPARE("Wallis Filter", mWallisWidget->windowTitle());
 }
 
-void TestWallisWidget::testContrast_data()
+void TestWallisWidget::test_contrast_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -87,7 +87,7 @@ void TestWallisWidget::testContrast_data()
   QTest::newRow("Out of range value") << 2. << 1.;
 }
 
-void TestWallisWidget::testContrast()
+void TestWallisWidget::test_contrast()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -96,7 +96,7 @@ void TestWallisWidget::testContrast()
   QCOMPARE(result, mWallisWidget->contrast());
 }
 
-void TestWallisWidget::testBrightness_data()
+void TestWallisWidget::test_brightness_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -107,7 +107,7 @@ void TestWallisWidget::testBrightness_data()
   QTest::newRow("Out of range value") << 2. << 1.;
 }
 
-void TestWallisWidget::testBrightness()
+void TestWallisWidget::test_brightness()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -116,7 +116,7 @@ void TestWallisWidget::testBrightness()
   QCOMPARE(result, mWallisWidget->brightness());
 }
 
-void TestWallisWidget::testImposedAverage_data()
+void TestWallisWidget::test_imposedAverage_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -126,7 +126,7 @@ void TestWallisWidget::testImposedAverage_data()
   QTest::newRow("Out of range value") << 1001 << 1000;
 }
 
-void TestWallisWidget::testImposedAverage()
+void TestWallisWidget::test_imposedAverage()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -135,7 +135,7 @@ void TestWallisWidget::testImposedAverage()
   QCOMPARE(result, mWallisWidget->imposedAverage());
 }
 
-void TestWallisWidget::testImposedLocalStdDev_data()
+void TestWallisWidget::test_imposedLocalStdDev_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -145,7 +145,7 @@ void TestWallisWidget::testImposedLocalStdDev_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestWallisWidget::testImposedLocalStdDev()
+void TestWallisWidget::test_imposedLocalStdDev()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -154,7 +154,7 @@ void TestWallisWidget::testImposedLocalStdDev()
   QCOMPARE(result, mWallisWidget->imposedLocalStdDev());
 }
 
-void TestWallisWidget::testKernelSize_data()
+void TestWallisWidget::test_kernelSize_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -164,7 +164,7 @@ void TestWallisWidget::testKernelSize_data()
   QTest::newRow("Out of range value") << 10001 << 10000;
 }
 
-void TestWallisWidget::testKernelSize()
+void TestWallisWidget::test_kernelSize()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -173,7 +173,7 @@ void TestWallisWidget::testKernelSize()
   QCOMPARE(result, mWallisWidget->kernelSize());
 }
 
-void TestWallisWidget::testReset()
+void TestWallisWidget::test_reset()
 {
   mWallisWidget->setContrast(.5);
   mWallisWidget->setBrightness(0.5);

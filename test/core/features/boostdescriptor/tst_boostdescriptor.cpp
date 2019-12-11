@@ -123,23 +123,23 @@ void TestBoostDescriptor::test_descriptorType()
 
 void TestBoostDescriptor::test_scaleFactor_data()
 {
-    QTest::addColumn<double>("value");
-    QTest::addColumn<double>("result");
+  QTest::addColumn<double>("value");
+  QTest::addColumn<double>("result");
 
-    QTest::newRow("6.75") << 6.75 << 6.75;
-    QTest::newRow("6.25") << 6.25 << 6.25;
-    QTest::newRow("5.00") << 5.00 << 5.00;
-    QTest::newRow("0.75") << 0.75 << 0.75;
-    QTest::newRow("1.50") << 1.50 << 1.50;
+  QTest::newRow("6.75") << 6.75 << 6.75;
+  QTest::newRow("6.25") << 6.25 << 6.25;
+  QTest::newRow("5.00") << 5.00 << 5.00;
+  QTest::newRow("0.75") << 0.75 << 0.75;
+  QTest::newRow("1.50") << 1.50 << 1.50;
 }
 
 void TestBoostDescriptor::test_scaleFactor()
 {
-    QFETCH(double, value);
-    QFETCH(double, result);
+  QFETCH(double, value);
+  QFETCH(double, result);
 
-    mBoostDescriptor->setScaleFactor(value);
-    QCOMPARE(result, mBoostDescriptor->scaleFactor());
+  mBoostDescriptor->setScaleFactor(value);
+  QCOMPARE(result, mBoostDescriptor->scaleFactor());
 }
 
 void TestBoostDescriptor::test_useOrientation_data()

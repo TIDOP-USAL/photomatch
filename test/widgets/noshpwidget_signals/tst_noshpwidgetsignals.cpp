@@ -19,8 +19,8 @@ public:
 private slots:
   void initTestCase();
   void cleanupTestCase();
-  void testTilesGridSizeChange();
-  void testReset();
+  void test_blockSizeChange();
+  void test_reset();
 
 };
 
@@ -45,12 +45,11 @@ void TestNoshpWidgetSignals::cleanupTestCase()
 
 }
 
-void TestNoshpWidgetSignals::testTilesGridSizeChange()
+void TestNoshpWidgetSignals::test_blockSizeChange()
 {
   QSignalSpy spy_blockSizeChange(this, &NoshpWidget::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
-  //this->mTilesGridY->setValue(10);
 
   QCOMPARE(spy_blockSizeChange.count(), 1);
 
@@ -61,7 +60,7 @@ void TestNoshpWidgetSignals::testTilesGridSizeChange()
   QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
-void TestNoshpWidgetSignals::testReset()
+void TestNoshpWidgetSignals::test_reset()
 {
   QSignalSpy spy_blockSizeChange(this, &NoshpWidget::blockSizeChange);
 

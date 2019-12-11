@@ -21,18 +21,18 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testThresholdSaliencyChange();
-  void testPathRadiusChange();
-  void testKNNChange();
-  void testAreaRadiusChange();
-  void testScaleFactorChange();
-  void testNMSRadiusChange();
-  void testNScalesChange();
-  void testNMSScaleRChange();
-  void testComputeOrientationsChange();
-  void testAffineMSDChange();
-  void testTiltsChange();
-  void testReset();
+  void test_thresholdSaliencyChange();
+  void test_pathRadiusChange();
+  void test_KNNChange();
+  void test_areaRadiusChange();
+  void test_scaleFactorChange();
+  void test_NMSRadiusChange();
+  void test_NScalesChange();
+  void test_NMSScaleRChange();
+  void test_computeOrientationsChange();
+  void test_affineMSDChange();
+  void test_tiltsChange();
+  void test_reset();
 };
 
 TestMsdWidgetSignals::TestMsdWidgetSignals()
@@ -56,7 +56,7 @@ void TestMsdWidgetSignals::cleanupTestCase()
 
 }
 
-void TestMsdWidgetSignals::testThresholdSaliencyChange()
+void TestMsdWidgetSignals::test_thresholdSaliencyChange()
 {
   QSignalSpy spyThresholdSaliencyChange(this, &MsdWidget::thresholdSaliencyChange);
 
@@ -71,7 +71,7 @@ void TestMsdWidgetSignals::testThresholdSaliencyChange()
   QCOMPARE(spyThresholdSaliencyChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testPathRadiusChange()
+void TestMsdWidgetSignals::test_pathRadiusChange()
 {
   QSignalSpy spyPathRadiusChange(this, &MsdWidget::pathRadiusChange);
 
@@ -86,7 +86,7 @@ void TestMsdWidgetSignals::testPathRadiusChange()
   QCOMPARE(spyPathRadiusChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testKNNChange()
+void TestMsdWidgetSignals::test_KNNChange()
 {
   QSignalSpy spyKNNChange(this, &MsdWidget::KNNChange);
 
@@ -101,7 +101,7 @@ void TestMsdWidgetSignals::testKNNChange()
   QCOMPARE(spyKNNChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testAreaRadiusChange()
+void TestMsdWidgetSignals::test_areaRadiusChange()
 {
   QSignalSpy spyAreaRadiusChange(this, &MsdWidget::areaRadiusChange);
 
@@ -116,7 +116,7 @@ void TestMsdWidgetSignals::testAreaRadiusChange()
   QCOMPARE(spyAreaRadiusChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testScaleFactorChange()
+void TestMsdWidgetSignals::test_scaleFactorChange()
 {
   QSignalSpy spyScaleFactorChange(this, &MsdWidget::scaleFactorChange);
 
@@ -131,7 +131,7 @@ void TestMsdWidgetSignals::testScaleFactorChange()
   QCOMPARE(spyScaleFactorChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testNMSRadiusChange()
+void TestMsdWidgetSignals::test_NMSRadiusChange()
 {
   QSignalSpy spyNMSRadiusChange(this, &MsdWidget::NMSRadiusChange);
 
@@ -146,7 +146,7 @@ void TestMsdWidgetSignals::testNMSRadiusChange()
   QCOMPARE(spyNMSRadiusChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testNScalesChange()
+void TestMsdWidgetSignals::test_NScalesChange()
 {
   QSignalSpy spyNScalesChange(this, &MsdWidget::nScalesChange);
 
@@ -161,7 +161,7 @@ void TestMsdWidgetSignals::testNScalesChange()
   QCOMPARE(spyNScalesChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testNMSScaleRChange()
+void TestMsdWidgetSignals::test_NMSScaleRChange()
 {
   QSignalSpy spyNMSScaleRChange(this, &MsdWidget::NMSScaleRChange);
 
@@ -176,7 +176,7 @@ void TestMsdWidgetSignals::testNMSScaleRChange()
   QCOMPARE(spyNMSScaleRChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testComputeOrientationsChange()
+void TestMsdWidgetSignals::test_computeOrientationsChange()
 {
   QSignalSpy spyComputeOrientationsChange(this, &MsdWidget::computeOrientationsChange);
 
@@ -191,7 +191,7 @@ void TestMsdWidgetSignals::testComputeOrientationsChange()
   QCOMPARE(spyComputeOrientationsChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testAffineMSDChange()
+void TestMsdWidgetSignals::test_affineMSDChange()
 {
   QSignalSpy spyAffineMSDChange(this, &MsdWidget::affineMSDChange);
 
@@ -206,7 +206,7 @@ void TestMsdWidgetSignals::testAffineMSDChange()
   QCOMPARE(spyAffineMSDChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testTiltsChange()
+void TestMsdWidgetSignals::test_tiltsChange()
 {
   QSignalSpy spyTiltsChange(this, &MsdWidget::tiltsChange);
 
@@ -221,7 +221,7 @@ void TestMsdWidgetSignals::testTiltsChange()
   QCOMPARE(spyTiltsChange.count(), 0);
 }
 
-void TestMsdWidgetSignals::testReset()
+void TestMsdWidgetSignals::test_reset()
 {
   QSignalSpy spyThresholdSaliencyChange(this, &MsdWidget::thresholdSaliencyChange);
   QSignalSpy spyPathRadiusChange(this, &MsdWidget::pathRadiusChange);

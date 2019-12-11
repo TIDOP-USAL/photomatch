@@ -18,7 +18,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
+  void test_constructor();
   void test_windowTitle();
   void test_orientationNormalized_data();
   void test_orientationNormalized();
@@ -59,7 +59,7 @@ void TestFreakWidget::cleanupTestCase()
 
 }
 
-void TestFreakWidget::testDefaultConstructor()
+void TestFreakWidget::test_constructor()
 {
   QCOMPARE(true, mFreakWidget->orientationNormalized());
   QCOMPARE(true, mFreakWidget->scaleNormalized());
