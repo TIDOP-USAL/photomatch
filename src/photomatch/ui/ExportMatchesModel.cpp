@@ -1,5 +1,7 @@
 #include "ExportMatchesModel.h"
 
+#include "photomatch/core/features/matcher.h"
+#include "photomatch/core/features/features.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <tidop/core/messages.h>
@@ -65,40 +67,87 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
 
+    std::vector<std::vector<std::pair<QString,int>>> pass_points;
+    passPointsRead(session->passPoints(), pass_points);
+
     QByteArray ba = file.toLocal8Bit();
     const char *c_file = ba.data();
     msgInfo("Exported matches: %s", c_file);
 
-    QString ext;
+    //QString ext;
 
-    if (format.compare("OpenCV XML") == 0){
+    /*if (format.compare("OpenCV XML") == 0){
       ext = ".xml";
     } else if (format.compare("OpenCV YML") == 0) {
       ext = ".yml";
-    } else if (format.compare("ORIMA") == 0) {
-      ext = ".txt";
+    } else*/
+
+    if (format.compare("ORIMA") == 0) {
+
+      std::ofstream ofs(file.toStdString(), std::ofstream::trunc);
+      if (ofs.is_open()){
+
+        for (auto &feat : session->features()){
+          QString image_id = QFileInfo(feat).baseName();
+
+          std::vector<cv::KeyPoint> keyPoints;
+          cv::Mat descriptors;
+          featuresRead(feat, keyPoints, descriptors);
+          descriptors.release();
+
+          for (size_t i = 0; i < pass_points.size(); i++) {
+
+            for (size_t j = 0; j < pass_points[i].size(); j++){
+              if (pass_points[i][j].first.compare(image_id) == 0){
+                size_t pt_id = static_cast<size_t>(pass_points[i][j].second);
+                ofs << image_id.toStdString() << " " << i << " "
+                    << keyPoints[pt_id].pt.x << " " << keyPoints[pt_id].pt.y
+                    << " 0 M" << std::endl;
+                break;
+              }
+            }
+
+          }
+        }
+
+        ofs.close();
+      }
+
     } else if (format.compare("BINGO") == 0) {
-      ext = ".txt";
+
+      std::ofstream ofs(file.toStdString(), std::ofstream::trunc);
+      if (ofs.is_open()){
+        for (auto &feat : session->features()){
+
+          QString image_id = QFileInfo(feat).baseName();
+          ofs << image_id.toStdString() << std::endl;
+
+          std::vector<cv::KeyPoint> keyPoints;
+          cv::Mat descriptors;
+          featuresRead(feat, keyPoints, descriptors);
+          descriptors.release();
+
+          for (size_t i = 0; i < pass_points.size(); i++) {
+
+            for (size_t j = 0; j < pass_points[i].size(); j++){
+              if (pass_points[i][j].first.compare(image_id) == 0){
+                size_t pt_id = static_cast<size_t>(pass_points[i][j].second);
+                ofs << i << " " << keyPoints[pt_id].pt.x
+                         << " " << keyPoints[pt_id].pt.y  << std::endl;
+                break;
+              }
+            }
+
+          }
+          ofs << -99 << std::endl;
+        }
+        ofs.close();
+      }
+
     } else {
       /// Formato desconocido
       return;
     }
-
-    /// TODO: leer el fichero de pares
-    std::vector<std::vector<std::pair<QString,int>>> idx_pass_points;
-
-//    for (auto &id_image : features){
-//      std::vector<cv::KeyPoint> cvKeyPoints;
-//      cv::Mat descriptors;
-//      featuresRead(session->features(id_image), cvKeyPoints, descriptors);
-
-//      if (cvKeyPoints.size() > 0){
-//        QString file = path;
-//        file.append("\\").append(id_image).append(ext);
-//        featuresWrite(file, cvKeyPoints, descriptors);
-//      }
-
-//    }
 
   }
 }

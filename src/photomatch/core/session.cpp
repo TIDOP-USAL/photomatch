@@ -250,11 +250,30 @@ std::vector<std::pair<QString, QString>> Session::matches(const QString &image) 
   return pairs;
 }
 
+QString Session::passPoints() const
+{
+  return mPassPoints;
+}
+
+void Session::setPassPoints(const QString &passPoint)
+{
+  mPassPoints = passPoint;
+}
+
 void Session::clear()
 {
   mName.clear();
   mDescription.clear();
   mMaxImageSize = 2000;
+  mPreprocess.reset();
+  mFeatureDetector.reset();
+  mFeatureDescriptor.reset();
+  mMatcher.reset();
+  mRobustMatcherRefinement.reset();
+  mPreprocessImages.clear();
+  mFeatures.clear();
+  mImagesPairs.clear();
+  mPassPoints.clear();
 }
 
 } // namespace photomatch

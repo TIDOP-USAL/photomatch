@@ -107,6 +107,10 @@ public:
   virtual void deleteMatches() = 0;
   virtual std::map<QString, std::vector<std::pair<QString, QString>>> matches() const = 0;
   virtual std::vector<std::pair<QString, QString>> matches(const QString &image) const = 0;
+
+  virtual QString passPoints() const = 0;
+  virtual void setPassPoints(const QString &passPoint) = 0;
+
   /*!
    * \brief Limpia la sesión
    */
@@ -167,6 +171,9 @@ public:
   std::map<QString, std::vector<std::pair<QString, QString>>> matches() const override;
   std::vector<std::pair<QString, QString>> matches(const QString &image) const override;
 
+  QString passPoints() const override;
+  void setPassPoints(const QString &passPoint) override;
+
   void clear() override;
 
 protected:
@@ -182,6 +189,7 @@ protected:
   std::vector<QString> mPreprocessImages;
   std::vector<QString> mFeatures;
   std::map<QString, std::vector<std::pair<QString, QString>>> mImagesPairs;
+  QString mPassPoints;
 };
 
 } // namespace photomatch

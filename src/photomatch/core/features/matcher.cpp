@@ -650,7 +650,9 @@ std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDesc
 /*----------------------------------------------------------------*/
 
 
-void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches, const std::vector<cv::DMatch> &wrongMatches)
+void matchesWrite(const QString &fname,
+                  const std::vector<cv::DMatch> &matches,
+                  const std::vector<cv::DMatch> &wrongMatches)
 {
 
   QByteArray ba = fname.toLocal8Bit();
@@ -710,7 +712,9 @@ void matchesWrite(const QString &fname, const std::vector<cv::DMatch> &matches, 
   }
 }
 
-void matchesRead(const QString &fname, std::vector<cv::DMatch> *matches, std::vector<cv::DMatch> *wrongMatches)
+void matchesRead(const QString &fname,
+                 std::vector<cv::DMatch> *matches,
+                 std::vector<cv::DMatch> *wrongMatches)
 {
   QByteArray ba = fname.toLocal8Bit();
   const char *feat_file = ba.data();
@@ -770,6 +774,61 @@ void matchesRead(const QString &fname, std::vector<cv::DMatch> *matches, std::ve
       }
     }
   } /*else msgError("Fichero no valido: %s", fname);*/
+}
+
+
+void passPointsWrite(const QString &fname,
+                     const std::vector<std::vector<std::pair<QString, int>>> &pass_points)
+{
+  std::ofstream ofs(fname.toStdString(), std::ofstream::trunc);
+  if (ofs.is_open()){
+
+    for (size_t i = 0; i < pass_points.size(); i++) {
+
+      ofs << i;
+
+      for (size_t j = 0; j < pass_points[i].size(); j++){
+        ofs << " " << pass_points[i][j].first.toStdString()
+            << " " << pass_points[i][j].second;
+      }
+
+      ofs << std::endl;
+    }
+
+    ofs.close();
+  }
+}
+
+void passPointsRead(const QString &fname, std::vector<std::vector<std::pair<QString, int>>> &pass_points)
+{
+  std::ifstream ifs(fname.toStdString());
+  std::string line;
+  if (ifs.is_open()) {
+
+    int r = 0;
+    while (std::getline(ifs, line)) {
+      QStringList list = QString(line.c_str()).split(" ");
+      int size = list.size();
+      if (size >= 1){
+        if (size == 1 || size % 2 == 0){
+          /// deleted point
+          pass_points.push_back(std::vector<std::pair<QString, int>>());
+        } else {
+          std::vector<std::pair<QString, int>> pass_point;
+          for(int i = 1; i < size; i++){
+            QString idImage = list[i];
+            int idx = list[++i].toInt();
+            pass_point.push_back(std::make_pair(idImage, idx));
+          }
+          pass_points.push_back(pass_point);
+        }
+      }
+
+      r++;
+    }
+
+    ifs.close();
+  }
 }
 
 

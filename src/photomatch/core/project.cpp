@@ -796,6 +796,9 @@ bool ProjectRW::read(const QString &file, IProject &prj)
 //                          } else
 //                            stream.skipCurrentElement();
 //                        }
+                      } else if (stream.name() == "PassPoints") {
+                        QString passPointFile = stream.readElementText();
+                        session->setPassPoints(passPointFile);
                       } else
                         stream.skipCurrentElement();
 
@@ -1158,6 +1161,9 @@ bool ProjectRW::write(const QString &file, const IProject &prj) const
               }
             }
             stream.writeEndElement();  // Images
+
+            stream.writeTextElement("PassPoints", (*it)->passPoints());
+
           }
           stream.writeEndElement();  // Matches
 

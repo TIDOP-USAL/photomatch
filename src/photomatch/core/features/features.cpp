@@ -8,24 +8,13 @@
 namespace photomatch
 {
 
-void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoints, const cv::Mat &descriptors)
+void featuresWrite(const QString &fname,
+                   const std::vector<cv::KeyPoint> &keyPoints,
+                   const cv::Mat &descriptors)
 {
   QByteArray ba = fname.toLocal8Bit();
   const char *feat_file = ba.data();
   QString ext = QFileInfo(fname).suffix();
-  /*int flags = 0;
-  if (ext.compare("xml", Qt::CaseInsensitive) == 0) {
-    flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_XML;
-  } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
-    flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_YAML;
-  } else if (ext.compare("bin") == 0) {
-
-  } else {
-    ba = ext.toLocal8Bit();
-    const char *cext = ba.data();
-    msgError("file extension '%s' not valid", cext);
-    return;
-  }*/
   if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
 
     TL_TODO("Comprobar la escritura/lectura en ORB.")
@@ -55,7 +44,7 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
         std::fwrite(&kp.octave, sizeof(float), 1, fp);
         std::fwrite(&kp.class_id, sizeof(float), 1, fp);
       }
-      std::fwrite(descriptors.data, sizeof(float), rows*cols, fp);
+      std::fwrite(descriptors.data, sizeof(float), static_cast<size_t>(rows*cols), fp);
       std::fclose(fp);
     } else {
       //msgError("No pudo escribir archivo %s", fname.c_str());
@@ -72,7 +61,7 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
       ofs << size << " " <<  descriptors.cols << " " << type << std::endl;
 
       for (int r = 0; r < size; r++) {
-        cv::KeyPoint kp = keyPoints[r];
+        cv::KeyPoint kp = keyPoints[static_cast<size_t>(r)];
         ofs << kp.pt.x << " " << kp.pt.y << " " << kp.size << " " << kp.angle;
         for (int c = 0; c < descriptors.cols; c++) {
           
@@ -135,13 +124,16 @@ void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoi
   }
 }
 
-void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
+void featuresRead(const QString &fname,
+                  std::vector<cv::KeyPoint> &keyPoints,
+                  cv::Mat &descriptors)
 {
   QByteArray ba = fname.toLocal8Bit();
   const char *feat_file = ba.data();
   QString ext = QFileInfo(fname).suffix();
   if (ext.isEmpty() == false) {
     if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
+
       if (FILE* fp = std::fopen(feat_file, "rb")) {
         //cabecera
         char h[24];
@@ -157,7 +149,7 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
         std::fread(&type, sizeof(int32_t), 1, fp);
         std::fread(&extraHead, sizeof(char), 200, fp);
         //Cuerpo
-        keyPoints.resize(size);
+        keyPoints.resize(static_cast<size_t>(size));
         for (auto &kp : keyPoints) {
           std::fread(&kp.pt.x, sizeof(float), 1, fp);
           std::fread(&kp.pt.y, sizeof(float), 1, fp);
@@ -168,14 +160,75 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
           std::fread(&kp.class_id, sizeof(float), 1, fp);
         }
         cv::Mat aux(static_cast<int>(rows), static_cast<int>(cols), type);
-        std::fread(aux.data, sizeof(float), rows*cols, fp);
+        std::fread(aux.data, sizeof(float), static_cast<size_t>(rows*cols), fp);
         aux.copyTo(descriptors);
         aux.release();
         std::fclose(fp);
       } else {
         //msgError("No pudo leer archivo %s", fname.c_str());
       }
-    } else if (ext.compare("xml", Qt::CaseInsensitive) == 0 || ext.compare("yml", Qt::CaseInsensitive) == 0) {
+
+    } else if (ext.compare("txt", Qt::CaseInsensitive) == 0) {
+
+      std::ifstream ifs(feat_file);
+      std::string line;
+      if (ifs.is_open()) {
+
+        int type;
+        int size;
+        int cols;
+
+        std::getline(ifs, line);
+        std::istringstream stream(line);
+        stream >> type >> size >> cols;
+
+        keyPoints.resize(static_cast<size_t>(size));
+        descriptors = cv::Mat(size, cols, type);
+
+        int r = 0;
+        while (std::getline(ifs, line)) {
+
+          QStringList list = QString(line.c_str()).split(" ");
+          keyPoints[static_cast<size_t>(r)].pt.x = list[0].toFloat();
+          keyPoints[static_cast<size_t>(r)].pt.y = list[1].toFloat();
+          keyPoints[static_cast<size_t>(r)].size = list[2].toFloat();
+          keyPoints[static_cast<size_t>(r)].angle = list[3].toFloat();
+
+          for (int c = 0; c < cols; c++) {
+            switch (type) {
+              case CV_8U:
+                descriptors.at<uchar>(r,c) = static_cast<uchar>(list[c+4].toFloat());
+                break;
+              case CV_8S:
+                descriptors.at<schar>(r,c) = static_cast<schar>(list[c+4].toFloat());
+                break;
+              case CV_16U:
+                descriptors.at<ushort>(r,c) = static_cast<ushort>(list[c+4].toFloat());
+                break;
+              case CV_16S:
+                descriptors.at<short>(r,c) = static_cast<short>(list[c+4].toFloat());
+                break;
+              case CV_32S:
+                descriptors.at<int>(r,c) = static_cast<int>(list[c+4].toFloat());
+                break;
+              case CV_32F:
+                descriptors.at<float>(r,c) = list[c+4].toFloat();
+                break;
+              case CV_64F:
+                descriptors.at<double>(r,c) = static_cast<double>(list[c+4].toFloat());
+                break;
+              default:
+                break;
+            }
+          }
+          r++;
+        }
+
+        ifs.close();
+      }
+
+    } else if (ext.compare("xml", Qt::CaseInsensitive) == 0 ||
+               ext.compare("yml", Qt::CaseInsensitive) == 0) {
 
       cv::FileStorage fs(feat_file, cv::FileStorage::READ);
       if (fs.isOpened()) {
@@ -187,6 +240,11 @@ void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv
       } else {
         //msgError("No pudo leer archivo %s", fname.c_str());
       }
+    } else {
+      ba = ext.toLocal8Bit();
+      const char *cext = ba.data();
+      msgError("file extension '%s' not valid", cext);
+      return;
     }
   } else {
     //msgError("Fichero no valido: %s", fname.c_str());

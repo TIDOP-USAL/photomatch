@@ -38,6 +38,7 @@ private slots:
   void test_preprocessImages();
   void test_features();
   void test_matches();
+  void test_passPoints();
   void test_clear();
 
 protected:
@@ -83,6 +84,7 @@ void TestSession::test_constructor()
   QCOMPARE(nullptr, session.robustMatcherRefinement());
   QCOMPARE(std::vector<QString>(), session.preprocessImages());
   QCOMPARE(std::vector<QString>(), session.features());
+  QCOMPARE(QString(), session.passPoints());
 }
 
 void TestSession::test_name_data()
@@ -195,38 +197,44 @@ void TestSession::test_robustMatcherRefinement()
 
 void TestSession::test_preprocessImages()
 {
-  mSession->addPreprocessImage("c://image01.jpg");
-  mSession->addPreprocessImage("c://image02.jpg");
-  mSession->addPreprocessImage("c://image03.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image01.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image02.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image03.jpg");
   QCOMPARE(3, mSession->preprocessImages().size());
-  mSession->deletePreprocessImage("c://image02.jpg");
+  mSession->deletePreprocessImage("c:/prj/session01/image02.jpg");
   QCOMPARE(2, mSession->preprocessImages().size());
-  QCOMPARE("c://image03.jpg", mSession->preprocessImage("image03"));
+  QCOMPARE("c:/prj/session01/image03.jpg", mSession->preprocessImage("image03"));
   mSession->deletePreprocessImages();
   QCOMPARE(0, mSession->preprocessImages().size());
 }
 
 void TestSession::test_features()
 {
-  mSession->addFeatures("c://image01.xml");
-  mSession->addFeatures("c://image02.xml");
-  mSession->addFeatures("c://image03.xml");
+  mSession->addFeatures("c:/prj/session01/image01.xml");
+  mSession->addFeatures("c:/prj/session01/image02.xml");
+  mSession->addFeatures("c:/prj/session01/image03.xml");
   QCOMPARE(3, mSession->features().size());
-  mSession->deleteFeatures("c://image02.xml");
+  mSession->deleteFeatures("c:/prj/session01/image02.xml");
   QCOMPARE(2, mSession->features().size());
-  QCOMPARE("c://image03.xml", mSession->features("image03"));
+  QCOMPARE("c:/prj/session01/image03.xml", mSession->features("image03"));
   mSession->deleteFeatures();
   QCOMPARE(0, mSession->features().size());
 }
 
 void TestSession::test_matches()
 {
-  mSession->addMatches("image01", "image02", "c://image01_image02.xml");
-  mSession->addMatches("image01", "image03", "c://image01_image03.xml");
-  mSession->addMatches("image02", "image03", "c://image02_image03.xml");
+  mSession->addMatches("image01", "image02", "c:/prj/session01/image01_image02.xml");
+  mSession->addMatches("image01", "image03", "c:/prj/session01/image01_image03.xml");
+  mSession->addMatches("image02", "image03", "c:/prj/session01/image02_image03.xml");
   QCOMPARE(2, mSession->matches("image01").size());
-  mSession->deleteMatches("image01", "image03", "c://image01_image03.xml");
+  mSession->deleteMatches("image01", "image03", "c:/prj/session01/image01_image03.xml");
   QCOMPARE(1, mSession->matches("image01").size());
+}
+
+void TestSession::test_passPoints()
+{
+  mSession->setPassPoints("c:/prj/session01/pass_points_ids.txt");
+  QCOMPARE("c:/prj/session01/pass_points_ids.txt", mSession->passPoints());
 }
 
 void TestSession::test_clear()
@@ -235,6 +243,27 @@ void TestSession::test_clear()
   mSession->setDescription("Descripción de la sesión 3");
   mSession->setMaxImageSize(3000);
   mSession->setFullImageSize(true);
+  std::shared_ptr<Preprocess> preprocess(new AcebsfProperties());
+  mSession->setPreprocess(preprocess);
+  std::shared_ptr<Feature> detector(new AgastProperties());
+  mSession->setDetector(detector);
+  std::shared_ptr<Feature> descriptor(new BriefProperties());
+  mSession->setDescriptor(descriptor);
+  std::shared_ptr<Match> matcher(new BruteForceMatcher());
+  mSession->setMatcher(matcher);
+  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatcherProperties());
+  robustMatcherRefinement->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
+  mSession->setRobustMatcherRefinement(robustMatcherRefinement);
+  mSession->addPreprocessImage("c:/prj/session01/image01.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image02.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image03.jpg");
+  mSession->addFeatures("c:/prj/session01/image01.xml");
+  mSession->addFeatures("c:/prj/session01/image02.xml");
+  mSession->addFeatures("c:/prj/session01/image03.xml");
+  mSession->addMatches("image01", "image02", "c:/prj/session01/image01_image02.xml");
+  mSession->addMatches("image01", "image03", "c:/prj/session01/image01_image03.xml");
+  mSession->addMatches("image02", "image03", "c:/prj/session01/image02_image03.xml");
+  mSession->setPassPoints("c:/prj/session01/pass_points_ids.txt");
 
   mSession->clear();
   
@@ -242,6 +271,15 @@ void TestSession::test_clear()
   QCOMPARE(QString(), mSession->description());
   QCOMPARE(2000, mSession->maxImageSize());
   QCOMPARE(false, mSession->fullImageSize());
+  QCOMPARE(nullptr, mSession->preprocess());
+  QCOMPARE(nullptr, mSession->detector());
+  QCOMPARE(nullptr, mSession->descriptor());
+  QCOMPARE(nullptr, mSession->matcher());
+  QCOMPARE(nullptr, mSession->robustMatcherRefinement());
+  QCOMPARE(std::vector<QString>(), mSession->preprocessImages());
+  QCOMPARE(std::vector<QString>(), mSession->features());
+  QCOMPARE(QString(), mSession->passPoints());
+
 }
 
 QTEST_APPLESS_MAIN(TestSession)

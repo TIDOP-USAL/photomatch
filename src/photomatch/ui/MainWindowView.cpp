@@ -54,7 +54,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionPreprocess(new QAction(this)),
     mActionFeatureExtraction(new QAction(this)),
     mActionFeatureMatching(new QAction(this)),
-    mActionBatch(new QAction(this)),
+    //mActionBatch(new QAction(this)),
     mActionViewSettings(new QAction(this)),
     mActionToolSettings(new QAction(this)),
     mActionHelp(new QAction(this)),
@@ -1374,7 +1374,7 @@ void MainWindowView::update()
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  mActionBatch->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
+  //mActionBatch->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   mActionExportMatches->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   //mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
@@ -1843,7 +1843,7 @@ void MainWindowView::init()
   iconFeatureMatching.addFile(QStringLiteral(":/ico/24/img/material/24/match_view.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionFeatureMatching->setIcon(iconFeatureMatching);
 
-  mActionBatch->setText(QApplication::translate("MainWindowView", "Batch", nullptr));
+  //mActionBatch->setText(QApplication::translate("MainWindowView", "Batch", nullptr));
 
   mActionToolSettings->setText(QApplication::translate("MainWindowView", "Tools Settings", nullptr));
   QIcon iconSettings;

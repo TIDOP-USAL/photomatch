@@ -66,9 +66,9 @@ set(PHOTOMATCH_SOURCES
     ExportMatchesModel.cpp
     ExportMatchesView.cpp
     ExportMatchesPresenter.cpp
-    BatchModel.cpp
-    BatchView.cpp
-    BatchPresenter.cpp
+    #BatchModel.cpp
+    #BatchView.cpp
+    #BatchPresenter.cpp
     AboutDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
@@ -127,9 +127,9 @@ set(PHOTOMATCH_HEADERS
     ExportMatchesModel.h
     ExportMatchesView.h
     ExportMatchesPresenter.h
-    BatchModel.h
-    BatchView.h
-    BatchPresenter.h
+    #BatchModel.h
+    #BatchView.h
+    #BatchPresenter.h
     AboutDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
