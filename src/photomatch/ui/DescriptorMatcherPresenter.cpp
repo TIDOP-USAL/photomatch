@@ -53,9 +53,13 @@ void DescriptorMatcherPresenter::help()
 
 void DescriptorMatcherPresenter::open()
 {
-  Match *matcher = mProjectModel->currentSession()->matcher().get();
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) {
+    msgError("No active session found");
+    return;
+  }
 
-  if (matcher){
+  if (Match *matcher = current_session->matcher().get()){
     if (matcher->type() == Match::Type::brute_force){
       mView->setMatchingMethod("Brute-Force");
       BruteForceMatcher::Norm norm = dynamic_cast<IBruteForceMatcher *>(matcher)->normType();
@@ -79,7 +83,7 @@ void DescriptorMatcherPresenter::open()
   }
 
 
-  if (IRobustMatcherRefinement *robustMatcherRefinement = mProjectModel->currentSession()->robustMatcherRefinement().get()){
+  if (IRobustMatcherRefinement *robustMatcherRefinement = current_session->robustMatcherRefinement().get()){
 
     mView->setRatio(robustMatcherRefinement->ratio());
     mView->setCrossMatching(robustMatcherRefinement->crossCheck());
@@ -136,7 +140,7 @@ void DescriptorMatcherPresenter::open()
     mView->setCrossMatching(mSettingsModel->matchCrossMatching());
   }
 
-  if (Feature *descriptor = mProjectModel->currentSession()->descriptor().get()){
+  if (Feature *descriptor = current_session->descriptor().get()){
 
     if (descriptor->type() == Feature::Type::akaze){
       QString descriptorType = dynamic_cast<IAkaze *>(descriptor)->descriptorType();
@@ -181,7 +185,7 @@ void DescriptorMatcherPresenter::open()
   }
 
 
-  mView->setSessionName(mProjectModel->currentSession()->name());
+  mView->setSessionName(current_session->name());
   mView->exec();
 }
 
@@ -219,9 +223,13 @@ void DescriptorMatcherPresenter::cancel()
 
 void DescriptorMatcherPresenter::run()
 {
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) {
+    msgError("No active session found");
+    return;
+  }
 
-  Match *matcher = mProjectModel->currentSession()->matcher().get();
-  if(matcher){
+  if(Match *matcher = current_session->matcher().get()){
     int i_ret = QMessageBox(QMessageBox::Warning,
                             tr("Previous results"),
                             tr("The previous results will be overwritten. Do you wish to continue?"),

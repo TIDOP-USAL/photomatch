@@ -111,26 +111,28 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
           cv::Mat imgRight = cv::imread(img_right, cv::IMREAD_IGNORE_ORIENTATION | cv::IMREAD_COLOR);
 
           cv::Mat merged;
-#ifdef HAVE_CUDA
-          if (bUseCuda){
-            cv::cuda::GpuMat gpuImgLeft(imgLeft);
-            imgLeft.release();
-            cv::cuda::GpuMat gpuOut;
-            cv::cuda::GpuMat gpuH(H);
-            cv::cuda::warpPerspective(gpuImgLeft, gpuOut, gpuH, gpuImgLeft.size(), cv::INTER_LINEAR);
-            cv::cuda::GpuMat gpuImgRight(imgRight);
-            cv::cuda::GpuMat gpuMerged;
-            cv::cuda::addWeighted(imgRight, 0.5, gpuOut, 0.3, 0.0, gpuMerged);
-            gpuMerged.download(merged);
-          } else {
-#endif
+//#ifdef HAVE_CUDA
+//          if (bUseCuda){
+//            cv::cuda::GpuMat gpuImgLeft;
+//            gpuImgLeft.upload(imgLeft);
+//            cv::cuda::GpuMat gpuOut;
+//            cv::cuda::GpuMat gpuH;
+//            gpuImgLeft.upload(H);
+//            cv::cuda::warpPerspective(gpuImgLeft, gpuOut, gpuH, gpuImgLeft.size(), cv::INTER_LINEAR);
+//            imgLeft.release();
+//            cv::cuda::GpuMat gpuImgRight(imgRight);
+//            cv::cuda::GpuMat gpuMerged;
+//            cv::cuda::addWeighted(imgRight, 0.5, gpuOut, 0.3, 0.0, gpuMerged);
+//            gpuMerged.download(merged);
+//          } else {
+//#endif
             cv::Mat out;
             cv::warpPerspective(imgLeft, out, H, imgRight.size(), cv::INTER_LINEAR);
             imgLeft.release();
             cv::addWeighted(imgRight, 0.5, out, 0.3, 0.0, merged);
-#ifdef HAVE_CUDA
-          }
-#endif
+//#ifdef HAVE_CUDA
+//          }
+//#endif
           ///cv::cuda::warpPerspective
 
 

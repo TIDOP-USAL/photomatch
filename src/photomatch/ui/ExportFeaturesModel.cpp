@@ -100,7 +100,8 @@ void ExportFeaturesModel::setSessionName(const QString &session)
 
 void ExportFeaturesModel::init()
 {
-  mSession = mProjectModel->currentSession()->name();
+  if (mProjectModel->currentSession())
+    mSession = mProjectModel->currentSession()->name();
 }
 
 } // namespace photomatch

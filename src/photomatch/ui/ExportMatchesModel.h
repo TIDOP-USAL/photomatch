@@ -46,7 +46,6 @@ public:
   QStringList sessions() const override;
   QString sessionName() const override;
   QStringList formats() const override;
-  //QStringList features() const override;
 
 public slots:
 

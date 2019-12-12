@@ -48,21 +48,6 @@ QStringList ExportMatchesModel::formats() const
   return formats;
 }
 
-//QStringList ExportMatchesModel::features() const
-//{
-//  QStringList images;
-
-//  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
-//    if (session->features().size() > 0 ){
-//      for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-//        images.push_back((*it)->name());
-//      }
-//    }
-//  }
-
-//  return images;
-//}
-
 void ExportMatchesModel::exportMatches(const QString &file, const QString &format) const
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
@@ -145,7 +130,9 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
       }
 
     } else {
-      /// Formato desconocido
+
+      QByteArray ba = format.toLocal8Bit();
+      msgError("unknown format: %s", ba.data());
       return;
     }
 
