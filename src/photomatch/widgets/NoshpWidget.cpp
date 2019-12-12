@@ -15,6 +15,8 @@ NoshpWidget::NoshpWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));

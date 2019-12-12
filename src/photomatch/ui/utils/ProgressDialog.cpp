@@ -14,8 +14,11 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
 
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-  this->setWindowFlags(this->windowFlags() | Qt::WindowMinimizeButtonHint);
+  //this->setWindowFlags(this->windowFlags() | Qt::WindowMinimizeButtonHint);
+  this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
+  this->setWindowFlags(this->windowFlags() & ~Qt::WindowCloseButtonHint);
   this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
+
   ui->setupUi(this);
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
 
@@ -51,17 +54,6 @@ void ProgressDialog::setInitialized()
   this->show();
 }
 
-//void ProgressDialog::setProcess(Process *process)
-//{
-//  mProcess = process;
-
-//  connect(process, SIGNAL(finished()),                 this,    SLOT(onProcessFinished()));
-//  connect(process, SIGNAL(statusChanged(int,QString)), this,    SLOT(onStatusChanged(int,QString)));
-//  connect(process, SIGNAL(statusChangedNext()),        this,    SLOT(onStatusChangedNext()));
-//  connect(process, SIGNAL(error(int,QString)),         this,    SLOT(onError(int,QString)));
-//  //connect(this,    SIGNAL(cancel()),                   process, SLOT(stop()));
-//}
-
 void ProgressDialog::setFinished()
 {
   ui->pushButton->setText(tr("Close"));
@@ -76,27 +68,10 @@ void ProgressDialog::setTitle(QString title)
   ui->progressBar->setWindowTitle(title);
 }
 
-void ProgressDialog::onStatusChanged(int step, QString message)
-{
-  ui->progressBar->setValue(step);
-  ui->labelStatus->setText(message);
-}
-
-void ProgressDialog::onStatusChangedNext()
-{
-  int value = ui->progressBar->value()+1;
-  ui->progressBar->setValue(value);
-}
-
 void ProgressDialog::onMinimized()
 {
   this->hide();
 }
-
-//void ProgressDialog::onProcessFinished()
-//{
-//  this->show();
-//}
 
 void ProgressDialog::on_pushButton_clicked()
 {
@@ -105,20 +80,3 @@ void ProgressDialog::on_pushButton_clicked()
 }
 
 } // namespace photomatch
-
-
-//void photomatch::ProgressDialog::closeEvent(QCloseEvent *event)
-//{
-//}
-
-//void photomatch::ProgressDialog::changeEvent(QEvent *event)
-//{
-//  QEvent::Type type = event->type();
-//  if(type == QEvent::WindowStateChange) {
-//    bool bTopLevel = this->isTopLevel();
-//    if (bTopLevel == false){
-//      this->hide();
-//    }
-//  }
-//  QDialog::changeEvent(event);
-//}

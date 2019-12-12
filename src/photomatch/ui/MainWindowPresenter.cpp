@@ -43,6 +43,7 @@
 #include "photomatch/ui/RepeatabilityView.h"
 #include "photomatch/ui/RepeatabilityPresenter.h"
 #include "photomatch/ui/AboutDialog.h"
+#include "photomatch/ui/HelpDialog.h"
 #include "photomatch/ui/utils/Progress.h"
 #include "photomatch/ui/utils/ProgressDialog.h"
 //#include "photomatch/ui/utils/KeyPointGraphicsItem.h"
@@ -112,6 +113,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mRepeatabilityPresenter(nullptr),
     mRepeatabilityModel(nullptr),
     mAboutDialog(nullptr),
+    mHelpDialog(nullptr),
     mProgressHandler(nullptr),
     mProgressDialog(nullptr)
 {
@@ -1417,6 +1419,8 @@ void MainWindowPresenter::processRunning()
 
 void MainWindowPresenter::help()
 {
+  initHelpDialog();
+  mHelpDialog->show();
 }
 
 void MainWindowPresenter::open()
@@ -1677,6 +1681,14 @@ void MainWindowPresenter::initAboutDialog()
 {
   if (mAboutDialog == nullptr) {
     mAboutDialog = new AboutDialog(mView);
+  }
+}
+
+void MainWindowPresenter::initHelpDialog()
+{
+  if (mHelpDialog == nullptr) {
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    mHelpDialog = new HelpDialog(mView, f);
   }
 }
 

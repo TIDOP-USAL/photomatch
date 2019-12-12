@@ -1,0 +1,91 @@
+
+p { 
+  direction: inherit 
+}
+
+p.western { 
+  font-family: "Verdana", sans-serif; 
+  font-size: 10pt; 
+  text-align: justify; 
+}
+
+p.cjk { 
+  font-size: 10pt 
+}
+
+td p { 
+  margin-bottom: 0cm; 
+  direction: inherit; 
+  text-align: center; 
+  page-break-before: auto 
+}
+
+td p.western { 
+  font-family: "Verdana", sans-serif; 
+  font-size: 10pt 
+}
+
+td p.cjk { 
+  font-size: 10pt 
+}
+
+h1 { 
+  direction: inherit; 
+  color: #ffffff;
+  background: #1abc9c 
+}
+  
+h1.western { 
+  font-family: "Arial Black", sans-serif; 
+  font-weight: normal 
+}
+
+h2 { 
+  direction: inherit; 
+  color: #ffffff; 
+  background: #1abc9c 
+}
+
+h2.western { 
+  font-family: "Albany", sans-serif; 
+  font-size: 16pt 
+}
+
+h2.cjk { 
+  font-family: "SimSun"; 
+  font-size: 16pt 
+}
+
+h2.ctl { 
+  font-family: "Arial"; 
+  font-size: 16pt 
+}
+
+h3 { 
+  direction: inherit; 
+  color: #ffffff; 
+  background: #1abc9c 
+} 
+
+h3.western { 
+  font-family: "Albany", sans-serif; 
+  font-size: 12pt 
+}
+
+h3.cjk { 
+  font-family: "SimSun" 
+  }
+
+h3.ctl { 
+  font-family: "Arial" 
+}
+
+li.western { 
+  font-family: "Verdana", sans-serif; 
+  font-size: 10pt; 
+  text-align: justify; 
+}
+
+.image {
+  text-align: center;
+}

@@ -152,6 +152,7 @@ void PreprocessView::retranslate()
   mSpinBoxMaxImageSize->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Select maximun image size.</p></body></html>"));
   mComboBoxPreprocess->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Select preprocesing method.</p></body></html>"));
   mButtonBox->button(QDialogButtonBox::Cancel)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Cancel the changes and close the image preprocessing tool.</p></body></html>"));
+  mButtonBox->button(QDialogButtonBox::Apply)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Apply the selected preprocessing to the project images.</p></body></html>"));
   mButtonBox->button(QDialogButtonBox::Help)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Show help.</p></body></html>"));
 #endif // QT_NO_WHATSTHIS
 

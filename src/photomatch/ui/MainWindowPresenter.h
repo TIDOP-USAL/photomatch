@@ -46,6 +46,7 @@ class IExportMatchesPresenter;
 class ProgressHandler;
 class IProgressDialog;
 class AboutDialog;
+class HelpDialog;
 
 class MainWindowPresenter
   : public IPresenter
@@ -219,6 +220,7 @@ private:
   void initDETCurvesViewer();
 
   void initAboutDialog();
+  void initHelpDialog();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
@@ -283,6 +285,7 @@ protected:
   IRepeatabilityModel *mRepeatabilityModel;
 
   AboutDialog *mAboutDialog;
+  HelpDialog *mHelpDialog;
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;

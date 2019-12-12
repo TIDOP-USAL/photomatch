@@ -16,6 +16,8 @@ ClaheWidget::ClaheWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mClipLimit,     SIGNAL(valueChanged(double)),     this, SIGNAL(clipLimitChange(double)));
   connect(mTilesGridX,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridXChange(int)));
@@ -69,7 +71,11 @@ void ClaheWidget::update()
 
 void ClaheWidget::retranslate()
 {
-
+#ifndef QT_NO_WHATSTHIS
+  mClipLimit->setWhatsThis(tr("<html><head/><body><p>Threshold value for contrast limiting.</p></body></html>"));
+  mTilesGridX->setWhatsThis(tr("<html><head/><body><p>Width of grid for histogram equalization.</p></p></body></html>"));
+  mTilesGridY->setWhatsThis(tr("<html><head/><body><p>Height of grid for histogram equalization.</p></p></body></html>"));
+#endif // QT_NO_WHATSTHIS
 }
 
 void ClaheWidget::reset()
@@ -110,16 +116,16 @@ void ClaheWidget::init()
   mClipLimit->setRange(0., 100.);
   propertiesLayout->addWidget(mClipLimit, 1, 1, 1, 1);
 
-  QGroupBox *groupBoxTiles = new QGroupBox(mGroupBox);
+  QGroupBox *groupBoxTiles = new QGroupBox(tr("Block Size"), mGroupBox);
   QGridLayout *gridLayoutTiles = new QGridLayout(groupBoxTiles);
   gridLayoutTiles->setSpacing(6);
   gridLayoutTiles->setContentsMargins(11, 11, 11, 11);
 
-  gridLayoutTiles->addWidget(new QLabel(tr("Tiles Size X:")), 0, 0, 1, 1);
+  gridLayoutTiles->addWidget(new QLabel(tr("Width:")), 0, 0, 1, 1);
   mTilesGridX->setRange(0, 100);
   gridLayoutTiles->addWidget(mTilesGridX, 0, 1, 1, 1);
 
-  gridLayoutTiles->addWidget(new QLabel(tr("Tiles Size Y:")), 1, 0, 1, 1);
+  gridLayoutTiles->addWidget(new QLabel(tr("Height:")), 1, 0, 1, 1);
   mTilesGridY->setRange(0, 100);
   gridLayoutTiles->addWidget(mTilesGridY, 1, 1, 1, 1);
 

@@ -78,6 +78,10 @@ public:
   IDialogView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags())
     : QDialog(parent, f)
   {
+    Qt::WindowFlags helpFlag = Qt::WindowContextHelpButtonHint;
+    Qt::WindowFlags flags = windowFlags();
+    flags = flags & (~helpFlag);
+    setWindowFlags(flags);
   }
 
   virtual ~IDialogView() override = default;

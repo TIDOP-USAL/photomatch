@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+    <namespace>tidop.com.photomatch.1.0</namespace>
+    <virtualFolder>doc</virtualFolder>
+    <customFilter name="PHOTOMATCH">
+        <filterAttribute>photomatch</filterAttribute>
+        <filterAttribute>1.0</filterAttribute>
+    </customFilter>
+    <filterSection>
+        <filterAttribute>photomatch</filterAttribute>
+        <filterAttribute>1.0</filterAttribute>
+        <toc>
+            <section title="Presentation" ref="index.html">
+                <!--<section title="Install" ref="installation.html"/>-->
+                <!--<section title="Getting Started" ref="getting_started.html"/>-->
+            </section>
+            <section title="Getting Started" ref="getting_started.html">
+                <section title="User Interface" ref="gui.html">
+                    <section title="Work Area" ref="workarea.html"/>
+                    <section title="Start Page" ref="start_page.html"/>
+                    <section title="Project Tree" ref="prj_tree.html"/>
+                    <section title="Menus" ref="menus.html"/>
+                    <section title="Toolbars" ref="toolbar.html"/>
+                    <section title="Properties" ref="properties.html"/>
+                    <section title="Console" ref="console.html"/>
+                    <section title="Thumbnails" ref="thumbnails.html"/>
+                </section>
+                <section title="Settings" ref="settings.html"/>
+            </section>
+            <section title="Tools" ref="tools.html">
+                <section title="Preprocess" ref="preprocess.html"/>
+                <section title="Feature Extraction" ref="feature_extraction.html"/>
+                <section title="Feature Matching" ref="feature_matching.html"/>
+            </section>
+            <section title="Quality Control" ref="quality_control.html">
+                <section title="Keypoints Viewer" ref="keypoints_viewer.html"/>
+                <section title="Matches Viewer" ref="matches_viewer.html"/>
+                <section title="Ground Truth Editor" ref="ground_truth_editor.html"/>
+                <section title="Homography" ref="homography.html"/>
+                <section title="ROC Curves" ref="roc_curves.html"/>
+                <section title="DET Curves" ref="det_curves.html"/>
+            </section>
+            <!--<section title="Teclas rapidas" ref="hotkeys.html"/>
+            <section title="Glosario de términos" ref="glossary.html"/>
+            <section title="FAQ" ref="faq.html"/>-->
+        </toc>
+        <keywords>
+            <keyword name="Getting Started" id="PHOTOMATCH::getting_started" ref="getting_started.html" />
+            <keyword name="User Interface" id="PHOTOMATCH::gui" ref="gui.html" />
+            <keyword name="Work Area" id="PHOTOMATCH::workarea" ref="workarea.html"/>
+            <keyword name="Start Page" id="PHOTOMATCH::start_page" ref="start_page.html"/>
+            <keyword name="Project Tree" id="PHOTOMATCH::prj_tree" ref="prj_tree.html"/>
+            <keyword name="Menús" id="PHOTOMATCH::menus" ref="menus.html"/>
+            <keyword name="Toolbars" id="PHOTOMATCH::toolbar" ref="toolbar.html"/>
+            <keyword name="Properties" id="PHOTOMATCH::properties" ref="properties.html"/>
+            <keyword name="Console" id="PHOTOMATCH::console" ref="console.html"/>
+            <keyword name="Thumbnails" id="PHOTOMATCH::thumbnails" ref="thumbnails.html"/>
+            <keyword name="Settings" id="PHOTOMATCH::settings" ref="settings.html"/>
+            <keyword name="Tools" id="PHOTOMATCH::tools" ref="tools.html"/>
+            <keyword name="Preprocess" id="PHOTOMATCH::preprocess" ref="preprocess.html"/>
+            <keyword name="Feature Extraction" id="PHOTOMATCH::feature_extraction" ref="feature_extraction.html"/>
+            <keyword name="Feature Matching" id="PHOTOMATCH::feature_matching" ref="feature_matching.html"/>
+            <keyword name="Quality Control" id="PHOTOMATCH::quality_control" ref="quality_control.html"/>
+            <keyword name="Keypoints Viewer" id="PHOTOMATCH::keypoints_viewer" ref="keypoints_viewer.html"/>
+            <keyword name="Matches Viewer" id="PHOTOMATCH::matches_viewer" ref="matches_viewer.html"/>
+            <keyword name="Ground Truth Editor" id="PHOTOMATCH::ground_truth_editor" ref="ground_truth_editor.html"/>
+            <keyword name="Homography" id="PHOTOMATCH::homography" ref="homography.html"/>
+            <keyword name="ROC Curves" id="PHOTOMATCH::roc_curves" ref="roc_curves.html"/>
+            <keyword name="DET Curves" id="PHOTOMATCH::det_curves" ref="det_curves.html"/>
+            
+            <!--<keyword name="FAQ" id="PHOTOMATCH::faq" ref="faq.html"/>
+            <keyword name="Glosario de términos" id="PHOTOMATCH::glossary" ref="glossary.html"/>
+            <keyword name="Guía rápida" id="PHOTOMATCH::guide" ref="guide.html"/>
+            <keyword name="Herramientas" id="PHOTOMATCH::tools" ref="tools.html"/>
+            <keyword name="Instalación" id="PHOTOMATCH::instalation" ref="installation.html"/>
+            
+            <keyword name="Presentación" id="PHOTOMATCH::presentation" ref="index.html"/>
+            <keyword name="Teclas rapidas" id="PHOTOMATCH::hotkeys" ref="hotkeys.html"/>-->
+        </keywords>
+        <files>
+            <file>css/styles.css</file>
+            <file>*.html</file>
+            <file>img/*.png</file>
+            <file>img/*.jpg</file>
+        </files>
+    </filterSection>
+</QtHelpProject>

@@ -18,6 +18,8 @@ RswheWidget::RswheWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mHistogramDivisions,    SIGNAL(valueChanged(int)),        this, SIGNAL(histogramDivisionsChange(int)));
   connect(mHistogramCutByMean,    SIGNAL(clicked()),                this, SLOT(onHistogramCutByMean()));

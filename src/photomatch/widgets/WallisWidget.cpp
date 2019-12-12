@@ -17,6 +17,8 @@ WallisWidget::WallisWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
 
   connect(mContrast,            SIGNAL(valueChanged(double)),     this, SIGNAL(contrastChange(double)));

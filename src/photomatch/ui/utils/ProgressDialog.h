@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QTextEdit>
 
-#include "process.h"   /// TODO: esto es solo para Visual Studio. No se para que se utiliza
 #include "photomatch/process/Process.h"
 
 namespace Ui
@@ -25,9 +24,6 @@ public:
   explicit IProgressDialog(QWidget *parent = nullptr) : QDialog(parent){}
   virtual ~IProgressDialog() = default;
 
-
-  //virtual void setProcess(Process *process) = 0;
-
 public slots:
 
   virtual void setRange(int min, int max) = 0;
@@ -37,9 +33,8 @@ public slots:
   virtual void setTitle(QString text) = 0;
   virtual void setStatusText(QString text) = 0;
 
-  virtual void onStatusChanged(int step, QString message) = 0;
-  virtual void onStatusChangedNext() = 0;
-  //virtual void onProcessFinished() = 0;
+protected slots:
+
   virtual void onMinimized() = 0;
 
 signals:
@@ -68,9 +63,11 @@ public slots:
   void setFinished() override;
   void setTitle(QString title) override;
   void setStatusText(QString text) override;
-  void onStatusChanged(int step, QString message) override;
-  void onStatusChangedNext() override;
-  //void onProcessFinished() override;
+
+protected slots:
+
+//  void onStatusChanged(int step, QString message) override;
+//  void onStatusChangedNext() override;
   void onMinimized() override;
 
 private slots:
@@ -82,16 +79,13 @@ private slots:
 protected:
 
   //void closeEvent(QCloseEvent *event) override;
+  //void changeEvent(QEvent *) override;
 
 private:
 
   Ui::ProgressDialog *ui;
   Process *mProcess;
 
-
-  // QWidget interface
-protected:
-  //void changeEvent(QEvent *) override;
 };
 
 } // namespace photomatch

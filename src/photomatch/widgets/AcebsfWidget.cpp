@@ -141,7 +141,7 @@ void AcebsfWidget::init()
   lbl->setFont(font);
   propertiesLayout->addWidget(lbl, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), this);
+  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), this);
   propertiesLayout->addWidget(groupBoxBlocksize, 1, 0, 1, 2);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
   groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
