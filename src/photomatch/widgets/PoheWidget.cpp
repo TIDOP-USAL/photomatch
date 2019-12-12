@@ -15,6 +15,8 @@ PoheWidget::PoheWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
@@ -56,7 +58,10 @@ void PoheWidget::update()
 
 void PoheWidget::retranslate()
 {
-
+#ifndef QT_NO_WHATSTHIS
+  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+#endif // QT_NO_WHATSTHIS
 }
 
 void PoheWidget::reset()

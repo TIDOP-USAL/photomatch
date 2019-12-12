@@ -15,6 +15,8 @@ LceBsescsWidget::LceBsescsWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
@@ -56,7 +58,10 @@ void LceBsescsWidget::update()
 
 void LceBsescsWidget::retranslate()
 {
-
+#ifndef QT_NO_WHATSTHIS
+  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+#endif // QT_NO_WHATSTHIS
 }
 
 void LceBsescsWidget::reset()
@@ -90,7 +95,7 @@ void LceBsescsWidget::init()
   lbl->setFont(font);
   propertiesLayout->addWidget(lbl, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), this);
+  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), this);
   propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
   groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);

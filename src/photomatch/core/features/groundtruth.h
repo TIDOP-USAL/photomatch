@@ -52,10 +52,28 @@ public:
   reference operator[](size_type position);
   iterator erase(const_iterator first, const_iterator last);
 
+  /*!
+   * \brief Id image 1 (base name of image file)
+   * \return Id
+   */
   QString idImg1() const;
+
+  /*!
+   * \brief Id image 2 (base name of image file)
+   * \return Id
+   */
   QString idImg2() const;
 
+  /*!
+   * \brief List of homologus points
+   * \return
+   */
   std::vector<std::pair<QPointF, QPointF>> homologusPoints() const;
+
+  /*!
+   * \brief homography
+   * \return
+   */
   cv::Mat homography() const;
 
 private:
@@ -75,10 +93,32 @@ public:
   GroundTruth();
   GroundTruth(const QString &gtFile);
 
+  /*!
+   * \brief Read ground truth file
+   * \param[in] gtFile ground truth file
+   */
   void read(const QString &gtFile);
+
+  /*!
+   * \brief Write ground truth file
+   * \param[in] gtFile ground truth file
+   */
   void write(const QString &gtFile);
 
+  /*!
+   * \brief findPair
+   * \param[in] idImg1 Id image 1 (base name of image file)
+   * \param[in] idImg2 Id image 2 (base name of image file)
+   * \return
+   */
   std::shared_ptr<HomologusPoints> findPair(const QString &idImg1, const QString &idImg2);
+
+  /*!
+   * \brief pair
+   * \param[in] idImg1 Id image 1 (base name of image file)
+   * \param[in] idImg2 Id image 2 (base name of image file)
+   * \return
+   */
   std::shared_ptr<HomologusPoints> pair(const QString &idImg1, const QString &idImg2);
 
   void clear();

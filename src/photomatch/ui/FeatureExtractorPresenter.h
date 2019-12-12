@@ -58,6 +58,7 @@ public:
 signals:
 
   void running();
+  void imagePreprocessed(QString);
   void featuresExtracted(QString);
   void finished();
 
@@ -114,6 +115,7 @@ private slots:
 
   void onError(int code, const QString &msg);
   void onFinished();
+  void onImagePreprocessed(const QString &image);
   void onFeaturesExtracted(const QString &features);
 
 protected:

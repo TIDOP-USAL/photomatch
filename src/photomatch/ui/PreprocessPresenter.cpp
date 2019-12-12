@@ -378,7 +378,6 @@ void PreprocessPresenter::run()
   for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString file_in = (*it)->path();
     QFileInfo fileInfo(file_in);
-    //QString file_out = fileInfo.path();
     QString file_out = mProjectModel->projectFolder();
     file_out.append("\\").append(mProjectModel->currentSession()->name());
     file_out.append("\\preprocess\\");

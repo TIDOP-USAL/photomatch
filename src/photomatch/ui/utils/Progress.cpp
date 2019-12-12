@@ -33,7 +33,6 @@ void ProgressHandler::setValue(int value)
 void ProgressHandler::onNextPosition()
 {
   setValue(++mValue);
-  //emit positionNext();
 }
 
 void ProgressHandler::onInit()
@@ -56,31 +55,6 @@ void ProgressHandler::setDescription(const QString &description)
   emit descriptionChange(description);
 }
 
-//Progress::Progress()
-//{}
-
-//Progress::~Progress()
-//{}
-
-//void Progress::setRange(int min, int max)
-//{
-//  emit rangeChange(min, max);
-//}
-
-//void Progress::setValue(int value)
-//{
-//  emit valueChange(value);
-//}
-
-//void Progress::setTitle(const QString &title)
-//{
-
-//}
-
-//void Progress::setDescription(const QString &value)
-//{
-
-//}
 
 } // namespace photomatch
 

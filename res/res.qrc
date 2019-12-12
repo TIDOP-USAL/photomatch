@@ -149,6 +149,8 @@
         <file>img/material/96/keypoint.png</file>
         <file>img/material/96/icons8_list_view_96px.png</file>
         <file>img/material/96/delete_list_96px.png</file>
+        <file>img/material/96/icons8_arrow_96px.png</file>
+        <file>img/material/96/icons8_arrow_pointing_left_96px.png</file>
     </qresource>
     <qresource prefix="/img/logos">
         <file>img/isprs_logo.jpg</file>

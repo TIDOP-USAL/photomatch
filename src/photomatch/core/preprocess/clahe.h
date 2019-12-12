@@ -33,9 +33,28 @@ public:
 
 public:
 
+  /*!
+   * \brief Return threshold value for contrast limiting
+   * \return
+   */
   virtual double clipLimit() const override;
+
+  /*!
+   * \brief Set threshold value for contrast limiting
+   * \param clipLimit
+   */
   virtual void setClipLimit(double clipLimit) override;
+
+  /*!
+   * \brief Returns the number of tiles in row and column.
+   * \return
+   */
   virtual QSize tilesGridSize() const override;
+
+  /*!
+   * \brief Sets size of grid for histogram equalization. Input image will be divided into equally sized rectangular tiles.
+   * \param[in] tilesGridSize
+   */
   virtual void setTilesGridSize(const QSize &tilesGridSize) override;
 
 // Preprocess interface

@@ -70,6 +70,7 @@ set(PHOTOMATCH_SOURCES
     #BatchView.cpp
     #BatchPresenter.cpp
     AboutDialog.cpp
+    HelpDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
     utils/Progress.cpp
@@ -131,6 +132,7 @@ set(PHOTOMATCH_HEADERS
     #BatchView.h
     #BatchPresenter.h
     AboutDialog.h
+    HelpDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
     utils/Progress.h

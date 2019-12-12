@@ -17,6 +17,8 @@ HmclaheWidget::HmclaheWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
@@ -81,7 +83,12 @@ void HmclaheWidget::update()
 
 void HmclaheWidget::retranslate()
 {
-
+#ifndef QT_NO_WHATSTHIS
+  mL->setWhatsThis(tr("<html><head/><body><p>Use to district the range of histogram. Range between 0 and 1.</p></body></html>"));
+  mPhi->setWhatsThis(tr("<html><head/><body><p>Use to adjust the histogram. Range between 0 and 1.</p></body></html>"));
+  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+#endif // QT_NO_WHATSTHIS
 }
 
 void HmclaheWidget::reset()
@@ -117,7 +124,7 @@ void HmclaheWidget::init()
   lbl->setFont(font);
   propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Blocksize"), groupBox);
+  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), groupBox);
 
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout(groupBoxBlocksize);
 

@@ -15,6 +15,8 @@ DheWidget::DheWidget(QWidget *parent)
 {
   init();
 
+  retranslate();
+
   /// Signals and slots
   connect(mX,    SIGNAL(valueChanged(int)),      this, SIGNAL(xChange(int)));
 

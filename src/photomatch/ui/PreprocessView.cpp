@@ -7,6 +7,7 @@
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QGridLayout>
+#include <QApplication>
 
 namespace photomatch
 {
@@ -94,6 +95,7 @@ void PreprocessView::onCheckBoxFullImageChange()
 void PreprocessView::init()
 {
   this->setWindowTitle(tr("Preprocess"));
+  this->setObjectName(QStringLiteral("PreprocessView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(350, 450);
 
@@ -146,9 +148,12 @@ void PreprocessView::retranslate()
   ///TODO: mover aqui todos los textos
 
 #ifndef QT_NO_WHATSTHIS
-  mCheckBoxFullImage->setWhatsThis(tr("<html><head/><body><p>If checked, use the full image size</p></body></html>"));
-  mSpinBoxMaxImageSize->setWhatsThis(tr("<html><head/><body><p>Select maximun image size</p></body></html>"));
-  mComboBoxPreprocess->setWhatsThis(tr("<html><head/><body><p>Select preprocesing method</p></body></html>"));
+  mCheckBoxFullImage->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>If checked, use the full image size.</p></body></html>"));
+  mSpinBoxMaxImageSize->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Select maximun image size.</p></body></html>"));
+  mComboBoxPreprocess->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Select preprocesing method.</p></body></html>"));
+  mButtonBox->button(QDialogButtonBox::Cancel)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Cancel the changes and close the image preprocessing tool.</p></body></html>"));
+  mButtonBox->button(QDialogButtonBox::Apply)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Apply the selected preprocessing to the project images.</p></body></html>"));
+  mButtonBox->button(QDialogButtonBox::Help)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Show help.</p></body></html>"));
 #endif // QT_NO_WHATSTHIS
 
 }

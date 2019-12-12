@@ -12,7 +12,18 @@ namespace photomatch
 
 /*----------------------------------------------------------------*/
 
+/*!
+ * \brief Convert QImage to cv::Mat
+ * \param[in] image QImage
+ * \return cv::Mat
+ */
 PHOTOMATCH_EXPORT cv::Mat qImageToCvMat(const QImage &image);
+
+/*!
+ * \brief Convert cv::Mat to QImage
+ * \param[in] image cv::Mat
+ * \return QImage
+ */
 PHOTOMATCH_EXPORT QImage cvMatToQImage(const cv::Mat &image);
 
 /*----------------------------------------------------------------*/
