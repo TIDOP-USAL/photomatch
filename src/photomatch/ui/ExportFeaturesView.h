@@ -27,6 +27,7 @@ public:
   virtual QString format() const = 0;
   virtual QStringList exportFiles() const = 0;
   virtual QString exportPath() const = 0;
+  virtual bool exportAll() const = 0;
 
 public slots:
 
@@ -35,6 +36,7 @@ public slots:
   virtual void setFormats(const QStringList &formats) = 0;
   virtual void setCurrentFormat(const QString &format) = 0;
   virtual void setExportAll(bool active) = 0;
+  virtual void setExportPath(const QString &path) = 0;
   virtual void setImageFiles(const QStringList &images) = 0;
 
 signals:
@@ -62,9 +64,12 @@ protected slots:
 
 // IExportFeaturesView interface
 
+public:
+
   QString format() const override;
   QStringList exportFiles() const override;
   QString exportPath() const override;
+  bool exportAll() const override;
 
 public slots:
 
@@ -73,6 +78,7 @@ public slots:
   void setFormats(const QStringList &formats) override;
   void setCurrentFormat(const QString &format) override;
   void setExportAll(bool active) override;
+  void setExportPath(const QString &path) override;
   void setImageFiles(const QStringList &images) override;
 
 // IDialogView interface

@@ -25,6 +25,7 @@ ExportFeaturesView::ExportFeaturesView(QWidget *parent)
   connect(mLineEditExportPath,     SIGNAL(textChanged(QString)),        this, SLOT(update()));
   connect(mCheckBoxExportAll,      SIGNAL(clicked(bool)),               this, SLOT(update()));
   connect(mPushButtonExportFormat, SIGNAL(clicked(bool)),               this, SLOT(onPushButtonExportFormat()));
+  connect(mListWidgetfeatures,     SIGNAL(itemSelectionChanged()),      this, SLOT(update()));
 
   connect(mButtonBox,                                   SIGNAL(rejected()),      this, SLOT(reject()));
   connect(mButtonBox->button(QDialogButtonBox::Ok),     SIGNAL(clicked(bool)),   this, SLOT(accept()));
@@ -71,9 +72,15 @@ QString ExportFeaturesView::exportPath() const
   return mLineEditExportPath->text();
 }
 
+bool ExportFeaturesView::exportAll() const
+{
+  return mCheckBoxExportAll->isChecked();
+}
+
 void ExportFeaturesView::setSessions(const QStringList &sessions)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
+  mComboBoxSession->clear();
   mComboBoxSession->addItems(sessions);
 }
 
@@ -86,6 +93,7 @@ void ExportFeaturesView::setActiveSession(const QString &session)
 void ExportFeaturesView::setFormats(const QStringList &formats)
 {
   const QSignalBlocker blockerComboBoxFormat(mComboBoxFormat);
+  mComboBoxFormat->clear();
   mComboBoxFormat->addItems(formats);
 }
 
@@ -102,9 +110,15 @@ void ExportFeaturesView::setExportAll(bool active)
   update();
 }
 
+void ExportFeaturesView::setExportPath(const QString &path)
+{
+  mLineEditExportPath->setText(path);
+}
+
 void ExportFeaturesView::setImageFiles(const QStringList &images)
 {
   mListWidgetfeatures->addItems(images);
+  update();
 }
 
 void ExportFeaturesView::init()

@@ -103,14 +103,8 @@ QString SurfProperties::name() const
 SurfDetectorDescriptor::SurfDetectorDescriptor()
   : SurfProperties(),
     KeypointDetector(),
-    DescriptorExtractor()/*,
-    mSurf(cv::xfeatures2d::SURF::create())*/
+    DescriptorExtractor()
 {
-//  mSurf->setHessianThreshold(SurfProperties::hessianThreshold());
-//  mSurf->setNOctaves(SurfProperties::octaves());
-//  mSurf->setNOctaveLayers(SurfProperties::octaveLayers());
-//  mSurf->setExtended(SurfProperties::extendedDescriptor());
-//  mSurf->setUpright(SurfProperties::rotatedFeatures());
   mSurf = cv::xfeatures2d::SURF::create(SurfProperties::hessianThreshold(),
                                         SurfProperties::octaves(),
                                         SurfProperties::octaveLayers(),
@@ -124,11 +118,6 @@ SurfDetectorDescriptor::SurfDetectorDescriptor(const SurfDetectorDescriptor &sur
     DescriptorExtractor(),
     mSurf(surfDetectorDescriptor.mSurf)
 {
-//  mSurf->setHessianThreshold(SurfProperties::hessianThreshold());
-//  mSurf->setNOctaves(SurfProperties::octaves());
-//  mSurf->setNOctaveLayers(SurfProperties::octaveLayers());
-//  mSurf->setExtended(SurfProperties::extendedDescriptor());
-//  mSurf->setUpright(SurfProperties::rotatedFeatures());
 }
 
 SurfDetectorDescriptor::SurfDetectorDescriptor(double hessianThreshold,
@@ -304,7 +293,7 @@ bool SurfCudaDetectorDescriptor::extract(const cv::Mat &img,
   try {
     cv::cuda::GpuMat g_img(img);
     cv::cuda::GpuMat g_descriptors;
-    (*mSurf)(g_img, cv::cuda::GpuMat(), keyPoints, g_descriptors);
+    (*mSurf)(g_img, cv::cuda::GpuMat(), keyPoints, g_descriptors, true);
     g_descriptors.download(descriptors);
   } catch (cv::Exception &e) {
     msgError("SURF Descriptor error: %s", e.what());
