@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include <QListWidget>
 #include <QLineEdit>
+#include <QStandardPaths>
 
 namespace photomatch
 {
@@ -41,7 +42,7 @@ void ExportFeaturesView::onPushButtonExportFormat()
 {
   QString pathName = QFileDialog::getExistingDirectory(this,
     tr("Export folder"),
-    "",
+    QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
     QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
   if (!pathName.isEmpty()) {

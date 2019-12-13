@@ -6,6 +6,7 @@
 #include <tidop/core/messages.h>
 
 #include <QFileDialog>
+#include <QStandardPaths>
 
 namespace photomatch
 {
@@ -57,7 +58,7 @@ void ExportMatchesPresenter::save()
   QString selectedFilter;
   QString pathName = QFileDialog::getSaveFileName(nullptr,
       tr("Export matches"),
-      "",
+      QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
       tr("ORIMA (*.txt);;BINGO (*.txt);;All Files (*)"),
       &selectedFilter);
 

@@ -394,6 +394,7 @@ void DescriptorMatcherPresenter::run()
   pass_points_ids.append("\\matches\\pass_points_ids.txt");
 
   std::shared_ptr<PassPointsGroupingProcess> passPointsGroupingProcess(new PassPointsGroupingProcess(pairs, pass_points_ids));
+  connect(passPointsGroupingProcess.get(), SIGNAL(writeFinished(QString)), this, SLOT(onPassPointsFinished(QString)));
   mMultiProcess->appendProcess(passPointsGroupingProcess);
   ///
 
@@ -463,6 +464,11 @@ void DescriptorMatcherPresenter::onMatchCompute(const QString &left, const QStri
 {
   mProjectModel->addMatches(left, right, match);
   emit matchCompute(match);
+}
+
+void DescriptorMatcherPresenter::onPassPointsFinished(const QString &file)
+{
+  mProjectModel->setPassPoints(file);
 }
 
 } // namespace photomatch
