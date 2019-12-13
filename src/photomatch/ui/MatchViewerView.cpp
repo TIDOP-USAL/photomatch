@@ -79,7 +79,7 @@ void MatchViewerView::setRightImageList(const std::vector<QString> &rightImageLi
   }
 }
 
-void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float> > &matches)
+void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float> > &matches)
 {
   QSignalBlocker blocker(mTreeWidgetMatches);
   mTreeWidgetMatches->clear();
@@ -145,11 +145,12 @@ void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, QPointF, s
 
   for (size_t i = 0; i < matches.size(); i++){
     QTreeWidgetItem *treeWidgetItem = new QTreeWidgetItem();
-    treeWidgetItem->setText(0, QString::number(i + 1));
-    size_t query_id, train_id;
+    //treeWidgetItem->setText(0, QString::number(i + 1));
+    size_t pp_id, query_id, train_id;
     QPointF query_point, train_point;
     double distance;
-    std::tie(query_id, query_point, train_id, train_point, distance) = matches[i];
+    std::tie(pp_id, query_id, query_point, train_id, train_point, distance) = matches[i];
+    treeWidgetItem->setText(0, QString::number(pp_id));
     treeWidgetItem->setText(1, QString::number(query_id));
     treeWidgetItem->setText(2, QString::number(query_point.x()));
     treeWidgetItem->setText(3, QString::number(query_point.y()));
@@ -165,13 +166,15 @@ void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, QPointF, s
       itemLeft->setPen(pen);
       itemLeft->setSelectedPen(select_pen);
       itemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
-      itemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      //itemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      itemLeft->setToolTip(QString::number(static_cast<int>(pp_id)));
       mGraphicsViewLeft->scene()->addItem(itemLeft);
       CircleGraphicItem *itemRight = new CircleGraphicItem(train_point, mMarkerSize);
       itemRight->setPen(pen);
       itemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
       itemRight->setSelectedPen(select_pen);
-      itemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      //itemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      itemRight->setToolTip(QString::number(static_cast<int>(pp_id)));
       mGraphicsViewRight->scene()->addItem(itemRight);
     } else if (mMarkerType == 1){
       // Cross
@@ -179,13 +182,15 @@ void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, QPointF, s
       crossGraphicItemLeft->setPen(pen);
       crossGraphicItemLeft->setSelectedPen(select_pen);
       crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
-      crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      //crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(pp_id)));
       mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
       CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(train_point, mMarkerSize);
       crossGraphicItemRight->setPen(pen);
       crossGraphicItemRight->setSelectedPen(select_pen);
       crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
-      crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      //crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(pp_id)));
       mGraphicsViewRight->scene()->addItem(crossGraphicItemRight);
     } else if (mMarkerType == 2){
       // Diagonal cross
@@ -193,13 +198,15 @@ void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, QPointF, s
       crossGraphicItemLeft->setPen(pen);
       crossGraphicItemLeft->setSelectedPen(select_pen);
       crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
-      crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      //crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(pp_id)));
       mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
       DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(train_point, mMarkerSize);
       crossGraphicItemRight->setPen(pen);
       crossGraphicItemRight->setSelectedPen(select_pen);
       crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
-      crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      //crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
+      crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(pp_id)));
       mGraphicsViewRight->scene()->addItem(crossGraphicItemRight);
     }
   }
@@ -222,8 +229,8 @@ void MatchViewerView::setMarkerStyle(const QString &color, int width, int type, 
   int markerTypeOld = mMarkerType;
   mMarkerColor = color;
   mMarkerSize = size;
-  mMarkerWidth = type;
-  mMarkerType = width;
+  mMarkerWidth = width;
+  mMarkerType = type;
 
   QPen pen(QColor(mMarkerColor), mMarkerWidth);
   pen.setCosmetic(true);
@@ -481,6 +488,8 @@ void MatchViewerView::init()
   mPushButtonDeleteMatch = new QPushButton(tr("Delete Match"), this);
   mPushButtonDeleteMatch->setMaximumSize(QSize(280, 16777215));
   gridLayout2->addWidget(mPushButtonDeleteMatch, 0, 1, 1, 1);
+  /// Desactivo el borrado de puntos por ahora
+  mPushButtonDeleteMatch->setVisible(false);
 
   gridLayout->addLayout(gridLayout2, 4, 0, 1, 2);
 

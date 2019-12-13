@@ -19,9 +19,7 @@ ExportMatchesPresenter::ExportMatchesPresenter(IExportMatchesView *view,
 {
   connect(mView, SIGNAL(sessionChange(QString)),   this, SLOT(sessionChange(QString)));
   connect(mView, SIGNAL(accepted()),               this, SLOT(save()));
-
-  //connect(mView, SIGNAL(rejected()),        this, SLOT(discart()));
-  connect(mView, SIGNAL(help()),            this, SLOT(help()));
+  connect(mView, SIGNAL(help()),                   this, SLOT(help()));
 }
 
 ExportMatchesPresenter::~ExportMatchesPresenter()
@@ -49,12 +47,7 @@ void ExportMatchesPresenter::init()
 
 void ExportMatchesPresenter::save()
 {
-//  QFileDialog dialog(nullptr, tr("Export matches"), "", tr("ORIMA (*.txt);;BINGO (*.txt);;All Files (*)"));
-//  dialog.setAcceptMode(QFileDialog::AcceptMode::AcceptSave);
-//  if (dialog.exec() == QDialog::Accepted){
-//    dialog.selectNameFilter();
 
-//  }
   QString selectedFilter;
   QString pathName = QFileDialog::getSaveFileName(nullptr,
       tr("Export matches"),
@@ -62,22 +55,19 @@ void ExportMatchesPresenter::save()
       tr("ORIMA (*.txt);;BINGO (*.txt);;All Files (*)"),
       &selectedFilter);
 
-    if (!pathName.isEmpty()) {
+  if (!pathName.isEmpty()) {
 
-      QString format;
-      if (selectedFilter.compare("ORIMA (*.txt)") == 0){
-        format = "ORIMA";
-      } else if (selectedFilter.compare("BINGO (*.txt)") == 0){
-        format = "BINGO";
-      } else {
-        msgError("Unsupported format");
-      }
-      mModel->exportMatches(pathName, format);
+    QString format;
+    if (selectedFilter.compare("ORIMA (*.txt)") == 0){
+      format = "ORIMA";
+    } else if (selectedFilter.compare("BINGO (*.txt)") == 0){
+      format = "BINGO";
+    } else {
+      msgError("Unsupported format");
     }
+    mModel->exportMatches(pathName, format);
+  }
 
-//  mModel->exportFeatures(mView->exportFiles(),
-//                         mView->exportPath(),
-//                         mView->format());
 }
 
 void ExportMatchesPresenter::sessionChange(const QString &session)

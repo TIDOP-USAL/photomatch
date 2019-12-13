@@ -22,21 +22,14 @@ public:
   IExportMatchesView(QWidget *parent) : IDialogView(parent) {}
   virtual ~IExportMatchesView() override = default;
 
-  //virtual QString format() const = 0;
-  //virtual QString exportPath() const = 0;
-
 public slots:
 
   virtual void setSessions(const QStringList &sessions) = 0;
   virtual void setActiveSession(const QString &session) = 0;
-  //virtual void setFormats(const QStringList &formats) = 0;
-  //virtual void setCurrentFormat(const QString &format) = 0;
 
 signals:
 
   void sessionChange(QString);
-  //void formatChange(QString);
-  //void exportMatches();
 };
 
 
@@ -51,21 +44,12 @@ public:
   ExportMatchesView(QWidget *parent = nullptr);
   virtual ~ExportMatchesView() override;
 
-protected slots:
-
-  //void onPushButtonExportFormat();
-
 // IExportMatchesView interface
-
-  //QString format() const override;
-  //QString exportPath() const override;
 
 public slots:
 
   void setSessions(const QStringList &sessions) override;
   void setActiveSession(const QString &session) override;
-  //void setFormats(const QStringList &formats) override;
-  //void setCurrentFormat(const QString &format) override;
 
 // IDialogView interface
 
@@ -86,11 +70,6 @@ protected:
 
   QLabel *mLabelSession;
   QComboBox *mComboBoxSession;
-  //QLabel *mLabelFormat;
-  //QComboBox *mComboBoxFormat;
-  //QLabel *mLabelExportPath;
-  //QLineEdit *mLineEditExportPath;
-  //QPushButton *mPushButtonExportFormat;
   QDialogButtonBox *mButtonBox;
 };
 

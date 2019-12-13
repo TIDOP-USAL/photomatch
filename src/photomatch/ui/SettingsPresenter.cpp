@@ -347,7 +347,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mView, SIGNAL(matchesViewerMarkerTypeChange(int)),                mModel, SLOT(setMatchesViewerMarkerType(int)));
   connect(mView, SIGNAL(matchesViewerMarkerSizeChange(int)),                mModel, SLOT(setMatchesViewerMarkerSize(int)));
   connect(mView, SIGNAL(matchesViewerMarkerWidthChange(int)),               mModel, SLOT(setMatchesViewerMarkerWidth(int)));
-  connect(mView, SIGNAL(matchesViewerMarkerColorChange(QString)),           mModel, SLOT(setMatchesViewerLineColor(QString)));
+  connect(mView, SIGNAL(matchesViewerMarkerColorChange(QString)),           mModel, SLOT(setMatchesViewerMarkerColor(QString)));
   connect(mView, SIGNAL(selectMatchesViewerMarkerWidthChange(int)),         mModel, SLOT(setMatchesViewerSelectMarkerWidth(int)));
   connect(mView, SIGNAL(selectMatchesViewerMarkerColorChange(QString)),     mModel, SLOT(setMatchesViewerSelectMarkerColor(QString)));
   connect(mView, SIGNAL(matchesViewerLineWidthChange(int)),                 mModel, SLOT(setMatchesViewerLineWidth(int)));

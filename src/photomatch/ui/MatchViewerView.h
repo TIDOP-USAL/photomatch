@@ -52,7 +52,7 @@ public:
    */
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
-  virtual void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) = 0;
+  virtual void setMatches(const std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> &matches) = 0;
   //virtual void deleteMatch(int id) = 0;
 
   virtual void setBGColor(const QString &bgColor) = 0;
@@ -98,7 +98,7 @@ public:
   void setRightImage(const QString &rightImage) override;
   void setLeftImageList(const std::vector<QString> &leftImageList) override;
   void setRightImageList(const std::vector<QString> &rightImageList) override;
-  void setMatches(const std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> &matches) override;
+  void setMatches(const std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> &matches) override;
   void setBGColor(const QString &bgColor) override;
   void setSelectedMarkerStyle(const QString &color, int width) override;
   void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
