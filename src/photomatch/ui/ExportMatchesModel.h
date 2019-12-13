@@ -23,7 +23,6 @@ public:
   virtual QStringList sessions() const = 0;
   virtual QString sessionName() const = 0;
   virtual QStringList formats() const = 0;
-  //virtual QStringList features() const = 0;
 
 public slots:
 

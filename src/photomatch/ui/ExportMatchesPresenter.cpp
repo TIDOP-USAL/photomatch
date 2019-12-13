@@ -7,6 +7,7 @@
 #include <tidop/core/messages.h>
 
 #include <QFileDialog>
+#include <QStandardPaths>
 
 namespace photomatch
 {
@@ -58,35 +59,27 @@ void ExportMatchesPresenter::init()
 
 void ExportMatchesPresenter::save()
 {
-//  QFileDialog dialog(nullptr, tr("Export matches"), "", tr("ORIMA (*.txt);;BINGO (*.txt);;All Files (*)"));
-//  dialog.setAcceptMode(QFileDialog::AcceptMode::AcceptSave);
-//  if (dialog.exec() == QDialog::Accepted){
-//    dialog.selectNameFilter();
 
-//  }
   QString selectedFilter;
   QString pathName = QFileDialog::getSaveFileName(nullptr,
       tr("Export matches"),
-      "",
+      QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation),
       tr("ORIMA (*.txt);;BINGO (*.txt);;All Files (*)"),
       &selectedFilter);
 
-    if (!pathName.isEmpty()) {
+  if (!pathName.isEmpty()) {
 
-      QString format;
-      if (selectedFilter.compare("ORIMA (*.txt)") == 0){
-        format = "ORIMA";
-      } else if (selectedFilter.compare("BINGO (*.txt)") == 0){
-        format = "BINGO";
-      } else {
-        msgError("Unsupported format");
-      }
-      mModel->exportMatches(pathName, format);
+    QString format;
+    if (selectedFilter.compare("ORIMA (*.txt)") == 0){
+      format = "ORIMA";
+    } else if (selectedFilter.compare("BINGO (*.txt)") == 0){
+      format = "BINGO";
+    } else {
+      msgError("Unsupported format");
     }
+    mModel->exportMatches(pathName, format);
+  }
 
-//  mModel->exportFeatures(mView->exportFiles(),
-//                         mView->exportPath(),
-//                         mView->format());
 }
 
 void ExportMatchesPresenter::sessionChange(const QString &session)

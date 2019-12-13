@@ -475,11 +475,11 @@ void SettingsView::init()
   mSpinBoxMatchesViewerMarkerSize->setRange(0, 100);
   mSpinBoxMatchesViewerMarkerSize->setValue(20);
   layoutMVMarker->addWidget(mSpinBoxMatchesViewerMarkerSize, 1, 1, 1, 1);
-  layoutKPVMarker->addWidget(new QLabel(tr("Width:")), 2, 0, 1, 1);
+  layoutMVMarker->addWidget(new QLabel(tr("Width:")), 2, 0, 1, 1);
   mSpinBoxMatchesViewerMarkerWidth = new QSpinBox(tabMatchesViewer);
   mSpinBoxMatchesViewerMarkerWidth->setRange(0, 50);
   mSpinBoxMatchesViewerMarkerWidth->setValue(2);
-  layoutKPVMarker->addWidget(mSpinBoxMatchesViewerMarkerWidth, 2, 1, 1, 1);
+  layoutMVMarker->addWidget(mSpinBoxMatchesViewerMarkerWidth, 2, 1, 1, 1);
   layoutMVMarker->addWidget(new QLabel(tr("Color:")), 3, 0, 1, 1);
   mLineEditMatchesViewerMarkerColor = new QLineEdit(tabMatchesViewer);
   mLineEditMatchesViewerMarkerColor->setText("#e5097e");

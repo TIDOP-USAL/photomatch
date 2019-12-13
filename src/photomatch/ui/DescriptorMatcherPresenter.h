@@ -86,7 +86,7 @@ private slots:
   void onError(int code, const QString &msg);
   void onFinished();
   void onMatchCompute(const QString &left, const QString &right, const QString &match);
-
+  void onPassPointsFinished(const QString &file);
 protected:
 
   IDescriptorMatcherView *mView;

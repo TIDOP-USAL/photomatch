@@ -55,7 +55,7 @@ void MatchViewerPresenter::loadRightImage(const QString &image)
 
 void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
 {
-  std::vector<std::tuple<size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
+  std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
   mView->setMatches(matches);
 }
 
@@ -79,14 +79,17 @@ void MatchViewerPresenter::open()
 
   mView->setSessionName(mModel->sessionName());
   mView->setBGColor(mSettingsModel->matchesViewerBGColor());
-  mView->setSelectedMarkerStyle(mSettingsModel->keypointsViewerSelectMarkerColor(),
-                                mSettingsModel->keypointsViewerSelectMarkerWidth());
+  mView->setSelectedMarkerStyle(mSettingsModel->matchesViewerSelectMarkerColor(),
+                                mSettingsModel->matchesViewerSelectMarkerWidth());
   mView->setMarkerStyle(mSettingsModel->matchesViewerMarkerColor(),
                         mSettingsModel->matchesViewerMarkerWidth(),
                         mSettingsModel->matchesViewerMarkerType(),
                         mSettingsModel->matchesViewerMarkerSize());
   mView->setLineStyle(mSettingsModel->matchesViewerLineColor(),
                       mSettingsModel->matchesViewerLineWidth());
+
+  /// Se carga el fichero de puntos de paso.
+  mModel->loadPassPoints();
 
   mView->show();
 

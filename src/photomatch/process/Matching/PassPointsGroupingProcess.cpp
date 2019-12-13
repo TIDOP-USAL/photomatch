@@ -110,6 +110,8 @@ void PassPointsGroupingProcess::run()
       ofs << std::endl;
     }
 
+    emit writeFinished(mPassPointsFile);
+
     ofs.close();
   }
 

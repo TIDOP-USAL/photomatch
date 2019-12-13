@@ -23,6 +23,10 @@ public:
   QString passPointsFile() const;
   void setPassPointsFile(const QString &passPointsFile);
 
+signals:
+
+  void writeFinished(QString);
+
 // ProcessConcurrent interface
 
 protected:
