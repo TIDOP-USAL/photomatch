@@ -544,7 +544,7 @@ void SettingsPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("settings.html");
-    mHelp->setModal(true);
+    //mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }

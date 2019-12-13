@@ -59,7 +59,7 @@ void CurvesViewerPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("roc_curves.html");
-    mHelp->setModal(true);
+    //mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }

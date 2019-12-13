@@ -30,7 +30,7 @@ void ExportFeaturesPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("index.html");
-    mHelp->setModal(true);
+    //mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }

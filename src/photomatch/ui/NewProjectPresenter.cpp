@@ -34,7 +34,7 @@ void NewProjectPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("menus.html#new_project");
-    mHelp->setModal(true);
+//    mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }

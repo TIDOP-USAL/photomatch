@@ -68,7 +68,7 @@ void MatchViewerPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("matches_viewer.html");
-    mHelp->setModal(true);
+    //mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }

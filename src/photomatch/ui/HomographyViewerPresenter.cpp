@@ -40,7 +40,7 @@ void HomographyViewerPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("homography.html");
-    mHelp->setModal(true);
+    //mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }

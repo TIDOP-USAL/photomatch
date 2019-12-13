@@ -301,7 +301,7 @@ void FeatureExtractorPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("feature_extraction.html");
-    mHelp->setModal(true);
+    //mHelp->setModal(true);
     mHelp->showMaximized();
   }
 }
