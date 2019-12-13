@@ -14,6 +14,7 @@ namespace photomatch
 
 class ISettingsView;
 class ISettingsModel;
+class HelpDialog;
 
 /* Image preprocess */
 class IAcebsfWidget;
@@ -104,6 +105,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -121,6 +123,7 @@ protected:
 
   ISettingsView *mView;
   ISettingsModel *mModel;
+  std::shared_ptr<HelpDialog> mHelp;
 
   /* Image preprocess */
 

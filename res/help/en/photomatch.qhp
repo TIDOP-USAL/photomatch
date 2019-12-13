@@ -40,9 +40,6 @@
                 <section title="ROC Curves" ref="roc_curves.html"/>
                 <section title="DET Curves" ref="det_curves.html"/>
             </section>
-            <!--<section title="Teclas rapidas" ref="hotkeys.html"/>
-            <section title="Glosario de términos" ref="glossary.html"/>
-            <section title="FAQ" ref="faq.html"/>-->
         </toc>
         <keywords>
             <keyword name="Getting Started" id="PHOTOMATCH::getting_started" ref="getting_started.html" />
@@ -67,15 +64,6 @@
             <keyword name="Homography" id="PHOTOMATCH::homography" ref="homography.html"/>
             <keyword name="ROC Curves" id="PHOTOMATCH::roc_curves" ref="roc_curves.html"/>
             <keyword name="DET Curves" id="PHOTOMATCH::det_curves" ref="det_curves.html"/>
-            
-            <!--<keyword name="FAQ" id="PHOTOMATCH::faq" ref="faq.html"/>
-            <keyword name="Glosario de términos" id="PHOTOMATCH::glossary" ref="glossary.html"/>
-            <keyword name="Guía rápida" id="PHOTOMATCH::guide" ref="guide.html"/>
-            <keyword name="Herramientas" id="PHOTOMATCH::tools" ref="tools.html"/>
-            <keyword name="Instalación" id="PHOTOMATCH::instalation" ref="installation.html"/>
-            
-            <keyword name="Presentación" id="PHOTOMATCH::presentation" ref="index.html"/>
-            <keyword name="Teclas rapidas" id="PHOTOMATCH::hotkeys" ref="hotkeys.html"/>-->
         </keywords>
         <files>
             <file>css/styles.css</file>

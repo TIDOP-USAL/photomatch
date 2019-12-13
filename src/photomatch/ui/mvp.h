@@ -1,12 +1,16 @@
 #ifndef PHOTOMATCH_MVP_H
 #define PHOTOMATCH_MVP_H
 
+#include <memory>
+
 #include <QObject>
 #include <QDialog>
 #include <QEvent>
 
 namespace photomatch
 {
+
+class HelpDialog;
 
 /*!
  * \brief Interfaz para las Vistas que sean QWidget
@@ -174,7 +178,7 @@ public slots:
   */
   virtual void open() = 0;
 
-  //virtual void setHelp(std::shared_ptr<ui::Help> &help) = 0;
+  virtual void setHelp(std::shared_ptr<HelpDialog> &help) = 0;
 
 private:
 

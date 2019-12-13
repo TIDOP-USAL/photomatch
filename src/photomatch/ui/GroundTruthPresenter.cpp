@@ -3,6 +3,7 @@
 #include "photomatch/ui/GroundTruthModel.h"
 #include "photomatch/ui/GroundTruthView.h"
 #include "photomatch/ui/SettingsModel.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QStandardPaths>
 #include <QDir>
@@ -17,8 +18,8 @@ GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
   : IGroundTruthPresenter(),
     mView(view),
     mModel(model),
-    mSettingsModel(settings)/*,
-    mHelp(nullptr)*/
+    mSettingsModel(settings),
+    mHelp(nullptr)
 {
   init();
 
@@ -36,8 +37,6 @@ GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
   connect(mView, SIGNAL(findLeftPoint(QString, QString, QPointF)), this, SLOT(findLeftPoint(QString, QString, QPointF)));
   connect(mView, SIGNAL(findRightPoint(QString, QString, QPointF)), this, SLOT(findRightPoint(QString, QString, QPointF)));
 
-
-  //connect(mView, SIGNAL(accepted()), this, SLOT(save()));
   connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 
@@ -83,16 +82,6 @@ void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QStri
     mView->enableLockView(false);
   }
 }
-
-//void GroundTruthPresenter::markedLeftPoint(const QPointF &pt)
-//{
-//  mView->setPointLeft(pt);
-//}
-
-//void GroundTruthPresenter::markedRightPoint(const QPointF &pt)
-//{
-//  mView->setPointRight(pt);
-//}
 
 void GroundTruthPresenter::addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
 {
@@ -215,6 +204,11 @@ void GroundTruthPresenter::discart()
 
 void GroundTruthPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("ground_truth_editor.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void GroundTruthPresenter::open()
@@ -240,6 +234,11 @@ void GroundTruthPresenter::open()
     mView->setLeftImageList(imagesLeft);
     loadLeftImage(QFileInfo(imagesLeft[0]).baseName());
   }
+}
+
+void GroundTruthPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void GroundTruthPresenter::init()

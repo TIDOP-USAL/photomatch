@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/CurvesViewerModel.h"
 #include "photomatch/ui/CurvesViewerView.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QFileInfo>
 
@@ -12,8 +13,8 @@ CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
                                              ICurvesViewerModel *model)
   : ICurvesViewerPresenter(),
     mView(view),
-    mModel(model)/*,
-    mHelp(nullptr)*/
+    mModel(model),
+    mHelp(nullptr)
 {
   init();
 
@@ -22,7 +23,7 @@ CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
   connect(mView, SIGNAL(drawCurve(QString,QString,QString)), this, SLOT(drawCurve(QString,QString,QString)));
   connect(mView, SIGNAL(deleteCurve(QString)),               this, SLOT(deleteCurve(QString)));
 
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  connect(mView, SIGNAL(help()),                             this, SLOT(help()));
 }
 
 void CurvesViewerPresenter::loadLeftImage(const QString &image)
@@ -56,6 +57,11 @@ void CurvesViewerPresenter::deleteCurve(const QString &session)
 
 void CurvesViewerPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("roc_curves.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void CurvesViewerPresenter::open()
@@ -79,6 +85,11 @@ void CurvesViewerPresenter::open()
   }
 
   mView->show();
+}
+
+void CurvesViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void CurvesViewerPresenter::init()

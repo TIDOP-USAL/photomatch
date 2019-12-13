@@ -18,6 +18,7 @@ class IFeatureExtractorView;
 class IFeatureExtractorModel;
 class IProjectModel;
 class ISettingsModel;
+class HelpDialog;
 
 class IAgastWidget;
 class IAkazeWidget;
@@ -95,6 +96,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -124,6 +126,7 @@ protected:
   IFeatureExtractorModel *mModel;
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
+  std::shared_ptr<HelpDialog> mHelp;
 
   IAgastWidget *mAgastDetector;
   IAkazeWidget *mAkazeDetector;

@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/ExportMatchesModel.h"
 #include "photomatch/ui/ExportMatchesView.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <tidop/core/messages.h>
 
@@ -14,13 +15,12 @@ ExportMatchesPresenter::ExportMatchesPresenter(IExportMatchesView *view,
                                                IExportMatchesModel *model)
   : IExportMatchesPresenter(),
     mView(view),
-    mModel(model)
+    mModel(model),
+    mHelp(nullptr)
 {
   connect(mView, SIGNAL(sessionChange(QString)),   this, SLOT(sessionChange(QString)));
   connect(mView, SIGNAL(accepted()),               this, SLOT(save()));
-
-  //connect(mView, SIGNAL(rejected()),        this, SLOT(discart()));
-  connect(mView, SIGNAL(help()),            this, SLOT(help()));
+  connect(mView, SIGNAL(help()),                   this, SLOT(help()));
 }
 
 ExportMatchesPresenter::~ExportMatchesPresenter()
@@ -30,6 +30,11 @@ ExportMatchesPresenter::~ExportMatchesPresenter()
 
 void ExportMatchesPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("menus.html#new_session");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void ExportMatchesPresenter::open()
@@ -40,6 +45,11 @@ void ExportMatchesPresenter::open()
   mView->setActiveSession(mModel->sessionName());
 
   mView->exec();
+}
+
+void ExportMatchesPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void ExportMatchesPresenter::init()

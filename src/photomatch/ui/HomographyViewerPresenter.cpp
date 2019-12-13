@@ -3,6 +3,7 @@
 #include "photomatch/ui/HomographyViewerModel.h"
 #include "photomatch/ui/HomographyViewerView.h"
 #include "photomatch/ui/SettingsModel.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QFileInfo>
 #include <QImageReader>
@@ -16,8 +17,8 @@ HomographyViewerPresenter::HomographyViewerPresenter(IHomographyViewerView *view
   : IHomographyViewerPresenter(),
     mView(view),
     mModel(model),
-    mSettingsModel(settings)/*,
-    mHelp(nullptr)*/
+    mSettingsModel(settings),
+    mHelp(nullptr)
 {
   init();
 
@@ -37,6 +38,11 @@ HomographyViewerPresenter::~HomographyViewerPresenter()
 
 void HomographyViewerPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("homography.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void HomographyViewerPresenter::open()
@@ -50,6 +56,11 @@ void HomographyViewerPresenter::open()
     mView->setLeftImageList(imagesLeft);
     this->loadLeftImage(imagesLeft[0]);
   }
+}
+
+void HomographyViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void HomographyViewerPresenter::init()

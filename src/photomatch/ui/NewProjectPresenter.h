@@ -12,7 +12,7 @@ namespace photomatch
 
 class INewProjectView;
 class IProjectModel;
-class Help;
+class HelpDialog;
 
 /*!
  * \brief The INewProjectPresenter class
@@ -73,7 +73,7 @@ public slots:
 
   void help() override;
   void open() override;
-//  void setHelp(std::shared_ptr<Help> &help) override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -84,7 +84,7 @@ private:
   INewProjectView *mView;
   IProjectModel *mProjectModel;
   QString mProjectsDefaultPath;
-  std::shared_ptr<Help> mHelp;
+  std::shared_ptr<HelpDialog> mHelp;
 
 };
 

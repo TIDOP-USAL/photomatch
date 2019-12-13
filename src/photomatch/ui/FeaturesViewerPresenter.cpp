@@ -3,6 +3,7 @@
 #include "photomatch/ui/FeaturesViewerModel.h"
 #include "photomatch/ui/FeaturesViewerView.h"
 #include "photomatch/ui/SettingsModel.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QFileInfo>
 
@@ -15,8 +16,8 @@ FeaturesViewerPresenter::FeaturesViewerPresenter(photomatch::IFeaturesViewerView
   : IFeaturesViewerPresenter(),
     mView(view),
     mModel(model),
-    mSettingsModel(settingsModel)/*,
-    mHelp(nullptr)*/
+    mSettingsModel(settingsModel),
+    mHelp(nullptr)
 {
   init();
 
@@ -32,11 +33,11 @@ FeaturesViewerPresenter::~FeaturesViewerPresenter()
 
 void FeaturesViewerPresenter::help()
 {
-  //  if (mHelp){
-  //    mHelp->setPage("MatchViewer.html");
-  //    mHelp->setModal(true);
-  //    mHelp->showMaximized();
-  //  }
+  if (mHelp){
+    mHelp->setPage("keypoints_viewer.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void FeaturesViewerPresenter::open()
@@ -59,6 +60,11 @@ void FeaturesViewerPresenter::open()
     mView->setImageList(images);
     setImageActive(QFileInfo(images[0]).baseName());
   }
+}
+
+void FeaturesViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void FeaturesViewerPresenter::init()

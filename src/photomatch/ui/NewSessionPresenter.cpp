@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/NewSessionView.h"
+#include "photomatch/ui/HelpDialog.h"
 
 namespace photomatch
 {
@@ -9,8 +10,8 @@ namespace photomatch
 NewSessionPresenter::NewSessionPresenter(INewSessionView *view, IProjectModel *model)
   : INewSessionPresenter(),
     mView(view),
-    mProjectModel(model)/*,
-      mHelp(nullptr)*/
+    mProjectModel(model),
+    mHelp(nullptr)
 {
   init();
 
@@ -28,16 +29,21 @@ NewSessionPresenter::~NewSessionPresenter()
 
 void NewSessionPresenter::help()
 {
-//  if (mHelp){
-//    mHelp->setPage("menus.html#new");
-//    mHelp->setModal(true);
-//    mHelp->showMaximized();
-//  }
+  if (mHelp){
+    mHelp->setPage("menus.html#new_session");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void NewSessionPresenter::open()
 {
   mView->exec();
+}
+
+void NewSessionPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void NewSessionPresenter::init()

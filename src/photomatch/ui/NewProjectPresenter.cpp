@@ -2,7 +2,7 @@
 
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/NewProjectView.h"
-//#include "ui/help.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QStandardPaths>
 #include <QDir>
@@ -14,8 +14,8 @@ namespace photomatch
 NewProjectPresenter::NewProjectPresenter(INewProjectView *view, IProjectModel *model)
   : INewProjectPresenter(),
     mView(view),
-    mProjectModel(model)/*,
-    mHelp(nullptr)*/
+    mProjectModel(model),
+    mHelp(nullptr)
 {
   init();
 
@@ -32,11 +32,11 @@ NewProjectPresenter::~NewProjectPresenter()
 
 void NewProjectPresenter::help()
 {
-//  if (mHelp){
-//    mHelp->setPage("menus.html#new");
-//    mHelp->setModal(true);
-//    mHelp->showMaximized();
-//  }
+  if (mHelp){
+    mHelp->setPage("menus.html#new_project");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 // INewProjectPresenter interface
@@ -87,10 +87,10 @@ void NewProjectPresenter::open()
   mView->exec();
 }
 
-//void NewProjectPresenter::setHelp(std::shared_ptr<Help>& help)
-//{
-//  mHelp = help;
-//}
+void NewProjectPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
+}
 
 // private
 

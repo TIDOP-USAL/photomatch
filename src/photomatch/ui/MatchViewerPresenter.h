@@ -13,7 +13,7 @@ namespace photomatch
 class IMatchViewerView;
 class IMatchViewerModel;
 class ISettingsModel;
-class Help;
+class HelpDialog;
 
 /*!
  * \brief The IMatchViewerPresenter class
@@ -67,7 +67,7 @@ public slots:
 
   void help() override;
   void open() override;
-  //void setHelp(std::shared_ptr<Help> &help) override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -87,7 +87,7 @@ private:
   IMatchViewerModel *mModel;
 //  IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<Help> mHelp;
+  std::shared_ptr<HelpDialog> mHelp;
 
 };
 

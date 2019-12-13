@@ -5,6 +5,7 @@
 #include "photomatch/ui/DescriptorMatcherView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
+#include "photomatch/ui/HelpDialog.h"
 #include "photomatch/ui/utils/Progress.h"
 
 #include "photomatch/process/MultiProcess.h"
@@ -29,6 +30,7 @@ DescriptorMatcherPresenter::DescriptorMatcherPresenter(IDescriptorMatcherView *v
     mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
+    mHelp(nullptr),
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
@@ -49,6 +51,11 @@ DescriptorMatcherPresenter::~DescriptorMatcherPresenter()
 
 void DescriptorMatcherPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("feature_matching.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void DescriptorMatcherPresenter::open()
@@ -187,6 +194,11 @@ void DescriptorMatcherPresenter::open()
 
   mView->setSessionName(current_session->name());
   mView->exec();
+}
+
+void DescriptorMatcherPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void DescriptorMatcherPresenter::init()

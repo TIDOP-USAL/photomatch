@@ -16,6 +16,7 @@ class IPreprocessView;
 class IPreprocessModel;
 class IProjectModel;
 class ISettingsModel;
+class HelpDialog;
 
 class IAcebsfWidget;
 class IClaheWidget;
@@ -81,6 +82,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -108,6 +110,7 @@ protected:
   IPreprocessModel *mModel;
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
+  std::shared_ptr<HelpDialog> mHelp;
 
   IAcebsfWidget *mACEBSF;
   IClaheWidget *mCLAHE;

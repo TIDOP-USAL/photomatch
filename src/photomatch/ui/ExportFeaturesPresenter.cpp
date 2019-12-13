@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/ExportFeaturesModel.h"
 #include "photomatch/ui/ExportFeaturesView.h"
+#include "photomatch/ui/HelpDialog.h"
 
 namespace photomatch
 {
@@ -10,15 +11,14 @@ ExportFeaturesPresenter::ExportFeaturesPresenter(IExportFeaturesView *view,
                                                  IExportFeaturesModel *model)
   : IExportFeaturesPresenter(),
     mView(view),
-    mModel(model)
+    mModel(model),
+    mHelp(nullptr)
 {
   init();
 
   connect(mView, SIGNAL(sessionChange(QString)),   this, SLOT(sessionChange(QString)));
   connect(mView, SIGNAL(accepted()),               this, SLOT(save()));
-
-  //connect(mView, SIGNAL(rejected()),        this, SLOT(discart()));
-  connect(mView, SIGNAL(help()),            this, SLOT(help()));
+  connect(mView, SIGNAL(help()),                   this, SLOT(help()));
 }
 
 ExportFeaturesPresenter::~ExportFeaturesPresenter()
@@ -28,6 +28,11 @@ ExportFeaturesPresenter::~ExportFeaturesPresenter()
 
 void ExportFeaturesPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("index.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void ExportFeaturesPresenter::open()
@@ -40,6 +45,11 @@ void ExportFeaturesPresenter::open()
   mView->setImageFiles(mModel->features());
 
   mView->exec();
+}
+
+void ExportFeaturesPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void ExportFeaturesPresenter::init()

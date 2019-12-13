@@ -156,6 +156,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -285,7 +286,7 @@ protected:
   IRepeatabilityModel *mRepeatabilityModel;
 
   AboutDialog *mAboutDialog;
-  HelpDialog *mHelpDialog;
+  std::shared_ptr<HelpDialog> mHelpDialog;
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;

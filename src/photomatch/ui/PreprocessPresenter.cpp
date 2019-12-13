@@ -19,6 +19,7 @@
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
 #include "photomatch/ui/utils/Progress.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include "photomatch/widgets/AcebsfWidget.h"
 #include "photomatch/widgets/ClaheWidget.h"
@@ -56,6 +57,7 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
     mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
+    mHelp(nullptr),
     mACEBSF(new AcebsfWidget),
     mCLAHE(new ClaheWidget),
     mCMBFHE(new CmbfheWidget),
@@ -156,6 +158,11 @@ PreprocessPresenter::~PreprocessPresenter()
 
 void PreprocessPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("preprocess.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void PreprocessPresenter::open()
@@ -252,6 +259,11 @@ void PreprocessPresenter::open()
 
   mView->setSessionName(mProjectModel->currentSession()->name());
   mView->exec();
+}
+
+void PreprocessPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void PreprocessPresenter::init()

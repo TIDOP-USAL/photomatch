@@ -12,7 +12,7 @@ namespace photomatch
 
 class IRepeatabilityView;
 class IRepeatabilityModel;
-class Help;
+class HelpDialog;
 
 class IRepeatabilityPresenter
   : public IPresenter
@@ -54,6 +54,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -63,7 +64,7 @@ private:
 
   IRepeatabilityView *mView;
   IRepeatabilityModel *mModel;
-  std::shared_ptr<Help> mHelp;
+  std::shared_ptr<HelpDialog> mHelp;
 };
 
 } // namespace photomatch

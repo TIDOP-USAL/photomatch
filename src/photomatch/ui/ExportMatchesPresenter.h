@@ -10,7 +10,7 @@ namespace photomatch
 
 class IExportMatchesView;
 class IExportMatchesModel;
-class Help;
+class HelpDialog;
 
 class IExportMatchesPresenter
   : public IPresenter
@@ -49,6 +49,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -65,6 +66,7 @@ protected:
 
   IExportMatchesView *mView;
   IExportMatchesModel *mModel;
+  std::shared_ptr<HelpDialog> mHelp;
 };
 
 

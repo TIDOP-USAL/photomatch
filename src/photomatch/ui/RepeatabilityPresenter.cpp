@@ -2,6 +2,7 @@
 
 #include "photomatch/ui/RepeatabilityModel.h"
 #include "photomatch/ui/RepeatabilityView.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QFileInfo>
 
@@ -12,8 +13,8 @@ RepeatabilityPresenter::RepeatabilityPresenter(IRepeatabilityView *view,
                                                IRepeatabilityModel *model)
   : IRepeatabilityPresenter(),
     mView(view),
-    mModel(model)/*,
-    mHelp(nullptr)*/
+    mModel(model),
+    mHelp(nullptr)
 {
   init();
 
@@ -44,6 +45,11 @@ void RepeatabilityPresenter::selectSession(const QString &session)
 
 void RepeatabilityPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("index.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void RepeatabilityPresenter::open()
@@ -62,6 +68,11 @@ void RepeatabilityPresenter::open()
   this->selectSession(std::get<0>(sessions[0]));
 
   mView->show();
+}
+
+void RepeatabilityPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void RepeatabilityPresenter::init()

@@ -17,7 +17,7 @@
 #include <QVariant>
 #include <QApplication>
 
-#define PHOTOMATCH_HELP_URL_BASE "qthelp://tidop.com.photomatch.2.0/doc/"
+#define PHOTOMATCH_HELP_URL_BASE "qthelp://tidop.com.photomatch.1.0/doc/"
 #define PHOTOMATCH_HELP_HOME_PAGE "index.html"
 
 static const QUrl& HOME_PAGE = QUrl(QString(PHOTOMATCH_HELP_URL_BASE) + QString(PHOTOMATCH_HELP_HOME_PAGE));

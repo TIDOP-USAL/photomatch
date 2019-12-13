@@ -16,6 +16,7 @@ class IDescriptorMatcherView;
 class IDescriptorMatcherModel;
 class IProjectModel;
 class ISettingsModel;
+class HelpDialog;
 class ProgressHandler;
 
 class IDescriptorMatcherPresenter
@@ -66,6 +67,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -91,6 +93,7 @@ protected:
   IDescriptorMatcherModel *mModel;
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
+  std::shared_ptr<HelpDialog> mHelp;
   MultiProcess *mMultiProcess;
   ProgressHandler *mProgressHandler;
 };

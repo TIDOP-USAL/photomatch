@@ -3,8 +3,7 @@
 #include "photomatch/ui/MatchViewerModel.h"
 #include "photomatch/ui/MatchViewerView.h"
 #include "photomatch/ui/SettingsModel.h"
-
-//#include "ui/help.h"
+#include "photomatch/ui/HelpDialog.h"
 
 #include <QStandardPaths>
 #include <QDir>
@@ -18,8 +17,8 @@ MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
   : IMatchViewerPresenter(),
     mView(view),
     mModel(model),
-    mSettingsModel(settings)/*,
-    mHelp(nullptr)*/
+    mSettingsModel(settings),
+    mHelp(nullptr)
 {
   init();
 
@@ -67,11 +66,11 @@ void MatchViewerPresenter::deleteMatch(const QString &imageLeft, const QString &
 
 void MatchViewerPresenter::help()
 {
-//  if (mHelp){
-//    mHelp->setPage("MatchViewer.html");
-//    mHelp->setModal(true);
-//    mHelp->showMaximized();
-//  }
+  if (mHelp){
+    mHelp->setPage("matches_viewer.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void MatchViewerPresenter::open()
@@ -101,10 +100,10 @@ void MatchViewerPresenter::open()
 
 }
 
-//void MatchViewerPresenter::setHelp(std::shared_ptr<Help> &help)
-//{
-//  mHelp = help;
-//}
+void MatchViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
+}
 
 void MatchViewerPresenter::init()
 {

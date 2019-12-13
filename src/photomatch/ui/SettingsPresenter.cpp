@@ -2,6 +2,7 @@
 
 #include "SettingsModel.h"
 #include "SettingsView.h"
+#include "photomatch/ui/HelpDialog.h"
 
 /* Image preprocess */
 #include "photomatch/widgets/AcebsfWidget.h"
@@ -59,7 +60,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   : ISettingsPresenter(),
     mView(view),
     mModel(model),
-    /*mHelp(nullptr),*/
+    mHelp(nullptr),
     mACEBSF(new AcebsfWidget),
     mCLAHE(new ClaheWidget),
     mCMBFHE(new CmbfheWidget),
@@ -541,11 +542,11 @@ void SettingsPresenter::openPage(int page)
 
 void SettingsPresenter::help()
 {
-//  if (mHelp){
-//    mHelp->setPage("settings.html");
-//    mHelp->setModal(true);
-//    mHelp->showMaximized();
-//  }
+  if (mHelp){
+    mHelp->setPage("settings.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void SettingsPresenter::open()
@@ -785,6 +786,11 @@ void SettingsPresenter::open()
   mView->setSelectGroundTruthEditorMarkerColor(mModel->groundTruthEditorSelectMarkerColor());
 
   mView->exec();
+}
+
+void SettingsPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void SettingsPresenter::init()

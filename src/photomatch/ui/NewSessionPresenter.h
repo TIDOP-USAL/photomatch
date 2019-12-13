@@ -10,7 +10,7 @@ namespace photomatch
 
 class INewSessionView;
 class IProjectModel;
-class Help;
+class HelpDialog;
 
 class INewSessionPresenter
   : public IPresenter
@@ -61,6 +61,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -78,7 +79,7 @@ private:
 
   INewSessionView *mView;
   IProjectModel *mProjectModel;
-  //std::shared_ptr<Help> mHelp;
+  std::shared_ptr<HelpDialog> mHelp;
 };
 
 } // namespace photomatch

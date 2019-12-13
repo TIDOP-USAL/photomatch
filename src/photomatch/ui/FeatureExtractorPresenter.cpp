@@ -30,6 +30,7 @@
 #include "photomatch/ui/FeatureExtractorView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
+#include "photomatch/ui/HelpDialog.h"
 #include "photomatch/ui/utils/Progress.h"
 
 #include "photomatch/widgets/AgastWidget.h"
@@ -86,6 +87,7 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
+    mHelp(nullptr),
     mAgastDetector(new AgastWidget),
     mAkazeDetector(new AkazeWidget),
     mBriskDetector(new BriskWidget),
@@ -297,6 +299,11 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
 
 void FeatureExtractorPresenter::help()
 {
+  if (mHelp){
+    mHelp->setPage("feature_extraction.html");
+    mHelp->setModal(true);
+    mHelp->showMaximized();
+  }
 }
 
 void FeatureExtractorPresenter::open()
@@ -801,6 +808,11 @@ void FeatureExtractorPresenter::open()
 
   mView->setSessionName(mProjectModel->currentSession()->name());
   mView->exec();
+}
+
+void FeatureExtractorPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+{
+  mHelp = help;
 }
 
 void FeatureExtractorPresenter::init()

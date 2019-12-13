@@ -13,7 +13,7 @@ namespace photomatch
 class IGroundTruthView;
 class IGroundTruthModel;
 class ISettingsModel;
-class Help;
+class HelpDialog;
 
 class IGroundTruthPresenter
   : public IPresenter
@@ -31,8 +31,6 @@ protected slots:
   virtual void loadLeftImage(const QString &image) = 0;
   virtual void loadRightImage(const QString &image) = 0;
   virtual void loadGroundTruth(const QString &imageLeft, const QString &imageRight) = 0;
-  //virtual void markedLeftPoint(const QPointF &pt) = 0;
-  //virtual void markedRightPoint(const QPointF &pt) = 0;
   virtual void addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
   virtual void deleteHomologous(const QString &image1, const QString &image2, int pointId) = 0;
   virtual void importGroundTruth() = 0;
@@ -71,8 +69,6 @@ protected slots:
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
   void loadGroundTruth(const QString &imageLeft, const QString &imageRight) override;
-  //void markedLeftPoint(const QPointF &pt) override;
-  //void markedRightPoint(const QPointF &pt) override;
   void addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
   void deleteHomologous(const QString &image1, const QString &image2, int pointId) override;
   void importGroundTruth() override;
@@ -91,6 +87,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -101,7 +98,7 @@ private:
   IGroundTruthView *mView;
   IGroundTruthModel *mModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<Help> mHelp;
+  std::shared_ptr<HelpDialog> mHelp;
 
 };
 

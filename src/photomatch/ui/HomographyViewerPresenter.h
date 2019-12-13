@@ -13,7 +13,7 @@ namespace photomatch
 class IHomographyViewerView;
 class IHomographyViewerModel;
 class ISettingsModel;
-class Help;
+class HelpDialog;
 
 
 class IHomographyViewerPresenter
@@ -54,6 +54,7 @@ public slots:
 
   void help() override;
   void open() override;
+  void setHelp(std::shared_ptr<HelpDialog> &help) override;
 
 private:
 
@@ -72,7 +73,7 @@ private:
   IHomographyViewerView *mView;
   IHomographyViewerModel *mModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<Help> mHelp;
+  std::shared_ptr<HelpDialog> mHelp;
 };
 
 } // namespace photomatch
