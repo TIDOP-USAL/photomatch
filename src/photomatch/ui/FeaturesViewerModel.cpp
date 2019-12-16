@@ -19,7 +19,8 @@ FeaturesViewerModel::~FeaturesViewerModel()
 
 void FeaturesViewerModel::init()
 {
-  mSession = mProjectModel->currentSession()->name();
+  if (mProjectModel->currentSession())
+    mSession = mProjectModel->currentSession()->name();
 }
 
 QString FeaturesViewerModel::sessionName() const
@@ -55,7 +56,7 @@ std::vector<std::tuple<QPointF, double, double> > FeaturesViewerModel::loadKeypo
 
       for (size_t i = 0; i < cvKeyPoints.size(); i++){
         QPointF pt(static_cast<qreal>(cvKeyPoints[i].pt.x),
-                  static_cast<qreal>(cvKeyPoints[i].pt.y));
+                   static_cast<qreal>(cvKeyPoints[i].pt.y));
         keyPoints.push_back(std::make_tuple(pt, static_cast<double>(cvKeyPoints[i].size), static_cast<double>(cvKeyPoints[i].angle)));
       }
 

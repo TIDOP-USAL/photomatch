@@ -90,7 +90,7 @@ private slots:
 protected:
 
   IDescriptorMatcherView *mView;
-  IDescriptorMatcherModel *mModel;
+  IDescriptorMatcherModel *mModel;  /// Por ahora es una clase vacia
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
   std::shared_ptr<HelpDialog> mHelp;

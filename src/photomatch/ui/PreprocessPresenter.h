@@ -107,7 +107,7 @@ private slots:
 protected:
 
   IPreprocessView *mView;
-  IPreprocessModel *mModel;
+  IPreprocessModel *mModel;  /// Por ahora es una clase vacia
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
   std::shared_ptr<HelpDialog> mHelp;

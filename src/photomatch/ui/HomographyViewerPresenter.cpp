@@ -26,8 +26,6 @@ HomographyViewerPresenter::HomographyViewerPresenter(IHomographyViewerView *view
   connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
   connect(mView, SIGNAL(homography(QString, QString)),     this, SLOT(homography(QString, QString)));
 
-  //connect(mView, SIGNAL(accepted()), this, SLOT(save()));
-  //connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 

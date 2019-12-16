@@ -85,7 +85,6 @@ private:
 
   IMatchViewerView *mView;
   IMatchViewerModel *mModel;
-//  IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
   std::shared_ptr<HelpDialog> mHelp;
 

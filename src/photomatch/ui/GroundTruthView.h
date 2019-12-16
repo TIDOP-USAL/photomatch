@@ -146,8 +146,6 @@ signals:
   void rightPointClicked(QString, QString, QPointF);
   void findLeftPoint(QString, QString, QPointF);
   void findRightPoint(QString, QString, QPointF);
-//  void markedLeftPoint(QPointF);
-//  void markedRightPoint(QPointF);
 
 };
 
@@ -171,12 +169,10 @@ protected slots:
 
   void onComboBoxLeftImageIndexChanged(int idx);
   void onComboBoxRightImageIndexChanged(int idx);
-  //void onTreeWidgetItemClicked(QTreeWidgetItem *item, int col);
   void onTreeWidgetItemSelectionChanged();
   void onGraphicsViewLeftSelectionChanged();
   void onGraphicsViewRightSelectionChanged();
   void onPushButtonAddPoints(bool active);
-  //void onPushButtonDeletePoints(bool active);
   void onPushButtonAddPointClicked();
   void onPushButtonLockViewsToggled(bool active);
   void onPushButtonDeleteClicked();
@@ -207,7 +203,6 @@ public slots:
   void enableLockView(bool enable) override;
   void clickedPointLeft(const QPointF &pt) override;
   void clickedPointRight(const QPointF &pt) override;
-  //void setTransform(const QTransform &trf) override;
   void setBGColor(const QString &bgColor) override;
   void setSelectedMarkerStyle(const QString &color, int width) override;
   void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) override;
@@ -228,6 +223,12 @@ private slots:
 
   void update() override;
   void retranslate() override;
+
+// QWidget interface
+
+protected:
+
+  void closeEvent(QCloseEvent *event) override;
 
 protected:
 
@@ -263,6 +264,8 @@ protected:
   int mPointsCounter;
   QString mSelectedMarkerColor;
   int mSelectedMarkerWidth;
+
+
 };
 
 } // namespace photomatch

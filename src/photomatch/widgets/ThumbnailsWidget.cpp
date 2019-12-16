@@ -48,7 +48,6 @@ ThumbnailsWidget::ThumbnailsWidget(QWidget *parent)
 {
   init();
 
-  //connect(mListWidget, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(onImageActivated(QListWidgetItem*)));
   connect(mListWidget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onThumbnailDoubleClicked(QListWidgetItem*)));
   connect(mListWidget, SIGNAL(itemSelectionChanged()), this, SLOT(onSelectionChanged()));
 }
@@ -96,7 +95,6 @@ void ThumbnailsWidget::addThumbnail(const QString &thumb)
 
   QFileInfo fileInfo(thumb);
 
-  //QPixmap pixmap(mIconSize.width(), mIconSize.height());
   QPixmap pixmap(size.width(), size.height());
   pixmap.fill(QColor(Qt::GlobalColor::lightGray));
   QIcon icon(pixmap);
@@ -124,8 +122,6 @@ void ThumbnailsWidget::addThumbnails(const QStringList &thumbs)
     size /= scale;
 
     QFileInfo fileInfo(thumb);
-
-    //QPixmap pixmap(mIconSize.width(), mIconSize.height());
     QPixmap pixmap(size.width(), size.height());
     pixmap.fill(QColor(Qt::GlobalColor::lightGray));
     QIcon icon(pixmap);
@@ -147,7 +143,6 @@ void ThumbnailsWidget::deleteThumbnail(const QString &thumb)
   for (int i = 0; i < mListWidget->count(); i++){
    item = mListWidget->item(i);
    if (item->toolTip().compare(thumb) == 0) {
-     //mListWidget->removeItemWidget(item);
      delete item;
      item = nullptr;
      break;
@@ -168,7 +163,6 @@ void ThumbnailsWidget::onThumbnailDoubleClicked(QListWidgetItem *item)
 void ThumbnailsWidget::onSelectionChanged()
 {
   if (mListWidget->currentItem()){
-    //emit selectImage(mListWidget->currentItem()->toolTip());
     QList<QListWidgetItem*> item = mListWidget->selectedItems();
     int size = item.size();
     if (size == 1) {

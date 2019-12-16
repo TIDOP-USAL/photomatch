@@ -53,7 +53,6 @@ public:
   virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
 
   virtual void setMatches(const std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> &matches) = 0;
-  //virtual void deleteMatch(int id) = 0;
 
   virtual void setBGColor(const QString &bgColor) = 0;
   virtual void setSelectedMarkerStyle(const QString &color, int width) = 0;
@@ -134,7 +133,6 @@ protected:
   GraphicViewer *mGraphicsViewRight;
   GraphicViewer *mGraphicsViewLeft;
   QPushButton *mPushButtonDeleteMatch;
-  //QPushButton *mPushButtonSaveMatches;
   bool bUnsavedChanges;
   QString mMarkerColor;
   int mMarkerSize;

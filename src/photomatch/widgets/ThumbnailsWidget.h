@@ -45,7 +45,6 @@ private slots:
   void onThumbnailDoubleClicked(QListWidgetItem *item);
   void onSelectionChanged();
 
-  //void refresh();
   void onThumbnailToggled(bool active);
   void onThumbnailSmallToggled(bool active);
   void onDetailsToggled(bool active);
@@ -53,7 +52,6 @@ private slots:
 
   void showThumbnail(int id);
   void finished();
-  //static QImage makeThumbnail(const QString &thumb/*, int thumb_w, int thumb_h*/);
 
 // PhotoMatchWidget interface
 

@@ -108,9 +108,6 @@ public slots:
    */
   void showImage(const QString &file);
 
-  //bool showKeyPoints() const;
-  //void setKeyPoints(const std::vector<QPointF> &keyPoints);
-  //void setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints);
   void addKeyPoint(const QPointF &pt, double size, double angle);
 
   void showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF>> &matches);
@@ -129,11 +126,6 @@ signals:
   void saveProjectAs();
   void exportTiePoints();
   void exportMatches();
-//  void exportTiePointsCvXml();
-//  void exportTiePointsCvYml();
-//  void exportMatchesCvYml();
-//  void exportMatchesCvXml();
-//  void exportMatchesTxt();
   void closeProject();
   void exit();
   void openSettings();
@@ -206,7 +198,6 @@ private slots:
   void onItemDoubleClicked(QTreeWidgetItem *item, int column);
   void openStartPage();
   void onCommandLinkButtonGitHubClicked();
-  //void onShowKeyPoints(bool show);
   void onTreeContextMenu(const QPoint &point);
   void onTabWidgetContextMenu(const QPoint &point);
 
@@ -243,11 +234,6 @@ protected:
   QAction *mActionAbout;
   QAction *mActionExportTiePoints;
   QAction *mActionExportMatches;
-//  QAction *mActionExportTiePointsCvXml;
-//  QAction *mActionExportTiePointsCvYml;
-//  QAction *mActionExportMatchesToCvXml;
-//  QAction *mActionExportMatchesToCvYml;
-//  QAction *mActionExportMatchesToTxt;
   QAction *mActionFeaturesViewer;
   QAction *mActionMatchesViewer;
   QAction *mActionGroundTruthEditor;
@@ -263,13 +249,10 @@ protected:
   QAction *mActionZoomOut;
   QAction *mActionZoomExtend;
   QAction *mActionZoom11;
-  //QAction *mActionShowKeyPoints;
   QAction *mActionSetSession;
   QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;
   QMenu *mMenuExport;
-//  QMenu *mMenuExportTiePoints;
-//  QMenu *mMenuExportMatches;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
   GraphicViewer *mGraphicViewer;

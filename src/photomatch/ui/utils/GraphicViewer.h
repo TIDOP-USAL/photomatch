@@ -81,10 +81,6 @@ public:
 
 protected:
 
-  //virtual void drawOnImage(QPainter *painter, QSize imageSize) = 0;
-  //virtual void drawInViewPort(QPainter *painter, QSize portSize) = 0;
-  //virtual QString setToolTipText(QPoint imageCoordinates) = 0;
-
   /*!
    * \brief Mostrar el menú contextual (al hacer clic con el botón derecho)
    * \param[in] pos Posición del mouse en el widget
@@ -139,8 +135,6 @@ protected:
 
   virtual void drawOnImage(QPainter *painter, QSize imageSize);
   virtual void drawInViewPort(QPainter *painter, QSize portSize);
-  //virtual QString setToolTipText(QPoint imageCoordinates);
-
   virtual void drawForeground(QPainter *painter, const QRectF &rect) override;
 
   /*!

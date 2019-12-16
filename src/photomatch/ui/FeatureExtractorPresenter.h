@@ -123,7 +123,7 @@ private slots:
 protected:
 
   IFeatureExtractorView *mView;
-  IFeatureExtractorModel *mModel;
+  IFeatureExtractorModel *mModel;  /// Por ahora es una clase vacia.
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
   std::shared_ptr<HelpDialog> mHelp;

@@ -61,11 +61,6 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionAbout(new QAction(this)),
     mActionExportTiePoints(new QAction(this)),
     mActionExportMatches(new QAction(this)),
-//    mActionExportTiePointsCvXml(new QAction(this)),
-//    mActionExportTiePointsCvYml(new QAction(this)),
-//    mActionExportMatchesToCvXml(new QAction(this)),
-//    mActionExportMatchesToCvYml(new QAction(this)),
-//    mActionExportMatchesToTxt(new QAction(this)),
     mActionFeaturesViewer(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
     mActionGroundTruthEditor(new QAction(this)),
@@ -81,7 +76,6 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionZoomOut(new QAction(this)),
     mActionZoomExtend(new QAction(this)),
     mActionZoom11(new QAction(this)),
-    //mActionShowKeyPoints(new QAction(this)),
     mActionSetSession(new QAction(this)),
     mActionDeleteSession(new QAction(this)),
     mGraphicViewer(nullptr),
@@ -101,11 +95,6 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionSaveProjectAs,        SIGNAL(triggered(bool)), this,   SIGNAL(saveProjectAs()));
   connect(mActionExportTiePoints,      SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePoints()));
   connect(mActionExportMatches,        SIGNAL(triggered(bool)), this,   SIGNAL(exportMatches()));
-//  connect(mActionExportTiePointsCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvXml()));
-//  connect(mActionExportTiePointsCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePointsCvYml()));
-//  connect(mActionExportMatchesToCvYml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvYml()));
-//  connect(mActionExportMatchesToCvXml, SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesCvXml()));
-//  connect(mActionExportMatchesToTxt,   SIGNAL(triggered(bool)), this,   SIGNAL(exportMatchesTxt()));
   connect(mActionCloseProject,         SIGNAL(triggered(bool)), this,   SIGNAL(closeProject()));
   connect(mActionExit,                 SIGNAL(triggered(bool)), this,   SIGNAL(exit()));
 
@@ -156,8 +145,6 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(hideTab(int)));
   connect(ui->tabWidget, SIGNAL(currentChanged(int)),    this, SLOT(tabChanged(int)));
   connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTabWidgetContextMenu(const QPoint &)));
-
-  //connect(mActionShowKeyPoints, SIGNAL(toggled(bool)), this, SLOT(onShowKeyPoints(bool)));
 
   /* Start Page */
   connect(ui->commandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
@@ -720,7 +707,6 @@ void MainWindowView::addMatches(const QString &sessionName, const QString &match
           itemLeftImage->setFlags(itemLeftImage->flags() | Qt::ItemIsTristate);
           itemLeftImage->setData(0, Qt::UserRole, photomatch::pair_left);
           itemImagePairs->addChild(itemLeftImage);
-          //itemLeftImage->setExpanded(true);
         }
 
         QTreeWidgetItem *itemRightImage = nullptr;
@@ -1363,9 +1349,14 @@ void MainWindowView::update()
   bool bImageOpen = mFlags.isActive(Flag::image_open);
   bool bProcessing = mFlags.isActive(Flag::processing);
 
-  mActionSaveProject->setEnabled(bProjectExists && bProjectModified);
-  mActionSaveProjectAs->setEnabled(bProjectExists);
-  mActionCloseProject->setEnabled(bProjectExists);
+  mActionNewProject->setEnabled(!bProcessing);
+  mActionOpenProject->setEnabled(!bProcessing);
+  mMenuRecentProjects->setEnabled(!bProcessing);
+  mActionSaveProject->setEnabled(bProjectExists && bProjectModified && !bProcessing);
+  mActionSaveProjectAs->setEnabled(bProjectExists && !bProcessing);
+  mActionCloseProject->setEnabled(bProjectExists && !bProcessing);
+  mActionExit->setEnabled(!bProcessing);
+
 
   mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
   mActionGroundTruthEditor->setEnabled(mFlags.isActive(Flag::images_added));

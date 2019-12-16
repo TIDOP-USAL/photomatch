@@ -97,7 +97,7 @@ Settings::Settings()
     mKeypointViewerSelectMarkerWidth(2),
     mKeypointViewerSelectMarkerColor("#e5097e"),
     mMatchesViewerBGColor("#dcdcdc"),
-    mMatchesViewerMarkerType(0),
+    mMatchesViewerMarkerType(1),
     mMatchesViewerMarkerColor("#00aa00"),
     mMatchesViewerMarkerSize(20),
     mMatchesViewerMarkerWidth(2),

@@ -308,9 +308,14 @@ void FeatureExtractorPresenter::help()
 
 void FeatureExtractorPresenter::open()
 {
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) {
+    msgError("No active session found");
+    return;
+  }
 
-  Feature *detector = mProjectModel->currentSession()->detector().get();
-  Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
+  Feature *detector = current_session->detector().get();
+  Feature *descriptor = current_session->descriptor().get();
   if (detector) setCurrentkeypointDetector(detector->name());
   if (descriptor) setCurrentDescriptorExtractor(descriptor->name());
 
@@ -806,7 +811,7 @@ void FeatureExtractorPresenter::open()
   //mKeypointsFilterWidget->setMinSize();
   //mKeypointsFilterWidget->setMaxSize();
 
-  mView->setSessionName(mProjectModel->currentSession()->name());
+  mView->setSessionName(current_session->name());
   mView->exec();
 }
 
@@ -894,7 +899,13 @@ void FeatureExtractorPresenter::cancel()
 
 void FeatureExtractorPresenter::run()
 {
-  std::shared_ptr<Preprocess> preprocess = mProjectModel->currentSession()->preprocess();
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) {
+    msgError("No active session found");
+    return;
+  }
+
+  std::shared_ptr<Preprocess> preprocess = current_session->preprocess();
   std::shared_ptr<ImageProcess> imageProcess;
   if (preprocess == nullptr){
     imageProcess = std::make_shared<DecolorPreprocess>();
@@ -902,8 +913,8 @@ void FeatureExtractorPresenter::run()
     mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
   }
 
-  Feature *detector = mProjectModel->currentSession()->detector().get();
-  Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
+  Feature *detector = current_session->detector().get();
+  Feature *descriptor = current_session->descriptor().get();
   if (detector && descriptor){
     int i_ret = QMessageBox(QMessageBox::Warning,
                             tr("Previous results"),
@@ -1242,7 +1253,7 @@ void FeatureExtractorPresenter::run()
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
 
-  /// Hay que recuperar las imagenes de la carpeta de preprocesos
+
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
     QString fileName = (*it)->name();
     QString preprocessed_image;

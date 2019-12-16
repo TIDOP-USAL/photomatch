@@ -303,15 +303,15 @@ void ProjectModel::clearFeatures()
   bUnsavedChanges = true;
 }
 
-void ProjectModel::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+void ProjectModel::addMatches(const QString &img1, const QString &img2, const QString &matchsFile)
 {
-  this->currentSession()->addMatches(img1, img2, fileMatch);
+  this->currentSession()->addMatches(img1, img2, matchsFile);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+void ProjectModel::deleteMatches(const QString &img1, const QString &img2, const QString &matchsFile)
 {
-  this->currentSession()->deleteMatches(img1, img2, fileMatch);
+  this->currentSession()->deleteMatches(img1, img2, matchsFile);
   bUnsavedChanges = true;
 }
 
@@ -361,8 +361,6 @@ void ProjectModel::saveAs(const QString &file)
   mPrjFile = file;
   mProjectIO->write(file, *mProject);
 
-  ///TODO: Señal de proyecto guardado
-  /// emit modifiedProject(false);
   bUnsavedChanges = false;
 }
 

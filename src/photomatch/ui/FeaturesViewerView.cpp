@@ -46,7 +46,7 @@ void FeaturesViewerView::onGraphicsViewSelectionChanged()
   QList<QGraphicsItem *> items = mGraphicView->items();
   bool bSelectedItem = false;
   for (int i = 0; i < items.size(); i++) {
-    if (items[i]->isSelected() == true) {
+    if (items[i] && items[i]->isSelected() == true) {
 
       mTreeWidget->selectionModel()->clearSelection();
       for (int j = 0; j < mTreeWidget->topLevelItemCount(); j++){
@@ -93,18 +93,6 @@ void FeaturesViewerView::onTreeWidgetItemSelectionChanged()
   }
   update();
 }
-
-//void FeaturesViewerView::changeEvent(QEvent *e)
-//{
-//  QDialog::changeEvent(e);
-//  switch (e->type()) {
-//  case QEvent::LanguageChange:
-//    ui->retranslateUi(this);
-//    break;
-//  default:
-//    break;
-//  }
-//}
 
 void photomatch::FeaturesViewerView::setSessionName(const QString &name)
 {

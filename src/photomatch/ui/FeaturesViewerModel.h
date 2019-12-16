@@ -51,6 +51,7 @@ private:
   void init() override;
 
 // IFeaturesViewerModel interface
+
 public:
 
   QString sessionName() const override;

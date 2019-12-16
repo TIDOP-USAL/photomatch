@@ -40,9 +40,9 @@ void ExportFeaturesPresenter::open()
   mView->clear();
 
   mView->setSessions(mModel->sessions());
-  mView->setActiveSession(mModel->sessionName());
+  mView->setSessionToExport(mModel->activeSessionName());
   mView->setFormats(mModel->formats());
-  mView->setImageFiles(mModel->features());
+  mView->setImageFiles(mModel->features(mModel->activeSessionName()));
 
   mView->exec();
 }
@@ -58,15 +58,16 @@ void ExportFeaturesPresenter::init()
 
 void ExportFeaturesPresenter::save()
 {
-  mModel->exportFeatures(mView->exportFiles(),
+  mModel->exportFeatures(mView->session(),
+                         mView->exportFiles(),
                          mView->exportPath(),
                          mView->format());
 }
 
 void ExportFeaturesPresenter::sessionChange(const QString &session)
 {
-  mModel->setSessionName(session);
-  mView->setActiveSession(session);
+  //mModel->setSessionName(session);
+  mView->setSessionToExport(session);
   mView->setFormats(mModel->formats());
 }
 

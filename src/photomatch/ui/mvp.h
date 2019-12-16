@@ -12,9 +12,7 @@ namespace photomatch
 
 class HelpDialog;
 
-/*!
- * \brief Interfaz para las Vistas que sean QWidget
- */
+
 class IWidgetView
   : public QWidget
 {
@@ -33,27 +31,20 @@ public:
 private:
 
   /*!
-   * \brief Inicialización del Widget
+   * \brief Widget Initialization
    */
   virtual void init() = 0;
 
 public slots:
 
   /*!
-   * \brief Limpia los campos  del Widget
+   * \brief Clear the widget
    */
   virtual void clear() = 0;
 
 private slots:
 
-  /*!
-   * \brief Actualización de los controles  del Widget
-   */
   virtual void update() = 0;
-
-  /*!
-   * \brief Retranslate
-   */
   virtual void retranslate() = 0;
 
 // QWidget interface
@@ -69,9 +60,7 @@ protected:
 
 };
 
-/*!
- * \brief Interfaz para las Vistas que sean QDialog
- */
+
 class IDialogView
   : public QDialog
 {
@@ -93,7 +82,7 @@ public:
 private:
 
   /*!
-   * \brief Inicialización del dialogo
+   * \brief Dialog initialization
    */
   virtual void init() = 0;
 
@@ -105,20 +94,14 @@ signals:
 public slots:
 
   /*!
-   * \brief Limpia los campos  del dialogo
+   * \brief Clear dialog
    */
   virtual void clear() = 0;
 
 private slots:
 
-  /*!
-   * \brief Actualización de los controles  del dialogo
-   */
   virtual void update() = 0;
 
-  /*!
-   * \brief Retranslate
-   */
   virtual void retranslate() = 0;
 
 // QWidget interface
@@ -149,7 +132,7 @@ public:
 private:
 
   /*!
-   * \brief Inicialización de la clase
+   * \brief Class Initialization
    */
   virtual void init() = 0;
 
@@ -169,21 +152,25 @@ public:
 public slots:
 
  /*!
-  * \brief Muestra la ayuda de la herramienta
+  * \brief Show help
   */
   virtual void help() = 0;
 
  /*!
-  * \brief Muestra la herramienta
+  * \brief Open
   */
   virtual void open() = 0;
 
+  /*!
+   * \brief Set Help
+   * \param[in] help
+   */
   virtual void setHelp(std::shared_ptr<HelpDialog> &help) = 0;
 
 private:
 
   /*!
-   * \brief Inicialización de la herramienta
+   * \brief Class Initialization
    */
   virtual void init() = 0;
 

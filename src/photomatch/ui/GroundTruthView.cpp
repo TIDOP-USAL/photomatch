@@ -46,7 +46,7 @@ GroundTruthView::GroundTruthView(QWidget *parent, Qt::WindowFlags f)
   connect(mImportGroundTruth,   SIGNAL(triggered(bool)),          this, SIGNAL(importGroundTruth()));
   connect(mAddPoints,           SIGNAL(toggled(bool)),            this, SLOT(onPushButtonAddPoints(bool)));
   connect(mSaveGroundTruth,     SIGNAL(triggered(bool)),          this, SIGNAL(saveGroundTruth()));
-  
+
   connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(onAccept()));
   connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
   connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
@@ -154,8 +154,6 @@ void GroundTruthView::onPushButtonAddPoints(bool active)
   //const QSignalBlocker blocker4(mDeletePoints);
 
   if (active){
-//    connect(mGraphicsViewLeft,  SIGNAL(mouseClicked(QPointF)), this, SLOT(selectLeftPoint(QPointF)));
-//    connect(mGraphicsViewRight, SIGNAL(mouseClicked(QPointF)), this, SLOT(selectRightPoint(QPointF)));
     connect(mGraphicsViewLeft,  SIGNAL(mouseClicked(QPointF)), this, SLOT(clickedPointLeft(QPointF)));
     connect(mGraphicsViewRight, SIGNAL(mouseClicked(QPointF)), this, SLOT(clickedPointRight(QPointF)));
     //mDeletePoints->setChecked(false);
@@ -171,8 +169,6 @@ void GroundTruthView::onPushButtonAddPoints(bool active)
       itemsLeft[i]->setSelected(false);
     }
   } else {
-//    disconnect(mGraphicsViewLeft,  SIGNAL(mouseClicked(QPointF)), this, SLOT(selectLeftPoint(QPointF)));
-//    disconnect(mGraphicsViewRight, SIGNAL(mouseClicked(QPointF)), this, SLOT(selectRightPoint(QPointF)));
     disconnect(mGraphicsViewLeft,  SIGNAL(mouseClicked(QPointF)), this, SLOT(clickedPointLeft(QPointF)));
     disconnect(mGraphicsViewRight, SIGNAL(mouseClicked(QPointF)), this, SLOT(clickedPointRight(QPointF)));
  
@@ -192,16 +188,6 @@ void GroundTruthView::onPushButtonAddPoints(bool active)
   update();
 }
 
-//void GroundTruthView::onPushButtonDeletePoints(bool active)
-//{
-//  QSignalBlocker blocker(mAddPoints);
-//  if (active){
-//    mAddPoints->setChecked(false);
-//  } else {
-//  }
-//  update();
-//}
-
 void GroundTruthView::onPushButtonAddPointClicked()
 {
   emit addHomologousPoints(mComboBoxLeftImage->currentText(),
@@ -210,11 +196,6 @@ void GroundTruthView::onPushButtonAddPointClicked()
                            mComboBoxRightImage->currentText(),
                            QPointF(mLineEditRightX->text().toDouble(),
                            mLineEditRightY->text().toDouble()));
-
-//  mLineEditLeftX->clear();
-//  mLineEditLeftY->clear();
-//  mLineEditRightX->clear();
-//  mLineEditRightY->clear();
 }
 
 void GroundTruthView::onPushButtonLockViewsToggled(bool active)
@@ -430,7 +411,6 @@ void GroundTruthView::setSelectLeftPoint(const QPointF &pt, bool newPoint)
 
       mCrossGraphicItem1 = new CrossGraphicItem(pt, mMarkerSize);
       mCrossGraphicItem1->setPen(pen);
-      //mCrossGraphicItem1->setSize(20);
       mGraphicsViewLeft->scene()->addItem(mCrossGraphicItem1);
     }
 
@@ -487,7 +467,6 @@ void GroundTruthView::setSelectedRightPoint(const QPointF &pt, bool newPoint)
 
       mCrossGraphicItem2 = new CrossGraphicItem(pt, mMarkerSize);
       mCrossGraphicItem2->setPen(pen);
-      //mCrossGraphicItem2->setSize(20);
       mGraphicsViewRight->scene()->addItem(mCrossGraphicItem2);
 
     }
@@ -593,14 +572,12 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
       // Cross
       CrossGraphicItem *crossGraphicItemLeft = new CrossGraphicItem(query_point, mMarkerSize);
       crossGraphicItemLeft->setPen(pen);
-      //crossGraphicItemLeft->setSize(mMarkerSize);
       crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
       crossGraphicItemLeft->setSelectedPen(select_pen);
       mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
       CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(train_point, mMarkerSize);
       crossGraphicItemRight->setPen(pen);
-      //crossGraphicItemRight->setSize(mMarkerSize);
       crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
       crossGraphicItemRight->setSelectedPen(select_pen);
@@ -609,14 +586,12 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
       // Diagonal cross
       DiagonalCrossGraphicItem *crossGraphicItemLeft = new DiagonalCrossGraphicItem(query_point, mMarkerSize);
       crossGraphicItemLeft->setPen(pen);
-      //crossGraphicItemLeft->setSize(mMarkerSize);
       crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemLeft->setToolTip(QString::number(static_cast<int>(i+1)));
       crossGraphicItemLeft->setSelectedPen(select_pen);
       mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
       DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(train_point, mMarkerSize);
       crossGraphicItemRight->setPen(pen);
-      //crossGraphicItemRight->setSize(mMarkerSize);
       crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
       crossGraphicItemRight->setToolTip(QString::number(static_cast<int>(i+1)));
       crossGraphicItemRight->setSelectedPen(select_pen);
@@ -645,14 +620,12 @@ void GroundTruthView::addHomologous(const QPointF &pt1, const QPointF &pt2)
 
   if (mMarkerType == 0){
     // Circle
-    //QGraphicsEllipseItem *itemLeft = mGraphicsViewLeft->scene()->addEllipse(pt1.x(), pt1.y(), mMarkerSize, mMarkerSize, pen);
     CircleGraphicItem *itemLeft = new CircleGraphicItem(pt1, mMarkerSize);
     itemLeft->setPen(pen);
     itemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
     itemLeft->setToolTip(QString::number(mPointsCounter));
     itemLeft->setSelectedPen(select_pen);
     mGraphicsViewLeft->scene()->addItem(itemLeft);
-    //QGraphicsEllipseItem *itemRight = mGraphicsViewRight->scene()->addEllipse(pt2.x(), pt2.y(), mMarkerSize, mMarkerSize, pen);
     CircleGraphicItem *itemRight = new CircleGraphicItem(pt2, mMarkerSize);
     itemRight->setPen(pen);
     itemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
@@ -663,14 +636,12 @@ void GroundTruthView::addHomologous(const QPointF &pt1, const QPointF &pt2)
     // Cross
     CrossGraphicItem *crossGraphicItemLeft = new CrossGraphicItem(pt1, mMarkerSize);
     crossGraphicItemLeft->setPen(pen);
-    //crossGraphicItemLeft->setSize(mMarkerSize);
     crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemLeft->setToolTip(QString::number(mPointsCounter));
     crossGraphicItemLeft->setSelectedPen(select_pen);
     mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
     CrossGraphicItem *crossGraphicItemRight = new CrossGraphicItem(pt2, mMarkerSize);
     crossGraphicItemRight->setPen(pen);
-    //crossGraphicItemRight->setSize(mMarkerSize);
     crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemRight->setToolTip(QString::number(mPointsCounter));
     crossGraphicItemRight->setSelectedPen(select_pen);
@@ -679,14 +650,12 @@ void GroundTruthView::addHomologous(const QPointF &pt1, const QPointF &pt2)
     // Diagonal cross
     DiagonalCrossGraphicItem *crossGraphicItemLeft = new DiagonalCrossGraphicItem(pt1, mMarkerSize);
     crossGraphicItemLeft->setPen(pen);
-    //crossGraphicItemLeft->setSize(mMarkerSize);
     crossGraphicItemLeft->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemLeft->setToolTip(QString::number(mPointsCounter));
     crossGraphicItemLeft->setSelectedPen(select_pen);
     mGraphicsViewLeft->scene()->addItem(crossGraphicItemLeft);
     DiagonalCrossGraphicItem *crossGraphicItemRight = new DiagonalCrossGraphicItem(pt2, mMarkerSize);
     crossGraphicItemRight->setPen(pen);
-    //crossGraphicItemRight->setSize(mMarkerSize);
     crossGraphicItemRight->setFlag(QGraphicsItem::ItemIsSelectable, true);
     crossGraphicItemRight->setToolTip(QString::number(mPointsCounter));
     crossGraphicItemRight->setSelectedPen(select_pen);
@@ -933,7 +902,6 @@ void GroundTruthView::clear()
 
 void GroundTruthView::update()
 {
-  //mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bUnsavedChanges);
   mSaveGroundTruth->setEnabled(bUnsavedChanges);
   mPushButtonDelete->setEnabled(mTreeWidget->selectedItems().size() > 0);
   mPushButtonAddPoint->setEnabled(mAddPoints->isChecked() &&
@@ -975,30 +943,6 @@ void GroundTruthView::clickedPointLeft(const QPointF &pt)
                         pt);
   }
 
-  //void findLeftPoint(QString, QString,  QPointF);
-  //void findRightPoint(QString, QString,  QPointF);
-
-//  QColor color;
-//  color.setNamedColor(QString("#0000FF"));
-//  QPen pen(color, 1.);
-
-//  if (mCrossGraphicItem1){
-//    mGraphicsViewLeft->scene()->removeItem(mCrossGraphicItem1);
-//    delete mCrossGraphicItem1;
-//    mCrossGraphicItem1 = nullptr;
-//  }
-
-//  mCrossGraphicItem1 = new CrossGraphicItem(pt);
-//  mCrossGraphicItem1->setPen(pen);
-//  mCrossGraphicItem1->setSize(20);
-//  mGraphicsViewLeft->scene()->addItem(mCrossGraphicItem1);
-
-//  if (mTrf.isIdentity() == false && bLockViews == true){
-//    QPointF trf_point = mTrf.map(pt);
-//    mGraphicsViewRight->centerOn(trf_point);
-//  }
-
-//  update();
 }
 
 void GroundTruthView::clickedPointRight(const QPointF &pt)
@@ -1012,29 +956,6 @@ void GroundTruthView::clickedPointRight(const QPointF &pt)
                         mComboBoxRightImage->currentText(),
                         pt);
   }
-
-//  QColor color;
-//  color.setNamedColor(QString("#0000FF"));
-//  QPen pen(color, 1.);
-
-//  if (mCrossGraphicItem2){
-//    mGraphicsViewRight->scene()->removeItem(mCrossGraphicItem2);
-//    delete mCrossGraphicItem2;
-//    mCrossGraphicItem2 = nullptr;
-//  }
-
-//  mCrossGraphicItem2 = new CrossGraphicItem(pt);
-//  mCrossGraphicItem2->setPen(pen);
-//  mCrossGraphicItem2->setSize(20);
-//  mGraphicsViewRight->scene()->addItem(mCrossGraphicItem2);
-
-//  if (mTrf.isIdentity() == false && bLockViews == true){
-//    QTransform trf_inv = mTrf.inverted();
-//    QPointF trf_point = trf_inv.map(pt);
-//    mGraphicsViewLeft->centerOn(trf_point);
-//  }
-
-//  update();
 }
 
 void GroundTruthView::setBGColor(const QString &bgColor)
@@ -1180,5 +1101,12 @@ void GroundTruthView::setCenterRightViewer(const QPointF & pt, bool zoom11)
   }
 }
 
+void GroundTruthView::closeEvent(QCloseEvent *event)
+{
+  onAccept();
+}
+
 } // namespace photomatch
+
+
 

@@ -167,7 +167,13 @@ void PreprocessPresenter::help()
 
 void PreprocessPresenter::open()
 {
-  Preprocess *preprocess = mProjectModel->currentSession()->preprocess().get();
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) {
+    msgError("No active session found");
+    return;
+  }
+
+  Preprocess *preprocess = current_session->preprocess().get();
   if (preprocess) setCurrentPreprocess(preprocess->name());
 
   mACEBSF->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
@@ -257,7 +263,7 @@ void PreprocessPresenter::open()
                                    dynamic_cast<IWallis *>(preprocess)->imposedLocalStdDev() :
                                    mSettingsModel->wallisImposedLocalStdDev());
 
-  mView->setSessionName(mProjectModel->currentSession()->name());
+  mView->setSessionName(current_session->name());
   mView->exec();
 }
 
@@ -315,8 +321,13 @@ void PreprocessPresenter::cancel()
 
 void PreprocessPresenter::run()
 {
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) {
+    msgError("No active session found");
+    return;
+  }
 
-  if(std::shared_ptr<Preprocess> preprocess = mProjectModel->currentSession()->preprocess()){
+  if(std::shared_ptr<Preprocess> preprocess = current_session->preprocess()){
     int i_ret = QMessageBox(QMessageBox::Warning,
                             tr("Previous results"),
                             tr("The previous results will be overwritten. Do you wish to continue?"),
@@ -325,9 +336,6 @@ void PreprocessPresenter::run()
       return;
     }
   }
-
-  ///TODO: se crean los procesos
-  /// - Se recorren todas las imagenes y se añaden los procesos
 
   mMultiProcess->clearProcessList();
 
@@ -391,7 +399,7 @@ void PreprocessPresenter::run()
     QString file_in = (*it)->path();
     QFileInfo fileInfo(file_in);
     QString file_out = mProjectModel->projectFolder();
-    file_out.append("\\").append(mProjectModel->currentSession()->name());
+    file_out.append("\\").append(current_session->name());
     file_out.append("\\preprocess\\");
     QDir dir_out(file_out);
     if (!dir_out.exists()) {

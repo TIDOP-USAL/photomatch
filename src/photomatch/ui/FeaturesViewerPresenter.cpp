@@ -76,12 +76,6 @@ void FeaturesViewerPresenter::setSession(const QString &session)
   mModel->setSessionName(session);
   mView->clear();
   mView->setSessionName(mModel->sessionName());
-
-  //std::vector<QString> images = mModel->images();
-  //if (images.empty() == false) {
-  //  mView->setImageList(images);
-  //  setImageActive(QFileInfo(images[0]).baseName());
-  //}
 }
 
 void FeaturesViewerPresenter::setImageActive(const QString &image)
@@ -89,17 +83,6 @@ void FeaturesViewerPresenter::setImageActive(const QString &image)
   mView->setCurrentImage(image);
   loadKeypoints(image);
 }
-
-void FeaturesViewerPresenter::setPointStyle(const QPen &pen, int size)
-{
-
-}
-
-//void FeaturesViewerPresenter::activeImage(const QString &image)
-//{
-//  mView->setCurrentImage(image);
-//  loadKeypoints(image);
-//}
 
 void FeaturesViewerPresenter::loadKeypoints(const QString &image)
 {

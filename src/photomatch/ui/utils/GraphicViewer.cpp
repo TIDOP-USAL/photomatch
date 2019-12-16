@@ -55,21 +55,6 @@ void GraphicViewer::init()
 
   this->setResizeAnchor(QGraphicsView::AnchorViewCenter);
 
-//  // Initialize contextual menu if requested
-//  if (isContextualMenu)
-//  {
-//      setContextMenuPolicy(Qt::CustomContextMenu);
-//      connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
-//  }
-
-  //setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  //setDragMode(QGraphicsView::ScrollHandDrag);
-  //setMouseTracking(true);
-
-//  // Deshabilitar barra de desplazamiento para evitar una recursión de tamaño no deseado
-//  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-//  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
   // Add the default pixmap at startup
   mPixmapItem = mScene->addPixmap(mPixmap);
 
@@ -150,9 +135,7 @@ void GraphicViewer::mouseReleaseEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton){
 
-    /*if (this->dragMode() == QGraphicsView::NoDrag){
-      emit mouseClicked(event->pos());
-    } else*/ if (this->dragMode() == QGraphicsView::ScrollHandDrag){
+    if (this->dragMode() == QGraphicsView::ScrollHandDrag){
       setDragMode(QGraphicsView::NoDrag);
     }
 
@@ -246,11 +229,6 @@ void GraphicViewer::zoomExtend()
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   
-  //double scale11 = 1. / transform().m11();
-  //// Fit the scene in the QGraphicsView
-  //fitInView(mScene->sceneRect(), Qt::KeepAspectRatio);
-  //scale11 = 1. / transform().m11();
-  
   fitInView(mScene->sceneRect(), Qt::KeepAspectRatio);
 
   // Restaure scroll bar policy
@@ -266,7 +244,6 @@ void GraphicViewer::zoom11()
 
 void GraphicViewer::zoomIn(QPoint point)
 {
-  //setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
   scale(mZoomFactor, mZoomFactor);
 }
 
@@ -280,9 +257,7 @@ void GraphicViewer::showContextMenu(const QPoint &position)
 {
   // Get the mouse position in the scene
   QPoint globalPos = mapToGlobal(position);
-  // Create the menu and add action
-  //QMenu contextMenu;
-  //contextMenu.addAction("Reset view", this, SLOT(zoomExtend()));
+
   // Display the menu
   mContextMenu->exec(globalPos);
 }

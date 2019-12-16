@@ -14,7 +14,6 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 {
 
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowContextHelpButtonHint);
-  //this->setWindowFlags(this->windowFlags() | Qt::WindowMinimizeButtonHint);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowMaximizeButtonHint);
   this->setWindowFlags(this->windowFlags() & ~Qt::WindowCloseButtonHint);
   this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);

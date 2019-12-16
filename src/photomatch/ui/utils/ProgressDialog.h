@@ -53,8 +53,6 @@ public:
   explicit ProgressDialog(QWidget *parent = nullptr);
   ~ProgressDialog()  override;
 
-  //void setProcess(Process *process) override;
-
 public slots:
 
   void setRange(int min, int max) override;
@@ -66,20 +64,11 @@ public slots:
 
 protected slots:
 
-//  void onStatusChanged(int step, QString message) override;
-//  void onStatusChangedNext() override;
   void onMinimized() override;
 
 private slots:
 
   void on_pushButton_clicked();
-
-// QWidget interface
-
-protected:
-
-  //void closeEvent(QCloseEvent *event) override;
-  //void changeEvent(QEvent *) override;
 
 private:
 

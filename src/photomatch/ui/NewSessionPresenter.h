@@ -41,6 +41,10 @@ protected slots:
    */
   virtual void discartProject() = 0;
 
+  /*!
+   * \brief Comprueba si ya existe una sesión con el mismo nombre
+   * \param[in] name Session name
+   */
   virtual void checkSessionName(const QString &name) = 0;
 };
 

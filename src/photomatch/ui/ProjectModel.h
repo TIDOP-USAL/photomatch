@@ -21,116 +21,124 @@ public:
   IProjectModel(QObject *parent = nullptr) : IModel(parent) {}
 
   /*!
-   * \brief Ruta del fichero de proyecto
-   * \return
+   * \brief Project file path
+   * \return Project file path
    */
   virtual QString path() const = 0;
 
   /*!
-   * \brief Carga un proyecto
-   * \param[in] file Fichero de proyecto
+   * \brief Load a project
+   * \param[in] file Project file
    */
   virtual void load(const QString &file) = 0;
 
   /*!
-   * \brief Guarda el proyecto
+   * \brief Save the project
    */
   virtual void save() = 0;
 
   /*!
-   * \brief Guarda un proyecto como...
-   * \param[in] file Nombre con el cual se guarda el proyecto
+   * \brief Save a project as ...
+   * \param[in] file Project file
    */
   virtual void saveAs(const QString &file) = 0;
 
   /*!
-   * \brief Comprueba si hay cambios sin guardar en el proyecto
+   * \brief Check for changes without saving in the project
    * \return
    */
   virtual bool checkUnsavedChanges() const = 0;
 
   /*!
-   * \brief Comprueba si un proyecto es de una versión antigua
-   * \param[in] file
+   * \brief Check if a project is an old version
+   * \param[in] file Project file
    * \return
    */
   virtual bool checkOldVersion(const QString &file) const = 0;
 
   /*!
-   * \brief Crea una copia de un proyecto antiguo con el mismo nombre y un sufijo con la versión
-   * \param[in] file
+   * \brief Create a copy of a project from an old version with the same name and a suffix with the version
+   * \param[in] file Project file
    */
   virtual void oldVersionBak(const QString &file) const = 0;
 
   /*!
-   * \brief Devuelve el nombre del proyecto
-   * \return Nombre del proyecto
+   * \brief Returns the name of the project
+   * \return Project's name
    */
   virtual QString name() const = 0;
 
   /*!
-   * \brief Establece el nombre del proyecto
-   * \param[in] name Nombre del proyecto
+   * \brief Set the project name
+   * \param[in] name Project's name
    */
   virtual void setName(const QString &name) = 0;
 
   /*!
-   * \brief Devuelve la descripción del proyecto
-   * \return Descripción del proyecto
+   * \brief Returns the project description
+   * \return Project description
    */
   virtual QString description() const = 0;
 
   /*!
-   * \brief Establece la descripción del proyecto
-   * \param[in] description Descripción del proyecto
+   * \brief Set the project description
+   * \param[in] description Project description
    */
   virtual void setDescription(const QString &description) = 0;
 
   /*!
-   * \brief Devuelve el directorio del proyecto
-   * \return Directorio del proyecto
+   * \brief Returns the project directory
+   * \return Project directory
    */
   virtual QString projectFolder() const = 0;
 
   /*!
-   * \brief Establece el directorio del proyecto
-   * \param[in] path Directorio del proyecto
+   * \brief Set the project directory
+   * \param[in] path Project Directory
    */
   virtual void setProjectFolder(const QString &dir) = 0;
 
   /*!
-   * \brief Versión del fichero de proyecto
-   * La versión del fichero de proyecto se utiliza para actualizar proyectos antiguos
-   * \return Versión del fichero de proyecto
+   * \brief Project File Version
+   * The project file version is used to update old projects
+   * \return Project File Version
    */
   virtual QString version() const = 0;
 
+  /*!
+   * \brief Set Ground Truth
+   * \param[in] groundTruth Ground Truth
+   */
   virtual void setGroundTruth(const QString &groundTruth) = 0;
 
+  /*!
+   * \brief Returns the Ground Truth
+   * \return Ground Truth
+   */
   virtual QString groundTruth() const = 0;
 
   /*!
-   * \brief Añade una imagen al proyecto
-   * \param[in] img Imagen
+   * \brief Add an image to the project
+   * \param[in] img Image
    */
   virtual void addImage(const std::shared_ptr<Image> &img) = 0;
 
   /*!
-   * \brief Elimina una imagen del proyecto
-   * \param[in] img Ruta de la imagen que se quiere eliminar
+   * \brief Delete an image from the project
+   * \param[in] img Image path to be deleted
    */
   virtual void deleteImage(const QString &img) = 0;
 
   /*!
-   * \brief Elimina una imagen del proyecto
-   * \param[in] imgId Identificador de la imagen que se quiere eliminar
+   * \brief Delete an image from the project
+   * \param[in] imgId ID image to be deleted
    */
   virtual void deleteImage(size_t imgId) = 0;
 
   /*!
-   * \brief Busca una imagen en el proyecto
-   * \param[in] path Ruta de la imagen a buscar
-   * \return Objeto Image correspondiente o puntero nulo si no se encuentra
+   * \brief Search for an image in the project
+   * \param[in] path Image path
+   * \return Image object or null pointer if not found
    */
   virtual const std::shared_ptr<Image> findImage(const QString &path) const = 0;
 
@@ -138,151 +146,271 @@ public:
   virtual const std::shared_ptr<Image> findImageByName(const QString &imgName) const = 0;
 
   /*!
-   * \brief Busca una imagen en el proyecto
-   * \param[in] path Ruta de la imagen a buscar
-   * \return Objeto Identificador de la imagen o std::numeric_limits<size_t>().max() si no se encuentra.
+   * \brief Search for an image in the project
+   * \param[in] path Image path
+   * \return Image ID o std::numeric_limits<size_t>().max() if it is not found
    */
   virtual size_t findImageId(const QString &path) const = 0;
 
   /*!
-   * \brief Devuelve un iterador constante al inicio del listado de imágenes
-   * \return Iterador al primer elemento del listado de imágenes
+   * \brief Returns a constant iterator at the beginning of the image list
+   * \return Iterator to the first element of the image list
    */
   virtual IProject::image_const_iterator imageBegin() const = 0;
 
   /*!
-   * \brief Devuelve un iterador constante al siguiente elemento después de la última imagen
-   * Este elemento actúa como un marcador de posición, intentar acceder a él resulta en un comportamiento no definido
-   * \return Iterador constante al siguiente elemento después de la última imagen
+   * \brief Return a constant iterator to the next element after the last image
+   * \return Constant Iterator to the next element after the last image
    */
   virtual IProject::image_const_iterator imageEnd() const = 0;
 
   /*!
-   * \brief Número de imagenes cargadas en el proyecto
+   * \brief Number of images of the project
    * \return
    */
   virtual size_t imagesCount() const = 0;
 
+  /*!
+   * \brief Add images
+   * \param[in] fileNames Image list to be added
+   */
   virtual void addImages(const QStringList &fileNames) = 0;
+
+  /*!
+   * \brief Delete images
+   * \param[in] images Image list to be deleted
+   */
   virtual void deleteImages(const QStringList &images) = 0;
 
   /*!
-   * \brief Añade una sesión
-   * \param[in] name Nombre de la sesión
-   * \param[in] description Descripción de la sesión
+   * \brief Add a session
+   * \param[in] name Session name
+   * \param[in] description Session description
    */
   virtual void addSession(const QString &name, const QString &description) = 0;
 
   /*!
-   * \brief Añade una sesión
-   * \param[in] session Sesión
+   * \brief Add a session
+   * \param[in] session Session
    */
   virtual void addSession(const std::shared_ptr<Session> &session) = 0;
 
   /*!
-   * \brief Borra una sesión
-   * \param[in] nameSession Nombre de la sesión
+   * \brief Delete a session
+   * \param[in] nameSession Session name
    */
   virtual void deleteSession(const QString &nameSession) = 0;
 
   /*!
-   * \brief Borra una sesión
-   * \param[in] sessionId Identificador de la sesión
+   * \brief Delete a session
+   * \param[in] sessionId Session ID
    */
   virtual void deleteSession(size_t sessionId) = 0;
 
   /*!
-   * \brief Busca una sesión en el proyecto
-   * \param[in] sessionName Nombre de la sesión
+   * \brief Search for a session in the project
+   * \param[in] sessionName Session name
    * \return
    */
   virtual std::shared_ptr<Session> findSession(const QString &sessionName) = 0;
 
   /*!
-   * \brief Busca una sesión en el proyecto
-   * \param[in] sessionName Nombre de la sesión
+   * \brief Search for a session in the project
+   * \param[in] sessionName Session name
    * \return
    */
   virtual const std::shared_ptr<Session> findSession(const QString &sessionName) const = 0;
 
   /*!
-   * \brief Busca el identificador de una sesión en el proyecto
-   * \param[in] sessionName Nombre de la sesión
+   * \brief Search for the session ID in the project
+   * \param[in] sessionName Session name
    * \return
    */
   virtual size_t findSessionId(const QString &sessionName) = 0;
 
   /*!
-   * \brief Busca el identificador de una sesión en el proyecto
-   * \param[in] sessionName Nombre de la sesión
+   * \brief Search for the session ID in the project
+   * \param[in] sessionName Session name
    * \return
    */
   virtual size_t findSessionId(const QString &sessionName) const = 0;
 
   /*!
-   * \brief Devuelve un iterador constante al inicio del listado de sessiones
+   * \brief Returns a constant iterator at the beginning of the session list
    * \return Iterador al primer elemento del listado de sessiones
    */
   virtual IProject::session_const_iterator sessionBegin() const = 0;
 
   /*!
-   * \brief Devuelve un iterador constante al siguiente elemento después de la última sesión
-   * Este elemento actúa como un marcador de posición, intentar acceder a él
-   * resulta en un comportamiento no definido
-   * \return Iterador constante al siguiente elemento después de la última sesión
+   * \brief Return a constant iterator to the next item after the last session
+   * \return Constant Iterator to the next element after the last session
    */
   virtual IProject::session_const_iterator sessionEnd() const = 0;
 
   /*!
-   * \brief Número de sesiones del proyecto
+   * \brief Number of project sessions
    * \return
    */
   virtual size_t sessionCount() const = 0;
 
+  /*!
+   * \brief Returns current session
+   * \return
+   */
   virtual const std::shared_ptr<Session> currentSession() const = 0;
-  virtual void setCurrentSession(const QString &sessionName) = 0;
-
-  virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
-  virtual void deletePreprocess() = 0;
-  virtual void setDetector(const std::shared_ptr<Feature> &detector) = 0;
-  virtual void deleteDetector() = 0;
-  virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
-  virtual void deleteDescriptor() = 0;
-  virtual void setMatcher(const std::shared_ptr<Match> &descriptor) = 0;
-  virtual void deleteMatcher() = 0;
-  virtual void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) = 0;
-  virtual int maxImageSize() const = 0;
-  virtual void setMaxImageSize(int size) = 0;
-  virtual bool fullImageSize() const = 0;
-  virtual void setFullImageSize(bool fullImageSize) = 0;
-  virtual void addPreprocessedImage(const QString &image) = 0;
-  virtual void deletePreprocessedImage(const QString &image) = 0;
-  virtual void clearPreprocessedImages() = 0;
-  virtual void addFeatures(const QString &feat) = 0;
-  virtual void deleteFeatures(const QString &feat) = 0;
-  virtual void clearFeatures() = 0;
-  virtual void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
-  virtual void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) = 0;
-  virtual void clearMatches() = 0;
-  virtual QString passPoints() const = 0;
-  virtual void setPassPoints(const QString &passPoint) = 0;
 
   /*!
-   * \brief Limpia el proyecto
+   * \brief Set current session
+   * \param[in] sessionName Session name
    */
+  virtual void setCurrentSession(const QString &sessionName) = 0;
+
+  /*!
+   * \brief Set Preprocess
+   * \param[in] preprocess Preprocess
+   */
+  virtual void setPreprocess(const std::shared_ptr<Preprocess> &preprocess) = 0;
+
+  /*!
+   * \brief Delete Preprocess
+   */
+  virtual void deletePreprocess() = 0;
+
+  /*!
+   * \brief Set Detector
+   * \param[in] detector Detector
+   */
+  virtual void setDetector(const std::shared_ptr<Feature> &detector) = 0;
+
+  /*!
+   * \brief Delete Detector
+   */
+  virtual void deleteDetector() = 0;
+
+  /*!
+   * \brief Set Descriptor
+   * \param[in] descriptor Descriptor
+   */
+  virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
+
+  /*!
+   * \brief Delete Descriptor
+   */
+  virtual void deleteDescriptor() = 0;
+
+  /*!
+   * \brief setMatcher
+   * \param[in] matcher
+   */
+  virtual void setMatcher(const std::shared_ptr<Match> &matcher) = 0;
+
+  /*!
+   * \brief deleteMatcher
+   */
+  virtual void deleteMatcher() = 0;
+
+  /*!
+   * \brief Set Robust Matcher Refinement
+   * \param[in] robustMatcherRefinement
+   */
+  virtual void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) = 0;
+
+  /*!
+   * \brief Returns Maximum image size
+   * \return Maximum image size
+   */
+  virtual int maxImageSize() const = 0;
+
+  /*!
+   * \brief Set maximum image size
+   * \param[in] size Maximum image size
+   */
+  virtual void setMaxImageSize(int size) = 0;
+
+  /*!
+   * \brief Full image size
+   * \return Full image size
+   */
+  virtual bool fullImageSize() const = 0;
+
+  /*!
+   * \brief Set full image size
+   * \param[in] fullImageSize Full image size
+   */
+  virtual void setFullImageSize(bool fullImageSize) = 0;
+
+  /*!
+   * \brief Add Preprocessed Image
+   * \param[in] image Preprocessed Image
+   */
+  virtual void addPreprocessedImage(const QString &image) = 0;
+
+  /*!
+   * \brief Delete Preprocessed Image
+   * \param[in] image Preprocessed Image
+   */
+  virtual void deletePreprocessedImage(const QString &image) = 0;
+
+  /*!
+   * \brief clear preprocessed images
+   */
+  virtual void clearPreprocessedImages() = 0;
+
+  /*!
+   * \brief Add features
+   * \param[in] feat Features
+   */
+  virtual void addFeatures(const QString &feat) = 0;
+
+  /*!
+   * \brief Delete features
+   * \param[in] feat Features
+   */
+  virtual void deleteFeatures(const QString &feat) = 0;
+
+  /*!
+   * \brief Clear features
+   */
+  virtual void clearFeatures() = 0;
+
+  /*!
+   * \brief Add Matches
+   * \param[in] img1 Image 1
+   * \param[in] img2 Image 2
+   * \param[in] matchsFile Matchs file
+   */
+  virtual void addMatches(const QString &img1, const QString &img2, const QString &matchsFile) = 0;
+
+  /*!
+   * \brief Delete matches
+   * \param img1 Image 1
+   * \param img2 Image 2
+   * \param matchsFile atchs file
+   */
+  virtual void deleteMatches(const QString &img1, const QString &img2, const QString &matchsFile) = 0;
+
+  /*!
+   * \brief clear matches
+   */
+  virtual void clearMatches() = 0;
+
+  /*!
+   * \brief Pass points
+   * \return Pass points
+   */
+  virtual QString passPoints() const = 0;
+
+  /*!
+   * \brief Set pass points
+   * \param[in] passPoint Pass points
+   */
+  virtual void setPassPoints(const QString &passPoint) = 0;
+
   virtual void clear() = 0;
 
-signals:
-
-//  void nameChange(QString);
-//  void descriptionChange(QString);
-//  void projectFolderChange(QString);
-//  void imageAdded(QString);
-//  void imageDeleted(QString);
-//  void imageDeleted(size_t);
-//  void modifiedProject(bool);
-
 };
+
+
 
 class ProjectModel
   : public IProjectModel
@@ -354,8 +482,8 @@ public:
   void addFeatures(const QString &feat) override;
   void deleteFeatures(const QString &feat) override;
   void clearFeatures() override;
-  void addMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
-  void deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch) override;
+  void addMatches(const QString &img1, const QString &img2, const QString &matchsFile) override;
+  void deleteMatches(const QString &img1, const QString &img2, const QString &matchsFile) override;
   void clearMatches() override;
   QString passPoints() const override;
   void setPassPoints(const QString &passPoint) override;

@@ -33,7 +33,10 @@ HomographyViewerModel::~HomographyViewerModel()
 
 QString HomographyViewerModel::currentSession() const
 {
-  return mProjectModel->currentSession()->name();
+  if (mProjectModel->currentSession())
+    return mProjectModel->currentSession()->name();
+  else
+    return QString();
 }
 
 std::vector<QString> HomographyViewerModel::images() const
