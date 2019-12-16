@@ -801,6 +801,7 @@ void passPointsWrite(const QString &fname,
 
 void passPointsRead(const QString &fname, std::vector<std::vector<std::pair<QString, int>>> &pass_points)
 {
+  pass_points.resize(0);
   std::ifstream ifs(fname.toStdString());
   std::string line;
   if (ifs.is_open()) {

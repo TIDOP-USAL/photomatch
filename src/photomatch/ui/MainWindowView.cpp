@@ -1363,9 +1363,14 @@ void MainWindowView::update()
   bool bImageOpen = mFlags.isActive(Flag::image_open);
   bool bProcessing = mFlags.isActive(Flag::processing);
 
-  mActionSaveProject->setEnabled(bProjectExists && bProjectModified);
-  mActionSaveProjectAs->setEnabled(bProjectExists);
-  mActionCloseProject->setEnabled(bProjectExists);
+  mActionNewProject->setEnabled(!bProcessing);
+  mActionOpenProject->setEnabled(!bProcessing);
+  mMenuRecentProjects->setEnabled(!bProcessing);
+  mActionSaveProject->setEnabled(bProjectExists && bProjectModified && !bProcessing);
+  mActionSaveProjectAs->setEnabled(bProjectExists && !bProcessing);
+  mActionCloseProject->setEnabled(bProjectExists && !bProcessing);
+  mActionExit->setEnabled(!bProcessing);
+
 
   mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
   mActionGroundTruthEditor->setEnabled(mFlags.isActive(Flag::images_added));

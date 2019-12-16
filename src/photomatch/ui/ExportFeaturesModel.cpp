@@ -31,9 +31,14 @@ QStringList ExportFeaturesModel::sessions() const
   return sessions;
 }
 
-QString ExportFeaturesModel::sessionName() const
+//QString ExportFeaturesModel::sessionName() const
+//{
+//  return mSession;
+//}
+
+QString ExportFeaturesModel::activeSessionName() const
 {
-  return mSession;
+  return mProjectModel->currentSession()->name();
 }
 
 QStringList ExportFeaturesModel::formats() const
@@ -45,11 +50,11 @@ QStringList ExportFeaturesModel::formats() const
   return formats;
 }
 
-QStringList ExportFeaturesModel::features() const
+QStringList ExportFeaturesModel::features(const QString &sessionName) const
 {
   QStringList images;
 
-  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
     if (session->features().size() > 0 ){
       for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
         images.push_back((*it)->name());
@@ -60,9 +65,12 @@ QStringList ExportFeaturesModel::features() const
   return images;
 }
 
-void ExportFeaturesModel::exportFeatures(const QStringList &features, const QString &path, const QString &format) const
+void ExportFeaturesModel::exportFeatures(const QString &sessionName,
+                                         const QStringList &features,
+                                         const QString &path,
+                                         const QString &format) const
 {
-  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
 
     QString ext;
 
@@ -93,15 +101,15 @@ void ExportFeaturesModel::exportFeatures(const QStringList &features, const QStr
   }
 }
 
-void ExportFeaturesModel::setSessionName(const QString &session)
-{
-  mSession = session;
-}
+//void ExportFeaturesModel::setSessionName(const QString &session)
+//{
+//  mSession = session;
+//}
 
 void ExportFeaturesModel::init()
 {
-  if (mProjectModel->currentSession())
-    mSession = mProjectModel->currentSession()->name();
+//  if (mProjectModel->currentSession())
+//    mSession = mProjectModel->currentSession()->name();
 }
 
 } // namespace photomatch

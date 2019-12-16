@@ -67,16 +67,16 @@ void featuresWrite(const QString &fname,
           
           switch (type) {
             case CV_8U:
-              ofs << " " << descriptors.at<uchar>(r,c);
+              ofs << " " << static_cast<int>(descriptors.at<uchar>(r,c));
               break;  
             case CV_8S:
-              ofs << " "  << descriptors.at<schar>(r,c);
+              ofs << " "  << static_cast<int>(descriptors.at<schar>(r,c));
               break;  
             case CV_16U: 
-              ofs << " "  << descriptors.at<ushort>(r,c);
+              ofs << " "  << static_cast<int>(descriptors.at<ushort>(r,c));
               break; 
             case CV_16S: 
-              ofs << " "  << descriptors.at<short>(r,c);
+              ofs << " "  << static_cast<int>(descriptors.at<short>(r,c));
               break; 
             case CV_32S:
               ofs << " "  << descriptors.at<int>(r,c);
@@ -197,25 +197,25 @@ void featuresRead(const QString &fname,
           for (int c = 0; c < cols; c++) {
             switch (type) {
               case CV_8U:
-                descriptors.at<uchar>(r,c) = static_cast<uchar>(list[c+4].toFloat());
+                descriptors.at<uchar>(r,c) = static_cast<uchar>(list[c+4].toInt());
                 break;
               case CV_8S:
-                descriptors.at<schar>(r,c) = static_cast<schar>(list[c+4].toFloat());
+                descriptors.at<schar>(r,c) = static_cast<schar>(list[c+4].toInt());
                 break;
               case CV_16U:
-                descriptors.at<ushort>(r,c) = static_cast<ushort>(list[c+4].toFloat());
+                descriptors.at<ushort>(r,c) = static_cast<ushort>(list[c+4].toInt());
                 break;
               case CV_16S:
-                descriptors.at<short>(r,c) = static_cast<short>(list[c+4].toFloat());
+                descriptors.at<short>(r,c) = static_cast<short>(list[c+4].toInt());
                 break;
               case CV_32S:
-                descriptors.at<int>(r,c) = static_cast<int>(list[c+4].toFloat());
+                descriptors.at<int>(r,c) = list[c+4].toInt();
                 break;
               case CV_32F:
                 descriptors.at<float>(r,c) = list[c+4].toFloat();
                 break;
               case CV_64F:
-                descriptors.at<double>(r,c) = static_cast<double>(list[c+4].toFloat());
+                descriptors.at<double>(r,c) = list[c+4].toDouble();
                 break;
               default:
                 break;

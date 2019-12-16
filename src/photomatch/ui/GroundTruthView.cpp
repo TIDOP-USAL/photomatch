@@ -46,7 +46,7 @@ GroundTruthView::GroundTruthView(QWidget *parent, Qt::WindowFlags f)
   connect(mImportGroundTruth,   SIGNAL(triggered(bool)),          this, SIGNAL(importGroundTruth()));
   connect(mAddPoints,           SIGNAL(toggled(bool)),            this, SLOT(onPushButtonAddPoints(bool)));
   connect(mSaveGroundTruth,     SIGNAL(triggered(bool)),          this, SIGNAL(saveGroundTruth()));
-  
+
   connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(onAccept()));
   connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
   connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
@@ -1180,5 +1180,12 @@ void GroundTruthView::setCenterRightViewer(const QPointF & pt, bool zoom11)
   }
 }
 
+void GroundTruthView::closeEvent(QCloseEvent *event)
+{
+  onAccept();
+}
+
 } // namespace photomatch
+
+
 

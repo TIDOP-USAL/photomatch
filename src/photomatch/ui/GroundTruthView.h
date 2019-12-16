@@ -229,6 +229,12 @@ private slots:
   void update() override;
   void retranslate() override;
 
+// QWidget interface
+
+protected:
+
+  void closeEvent(QCloseEvent *event) override;
+
 protected:
 
   QDialogButtonBox *mButtonBox;
@@ -263,6 +269,8 @@ protected:
   int mPointsCounter;
   QString mSelectedMarkerColor;
   int mSelectedMarkerWidth;
+
+
 };
 
 } // namespace photomatch

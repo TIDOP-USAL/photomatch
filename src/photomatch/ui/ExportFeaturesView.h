@@ -24,6 +24,7 @@ public:
   IExportFeaturesView(QWidget *parent) : IDialogView(parent) {}
   virtual ~IExportFeaturesView() override = default;
 
+  virtual QString session() const = 0;
   virtual QString format() const = 0;
   virtual QStringList exportFiles() const = 0;
   virtual QString exportPath() const = 0;
@@ -32,7 +33,7 @@ public:
 public slots:
 
   virtual void setSessions(const QStringList &sessions) = 0;
-  virtual void setActiveSession(const QString &session) = 0;
+  virtual void setSessionToExport(const QString &session) = 0;
   virtual void setFormats(const QStringList &formats) = 0;
   virtual void setCurrentFormat(const QString &format) = 0;
   virtual void setExportAll(bool active) = 0;
@@ -66,6 +67,7 @@ protected slots:
 
 public:
 
+  QString session() const override;
   QString format() const override;
   QStringList exportFiles() const override;
   QString exportPath() const override;
@@ -74,7 +76,7 @@ public:
 public slots:
 
   void setSessions(const QStringList &sessions) override;
-  void setActiveSession(const QString &session) override;
+  void setSessionToExport(const QString &session) override;
   void setFormats(const QStringList &formats) override;
   void setCurrentFormat(const QString &format) override;
   void setExportAll(bool active) override;

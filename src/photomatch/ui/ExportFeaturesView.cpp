@@ -52,6 +52,11 @@ void ExportFeaturesView::onPushButtonExportFormat()
   update();
 }
 
+QString ExportFeaturesView::session() const
+{
+  return mComboBoxSession->currentText();
+}
+
 QString ExportFeaturesView::format() const
 {
   return mComboBoxFormat->currentText();
@@ -85,7 +90,7 @@ void ExportFeaturesView::setSessions(const QStringList &sessions)
   mComboBoxSession->addItems(sessions);
 }
 
-void ExportFeaturesView::setActiveSession(const QString &session)
+void ExportFeaturesView::setSessionToExport(const QString &session)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
   mComboBoxSession->setCurrentText(session);
