@@ -193,7 +193,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
   connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
 
-  connect(mView, SIGNAL(openFeatures(QString, QString)),      this, SLOT(openKeypointsViewer(QString, QString)));
+  connect(mView, SIGNAL(openFeatures(QString, QString)),          this, SLOT(openKeypointsViewer(QString, QString)));
+  connect(mView, SIGNAL(openMatches(QString, QString, QString)),  this, SLOT(openMatchesViewer(QString, QString, QString)));
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -537,69 +538,6 @@ void MainWindowPresenter::exportMatches()
   mExportMatchesPresenter->open();
 }
 
-//void MainWindowPresenter::exportTiePointsCvXml()
-//{
-//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-//                                                       tr("Export directory"),
-//                                                       "",
-//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-//  if (!pathName.isEmpty()) {
-
-//    TL_TODO("Permitir exportar otras sesiones a parte de la activa")
-//    //mModel->exportTiePointsCvXml(pathName);
-
-//  }
-//}
-
-//void MainWindowPresenter::exportTiePointsCvYml()
-//{
-//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-//                                                       tr("Export directory"),
-//                                                       "",
-//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-//  if (!pathName.isEmpty()) {
-
-//  }
-//}
-
-//void MainWindowPresenter::exportMatchesCvYml()
-//{
-//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-//                                                       tr("Export directory"),
-//                                                       "",
-//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-//  if (!pathName.isEmpty()) {
-
-//  }
-//}
-
-//void MainWindowPresenter::exportMatchesCvXml()
-//{
-//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-//                                                       tr("Export directory"),
-//                                                       "",
-//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-//  if (!pathName.isEmpty()) {
-
-//  }
-//}
-
-//void MainWindowPresenter::exportMatchesTxt()
-//{
-//  QString pathName = QFileDialog::getExistingDirectory(nullptr,
-//                                                       tr("Export directory"),
-//                                                       "",
-//                                                       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-//  if (!pathName.isEmpty()) {
-
-//  }
-//}
-
 void MainWindowPresenter::closeProject()
 {
   if(mProjectModel->checkUnsavedChanges()){
@@ -656,6 +594,7 @@ void MainWindowPresenter::openViewSettings()
 void MainWindowPresenter::openKeypointsViewer()
 {
   initFeaturesViewer();
+  mFeaturesViewerPresenter->setSession(mProjectModel->currentSession()->name());
   mFeaturesViewerPresenter->open();
 }
 
@@ -671,7 +610,19 @@ void MainWindowPresenter::openKeypointsViewer(const QString &session, const QStr
 void MainWindowPresenter::openMatchesViewer()
 {
   initMatchesViewer();
+  mMatchesViewerPresenter->setSession(mProjectModel->currentSession()->name());
   mMatchesViewerPresenter->open();
+}
+
+void MainWindowPresenter::openMatchesViewer(const QString &session, const QString &imageLeft, const QString &imageRight)
+{
+  initMatchesViewer();
+  mMatchesViewerPresenter->setSession(session);
+  mMatchesViewerPresenter->open();
+  mMatchesViewerPresenter->setLeftImage(imageLeft);
+  if (imageRight.isEmpty() == false){
+    mMatchesViewerPresenter->setRightImage(imageRight);
+  }
 }
 
 void MainWindowPresenter::groundTruthEditor()
@@ -1570,14 +1521,6 @@ void MainWindowPresenter::initProgress()
     mProgressDialog = new ProgressDialog;
 
     QProgressBar *statusBarProgress = mView->progressBar();
-//    QAction *mAction = new QAction(tr(""), statusBarProgress);
-//    QMenu *contextMenuProgressBar = new QMenu(statusBarProgress);
-//    contextMenuProgressBar->addAction(mAction);
-//    statusBarProgress->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
-//    statusBarProgress->setContextMenu(contextMenuProgressBar);
-
-//    connect(mAction, SIGNAL(triggered(bool)),   statusBarProgress,   SLOT(hide()));
-//    connect(mAction, SIGNAL(triggered(bool)),   mProgressDialog,     SLOT(show()));
 
     mProgressHandler = new ProgressHandler;
 

@@ -17,11 +17,18 @@ MatchViewerModel::MatchViewerModel(IProjectModel *mProjectModel)
 
 void MatchViewerModel::init()
 {
+  if (mProjectModel->currentSession())
+    mSession = mProjectModel->currentSession()->name();
 }
 
 QString MatchViewerModel::sessionName() const
 {
-  return mProjectModel->currentSession()->name();
+  return mSession;
+}
+
+void MatchViewerModel::setSessionName(const QString &session)
+{
+  mSession = session;
 }
 
 std::vector<QString> MatchViewerModel::images() const
@@ -36,7 +43,7 @@ std::vector<QString> MatchViewerModel::images() const
 std::vector<QString> MatchViewerModel::imagePairs(const QString &imageName) const
 {
   std::vector<QString> pairs;
-  if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
     std::vector<std::pair<QString, QString>> matches = session->matches(imageName);
     if (!matches.empty()){
       for (auto &m : matches){
@@ -59,7 +66,7 @@ MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) 
 {
   std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> r_matches;
 
-  if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
 
     std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
     cv::Mat descriptors;
@@ -123,7 +130,7 @@ void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgNa
   QString imgPath2 = mProjectModel->findImageByName(imgName2)->path();
 
   if (QFileInfo(imgPath1).exists() == true && QFileInfo(imgPath2).exists() == true) {
-    if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+    if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
       std::vector<std::pair<QString, QString>> matches = session->matches(imgName1);
 
       if (!matches.empty()){
@@ -154,7 +161,7 @@ void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgNa
 
 void MatchViewerModel::loadPassPoints()
 {
-  if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
+  if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
     passPointsRead(session->passPoints(), mPassPoints);
   } else {
     mPassPoints.clear();

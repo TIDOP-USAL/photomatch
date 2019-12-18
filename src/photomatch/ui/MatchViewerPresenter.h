@@ -29,10 +29,16 @@ public:
   IMatchViewerPresenter(){}
   virtual ~IMatchViewerPresenter() {}
 
+public slots:
+
+  virtual void setSession(const QString &session) = 0;
+  virtual void setLeftImage(const QString &image) = 0;
+  virtual void setRightImage(const QString &image) = 0;
+
 protected slots:
 
-  virtual void loadLeftImage(const QString &image) = 0;
-  virtual void loadRightImage(const QString &image) = 0;
+  //virtual void loadLeftImage(const QString &image) = 0;
+  //virtual void loadRightImage(const QString &image) = 0;
   virtual void loadMatches(const QString &imageLeft, const QString &imageRight) = 0;
   virtual void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) = 0;
 };
@@ -51,10 +57,18 @@ public:
 
   ~MatchViewerPresenter() override;
 
+// IMatchViewerPresenter interface
+
+public slots:
+
+  void setSession(const QString &session) override;
+  void setLeftImage(const QString &image) override;
+  void setRightImage(const QString &image) override;
+
 protected slots:
 
-  void loadLeftImage(const QString &image) override;
-  void loadRightImage(const QString &image) override;
+//  void loadLeftImage(const QString &image) override;
+//  void loadRightImage(const QString &image) override;
   void loadMatches(const QString &imageLeft, const QString &imageRight) override;
   void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) override;
 
@@ -73,11 +87,12 @@ private:
 
   void init() override;
 
-// IMatchViewerPresenter interface
+
 
 public slots:
 
 // IMatchViewerPresenter interface
+
 
 protected slots:
 

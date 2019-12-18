@@ -29,7 +29,8 @@ QStringList ExportMatchesModel::sessions() const
   QStringList sessions;
 
   for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
-    sessions.push_back((*it)->name());
+    if ((*it)->matches().empty() == false)
+      sessions.push_back((*it)->name());
   }
 
   return sessions;

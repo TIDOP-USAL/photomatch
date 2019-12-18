@@ -66,9 +66,9 @@ void ExportFeaturesPresenter::save()
 
 void ExportFeaturesPresenter::sessionChange(const QString &session)
 {
-  //mModel->setSessionName(session);
   mView->setSessionToExport(session);
   mView->setFormats(mModel->formats());
+  mView->setImageFiles(mModel->features(session));
 }
 
 } // namespace photomatch

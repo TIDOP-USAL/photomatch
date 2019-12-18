@@ -22,8 +22,8 @@ MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
 {
   init();
 
-  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
-  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
+  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(setLeftImage(QString)));
+  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(setRightImage(QString)));
   connect(mView, SIGNAL(loadMatches(QString, QString)),    this, SLOT(loadMatches(QString, QString)));
 
   connect(mView, SIGNAL(deleteMatch(QString, QString, int, int)),
@@ -37,25 +37,35 @@ MatchViewerPresenter::~MatchViewerPresenter()
 
 }
 
-void MatchViewerPresenter::loadLeftImage(const QString &image)
+void MatchViewerPresenter::setSession(const QString &session)
+{
+  mModel->setSessionName(session);
+  mView->clear();
+  mView->setSessionName(mModel->sessionName());
+}
+
+void MatchViewerPresenter::setLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
-  std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
+  //std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
+  std::vector<QString> imagesRight = mModel->imagePairs(image);
   if (imagesRight.empty() == false){
     mView->setRightImageList(imagesRight);
-    mView->setRightImage(imagesRight[0]);
-    loadMatches(image, imagesRight[0]);
+    //mView->setRightImage(imagesRight[0]);
+    mView->setRightImage(QFileInfo(imagesRight[0]).baseName());
+    loadMatches(image, QFileInfo(imagesRight[0]).baseName());
   }
 }
 
-void MatchViewerPresenter::loadRightImage(const QString &image)
+void MatchViewerPresenter::setRightImage(const QString &image)
 {
   mView->setRightImage(image);
 }
 
 void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
 {
-  std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
+  //std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
+  std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(imageLeft, imageRight);
   mView->setMatches(matches);
 }
 
@@ -98,7 +108,7 @@ void MatchViewerPresenter::open()
   std::vector<QString> imagesLeft = mModel->images();
   if (imagesLeft.empty() == false) {
     mView->setLeftImageList(imagesLeft);
-    loadLeftImage(imagesLeft[0]);
+    setLeftImage(QFileInfo(imagesLeft[0]).baseName());
   }
 
 }

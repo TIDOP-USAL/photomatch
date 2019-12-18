@@ -31,11 +31,6 @@ QStringList ExportFeaturesModel::sessions() const
   return sessions;
 }
 
-//QString ExportFeaturesModel::sessionName() const
-//{
-//  return mSession;
-//}
-
 QString ExportFeaturesModel::activeSessionName() const
 {
   return mProjectModel->currentSession()->name();
@@ -101,15 +96,8 @@ void ExportFeaturesModel::exportFeatures(const QString &sessionName,
   }
 }
 
-//void ExportFeaturesModel::setSessionName(const QString &session)
-//{
-//  mSession = session;
-//}
-
 void ExportFeaturesModel::init()
 {
-//  if (mProjectModel->currentSession())
-//    mSession = mProjectModel->currentSession()->name();
 }
 
 } // namespace photomatch

@@ -94,6 +94,7 @@ protected slots:
   void openKeypointsViewer();
   void openKeypointsViewer(const QString &session, const QString &image);
   void openMatchesViewer();
+  void openMatchesViewer(const QString &session, const QString &imageLeft, const QString &imageRight = QString());
   void groundTruthEditor();
   void openHomographyViewer();
   void openRepeatability();

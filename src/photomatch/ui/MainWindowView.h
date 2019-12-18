@@ -183,6 +183,7 @@ signals:
   void delete_session(QString);
 
   void openFeatures(QString, QString);
+  void openMatches(QString, QString, QString);
 
 protected:
 

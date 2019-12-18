@@ -20,7 +20,6 @@ public:
   ISettingsModel(QObject *parent = nullptr) : IModel(parent) {}
   virtual ~ISettingsModel() override {}
 
-
   /*!
    * \brief List of available languages
    * \return

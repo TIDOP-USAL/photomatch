@@ -29,8 +29,6 @@ private slots:
 
   void test_constructor();
   void test_sessions();
-  void test_activeSession_data();
-  void test_activeSession();
   void test_sessionChange();
   void test_formats();
   void test_currentFormat_data();
@@ -113,25 +111,6 @@ void TestExportFeaturesView::test_sessions()
   QCOMPARE("Session03", this->mComboBoxSession->itemText(2));
 }
 
-void TestExportFeaturesView::test_activeSession_data()
-{
-  QTest::addColumn<QString>("value");
-  QTest::addColumn<QString>("result");
-
-  QTest::newRow("Session01") << "Session01" << "Session01";
-  QTest::newRow("Session02") << "Session02" << "Session02";
-  QTest::newRow("Session03") << "Session03" << "Session03";
-}
-
-void TestExportFeaturesView::test_activeSession()
-{
-  QFETCH(QString, value);
-  QFETCH(QString, result);
-
-  this->setActiveSession(value);
-  QCOMPARE(result, this->mComboBoxSession->currentText());
-}
-
 void TestExportFeaturesView::test_sessionChange()
 {
 QSignalSpy spy_sessionChange(this, &ExportFeaturesView::sessionChange);
@@ -142,9 +121,6 @@ QSignalSpy spy_sessionChange(this, &ExportFeaturesView::sessionChange);
 
   QList<QVariant> args = spy_sessionChange.takeFirst();
   QCOMPARE(args.at(0).toString(), "Session02");
-
-  this->setActiveSession("Session03");
-  QCOMPARE(spy_sessionChange.count(), 0);
 }
 
 void TestExportFeaturesView::test_formats()
@@ -264,7 +240,17 @@ void TestExportFeaturesView::test_exportAll()
 
 void TestExportFeaturesView::test_imageFiles()
 {
+  QStringList images2;
+  images2.push_back("C:/images/image1.jpg");
+  images2.push_back("C:/images/image2.jpg");
+  this->setImageFiles(images2);
+  QCOMPARE(2, this->exportFiles().size());
+  QCOMPARE(2, this->mListWidgetfeatures->selectedItems().size());
 
+  /// Recupero el estado anterior
+  this->setImageFiles(images);
+  QCOMPARE(5, this->exportFiles().size());
+  QCOMPARE(5, this->mListWidgetfeatures->selectedItems().size());
 }
 
 void TestExportFeaturesView::test_dialogButtonBox()

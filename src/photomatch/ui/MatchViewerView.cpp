@@ -44,19 +44,23 @@ MatchViewerView::~MatchViewerView()
 void MatchViewerView::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
-  QFileInfo file_info(leftImage);
-  mComboBoxLeftImage->setCurrentText(file_info.baseName());
+  //QFileInfo file_info(leftImage);
+  //mComboBoxLeftImage->setCurrentText(file_info.baseName());
+  mComboBoxLeftImage->setCurrentText(leftImage);
   mGraphicsViewLeft->scene()->clearSelection();
-  mGraphicsViewLeft->setImage(QImage(leftImage));
+  //mGraphicsViewLeft->setImage(QImage(leftImage));
+  mGraphicsViewLeft->setImage(QImage(mComboBoxLeftImage->currentData().toString()));
 }
 
 void MatchViewerView::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
-  QFileInfo file_info(rightImage);
-  mComboBoxRightImage->setCurrentText(file_info.baseName());
+  //QFileInfo file_info(rightImage);
+  //mComboBoxRightImage->setCurrentText(file_info.baseName());
+  mComboBoxRightImage->setCurrentText(rightImage);
   mGraphicsViewRight->scene()->clearSelection();
-  mGraphicsViewRight->setImage(QImage(rightImage));
+  //mGraphicsViewRight->setImage(QImage(rightImage));
+  mGraphicsViewRight->setImage(QImage(mComboBoxRightImage->currentData().toString()));
 }
 
 void MatchViewerView::setLeftImageList(const std::vector<QString> &leftImageList)
@@ -521,13 +525,13 @@ void MatchViewerView::retranslate()
 
 void MatchViewerView::onComboBoxLeftImageIndexChanged(int idx)
 {
-  emit leftImageChange(mComboBoxLeftImage->itemData(idx).toString());
+  emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
 void MatchViewerView::onComboBoxRightImageIndexChanged(int idx)
 {
-  QString image_right(mComboBoxRightImage->itemData(idx).toString());
-  QString image_left(mComboBoxLeftImage->currentData().toString());
+  QString image_right(mComboBoxRightImage->itemText(idx));
+  QString image_left(mComboBoxLeftImage->currentText());
   emit rightImageChange(image_right);
   emit loadMatches(image_left, image_right);
 }

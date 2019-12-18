@@ -123,6 +123,7 @@ void ExportFeaturesView::setExportPath(const QString &path)
 
 void ExportFeaturesView::setImageFiles(const QStringList &images)
 {
+  mListWidgetfeatures->clear();
   mListWidgetfeatures->addItems(images);
   update();
 }

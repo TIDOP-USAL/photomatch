@@ -21,15 +21,16 @@ public:
   virtual ~IExportFeaturesModel() override = default;
 
   virtual QStringList sessions() const = 0;
-  //virtual QString sessionName() const = 0;
   virtual QString activeSessionName() const = 0;
   virtual QStringList formats() const = 0;
   virtual QStringList features(const QString &sessionName) const = 0;
 
 public slots:
 
-  virtual void exportFeatures(const QString &sessionName, const QStringList &features, const QString &path, const QString &format) const = 0;
-  //virtual void setSessionName(const QString &session) = 0;
+  virtual void exportFeatures(const QString &sessionName,
+                              const QStringList &features,
+                              const QString &path,
+                              const QString &format) const = 0;
 
 };
 
@@ -45,15 +46,16 @@ public:
   ~ExportFeaturesModel() override;
 
   QStringList sessions() const override;
-  //QString sessionName() const override;
   QString activeSessionName() const override;
   QStringList formats() const override;
   QStringList features(const QString &sessionName) const override;
 
 public slots:
 
-  void exportFeatures(const QString &sessionName, const QStringList &features, const QString &path, const QString &format) const override;
-  //void setSessionName(const QString &session) override;
+  void exportFeatures(const QString &sessionName,
+                      const QStringList &features,
+                      const QString &path,
+                      const QString &format) const override;
 
 // IModel interface
 
@@ -64,7 +66,6 @@ private:
 protected:
 
   IProjectModel *mProjectModel;
-  //QString mSession;
 
 };
 

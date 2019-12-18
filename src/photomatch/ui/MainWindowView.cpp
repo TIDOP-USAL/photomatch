@@ -540,7 +540,6 @@ void MainWindowView::addFeatures(const QString &sessionName, const QString &dete
               }
             }
           }
-
         }
 
         if (itemDescriptor == nullptr) {
@@ -1361,21 +1360,14 @@ void MainWindowView::update()
   mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
   mActionGroundTruthEditor->setEnabled(mFlags.isActive(Flag::images_added));
   mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added) && !bProcessing);
-  //mActionAssistant->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
-  //mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::preprocess) && !bProcessing);
   mActionFeatureExtraction->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeatureMatching->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
   //mActionBatch->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
-  mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  mActionExportMatches->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
-  //mActionExportTiePointsCvXml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
-  //mActionExportTiePointsCvYml->setEnabled(mFlags.isActive(Flag::feature_extraction) && !bProcessing);
+  mActionExportTiePoints->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
+  mActionExportMatches->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeaturesViewer->setEnabled(mFlags.isActive(Flag::feature_extraction));
   mActionMatchesViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
-  //mActionExportMatchesToCvYml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
-  //mActionExportMatchesToCvXml->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
-  //mActionExportMatchesToTxt->setEnabled(mFlags.isActive(Flag::feature_matching) && !bProcessing);
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
   //mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
@@ -1657,14 +1649,37 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
   } else if (item->data(0, Qt::UserRole) == photomatch::features_images){
 
   } else if (item->data(0, Qt::UserRole) == photomatch::features_image){
-    /// TODO: el visualizar la imagen si no es la sesion activa...
-//    QMenu menu;
-//    menu.addAction(tr("View keypoints"));
+    QMenu menu;
+    menu.addAction(tr("View keypoints"));
+    if (QAction *selectedItem = menu.exec(globalPos)) {
+      if (selectedItem->text() == tr("View keypoints")) {
+        QString session = item->parent()->parent()->parent()->text(0);
+        emit openFeatures(session, QFileInfo(item->text(0)).baseName());
+      }
+    }
 
   } else if (item->data(0, Qt::UserRole) == photomatch::detector){
 
   } else if (item->data(0, Qt::UserRole) == photomatch::descriptor){
 
+  } else if (item->data(0, Qt::UserRole) == photomatch::pair_left){
+    QMenu menu;
+    menu.addAction(tr("View Matches"));
+    if (QAction *selectedItem = menu.exec(globalPos)) {
+      if (selectedItem->text() == tr("View Matches")) {
+        QString session = item->parent()->parent()->parent()->text(0);
+        emit openMatches(session, QFileInfo(item->text(0)).baseName(), QString());
+      }
+    }
+  } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
+    QMenu menu;
+    menu.addAction(tr("View Matches"));
+    if (QAction *selectedItem = menu.exec(globalPos)) {
+      if (selectedItem->text() == tr("View Matches")) {
+        QString session = item->parent()->parent()->parent()->parent()->text(0);
+        emit openMatches(session, QFileInfo(item->parent()->text(0)).baseName(), QFileInfo(item->text(0)).baseName());
+      }
+    }
   }
 
 }

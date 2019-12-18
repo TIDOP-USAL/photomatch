@@ -34,6 +34,7 @@ ExportMatchesView::~ExportMatchesView()
 void ExportMatchesView::setSessions(const QStringList &sessions)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
+  mComboBoxSession->clear();
   mComboBoxSession->addItems(sessions);
 }
 

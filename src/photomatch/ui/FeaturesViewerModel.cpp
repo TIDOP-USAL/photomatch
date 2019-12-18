@@ -63,7 +63,6 @@ std::vector<std::tuple<QPointF, double, double> > FeaturesViewerModel::loadKeypo
     }
   }
 
-
   return keyPoints;
 }
 

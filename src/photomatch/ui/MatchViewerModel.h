@@ -25,6 +25,7 @@ public:
   virtual ~IMatchViewerModel() {}
 
   virtual QString sessionName() const = 0;
+  virtual void setSessionName(const QString &session) = 0;
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
   virtual std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> loadMatches(const QString &imgName1, const QString &imgName2) const = 0;
@@ -58,6 +59,7 @@ private:
 public:
 
   QString sessionName() const override;
+  void setSessionName(const QString &session) override;
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
   std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float> > loadMatches(const QString &imgName1, const QString &imgName2) const override;
@@ -68,6 +70,7 @@ protected:
 
   IProjectModel *mProjectModel;
   std::vector<std::vector<std::pair<QString,int>>> mPassPoints;
+  QString mSession;
 };
 
 } // namespace photomatch
