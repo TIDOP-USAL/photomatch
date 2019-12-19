@@ -53,8 +53,7 @@ void DescriptorMatcherPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("feature_matching.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->show();
   }
 }
 

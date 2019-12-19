@@ -206,8 +206,7 @@ void GroundTruthPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("ground_truth_editor.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->show();
   }
 }
 

@@ -29,9 +29,8 @@ ExportFeaturesPresenter::~ExportFeaturesPresenter()
 void ExportFeaturesPresenter::help()
 {
   if (mHelp){
-    mHelp->setPage("index.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->setPage("index.html#export");
+    mHelp->show();
   }
 }
 

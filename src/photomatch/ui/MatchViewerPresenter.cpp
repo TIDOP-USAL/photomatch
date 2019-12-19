@@ -47,11 +47,9 @@ void MatchViewerPresenter::setSession(const QString &session)
 void MatchViewerPresenter::setLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
-  //std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
   std::vector<QString> imagesRight = mModel->imagePairs(image);
   if (imagesRight.empty() == false){
     mView->setRightImageList(imagesRight);
-    //mView->setRightImage(imagesRight[0]);
     mView->setRightImage(QFileInfo(imagesRight[0]).baseName());
     loadMatches(image, QFileInfo(imagesRight[0]).baseName());
   }
@@ -64,7 +62,6 @@ void MatchViewerPresenter::setRightImage(const QString &image)
 
 void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
 {
-  //std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(QFileInfo(imageLeft).baseName(), QFileInfo(imageRight).baseName());
   std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(imageLeft, imageRight);
   mView->setMatches(matches);
 }
@@ -78,8 +75,7 @@ void MatchViewerPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("matches_viewer.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->show();
   }
 }
 

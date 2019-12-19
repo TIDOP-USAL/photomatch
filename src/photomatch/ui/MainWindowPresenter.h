@@ -74,11 +74,6 @@ protected slots:
   void saveProjectAs();
   void exportFeatures();
   void exportMatches();
-//  void exportTiePointsCvXml();
-//  void exportTiePointsCvYml();
-//  void exportMatchesCvYml();
-//  void exportMatchesCvXml();
-//  void exportMatchesTxt();
 
   void closeProject();
   void exit();

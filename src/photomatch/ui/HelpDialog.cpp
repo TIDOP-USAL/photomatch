@@ -1,5 +1,4 @@
 #include "HelpDialog.h"
-//#include "ui_help.h"
 
 #include <tidop/core/messages.h>
 
@@ -40,11 +39,9 @@ QVariant HelpBrowser::loadResource(int type, const QUrl &name)
 namespace photomatch
 {
 
-HelpDialog::HelpDialog(QWidget *parent, Qt::WindowFlags f)
-  : IDialogView(parent, f)/*,
-    ui(new Ui::Help())*/
+HelpDialog::HelpDialog(QWidget *parent)
+  : QDialog(parent, Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint)
 {
-  //ui->setupUi(this);
   init();
 
   retranslate();
@@ -63,7 +60,6 @@ HelpDialog::HelpDialog(QWidget *parent, Qt::WindowFlags f)
 
 HelpDialog::~HelpDialog()
 {
-  //delete ui;
 }
 
 void HelpDialog::setPage(const QString &page)
@@ -134,7 +130,7 @@ void HelpDialog::init()
 #endif
 
   mHelpBrowser = new HelpBrowser(mHelpEngine, this);
-  mHelpBrowser->setMinimumSize(450, 300);
+  mHelpBrowser->setMinimumSize(600, 450);
 
   if (!mHelpEngine->setupData()) {
     std::string err = mHelpEngine->error().toStdString();
@@ -204,14 +200,6 @@ void HelpDialog::init()
   mSearchResultsWidget->setOpenExternalLinks(false);
 
   navigateHome();
-}
-
-void HelpDialog::clear()
-{
-}
-
-void HelpDialog::update()
-{
 }
 
 void HelpDialog::retranslate()

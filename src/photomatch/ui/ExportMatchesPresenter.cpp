@@ -32,8 +32,7 @@ ExportMatchesPresenter::~ExportMatchesPresenter()
 void ExportMatchesPresenter::help()
 {
   if (mHelp){
-    mHelp->setPage("index.html");
-    //mHelp->setModal(true);
+    mHelp->setPage("index.html#export");
     mHelp->showMaximized();
   }
 }
