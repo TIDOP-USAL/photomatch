@@ -1247,7 +1247,7 @@ void SettingsRW::read(ISettings &settings)
   /* SURF */
   settings.surf()->setOctaves(mSettingsRW->value("SURF/Octaves", settings.surf()->octaves()).toInt());
   settings.surf()->setOctaveLayers(mSettingsRW->value("SURF/OctaveLayers", settings.surf()->octaveLayers()).toInt());
-  settings.surf()->setRotatedFeatures(mSettingsRW->value("SURF/RotatedFeatures", settings.surf()->rotatedFeatures()).toBool());
+  settings.surf()->setUpright(mSettingsRW->value("SURF/RotatedFeatures", settings.surf()->upright()).toBool());
   settings.surf()->setHessianThreshold(mSettingsRW->value("SURF/HessianThreshold", settings.surf()->hessianThreshold()).toDouble());
   settings.surf()->setExtendedDescriptor(mSettingsRW->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
 
@@ -1497,7 +1497,7 @@ void SettingsRW::write(const ISettings &settings)
   /* SURF */
   mSettingsRW->setValue("SURF/Octaves", settings.surf()->octaves());
   mSettingsRW->setValue("SURF/OctaveLayers", settings.surf()->octaveLayers());
-  mSettingsRW->setValue("SURF/RotatedFeatures", settings.surf()->rotatedFeatures());
+  mSettingsRW->setValue("SURF/RotatedFeatures", settings.surf()->upright());
   mSettingsRW->setValue("SURF/HessianThreshold", settings.surf()->hessianThreshold());
   mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
 

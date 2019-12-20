@@ -25,7 +25,7 @@ SurfWidget::SurfWidget(QWidget *parent)
   connect(mOctaves,             SIGNAL(valueChanged(int)),       this, SIGNAL(octavesChange(int)));
   connect(mOctaveLayers,        SIGNAL(valueChanged(int)),       this, SIGNAL(octaveLayersChange(int)));
   connect(mExtendedDescriptor,  SIGNAL(clicked(bool)),           this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mRotatedFeatures,     SIGNAL(clicked(bool)),           this, SIGNAL(rotatedFeaturesChange(bool)));
+  connect(mRotatedFeatures,     SIGNAL(clicked(bool)),           this, SIGNAL(uprightChange(bool)));
 }
 
 SurfWidget::~SurfWidget()
@@ -52,7 +52,7 @@ bool SurfWidget::extendedDescriptor() const
   return mExtendedDescriptor->isChecked();
 }
 
-bool SurfWidget::rotatedFeatures() const
+bool SurfWidget::upright() const
 {
   return mRotatedFeatures->isChecked();
 }
@@ -80,7 +80,7 @@ void SurfWidget::setExtendedDescriptor(bool extendedDescriptor)
   mExtendedDescriptor->setChecked(extendedDescriptor);
 }
 
-void SurfWidget::setRotatedFeatures(bool rotatedFeatures)
+void SurfWidget::seUpright(bool rotatedFeatures)
 {
   mRotatedFeatures->setChecked(rotatedFeatures);
 }

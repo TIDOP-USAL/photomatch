@@ -1074,7 +1074,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(surf->octaves())));
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(surf->octaveLayers())));
     properties.push_back(std::make_pair(QString("Extended Descriptor"), surf->extendedDescriptor() ? "true" : "false"));
-    properties.push_back(std::make_pair(QString("Rotated Features"), surf->rotatedFeatures() ? "true" : "false"));
+    properties.push_back(std::make_pair(QString("Rotated Features"), surf->upright() ? "true" : "false"));
   }
 
   mView->setProperties(properties);
@@ -1181,7 +1181,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(surf->octaves())));
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(surf->octaveLayers())));
     properties.push_back(std::make_pair(QString("Extended Descriptor"), surf->extendedDescriptor() ? "true" : "false"));
-    properties.push_back(std::make_pair(QString("Rotated Features"), surf->rotatedFeatures() ? "true" : "false"));
+    properties.push_back(std::make_pair(QString("Rotated Features"), surf->upright() ? "true" : "false"));
   }
 
   mView->setProperties(properties);

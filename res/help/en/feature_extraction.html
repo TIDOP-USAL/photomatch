@@ -11,10 +11,294 @@
 
   <h1 class="western">Feature extraction</h1>
 
-  <div class="image"><img src="img/feature_extraction.png" width="471" height="405" /> 
+  <div class="image"><img src="img/feature_extraction.png" width="352" height="482" /> 
     <br clear="all" />
   </div>
   
+  <h3 class="western">Detector and descriptors</h3>
   
+  <ul>  
+    <li class="western"><a href="#AGAST">AGAST</a></li>
+    <li class="western"><a href="#AKAZE">AKAZE</a></li>
+    <li class="western"><a href="#BOOST">BOOST</a></li>
+    <li class="western"><a href="#BRIEF">BRIEF</a></li>
+    <li class="western"><a href="#BRISK">BRISK</a></li>
+    <li class="western"><a href="#DAISY">DAISY</a></li>
+    <li class="western"><a href="#FAST">FAST</a></li>
+    <li class="western"><a href="#FREAK">FREAK</a></li>
+    <li class="western"><a href="#GFTT">GFTT</a></li>
+    <li class="western"><a href="#HOG">HOG</a></li>
+    <li class="western"><a href="#KAZE">KAZE</a></li>
+    <li class="western"><a href="#LATCH">LATCH</a></li>
+    <li class="western"><a href="#LSS">LSS</a></li>
+    <li class="western"><a href="#MSD">MSD</a></li>
+    <li class="western"><a href="#MSER">MSER</a></li>
+    <li class="western"><a href="#ORB">ORB</a></li>
+    <li class="western"><a href="#SIFT">SIFT</a></li>
+    <li class="western"><a href="#STAR">STAR</a></li>
+    <li class="western"><a href="#SURF">SURF</a></li>
+    <li class="western"><a href="#VGG">VGG</a></li>
+  </ul>      
+    
+    <h3 class="western"><a name="AGAST">AGAST (Detector)</a></h3>
+    
+    <h4 class="western">Adaptive and Generic Corner Detection Based on the Accelerated Segment Test</h4>
+    
+    <p class="western" align="justify">Mair, Elmar & Hager, Gregory & Burschka, Darius & Suppa, Michael & Hirzinger, Gerhard. (2010).<br /> 
+    Adaptive and Generic Corner Detection Based on the Accelerated Segment Test.<br />
+    10.1007/978-3-642-15552-9_14.</p>
+    
+    <p class="western" align="justify">The efficient detection of interesting features is a crucial step for various tasks in Computer Vision. Corners are favored cues due to their two dimensional constraint and fast algorithms to detect them. Recently, a novel corner detection approach, FAST, has been presented which outperforms previous algorithms in both computational performance and repeatability. We will show how the accelerated segment test, which underlies FAST, can be significantly improved by making it more generic while increasing its performance.We do so by finding the optimal decision tree in an extended configuration space, and demonstrating how specialized trees can be combined to yield an adaptive and generic accelerated segment test. The resulting method provides high performance for arbitrary environments and so unlike FAST does not have to be adapted to a specific scene structure. We will also discuss how different test patterns affect the corner response of the accelerated segment test.</p>
+    
+    <p class="western" align="justify"><a href="https://www.researchgate.net/publication/319770471_Adaptive_and_Generic_Corner_Detection_Based_on_the_Accelerated_Segment_Test">Read full paper</a></p>
+    
+    
+    <div class="image"><img src="img/agast.png" width="344" height="110" /> 
+      <br clear="all" />
+    </div>
+  
+    <ul>
+      <li class="western"><strong>Threshold</strong>: The AST applies a minimum difference threshold when comparing the value of a pixel on the pattern with the brightness of the nucleus. This parameter controls the sensitivity of the corner response.</li>
+      <li class="western"><strong>Nonmax Suppression</strong>: Non Maximal Suppression for removing adjacent corners.</li>
+      <li class="western"><strong>Detector type</strong>: Suported types are:
+      <ul>
+        <li class="western"><strong>AGAST_5_8</strong>: AGAST-5 decision tree with the 8 pixels mask</li>
+        <li class="western"><strong>AGAST_7_12d</strong>: AGAST-7 decision tree with the Diamond shaped 12 pixels mask</li>
+        <li class="western"><strong>AGAST_7_12s</strong>: AGAST-7 decision tree with the Squared shaped 12 pixels mask</li>
+        <li class="western"><strong>OAST_9_16</strong>: OAST-9 (Optimal AST) decision tree with the 16 pixels mask</li>
+      </ul>
+      </li>
+    </ul>
+  
+    <h3 class="western"><a name="AKAZE">AKAZE (Detector/Descriptor)</a></h3>
+    
+    <p class="western" align="justify">Alcantarilla, Pablo Fernández, Jesús Nuevo and Adrien Bartoli. (2013). <br />
+    Fast Explicit Diffusion for Accelerated Features in Nonlinear Scale Spaces.<br /> 10.5244/C.27.13.</p>
+    
+    <p class="western" align="justify"><strong>Abstract</strong></p>
+
+    <p class="western" align="justify">We propose a novel and fast multiscale feature detection and description approach&nbsp;that exploits the beneﬁts of nonlinear scale spaces. Previous attempts to detect and de&nbsp;scribe features in nonlinear scale spaces are highly time consuming due to the computational burden of creating the nonlinear scale space. In this paper we propose to use&nbsp;recent numerical schemes called Fast Explicit Diffusion (FED) embedded in a pyramidal framework to dramatically speed-up feature detection in nonlinear scale spaces. In&nbsp;addition, we introduce a Modiﬁed-Local Difference Binary (M-LDB) descriptor that is&nbsp;highly efﬁcient, exploits gradient information from the nonlinear scale space, is scale and&nbsp;rotation invariant and has low storage requirements. We present an extensive evaluation&nbsp;that shows the excellent compromise between speed and performance of our approach&nbsp;compared to state-of-the-art methods such as BRISK, ORB, SURF, SIFT and KAZE.</p>
+
+    <p class="western" align="justify"><a href="https://www.researchgate.net/publication/257142102_Fast_Explicit_Diffusion_for_Accelerated_Features_in_Nonlinear_Scale_Spaces">Read full paper</a></p>
+    
+    <div class="image"><img src="img/akaze.png" width="341" height="213" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+    <li class="western"><strong>Descriptor Type</strong>: Type of the extracted descriptor (<em>KAZE</em>,&nbsp;<em>KAZE_UPRIGHT</em>, <em>MLDB</em> or <em>MLDB_UPRIGHT</em>).</li>
+    <li class="western"><strong>Descriptor Size</strong>:&nbsp;Size of the descriptor in bits.</li>
+    <li class="western"><strong>Detector Channels</strong>: Number of channels in the descriptor (1, 2 or 3 (default)).&nbsp;</li>
+    <li class="western"><strong>Threshold</strong>: Detector response threshold to accept point.</li>
+    <li class="western"><strong>Octaves</strong>:&nbsp;Number of octaves.</li>
+    <li class="western"><strong>Octave Layers</strong>:&nbsp;Default number of sublevels per scale level.</li>
+    <li class="western"><strong>Diffusivity</strong>:&nbsp;Diffusivity type (<em>DIFF_PM_G1</em>, <em>DIFF_PM_G2</em> (default), <em>DIFF_WEICKERT</em> or <em>DIFF_CHARBONNIER</em>)</li>
+    </ul>
+
+    <h3 class="western"><a name="BOOST">BOOST (Descriptor)</a></h3>
+    
+    <div class="image"><img src="img/boost.png" width="340" height="83" /> 
+      <br clear="all" />
+    </div>    
+    
+    <ul>
+      <li class="western"><strong>Descriptor Type</strong>:&nbsp;Type of descriptor used (BINBOOST_256, BGM, BGM_HARD, BGM_BILINEAR, LBGM, BINBOOST_64, BINBOOST_128, BINBOOST_256)</li>
+      <li class="western"><strong>Use Keypoints Orientation</strong>: Sample patterns using keypoints orientation.</li>
+    </ul>
+    
+    <h3 class="western"><a name="BRIEF">BRIEF (Descriptor)</a></h3>
+
+    <p class="western" align="justify">Calonder, Michael & Lepetit, Vincent & Strecha, Christoph & Fua, Pascal. (2010). <br />
+    BRIEF: Binary Robust Independent Elementary Features. <br />
+    Eur. Conf. Comput. Vis.. 6314. 778-792. 10.1007/978-3-642-15561-1_56.</p> 
+    
+    <p class="western" align="justify"><strong>Abstract</strong></p>
+    
+    <p class="western" align="justify">We propose to use binary strings as an efficient feature point descriptor, which we call BRIEF.We show that it is highly discriminative even when using relatively few bits and can be computed using simple intensity difference tests. Furthermore, the descriptor similarity can be evaluated using the Hamming distance, which is very efficient to compute, instead of the L2 norm as is usually done. As a result, BRIEF is very fast both to build and to match. We compare it against SURF and U-SURF on standard benchmarks and show that it yields a similar or better recognition performance, while running in a fraction of the time required by either.</p>
+
+    <p class="western" align="justify"><a href="https://www.researchgate.net/publication/221304115_BRIEF_Binary_Robust_Independent_Elementary_Features">Read full paper</a></p>
+
+    <div class="image"><img src="img/brief.png" width="341" height="85" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+      <li class="western"><strong>Descriptor Bytes</strong>: Legth of the descriptor in bytes.&nbsp;Valid values are: 16, 32 (default) or 64</li>
+      <li class="western"><strong>Use Keypoints Orientation</strong>: Sample patterns using keypoints orientation.</li>
+    </ul>
+
+    <h3 class="western"><a name="BRISK">BRISK (Detector/Descriptor)</a></h3>
+
+    <p class="western" align="justify">Leutenegger, Stefan & Chli, Margarita & Siegwart, Roland. (2011). <br /> 
+    BRISK: Binary Robust invariant scalable keypoints. Proceedings of the IEEE International Conference on Computer Vision. <br/>
+    2548-2555. 10.1109/ICCV.2011.6126542.</p>
+    
+    <p class="western" align="justify"><strong>Abstract</strong></p>
+    
+    <p class="western" align="justify">Effective and efficient generation of keypoints from an image is a well-studied problem in the literature and forms the basis of numerous Computer Vision applications. Established leaders in the field are the SIFT and SURF algorithms which exhibit great performance under a variety of image transformations, with SURF in particular considered as the most computationally efficient amongst the high-performance methods to date. In this paper we propose BRISK1, a novel method for keypoint detection, description and matching. A comprehensive evaluation on benchmark datasets reveals BRISK's adaptive, high quality performance as in state-of-the-art algorithms, albeit at a dramatically lower computational cost (an order of magnitude faster than SURF in cases). The key to speed lies in the application of a novel scale-space FAST-based detector in combination with the assembly of a bit-string descriptor from intensity comparisons retrieved by dedicated sampling of each keypoint neighborhood.</p>
+
+    <p class="western" align="justify"><a href="https://www.researchgate.net/publication/221110715_BRISK_Binary_Robust_invariant_scalable_keypoints">Read full paper</a></p>
+    
+    <div class="image"><img src="img/brisk.png" width="341" height="113" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+      <li class="western"><strong>Threshold</strong>: AGAST detection threshold score (Default=30).</li>
+      <li class="western"><strong>Octaves:</strong> Detection octaves (Default=3).</li>
+      <li class="western"><strong>Pattern Scale</strong>:&nbsp;</li>
+    </ul>
+
+    <h3 class="western"><a name="DAISY">DAISY  (Descriptor)</a></h3>
+ 
+    <p class="western" align="justify">Tola, Engin & Lepetit, Vincent & Fua, Pascal. (2010). <br />
+    Daisy: An Efficient Dense Descriptor Applied to Wide Baseline Stereo. <br />
+    IEEE transactions on pattern analysis and machine intelligence. 32. 815-30. 10.1109/TPAMI.2009.77.</p> 
+ 
+    <p class="western" align="justify"><strong>Abstract</strong></p>
+    
+    <p class="western" align="justify">In this paper, we introduce a local image descriptor, DAISY, which is very efficient to compute densely. We also present an EM-based algorithm to compute dense depth and occlusion maps from wide-baseline image pairs using this descriptor. This yields much better results in wide-baseline situations than the pixel and correlation-based algorithms that are commonly used in narrow-baseline stereo. Also, using a descriptor makes our algorithm robust against many photometric and geometric transformations. Our descriptor is inspired from earlier ones such as SIFT and GLOH but can be computed much faster for our purposes. Unlike SURF, which can also be computed efficiently at every pixel, it does not introduce artifacts that degrade the matching performance when used densely. It is important to note that our approach is the first algorithm that attempts to estimate dense depth maps from wide-baseline image pairs, and we show that it is a good one at that with many experiments for depth estimation accuracy, occlusion detection, and comparing it against other descriptors on laser-scanned ground truth scenes. We also tested our approach on a variety of indoor and outdoor scenes with different photometric and geometric transformations and our experiments support our claim to being robust against these.</p>
+ 
+    <p class="western" align="justify"><a href="https://www.researchgate.net/publication/42345292_Daisy_An_Efficient_Dense_Descriptor_Applied_to_Wide_Baseline_Stereo">Read full paper</a></p>
+ 
+    <div class="image"><img src="img/daisy.png" width="354" height="213" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+      <li class="western"><strong>Radius</strong>: Radius of the descriptor at the initial scale (Default=15.).</li>
+      <li class="western"><strong>Radial range division quantity</strong>.</li>
+      <li class="western"><strong>Angular range division quantity</strong>.</li>
+      <li class="western"><strong>Interpolation</strong></li>
+      <li><strong>Keypoints orientation</strong></li>
+      <li><strong>Descriptor normalization type</strong>:&nbsp;Normalization types are:
+      <ul>
+        <li>NRM_NONE: not make any normalization (Default).</li>
+        <li>NRM_PARTIAL: mean that histograms are normalized independently for L2 norm equal to 1.0.</li>
+        <li>NRM_FULL: mean that descriptors are normalized for L2 norm equal to 1.0.</li>
+        <li>NRM_SIFT: mean that descriptors are normalized for L2 norm equal to 1.0 but no individual one is bigger than 0.154 as in SIFT.</li>
+      </ul>
+      </li>
+    </ul>
+
+    <h3 class="western"><a name="FAST">FAST  (Detector)</a></h3>
+
+    <p class="western" align="justify">Rosten, Edward & Drummond, Tom. (2006). <br />
+    Machine Learning for High-Speed Corner Detection. <br />
+    Comput Conf Comput Vis. 3951. 10.1007/11744023_34.</p> 
+ 
+    <p class="western" align="justify"><strong>Abstract</strong></p>
+    
+    <p class="western" align="justify">Where feature points are used in real-time frame-rate applications, a high-speed feature detector is necessary. Feature detectors such as SIFT (DoG), Harris and SUSAN are good methods which yield high quality features, however they are too computationally intensive for use in real-time applications of any complexity. Here we show that machine learning can be used to derive a feature detector which can fully process live PAL video using less than 7% of the available processing time. By comparison neither the Harris detector (120%) nor the detection stage of SIFT (300%) can operate at full frame rate. Clearly a high-speed detector is of limited use if the features produced are unsuitable for downstream processing. In particular, the same scene viewed from two different positions should yield features which correspond to the same real-world 3D locations [1]. Hence the second contribution of this paper is a comparison corner detectors based on this criterion applied to 3D scenes. This comparison supports a number of claims made elsewhere concerning existing corner detectors. Further, contrary to our initial expectations, we show that despite being principally constructed for speed, our detector significantly outperforms existing feature detectors according to this criterion.</p>
+ 
+    <p class="western" align="justify"><a href="https://www.researchgate.net/publication/215458901_Machine_Learning_for_High-Speed_Corner_Detection">Read full paper</a></p>
+
+    <div class="image"><img src="img/fast.png" width="351" height="111" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+      <li class="western"><strong>Threshold</strong></li>
+      <li class="western"><strong>Nonmax Suppression</strong>: Non Maximal Suppression for removing adjacent corners.</li>
+      <li class="western"><strong>Detector type</strong>: Suported types are:
+        <ul>
+          <li class="western"><strong>TYPE_5_8</strong>: FAST-5 decision tree whith the 8 pixels mask</li>
+          <li class="western"><strong>TYPE_7_12</strong>: FAST-7 decision tree whith the 12 pixels mask</li>
+          <li class="western"><strong>TYPE_9_16</strong>: FAST-9 decision tree whith the 16 pixels mask (default)</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 class="western"><a name="FREAK">FREAK (Descriptor)</a></h3>
+
+    <div class="image"><img src="img/freak.png" width="353" height="134" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="GFTT">GFTT (Detector)</a></h3>
+
+    <div class="image"><img src="img/gftt.png" width="350" height="188" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="HOG">HOG (Descriptor)</a></h3>
+
+    <div class="image"><img src="img/hog.png" width="352" height="191" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="KAZE">KAZE (Detector/Descriptor)</a></h3>
+
+    <div class="image"><img src="img/kaze.png" width="354" height="188" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="LATCH">LATCH (Descriptor)</a></h3>
+
+    <div class="image"><img src="img/latch.png" width="352" height="110" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="LSS">LSS (Descriptor)</a></h3>
+
+    
+    <h3 class="western"><a name="MSD">MSD (Detector)</a></h3>
+
+    <div class="image"><img src="img/msd.png" width="352" height="192" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="MSER">MSER (Detector)</a></h3>
+
+    <div class="image"><img src="img/mser.png" width="352" height="269" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="ORB">ORB (Detector/Descriptor)</a></h3>
+
+    <div class="image"><img src="img/orb.png" width="352" height="242" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="SIFT">SIFT (Detector/Descriptor)</a></h3>
+
+    <div class="image"><img src="img/sift.png" width="351" height="166" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+      <li class="western"><strong>Features Number</strong>: The number of best features to retain. The features are ranked by their scores (measured in&nbsp;SIFT algorithm as the local contrast).</li>
+      <li class="western"><strong>Octave Layers</strong>: Number of layers in each octave.&nbsp;3 is the value used in D. Lowe paper. The number of octaves&nbsp;is computed automatically from the image resolution.</li>
+      <li class="western"><strong>Contrast Threshold</strong>: Used to filter out weak features in semi-uniform (low-contrast) regions.</li>
+      <li class="western"><strong>Edge&nbsp;Threshold</strong>:&nbsp;Threshold used to filter out edge-like features</li>
+      <li class="western"><strong>Sigma</strong>: Sigma of the Gaussian applied to the input image at the octave 0.</li>
+    </ul>
+
+    <h3 class="western"><a name="STAR">STAR (Detector)</a></h3>
+
+    <div class="image"><img src="img/star.png" width="353" height="165" /> 
+      <br clear="all" />
+    </div>
+    
+    <h3 class="western"><a name="SURF">SURF (Detector/Descriptor)</a></h3>
+
+    <div class="image"><img src="img/surf.png" width="352" height="161" /> 
+      <br clear="all" />
+    </div>
+    
+    <ul>
+  <li class="western"><strong>Hessian Threshold</strong>: Threshold for the keypoint detector. Only features, whose hessian is larger than hessianThreshold are retained by the detector.</li>
+  <li class="western"><strong>Octaves</strong>: The number of a gaussian pyramid octaves that the detector uses.&nbsp;It is set to 4 by default. If you want to get very large features, use the larger value. If you want just small features, decrease it.</li>
+  <li class="western"><strong>Octave Layers</strong>: The number of images within each octave of a gaussian pyramid.&nbsp;</li>
+  <li class="western"><strong>Extended Descriptor</strong>:&nbsp;If checked use extended 128-element descriptors otherwise use basic 64-element descriptors.&nbsp;</li>
+  <li class="western"><strong>Upright: </strong>If true&nbsp;the orientation is not computed.</li>
+  </ul>
+
+    <h3 class="western"><a name="VGG">VGG (Descriptor)</a></h3>     
+
+    <div class="image"><img src="img/vgg.png" width="352" height="159" /> 
+      <br clear="all" />
+    </div>
+    
 </body>
 </html>

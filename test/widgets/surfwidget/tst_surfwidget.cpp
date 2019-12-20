@@ -66,7 +66,7 @@ void TestSurfWidget::test_constructor()
   QCOMPARE(4, mSurfWidget->octaves());
   QCOMPARE(3, mSurfWidget->octaveLayers());
   QCOMPARE(false, mSurfWidget->extendedDescriptor());
-  QCOMPARE(false, mSurfWidget->rotatedFeatures());
+  QCOMPARE(false, mSurfWidget->upright());
 }
 
 void TestSurfWidget::test_windowTitle()
@@ -164,8 +164,8 @@ void TestSurfWidget::test_rotatedFeatures()
   QFETCH(bool, value);
   QFETCH(bool, result);
 
-  mSurfWidget->setRotatedFeatures(value);
-  QCOMPARE(result, mSurfWidget->rotatedFeatures());
+  mSurfWidget->seUpright(value);
+  QCOMPARE(result, mSurfWidget->upright());
 }
 
 void TestSurfWidget::test_reset()
@@ -174,7 +174,7 @@ void TestSurfWidget::test_reset()
   mSurfWidget->setOctaves(2);
   mSurfWidget->setOctaveLayers(5);
   mSurfWidget->setExtendedDescriptor(true);
-  mSurfWidget->setRotatedFeatures(true);
+  mSurfWidget->seUpright(true);
 
   mSurfWidget->reset();
 
@@ -182,7 +182,7 @@ void TestSurfWidget::test_reset()
   QCOMPARE(4, mSurfWidget->octaves());
   QCOMPARE(3, mSurfWidget->octaveLayers());
   QCOMPARE(false, mSurfWidget->extendedDescriptor());
-  QCOMPARE(false, mSurfWidget->rotatedFeatures());
+  QCOMPARE(false, mSurfWidget->upright());
 }
 
 QTEST_MAIN(TestSurfWidget)
