@@ -704,7 +704,7 @@ bool SettingsModel::surfExtendedDescriptor() const
 
 bool SettingsModel::surfRotatedFeatures() const
 {
-  return mSettings->surf()->rotatedFeatures();
+  return mSettings->surf()->upright();
 }
 
 QString SettingsModel::vggDescriptorType() const
@@ -1734,7 +1734,7 @@ void SettingsModel::setSurfExtendedDescriptor(bool extendedDescriptor)
 
 void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
 {
-  mSettings->surf()->setRotatedFeatures(rotatedFeatures);
+  mSettings->surf()->setUpright(rotatedFeatures);
   emit unsavedChanges(true);
 }
 

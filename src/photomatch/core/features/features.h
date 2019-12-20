@@ -122,7 +122,7 @@ public:
  * Mair E., Hager G.D., Burschka D., Suppa M., Hirzinger G. (2010) Adaptive and Generic
  * Corner Detection Based on the Accelerated Segment Test. In: Daniilidis K., Maragos P.,
  * Paragios N. (eds) Computer Vision – ECCV 2010. ECCV 2010.
- * ecture Notes in Computer Science, vol 6312. Springer, Berlin, Heidelberg
+ * Lecture Notes in Computer Science, vol 6312. Springer, Berlin, Heidelberg
  * https://mediatum.ub.tum.de/doc/1287456/1287456.pdf
  */
 class PHOTOMATCH_EXPORT IAgast
@@ -1307,14 +1307,16 @@ public:
   virtual void setHessianThreshold(double hessianThreshold) = 0;
 
   /*!
-   * \brief Number of pyramid octaves the keypoint detector will use.
+   * \brief Number of a gaussian pyramid octaves that the detector uses.
    * \return Number of octaves
    */
   virtual int octaves() const = 0;
 
   /*!
-   * \brief Set the number of pyramid octaves
-   * \param[in] octaves Number of pyramid octaves the keypoint detector will use.
+   * \brief Set the number of a gaussian pyramid octaves that the detector uses.
+   * It is set to 4 by default. If you want to get very large features, use the
+   * larger value. If you want just small features, decrease it.
+   * \param[in] octaves The number of a gaussian pyramid octaves that the detector uses.
    */
   virtual void setOctaves(int octaves) = 0;
 
@@ -1346,13 +1348,13 @@ public:
    * \brief Up-right or rotated features
    * \return true (do not compute orientation of features) or false (compute orientation)
    */
-  virtual bool rotatedFeatures() const = 0;
+  virtual bool upright() const = 0;
 
   /*!
    * \brief compute orientation of features
    * \param[in] rotatedFeatures false for compute orientation
    */
-  virtual void setRotatedFeatures(bool rotatedFeatures) = 0;
+  virtual void setUpright(bool upright) = 0;
 
 };
 

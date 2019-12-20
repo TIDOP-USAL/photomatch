@@ -39,12 +39,12 @@ public:
   virtual int octaves() const override;
   virtual int octaveLayers() const override;
   virtual bool extendedDescriptor() const override;
-  virtual bool rotatedFeatures() const override;
+  virtual bool upright() const override;
   virtual void setHessianThreshold(double hessianThreshold) override;
   virtual void setOctaves(int octaves) override;
   virtual void setOctaveLayers(int octaveLayers) override;
   virtual void setExtendedDescriptor(bool extendedDescriptor) override;
-  virtual void setRotatedFeatures(bool rotatedFeatures) override;
+  virtual void setUpright(bool upright) override;
 
 // Feature interface
 
@@ -59,7 +59,7 @@ private:
   int mOctaves;
   int mOctaveLayers;
   bool mExtendedDescriptor;
-  bool mRotatedFeatures;
+  bool mUpright;
 };
 
 
@@ -81,7 +81,7 @@ public:
                          int octaves,
                          int octaveLayers,
                          bool extendedDescriptor,
-                         bool rotatedFeatures);
+                         bool upright);
 
   ~SurfDetectorDescriptor() override;
 
@@ -109,7 +109,7 @@ public:
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;
   void setExtendedDescriptor(bool extendedDescriptor) override;
-  void setRotatedFeatures(bool rotatedFeatures) override;
+  void setUpright(bool upright) override;
 
 // Feature interface
 
@@ -141,7 +141,7 @@ public:
                              int octaves,
                              int octaveLayers,
                              bool extendedDescriptor,
-                             bool rotatedFeatures);
+                             bool upright);
                              
   ~SurfCudaDetectorDescriptor() override;
 
@@ -169,7 +169,7 @@ public:
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;
   void setExtendedDescriptor(bool extendedDescriptor) override;
-  void setRotatedFeatures(bool rotatedFeatures) override;
+  void setUpright(bool upright) override;
 
 // Feature interface
 

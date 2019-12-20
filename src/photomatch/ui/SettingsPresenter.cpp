@@ -733,7 +733,7 @@ void SettingsPresenter::open()
 #ifdef OPENCV_ENABLE_NONFREE
   mSurf->setOctaves(mModel->surfOctaves());
   mSurf->setOctaveLayers(mModel->surfOctaveLayers());
-  mSurf->setRotatedFeatures(mModel->surfRotatedFeatures());
+  mSurf->seUpright(mModel->surfRotatedFeatures());
   mSurf->setHessianThreshold(mModel->surfHessianThreshold());
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
 #endif

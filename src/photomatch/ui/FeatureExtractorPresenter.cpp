@@ -754,8 +754,8 @@ void FeatureExtractorPresenter::open()
   mSurfDetector->setOctaveLayers(detector && detector->type() == Feature::Type::surf ?
                                  dynamic_cast<ISurf *>(detector)->octaveLayers() :
                                  mSettingsModel->surfOctaveLayers());
-  mSurfDetector->setRotatedFeatures(detector && detector->type() == Feature::Type::surf ?
-                                    dynamic_cast<ISurf *>(detector)->rotatedFeatures() :
+  mSurfDetector->seUpright(detector && detector->type() == Feature::Type::surf ?
+                                    dynamic_cast<ISurf *>(detector)->upright() :
                                     mSettingsModel->surfRotatedFeatures());
   mSurfDetector->setHessianThreshold(detector && detector->type() == Feature::Type::surf ?
                                      dynamic_cast<ISurf *>(detector)->hessianThreshold() :
@@ -770,8 +770,8 @@ void FeatureExtractorPresenter::open()
   mSurfDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::surf ?
                                    dynamic_cast<ISurf *>(descriptor)->octaveLayers() :
                                    mSettingsModel->surfOctaveLayers());
-  mSurfDescriptor->setRotatedFeatures(descriptor && descriptor->type() == Feature::Type::surf ?
-                                      dynamic_cast<ISurf *>(descriptor)->rotatedFeatures() :
+  mSurfDescriptor->seUpright(descriptor && descriptor->type() == Feature::Type::surf ?
+                                      dynamic_cast<ISurf *>(descriptor)->upright() :
                                       mSettingsModel->surfRotatedFeatures());
   mSurfDescriptor->setHessianThreshold(descriptor && descriptor->type() == Feature::Type::surf ?
                                        dynamic_cast<ISurf *>(descriptor)->hessianThreshold() :
@@ -1046,7 +1046,7 @@ void FeatureExtractorPresenter::run()
                                                                 mSurfDetector->octaves(),
                                                                 mSurfDetector->octaveLayers(),
                                                                 mSurfDetector->extendedDescriptor(),
-                                                                mSurfDetector->rotatedFeatures());
+                                                                mSurfDetector->upright());
 #ifdef HAVE_CUDA
     }
 #endif // HAVE_CUDA
@@ -1221,13 +1221,13 @@ void FeatureExtractorPresenter::run()
                                                                        mSurfDetector->octaves(),
                                                                        mSurfDetector->octaveLayers(),
                                                                        mSurfDetector->extendedDescriptor(),
-                                                                       mSurfDetector->rotatedFeatures());
+                                                                       mSurfDetector->upright());
       } else {
         descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
                                                                        mSurfDescriptor->octaves(),
                                                                        mSurfDescriptor->octaveLayers(),
                                                                        mSurfDescriptor->extendedDescriptor(),
-                                                                       mSurfDescriptor->rotatedFeatures());
+                                                                       mSurfDescriptor->upright());
       }
 #ifdef HAVE_CUDA
     }

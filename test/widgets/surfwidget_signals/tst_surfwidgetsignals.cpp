@@ -111,7 +111,7 @@ void TestSurfWidgetSignals::test_extendedDescriptorChange()
 
 void TestSurfWidgetSignals::test_rotatedFeaturesChange()
 {
-  QSignalSpy spyRotatedFeaturesChange(this, &SurfWidget::rotatedFeaturesChange);
+  QSignalSpy spyRotatedFeaturesChange(this, &SurfWidget::uprightChange);
 
   QTest::mouseClick(mRotatedFeatures, Qt::MouseButton::LeftButton);
 
@@ -120,7 +120,7 @@ void TestSurfWidgetSignals::test_rotatedFeaturesChange()
   QList<QVariant> args = spyRotatedFeaturesChange.takeFirst();
   QCOMPARE(args.at(0).toBool(), true);
 
-  this->setRotatedFeatures(true);
+  this->seUpright(true);
   QCOMPARE(spyRotatedFeaturesChange.count(), 0);
 }
 
@@ -130,13 +130,13 @@ void TestSurfWidgetSignals::test_reset()
   QSignalSpy spyOctavesChange(this, &SurfWidget::octavesChange);
   QSignalSpy spyOctaveLayersChange(this, &SurfWidget::octaveLayersChange);
   QSignalSpy spyExtendedDescriptorChange(this, &SurfWidget::extendedDescriptorChange);
-  QSignalSpy spyRotatedFeaturesChange(this, &SurfWidget::rotatedFeaturesChange);
+  QSignalSpy spyRotatedFeaturesChange(this, &SurfWidget::uprightChange);
 
   this->setHessianThreshold(120);
   this->setOctaves(6);
   this->setOctaveLayers(6);
   this->setExtendedDescriptor(true);
-  this->setRotatedFeatures(true);
+  this->seUpright(true);
 
   this->reset();
 
