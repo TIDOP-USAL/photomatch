@@ -1423,6 +1423,7 @@ void MainWindowPresenter::initExportFeaturesDialog()
     IExportFeaturesView *exportFeaturesView = new ExportFeaturesView(mView);
     mExportFeaturesModel = new ExportFeaturesModel(mProjectModel);
     mExportFeaturesPresenter = new ExportFeaturesPresenter(exportFeaturesView, mExportFeaturesModel);
+    mExportFeaturesPresenter->setHelp(mHelpDialog);
   }
 }
 
@@ -1432,6 +1433,7 @@ void MainWindowPresenter::initExportMatchesDialog()
     IExportMatchesView *exportMatchesView = new ExportMatchesView(mView);
     mExportMatchesModel = new ExportMatchesModel(mProjectModel);
     mExportMatchesPresenter = new ExportMatchesPresenter(exportMatchesView, mExportMatchesModel);
+    mExportMatchesPresenter->setHelp(mHelpDialog);
   }
 }
 

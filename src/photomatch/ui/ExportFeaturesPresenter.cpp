@@ -29,7 +29,7 @@ ExportFeaturesPresenter::~ExportFeaturesPresenter()
 void ExportFeaturesPresenter::help()
 {
   if (mHelp){
-    mHelp->setPage("index.html#export");
+    mHelp->setPage("index.html#export_keypoints");
     mHelp->show();
   }
 }
