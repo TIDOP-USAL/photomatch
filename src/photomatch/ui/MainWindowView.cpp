@@ -1858,6 +1858,9 @@ void MainWindowView::init()
   mActionToolSettings->setIcon(iconSettings);
 
   mActionHelp->setText(QApplication::translate("MainWindowView", "Help", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionHelp->setShortcut(QApplication::translate("MainWindowView", "F1", nullptr));
+#endif // QT_NO_SHORTCUT
   QIcon iconHelp;
   iconHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionHelp->setIcon(iconHelp);

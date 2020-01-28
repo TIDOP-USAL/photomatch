@@ -80,6 +80,17 @@ h3.ctl {
   font-family: "Arial" 
 }
 
+h4 { 
+  direction: inherit; 
+  color: #1abc9c; 
+  #background: #1abc9c 
+} 
+
+h4.western { 
+  font-family: "Albany", sans-serif; 
+  font-size: 12pt 
+}
+
 li.western { 
   font-family: "Verdana", sans-serif; 
   font-size: 10pt; 
