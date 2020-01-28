@@ -32,7 +32,7 @@ ExportMatchesPresenter::~ExportMatchesPresenter()
 void ExportMatchesPresenter::help()
 {
   if (mHelp){
-    mHelp->setPage("index.html#export_matches");
+    mHelp->setPage("menus.html#export_matches");
     mHelp->showMaximized();
   }
 }
