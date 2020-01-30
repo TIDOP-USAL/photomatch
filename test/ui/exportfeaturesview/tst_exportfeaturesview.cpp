@@ -28,6 +28,7 @@ private slots:
   void cleanupTestCase();
 
   void test_constructor();
+  void test_windowTitle();
   void test_sessions();
   void test_sessionChange();
   void test_formats();
@@ -82,7 +83,12 @@ void TestExportFeaturesView::initTestCase()
 
 void TestExportFeaturesView::cleanupTestCase()
 {
+  
+}
 
+void TestExportFeaturesView::test_windowTitle()
+{
+  QCOMPARE("Export Keypoints", this->windowTitle());
 }
 
 void TestExportFeaturesView::test_constructor()

@@ -53,6 +53,9 @@
 #include "photomatch/ui/ExportMatchesModel.h"
 #include "photomatch/ui/ExportMatchesView.h"
 #include "photomatch/ui/ExportMatchesPresenter.h"
+#include "photomatch/ui/MultiViewModel.h"
+#include "photomatch/ui/MultiViewView.h"
+#include "photomatch/ui/MultiViewPresenter.h"
 //#include "photomatch/ui/BatchModel.h"
 //#include "photomatch/ui/BatchView.h"
 //#include "photomatch/ui/BatchPresenter.h"
@@ -112,6 +115,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mCurvesDETViewerModel(nullptr),
     mRepeatabilityPresenter(nullptr),
     mRepeatabilityModel(nullptr),
+    mMultiViewModel(nullptr),
+    mMultiViewPresenter(nullptr),
     mAboutDialog(nullptr),
     mHelpDialog(nullptr),
     mProgressHandler(nullptr),
@@ -141,6 +146,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   connect(mView,  SIGNAL(featuresViewer()),           this, SLOT(openKeypointsViewer()));
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
+  connect(mView,  SIGNAL(passPointsViewer()),         this, SLOT(openMultiViewViewer()));
   connect(mView,  SIGNAL(groundTruthEditor()),        this, SLOT(groundTruthEditor()));
   connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
   connect(mView,  SIGNAL(repeatability()),            this, SLOT(openRepeatability()));
@@ -190,6 +196,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   connect(mView, SIGNAL(openFeatures(QString, QString)),          this, SLOT(openKeypointsViewer(QString, QString)));
   connect(mView, SIGNAL(openMatches(QString, QString, QString)),  this, SLOT(openMatchesViewer(QString, QString, QString)));
+  connect(mView, SIGNAL(openMultiView(QString)),                  this, SLOT(openMultiViewViewer(QString)));
+
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -384,10 +392,21 @@ MainWindowPresenter::~MainWindowPresenter()
     mRepeatabilityPresenter = nullptr;
   }
 
+  if (mMultiViewModel){
+    delete mMultiViewModel;
+    mMultiViewModel = nullptr;
+  }
+
+  if (mMultiViewPresenter){
+    delete mMultiViewPresenter;
+    mMultiViewPresenter = nullptr;
+  }
+
   if (mRepeatabilityModel){
     delete mRepeatabilityModel;
     mRepeatabilityModel = nullptr;
   }
+
 
   mHelpDialog.reset();
 }
@@ -620,6 +639,20 @@ void MainWindowPresenter::openMatchesViewer(const QString &session, const QStrin
   if (imageRight.isEmpty() == false){
     mMatchesViewerPresenter->setRightImage(imageRight);
   }
+}
+
+void MainWindowPresenter::openMultiViewViewer()
+{
+  initMultiViewViewer();
+  mMultiViewPresenter->setSession(mProjectModel->currentSession()->name());
+  mMultiViewPresenter->open();
+}
+
+void MainWindowPresenter::openMultiViewViewer(const QString &session)
+{
+  initMultiViewViewer();
+  mMultiViewPresenter->setSession(session);
+  mMultiViewPresenter->open();
 }
 
 void MainWindowPresenter::groundTruthEditor()
@@ -1563,6 +1596,17 @@ void MainWindowPresenter::initMatchesViewer()
     IMatchViewerView *matchViewerView = new MatchViewerView(mView, f);
     mMatchesViewerPresenter = new MatchViewerPresenter(matchViewerView, mMatchesViewerModel, mSettingsModel);
     mMatchesViewerPresenter->setHelp(mHelpDialog);
+  }
+}
+
+void MainWindowPresenter::initMultiViewViewer()
+{
+  if (mMultiViewPresenter == nullptr){
+    mMultiViewModel = new MultiViewModel(mProjectModel);
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    IMultiViewView *multiViewView = new MultiViewView(mView, f);
+    mMultiViewPresenter = new MultiViewPresenter(multiViewView, mMultiViewModel);
+    mMultiViewPresenter->setHelp(mHelpDialog);
   }
 }
 

@@ -16,6 +16,15 @@ class PHOTOMATCH_EXPORT FeatureExtractor
 
 public:
 
+  /*!
+   * \brief Constructor FeatureExtractor
+   * \param[in] img Image file
+   * \param[in] features Features output file
+   * \param[in] scale Image scale
+   * \param[in] keypointDetector KeypointDetector object
+   * \param[in] descriptorExtractor DescriptorExtractor object
+   * \param[in] keyPointsFiltersProcess KeyPointsFilterProcess object
+   */
   FeatureExtractor(const QString &img,
                    const QString &features,
                    double scale,

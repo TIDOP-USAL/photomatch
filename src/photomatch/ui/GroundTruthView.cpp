@@ -381,11 +381,11 @@ void GroundTruthView::setSelectLeftPoint(const QPointF &pt, bool newPoint)
     reader.setClipRect(rect);
     QImage image = reader.read();
     QPixmap pixmap = QPixmap::fromImage(image);
-    QPainter p (&pixmap);
-    p.setPen (Qt::green);
-    p.drawLine (0, 25, 50, 25);
-    p.drawLine (25, 0, 25, 50);
-    p.end ();
+    QPainter p(&pixmap);
+    p.setPen(Qt::green);
+    p.drawLine(0, 25, 50, 25);
+    p.drawLine(25, 0, 25, 50);
+    p.end();
     mLabelDetailLeft->setPixmap(pixmap);
 
     if (newPoint == false){

@@ -329,7 +329,7 @@ void SurfCudaDetectorDescriptor::setExtendedDescriptor(bool extendedDescriptor)
 
 void SurfCudaDetectorDescriptor::setUpright(bool upright)
 {
-  SurfProperties::setRotatedFeatures(rotatedFeatures);
+  SurfProperties::setUpright(upright);
   mSurf->upright = upright;
 }
 

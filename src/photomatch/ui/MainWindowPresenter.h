@@ -43,6 +43,8 @@ class IExportMatchesModel;
 class IExportMatchesPresenter;
 //class IBatchModel;
 //class IBatchPresenter;
+class IMultiViewModel;
+class IMultiViewPresenter;
 class ProgressHandler;
 class IProgressDialog;
 class AboutDialog;
@@ -90,6 +92,8 @@ protected slots:
   void openKeypointsViewer(const QString &session, const QString &image);
   void openMatchesViewer();
   void openMatchesViewer(const QString &session, const QString &imageLeft, const QString &imageRight = QString());
+  void openMultiViewViewer();
+  void openMultiViewViewer(const QString &session);
   void groundTruthEditor();
   void openHomographyViewer();
   void openRepeatability();
@@ -205,6 +209,8 @@ private:
    */
   void initMatchesViewer();
 
+  void initMultiViewViewer();
+
   void initGroundTruthEditor();
 
   /*!
@@ -280,6 +286,9 @@ protected:
 
   IRepeatabilityPresenter *mRepeatabilityPresenter;
   IRepeatabilityModel *mRepeatabilityModel;
+
+  IMultiViewModel *mMultiViewModel;
+  IMultiViewPresenter *mMultiViewPresenter;
 
   AboutDialog *mAboutDialog;
   std::shared_ptr<HelpDialog> mHelpDialog;
