@@ -53,6 +53,8 @@ void KeyPointsFilterNBest::setNPoints(int nPoints)
 
 bool KeyPointsFilterNBest::filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints)
 {
+  if (filteredKeypoints.size() <= static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints()))
+    return false;
 
   try {
     filteredKeypoints = keypoints;
@@ -66,8 +68,8 @@ bool KeyPointsFilterNBest::filter(const std::vector<cv::KeyPoint> &keypoints, st
     msgError("Filtered keypoints error: %s", e.what());
     return true;
   }
-  return false;
 
+  return false;
 }
 
 void KeyPointsFilterNBest::reset()

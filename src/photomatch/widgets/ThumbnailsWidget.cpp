@@ -183,7 +183,7 @@ void ThumbnailsWidget::onThumbnailToggled(bool active)
   mIconSize  = QSize(200, 200);
   mListWidget->setIconSize(mIconSize);
   mListWidget->setViewMode(QListWidget::IconMode);
-  mListWidget->setResizeMode(QListWidget::Fixed);
+  mListWidget->setResizeMode(QListWidget::Adjust);
   const QSignalBlocker block0(mThumbnailAction);
   const QSignalBlocker block1(mThumbnailSmallAction);
   const QSignalBlocker block2(mDetailsAction);
@@ -197,7 +197,7 @@ void ThumbnailsWidget::onThumbnailSmallToggled(bool active)
   mIconSize  = QSize(100, 100);
   mListWidget->setIconSize(mIconSize);
   mListWidget->setViewMode(QListWidget::IconMode);
-  mListWidget->setResizeMode(QListWidget::Fixed);
+  mListWidget->setResizeMode(QListWidget::Adjust);
   const QSignalBlocker block0(mThumbnailAction);
   const QSignalBlocker block1(mThumbnailSmallAction);
   const QSignalBlocker block2(mDetailsAction);
@@ -211,7 +211,7 @@ void ThumbnailsWidget::onDetailsToggled(bool active)
   mIconSize  = QSize(50, 50);
   mListWidget->setIconSize(mIconSize);
   mListWidget->setViewMode(QListWidget::ListMode);
-  mListWidget->setResizeMode(QListWidget::Fixed);
+  mListWidget->setResizeMode(QListWidget::Adjust);
   const QSignalBlocker block0(mThumbnailAction);
   const QSignalBlocker block1(mThumbnailSmallAction);
   const QSignalBlocker block2(mDetailsAction);

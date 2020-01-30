@@ -48,6 +48,9 @@ set(PHOTOMATCH_SOURCES
     MatchViewerModel.cpp
     MatchViewerView.cpp
     MatchViewerPresenter.cpp
+    MultiViewModel.cpp
+    MultiViewView.cpp
+    MultiViewPresenter.cpp
     HomographyViewerModel.cpp
     HomographyViewerView.cpp
     HomographyViewerPresenter.cpp
@@ -110,6 +113,9 @@ set(PHOTOMATCH_HEADERS
     MatchViewerModel.h
     MatchViewerView.h
     MatchViewerPresenter.h
+    MultiViewModel.h
+    MultiViewView.h
+    MultiViewPresenter.h
     HomographyViewerModel.h
     HomographyViewerView.h
     HomographyViewerPresenter.h

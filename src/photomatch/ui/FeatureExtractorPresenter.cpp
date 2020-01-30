@@ -1038,7 +1038,7 @@ void FeatureExtractorPresenter::run()
                                                                       mSurfDetector->octaves(),
                                                                       mSurfDetector->octaveLayers(),
                                                                       mSurfDetector->extendedDescriptor(),
-                                                                      mSurfDetector->rotatedFeatures());
+                                                                      mSurfDetector->upright());
     } else {
 #endif // HAVE_CUDA
 
@@ -1206,13 +1206,13 @@ void FeatureExtractorPresenter::run()
                                                                            mSurfDetector->octaves(),
                                                                            mSurfDetector->octaveLayers(),
                                                                            mSurfDetector->extendedDescriptor(),
-                                                                           mSurfDetector->rotatedFeatures());
+                                                                           mSurfDetector->upright());
       } else {
         descriptorExtractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
                                                                            mSurfDescriptor->octaves(),
                                                                            mSurfDescriptor->octaveLayers(),
                                                                            mSurfDescriptor->extendedDescriptor(),
-                                                                           mSurfDescriptor->rotatedFeatures());
+                                                                           mSurfDescriptor->upright());
       }
     } else {
 #endif // HAVE_CUDA

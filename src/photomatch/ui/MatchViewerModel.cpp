@@ -156,7 +156,7 @@ void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgNa
         }
       }
     }
-    }
+  }
 }
 
 void MatchViewerModel::loadPassPoints()
