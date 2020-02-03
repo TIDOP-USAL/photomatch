@@ -77,6 +77,20 @@ void FlannMatcher::update()
 
 bool FlannMatcher::match(cv::InputArray &queryDescriptors,
                          cv::InputArray &trainDescriptors,
+                         std::vector<cv::DMatch> &matches,
+                         cv::InputArray mask)
+{
+  try {
+    mFlannBasedMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
+  } catch (cv::Exception &e) {
+    msgError("Flann Based Matcher error: %s", e.what());
+    return true;
+  }
+  return false;
+}
+
+bool FlannMatcher::match(cv::InputArray &queryDescriptors,
+                         cv::InputArray &trainDescriptors,
                          std::vector<std::vector<cv::DMatch>> &matches,
                          cv::InputArray mask)
 {
@@ -170,6 +184,20 @@ void BruteForceMatcher::update()
 
 bool BruteForceMatcher::match(cv::InputArray &queryDescriptors,
                               cv::InputArray &trainDescriptors,
+                              std::vector<cv::DMatch> &matches,
+                              cv::InputArray mask)
+{
+  try {
+    mBFMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
+  } catch (cv::Exception &e) {
+    msgError("Brute-force Matcher error: %s", e.what());
+    return true;
+  }
+  return false;
+}
+
+bool BruteForceMatcher::match(cv::InputArray &queryDescriptors,
+                              cv::InputArray &trainDescriptors,
                               std::vector<std::vector<cv::DMatch>> &matches,
                               cv::InputArray mask)
 {
@@ -232,6 +260,23 @@ void BruteForceMatcherCuda::update()
 
 bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
                                   cv::InputArray &trainDescriptors,
+                                  std::vector<cv::DMatch> &matches,
+                                  cv::InputArray mask)
+{
+  try {
+    cv::cuda::GpuMat gQueryDescriptors(queryDescriptors);
+    cv::cuda::GpuMat gTrainDescriptors(trainDescriptors);
+    cv::cuda::GpuMat gMask(mask);
+    mBFMatcher->match(gQueryDescriptors, gTrainDescriptors, matches, gMask);
+  } catch (cv::Exception &e) {
+    msgError("Brute-force Matcher error: %s", e.what());
+    return true;
+  }
+  return false;
+}
+
+bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
+                                  cv::InputArray &trainDescriptors,
                                   std::vector<std::vector<cv::DMatch>> &matches,
                                   cv::InputArray mask)
 {
@@ -263,7 +308,7 @@ void BruteForceMatcherCuda::setNormType(IBruteForceMatcher::Norm normType)
 
 /*----------------------------------------------------------------*/
 
-RobustMatcherProperties::RobustMatcherProperties()
+RobustMatchingProperties::RobustMatchingProperties()
   : IRobustMatcherRefinement(),
     mRatio(0.8),
     mCrossCheck(true),
@@ -277,97 +322,97 @@ RobustMatcherProperties::RobustMatcherProperties()
 {
 }
 
-double RobustMatcherProperties::ratio() const
+double RobustMatchingProperties::ratio() const
 {
   return mRatio;
 }
 
-void RobustMatcherProperties::setRatio(double ratio)
+void RobustMatchingProperties::setRatio(double ratio)
 {
   mRatio = ratio;
 }
 
-bool RobustMatcherProperties::crossCheck() const
+bool RobustMatchingProperties::crossCheck() const
 {
   return mCrossCheck;
 }
 
-void RobustMatcherProperties::setCrossCheck(bool crossCheck)
+void RobustMatchingProperties::setCrossCheck(bool crossCheck)
 {
   mCrossCheck = crossCheck;
 }
 
-IRobustMatcherRefinement::GeometricTest RobustMatcherProperties::geometricTest() const
+IRobustMatcherRefinement::GeometricTest RobustMatchingProperties::geometricTest() const
 {
   return mGeometricTest;
 }
 
-void RobustMatcherProperties::setGeometricTest(IRobustMatcherRefinement::GeometricTest geometricTest)
+void RobustMatchingProperties::setGeometricTest(IRobustMatcherRefinement::GeometricTest geometricTest)
 {
   mGeometricTest = geometricTest;
 }
 
-IRobustMatcherRefinement::HomographyComputeMethod RobustMatcherProperties::homographyComputeMethod() const
+IRobustMatcherRefinement::HomographyComputeMethod RobustMatchingProperties::homographyComputeMethod() const
 {
   return mHomographyComputeMethod;
 }
 
-void RobustMatcherProperties::setHomographyComputeMethod(IRobustMatcherRefinement::HomographyComputeMethod computeMethod)
+void RobustMatchingProperties::setHomographyComputeMethod(IRobustMatcherRefinement::HomographyComputeMethod computeMethod)
 {
   mHomographyComputeMethod = computeMethod;
 }
 
-IRobustMatcherRefinement::FundamentalComputeMethod RobustMatcherProperties::fundamentalComputeMethod() const
+IRobustMatcherRefinement::FundamentalComputeMethod RobustMatchingProperties::fundamentalComputeMethod() const
 {
   return mFundamentalComputeMethod;
 }
 
-void RobustMatcherProperties::setFundamentalComputeMethod(IRobustMatcherRefinement::FundamentalComputeMethod computeMethod)
+void RobustMatchingProperties::setFundamentalComputeMethod(IRobustMatcherRefinement::FundamentalComputeMethod computeMethod)
 {
   mFundamentalComputeMethod = computeMethod;
 }
 
-IRobustMatcherRefinement::EssentialComputeMethod RobustMatcherProperties::essentialComputeMethod() const
+IRobustMatcherRefinement::EssentialComputeMethod RobustMatchingProperties::essentialComputeMethod() const
 {
   return mEssentialComputeMethod;
 }
 
-void RobustMatcherProperties::setEssentialComputeMethod(IRobustMatcherRefinement::EssentialComputeMethod computeMethod)
+void RobustMatchingProperties::setEssentialComputeMethod(IRobustMatcherRefinement::EssentialComputeMethod computeMethod)
 {
   mEssentialComputeMethod = computeMethod;
 }
 
-double RobustMatcherProperties::distance() const
+double RobustMatchingProperties::distance() const
 {
   return mDistance;
 }
 
-void RobustMatcherProperties::setDistance(double distance)
+void RobustMatchingProperties::setDistance(double distance)
 {
   mDistance = distance;
 }
 
-double RobustMatcherProperties::confidence() const
+double RobustMatchingProperties::confidence() const
 {
   return mConfidence;
 }
 
-void RobustMatcherProperties::setConfidence(double confidence)
+void RobustMatchingProperties::setConfidence(double confidence)
 {
   mConfidence = confidence;
 }
 
-int RobustMatcherProperties::maxIter() const
+int RobustMatchingProperties::maxIter() const
 {
   return mMaxIters;
 }
 
-void RobustMatcherProperties::setMaxIters(int maxIter)
+void RobustMatchingProperties::setMaxIters(int maxIter)
 {
   mMaxIters = maxIter;
 }
 
-void RobustMatcherProperties::reset()
+void RobustMatchingProperties::reset()
 {
   mRatio = 0.8;
   mCrossCheck = true;
@@ -380,30 +425,299 @@ void RobustMatcherProperties::reset()
   mMaxIters = 2000;
 }
 
+QString photomatch::RobustMatchingProperties::name() const
+{
+  return QString("Robust Matcher");
+}
 
 /*----------------------------------------------------------------*/
 
 
-RobustMatching::RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher)
-  : IRobustMatching(),
-    RobustMatcherProperties(),
-    mMatcher(matcher)
+//RobustMatching::RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher)
+//  : IRobustMatching(),
+//    RobustMatchingProperties(),
+//    mMatcher(matcher)
+//{
+//}
+
+//RobustMatching::RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher,
+//                               double ratio,
+//                               bool crossCheck,
+//                               GeometricTest geometricTest,
+//                               HomographyComputeMethod homographyComputeMethod,
+//                               FundamentalComputeMethod fundamentalComputeMethod,
+//                               EssentialComputeMethod essentialComputeMethod,
+//                               double distance,
+//                               double confidence,
+//                               int maxIter)
+//  : IRobustMatching(),
+//    RobustMatchingProperties(),
+//    mMatcher(matcher)
+//{
+//  this->setRatio(ratio);
+//  this->setCrossCheck(crossCheck);
+//  this->setGeometricTest(geometricTest);
+//  this->setHomographyComputeMethod(homographyComputeMethod);
+//  this->setFundamentalComputeMethod(fundamentalComputeMethod);
+//  this->setEssentialComputeMethod(essentialComputeMethod);
+//  this->setDistance(distance);
+//  this->setConfidence(confidence);
+//  this->setMaxIters(maxIter);
+//}
+
+//RobustMatching::~RobustMatching()
+//{
+//}
+
+//void RobustMatching::setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher)
+//{
+//  mMatcher = matcher;
+//}
+
+//std::vector<cv::DMatch> RobustMatching::match(const cv::Mat &queryDescriptor,
+//                                              const cv::Mat &trainDescriptor,
+//                                              std::vector<cv::DMatch> *wrongMatches)
+//{
+//  if (this->crossCheck()){
+//    return this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+//  } else {
+//    return this->fastRobustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+//  }
+//}
+
+//std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DMatch> &matches,
+//                                                        const std::vector<cv::KeyPoint> &keypoints1,
+//                                                        const std::vector<cv::KeyPoint> &keypoints2,
+//                                                        std::vector<cv::DMatch> *wrongMatches)
+//{
+//  std::vector<cv::DMatch> filter_matches;
+
+//  // Convert keypoints into Point2f
+//  size_t nPoints = matches.size();
+//  std::vector<cv::Point2f> pts1(nPoints);
+//  std::vector<cv::Point2f> pts2(nPoints);
+//  for (size_t igm = 0; igm < nPoints; igm++) {
+//    pts1[igm] = keypoints1[static_cast<size_t>(matches[igm].queryIdx)].pt;
+//    pts2[igm] = keypoints2[static_cast<size_t>(matches[igm].trainIdx)].pt;
+//  }
+
+//  IRobustMatcherRefinement::GeometricTest geometric_test = RobustMatchingProperties::geometricTest();
+//  if (geometric_test == IRobustMatcherRefinement::GeometricTest::essential) {
+
+
+//  } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::homography){
+
+//    filter_matches = filterByHomographyMatrix(matches, pts1, pts2, wrongMatches);
+
+//  } else if (geometric_test == IRobustMatcherRefinement::GeometricTest::fundamental){
+
+//    filter_matches = filterByFundamentalMatrix(matches, pts1, pts2, wrongMatches);
+
+//  }
+
+//  return filter_matches;
+//}
+
+//std::vector<cv::DMatch> RobustMatching::filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
+//                                                                 const std::vector<cv::Point2f> &points1,
+//                                                                 const std::vector<cv::Point2f> &points2,
+//                                                                 std::vector<cv::DMatch> *wrongMatches)
+//{
+//  std::vector<cv::DMatch> filter_matches;
+
+//  int hcm = cv::RANSAC;
+//  IRobustMatcherRefinement::HomographyComputeMethod homographyComputeMethod = this->homographyComputeMethod();
+//  if (homographyComputeMethod == IRobustMatcherRefinement::HomographyComputeMethod::all_points){
+//    hcm = 0;
+//  } else if (homographyComputeMethod == IRobustMatcherRefinement::HomographyComputeMethod::ransac){
+//    hcm = cv::RANSAC;
+//  } else if (homographyComputeMethod == IRobustMatcherRefinement::HomographyComputeMethod::lmeds){
+//    hcm = cv::LMEDS;
+//  } else if (homographyComputeMethod == IRobustMatcherRefinement::HomographyComputeMethod::rho){
+//    hcm = cv::RHO;
+//  }
+
+//  size_t nPoints = matches.size();
+//  std::vector<uchar> inliers(nPoints, 0);
+//  cv::Mat H = cv::findHomography(cv::Mat(points1), cv::Mat(points2), hcm, this->distance(), inliers, this->maxIter(), this->confidence());
+
+//  // extract the surviving (inliers) matches
+//  std::vector<uchar>::const_iterator itIn = inliers.begin();
+//  std::vector<cv::DMatch>::const_iterator itM = matches.begin();
+//  // for all matches
+//  for (; itIn != inliers.end(); ++itIn, ++itM) {
+
+//    if (*itIn) {
+//      filter_matches.push_back(*itM);
+//    } else {
+//      if (wrongMatches) wrongMatches->push_back(*itM);
+//    }
+//  }
+
+
+//  return filter_matches;
+//}
+
+//std::vector<cv::DMatch> RobustMatching::filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
+//                                                                const std::vector<cv::Point2f> &points1,
+//                                                                const std::vector<cv::Point2f> &points2,
+//                                                                std::vector<cv::DMatch> *wrongMatches)
+//{
+//  std::vector<cv::DMatch> filter_matches;
+
+//  int fm = cv::RANSAC;
+//  IRobustMatcherRefinement::EssentialComputeMethod essentialComputeMethod = this->essentialComputeMethod();
+//  if (essentialComputeMethod == IRobustMatcherRefinement::EssentialComputeMethod::ransac){
+//    fm = cv::RANSAC;
+//  } else if (essentialComputeMethod == IRobustMatcherRefinement::EssentialComputeMethod::lmeds){
+//    fm = cv::LMEDS;
+//  }
+
+//  // Convert keypoints into Point2f
+//  size_t nPoints = matches.size();
+
+//  TL_TODO("Se necesita la calibración de la cámara (focal y pp) con lo cual no se si es interesante")
+
+////  std::vector<uchar> inliers(nPoints, 0);
+////  cv::findEssentialMat(	InputArray 	points1,
+////  InputArray 	points2,
+////  InputArray 	cameraMatrix,
+////  int 	method = RANSAC,
+////  double 	prob = 0.999,
+////  double 	threshold = 1.0,
+////  OutputArray 	mask = noArray()
+////  )
+
+//  return filter_matches;
+//}
+
+//std::vector<cv::DMatch> RobustMatching::filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
+//                                                                  const std::vector<cv::Point2f> &points1,
+//                                                                  const std::vector<cv::Point2f> &points2,
+//                                                                  std::vector<cv::DMatch> *wrongMatches)
+//{
+//  int fm_method = cv::FM_RANSAC;
+//  IRobustMatcherRefinement::FundamentalComputeMethod fundamentalComputeMethod = this->fundamentalComputeMethod();
+//  if (fundamentalComputeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point){
+//    fm_method = cv::FM_7POINT;
+//  } else if (fundamentalComputeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point){
+//    fm_method = cv::FM_8POINT;
+//  } else if (fundamentalComputeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::ransac){
+//    fm_method = cv::FM_RANSAC;
+//  } else if (fundamentalComputeMethod == IRobustMatcherRefinement::FundamentalComputeMethod::lmeds){
+//    fm_method = cv::FM_LMEDS;
+//  }
+
+//  // Convert keypoints into Point2f
+//  size_t nPoints = matches.size();
+//  std::vector<uchar> inliers(nPoints, 0);
+//  cv::Mat fundamental = cv::findFundamentalMat(cv::Mat(points1), cv::Mat(points2), inliers,
+//                                               fm_method, this->distance(), this->confidence());
+
+//  std::vector<cv::DMatch> filter_matches;
+//  // extract the surviving (inliers) matches
+//  std::vector<uchar>::const_iterator itIn = inliers.begin();
+//  std::vector<cv::DMatch>::const_iterator itM = matches.begin();
+//  // for all matches
+//  for (; itIn != inliers.end(); ++itIn, ++itM) {
+
+//    if (*itIn) { // it is a valid match
+//      filter_matches.push_back(*itM);
+//    } else {
+//      if (wrongMatches) wrongMatches->push_back(*itM);
+//    }
+//  }
+
+//  return filter_matches;
+//}
+
+//std::vector<cv::DMatch> RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
+//                                                    const cv::Mat &trainDescriptor,
+//                                                    std::vector<cv::DMatch> *wrongMatches)
+//{
+
+//  std::vector<cv::DMatch> goodMatches;
+
+//  std::vector<std::vector<cv::DMatch>> matches12;
+//  std::vector<std::vector<cv::DMatch>> matches21;
+
+//  bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches12);
+//  if (err) return goodMatches;
+
+//  err = mMatcher->match(trainDescriptor, queryDescriptor, matches21);
+//  if (err) return goodMatches;
+
+//  std::vector<std::vector<cv::DMatch>> wrong_matches12;
+//  std::vector<std::vector<cv::DMatch>> wrong_matches21;
+//  std::vector<std::vector<cv::DMatch>> good_matches12 = this->ratioTest(matches12, this->ratio(), &wrong_matches12);
+//  std::vector<std::vector<cv::DMatch>> good_matches21 = this->ratioTest(matches21, this->ratio(), &wrong_matches21);
+
+//  matches12.clear();
+//  matches21.clear();
+
+//  if (wrongMatches){
+//    for (size_t i = 0; i < wrong_matches12.size(); i++){
+//      wrongMatches->push_back(wrong_matches12[i][0]);
+//    }
+//  }
+
+
+//  goodMatches = this->crossCheckTest(good_matches12, good_matches21, wrongMatches);
+
+//  return goodMatches;
+//}
+
+//std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
+//                                                        const cv::Mat &trainDescriptor,
+//                                                        std::vector<cv::DMatch> *wrongMatches)
+//{
+//  std::vector<cv::DMatch> goodMatches;
+
+//  std::vector<std::vector<cv::DMatch>> matches;
+//  bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches);
+//  if (err) return goodMatches;
+
+//  std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
+//  std::vector<std::vector<cv::DMatch>> ratio_test_matches = this->ratioTest(matches, this->ratio(), &ratio_test_wrong_matches);
+
+//  for (auto &match : ratio_test_matches){
+//    goodMatches.push_back(match[0]);
+//  }
+
+//  if (wrongMatches) {
+//    for (auto &wrong_match : ratio_test_wrong_matches){
+//      wrongMatches->push_back(wrong_match[0]);
+//    }
+//  }
+
+//  return goodMatches;
+
+//}
+
+/*----------------------------------------------------------------*/
+
+
+RobustMatchingStrategy::RobustMatchingStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
+  : RobustMatchingProperties(),
+    MatchingAlgorithm(),
+    mDescriptorMatcher(descriptorMatcher)
 {
+
 }
 
-RobustMatching::RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher,
-                               double ratio,
-                               bool crossCheck,
-                               GeometricTest geometricTest,
-                               HomographyComputeMethod homographyComputeMethod,
-                               FundamentalComputeMethod fundamentalComputeMethod,
-                               EssentialComputeMethod essentialComputeMethod,
-                               double distance,
-                               double confidence,
-                               int maxIter)
-  : IRobustMatching(),
-    RobustMatcherProperties(),
-    mMatcher(matcher)
+RobustMatchingStrategy::RobustMatchingStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+                                               double ratio,
+                                               bool crossCheck,
+                                               GeometricTest geometricTest,
+                                               HomographyComputeMethod homographyComputeMethod,
+                                               FundamentalComputeMethod fundamentalComputeMethod,
+                                               EssentialComputeMethod essentialComputeMethod,
+                                               double distance,
+                                               double confidence,
+                                               int maxIter)
+  : RobustMatchingProperties(),
+    MatchingAlgorithm(),
+    mDescriptorMatcher(descriptorMatcher)
 {
   this->setRatio(ratio);
   this->setCrossCheck(crossCheck);
@@ -416,30 +730,17 @@ RobustMatching::RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher
   this->setMaxIters(maxIter);
 }
 
-RobustMatching::~RobustMatching()
+RobustMatchingStrategy::~RobustMatchingStrategy()
 {
+
 }
 
-void RobustMatching::setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher)
+void RobustMatchingStrategy::setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
 {
-  mMatcher = matcher;
+  mDescriptorMatcher = descriptorMatcher;
 }
 
-std::vector<cv::DMatch> RobustMatching::match(const cv::Mat &queryDescriptor,
-                                              const cv::Mat &trainDescriptor,
-                                              std::vector<cv::DMatch> *wrongMatches)
-{
-  if (this->crossCheck()){
-    return this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
-  } else {
-    return this->fastRobustMatch(queryDescriptor, trainDescriptor, wrongMatches);
-  }
-}
-
-std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DMatch> &matches,
-                                                        const std::vector<cv::KeyPoint> &keypoints1,
-                                                        const std::vector<cv::KeyPoint> &keypoints2,
-                                                        std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingStrategy::geometricFilter(const std::vector<cv::DMatch> &matches, const std::vector<cv::KeyPoint> &keypoints1, const std::vector<cv::KeyPoint> &keypoints2, std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -452,7 +753,7 @@ std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DM
     pts2[igm] = keypoints2[static_cast<size_t>(matches[igm].trainIdx)].pt;
   }
 
-  IRobustMatcherRefinement::GeometricTest geometric_test = RobustMatcherProperties::geometricTest();
+  IRobustMatcherRefinement::GeometricTest geometric_test = RobustMatchingProperties::geometricTest();
   if (geometric_test == IRobustMatcherRefinement::GeometricTest::essential) {
 
 
@@ -469,10 +770,7 @@ std::vector<cv::DMatch> RobustMatching::geometricFilter(const std::vector<cv::DM
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatching::filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
-                                                                 const std::vector<cv::Point2f> &points1,
-                                                                 const std::vector<cv::Point2f> &points2,
-                                                                 std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingStrategy::filterByHomographyMatrix(const std::vector<cv::DMatch> &matches, const std::vector<cv::Point2f> &points1, const std::vector<cv::Point2f> &points2, std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -509,10 +807,7 @@ std::vector<cv::DMatch> RobustMatching::filterByHomographyMatrix(const std::vect
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatching::filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
-                                                                const std::vector<cv::Point2f> &points1,
-                                                                const std::vector<cv::Point2f> &points2,
-                                                                std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingStrategy::filterByEssentialMatrix(const std::vector<cv::DMatch> &matches, const std::vector<cv::Point2f> &points1, const std::vector<cv::Point2f> &points2, std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -539,13 +834,10 @@ std::vector<cv::DMatch> RobustMatching::filterByEssentialMatrix(const std::vecto
 //  OutputArray 	mask = noArray()
 //  )
 
-  return filter_matches;
+      return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatching::filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
-                                                                  const std::vector<cv::Point2f> &points1,
-                                                                  const std::vector<cv::Point2f> &points2,
-                                                                  std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingStrategy::filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches, const std::vector<cv::Point2f> &points1, const std::vector<cv::Point2f> &points2, std::vector<cv::DMatch> *wrongMatches)
 {
   int fm_method = cv::FM_RANSAC;
   IRobustMatcherRefinement::FundamentalComputeMethod fundamentalComputeMethod = this->fundamentalComputeMethod();
@@ -582,20 +874,26 @@ std::vector<cv::DMatch> RobustMatching::filterByFundamentalMatrix(const std::vec
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatching::robustMatch(const cv::Mat &queryDescriptor,
-                                                    const cv::Mat &trainDescriptor,
-                                                    std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingStrategy::match(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor, std::vector<cv::DMatch> *wrongMatches)
 {
+  if (this->crossCheck()){
+    return this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+  } else {
+    return this->fastRobustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+  }
+}
 
+std::vector<cv::DMatch> RobustMatchingStrategy::robustMatch(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor, std::vector<cv::DMatch> *wrongMatches)
+{
   std::vector<cv::DMatch> goodMatches;
 
   std::vector<std::vector<cv::DMatch>> matches12;
   std::vector<std::vector<cv::DMatch>> matches21;
 
-  bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches12);
+  bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches12);
   if (err) return goodMatches;
 
-  err = mMatcher->match(trainDescriptor, queryDescriptor, matches21);
+  err = mDescriptorMatcher->match(trainDescriptor, queryDescriptor, matches21);
   if (err) return goodMatches;
 
   std::vector<std::vector<cv::DMatch>> wrong_matches12;
@@ -618,14 +916,12 @@ std::vector<cv::DMatch> RobustMatching::robustMatch(const cv::Mat &queryDescript
   return goodMatches;
 }
 
-std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDescriptor,
-                                                        const cv::Mat &trainDescriptor,
-                                                        std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingStrategy::fastRobustMatch(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor, std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> goodMatches;
 
   std::vector<std::vector<cv::DMatch>> matches;
-  bool err = mMatcher->match(queryDescriptor, trainDescriptor, matches);
+  bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches);
   if (err) return goodMatches;
 
   std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
@@ -642,12 +938,160 @@ std::vector<cv::DMatch> RobustMatching::fastRobustMatch(const cv::Mat &queryDesc
   }
 
   return goodMatches;
+}
 
+bool RobustMatchingStrategy::compute(const cv::Mat &queryDescriptor,
+                                     const cv::Mat &trainDescriptor,
+                                     const std::vector<cv::KeyPoint> &keypoints1,
+                                     const std::vector<cv::KeyPoint> &keypoints2,
+                                     std::vector<cv::DMatch> *goodMatches,
+                                     std::vector<cv::DMatch> *wrongMatches,
+                                     const QSize &queryImageSize,
+                                     const QSize &trainImageSize)
+{
+  try {
+    *goodMatches = this->match(queryDescriptor, trainDescriptor, wrongMatches);
+    *goodMatches = this->geometricFilter(*goodMatches, keypoints1, keypoints2, wrongMatches);
+  } catch(std::exception &e){
+    return true;
+  }
+  return false;
 }
 
 
+/*----------------------------------------------------------------*/
+
+
+GmsProperties::GmsProperties()
+  : IGms(),
+    mRotation(true),
+    mScale(true),
+    mThreshold(0.6)
+{
+
+}
+
+void GmsProperties::reset()
+{
+  mRotation = true;
+  mScale = true;
+  mThreshold = 6.0;
+}
+
+QString GmsProperties::name() const
+{
+  return QString("GMS");
+}
+
+bool GmsProperties::rotation() const
+{
+  return mRotation;
+}
+
+void GmsProperties::setRotation(bool rotation)
+{
+  mRotation = rotation;
+}
+
+bool GmsProperties::scale() const
+{
+  return mScale;
+}
+
+void GmsProperties::setScale(bool scale)
+{
+  mScale = scale;
+}
+
+double GmsProperties::threshold() const
+{
+  return mThreshold;
+}
+
+void GmsProperties::setThreshold(double threshold)
+{
+  mThreshold = threshold;
+}
 
 /*----------------------------------------------------------------*/
+
+
+GsmStrategy::GsmStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
+  : GmsProperties(),
+    MatchingAlgorithm(),
+    mDescriptorMatcher(descriptorMatcher)
+{
+}
+
+GsmStrategy::GsmStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+                         bool rotation,
+                         bool scale,
+                         double threshold)
+  : GmsProperties(),
+    MatchingAlgorithm(),
+    mDescriptorMatcher(descriptorMatcher)
+{
+  this->setRotation(rotation);
+  this->setScale(scale);
+  this->setThreshold(threshold);
+}
+
+GsmStrategy::~GsmStrategy()
+{
+
+}
+
+bool GsmStrategy::compute(const cv::Mat &queryDescriptor,
+                          const cv::Mat &trainDescriptor,
+                          const std::vector<cv::KeyPoint> &keypoints1,
+                          const std::vector<cv::KeyPoint> &keypoints2,
+                          std::vector<cv::DMatch> *goodMatches,
+                          std::vector<cv::DMatch> *wrongMatches,
+                          const QSize &queryImageSize,
+                          const QSize &trainImageSize)
+{
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1 )
+  try {
+
+    if (goodMatches == nullptr) return true;
+
+    std::vector<cv::DMatch> matches;
+    bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches);
+    if (err) return true;
+
+    cv::Size img1Size(queryImageSize.width(), queryImageSize.height());
+    cv::Size img2Size(trainImageSize.width(), trainImageSize.height());
+    cv::xfeatures2d::matchGMS(img1Size, img2Size, keypoints1, keypoints2, matches, *goodMatches);
+
+    for (size_t i = 0; i < matches.size(); i++) {
+      bool bWrong = true;
+      for (size_t j = 0; j < goodMatches->size(); j++) {
+        if (matches[i].queryIdx == (*goodMatches)[j].queryIdx &&
+            matches[i].trainIdx == (*goodMatches)[j].trainIdx) {
+          bWrong = false;
+          break;
+        }
+      }
+      if (bWrong) {
+        wrongMatches->push_back(matches[i]);
+      }
+    }
+
+    /// TODO: devolver wrongMatches
+
+  } catch(std::exception &e){
+    msgError(e.what());
+    return true;
+  }
+#  else
+  TL_COMPILER_WARNING("'matchGMS' not supported in OpenCV versions < 3.3.1")
+#endif
+  return false;
+}
+
+
+/*----------------------------------------------------------------*/
+
 
 
 void matchesWrite(const QString &fname,

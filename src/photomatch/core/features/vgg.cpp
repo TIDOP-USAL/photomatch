@@ -233,11 +233,7 @@ bool VggDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPo
   }
 
 #  else
-  QString msg("VGG Descriptor not supported in OpenCV ");
-  msg.append(CV_VERSION);
-  QByteArray ba = msg.toLocal8Bit();
-  const char *cmsg = ba.data();
-  TL_COMPILER_WARNING(cmsg)
+  TL_COMPILER_WARNING("VGG Descriptor not supported in OpenCV versions < 3.3 ")
 #endif
   return false;
 }

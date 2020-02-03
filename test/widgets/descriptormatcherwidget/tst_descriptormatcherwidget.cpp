@@ -41,7 +41,12 @@ private slots:
   void test_essentialMatrixMethod();
   void test_maxIters_data();
   void test_maxIters();
-  void test_reset();
+  void test_gmsRotation_data();
+  void test_gmsRotation();
+  void test_gmsScale_data();
+  void test_gmsScale();
+  void test_gmsThreshold_data();
+  void test_gmsThreshold();
 
 private:
 
@@ -70,7 +75,37 @@ void TestDescriptorMatcherWidget::initTestCase()
 
 void TestDescriptorMatcherWidget::cleanupTestCase()
 {
+  mDescriptorMatcherWidget->setMatchingMethod("FLANN");
+  mDescriptorMatcherWidget->setNormType("NORM_L2");
+  mDescriptorMatcherWidget->setRatio(0.5);
+  mDescriptorMatcherWidget->setGeometricTest("Fundamental Matrix");
+  mDescriptorMatcherWidget->setHomographyComputeMethod("All Points");
+  mDescriptorMatcherWidget->setFundamentalComputeMethod("LMedS");
+  mDescriptorMatcherWidget->setEssentialComputeMethod("LMedS");
+  mDescriptorMatcherWidget->setDistance(0.3);
+  mDescriptorMatcherWidget->setConfidence(0.2);
+  mDescriptorMatcherWidget->setCrossMatching(false);
+  mDescriptorMatcherWidget->setGmsScale(true);
+  mDescriptorMatcherWidget->setGmsRotation(true);
+  mDescriptorMatcherWidget->setGmsThreshold(2.0);
 
+  mDescriptorMatcherWidget->reset();
+
+  /// Check default values
+  QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
+  QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
+  QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
+  QCOMPARE("Homography Matrix", mDescriptorMatcherWidget->geometricTest());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->homographyComputeMethod());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->fundamentalComputeMethod());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->essentialComputeMethod());
+  QCOMPARE(0.7, mDescriptorMatcherWidget->distance());
+  QCOMPARE(0.999, mDescriptorMatcherWidget->confidence());
+  QCOMPARE(2000, mDescriptorMatcherWidget->maxIters());
+  QCOMPARE(true, mDescriptorMatcherWidget->crossMatching());
+  QCOMPARE(false, mDescriptorMatcherWidget->gmsScale());
+  QCOMPARE(false, mDescriptorMatcherWidget->gmsRotation());
+  QCOMPARE(6.0, mDescriptorMatcherWidget->gmsThreshold());
 }
 
 void TestDescriptorMatcherWidget::test_defaultConstructor()
@@ -88,6 +123,9 @@ void TestDescriptorMatcherWidget::test_defaultConstructor()
   QCOMPARE(0.999, descriptorMatcherWidget.confidence());
   QCOMPARE(2000, descriptorMatcherWidget.maxIters());
   QCOMPARE(true, descriptorMatcherWidget.crossMatching());
+  QCOMPARE(false, descriptorMatcherWidget.gmsScale());
+  QCOMPARE(false, descriptorMatcherWidget.gmsRotation());
+  QCOMPARE(6.0, descriptorMatcherWidget.gmsThreshold());
 }
 
 void TestDescriptorMatcherWidget::test_windowTitle()
@@ -209,6 +247,15 @@ void TestDescriptorMatcherWidget::test_crossMatching_data()
   QTest::newRow("false") << false << false;
 }
 
+void TestDescriptorMatcherWidget::test_crossMatching()
+{
+  QFETCH(bool, value);
+  QFETCH(bool, result);
+
+  mDescriptorMatcherWidget->setCrossMatching(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->crossMatching());
+}
+
 void TestDescriptorMatcherWidget::test_geometricTest_data()
 {
   QTest::addColumn<QString>("value");
@@ -313,42 +360,59 @@ void TestDescriptorMatcherWidget::test_maxIters()
   QCOMPARE(result, mDescriptorMatcherWidget->maxIters());
 }
 
-void TestDescriptorMatcherWidget::test_crossMatching()
+void TestDescriptorMatcherWidget::test_gmsRotation_data()
+{
+  QTest::addColumn<bool>("value");
+  QTest::addColumn<bool>("result");
+
+  QTest::newRow("true") << true << true;
+  QTest::newRow("false") << false << false;
+}
+
+void TestDescriptorMatcherWidget::test_gmsRotation()
 {
   QFETCH(bool, value);
   QFETCH(bool, result);
 
-  mDescriptorMatcherWidget->setCrossMatching(value);
-  QCOMPARE(result, mDescriptorMatcherWidget->crossMatching());
+  mDescriptorMatcherWidget->setGmsRotation(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->gmsRotation());
 }
 
-void TestDescriptorMatcherWidget::test_reset()
+void TestDescriptorMatcherWidget::test_gmsScale_data()
 {
-  mDescriptorMatcherWidget->setMatchingMethod("FLANN");
-  mDescriptorMatcherWidget->setNormType("NORM_L2");
-  mDescriptorMatcherWidget->setRatio(0.5);
-  mDescriptorMatcherWidget->setGeometricTest("Fundamental Matrix");
-  mDescriptorMatcherWidget->setHomographyComputeMethod("All Points");
-  mDescriptorMatcherWidget->setFundamentalComputeMethod("LMedS");
-  mDescriptorMatcherWidget->setEssentialComputeMethod("LMedS");
-  mDescriptorMatcherWidget->setDistance(0.3);
-  mDescriptorMatcherWidget->setConfidence(0.2);
-  mDescriptorMatcherWidget->setCrossMatching(false);
+  QTest::addColumn<bool>("value");
+  QTest::addColumn<bool>("result");
 
-  mDescriptorMatcherWidget->reset();
+  QTest::newRow("true") << true << true;
+  QTest::newRow("false") << false << false;
+}
 
-  /// Check default values
-  QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
-  QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
-  QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
-  QCOMPARE("Homography Matrix", mDescriptorMatcherWidget->geometricTest());
-  QCOMPARE("RANSAC", mDescriptorMatcherWidget->homographyComputeMethod());
-  QCOMPARE("RANSAC", mDescriptorMatcherWidget->fundamentalComputeMethod());
-  QCOMPARE("RANSAC", mDescriptorMatcherWidget->essentialComputeMethod());
-  QCOMPARE(0.7, mDescriptorMatcherWidget->distance());
-  QCOMPARE(0.999, mDescriptorMatcherWidget->confidence());
-  QCOMPARE(2000, mDescriptorMatcherWidget->maxIters());
-  QCOMPARE(true, mDescriptorMatcherWidget->crossMatching());
+void TestDescriptorMatcherWidget::test_gmsScale()
+{
+  QFETCH(bool, value);
+  QFETCH(bool, result);
+
+  mDescriptorMatcherWidget->setGmsScale(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->gmsScale());
+}
+
+void TestDescriptorMatcherWidget::test_gmsThreshold_data()
+{
+  QTest::addColumn<double>("value");
+  QTest::addColumn<double>("result");
+
+  QTest::newRow("1.") << 1. << 1.;
+  QTest::newRow("6.0") << 6.0 << 6.0;
+  QTest::newRow("20.0") << 20.0 << 20.0;
+}
+
+void TestDescriptorMatcherWidget::test_gmsThreshold()
+{
+  QFETCH(double, value);
+  QFETCH(double, result);
+
+  mDescriptorMatcherWidget->setGmsThreshold(value);
+  QCOMPARE(result, mDescriptorMatcherWidget->gmsThreshold());
 }
 
 QTEST_MAIN(TestDescriptorMatcherWidget)

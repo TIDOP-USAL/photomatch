@@ -88,7 +88,7 @@ Settings::Settings()
     mMatchMethod("Flann Based Matching"),
     mFlannMatcher(new FlannMatcherProperties),
     mBruteForceMatcher(new BruteForceMatcherProperties),
-    mRobustMatcherRefinement(new RobustMatcherProperties),
+    mRobustMatcherRefinement(new RobustMatchingProperties),
     mKeypointViewerBGColor("#dcdcdc"),
     mKeypointsViewerMarkerType(0),
     mKeypointViewerMarkerSize(20),

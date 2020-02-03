@@ -146,7 +146,7 @@ protected:
   QSpinBox *mOctaves;
   QSpinBox *mOctaveLayers;
   QCheckBox *mExtendedDescriptor;
-  QCheckBox *mRotatedFeatures;
+  QCheckBox *mUpright;
 
 };
 

@@ -16,7 +16,7 @@ SurfWidget::SurfWidget(QWidget *parent)
     mOctaves(new QSpinBox(this)),
     mOctaveLayers(new QSpinBox(this)),
     mExtendedDescriptor(new QCheckBox(this)),
-    mRotatedFeatures(new QCheckBox(this))
+    mUpright(new QCheckBox(this))
 {
   init();
 
@@ -25,7 +25,7 @@ SurfWidget::SurfWidget(QWidget *parent)
   connect(mOctaves,             SIGNAL(valueChanged(int)),       this, SIGNAL(octavesChange(int)));
   connect(mOctaveLayers,        SIGNAL(valueChanged(int)),       this, SIGNAL(octaveLayersChange(int)));
   connect(mExtendedDescriptor,  SIGNAL(clicked(bool)),           this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mRotatedFeatures,     SIGNAL(clicked(bool)),           this, SIGNAL(uprightChange(bool)));
+  connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(uprightChange(bool)));
 }
 
 SurfWidget::~SurfWidget()
@@ -54,7 +54,7 @@ bool SurfWidget::extendedDescriptor() const
 
 bool SurfWidget::upright() const
 {
-  return mRotatedFeatures->isChecked();
+  return mUpright->isChecked();
 }
 
 void SurfWidget::setHessianThreshold(double hessianThreshold)
@@ -80,9 +80,9 @@ void SurfWidget::setExtendedDescriptor(bool extendedDescriptor)
   mExtendedDescriptor->setChecked(extendedDescriptor);
 }
 
-void SurfWidget::seUpright(bool rotatedFeatures)
+void SurfWidget::seUpright(bool upright)
 {
-  mRotatedFeatures->setChecked(rotatedFeatures);
+  mUpright->setChecked(upright);
 }
 
 void SurfWidget::update()
@@ -104,7 +104,7 @@ void SurfWidget::reset()
   mOctaves->setValue(4);
   mOctaveLayers->setValue(3);
   mExtendedDescriptor->setChecked(false);
-  mRotatedFeatures->setChecked(false);
+  mUpright->setChecked(false);
 }
 
 void SurfWidget::init()
@@ -136,8 +136,8 @@ void SurfWidget::init()
   mExtendedDescriptor->setText(tr("Extended Descriptor"));
   propertiesLayout->addWidget(mExtendedDescriptor, 3, 0);
 
-  mRotatedFeatures->setText(tr("Upright"));
-  propertiesLayout->addWidget(mRotatedFeatures, 4, 0);
+  mUpright->setText(tr("Upright"));
+  propertiesLayout->addWidget(mUpright, 4, 0);
 
   reset(); /// set default values
 

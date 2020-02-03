@@ -666,7 +666,7 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                         }
                       } else if (stream.name() == "RobustMatcherRefinement") {
 
-                        std::shared_ptr<IRobustMatcherRefinement> rmr = std::make_shared<RobustMatcherProperties>();
+                        std::shared_ptr<IRobustMatcherRefinement> rmr = std::make_shared<RobustMatchingProperties>();
                         while (stream.readNextStartElement()) {
                           if (stream.name() == "Ratio") {
                             rmr->setRatio(stream.readElementText().toDouble());

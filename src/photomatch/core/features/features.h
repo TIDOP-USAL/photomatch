@@ -89,7 +89,9 @@ public:
 
 };
 
+
 /*----------------------------------------------------------------*/
+
 
 class PHOTOMATCH_EXPORT DescriptorExtractor
 {

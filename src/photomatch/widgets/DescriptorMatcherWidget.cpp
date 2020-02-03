@@ -14,6 +14,7 @@ namespace photomatch
 DescriptorMatcherWidget::DescriptorMatcherWidget(QWidget *parent)
   : IDescriptorMatcherWidget(parent),
     mMatchingMethod(new QComboBox(this)),
+    mMatchingStrategy(new QComboBox(this)),
     mNormType(new QComboBox(this)),
     mRatio(new QDoubleSpinBox(this)),
     mGeometricTest(new QComboBox(this)),
@@ -23,12 +24,16 @@ DescriptorMatcherWidget::DescriptorMatcherWidget(QWidget *parent)
     mCrossMatching(new QCheckBox(this)),
     mHComputeMethod(new QComboBox(this)),
     mFComputeMethod(new QComboBox(this)),
-    mEComputeMethod(new QComboBox(this))
+    mEComputeMethod(new QComboBox(this)),
+    mRotationGMS(new QCheckBox(this)),
+    mScaleGMS(new QCheckBox(this)),
+    mThresholdGMS(new QDoubleSpinBox(this))
 {
   init();
 
   /// Signals and slots
   connect(mMatchingMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingMethodChange(QString)));
+  connect(mMatchingStrategy,     SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingStrategyChange(QString)));
   connect(mNormType,             SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normTypeChange(QString)));
   connect(mRatio,                SIGNAL(valueChanged(double)),         this, SIGNAL(ratioChange(double)));
   connect(mDistance,             SIGNAL(valueChanged(double)),         this, SIGNAL(distanceChange(double)));
@@ -39,8 +44,12 @@ DescriptorMatcherWidget::DescriptorMatcherWidget(QWidget *parent)
   connect(mHComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(homographyComputeMethodChange(QString)));
   connect(mFComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(fundamentalComputeMethodChange(QString)));
   connect(mEComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(essentialComputeMethodChange(QString)));
+  connect(mRotationGMS,          SIGNAL(clicked(bool)),                this, SIGNAL(gmsRotationChange(bool)));
+  connect(mScaleGMS,             SIGNAL(clicked(bool)),                this, SIGNAL(gmsScaleChange(bool)));
+  connect(mThresholdGMS,         SIGNAL(valueChanged(double)),         this, SIGNAL(gmsThresholdChange(double)));
 
   connect(this, SIGNAL(matchingMethodChange(QString)),           this,  SLOT(update()));
+  connect(this, SIGNAL(matchingStrategyChange(QString)),         this,  SLOT(update()));
   connect(this, SIGNAL(geometricTestChange(QString)),            this,  SLOT(update()));
   connect(this, SIGNAL(homographyComputeMethodChange(QString)),  this,  SLOT(update()));
   connect(this, SIGNAL(fundamentalComputeMethodChange(QString)), this,  SLOT(update()));
@@ -55,6 +64,11 @@ DescriptorMatcherWidget::~DescriptorMatcherWidget()
 QString DescriptorMatcherWidget::matchingMethod() const
 {
   return mMatchingMethod->currentText();
+}
+
+QString DescriptorMatcherWidget::matchingStrategy() const
+{
+  return mMatchingStrategy->currentText();
 }
 
 QString DescriptorMatcherWidget::normType() const
@@ -107,10 +121,32 @@ bool DescriptorMatcherWidget::crossMatching() const
   return mCrossMatching->isChecked();
 }
 
+bool DescriptorMatcherWidget::gmsRotation() const
+{
+  return mRotationGMS->isChecked();
+}
+
+bool DescriptorMatcherWidget::gmsScale() const
+{
+  return mScaleGMS->isChecked();
+}
+
+double DescriptorMatcherWidget::gmsThreshold() const
+{
+  return mThresholdGMS->value();
+}
+
 void DescriptorMatcherWidget::setMatchingMethod(const QString &matchingMethod)
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
   mMatchingMethod->setCurrentText(matchingMethod);
+  update();
+}
+
+void DescriptorMatcherWidget::setMatchingStrategy(const QString &matchingStrategy)
+{
+  const QSignalBlocker blockerMatchingMethod(mMatchingStrategy);
+  mMatchingStrategy->setCurrentText(matchingStrategy);
   update();
 }
 
@@ -199,12 +235,36 @@ void DescriptorMatcherWidget::enableBruteForceNorm(const QString &norm)
   }
 }
 
+void DescriptorMatcherWidget::setGmsRotation(bool active)
+{
+  mRotationGMS->setChecked(active);
+}
+
+void DescriptorMatcherWidget::setGmsScale(bool active)
+{
+  mScaleGMS->setChecked(active);
+}
+
+void DescriptorMatcherWidget::setGmsThreshold(double threshold)
+{
+  const QSignalBlocker blocker(mThresholdGMS);
+  mThresholdGMS->setValue(threshold);
+}
+
 void DescriptorMatcherWidget::update()
 {
   if (mMatchingMethod->currentText().compare("FLANN") == 0){
     mGroupBoxBFParameters->hide();
   } else {
     mGroupBoxBFParameters->show();
+  }
+
+  if (mMatchingStrategy->currentText().compare("GMS") == 0){
+    mGroupBoxFilteringTest->hide();
+    mGroupBoxGMS->show();
+  } else {
+    mGroupBoxFilteringTest->show();
+    mGroupBoxGMS->hide();
   }
 
   QString geomTest = mGeometricTest->currentText();
@@ -300,6 +360,7 @@ void DescriptorMatcherWidget::retranslate()
 void DescriptorMatcherWidget::reset()
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
+  const QSignalBlocker blockerMatchingStrategy(mMatchingStrategy);
   const QSignalBlocker blockerNormType(mNormType);
   const QSignalBlocker blockerRatio(mRatio);
   const QSignalBlocker blockerGeometricTest(mGeometricTest);
@@ -309,10 +370,14 @@ void DescriptorMatcherWidget::reset()
   const QSignalBlocker blockerDistance(mDistance);
   const QSignalBlocker blockerConfidence(mConfidence);
   const QSignalBlocker blockerMaxIters(mMaxIters);
+  const QSignalBlocker blockerThresholdGMS(mThresholdGMS);
 
   mMatchingMethod->setCurrentText("Brute-Force");
   mNormType->setCurrentText("NORM_L1");
   mGroupBoxBFParameters->show();
+  mMatchingStrategy->setCurrentText("Robust Matching");
+  mGroupBoxFilteringTest->show();
+  mGroupBoxGMS->hide();
   mRatio->setValue(0.8);
   mGeometricTest->setCurrentText("Homography Matrix");
   mHComputeMethod->setCurrentText("RANSAC");
@@ -322,6 +387,9 @@ void DescriptorMatcherWidget::reset()
   mConfidence->setValue(0.999);
   mMaxIters->setValue(2000);
   mCrossMatching->setChecked(true);
+  mRotationGMS->setChecked(false);
+  mScaleGMS->setChecked(false);
+  mThresholdGMS->setValue(6.0);
 
   update();
 }
@@ -339,8 +407,13 @@ void DescriptorMatcherWidget::init()
   mMatchingMethod->addItem("FLANN");
   layout->addWidget(mMatchingMethod, 0, 1);
 
+  layout->addWidget(new QLabel(tr("Matching Strategy:")), 1, 0);
+  mMatchingStrategy->addItem("Robust Matching");
+  mMatchingStrategy->addItem("GMS");
+  layout->addWidget(mMatchingStrategy, 1, 1);
+
   mGroupBoxBFParameters = new QGroupBox(tr("Brute Force Parameters"), this);
-  layout->addWidget(mGroupBoxBFParameters, 1, 0, 1, 2);
+  layout->addWidget(mGroupBoxBFParameters, 2, 0, 1, 2);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBoxBFParameters->setLayout(propertiesLayout);
@@ -353,8 +426,10 @@ void DescriptorMatcherWidget::init()
   mNormType->addItem("NORM_HAMMING2");
   propertiesLayout->addWidget(mNormType, 0, 1);
 
+  /// Robust Matching
+
   mGroupBoxFilteringTest = new QGroupBox(tr("Filtering Test"), this);
-  layout->addWidget(mGroupBoxFilteringTest, 2, 0, 1, 2);
+  layout->addWidget(mGroupBoxFilteringTest, 3, 0, 1, 2);
 
   QGridLayout *filteringTestLayout = new QGridLayout();
   mGroupBoxFilteringTest->setLayout(filteringTestLayout);
@@ -415,6 +490,24 @@ void DescriptorMatcherWidget::init()
   mMaxIters->setRange(0, 10000);
   mMaxIters->setSingleStep(1);
   filteringTestLayout->addWidget(mMaxIters, 8, 1);
+
+  mGroupBoxGMS = new QGroupBox(tr("GMS"), this);
+  layout->addWidget(mGroupBoxGMS, 3, 0, 1, 2);
+
+  QGridLayout *gmsLayout = new QGridLayout();
+  mGroupBoxGMS->setLayout(gmsLayout);
+
+  mRotationGMS->setText(tr("Rotation:"));
+  gmsLayout->addWidget(mRotationGMS, 0, 0);
+
+  mScaleGMS->setText(tr("Scale:"));
+  gmsLayout->addWidget(mScaleGMS, 1, 0);
+
+  gmsLayout->addWidget(new QLabel(tr("Threshold:")), 2, 0);
+  mThresholdGMS->setDecimals(1);
+  mThresholdGMS->setRange(0.1, 100.);
+  mThresholdGMS->setSingleStep(0.1);
+  gmsLayout->addWidget(mThresholdGMS, 2, 1);
 
   reset(); /// set default values
 

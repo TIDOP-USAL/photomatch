@@ -53,11 +53,12 @@ void KeyPointsFilterNBest::setNPoints(int nPoints)
 
 bool KeyPointsFilterNBest::filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints)
 {
-  if (filteredKeypoints.size() <= static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints()))
-    return false;
-
   try {
+
     filteredKeypoints = keypoints;
+    if (filteredKeypoints.size() <= static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints()))
+      return false;
+
     cv::KeyPointsFilter::retainBest(filteredKeypoints, KeyPointsFilterNBestProperties::nPoints());
     if (filteredKeypoints.size() != static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints())){
       /// Los keypoints no tienen 'response'. Por ahora...
