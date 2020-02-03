@@ -47,6 +47,8 @@ class ProgressHandler;
 class IProgressDialog;
 class AboutDialog;
 class HelpDialog;
+class TabHandler;
+class StartPageWidget;
 
 class MainWindowPresenter
   : public IPresenter
@@ -83,7 +85,9 @@ protected slots:
   void closeProject();
   void exit();
 
+  void openStartPage();
   void openSettings();
+  void openGitHub();
 
   /* Menú View */
 
@@ -141,7 +145,6 @@ protected slots:
   void updatePreprocess();
   void updateFeatures();
   void updateMatches();
-  void loadKeyPoints(const QString &image);
   void deleteSession(const QString &sessionName);
   void deletePreprocess();
   void deleteFeatures();
@@ -175,6 +178,8 @@ private:
 
   void initExportFeaturesDialog();
   void initExportMatchesDialog();
+
+  void initStartPage();
 
   /*!
    * \brief Inicializa la herramienta de configuración de la aplicación
@@ -291,6 +296,9 @@ protected:
 
   ProgressHandler *mProgressHandler;
   IProgressDialog *mProgressDialog;
+
+  TabHandler *mTabHandler;
+  StartPageWidget *mStartPageWidget;
   //QTextEdit *mConsole;
 };
 

@@ -13,6 +13,7 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class QComboBox;
 class QProgressBar;
+class QGridLayout;
 
 namespace photomatch
 {
@@ -20,6 +21,7 @@ namespace photomatch
 class ThumbnailsWidget;
 class LogWidget;
 class GraphicViewer;
+class TabHandler;
 
 class MainWindowView
   : public QMainWindow
@@ -76,7 +78,12 @@ public:
   void setProperties(const std::list<std::pair<QString, QString> > &properties);
 
   QProgressBar *progressBar();
-  QTabWidget *tabWidget();
+
+  /*!
+   * \brief Tab handler
+   * \return
+   */
+  TabHandler *tabHandler();
 
 public slots:
 
@@ -101,17 +108,6 @@ public slots:
   void deletePreprocess(const QString &session, const QString &preprocess);
   void deleteFeatures(const QString &session, const QString &feat);
   void deleteMatches(const QString &session, const QString &matches);
-
-  /*!
-   * \brief Abre una imagen
-   * \param[in] file
-   */
-  void showImage(const QString &file);
-
-  void addKeyPoint(const QPointF &pt, double size, double angle);
-
-  void showMatches(const QString &pairLeft, const QString &pairRight, const std::vector<std::pair<QPointF, QPointF>> &matches);
-
   void setActiveSession(const QString &session);
 
 signals:
@@ -132,6 +128,7 @@ signals:
 
   /* Menú View */
 
+  void openStartPage();
   void openViewSettings();
 
   /* Menú herramientas */
@@ -176,7 +173,6 @@ signals:
   void selectDescriptor(QString);
   void selectImageFeatures(QString);
 
-  void loadKeyPoints(QString);
   void openImageMatches(QString, QString, QString);
 
   void activeSessionChange(QString);
@@ -194,13 +190,8 @@ private slots:
   void update();
   void openFromHistory();
   void onSelectionChanged();
-  void hideTab(int id);
-  void tabChanged(int id);
   void onItemDoubleClicked(QTreeWidgetItem *item, int column);
-  void openStartPage();
-  void onCommandLinkButtonGitHubClicked();
   void onTreeContextMenu(const QPoint &point);
-  void onTabWidgetContextMenu(const QPoint &point);
 
 private:
 
@@ -256,13 +247,14 @@ protected:
   QMenu *mMenuExport;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
-  GraphicViewer *mGraphicViewer;
   QWidget *mStartPageWidget;
   QComboBox *mComboBoxActiveSession;
   QProgressBar *mProgressBar;
 
   tl::EnumFlags<Flag> mFlags;
   std::vector<QAction*> mHistory;
+  QGridLayout *mLayoutCentral;
+  TabHandler *mTabHandler;
 
 private:
 

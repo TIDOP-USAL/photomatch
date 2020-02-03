@@ -47,6 +47,8 @@
 #include "photomatch/ui/utils/Progress.h"
 #include "photomatch/ui/utils/ProgressDialog.h"
 //#include "photomatch/ui/utils/KeyPointGraphicsItem.h"
+#include "photomatch/ui/utils/TabHandler.h"
+#include "photomatch/ui/utils/GraphicViewer.h"
 #include "photomatch/ui/ExportFeaturesModel.h"
 #include "photomatch/ui/ExportFeaturesView.h"
 #include "photomatch/ui/ExportFeaturesPresenter.h"
@@ -58,6 +60,8 @@
 //#include "photomatch/ui/BatchPresenter.h"
 #include "photomatch/core/project.h"
 
+#include "photomatch/widgets/StartPageWidget.h"
+
 /* TidopLib */
 #include <tidop/core/messages.h>
 
@@ -67,6 +71,9 @@
 #include <QImageReader>
 #include <QProgressBar>
 #include <QMenu>
+#include <QDesktopServices>
+#include <QUrl>
+#include <QPainter>
 
 namespace photomatch
 {
@@ -115,7 +122,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mAboutDialog(nullptr),
     //mHelpDialog(nullptr),
     mProgressHandler(nullptr),
-    mProgressDialog(nullptr)
+    mProgressDialog(nullptr),
+    mTabHandler(nullptr),
+    mStartPageWidget(nullptr)
 {
   init();
 
@@ -139,6 +148,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   /* Menú View */
 
+  connect(mView,   SIGNAL(openStartPage()),           this, SLOT(openStartPage()));
   connect(mView,   SIGNAL(openSettings()),            this, SLOT(openSettings()));
   connect(mView,   SIGNAL(openViewSettings()),        this, SLOT(openViewSettings()));
 
@@ -185,7 +195,6 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   connect(mView, SIGNAL(selectImageFeatures(QString)),   this, SLOT(selectImageFeatures(QString)));
 
   /* Visor de imagenes */
-  connect(mView, SIGNAL(loadKeyPoints(QString)),      this, SLOT(loadKeyPoints(QString)));
   connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
 
   //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
@@ -195,6 +204,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   connect(mView, SIGNAL(openFeatures(QString, QString)),          this, SLOT(openKeypointsViewer(QString, QString)));
   connect(mView, SIGNAL(openMatches(QString, QString, QString)),  this, SLOT(openMatchesViewer(QString, QString, QString)));
+
+  /* Tab Handler */
+
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -579,10 +591,36 @@ void MainWindowPresenter::exit()
   mView->close();
 }
 
+void MainWindowPresenter::openStartPage()
+{
+  initStartPage();
+
+  const QSignalBlocker blocker(mTabHandler);
+  int id = -1;
+  for (int i = 0; i < mTabHandler->count(); i++){
+    if (mTabHandler->tabText(i) == mStartPageWidget->windowTitle()){
+      id = -1;
+      mTabHandler->setCurrentIndex(id);
+      break;
+    }
+  }
+
+  if (id == -1){
+    id = mTabHandler->addTab(mStartPageWidget, mStartPageWidget->windowTitle());
+    mTabHandler->setCurrentIndex(id);
+    mTabHandler->setTabToolTip(id, mStartPageWidget->windowTitle());
+  }
+}
+
 void MainWindowPresenter::openSettings()
 {
   initSettingsDialog();
   mSettingsPresenter->open();
+}
+
+void MainWindowPresenter::openGitHub()
+{
+  QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
 }
 
 void MainWindowPresenter::openViewSettings()
@@ -677,6 +715,7 @@ void MainWindowPresenter::loadImages()
 
     mProjectModel->addImages(fileNames);
 
+    ///TODO: no pasar las imagenes directamente a la vista
     mView->addImages(fileNames);
 
     msgInfo("Load images");
@@ -738,7 +777,7 @@ void MainWindowPresenter::loadProject()
   /// Se añade al historial de proyectos recientes
   mSettingsModel->addToHistory(prjFile);
   mView->updateHistory(mSettingsModel->history());
-
+  mStartPageWidget->setHistory(mSettingsModel->history());
 
   mView->setProjectTitle(mProjectModel->name());
   mView->setFlag(MainWindowView::Flag::project_exists, true);
@@ -795,10 +834,8 @@ void MainWindowPresenter::updateProject()
 
 void MainWindowPresenter::openImage(const QString &image)
 {
-  mView->showImage(image);
-//  if (mView->showKeyPoints()){
-//    this->loadKeyPoints(image);
-//  }
+  //mView->showImage(image);
+  mTabHandler->setImage(image);
 }
 
 void MainWindowPresenter::activeImage(const QString &image)
@@ -1205,21 +1242,58 @@ void MainWindowPresenter::openImageMatches(const QString &sessionName, const QSt
   if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
     return;
 
-  if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
+  QString name(sessionName);
+  name.append("/").append(imgName1).append("-").append(imgName2);
+  int idTab = mTabHandler->graphicViewerId(name);
+  if (idTab == -1){
 
-    std::vector<std::pair<QString, QString>> pairs = session->matches(imgName1);
-    if (!pairs.empty()){
-      for (auto &pair : pairs){
-        if (pair.first.compare(imgName2) == 0){
-          matches = mModel->loadMatches(pair.second, session->features(imgName1), session->features(imgName2));
+    if (std::shared_ptr<Session> session = mProjectModel->findSession(sessionName)){
 
-          break;
+      std::vector<std::pair<QString, QString>> pairs = session->matches(imgName1);
+      if (!pairs.empty()){
+        for (auto &pair : pairs){
+          if (pair.first.compare(imgName2) == 0){
+            matches = mModel->loadMatches(pair.second, session->features(imgName1), session->features(imgName2));
+
+            break;
+          }
         }
       }
     }
-  }
 
-  mView->showMatches(imgPath1, imgPath2, matches);
+    GraphicViewer *graphicViewer = mTabHandler->addGraphicViewer(name);
+    if (graphicViewer){
+      QImage imageLeft(imgPath1);
+      QImage imageRight(imgPath2);
+      int height = imageLeft.height() > imageRight.height() ? imageLeft.height() : imageRight.height();
+      QImage pair(imageLeft.width() + imageRight.width(), height, imageLeft.format());
+
+      QPainter painter;
+      painter.begin(&pair);
+      painter.drawImage(0, 0, imageLeft);
+      painter.drawImage(imageLeft.width(), 0, imageRight);
+      QPen point_pen(QColor(0, 0, 255), 2.);
+      point_pen.setCosmetic(true);
+      QPen line_pen(QColor(229, 9, 127), 2.);
+      line_pen.setCosmetic(true);
+      painter.end();
+
+      graphicViewer->setImage(pair);
+
+      for (size_t i = 0; i < matches.size(); i++){
+        graphicViewer->scene()->addLine(matches[i].first.x(), matches[i].first.y(),
+                                        imageLeft.width() + matches[i].second.x(),
+                                        matches[i].second.y(), line_pen);
+        graphicViewer->scene()->addEllipse(matches[i].first.x() - 5, matches[i].first.y() - 5, 10, 10, point_pen);
+        graphicViewer->scene()->addEllipse(imageLeft.width() + matches[i].second.x() - 5, matches[i].second.y() - 5, 10, 10, point_pen);
+      }
+
+      graphicViewer->zoomExtend();
+
+    }
+  } else {
+    mTabHandler->setCurrentTab(idTab);
+  }
 }
 
 void MainWindowPresenter::updatePreprocess()
@@ -1250,27 +1324,6 @@ void MainWindowPresenter::updateMatches()
     if (project_modified)
       mView->setFlag(MainWindowView::Flag::project_modified, project_modified);
   }
-}
-
-void MainWindowPresenter::loadKeyPoints(const QString &image)
-{
-  QFileInfo fileInfo(image);
-  QString features = mProjectModel->currentSession()->features(fileInfo.baseName());
-
-  std::vector<std::tuple<QPointF, double, double>> keyPoints = mModel->loadKeyPoints(features);
-
-  if (keyPoints.size() > 0){
-
-    for (size_t i = 0; i < keyPoints.size(); i++){
-      QPointF point;
-      double size, angle;
-      std::tie(point, size, angle) = keyPoints[i];
-      //point *= scale;
-      mView->addKeyPoint(point, size/* * scale*/, angle);
-    }
-
-  }
-
 }
 
 void MainWindowPresenter::deleteSession(const QString &sessionName)
@@ -1391,7 +1444,12 @@ void MainWindowPresenter::init()
 
   initHelpDialog();
 
+  mTabHandler = mView->tabHandler();
+  openStartPage(); /// Show Start Page
+
+  /* Projects history */
   mView->updateHistory(mSettingsModel->history());
+  mStartPageWidget->setHistory(mSettingsModel->history());
 }
 
 void MainWindowPresenter::initNewProjectDialog()
@@ -1432,6 +1490,20 @@ void MainWindowPresenter::initExportMatchesDialog()
     IExportMatchesView *exportMatchesView = new ExportMatchesView(mView);
     mExportMatchesModel = new ExportMatchesModel(mProjectModel);
     mExportMatchesPresenter = new ExportMatchesPresenter(exportMatchesView, mExportMatchesModel);
+    }
+}
+
+void MainWindowPresenter::initStartPage()
+{
+  if (mStartPageWidget == nullptr){
+    mStartPageWidget = new StartPageWidget(mView);
+
+    connect(mStartPageWidget,   SIGNAL(openNew()),                       this, SLOT(openNew()));
+    connect(mStartPageWidget,   SIGNAL(openProject()),                   this, SLOT(openProject()));
+    connect(mStartPageWidget,   SIGNAL(openSettings()),                  this, SLOT(openSettings()));
+    connect(mStartPageWidget,   SIGNAL(openGitHub()),                    this, SLOT(openGitHub()));
+    connect(mStartPageWidget,   SIGNAL(clearHistory()),                  this, SLOT(deleteHistory()));
+    connect(mStartPageWidget,   SIGNAL(openProjectFromHistory(QString)), this, SLOT(openFromHistory(QString)));
   }
 }
 

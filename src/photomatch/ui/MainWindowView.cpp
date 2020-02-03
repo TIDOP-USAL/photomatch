@@ -3,8 +3,9 @@
 
 #include "photomatch/widgets/ThumbnailsWidget.h"
 #include "photomatch/widgets/LogWidget.h"
-#include "photomatch/ui/utils/GraphicViewer.h"
-#include "photomatch/ui/utils/GraphicItem.h"
+//#include "photomatch/ui/utils/GraphicViewer.h"
+//#include "photomatch/ui/utils/GraphicItem.h"
+#include "photomatch/ui/utils/TabHandler.h"
 
 #include <QTreeWidgetItem>
 #include <QFileInfo>
@@ -14,6 +15,7 @@
 #include <QUrl>
 #include <QComboBox>
 #include <QProgressBar>
+#include <QLabel>
 
 namespace photomatch
 {
@@ -72,13 +74,8 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionQualityControlSettings(new QAction(this)),
     mActionNotRecentProjects(new QAction(this)),
     mActionClearHistory(new QAction(this)),
-    mActionZoomIn(new QAction(this)),
-    mActionZoomOut(new QAction(this)),
-    mActionZoomExtend(new QAction(this)),
-    mActionZoom11(new QAction(this)),
     mActionSetSession(new QAction(this)),
     mActionDeleteSession(new QAction(this)),
-    mGraphicViewer(nullptr),
     mComboBoxActiveSession(new QComboBox(this)),
     ui(new Ui::MainWindowView)
 {
@@ -100,7 +97,7 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   /* Menú View */
 
-  connect(mActionStartPage,          SIGNAL(triggered(bool)),   this,   SLOT(openStartPage()));
+  connect(mActionStartPage,          SIGNAL(triggered(bool)),   this,   SIGNAL(openStartPage()));
   connect(mActionViewSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openViewSettings()));
 
   /* Menú herramientas */
@@ -142,19 +139,6 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
   connect(mTreeWidgetProject, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem *, int)));
 
-  connect(ui->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(hideTab(int)));
-  connect(ui->tabWidget, SIGNAL(currentChanged(int)),    this, SLOT(tabChanged(int)));
-  connect(ui->tabWidget, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTabWidgetContextMenu(const QPoint &)));
-
-  /* Start Page */
-  connect(ui->commandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
-  connect(ui->commandLinkButtonOpenProject,  SIGNAL(clicked()),  this, SIGNAL(openProject()));
-  connect(ui->commandLinkButtonSettings,     SIGNAL(clicked()),  this, SIGNAL(openSettings()));
-  connect(ui->commandLinkButtonGitHub,       SIGNAL(clicked()),  this, SLOT(onCommandLinkButtonGitHubClicked()));
-  connect(ui->commandLinkButtonClearHistory, SIGNAL(clicked()),  this, SIGNAL(clearHistory()));
-
-  connect(ui->listWidgetRecentProjects,      SIGNAL(currentTextChanged(QString)), this, SIGNAL(openProjectFromHistory(QString)));
-
   connect(mComboBoxActiveSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(activeSessionChange(QString)));
 
 }
@@ -176,11 +160,7 @@ void MainWindowView::clear()
   const QSignalBlocker blockerComboBoxActiveSession(mComboBoxActiveSession);
   mComboBoxActiveSession->clear();
 
-  const QSignalBlocker blocker(ui->tabWidget);
-  int n = ui->tabWidget->count();
-  for (int i = 0; i < n; i++){
-    hideTab(0);
-  }
+  if (mTabHandler) mTabHandler->clear();
 
   update();
 }
@@ -757,9 +737,9 @@ QProgressBar *MainWindowView::progressBar()
   return mProgressBar;
 }
 
-QTabWidget *MainWindowView::tabWidget()
+TabHandler *MainWindowView::tabHandler()
 {
-  return ui->tabWidget;
+  return mTabHandler;
 }
 
 void MainWindowView::updateHistory(const QStringList &history)
@@ -782,9 +762,7 @@ void MainWindowView::updateHistory(const QStringList &history)
       mHistory[static_cast<size_t>(r)]->setToolTip(history[r]);
     }
   }
-  const QSignalBlocker blocker(ui->listWidgetRecentProjects);
-  ui->listWidgetRecentProjects->clear();
-  ui->listWidgetRecentProjects->addItems(history);
+
   update();
 }
 
@@ -796,7 +774,8 @@ void MainWindowView::deleteHistory()
     mHistory.erase(mHistory.begin());
   }
 
-  ui->listWidgetRecentProjects->clear();
+  /// TODO: sacar fuera
+  ///ui->listWidgetRecentProjects->clear();
 
   update();
 }
@@ -1109,183 +1088,6 @@ void MainWindowView::deleteMatches(const QString &session, const QString &matche
   }
 }
 
-void MainWindowView::showImage(const QString &file)
-{
-  const QSignalBlocker blocker(ui->tabWidget);
-
-  QFileInfo fileInfo(file);
-
-  if (mGraphicViewer != nullptr){
-    disconnect(mActionZoomIn,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomIn()));
-    disconnect(mActionZoomOut,     SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
-    disconnect(mActionZoomExtend,  SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
-    disconnect(mActionZoom11,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
-    //mGraphicViewer->deleteKeyPoints();
-    for (auto &item : mGraphicViewer->scene()->items()) {
-      KeyPointGraphicsItem *keyPoints = dynamic_cast<KeyPointGraphicsItem *>(item);
-      if (keyPoints){
-        mGraphicViewer->scene()->removeItem(item);
-      }
-    }
-  }
-
-  // Carga en nueva pestaña
-  int id = -1;
-  for (int i = 0; i < ui->tabWidget->count(); i++){
-
-    if (ui->tabWidget->tabToolTip(i) == file){
-      id = i;
-      mGraphicViewer = static_cast<GraphicViewer *>(ui->tabWidget->widget(i));
-      ui->tabWidget->setCurrentIndex(id);
-      break;
-    }
-  }
-
-  if (id == -1) {
-    GraphicViewer *graphicViewer = new GraphicViewer(this);
-    mGraphicViewer = graphicViewer;
-    mGraphicViewer->setImage(QImage(file));
-    id = ui->tabWidget->addTab(mGraphicViewer, fileInfo.fileName());
-    ui->tabWidget->setCurrentIndex(id);
-    ui->tabWidget->setTabToolTip(id, file);
-    mGraphicViewer->zoomExtend();
-
-    QMenu *contextMenu = new QMenu(graphicViewer);
-    contextMenu->addAction(mActionZoomIn);
-    contextMenu->addAction(mActionZoomOut);
-    contextMenu->addAction(mActionZoomExtend);
-    contextMenu->addAction(mActionZoom11);
-    //contextMenu->addSeparator();
-    //contextMenu->addAction(mActionShowKeyPoints);
-    mGraphicViewer->setContextMenu(contextMenu);
-  }
-
-  connect(mActionZoomIn,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomIn()));
-  connect(mActionZoomOut,     SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
-  connect(mActionZoomExtend,  SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
-  connect(mActionZoom11,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
-
-  mFlags.activeFlag(Flag::image_open, true);
-
-  emit selectImage(file);
-
-  update();
-}
-
-//bool MainWindowView::showKeyPoints() const
-//{
-//  return mActionShowKeyPoints->isChecked();
-//}
-
-void MainWindowView::addKeyPoint(const QPointF &pt, double size, double angle)
-{
-  QColor color;
-  color.setNamedColor(QString("#00FF00"));
-  QPen pen(color, 2.);
-  QBrush brush;
-  brush = QBrush(Qt::NoBrush);
-
-  KeyPointGraphicsItem *item = new KeyPointGraphicsItem(pt, size, angle);
-  item->setPen(pen);
-  item->setToolTip(QString("Size: ").append(QString::number(size)).append("\nAngle: ").append(QString::number(angle)));
-  if (mGraphicViewer) 
-    mGraphicViewer->scene()->addItem(item);
-}
-
-void MainWindowView::showMatches(const QString &pairLeft, const QString &pairRight,
-                                 const std::vector<std::pair<QPointF, QPointF> > &matches)
-{
-  const QSignalBlocker blocker(ui->tabWidget);
-
-  QFileInfo fileInfoLeft(pairLeft);
-  QFileInfo fileInfoRight(pairRight);
-
-  if (mGraphicViewer != nullptr){
-    disconnect(mActionZoomIn, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomIn()));
-    disconnect(mActionZoomOut, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
-    disconnect(mActionZoomExtend, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
-    disconnect(mActionZoom11, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
-    for (auto &item : mGraphicViewer->scene()->items()) {
-      QGraphicsEllipseItem *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
-      if (ellipse){
-        mGraphicViewer->scene()->removeItem(item);
-      }
-    }
-  }
-
-  QString name(fileInfoLeft.baseName());
-  name.append("-").append(fileInfoRight.baseName());
-
-  // Carga en nueva pestaña
-  int id = -1;
-  for (int i = 0; i < ui->tabWidget->count(); i++){
-
-    if (ui->tabWidget->tabToolTip(i) == name){
-      id = i;
-      mGraphicViewer = static_cast<GraphicViewer *>(ui->tabWidget->widget(i));
-      ui->tabWidget->setCurrentIndex(id);
-    }
-  }
-
-  if (id == -1) {
-    GraphicViewer *graphicViewer = new GraphicViewer(this);
-    mGraphicViewer = graphicViewer;
-    QImage imageLeft(pairLeft);
-    QImage imageRight(pairRight);
-    int height = imageLeft.height() > imageRight.height() ? imageLeft.height() : imageRight.height();
-    QImage pair(imageLeft.width() + imageRight.width(), height, imageLeft.format());
-
-    QPainter painter;
-    painter.begin(&pair);
-    painter.drawImage(0, 0, imageLeft);
-    painter.drawImage(imageLeft.width(), 0, imageRight);
-    QPen point_pen(QColor(0, 0, 255), 2.);
-    point_pen.setCosmetic(true);
-    QPen line_pen(QColor(229, 9, 127), 2.);
-    line_pen.setCosmetic(true);
-    painter.end();
-
-    mGraphicViewer->setImage(pair);
-
-    for (size_t i = 0; i < matches.size(); i++){
-      mGraphicViewer->scene()->addLine(matches[i].first.x(), matches[i].first.y(),
-                                       imageLeft.width() + matches[i].second.x(),
-                                       matches[i].second.y(), line_pen);
-      mGraphicViewer->scene()->addEllipse(matches[i].first.x() - 5, matches[i].first.y() - 5, 10, 10, point_pen);
-      mGraphicViewer->scene()->addEllipse(imageLeft.width() + matches[i].second.x() - 5, matches[i].second.y() - 5, 10, 10, point_pen);
-    }
-
-    id = ui->tabWidget->addTab(mGraphicViewer, name);
-    ui->tabWidget->setCurrentIndex(id);
-    ui->tabWidget->setTabToolTip(id, name);
-    mGraphicViewer->zoomExtend();
-
-    QMenu *contextMenu = new QMenu(graphicViewer);
-    contextMenu->addAction(mActionZoomIn);
-    contextMenu->addAction(mActionZoomOut);
-    contextMenu->addAction(mActionZoomExtend);
-    contextMenu->addAction(mActionZoom11);
-    //contextMenu->addSeparator();
-    //contextMenu->addAction(ui->actionShowKeyPoints);
-    // Show all matches
-    // Show inliers matches
-    mGraphicViewer->setContextMenu(contextMenu);
-
-    //emit loadMatches(pairLeft, pairRight);
-  }
-
-  connect(mActionZoomIn, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomIn()));
-  connect(mActionZoomOut, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
-  connect(mActionZoomExtend, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
-  connect(mActionZoom11, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
-
-  //mFlags.activeFlag(Flag::images_open, true);
-
-  //emit selectImage(file);
-
-  update();
-}
-
 void MainWindowView::setActiveSession(const QString &session)
 {
   const QSignalBlocker blocker(mComboBoxActiveSession);
@@ -1326,7 +1128,7 @@ void MainWindowView::setActiveSession(const QString &session)
 
 
     update();
-  }
+    }
 }
 
 void MainWindowView::changeEvent(QEvent *e)
@@ -1376,13 +1178,6 @@ void MainWindowView::update()
 
   mActionNotRecentProjects->setVisible(mHistory.size() == 0);
   mActionClearHistory->setEnabled(mHistory.size() > 0);
-
-  // toolbar viewer
-  mActionZoomIn->setEnabled(bImageOpen);
-  mActionZoomOut->setEnabled(bImageOpen);
-  mActionZoomExtend->setEnabled(bImageOpen);
-  mActionZoom11->setEnabled(bImageOpen);
-  //mActionShowKeyPoints->setEnabled(bImageOpen && mFlags.isActive(Flag::feature_extraction));
 
   mComboBoxActiveSession->setDisabled(bProcessing);
   mActionSetSession->setDisabled(bProcessing);
@@ -1496,34 +1291,6 @@ void MainWindowView::onSelectionChanged()
   //  }
 }
 
-void MainWindowView::hideTab(int id)
-{
-  if (id != -1) {
-    GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(ui->tabWidget->widget(id));
-    ui->tabWidget->removeTab(id);
-    if (graphicViewer){
-      delete graphicViewer;
-      graphicViewer = nullptr;
-      mGraphicViewer = nullptr;
-    }
-  }
-
-  update();
-}
-
-void MainWindowView::tabChanged(int id)
-{
-  GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(ui->tabWidget->widget(id));
-
-  if (graphicViewer){
-    emit openImage(ui->tabWidget->tabToolTip(id));
-  } else {
-    mFlags.activeFlag(Flag::image_open, false);
-  }
-
-  update();
-}
-
 void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
 {
   if (item){
@@ -1539,55 +1306,6 @@ void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
    }
   }
 }
-
-void MainWindowView::openStartPage()
-{
-  const QSignalBlocker blocker(ui->tabWidget);
-  if (mStartPageWidget){
-    int id = -1;
-    for (int i = 0; i < ui->tabWidget->count(); i++){
-
-      if (ui->tabWidget->tabText(i) == tr("Start Page")){
-        id = i;
-        ui->tabWidget->setCurrentIndex(id);
-        break;
-      }
-    }
-
-    if (id == -1) {
-      id = ui->tabWidget->addTab(mStartPageWidget, tr("Start Page"));
-      ui->tabWidget->setCurrentIndex(id);
-      ui->tabWidget->setTabToolTip(id, tr("Start Page"));
-    }
-  }
-}
-
-void MainWindowView::onCommandLinkButtonGitHubClicked()
-{
-  QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
-}
-
-//void MainWindowView::onShowKeyPoints(bool show)
-//{
-//  if (show){
-//    // emitir señal con la imagen activa.
-//    if (ui->tabWidget->count() > 0){
-//      GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(ui->tabWidget->currentWidget());
-
-//      if (graphicViewer){
-//        QString file_name = ui->tabWidget->tabToolTip(ui->tabWidget->currentIndex());
-//        emit loadKeyPoints(file_name);
-//      }
-//    }
-//  } else {
-//    for (auto &item : mGraphicViewer->scene()->items()) {
-//      KeyPointGraphicsItem *kp = dynamic_cast<KeyPointGraphicsItem *>(item);
-//      if (kp){
-//        mGraphicViewer->scene()->removeItem(item);
-//      }
-//    }
-//  }
-//}
 
 void MainWindowView::onTreeContextMenu(const QPoint &point)
 {
@@ -1684,46 +1402,6 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
 
 }
 
-void MainWindowView::onTabWidgetContextMenu(const QPoint &point)
-{
-  if (point.isNull()) return;
-
-  int tabIndex = ui->tabWidget->tabBar()->tabAt(point);
-
-  if (tabIndex == -1) return;
-
-  //ui->tabWidget->widget(tabIndex);
-  QString tabText = ui->tabWidget->tabBar()->tabText(tabIndex);
-
-  QMenu menu;
-  menu.addAction(tr("Close"));
-  menu.addAction(tr("Close all tabs"));
-  menu.addAction(tr("Close all tabs but current one"));
-  QAction* selectedTab = menu.exec(ui->tabWidget->tabBar()->mapToGlobal(point));
-  if (selectedTab) {
-    if (selectedTab->text() == tr("Close")) {
-      hideTab(tabIndex);
-    } else if (selectedTab->text() == tr("Close all tabs")) {
-      const QSignalBlocker blocker(ui->tabWidget);
-      int n = ui->tabWidget->count();
-      for (int i = 0; i < n; i++){
-        hideTab(0);
-      }
-    } else if (selectedTab->text() == tr("Close all tabs but current one")) {
-      const QSignalBlocker blocker(ui->tabWidget);
-      int n = ui->tabWidget->count();
-      int tabToCloseId = 0;
-      for (int i = 0; i < n; i++){
-        if (ui->tabWidget->tabBar()->tabText(tabToCloseId).compare(tabText) == 0){
-          tabToCloseId = 1;
-        } else {
-          hideTab(tabToCloseId);
-        }
-      }
-    }
-  }
-}
-
 void MainWindowView::init()
 {
   setWindowTitle(QString("PhotoMatch"));
@@ -1761,42 +1439,8 @@ void MainWindowView::init()
   mActionSaveProjectAs->setIcon(iconSaveProjectAs);
 
   mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export tie points", nullptr));
-//  QIcon iconExportTiePointsCvXml;
-//  iconExportTiePointsCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionExportTiePoints->setIcon(iconExportTiePointsCvXml);
 
   mActionExportMatches->setText(QApplication::translate("MainWindowView", "Export Matches", nullptr));
-
-
-//  mActionExportTiePointsCvXml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV XML", nullptr));
-//  mActionExportTiePointsCvXml->setObjectName(QStringLiteral("actionExportTiePointsCvXml"));
-//  QIcon iconExportTiePointsCvXml;
-//  iconExportTiePointsCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionExportTiePointsCvXml->setIcon(iconExportTiePointsCvXml);
-
-//  mActionExportTiePointsCvYml->setText(QApplication::translate("MainWindowView", "Export tie points to OpenCV YML", nullptr));
-//  mActionExportTiePointsCvYml->setObjectName(QStringLiteral("actionExportTiePointsCvYml"));
-//  QIcon iconExportTiePointsCvYml;
-//  iconExportTiePointsCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionExportTiePointsCvYml->setIcon(iconExportTiePointsCvYml);
-
-//  mActionExportMatchesToCvXml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV XML", nullptr));
-//  mActionExportMatchesToCvXml->setObjectName(QStringLiteral("actionExportMatchesToCvXml"));
-//  QIcon iconExportMatchesToCvXml;
-//  iconExportMatchesToCvXml.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_xml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionExportMatchesToCvXml->setIcon(iconExportMatchesToCvXml);
-
-//  mActionExportMatchesToCvYml->setText(QApplication::translate("MainWindowView", "Export matches to OpenCV YML", nullptr));
-//  mActionExportMatchesToCvYml->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
-//  QIcon iconExportMatchesToCvYml;
-//  iconExportMatchesToCvYml.addFile(QStringLiteral(":/ico/24/img/material/24/yml_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionExportMatchesToCvYml->setIcon(iconExportMatchesToCvYml);
-
-//  mActionExportMatchesToTxt->setText(QApplication::translate("MainWindowView", "Export matches to txt", nullptr));
-//  mActionExportMatchesToTxt->setObjectName(QStringLiteral("actionExportMatchesToCvYml"));
-//  QIcon iconExportMatchesToTxt;
-//  iconExportMatchesToTxt.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_txt_24px"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionExportMatchesToTxt->setIcon(iconExportMatchesToTxt);
 
   mActionCloseProject->setText(QApplication::translate("MainWindowView", "Close Project", nullptr));
   QIcon icon4;
@@ -1832,9 +1476,6 @@ void MainWindowView::init()
   iconNewSession.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_add_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionNewSession->setIcon(iconNewSession);
 
-//  mActionAssistant->setText(QApplication::translate("MainWindowView", "Assistant", nullptr));
-//  mActionAssistant->setObjectName(QStringLiteral("actionAssistant"));
-
   mActionPreprocess->setText(QApplication::translate("MainWindowView", "Preprocess", nullptr));
   QIcon iconPreprocess;
   iconPreprocess.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_services_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -1866,9 +1507,6 @@ void MainWindowView::init()
   QIcon iconAbout;
   iconAbout.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_about_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionAbout->setIcon(iconAbout);
-
-  //mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export Tie Points", nullptr));
-  //mActionExportTiePoints->setObjectName(QStringLiteral("actionExportTiePoints"));
 
   mActionFeaturesViewer->setText(QApplication::translate("MainWindowView", "Keypoints Viewer", nullptr));
 
@@ -1908,32 +1546,6 @@ void MainWindowView::init()
   icon_delete_trash.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_delete_trash_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionClearHistory->setIcon(icon_delete_trash);
 
-  mActionZoomIn->setText(QApplication::translate("MainWindowView", "Zoom In", nullptr));
-  QIcon iconZoomIn;
-  iconZoomIn.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomIn->setIcon(iconZoomIn);
-
-  mActionZoomOut->setText(QApplication::translate("MainWindowView", "Zoom Out", nullptr));
-  QIcon iconZoomOut;
-  iconZoomOut.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomOut->setIcon(iconZoomOut);
-
-  mActionZoomExtend->setText(QApplication::translate("MainWindowView", "Zoom Extend", nullptr));
-  QIcon iconZoomExtend;
-  iconZoomExtend.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomExtend->setIcon(iconZoomExtend);
-
-  mActionZoom11->setText(QApplication::translate("MainWindowView", "Zoom 1:1", nullptr));
-  QIcon iconZoom11;
-  iconZoom11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoom11->setIcon(iconZoom11);
-
-//  mActionShowKeyPoints->setText(QApplication::translate("MainWindowView", "Show Keypoints", nullptr));
-//  QIcon iconZoomShowKeyPoints;
-//  iconZoomShowKeyPoints.addFile(QStringLiteral(":/ico/24/img/material/24/keypoints.png"), QSize(), QIcon::Normal, QIcon::Off);
-//  mActionShowKeyPoints->setIcon(iconZoomShowKeyPoints);
-//  mActionShowKeyPoints->setCheckable(true);
-
   mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
 
   mActionDeleteSession->setText(QApplication::translate("MainWindowView", "Delete session", nullptr));
@@ -1967,6 +1579,13 @@ void MainWindowView::init()
   gridLayoutConsole->setContentsMargins(0, 0, 0, 0);
   mLogWidget = new LogWidget(ui->dockWidgetThumbContents);
   gridLayoutConsole->addWidget(mLogWidget, 0, 0, 1, 1);
+
+  /* Tab Handler */
+  QGridLayout *gridLayoutCentral = new QGridLayout(this->centralWidget());
+  gridLayoutCentral->setSpacing(6);
+  gridLayoutCentral->setContentsMargins(0,0,0,0);
+  mTabHandler = new TabHandler(this->centralWidget());
+  gridLayoutCentral->addWidget(mTabHandler);
 
   /* Menu file */
 
@@ -2079,18 +1698,19 @@ void MainWindowView::init()
 //  ui->toolBarTools->addSeparator();
 //  ui->toolBarTools->addAction(mActionBatch);
 
-  ui->toolBarView->addAction(mActionZoomIn);
-  ui->toolBarView->addAction(mActionZoomOut);
-  ui->toolBarView->addAction(mActionZoom11);
-  ui->toolBarView->addAction(mActionZoomExtend);
-  //ui->toolBarView->addSeparator();
-  //ui->toolBarView->addAction(mActionShowKeyPoints);
+  ui->toolBarView->addAction(mTabHandler->actionZoomIn());
+  ui->toolBarView->addAction(mTabHandler->actionZoomOut());
+  ui->toolBarView->addAction(mTabHandler->actionZoom11());
+  ui->toolBarView->addAction(mTabHandler->actionZoomExtend());
+
 
   //ui->toolBarQualityControl->addAction(mActionPRCurves);
   ui->toolBarQualityControl->addAction(mActionROCCurves);
   ui->toolBarQualityControl->addAction(mActionDETCurves);
 
-  mStartPageWidget = ui->tabWidget->widget(0);
+  mLayoutCentral = new QGridLayout(this->centralWidget());
+  mLayoutCentral->setSpacing(6);
+  mLayoutCentral->setContentsMargins(0,0,0,0);
 
   mProgressBar = new QProgressBar(this);
   mProgressBar->setVisible(false);

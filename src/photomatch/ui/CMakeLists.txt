@@ -79,6 +79,7 @@ set(PHOTOMATCH_SOURCES
     #utils/DiagonalCrossGraphicItem.cpp
     #utils/CircleGraphicItem.cpp
     utils/GraphicItem.cpp
+    utils/TabHandler.cpp
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
 )  
 
@@ -141,6 +142,7 @@ set(PHOTOMATCH_HEADERS
     #utils/DiagonalCrossGraphicItem.h
     #utils/CircleGraphicItem.h
     utils/GraphicItem.h
+    utils/TabHandler.h
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.h
 )
 
