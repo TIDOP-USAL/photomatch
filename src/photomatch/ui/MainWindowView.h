@@ -145,6 +145,7 @@ signals:
 
   void featuresViewer();
   void matchesViewer();
+  void passPointsViewer();
   void groundTruthEditor();
   void homography();
   void repeatability();
@@ -180,6 +181,7 @@ signals:
 
   void openFeatures(QString, QString);
   void openMatches(QString, QString, QString);
+  void openMultiView(QString);
 
 protected:
 
@@ -228,6 +230,7 @@ protected:
   QAction *mActionExportMatches;
   QAction *mActionFeaturesViewer;
   QAction *mActionMatchesViewer;
+  QAction *mActionPassPointsViewer;
   QAction *mActionGroundTruthEditor;
   QAction *mActionHomography;
   //QAction *mActionRepeatability;

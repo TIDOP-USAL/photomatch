@@ -6,7 +6,7 @@
 using namespace photomatch;
 
 ///TODO: completar
-
+///TODO: extraer la clase ProjectRWFake a un fichero externo para poder utilizarla en los test que la necesiten
 class ProjectRWFake
   : public IProjectRW
 {

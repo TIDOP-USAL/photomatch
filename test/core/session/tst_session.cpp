@@ -188,7 +188,7 @@ void TestSession::test_matcher()
 
 void TestSession::test_robustMatcherRefinement()
 {
-  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatcherProperties());
+  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatchingProperties());
   robustMatcherRefinement->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
   mSession->setRobustMatcherRefinement(robustMatcherRefinement);
 
@@ -251,7 +251,7 @@ void TestSession::test_clear()
   mSession->setDescriptor(descriptor);
   std::shared_ptr<Match> matcher(new BruteForceMatcher());
   mSession->setMatcher(matcher);
-  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatcherProperties());
+  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatchingProperties());
   robustMatcherRefinement->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
   mSession->setRobustMatcherRefinement(robustMatcherRefinement);
   mSession->addPreprocessImage("c:/prj/session01/image01.jpg");

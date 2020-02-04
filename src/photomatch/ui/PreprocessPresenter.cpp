@@ -160,8 +160,7 @@ void PreprocessPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("preprocess.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->show();
   }
 }
 

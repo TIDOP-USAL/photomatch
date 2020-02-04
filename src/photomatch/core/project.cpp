@@ -666,7 +666,7 @@ bool ProjectRW::read(const QString &file, IProject &prj)
                         }
                       } else if (stream.name() == "RobustMatcherRefinement") {
 
-                        std::shared_ptr<IRobustMatcherRefinement> rmr = std::make_shared<RobustMatcherProperties>();
+                        std::shared_ptr<IRobustMatcherRefinement> rmr = std::make_shared<RobustMatchingProperties>();
                         while (stream.readNextStartElement()) {
                           if (stream.name() == "Ratio") {
                             rmr->setRatio(stream.readElementText().toDouble());
@@ -1826,7 +1826,7 @@ void ProjectRW::readSURF(QXmlStreamReader *stream, ISurf *surf) const
     } else if (stream->name() == "ExtendedDescriptor") {
       surf->setExtendedDescriptor(stream->readElementText().compare("true") == 0 ? true : false);
     } else if (stream->name() == "RotatedFeatures") {
-      surf->setRotatedFeatures(stream->readElementText().compare("true") == 0 ? true : false);
+      surf->setUpright(stream->readElementText().compare("true") == 0 ? true : false);
     } else
       stream->skipCurrentElement();
   }
@@ -2235,7 +2235,7 @@ void ProjectRW::writeSURF(QXmlStreamWriter *stream, ISurf *surf) const
     stream->writeTextElement("Octaves", QString::number(surf->octaves()));
     stream->writeTextElement("OctaveLayers", QString::number(surf->octaveLayers()));
     stream->writeTextElement("ExtendedDescriptor", surf->extendedDescriptor() ? "true" : "false");
-    stream->writeTextElement("RotatedFeatures", surf->rotatedFeatures() ? "true" : "false");
+    stream->writeTextElement("RotatedFeatures", surf->upright() ? "true" : "false");
   }
   stream->writeEndElement(); // SURF
 }

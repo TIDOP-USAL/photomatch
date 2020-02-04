@@ -179,6 +179,9 @@ public:
 
 /*!
  * \brief The IDhe class
+ * M. Abdullah-Al-Wadud, Md. Hasanul Kabir, M. Ali Akber Dewan, and O. Chae,
+ * "A dynamic histogram equalization for image contrast enhancement,"
+ * Intl. Conf. Consumer Electronics, pp. 1-2, 2007.
  * dynamic histogram equalization (DHE)
  */
 class PHOTOMATCH_EXPORT IDhe
@@ -242,7 +245,12 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief HMCLAHE (Histogram Modified Contrast Limited Adaptive Histogram Equalization)
+ * M. Sundaram, K. Ramar, N.Arumugam and G. Prabin, "Histogram based contrasr enhancement
+ * for mammogram images," International Conference on Signal Processing, Communication,
+ * Computing and Networking Technologies, 2011.
+ */
 class PHOTOMATCH_EXPORT IHmclahe
   : public Preprocess
 {
@@ -264,7 +272,12 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief LCE-BSESCS
+ * H. Ibrahim and S. C. Hoo, “Local contrast enhancement utilizing
+ * bidirectional switching equalization of separated and clipped subhistograms,”
+ * Mathematical Problems in Engineering, vol. 2014, 2014.
+ */
 class PHOTOMATCH_EXPORT ILceBsescs
   : public Preprocess
 {
@@ -282,7 +295,11 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief MSRCP (MultiScale Retinex with Chromaticity Preservation)
+ * Ana Belén Petro, Catalina Sbert, Jean-Michel Morel,
+ * "Multiscale Retinex," Image Processing On Line, 2014.
+ */
 class PHOTOMATCH_EXPORT IMsrcp
   : public Preprocess
 {
@@ -306,7 +323,10 @@ public:
 
 
 /*!
- * \brief Interface for NOSHP class
+ * \brief NOSHP (Non-Overlapped Sub-blocks and local Histogram Projection)
+ * B. Liu, W. Jin, Y. Chen, C. Liu, and L. Li, "Contrast enhancement
+ * using non-overlapped sub-blocks and local histogram projection,"
+ * TCE, vol. 57, no. 2, 2011.
  */
 class PHOTOMATCH_EXPORT INoshp
   : public Preprocess
@@ -327,7 +347,7 @@ public:
 
 
 /*!
- * \brief Interface for POHE class
+ * \brief POHE (Parametric-Oriented Histogram Equalization)
  * Y. F. Liu, J. M. Guo, B. S. Lai, and J. D. Lee, "High efficient
  * contrast enhancement using parametric approximation,"
  * in Proc. IEEE ICASSP, pp. 2444-2448, 26-31 May 2013.
@@ -349,7 +369,12 @@ public:
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief RSWHE (Recursively Separated and Weighted Histogram Equalization)
+ * Mary Kim and Min Gyo Chung, "Recursively Separated and Weighted
+ * Histogram Equalization for Brightness Preservation and Contrast
+ * Enhancement," 2008.
+ */
 class PHOTOMATCH_EXPORT IRswhe
   : public Preprocess
 {

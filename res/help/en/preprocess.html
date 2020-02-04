@@ -10,7 +10,311 @@
 <body>
 
   <h1 class="western">Preprocess</h1>
+   
+  <div class="image"><img src="img/preprocess.png" width="352" height="380" /> 
+    <br clear="all" />
+  </div> 
   
+  <p class="western" align="justify">This step offers the option to use image enhancement techniques that could potentially facilitate the detection of robust image features.</p>
+
+  <p class="western" align="justify"><strong>PARAMETERS</strong></p>
+
+  <p class="western" align="justify">Full Image Size or set Max Image Size</p>
+
+  <h3 class="western">Image preprocessing algorithms</h3>
+  
+  <ul>
+    <li class="western"><a href="#decolor">Decolorization</a></li>
+    <li class="western"><a href="#ACEBSF">ACEBSF</a></li>
+    <li class="western"><a href="#CLAHE">CLAHE</a></li>
+    <li class="western"><a href="#CMBFHE">CMBFHE</a></li>
+    <li class="western"><a href="#DHE">DHE</a></li>
+    <li class="western"><a href="#FAHE">FAHE</a></li>
+    <li class="western"><a href="#HMCLAHE">HMCLAHE</a></li>
+    <li class="western"><a href="#LCE-BSESCS">LCE-BSESCS</a></li>
+    <li class="western"><a href="#MSRCP">MSRCP</a></li>
+    <li class="western"><a href="#NOSHP">NOSHP</a></li>
+    <li class="western"><a href="#POHE">POHE</a></li>
+    <li class="western"><a href="#RSWHE">RSWHE</a></li>
+    <li class="western"><a href="#Wallis">Wallis filter</a></li>
+  </ul>
+  
+  <h3 class="western"><a name="decolor">Decolorization</a></h3>
+  
+  <p class="western"><strong>Contrast Preserving Decolorization</strong></p>
+  
+  <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/abstract/document/6215215">Decolorization</a>]: <em>Cewu Lu, Li Xu, Jiaya Jia, 2012. “Contrast Preserving Decolorization”, IEEE International Conference on Computational Photography (ICCP).</em></p>
+  
+  <h3 class="western"><a name="ACEBSF">ACEBSF</a></h3>
+  
+  <p class="western"><strong>Adaptive contrast enhancement based on modified sigmoid function</strong></p>
+  
+  <p class="western">It first improves the poor quality images using a modified sigmoid function and then applies contrast limited adaptive histogram equalization (AHE) to enhance image contrast.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/acebsf.png" width="352" height="380" /> 
+    <br clear="all" />
+  </div>
+    
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: Default = (Width: 8/Height: 8)</li>
+    <li class="western"><strong>L</strong>: Default = 0.3</li>
+    <li class="western"><strong>K1</strong>: Default = 10</li>
+    <li class="western"><strong>K2</strong>: Default = 0.5</li>
+  </ul>
+
+  <p class="western" align="justify">[<a href="http://iajit.org/PDF/vol.11,no.1/5307.pdf">ACEBSF</a>]: <em>Lal, S. and Chandra, M., 2014. Efficient algorithm for contrast enhancement of natural images. International Arab Journal of Information Technology, Vol. 11(1), pp. 95-102.</em></p>
+    
+  
+  <!-- CLAHE -->
+  
+  <h3 class="western"><a name="CLAHE">CLAHE</a></h3>
+  
+  <p class="western"><strong>Contrast Limited Adaptive Histogram Equalization</strong></p>
+  
+  <p class="western">CLAHE is a local contrast enhancement technique robust to outliers. Local contrast enhancement methods such as adaptive histogram equalization (AHE) divide the original image into several non-overlapped sub-blocks and apply histogram equalization accordingly. CLAHE is an improvement of AHE and performs well on low contrast images.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/clahe.png" width="352" height="319" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Clip Limit</strong>: Threshold value for contrast limiting (Default = 40)</li>
+    <li class="western"><strong>Blocksize</strong>: Size of grid for histogram equalization (Default = [8,8])</li>
+  </ul>
+  
+  <p class="western" align="justify">[CLAHE]: <em>Zuiderveld, K., 1994. Contrast limited adaptive histogram equalization. In Graphics gems, Vol. IV, pp. 474-485. Academic Press Professional, Inc.</em></p>
+  
+  
+  <!-- CMBFHE -->
+  
+  <h3 class="western"><a name="CMBFHE">CMBFHE</a></h3>
+  
+  <p class="western"><strong>Cascaded Multistep Binomial Filtering Histogram Equalization</strong></p>
+  
+  <p class="western">Based on the POSHE approach using cascaded multistep binomial filtering histogram equalization to reduce algorithm complexity. Similar to other local adaptive techniques, it exploits image sub-blocks (and not pixels), achieving results with effect similar to the application of a low-pass filter (LPF) avoiding the blocking effect.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/cmbfhe.png" width="352" height="319" /> 
+    <br clear="all" />
+  </div> 
+  
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: Default = [11,11]</li>
+  </ul>
+
+  <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/abstract/document/1706495">CMBFHE</a>]: <em>Lamberti, F., Montrucchio, B. and San, A., 2006. CMBFHE: a novel contrast enhancement technique based on cascaded multistep binomial filtering histogram equalization. IEEE Transactions on Consumer Electronics, Vol. 52(3), pp.966-974.</em></p>
+  
+  <p class="western" align="justify">[<a href="https://pdfs.semanticscholar.org/32cb/6dd6921b2ae414a1bcef1edb915828159d65.pdf">POSHE</a>]: <em>Kim, J.Y., Kim, L.S. and Hwang, S.H., 2001. An advanced contrast enhancement using partially overlapped sub-block histogram equalization. IEEE Transactions on Circuits and Systems for Video Technology, Vol. 11(4), pp. 475-484.</em></p>
+  
+  
+  
+  <!-- DHE -->
+    
+  <h3 class="western"><a name="DHE">DHE</a></h3>
+ 
+  <p class="western"><strong>Dynamic Histogram Equalization</strong></p>
+  
+  <p class="western">Traditional histogram equalization employing a histogram partitioning operation to avoid dominating components and achieving better overall contrast enhancement with controlled dynamic range of gray levels while also reassuring minimum detail loss.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/dhe.png" width="352" height="230" /> 
+    <br clear="all" />
+  </div>  
+  
+  <ul>
+    <li class="western"><strong>x</strong>: Default = 1</li>
+  </ul>
+
+  <p class="western" align="justify">[<a href="https://www.researchgate.net/profile/M_Dewan/publication/3183129_A_Dynamic_Histogram_Equalization_for_Image_Contrast_Enhancement/links/55559cdd08ae980ca60af136/A-Dynamic-Histogram-Equalization-for-Image-Contrast-Enhancement.pdf">DHE</a>]: <em>Abdullah-Al-Wadud, M., Kabir, M.H., Dewan, M.A.A. and Chae, O., 2007. A dynamic histogram equalization for image contrast enhancement. IEEE Transactions on Consumer Electronics, Vol. 53(2), pp. 593-600.</em></p>
+
+
+
+  <!-- FAHE -->
+  
+  <h3 class="western"><a name="FAHE">FAHE</a></h3>
+  
+  <p class="western"><strong>Fast Adaptive Histogram Equalization</strong></p>
+  
+  <p class="western">Software techniques are used on histogram acquisition and accumulation as well on the block size decision to reduce computational complexity.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/fahe.png" width="352" height="302" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: Default = [11,11]</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/abstract/document/4129083">FAHE</a>]: <em>Wang, Z. and Tao, J., 2006. A fast implementation of adaptive histogram equalization. In 2006 8th international Conference on Signal Processing, Vol. 2. IEEE.</em></p>
+  
+
+
+  <!-- HMCLAHE -->
+  
+  <h3 class="western"><a name="HMCLAHE">HMCLAHE</a></h3>
+  
+  <p class="western"><strong>Histogram Modified Contrast Limited Adaptive Histogram Equalization</strong></p>
+  
+  <p class="western">It incorporates both histogram modifications as an optimization technique and CLAHE. It controls the level of contrast enhancement, before CLAHE, resulting a strong contrast image with enhanced details.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/hmclahe.png" width="352" height="354" /> 
+    <br clear="all" />
+  </div>  
+  
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: Size of grid for histogram equalization (Default = [17,17])</li>
+    <li class="western"><strong>L</strong>: Use to district the range of histogram. Range between 0 and 1 (Default = 0.03).</li>
+    <li class="western"><strong>Phi</strong>: Use to adjust the histogram. Range between 0 and 1 (Default = 0.5).</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/abstract/document/6024667">HMCLAHE</a>]: <em>Sundaram, M., Ramar, K., Arumugam, N. and Prabin, G., 2011. Histogram based contrast enhancement for mammogram images. In 2011 International Conference on Signal Processing, Communication, Computing and Networking Technologies, pp. 842-846. IEEE.</em></p>
+  
+  
+  
+  <!-- LCE-BSESCS -->
+    
+  <h3 class="western"><a name="LCE-BSESCS">LCE-BSESCS</a></h3>
+  
+  <p class="western"><strong>Local Contrast Enhancement Utilizing Bidirectional Switching Equalization of Separated and Clipped Sub-histograms.</strong></p>
+  
+  <p class="western">Similar to other local HE, it aims to enhance the local contrast and increase simultaneously the sharpness of the image, while avoiding noise and artefacts, recommended especially when uneven illumination conditions are met.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/lce_bsescs.png" width="352" height="354" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: (Default = [33,33])</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="http://downloads.hindawi.com/journals/mpe/2014/848615.pdf">LCE-BSESCS</a>]: <em>Ibrahim, H. and Hoo, S.C., 2014. Local contrast enhancement utilizing bidirectional switching equalization of separated and clipped subhistograms. Mathematical Problems in Engineering.</em></p>  
+
+  
+  
+  
+  <!-- LCE-BSESCS -->
+  
+  <h3 class="western"><a name="MSRCP">MSRCP</a></h3>
+  
+  <p class="western"><strong>MultiScale Retinex with Chromaticity Preservation.</strong></p>
+  
+  <p class="western">Based on the original Multiscale Retinex method, it applies some modifications on the post-processing steps and preserves image chromaticity. Recommended for images with a correct color distribution and white lightning.</p>  
+
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/msrcp.png" width="352" height="354" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Small scale</strong>: (Default = 10)</li>
+    <li class="western"><strong>Mid scale</strong>: (Default = 100)</li>
+    <li class="western"><strong>Large scale</strong>: (Default = 220)</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="https://www.ipol.im/pub/art/2014/107/article_lr.pdf">MSRCP</a>]: <em>Petro, A.B., Sbert, C. and Morel, J.M., 2014. Multiscale retinex. Image Processing On Line, pp.71-88.</em></p>    
+  
+  
+  
+  <!-- NOSHP -->
+  
+  <h3 class="western"><a name="NOSHP">NOSHP</a></h3>
+  
+  <p class="western"><strong>Non-Overlapped Sub-blocks and local Histogram Projection.</strong></p>
+  
+  <p class="western" align="justify">To reduce computational complexity, it segments the image into non-overlapped sub-blocks where the histogram projection (HP) is then executed individually. Subsequently, each sub-block is related to its adjacent three ones by certain weights, so that the integral image and local details can be enhanced.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/noshp.png" width="352" height="354" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: (Default = [127,127])</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/abstract/document/5955195">NOSHP</a>]: <em>Liu, B., Jin, W., Chen, Y., Liu, C. and Li, L., 2011. Contrast enhancement using non-overlapped sub-blocks and local histogram projection. IEEE Transactions on Consumer Electronics, Vol. 57(2), pp. 583-588.</em></p>  
+  
+  
+  
+  <!-- POHE -->
+   
+  <h3 class="western"><a name="POHE">POHE</a></h3>
+  
+  <p class="western"><strong>Parametric-Oriented Histogram Equalization.</strong></p>
+  
+  <p class="western" align="justify">Local enhancement method using integral images to reduce computational time during the construction of the probability distribution function and the transformation function.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/pohe.png" width="352" height="289" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Blocksize</strong>: (Default = [127,127])</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="http://150.162.46.34:8080/icassp2013/pdfs/0002444.pdf">POHE</a>]: <em>Liu, Y.F., Guo, J.M., Lai, B.S. and Lee, J.D., 2013. High efficient contrast enhancement using parametric approximation. In 2013 IEEE International Conference on Acoustics, Speech and Signal Processing, pp. 2444-2448. IEEE.</em></p>  
+  
+  
+  
+  <!-- RSWHE --> 
+  
+  <h3 class="western"><a name="RSWHE">RSWHE</a></h3>
+  
+  <p class="western"><strong>Recursively Separated and Weighted Histogram Equalization.</strong></p>
+  
+  <p class="western" align="justify">It segments an input histogram into two or more sub-histograms recursively, modifies them using a weighting process based on a normalized power law function, and performs HE on the weighted sub-histograms independently, achieving brightness preservation and image contrast enhancement.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/rswhe.png" width="352" height="289" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Histogram cut by mean or by median</strong>.</li>
+    <li class="western"><strong>Histogram divisions</strong>: (Default = 2)</li>
+  </ul>
+  
+  <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/document/4637632">RSWHE</a>]: <em>Kim, M. and Chung, M.G., 2008. Recursively separated and weighted histogram equalization for brightness preservation and contrast enhancement. IEEE Transactions on Consumer Electronics, Vol., 54(3), pp. 1389-1397.</em></p>  
+  
+  
+  
+  
+  <!-- Wallis filter --> 
+  
+  <h3 class="western"><a name="Wallis">Wallis filter</a></h3>
+  
+  <p class="western" align="justify">Locally adaptive contrast adjustment filter to enhance image gray-scale details. It ensures that within every specified window, the local mean and the standard deviation will match some given (user-specified) values. Recommended to eliminate uneven illumination, where bright and dark tones are both present.</p>
+  
+  <h4 class="western">Parameters</h4>
+  
+  <div class="image"><img src="img/wallis.png" width="352" height="300" /> 
+    <br clear="all" />
+  </div>
+  
+  <ul>
+    <li class="western"><strong>Contrast</strong>: (Default = 1)</li>
+    <li class="western"><strong>Brightness</strong>: (Default = 0.20)</li>
+    <li class="western"><strong>Imposed Average</strong>: (Default = 41)</li>
+    <li class="western"><strong>Imposed Local StdDev</strong>: (Default = 127)</li>
+    <li class="western"><strong>Kernel Size</strong>: (Default = 50)</li>
+  </ul>
   
 </body>
 </html>

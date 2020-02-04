@@ -23,24 +23,21 @@ private:
   QHelpEngine *mHelpEngine;
 };
 
-//namespace Ui
-//{
-//class Help;
-//}
+
+
 
 namespace photomatch
 {
 
 class HelpDialog
-  : public IDialogView
+  : public QDialog
 {
 
   Q_OBJECT
 
 public:
 
-  HelpDialog(QWidget *parent = nullptr,
-             Qt::WindowFlags f = Qt::WindowFlags());
+  HelpDialog(QWidget *parent = nullptr);
   ~HelpDialog() override;
 
  public slots:
@@ -91,23 +88,18 @@ private slots:
    */
   void searchFinished(int hits);
 
-  // IDialogView interface
+// IDialogView interface
+
 private:
 
-  void init() override;
-
-public slots:
-
-  void clear() override;
+  void init();
 
 private slots:
 
-  void update() override;
-  void retranslate() override;
+  void retranslate();
 
 private:
 
-  //Ui::Help *ui;
   QHelpEngine *mHelpEngine;
   HelpBrowser *mHelpBrowser;
   QTextBrowser *mSearchResultsWidget;

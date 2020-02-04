@@ -65,6 +65,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionExportMatches(new QAction(this)),
     mActionFeaturesViewer(new QAction(this)),
     mActionMatchesViewer(new QAction(this)),
+    mActionPassPointsViewer(new QAction(this)),
     mActionGroundTruthEditor(new QAction(this)),
     mActionHomography(new QAction(this)),
     //mActionRepeatability(new QAction(this)),
@@ -114,6 +115,7 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   connect(mActionFeaturesViewer,     SIGNAL(triggered(bool)),   this,   SIGNAL(featuresViewer()));
   connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(matchesViewer()));
+  connect(mActionPassPointsViewer,   SIGNAL(triggered(bool)),   this,   SIGNAL(passPointsViewer()));
   connect(mActionGroundTruthEditor,  SIGNAL(triggered(bool)),   this,   SIGNAL(groundTruthEditor()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
   //connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
@@ -1170,6 +1172,7 @@ void MainWindowView::update()
   mActionExportMatches->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
   mActionFeaturesViewer->setEnabled(mFlags.isActive(Flag::feature_extraction));
   mActionMatchesViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
+  mActionPassPointsViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
   //mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
@@ -1499,6 +1502,9 @@ void MainWindowView::init()
   mActionToolSettings->setIcon(iconSettings);
 
   mActionHelp->setText(QApplication::translate("MainWindowView", "Help", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionHelp->setShortcut(QApplication::translate("MainWindowView", "F1", nullptr));
+#endif // QT_NO_SHORTCUT
   QIcon iconHelp;
   iconHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionHelp->setIcon(iconHelp);
@@ -1511,6 +1517,8 @@ void MainWindowView::init()
   mActionFeaturesViewer->setText(QApplication::translate("MainWindowView", "Keypoints Viewer", nullptr));
 
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
+
+  mActionPassPointsViewer->setText(QApplication::translate("MainWindowView", "Pass Points Viewer", nullptr));
 
   mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
 
@@ -1660,6 +1668,7 @@ void MainWindowView::init()
 
   ui->menuQualityControl->addAction(mActionFeaturesViewer);
   ui->menuQualityControl->addAction(mActionMatchesViewer);
+  ui->menuQualityControl->addAction(mActionPassPointsViewer);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionGroundTruthEditor);
   ui->menuQualityControl->addSeparator();

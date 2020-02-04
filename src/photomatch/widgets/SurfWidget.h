@@ -52,7 +52,7 @@ public:
    * \brief Up-right or rotated features
    * \return true (do not compute orientation of features) or false (compute orientation)
    */
-  virtual bool rotatedFeatures() const = 0;
+  virtual bool upright() const = 0;
 
 signals:
 
@@ -60,7 +60,7 @@ signals:
   void octavesChange(int);
   void octaveLayersChange(int);
   void extendedDescriptorChange(bool);
-  void rotatedFeaturesChange(bool);
+  void uprightChange(bool);
 
 public slots:
 
@@ -92,7 +92,7 @@ public slots:
    * \brief compute orientation of features
    * \param[in] rotatedFeatures false for compute orientation
    */
-  virtual void setRotatedFeatures(bool rotatedFeatures) = 0;
+  virtual void seUpright(bool upright) = 0;
 
 };
 
@@ -115,7 +115,7 @@ public:
   int octaves() const override;
   int octaveLayers() const override;
   bool extendedDescriptor() const override;
-  bool rotatedFeatures() const override;
+  bool upright() const override;
 
 public slots:
 
@@ -123,7 +123,7 @@ public slots:
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;
   void setExtendedDescriptor(bool extendedDescriptor) override;
-  void setRotatedFeatures(bool rotatedFeatures) override;
+  void seUpright(bool upright) override;
 
 // PhotoMatchWidget interface
 
@@ -146,7 +146,7 @@ protected:
   QSpinBox *mOctaves;
   QSpinBox *mOctaveLayers;
   QCheckBox *mExtendedDescriptor;
-  QCheckBox *mRotatedFeatures;
+  QCheckBox *mUpright;
 
 };
 

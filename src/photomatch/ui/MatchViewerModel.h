@@ -71,6 +71,7 @@ protected:
   IProjectModel *mProjectModel;
   std::vector<std::vector<std::pair<QString,int>>> mPassPoints;
   QString mSession;
+
 };
 
 } // namespace photomatch

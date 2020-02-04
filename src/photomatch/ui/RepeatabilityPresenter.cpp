@@ -47,8 +47,7 @@ void RepeatabilityPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("index.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->show();
   }
 }
 

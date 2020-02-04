@@ -40,6 +40,11 @@ QString DescriptorMatcherView::matchingMethod() const
   return mDescriptorMatcherWidget->matchingMethod();
 }
 
+QString DescriptorMatcherView::matchingStrategy() const
+{
+  return mDescriptorMatcherWidget->matchingStrategy();
+}
+
 QString DescriptorMatcherView::normType() const
 {
   return mDescriptorMatcherWidget->normType();
@@ -90,9 +95,29 @@ bool DescriptorMatcherView::crossMatching() const
   return mDescriptorMatcherWidget->crossMatching();
 }
 
+bool DescriptorMatcherView::gmsRotation() const
+{
+  return mDescriptorMatcherWidget->gmsRotation();
+}
+
+bool DescriptorMatcherView::gmsScale() const
+{
+  return mDescriptorMatcherWidget->gmsScale();
+}
+
+double DescriptorMatcherView::gmsThreshold() const
+{
+  return mDescriptorMatcherWidget->gmsThreshold();
+}
+
 void DescriptorMatcherView::setMatchingMethod(const QString &matchingMethod)
 {
   mDescriptorMatcherWidget->setMatchingMethod(matchingMethod);
+}
+
+void DescriptorMatcherView::setMatchingStrategy(const QString &matchingStrategy)
+{
+  mDescriptorMatcherWidget->setMatchingStrategy(matchingStrategy);
 }
 
 void DescriptorMatcherView::setNormType(const QString &normType)
@@ -153,6 +178,21 @@ void DescriptorMatcherView::disableBruteForceNorm(const QString &norm)
 void DescriptorMatcherView::enableBruteForceNorm(const QString &norm)
 {
   mDescriptorMatcherWidget->enableBruteForceNorm(norm);
+}
+
+void DescriptorMatcherView::setGmsRotation(bool active)
+{
+  mDescriptorMatcherWidget->setGmsRotation(active);
+}
+
+void DescriptorMatcherView::setGmsScale(bool active)
+{
+  mDescriptorMatcherWidget->setGmsScale(active);
+}
+
+void DescriptorMatcherView::setGmsThreshold(double threshold)
+{
+  mDescriptorMatcherWidget->setGmsThreshold(threshold);
 }
 
 void DescriptorMatcherView::init()

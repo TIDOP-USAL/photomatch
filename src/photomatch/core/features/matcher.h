@@ -7,6 +7,7 @@
 
 #include <QString>
 #include <QObject>
+#include <QSize>
 
 #include <opencv2/xfeatures2d.hpp>
 #ifdef HAVE_CUDA
@@ -78,7 +79,20 @@ public:
    * \brief Compute matching
    * \param[in] queryDescriptors Query descriptors
    * \param[in] trainDescriptors Train descriptors
-   * \param[out] matches Matches
+   * \param[out] matches Matches 1 to 2
+   * \param[in] mask
+   * \return
+   */
+  virtual bool match(cv::InputArray &queryDescriptors,
+                     cv::InputArray &trainDescriptors,
+                     std::vector<cv::DMatch> &matches,
+                     cv::InputArray mask = cv::noArray()) = 0;
+
+  /*!
+   * \brief Compute matching
+   * \param[in] queryDescriptors Query descriptors
+   * \param[in] trainDescriptors Train descriptors
+   * \param[out] matches Matches 1 to 2 and 2 to 1
    * \param[in] mask
    * \return true if error
    */
@@ -167,6 +181,11 @@ private:
 // DescriptorMatcher interface
 
 public:
+
+  bool match(cv::InputArray &queryDescriptors,
+             cv::InputArray &trainDescriptors,
+             std::vector<cv::DMatch> &matches,
+             cv::InputArray mask = cv::noArray()) override;
 
   bool match(cv::InputArray &queryDescriptors,
              cv::InputArray &trainDescriptors,
@@ -271,6 +290,11 @@ public:
 
   bool match(cv::InputArray &queryDescriptors,
              cv::InputArray &trainDescriptors,
+             std::vector<cv::DMatch> &matches,
+             cv::InputArray mask = cv::noArray()) override;
+
+  bool match(cv::InputArray &queryDescriptors,
+             cv::InputArray &trainDescriptors,
              std::vector<std::vector<cv::DMatch>> &matches,
              cv::InputArray mask = cv::noArray()) override;
 
@@ -316,6 +340,11 @@ public:
 
   bool match(cv::InputArray &queryDescriptors,
              cv::InputArray &trainDescriptors,
+             std::vector<cv::DMatch> &matches,
+             cv::InputArray mask = cv::noArray()) override;
+
+  bool match(cv::InputArray &queryDescriptors,
+             cv::InputArray &trainDescriptors,
              std::vector<std::vector<cv::DMatch>> &matches,
              cv::InputArray mask = cv::noArray()) override;
 
@@ -338,10 +367,70 @@ protected:
 
 #endif // HAVE_CUDA
 
+
+
 /*----------------------------------------------------------------*/
 
 
+class PHOTOMATCH_EXPORT MatchingStrategy
+{
+public:
+
+  enum class Strategy
+  {
+    robust_matching,
+    gms
+  };
+
+public:
+
+  MatchingStrategy(Strategy strategy) : mStrategy(strategy) {}
+  virtual ~MatchingStrategy() = default;
+
+  /*!
+   * \brief Recover the default values
+   */
+  virtual void reset() = 0;
+
+  Strategy strategy() const { return mStrategy.flags(); }
+  virtual QString name() const = 0;
+
+protected:
+
+  tl::EnumFlags<Strategy> mStrategy;
+
+};
+ALLOW_BITWISE_FLAG_OPERATIONS(MatchingStrategy::Strategy)
+
+
+/*----------------------------------------------------------------*/
+
+
+class PHOTOMATCH_EXPORT MatchingAlgorithm
+{
+
+public:
+
+  MatchingAlgorithm() {}
+  virtual ~MatchingAlgorithm() = default;
+
+  virtual bool compute(const cv::Mat &queryDescriptor,
+                       const cv::Mat &trainDescriptor,
+                       const std::vector<cv::KeyPoint> &keypoints1,
+                       const std::vector<cv::KeyPoint> &keypoints2,
+                       std::vector<cv::DMatch> *goodMatches,
+                       std::vector<cv::DMatch> *wrongMatches = nullptr,
+                       const QSize &queryImageSize = QSize(),
+                       const QSize &trainImageSize = QSize()) = 0;
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+
 class PHOTOMATCH_EXPORT IRobustMatcherRefinement
+  : public MatchingStrategy
 {
 
 public:
@@ -377,7 +466,8 @@ public:
 
 public:
 
-  IRobustMatcherRefinement() {}
+  IRobustMatcherRefinement()
+    : MatchingStrategy(MatchingStrategy::Strategy::robust_matching) {}
   virtual ~IRobustMatcherRefinement() = default;
 
   virtual double ratio() const = 0;
@@ -410,21 +500,21 @@ public:
   /*!
    * \brief Recover the default values
    */
-  virtual void reset() = 0;
+  //virtual void reset() = 0;
 
 };
 
 
 /*----------------------------------------------------------------*/
 
-class PHOTOMATCH_EXPORT RobustMatcherProperties
+class PHOTOMATCH_EXPORT RobustMatchingProperties
   : public IRobustMatcherRefinement
 {
 
 public:
 
-  RobustMatcherProperties();
-  ~RobustMatcherProperties() override = default;
+  RobustMatchingProperties();
+  ~RobustMatchingProperties() override = default;
 
 // IRobustMatcherRefinement interface
 
@@ -448,7 +538,13 @@ public:
   void setConfidence(double confidence) override;
   int maxIter() const override;
   void setMaxIters(int maxIter) override;
+
+// MatchingStrategy interface
+
+public:
+
   void reset() override;
+  QString name() const override;
 
 private:
 
@@ -473,21 +569,248 @@ private:
  *
  * http://docs.opencv.org/3.1.0/dc/d2c/tutorial_real_time_pose.html
  */
-class PHOTOMATCH_EXPORT IRobustMatching
+//class PHOTOMATCH_EXPORT IRobustMatching
+//{
+
+//public:
+
+//  IRobustMatching() {}
+//  virtual ~IRobustMatching() = default;
+
+//public:
+
+//  /*!
+//   * \brief Establece el metodo de matching
+//   * \param[in] matcher
+//   */
+//  virtual void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher) = 0;
+
+//  /*!
+//   * \brief Test de ratio
+//   * \param[in] matches
+//   */
+//  /*!
+//   * \brief Ratio test
+//   * \param[in] matches
+//   * \param[in] ratio
+//   * \param[out] goodMatches
+//   * \param[out] wrongMatches
+//   */
+//  static std::vector<std::vector<cv::DMatch>> ratioTest(const std::vector<std::vector<cv::DMatch>> &matches,
+//                        double ratio,
+//                        std::vector<std::vector<cv::DMatch>> *wrongMatches = nullptr)
+//  {
+//    std::vector<std::vector<cv::DMatch>> goodMatches;
+
+//    for (size_t i = 0; i < matches.size(); i++){
+
+//      if (matches[i].size() > 1){
+//        // check distance ratio
+//        if (matches[i][0].distance / matches[i][1].distance <= static_cast<float>(ratio)) {
+//            goodMatches.push_back(matches[i]);
+//        } else {
+//          if (wrongMatches){
+//            wrongMatches->push_back(matches[i]);
+//          }
+//        }
+//      }
+
+//    }
+
+//    return goodMatches;
+//  }
+
+//  /*!
+//   * \brief test cruzado
+//   * Busqueda de matches simétricos
+//   * \param[in] matches12
+//   * \param[in] matches21
+//   * \param[out] goodMatches
+//   * \param[out] wrongMatches
+//   */
+//  static std::vector<cv::DMatch> crossCheckTest(const std::vector<std::vector<cv::DMatch>> &matches12,
+//                                                const std::vector<std::vector<cv::DMatch>> &matches21,
+//                                                std::vector<cv::DMatch> *wrongMatches = nullptr)
+//  {
+//    std::vector<cv::DMatch> goodMatches;
+
+//    for (size_t i = 0; i < matches12.size(); i++){
+
+//      if (matches12[i].empty() || matches12[i].size() < 2)
+//        continue;
+
+//      bool findGoodMatch = false;
+//      for (size_t j = 0; j < matches21.size(); j++){
+
+//        if (matches21[j].empty() || matches21[j].size() < 2)
+//          continue;
+
+//        if (matches12[i][0].queryIdx == matches21[j][0].trainIdx &&
+//            matches21[j][0].queryIdx == matches12[i][0].trainIdx) {
+//            goodMatches.push_back(matches12[i][0]);
+//          findGoodMatch = true;
+//          break;
+//        }
+
+//      }
+
+//      if (findGoodMatch == false && wrongMatches)
+//        wrongMatches->push_back(matches12[i][0]);
+
+//    }
+
+//    return goodMatches;
+//  }
+
+//  virtual std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
+//                                                  const std::vector<cv::KeyPoint>& keypoints1,
+//                                                  const std::vector<cv::KeyPoint>& keypoints2,
+//                                                  std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+
+//  virtual std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
+//                                                           const std::vector<cv::Point2f>& points1,
+//                                                           const std::vector<cv::Point2f>& points2,
+//                                                           std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+//  virtual std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
+//                                                          const std::vector<cv::Point2f>& points1,
+//                                                          const std::vector<cv::Point2f>& points2,
+//                                                          std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+//  virtual std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
+//                                                            const std::vector<cv::Point2f>& points1,
+//                                                            const std::vector<cv::Point2f>& points2,
+//                                                            std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+
+//  /*!
+//   * \brief Matching
+//   * \param[in] queryDescriptor Query descriptor
+//   * \param[in] trainDescriptor Train descriptor
+//   * \param[out] wrongMatches Wrong matches
+//   * \return Good matches
+//   */
+//  virtual std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
+//                                        const cv::Mat &trainDescriptor,
+//                                        std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+
+//private:
+
+//  /*!
+//   * \brief Robust matching
+//   * Feature matching using ratio and symmetry tests
+//   * \param[in] queryDescriptor Query descriptor
+//   * \param[in] trainDescriptor Train descriptor
+//   * \param[out] wrongMatches Wrong matches
+//   * \return Good matches
+//   */
+//  virtual std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
+//                                              const cv::Mat &trainDescriptor,
+//                                              std::vector<cv::DMatch> *wrongMatches) = 0;
+
+//  /*!
+//   * \brief Robust matching
+//   * Feature matching using ratio test
+//   * \param[in] queryDescriptor Query descriptor
+//   * \param[in] trainDescriptor Train descriptor
+//   * \param[out] wrongMatches Wrong matches
+//   * \return Good matches
+//   */
+//  virtual std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
+//                                                  const cv::Mat &trainDescriptor,
+//                                                  std::vector<cv::DMatch> *wrongMatches) = 0;
+//};
+
+
+/*----------------------------------------------------------------*/
+
+
+//class PHOTOMATCH_EXPORT RobustMatching
+//  : public IRobustMatching,
+//    public RobustMatchingProperties
+//{
+
+//public:
+
+//  RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher);
+//  RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher,
+//                 double ratio,
+//                 bool crossCheck,
+//                 GeometricTest geometricTest,
+//                 HomographyComputeMethod homographyComputeMethod,
+//                 FundamentalComputeMethod fundamentalComputeMethod,
+//                 EssentialComputeMethod essentialComputeMethod,
+//                 double distance,
+//                 double confidence,
+//                 int maxIter);
+//  ~RobustMatching() override;
+
+//// IRobustMatching interface
+
+//public:
+
+//  void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher) override;
+
+//  std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
+//                                const cv::Mat &trainDescriptor,
+//                                std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+
+//  std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
+//                                          const std::vector<cv::KeyPoint>& keypoints1,
+//                                          const std::vector<cv::KeyPoint>& keypoints2,
+//                                          std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+
+//  std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
+//                                                   const std::vector<cv::Point2f>& points1,
+//                                                   const std::vector<cv::Point2f>& points2,
+//                                                   std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+//  std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
+//                                                  const std::vector<cv::Point2f>& points1,
+//                                                  const std::vector<cv::Point2f>& points2,
+//                                                  std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+//  std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
+//                                                    const std::vector<cv::Point2f>& points1,
+//                                                    const std::vector<cv::Point2f>& points2,
+//                                                    std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+
+//private:
+
+//  std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
+//                                      const cv::Mat &trainDescriptor,
+//                                      std::vector<cv::DMatch> *wrongMatches) override;
+//  std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
+//                                          const cv::Mat &trainDescriptor,
+//                                          std::vector<cv::DMatch> *wrongMatches) override;
+
+//protected:
+
+//  std::shared_ptr<DescriptorMatcher> mMatcher;
+//};
+
+/*----------------------------------------------------------------*/
+
+class PHOTOMATCH_EXPORT RobustMatchingStrategy
+  : public RobustMatchingProperties,
+    public MatchingAlgorithm
 {
 
 public:
 
-  IRobustMatching() {}
-  virtual ~IRobustMatching() = default;
-
-public:
+  RobustMatchingStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  RobustMatchingStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+                         double ratio,
+                         bool crossCheck,
+                         GeometricTest geometricTest,
+                         HomographyComputeMethod homographyComputeMethod,
+                         FundamentalComputeMethod fundamentalComputeMethod,
+                         EssentialComputeMethod essentialComputeMethod,
+                         double distance,
+                         double confidence,
+                         int maxIter);
+  ~RobustMatchingStrategy() override;
 
   /*!
    * \brief Establece el metodo de matching
    * \param[in] matcher
    */
-  virtual void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher) = 0;
+  void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
 
   /*!
    * \brief Test de ratio
@@ -566,23 +889,23 @@ public:
     return goodMatches;
   }
 
-  virtual std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
-                                                  const std::vector<cv::KeyPoint>& keypoints1,
-                                                  const std::vector<cv::KeyPoint>& keypoints2,
-                                                  std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+  std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
+                                          const std::vector<cv::KeyPoint>& keypoints1,
+                                          const std::vector<cv::KeyPoint>& keypoints2,
+                                          std::vector<cv::DMatch> *wrongMatches = nullptr);
 
-  virtual std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
-                                                           const std::vector<cv::Point2f>& points1,
-                                                           const std::vector<cv::Point2f>& points2,
-                                                           std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-  virtual std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
-                                                          const std::vector<cv::Point2f>& points1,
-                                                          const std::vector<cv::Point2f>& points2,
-                                                          std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-  virtual std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
-                                                            const std::vector<cv::Point2f>& points1,
-                                                            const std::vector<cv::Point2f>& points2,
-                                                            std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+  std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
+                                                   const std::vector<cv::Point2f>& points1,
+                                                   const std::vector<cv::Point2f>& points2,
+                                                   std::vector<cv::DMatch> *wrongMatches = nullptr);
+  std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
+                                                  const std::vector<cv::Point2f>& points1,
+                                                  const std::vector<cv::Point2f>& points2,
+                                                  std::vector<cv::DMatch> *wrongMatches = nullptr);
+  std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
+                                                    const std::vector<cv::Point2f>& points1,
+                                                    const std::vector<cv::Point2f>& points2,
+                                                    std::vector<cv::DMatch> *wrongMatches = nullptr);
 
   /*!
    * \brief Matching
@@ -591,9 +914,9 @@ public:
    * \param[out] wrongMatches Wrong matches
    * \return Good matches
    */
-  virtual std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
-                                        const cv::Mat &trainDescriptor,
-                                        std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
+  std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
+                                const cv::Mat &trainDescriptor,
+                                std::vector<cv::DMatch> *wrongMatches = nullptr);
 
 private:
 
@@ -605,9 +928,9 @@ private:
    * \param[out] wrongMatches Wrong matches
    * \return Good matches
    */
-  virtual std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
-                                              const cv::Mat &trainDescriptor,
-                                              std::vector<cv::DMatch> *wrongMatches) = 0;
+  std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
+                                      const cv::Mat &trainDescriptor,
+                                      std::vector<cv::DMatch> *wrongMatches);
 
   /*!
    * \brief Robust matching
@@ -617,78 +940,131 @@ private:
    * \param[out] wrongMatches Wrong matches
    * \return Good matches
    */
-  virtual std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
-                                                  const cv::Mat &trainDescriptor,
-                                                  std::vector<cv::DMatch> *wrongMatches) = 0;
-};
+  std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
+                                          const cv::Mat &trainDescriptor,
+                                          std::vector<cv::DMatch> *wrongMatches);
 
+
+// MatchingAlgorithm interface
+
+public:
+
+  bool compute(const cv::Mat &queryDescriptor,
+               const cv::Mat &trainDescriptor,
+               const std::vector<cv::KeyPoint> &keypoints1,
+               const std::vector<cv::KeyPoint> &keypoints2,
+               std::vector<cv::DMatch> *goodMatches,
+               std::vector<cv::DMatch> *wrongMatches = nullptr,
+               const QSize &queryImageSize = QSize(),
+               const QSize &trainImageSize = QSize()) override;
+
+protected:
+
+  std::shared_ptr<DescriptorMatcher> mDescriptorMatcher;
+
+};
 
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT RobustMatching
-  : public IRobustMatching,
-    public RobustMatcherProperties
+class PHOTOMATCH_EXPORT IGms
+  : public MatchingStrategy
 {
 
 public:
 
-  RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher);
-  RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher,
-                 double ratio,
-                 bool crossCheck,
-                 GeometricTest geometricTest,
-                 HomographyComputeMethod homographyComputeMethod,
-                 FundamentalComputeMethod fundamentalComputeMethod,
-                 EssentialComputeMethod essentialComputeMethod,
-                 double distance,
-                 double confidence,
-                 int maxIter);
-  ~RobustMatching() override;
+  IGms() : MatchingStrategy(MatchingStrategy::Strategy::gms) {}
+  virtual ~IGms() = default;
 
-// IRobustMatching interface
+  virtual bool rotation() const = 0;
+  virtual void setRotation(bool rotation) = 0;
+
+  virtual bool scale() const  = 0;
+  virtual void setScale(bool scale) = 0;
+
+  virtual double threshold() const = 0;
+  virtual void setThreshold(double threshold) = 0;
+};
+
+
+/*----------------------------------------------------------------*/
+
+
+class PHOTOMATCH_EXPORT GmsProperties
+  : public IGms
+{
 
 public:
 
-  void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher) override;
+  GmsProperties();
+  ~GmsProperties() override = default;
 
-  std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
-                                const cv::Mat &trainDescriptor,
-                                std::vector<cv::DMatch> *wrongMatches = nullptr) override;
 
-  std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
-                                          const std::vector<cv::KeyPoint>& keypoints1,
-                                          const std::vector<cv::KeyPoint>& keypoints2,
-                                          std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+// MatchingStrategy interface
 
-  std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
-                                                   const std::vector<cv::Point2f>& points1,
-                                                   const std::vector<cv::Point2f>& points2,
-                                                   std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-  std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
-                                                  const std::vector<cv::Point2f>& points1,
-                                                  const std::vector<cv::Point2f>& points2,
-                                                  std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-  std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
-                                                    const std::vector<cv::Point2f>& points1,
-                                                    const std::vector<cv::Point2f>& points2,
-                                                    std::vector<cv::DMatch> *wrongMatches = nullptr) override;
+public:
 
-private:
+  void reset() override;
+  QString name() const override;
 
-  std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
-                                      const cv::Mat &trainDescriptor,
-                                      std::vector<cv::DMatch> *wrongMatches) override;
-  std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
-                                          const cv::Mat &trainDescriptor,
-                                          std::vector<cv::DMatch> *wrongMatches) override;
+// IGms interface
+
+public:
+
+  bool rotation() const override;
+  void setRotation(bool rotation) override;
+  bool scale() const override;
+  void setScale(bool scale) override;
+  double threshold() const override;
+  void setThreshold(double threshold) override;
 
 protected:
 
-  std::shared_ptr<DescriptorMatcher> mMatcher;
+  bool mRotation;
+  bool mScale;
+  double mThreshold;
 };
 
+
 /*----------------------------------------------------------------*/
+
+
+class PHOTOMATCH_EXPORT GsmStrategy
+  : public GmsProperties,
+    public MatchingAlgorithm
+{
+
+public:
+
+  GsmStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  GsmStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+              bool rotation,
+              bool scale,
+              double threshold);
+  ~GsmStrategy() override;
+
+// MatchingAlgorithm interface
+
+public:
+
+  bool compute(const cv::Mat &queryDescriptor,
+               const cv::Mat &trainDescriptor,
+               const std::vector<cv::KeyPoint> &keypoints1,
+               const std::vector<cv::KeyPoint> &keypoints2,
+               std::vector<cv::DMatch> *goodMatches,
+               std::vector<cv::DMatch> *wrongMatches = nullptr,
+               const QSize &queryImageSize = QSize(),
+               const QSize &trainImageSize = QSize()) override;
+
+protected:
+
+  std::shared_ptr<DescriptorMatcher> mDescriptorMatcher;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
 
 /*!
  * \brief Matches write

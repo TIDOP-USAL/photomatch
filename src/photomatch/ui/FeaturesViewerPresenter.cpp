@@ -35,8 +35,7 @@ void FeaturesViewerPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("keypoints_viewer.html");
-    //mHelp->setModal(true);
-    mHelp->showMaximized();
+    mHelp->show();
   }
 }
 

@@ -10,6 +10,11 @@ AboutDialog::AboutDialog(QWidget *parent) :
 {
   ui->setupUi(this);
 
+  Qt::WindowFlags helpFlag = Qt::WindowContextHelpButtonHint;
+  Qt::WindowFlags flags = windowFlags();
+  flags = flags & (~helpFlag);
+  setWindowFlags(flags);
+
   connect(ui->listWidget, SIGNAL(currentRowChanged(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
 }
 

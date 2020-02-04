@@ -86,7 +86,7 @@ void ExportMatchesView::update()
 
 void ExportMatchesView::retranslate()
 {
-  this->setWindowTitle(QApplication::translate("ExportMatchesView", "Export Keypoints", nullptr));
+  this->setWindowTitle(QApplication::translate("ExportMatchesView", "Export Matches", nullptr));
   mLabelSession->setText(QApplication::translate("ExportMatchesView", "Session:", nullptr));
 
   mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("ExportMatchesView", "Cancel", nullptr));

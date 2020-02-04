@@ -72,7 +72,7 @@ void TestSurfDetectorDescriptor::test_defaultConstructor()
   QCOMPARE(4, surfDetectorDescriptor.octaves());
   QCOMPARE(3, surfDetectorDescriptor.octaveLayers());
   QCOMPARE(false, surfDetectorDescriptor.extendedDescriptor());
-  QCOMPARE(false, surfDetectorDescriptor.rotatedFeatures());
+  QCOMPARE(false, surfDetectorDescriptor.upright());
 }
 
 void TestSurfDetectorDescriptor::test_constructor()
@@ -82,7 +82,7 @@ void TestSurfDetectorDescriptor::test_constructor()
   QCOMPARE(2, surfDetectorDescriptor.octaves());
   QCOMPARE(5, surfDetectorDescriptor.octaveLayers());
   QCOMPARE(true, surfDetectorDescriptor.extendedDescriptor());
-  QCOMPARE(true, surfDetectorDescriptor.rotatedFeatures());
+  QCOMPARE(true, surfDetectorDescriptor.upright());
 }
 
 void TestSurfDetectorDescriptor::test_copy_constructor()
@@ -93,7 +93,7 @@ void TestSurfDetectorDescriptor::test_copy_constructor()
   QCOMPARE(2, c.octaves());
   QCOMPARE(5, c.octaveLayers());
   QCOMPARE(true, c.extendedDescriptor());
-  QCOMPARE(true, c.rotatedFeatures());
+  QCOMPARE(true, c.upright());
 }
 
 void TestSurfDetectorDescriptor::test_type()
@@ -197,8 +197,8 @@ void TestSurfDetectorDescriptor::test_rotatedFeatures()
   QFETCH(bool, value);
   QFETCH(bool, result);
 
-  this->setRotatedFeatures(value);
-  QCOMPARE(result, this->rotatedFeatures());
+  this->setUpright(value);
+  QCOMPARE(result, this->upright());
   QCOMPARE(result, this->mSurf->getUpright());
 }
 
@@ -208,7 +208,7 @@ void TestSurfDetectorDescriptor::test_reset()
   this->setOctaves(2);
   this->setOctaveLayers(5);
   this->setExtendedDescriptor(true);
-  this->setRotatedFeatures(true);
+  this->setUpright(true);
 
   this->reset();
 
@@ -220,7 +220,7 @@ void TestSurfDetectorDescriptor::test_reset()
   QCOMPARE(3, this->mSurf->getNOctaveLayers());
   QCOMPARE(false, this->extendedDescriptor());
   QCOMPARE(false, this->mSurf->getExtended());
-  QCOMPARE(false, this->rotatedFeatures());
+  QCOMPARE(false, this->upright());
   QCOMPARE(false, this->mSurf->getUpright());
 }
 #endif

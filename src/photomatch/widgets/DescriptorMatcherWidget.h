@@ -30,6 +30,8 @@ public:
    */
   virtual QString matchingMethod() const = 0;
 
+  virtual QString matchingStrategy() const = 0;
+
   /*!
    * \brief One of NORM_L1, NORM_L2, NORM_HAMMING, NORM_HAMMING2.
    * \return
@@ -87,11 +89,16 @@ public:
    * \brief crossMatching
    * \return
    */
- virtual bool crossMatching() const = 0;
+  virtual bool crossMatching() const = 0;
+
+  virtual bool gmsRotation() const = 0;
+  virtual bool gmsScale() const = 0;
+  virtual double gmsThreshold() const = 0;
 
 signals:
 
   void matchingMethodChange(QString);
+  void matchingStrategyChange(QString);
   void normTypeChange(QString);
   void ratioChange(double);
   void geometricTestChange(QString);
@@ -102,6 +109,9 @@ signals:
   void confidenceChange(double);
   void crossMatchingChange(bool);
   void maxItersChange(int);
+  void gmsRotationChange(bool);
+  void gmsScaleChange(bool);
+  void gmsThresholdChange(double);
 
 public slots:
 
@@ -110,6 +120,8 @@ public slots:
    * \param matchingMethod
    */
   virtual void setMatchingMethod(const QString &matchingMethod) = 0;
+
+  virtual void setMatchingStrategy(const QString &matchingStrategy) = 0;
 
   /*!
    * \brief setNormType
@@ -174,6 +186,9 @@ public slots:
   virtual void disableBruteForceNorm(const QString &norm) = 0;
   virtual void enableBruteForceNorm(const QString &norm) = 0;
 
+  virtual void setGmsRotation(bool active) = 0;
+  virtual void setGmsScale(bool active) = 0;
+  virtual void setGmsThreshold(double threshold) = 0;
 };
 
 class PHOTOMATCH_EXPORT DescriptorMatcherWidget
@@ -192,6 +207,7 @@ public:
 public:
 
   QString matchingMethod() const override;
+  QString matchingStrategy() const override;
   QString normType() const override;
   double ratio() const override;
   QString geometricTest() const override;
@@ -202,10 +218,14 @@ public:
   double confidence() const override;
   int maxIters() const override;
   bool crossMatching() const override;
+  bool gmsRotation() const override;
+  bool gmsScale() const override;
+  double gmsThreshold() const override;
 
 public slots:
 
   void setMatchingMethod(const QString &matchingMethod) override;
+  void setMatchingStrategy(const QString &matchingStrategy) override;
   void setNormType(const QString &normType) override;
   void setRatio(double ratio) override;
   void setGeometricTest(const QString &geometricTest) override;
@@ -218,6 +238,9 @@ public slots:
   void setCrossMatching(bool crossMatching) override;
   void disableBruteForceNorm(const QString &norm) override;
   void enableBruteForceNorm(const QString &norm) override;
+  void setGmsRotation(bool active) override;
+  void setGmsScale(bool active) override;
+  void setGmsThreshold(double threshold) override;
 
 // PhotoMatchWidget interface
 
@@ -237,6 +260,7 @@ private:
 protected:
 
   QComboBox *mMatchingMethod;
+  QComboBox *mMatchingStrategy;
   QGroupBox *mGroupBoxBFParameters;
   QComboBox *mNormType;
   QLabel *mNormTypeLabel;
@@ -256,8 +280,13 @@ protected:
   QLabel *mFComputeMethodLabel;
   QComboBox *mEComputeMethod;
   QLabel *mEComputeMethodLabel;
-
+  QGroupBox *mGroupBoxGMS;
+  QCheckBox *mRotationGMS;
+  QCheckBox *mScaleGMS;
+  QDoubleSpinBox *mThresholdGMS;
 };
+
+
 
 } // namespace photomatch
 
