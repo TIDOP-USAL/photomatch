@@ -26,7 +26,6 @@ private slots:
   void test_lucidKernel();
   void test_blurKernel_data();
   void test_blurKernel();
-  void test_reset();
 
 private:
 
@@ -49,12 +48,19 @@ TestLucidDescriptor::~TestLucidDescriptor()
 
 void TestLucidDescriptor::initTestCase()
 {
-
+  QCOMPARE(1, mLucidDescriptor->lucidKernel());
+  QCOMPARE(2, mLucidDescriptor->blurKernel());
 }
 
 void TestLucidDescriptor::cleanupTestCase()
 {
+  mLucidDescriptor->setLucidKernel(3);
+  mLucidDescriptor->setBlurKernel(3);
 
+  mLucidDescriptor->reset();
+
+  QCOMPARE(1, mLucidDescriptor->lucidKernel());
+  QCOMPARE(2, mLucidDescriptor->blurKernel());
 }
 
 void TestLucidDescriptor::test_defaultConstructor()
@@ -122,16 +128,6 @@ void TestLucidDescriptor::test_blurKernel()
   QCOMPARE(result, mLucidDescriptor->blurKernel());
 }
 
-void TestLucidDescriptor::test_reset()
-{
-  mLucidDescriptor->setLucidKernel(3);
-  mLucidDescriptor->setBlurKernel(3);
-
-  mLucidDescriptor->reset();
-
-  QCOMPARE(1, mLucidDescriptor->lucidKernel());
-  QCOMPARE(2, mLucidDescriptor->blurKernel());
-}
 
 QTEST_APPLESS_MAIN(TestLucidDescriptor)
 

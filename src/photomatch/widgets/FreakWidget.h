@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_FREAK_WIDGET_H
 #define PHOTOMATCH_FREAK_WIDGET_H
 
@@ -16,15 +40,15 @@ namespace photomatch
  * Freak: Fast retina keypoint. In Computer Vision and Pattern
  * Recognition (CVPR), 2012 IEEE Conference on, pages 510–517. Ieee, 2012.
  */
-class PHOTOMATCH_EXPORT IFreakWidget
+class PHOTOMATCH_EXPORT FreakWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IFreakWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IFreakWidget() = default;
+  FreakWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~FreakWidget() = default;
 
   /*!
    * \brief Orientation normalization (Default=true)
@@ -85,15 +109,15 @@ public slots:
 
 };
 
-class PHOTOMATCH_EXPORT FreakWidget
-  : public IFreakWidget
+class PHOTOMATCH_EXPORT FreakWidgetImp
+  : public FreakWidget
 {
   Q_OBJECT
 
 public:
 
-  FreakWidget(QWidget *parent = nullptr);
-  ~FreakWidget() override;
+  FreakWidgetImp(QWidget *parent = nullptr);
+  ~FreakWidgetImp() override;
 
 // IFreakWidget interface
 

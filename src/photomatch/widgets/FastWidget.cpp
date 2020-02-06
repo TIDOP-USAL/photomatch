@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "FastWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-FastWidget::FastWidget(QWidget *parent)
-  : IFastWidget(parent),
+FastWidgetImp::FastWidgetImp(QWidget *parent)
+  : FastWidget(parent),
     mThreshold(new QSpinBox(this)),
     mNonmaxSuppression(new QCheckBox(this)),
     mDetectorType(new QComboBox(this))
@@ -25,52 +49,52 @@ FastWidget::FastWidget(QWidget *parent)
   connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
 }
 
-FastWidget::~FastWidget()
+FastWidgetImp::~FastWidgetImp()
 {
 }
 
-int FastWidget::threshold() const
+int FastWidgetImp::threshold() const
 {
   return mThreshold->value();
 }
 
-bool FastWidget::nonmaxSuppression() const
+bool FastWidgetImp::nonmaxSuppression() const
 {
   return mNonmaxSuppression->isChecked();
 }
 
-QString FastWidget::detectorType() const
+QString FastWidgetImp::detectorType() const
 {
   return mDetectorType->currentText();
 }
 
-void FastWidget::setThreshold(int threshold)
+void FastWidgetImp::setThreshold(int threshold)
 {
   const QSignalBlocker blockerFastThreshold(mThreshold);
   mThreshold->setValue(threshold);
 }
 
-void FastWidget::setNonmaxSuppression(bool nonmaxSuppression)
+void FastWidgetImp::setNonmaxSuppression(bool nonmaxSuppression)
 {
   mNonmaxSuppression->setChecked(nonmaxSuppression);
 }
 
-void FastWidget::setDetectorType(QString detectorType)
+void FastWidgetImp::setDetectorType(QString detectorType)
 {
   const QSignalBlocker blockerDetectorType(mDetectorType);
   mDetectorType->setCurrentText(detectorType);
 }
 
-void FastWidget::update()
+void FastWidgetImp::update()
 {
 }
 
-void FastWidget::retranslate()
+void FastWidgetImp::retranslate()
 {
 
 }
 
-void FastWidget::reset()
+void FastWidgetImp::reset()
 {
   const QSignalBlocker blockerFastThreshold(mThreshold);
   const QSignalBlocker blockerDetectorType(mDetectorType);
@@ -80,7 +104,7 @@ void FastWidget::reset()
   mDetectorType->setCurrentText("TYPE_9_16");
 }
 
-void FastWidget::init()
+void FastWidgetImp::init()
 {
   this->setWindowTitle("FAST");
 

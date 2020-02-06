@@ -160,6 +160,7 @@ signals:
   /* Menú Ayuda */
 
   void openHelpDialog();
+  void openOnlineHelp();
   void openAboutDialog();
 
   /* Panel de vistas en miniatura */
@@ -234,6 +235,7 @@ protected:
   QAction *mActionViewSettings;
   QAction *mActionToolSettings;
   QAction *mActionHelp;
+  QAction *mActionOnlineHelp;
   QAction *mActionAbout;
   QAction *mActionExportTiePoints;
   QAction *mActionExportMatches;

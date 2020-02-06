@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "BoostWidget.h"
 
 #include <QCheckBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-BoostWidget::BoostWidget(QWidget *parent)
-  : IBoostWidget(parent),
+BoostWidgetImp::BoostWidgetImp(QWidget *parent)
+  : BoostWidget(parent),
     mDescriptorType(new QComboBox(this)),
     mUseOrientation(new QCheckBox(this)),
     mScaleFactor(new QDoubleSpinBox(this))
@@ -24,53 +48,53 @@ BoostWidget::BoostWidget(QWidget *parent)
   connect(mScaleFactor,       SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
 }
 
-BoostWidget::~BoostWidget()
+BoostWidgetImp::~BoostWidgetImp()
 {
 
 }
 
-QString BoostWidget::descriptorType() const
+QString BoostWidgetImp::descriptorType() const
 {
   return mDescriptorType->currentText();
 }
 
-bool BoostWidget::useOrientation() const
+bool BoostWidgetImp::useOrientation() const
 {
   return mUseOrientation->isChecked();
 }
 
-double BoostWidget::scaleFactor() const
+double BoostWidgetImp::scaleFactor() const
 {
   return mScaleFactor->value();
 }
 
-void BoostWidget::setDescriptorType(const QString &descriptorType)
+void BoostWidgetImp::setDescriptorType(const QString &descriptorType)
 {
   const QSignalBlocker blockerBytes(mDescriptorType);
   mDescriptorType->setCurrentText(descriptorType);
 }
 
-void BoostWidget::setUseOrientation(bool useOrientation)
+void BoostWidgetImp::setUseOrientation(bool useOrientation)
 {
   mUseOrientation->setChecked(useOrientation);
 }
 
-void BoostWidget::setScaleFactor(double scaleFactor)
+void BoostWidgetImp::setScaleFactor(double scaleFactor)
 {
   const QSignalBlocker blockerScaleFactor(mScaleFactor);
   mScaleFactor->setValue(scaleFactor);
 }
 
-void BoostWidget::update()
+void BoostWidgetImp::update()
 {
 }
 
-void BoostWidget::retranslate()
+void BoostWidgetImp::retranslate()
 {
 
 }
 
-void BoostWidget::reset()
+void BoostWidgetImp::reset()
 {
   const QSignalBlocker blockerBytes(mDescriptorType);
   const QSignalBlocker blockerScaleFactor(mScaleFactor);
@@ -80,7 +104,7 @@ void BoostWidget::reset()
   mScaleFactor->setValue(6.25);
 }
 
-void BoostWidget::init()
+void BoostWidgetImp::init()
 {
   this->setWindowTitle("BOOST");
 

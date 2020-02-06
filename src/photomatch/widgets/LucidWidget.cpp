@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "LucidWidget.h"
 
 
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-LucidWidget::LucidWidget(QWidget *parent)
-  : ILucidWidget (parent),
+LucidWidgetImp::LucidWidgetImp(QWidget *parent)
+  : LucidWidget (parent),
     mLucidKernel(new QSpinBox(this)),
     mBlurKernel(new QSpinBox(this))
 {
@@ -21,43 +45,43 @@ LucidWidget::LucidWidget(QWidget *parent)
 
 }
 
-LucidWidget::~LucidWidget()
+LucidWidgetImp::~LucidWidgetImp()
 {
 
 }
 
-int LucidWidget::lucidKernel() const
+int LucidWidgetImp::lucidKernel() const
 {
   return mLucidKernel->value();
 }
 
-int LucidWidget::blurKernel() const
+int LucidWidgetImp::blurKernel() const
 {
   return mBlurKernel->value();
 }
 
-void LucidWidget::setLucidKernel(int lucidKernel)
+void LucidWidgetImp::setLucidKernel(int lucidKernel)
 {
   const QSignalBlocker blockerLucidKernel(mLucidKernel);
   mLucidKernel->setValue(lucidKernel);
 }
 
-void LucidWidget::setBlurKernel(int blurKernel)
+void LucidWidgetImp::setBlurKernel(int blurKernel)
 {
   const QSignalBlocker blockerBlurKernel(mBlurKernel);
   mBlurKernel->setValue(blurKernel);
 }
 
-void LucidWidget::update()
+void LucidWidgetImp::update()
 {
 }
 
-void LucidWidget::retranslate()
+void LucidWidgetImp::retranslate()
 {
 
 }
 
-void LucidWidget::reset()
+void LucidWidgetImp::reset()
 {
   const QSignalBlocker blockerLucidKernel(mLucidKernel);
   const QSignalBlocker blockerBlurKernel(mBlurKernel);
@@ -66,7 +90,7 @@ void LucidWidget::reset()
   mBlurKernel->setValue(2);
 }
 
-void LucidWidget::init()
+void LucidWidgetImp::init()
 {
   this->setWindowTitle("LUCID");
 

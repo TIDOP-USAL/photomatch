@@ -30,7 +30,6 @@ private slots:
   void test_scaleFactor();
   void test_useOrientation_data();
   void test_useOrientation();
-  void test_reset();
 
 private:
 
@@ -53,12 +52,23 @@ TestBoostDescriptor::~TestBoostDescriptor()
 
 void TestBoostDescriptor::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE("BINBOOST_256", mBoostDescriptor->descriptorType());
+  QCOMPARE(true, mBoostDescriptor->useOrientation());
+  QCOMPARE(6.25, mBoostDescriptor->scaleFactor());
 }
 
 void TestBoostDescriptor::cleanupTestCase()
 {
+  mBoostDescriptor->setDescriptorType("BGM");
+  mBoostDescriptor->setUseOrientation(false);
+  mBoostDescriptor->setScaleFactor(6.75);
 
+  mBoostDescriptor->reset();
+
+  QCOMPARE("BINBOOST_256", mBoostDescriptor->descriptorType());
+  QCOMPARE(true, mBoostDescriptor->useOrientation());
+  QCOMPARE(6.25, mBoostDescriptor->scaleFactor());
 }
 
 void TestBoostDescriptor::test_defaultConstructor()
@@ -158,19 +168,6 @@ void TestBoostDescriptor::test_useOrientation()
 
   mBoostDescriptor->setUseOrientation(value);
   QCOMPARE(result, mBoostDescriptor->useOrientation());
-}
-
-void TestBoostDescriptor::test_reset()
-{
-  mBoostDescriptor->setDescriptorType("BGM");
-  mBoostDescriptor->setUseOrientation(false);
-  mBoostDescriptor->setScaleFactor(6.75);
-
-  mBoostDescriptor->reset();
-
-  QCOMPARE("BINBOOST_256", mBoostDescriptor->descriptorType());
-  QCOMPARE(true, mBoostDescriptor->useOrientation());
-  QCOMPARE(6.25, mBoostDescriptor->scaleFactor());
 }
 
 QTEST_APPLESS_MAIN(TestBoostDescriptor)

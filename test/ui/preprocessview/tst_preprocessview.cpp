@@ -47,34 +47,34 @@ private slots:
 
 private:
 
-  IAcebsfWidget *mACEBS;
-  IClaheWidget *mCLAHE;
-  ICmbfheWidget *mCMBFHE;
-  IDheWidget *mDHE;
-  IFaheWidget *mFAHE;
-  IHmclaheWidget *mHMCLAHE;
-  ILceBsescsWidget *mLCEBSESCS;
-  IMsrcpWidget *mMSRCP;
-  INoshpWidget *mNOSHP;
-  IPoheWidget *mPOHE;
-  IRswheWidget *mRSWHE;
-  IWallisWidget *mWallis;
+  AcebsfWidget *mACEBS;
+  ClaheWidget *mCLAHE;
+  CmbfheWidget *mCMBFHE;
+  DheWidget *mDHE;
+  FaheWidget *mFAHE;
+  HmclaheWidget *mHMCLAHE;
+  LceBsescsWidget *mLCEBSESCS;
+  MsrcpWidget *mMSRCP;
+  NoshpWidget *mNOSHP;
+  PoheWidget *mPOHE;
+  RswheWidget *mRSWHE;
+  WallisWidget *mWallis;
 };
 
 TestPreprocessView::TestPreprocessView()
   : PreprocessView(),
-    mACEBS(new AcebsfWidget),
-    mCLAHE(new ClaheWidget),
-    mCMBFHE(new CmbfheWidget),
-    mDHE(new DheWidget),
-    mFAHE(new FaheWidget),
-    mHMCLAHE(new HmclaheWidget),
-    mLCEBSESCS(new LceBsescsWidget),
-    mMSRCP(new MsrcpWidget),
-    mNOSHP(new NoshpWidget),
-    mPOHE(new PoheWidget),
-    mRSWHE(new RswheWidget),
-    mWallis(new WallisWidget)
+    mACEBS(new AcebsfWidgetImp),
+    mCLAHE(new ClaheWidgetImp),
+    mCMBFHE(new CmbfheWidgetImp),
+    mDHE(new DheWidgetImp),
+    mFAHE(new FaheWidgetImp),
+    mHMCLAHE(new HmclaheWidgetImp),
+    mLCEBSESCS(new LceBsescsWidgetImp),
+    mMSRCP(new MsrcpWidgetImp),
+    mNOSHP(new NoshpWidgetImp),
+    mPOHE(new PoheWidgetImp),
+    mRSWHE(new RswheWidgetImp),
+    mWallis(new WallisWidgetImp)
 {
   QApplication::setActiveWindow(this);
 }

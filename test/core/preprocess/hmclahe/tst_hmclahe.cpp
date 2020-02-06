@@ -18,6 +18,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
@@ -27,7 +29,6 @@ private slots:
   void test_l();
   void test_phi_data();
   void test_phi();
-  void test_reset();
 
 private:
 
@@ -46,6 +47,27 @@ TestHmclahe::~TestHmclahe()
     delete mHmclahePreprocess;
     mHmclahePreprocess = nullptr;
   }
+}
+
+void TestHmclahe::initTestCase()
+{
+  QCOMPARE(QSize(17, 17), mHmclahePreprocess->blockSize());
+  QCOMPARE(0.03, mHmclahePreprocess->l());
+  QCOMPARE(0.5, mHmclahePreprocess->phi());
+}
+
+
+void TestHmclahe::cleanupTestCase()
+{
+  mHmclahePreprocess->setBlockSize(QSize(5, 5));
+  mHmclahePreprocess->setL(0.05);
+  mHmclahePreprocess->setPhi(.8);
+
+  mHmclahePreprocess->reset();
+
+  QCOMPARE(QSize(17, 17), mHmclahePreprocess->blockSize());
+  QCOMPARE(0.03, mHmclahePreprocess->l());
+  QCOMPARE(0.5, mHmclahePreprocess->phi());
 }
 
 void TestHmclahe::test_constructors()
@@ -134,18 +156,6 @@ void TestHmclahe::test_phi()
   QCOMPARE(result, mHmclahePreprocess->phi());
 }
 
-void TestHmclahe::test_reset()
-{
-  mHmclahePreprocess->setBlockSize(QSize(5, 5));
-  mHmclahePreprocess->setL(0.05);
-  mHmclahePreprocess->setPhi(.8);
-
-  mHmclahePreprocess->reset();
-
-  QCOMPARE(QSize(17, 17), mHmclahePreprocess->blockSize());
-  QCOMPARE(0.03, mHmclahePreprocess->l());
-  QCOMPARE(0.5, mHmclahePreprocess->phi());
-}
 
 QTEST_MAIN(TestHmclahe)
 

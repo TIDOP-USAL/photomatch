@@ -8,7 +8,7 @@
 
 using namespace photomatch;
 
-class TestDheWidgetSignals : public DheWidget
+class TestDheWidgetSignals : public DheWidgetImp
 {
   Q_OBJECT
 
@@ -19,13 +19,14 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_histogramDivisionsChange();
-  void test_reset();
 
 };
 
 TestDheWidgetSignals::TestDheWidgetSignals()
-  : DheWidget()
+  : DheWidgetImp()
 {
 
 }
@@ -35,9 +36,25 @@ TestDheWidgetSignals::~TestDheWidgetSignals()
 
 }
 
+void TestDheWidgetSignals::initTestCase()
+{
+
+}
+
+void TestDheWidgetSignals::cleanupTestCase()
+{
+  QSignalSpy spy_XChange(this, &DheWidgetImp::xChange);
+
+  this->setX(5);
+
+  this->reset();
+
+  QCOMPARE(spy_XChange.count(), 0);
+}
+
 void TestDheWidgetSignals::test_histogramDivisionsChange()
 {
-  QSignalSpy spy_xChange(this, &DheWidget::xChange);
+  QSignalSpy spy_xChange(this, &DheWidgetImp::xChange);
 
   mX->setValue(3);
 
@@ -50,16 +67,7 @@ void TestDheWidgetSignals::test_histogramDivisionsChange()
   QCOMPARE(spy_xChange.count(), 0);
 }
 
-void TestDheWidgetSignals::test_reset()
-{
-  QSignalSpy spy_XChange(this, &DheWidget::xChange);
 
-  this->setX(5);
-
-  this->reset();
-
-  QCOMPARE(spy_XChange.count(), 0);
-}
 
 QTEST_MAIN(TestDheWidgetSignals)
 

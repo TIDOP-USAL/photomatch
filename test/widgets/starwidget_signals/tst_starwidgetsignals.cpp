@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestStarWidgetSignals : public StarWidget
+class TestStarWidgetSignals : public StarWidgetImp
 {
   Q_OBJECT
 
@@ -27,7 +27,7 @@ private slots:
 };
 
 TestStarWidgetSignals::TestStarWidgetSignals()
-  : StarWidget()
+  : StarWidgetImp()
 {
 
 }
@@ -39,7 +39,7 @@ TestStarWidgetSignals::~TestStarWidgetSignals()
 
 void TestStarWidgetSignals::test_maxSizeChange()
 {
-  QSignalSpy spy_maxSizeChange(this, &StarWidget::maxSizeChange);
+  QSignalSpy spy_maxSizeChange(this, &StarWidgetImp::maxSizeChange);
 
   this->mMaxSize->setValue(50);
 
@@ -54,7 +54,7 @@ void TestStarWidgetSignals::test_maxSizeChange()
 
 void TestStarWidgetSignals::test_responseThresholdChange()
 {
-  QSignalSpy spy_responseThresholdChange(this, &StarWidget::responseThresholdChange);
+  QSignalSpy spy_responseThresholdChange(this, &StarWidgetImp::responseThresholdChange);
 
   this->mResponseThreshold->setValue(50);
 
@@ -69,7 +69,7 @@ void TestStarWidgetSignals::test_responseThresholdChange()
 
 void TestStarWidgetSignals::test_lineThresholdProjectedChange()
 {
-  QSignalSpy spy_lineThresholdProjectedChange(this, &StarWidget::lineThresholdProjectedChange);
+  QSignalSpy spy_lineThresholdProjectedChange(this, &StarWidgetImp::lineThresholdProjectedChange);
 
   this->mLineThresholdProjected->setValue(50);
 
@@ -84,7 +84,7 @@ void TestStarWidgetSignals::test_lineThresholdProjectedChange()
 
 void TestStarWidgetSignals::test_lineThresholdBinarizedChange()
 {
-  QSignalSpy spy_lineThresholdBinarizedChange(this, &StarWidget::lineThresholdBinarizedChange);
+  QSignalSpy spy_lineThresholdBinarizedChange(this, &StarWidgetImp::lineThresholdBinarizedChange);
 
   this->mLineThresholdBinarized->setValue(50);
 
@@ -99,7 +99,7 @@ void TestStarWidgetSignals::test_lineThresholdBinarizedChange()
 
 void TestStarWidgetSignals::test_suppressNonmaxSizeChange()
 {
-  QSignalSpy spy_suppressNonmaxSizeChange(this, &StarWidget::suppressNonmaxSizeChange);
+  QSignalSpy spy_suppressNonmaxSizeChange(this, &StarWidgetImp::suppressNonmaxSizeChange);
 
   this->mSuppressNonmaxSize->setValue(50);
 

@@ -38,7 +38,6 @@ private slots:
   void test_extendedDescriptor();
   void test_rotatedFeatures_data();
   void test_rotatedFeatures();
-  void test_reset();
 #endif
 };
 
@@ -55,12 +54,38 @@ TestSurfDetectorDescriptor::~TestSurfDetectorDescriptor()
 
 void TestSurfDetectorDescriptor::initTestCase()
 {
-
+  QCOMPARE(100, this->hessianThreshold());
+  QCOMPARE(100, this->mSurf->getHessianThreshold());
+  QCOMPARE(4, this->octaves());
+  QCOMPARE(4, this->mSurf->getNOctaves());
+  QCOMPARE(3, this->octaveLayers());
+  QCOMPARE(3, this->mSurf->getNOctaveLayers());
+  QCOMPARE(false, this->extendedDescriptor());
+  QCOMPARE(false, this->mSurf->getExtended());
+  QCOMPARE(false, this->upright());
+  QCOMPARE(false, this->mSurf->getUpright());
 }
 
 void TestSurfDetectorDescriptor::cleanupTestCase()
 {
+  this->setHessianThreshold(50.);
+  this->setOctaves(2);
+  this->setOctaveLayers(5);
+  this->setExtendedDescriptor(true);
+  this->setUpright(true);
 
+  this->reset();
+
+  QCOMPARE(100, this->hessianThreshold());
+  QCOMPARE(100, this->mSurf->getHessianThreshold());
+  QCOMPARE(4, this->octaves());
+  QCOMPARE(4, this->mSurf->getNOctaves());
+  QCOMPARE(3, this->octaveLayers());
+  QCOMPARE(3, this->mSurf->getNOctaveLayers());
+  QCOMPARE(false, this->extendedDescriptor());
+  QCOMPARE(false, this->mSurf->getExtended());
+  QCOMPARE(false, this->upright());
+  QCOMPARE(false, this->mSurf->getUpright());
 }
 
 #ifdef OPENCV_ENABLE_NONFREE
@@ -202,27 +227,7 @@ void TestSurfDetectorDescriptor::test_rotatedFeatures()
   QCOMPARE(result, this->mSurf->getUpright());
 }
 
-void TestSurfDetectorDescriptor::test_reset()
-{
-  this->setHessianThreshold(50.);
-  this->setOctaves(2);
-  this->setOctaveLayers(5);
-  this->setExtendedDescriptor(true);
-  this->setUpright(true);
 
-  this->reset();
-
-  QCOMPARE(100, this->hessianThreshold());
-  QCOMPARE(100, this->mSurf->getHessianThreshold());
-  QCOMPARE(4, this->octaves());
-  QCOMPARE(4, this->mSurf->getNOctaves());
-  QCOMPARE(3, this->octaveLayers());
-  QCOMPARE(3, this->mSurf->getNOctaveLayers());
-  QCOMPARE(false, this->extendedDescriptor());
-  QCOMPARE(false, this->mSurf->getExtended());
-  QCOMPARE(false, this->upright());
-  QCOMPARE(false, this->mSurf->getUpright());
-}
 #endif
 
 QTEST_APPLESS_MAIN(TestSurfDetectorDescriptor)

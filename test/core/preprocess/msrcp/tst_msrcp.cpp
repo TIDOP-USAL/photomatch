@@ -18,6 +18,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
@@ -27,7 +29,6 @@ private slots:
   void test_midScale();
   void test_largeScale_data();
   void test_largeScale();
-  void test_reset();
 
 private:
 
@@ -46,6 +47,26 @@ TestMsrcp::~TestMsrcp()
     delete mMsrcpPreprocess;
     mMsrcpPreprocess = nullptr;
   }
+}
+
+void TestMsrcp::initTestCase()
+{
+  QCOMPARE(10., mMsrcpPreprocess->smallScale());
+  QCOMPARE(100., mMsrcpPreprocess->midScale());
+  QCOMPARE(220., mMsrcpPreprocess->largeScale());
+}
+
+void TestMsrcp::cleanupTestCase()
+{
+  mMsrcpPreprocess->setSmallScale(15.);
+  mMsrcpPreprocess->setMidScale(150.);
+  mMsrcpPreprocess->setLargeScale(250.);
+
+  mMsrcpPreprocess->reset();
+
+  QCOMPARE(10., mMsrcpPreprocess->smallScale());
+  QCOMPARE(100., mMsrcpPreprocess->midScale());
+  QCOMPARE(220., mMsrcpPreprocess->largeScale());
 }
 
 void TestMsrcp::test_constructors()
@@ -132,18 +153,6 @@ void TestMsrcp::test_largeScale()
   QCOMPARE(result, mMsrcpPreprocess->largeScale());
 }
 
-void TestMsrcp::test_reset()
-{
-  mMsrcpPreprocess->setSmallScale(15.);
-  mMsrcpPreprocess->setMidScale(150.);
-  mMsrcpPreprocess->setLargeScale(250.);
-
-  mMsrcpPreprocess->reset();
-
-  QCOMPARE(10., mMsrcpPreprocess->smallScale());
-  QCOMPARE(100., mMsrcpPreprocess->midScale());
-  QCOMPARE(220., mMsrcpPreprocess->largeScale());
-}
 
 
 QTEST_MAIN(TestMsrcp)

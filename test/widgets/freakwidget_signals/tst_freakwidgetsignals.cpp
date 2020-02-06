@@ -8,7 +8,7 @@
 
 using namespace photomatch;
 
-class TestFreakWidgetSignals : public FreakWidget
+class TestFreakWidgetSignals : public FreakWidgetImp
 {
   Q_OBJECT
 
@@ -25,12 +25,11 @@ private slots:
   void test_scaleNormalizedChange();
   void test_patternScaleChange();
   void test_octavesChange();
-  void test_reset();
 
 };
 
 TestFreakWidgetSignals::TestFreakWidgetSignals()
-  : FreakWidget()
+  : FreakWidgetImp()
 {
 
 }
@@ -47,12 +46,27 @@ void TestFreakWidgetSignals::initTestCase()
 
 void TestFreakWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spy_orientationNormalizedChange(this, &FreakWidgetImp::orientationNormalizedChange);
+  QSignalSpy spy_scaleNormalizedChange(this, &FreakWidgetImp::scaleNormalizedChange);
+  QSignalSpy spy_patternScaleChange(this, &FreakWidgetImp::patternScaleChange);
+  QSignalSpy spy_octavesChange(this, &FreakWidgetImp::octavesChange);
 
+  this->setOrientationNormalized(false);
+  this->setScaleNormalized(false);
+  this->setPatternScale(100.);
+  this->setOctaves(3);
+
+  this->reset();
+
+  QCOMPARE(spy_orientationNormalizedChange.count(), 0);
+  QCOMPARE(spy_scaleNormalizedChange.count(), 0);
+  QCOMPARE(spy_patternScaleChange.count(), 0);
+  QCOMPARE(spy_octavesChange.count(), 0);
 }
 
 void TestFreakWidgetSignals::test_orientationNormalizedChange()
 {
-  QSignalSpy spy_orientationNormalizedChange(this, &FreakWidget::orientationNormalizedChange);
+  QSignalSpy spy_orientationNormalizedChange(this, &FreakWidgetImp::orientationNormalizedChange);
 
   QTest::mouseClick(mOrientationNormalized, Qt::MouseButton::LeftButton);
 
@@ -67,7 +81,7 @@ void TestFreakWidgetSignals::test_orientationNormalizedChange()
 
 void TestFreakWidgetSignals::test_scaleNormalizedChange()
 {
-  QSignalSpy spy_scaleNormalizedChange(this, &FreakWidget::scaleNormalizedChange);
+  QSignalSpy spy_scaleNormalizedChange(this, &FreakWidgetImp::scaleNormalizedChange);
 
   QTest::mouseClick(mScaleNormalized, Qt::MouseButton::LeftButton);
 
@@ -82,7 +96,7 @@ void TestFreakWidgetSignals::test_scaleNormalizedChange()
 
 void TestFreakWidgetSignals::test_patternScaleChange()
 {
-  QSignalSpy spy_patternScaleChange(this, &FreakWidget::patternScaleChange);
+  QSignalSpy spy_patternScaleChange(this, &FreakWidgetImp::patternScaleChange);
 
   mPatternScale->setValue(25.);
 
@@ -97,7 +111,7 @@ void TestFreakWidgetSignals::test_patternScaleChange()
 
 void TestFreakWidgetSignals::test_octavesChange()
 {
-  QSignalSpy spy_octavesChange(this, &FreakWidget::octavesChange);
+  QSignalSpy spy_octavesChange(this, &FreakWidgetImp::octavesChange);
 
   mOctaves->setValue(8);
 
@@ -110,25 +124,6 @@ void TestFreakWidgetSignals::test_octavesChange()
   QCOMPARE(spy_octavesChange.count(), 0);
 }
 
-void TestFreakWidgetSignals::test_reset()
-{
-  QSignalSpy spy_orientationNormalizedChange(this, &FreakWidget::orientationNormalizedChange);
-  QSignalSpy spy_scaleNormalizedChange(this, &FreakWidget::scaleNormalizedChange);
-  QSignalSpy spy_patternScaleChange(this, &FreakWidget::patternScaleChange);
-  QSignalSpy spy_octavesChange(this, &FreakWidget::octavesChange);
-
-  this->setOrientationNormalized(false);
-  this->setScaleNormalized(false);
-  this->setPatternScale(100.);
-  this->setOctaves(3);
-
-  this->reset();
-
-  QCOMPARE(spy_orientationNormalizedChange.count(), 0);
-  QCOMPARE(spy_scaleNormalizedChange.count(), 0);
-  QCOMPARE(spy_patternScaleChange.count(), 0);
-  QCOMPARE(spy_octavesChange.count(), 0);
-}
 
 QTEST_MAIN(TestFreakWidgetSignals)
 

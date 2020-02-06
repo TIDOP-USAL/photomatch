@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "KazeWidget.h"
 
 #include <QSpinBox>
@@ -11,8 +35,8 @@
 namespace photomatch
 {
 
-KazeWidget::KazeWidget(QWidget *parent)
-  : IKazeWidget(parent),
+KazeWidgetImp::KazeWidgetImp(QWidget *parent)
+  : KazeWidget(parent),
     mExtended(new QCheckBox(this)),
     mUpright(new QCheckBox(this)),
     mThreshold(new QDoubleSpinBox(this)),
@@ -32,84 +56,84 @@ KazeWidget::KazeWidget(QWidget *parent)
 
 }
 
-KazeWidget::~KazeWidget()
+KazeWidgetImp::~KazeWidgetImp()
 {
 }
 
-bool KazeWidget::extendedDescriptor() const
+bool KazeWidgetImp::extendedDescriptor() const
 {
   return mExtended->isChecked();
 }
 
-bool KazeWidget::upright() const
+bool KazeWidgetImp::upright() const
 {
   return mUpright->isChecked();
 }
 
-double KazeWidget::threshold() const
+double KazeWidgetImp::threshold() const
 {
   return mThreshold->value();
 }
 
-int KazeWidget::octaves() const
+int KazeWidgetImp::octaves() const
 {
   return mOctaves->value();
 }
 
-int KazeWidget::octaveLayers() const
+int KazeWidgetImp::octaveLayers() const
 {
   return mOctaveLayers->value();
 }
 
-QString KazeWidget::diffusivity() const
+QString KazeWidgetImp::diffusivity() const
 {
   return mDiffusivity->currentText();
 }
 
-void KazeWidget::setExtendedDescriptor(bool extended)
+void KazeWidgetImp::setExtendedDescriptor(bool extended)
 {
   mExtended->setChecked(extended);
 }
 
-void KazeWidget::setUpright(bool upright)
+void KazeWidgetImp::setUpright(bool upright)
 {
   mUpright->setChecked(upright);
 }
 
-void KazeWidget::setThreshold(double threshold)
+void KazeWidgetImp::setThreshold(double threshold)
 {
   const QSignalBlocker blockerHessianThreshold(mThreshold);
   mThreshold->setValue(threshold);
 }
 
-void KazeWidget::setOctaves(int octaves)
+void KazeWidgetImp::setOctaves(int octaves)
 {
   const QSignalBlocker blockerOctaves(mOctaves);
   mOctaves->setValue(octaves);
 }
 
-void KazeWidget::setOctaveLayers(int octaveLayers)
+void KazeWidgetImp::setOctaveLayers(int octaveLayers)
 {
   const QSignalBlocker blockerOctaveLayers(mOctaveLayers);
   mOctaveLayers->setValue(octaveLayers);
 }
 
-void KazeWidget::setDiffusivity(const QString &diffusivity)
+void KazeWidgetImp::setDiffusivity(const QString &diffusivity)
 {
   const QSignalBlocker blockerDiffusivity(mDiffusivity);
   mDiffusivity->setCurrentText(diffusivity);
 }
 
-void KazeWidget::update()
+void KazeWidgetImp::update()
 {
 }
 
-void KazeWidget::retranslate()
+void KazeWidgetImp::retranslate()
 {
 
 }
 
-void KazeWidget::reset()
+void KazeWidgetImp::reset()
 {
   const QSignalBlocker blockerHessianThreshold(mThreshold);
   const QSignalBlocker blockerOctaves(mOctaves);
@@ -124,7 +148,7 @@ void KazeWidget::reset()
   mDiffusivity->setCurrentText("DIFF_PM_G2");
 }
 
-void KazeWidget::init()
+void KazeWidgetImp::init()
 {
   this->setWindowTitle("KAZE");
 

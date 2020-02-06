@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "MsrcpWidget.h"
 
 #include <QDoubleSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-MsrcpWidget::MsrcpWidget(QWidget *parent)
-  : IMsrcpWidget(parent),
+MsrcpWidgetImp::MsrcpWidgetImp(QWidget *parent)
+  : MsrcpWidget(parent),
     mSmallScale(new QDoubleSpinBox(this)),
     mMidScale(new QDoubleSpinBox(this)),
     mLargeScale(new QDoubleSpinBox(this))
@@ -22,49 +46,49 @@ MsrcpWidget::MsrcpWidget(QWidget *parent)
   connect(mLargeScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(largeScaleChange(double)));
 }
 
-double MsrcpWidget::smallScale() const
+double MsrcpWidgetImp::smallScale() const
 {
   return mSmallScale->value();
 }
 
-double MsrcpWidget::midScale() const
+double MsrcpWidgetImp::midScale() const
 {
   return mMidScale->value();
 }
 
-double MsrcpWidget::largeScale() const
+double MsrcpWidgetImp::largeScale() const
 {
   return mLargeScale->value();
 }
 
-void MsrcpWidget::setSmallScale(double smallScale)
+void MsrcpWidgetImp::setSmallScale(double smallScale)
 {
   const QSignalBlocker blockerSmallScale(mSmallScale);
   mSmallScale->setValue(smallScale);
 }
 
-void MsrcpWidget::setMidScale(double midScale)
+void MsrcpWidgetImp::setMidScale(double midScale)
 {
   const QSignalBlocker blockerMidScale(mMidScale);
   mMidScale->setValue(midScale);
 }
 
-void MsrcpWidget::setLargeScale(double largeScale)
+void MsrcpWidgetImp::setLargeScale(double largeScale)
 {
   const QSignalBlocker blockerLargeScale(mLargeScale);
   mLargeScale->setValue(largeScale);
 }
 
-void MsrcpWidget::update()
+void MsrcpWidgetImp::update()
 {
 }
 
-void MsrcpWidget::retranslate()
+void MsrcpWidgetImp::retranslate()
 {
 
 }
 
-void MsrcpWidget::reset()
+void MsrcpWidgetImp::reset()
 {
   const QSignalBlocker blockerSmallScale(mSmallScale);
   const QSignalBlocker blockerMidScale(mMidScale);
@@ -76,7 +100,7 @@ void MsrcpWidget::reset()
 
 }
 
-void MsrcpWidget::init()
+void MsrcpWidgetImp::init()
 {
   this->setWindowTitle("MSRCP");
 

@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "MsdWidget.h"
 
 #include <QSpinBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-MsdWidget::MsdWidget(QWidget *parent)
-  : IMsdWidget(parent),
+MsdWidgetImp::MsdWidgetImp(QWidget *parent)
+  : MsdWidget(parent),
     mThresholdSaliency(new QDoubleSpinBox(this)),
     mPathRadius(new QSpinBox(this)),
     mKNN(new QSpinBox(this)),
@@ -39,139 +63,139 @@ MsdWidget::MsdWidget(QWidget *parent)
 
 }
 
-MsdWidget::~MsdWidget()
+MsdWidgetImp::~MsdWidgetImp()
 {
 }
 
-double MsdWidget::thresholdSaliency() const
+double MsdWidgetImp::thresholdSaliency() const
 {
   return  mThresholdSaliency->value();
 }
 
-int MsdWidget::pathRadius() const
+int MsdWidgetImp::pathRadius() const
 {
   return mPathRadius->value();
 }
 
-int MsdWidget::knn() const
+int MsdWidgetImp::knn() const
 {
   return mKNN->value();
 }
 
-int MsdWidget::areaRadius() const
+int MsdWidgetImp::areaRadius() const
 {
   return mAreaRadius->value();
 }
 
-double MsdWidget::scaleFactor() const
+double MsdWidgetImp::scaleFactor() const
 {
   return mScaleFactor->value();
 }
 
-int MsdWidget::NMSRadius() const
+int MsdWidgetImp::NMSRadius() const
 {
   return mNMSRadius->value();
 }
 
-int MsdWidget::nScales() const
+int MsdWidgetImp::nScales() const
 {
   return mNScales->value();
 }
 
-int MsdWidget::NMSScaleR() const
+int MsdWidgetImp::NMSScaleR() const
 {
   return mNMSScaleR->value();
 }
 
-bool MsdWidget::computeOrientations() const
+bool MsdWidgetImp::computeOrientations() const
 {
   return mComputeOrientations->isChecked();
 }
 
-bool MsdWidget::affineMSD() const
+bool MsdWidgetImp::affineMSD() const
 {
   return mAffineMSD->isChecked();
 }
 
-int MsdWidget::tilts() const
+int MsdWidgetImp::tilts() const
 {
   return mTilts->value();
 }
 
-void MsdWidget::setThresholdSaliency(double thresholdSaliency)
+void MsdWidgetImp::setThresholdSaliency(double thresholdSaliency)
 {
   const QSignalBlocker blocker(mThresholdSaliency);
   mThresholdSaliency->setValue(thresholdSaliency);
 }
 
-void MsdWidget::setPatchRadius(int pathRadius)
+void MsdWidgetImp::setPatchRadius(int pathRadius)
 {
   const QSignalBlocker blocker(mPathRadius);
   mPathRadius->setValue(pathRadius);
 }
 
-void MsdWidget::setKNN(int knn)
+void MsdWidgetImp::setKNN(int knn)
 {
   const QSignalBlocker blocker(mKNN);
   mKNN->setValue(knn);
 }
 
-void MsdWidget::setAreaRadius(int areaRadius)
+void MsdWidgetImp::setAreaRadius(int areaRadius)
 {
   const QSignalBlocker blocker(mAreaRadius);
   mAreaRadius->setValue(areaRadius);
 }
 
-void MsdWidget::setScaleFactor(double scaleFactor)
+void MsdWidgetImp::setScaleFactor(double scaleFactor)
 {
   const QSignalBlocker blocker(mScaleFactor);
   mScaleFactor->setValue(scaleFactor);
 }
 
-void MsdWidget::setNMSRadius(int NMSRadius)
+void MsdWidgetImp::setNMSRadius(int NMSRadius)
 {
   const QSignalBlocker blocker(mNMSRadius);
   mNMSRadius->setValue(NMSRadius);
 }
 
-void MsdWidget::setNScales(int nScales)
+void MsdWidgetImp::setNScales(int nScales)
 {
   const QSignalBlocker blocker(mNScales);
   mNScales->setValue(nScales);
 }
 
-void MsdWidget::setNMSScaleR(int NMSScaleR)
+void MsdWidgetImp::setNMSScaleR(int NMSScaleR)
 {
   const QSignalBlocker blocker(mNMSScaleR);
   mNMSScaleR->setValue(NMSScaleR);
 }
 
-void MsdWidget::setComputeOrientations(bool computeOrientations)
+void MsdWidgetImp::setComputeOrientations(bool computeOrientations)
 {
   mComputeOrientations->setChecked(computeOrientations);
 }
 
-void MsdWidget::setAffineMSD(bool affineMSD)
+void MsdWidgetImp::setAffineMSD(bool affineMSD)
 {
   mAffineMSD->setChecked(affineMSD);
 }
 
-void MsdWidget::setTilts(int tilts)
+void MsdWidgetImp::setTilts(int tilts)
 {
   const QSignalBlocker blocker(mTilts);
   mTilts->setValue(tilts);
 }
 
-void MsdWidget::update()
+void MsdWidgetImp::update()
 {
 }
 
-void MsdWidget::retranslate()
+void MsdWidgetImp::retranslate()
 {
 
 }
 
-void MsdWidget::reset()
+void MsdWidgetImp::reset()
 {
   const QSignalBlocker blocker1(mThresholdSaliency);
   const QSignalBlocker blocker2(mPathRadius);
@@ -196,7 +220,7 @@ void MsdWidget::reset()
   mTilts->setValue(3);
 }
 
-void MsdWidget::init()
+void MsdWidgetImp::init()
 {
   this->setWindowTitle("MSD");
 

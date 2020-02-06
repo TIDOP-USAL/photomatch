@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "HogWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-HogWidget::HogWidget(QWidget *parent)
-  : IHogWidget(parent),
+HogWidgetImp::HogWidgetImp(QWidget *parent)
+  : HogWidget(parent),
     mWinSizeHeight(new QSpinBox(this)),
     mWinSizeWidth(new QSpinBox(this)),
     mBlockSizeX(new QSpinBox(this)),
@@ -45,78 +69,78 @@ HogWidget::HogWidget(QWidget *parent)
   connect(mDerivAperture,  SIGNAL(valueChanged(int)),        this, SIGNAL(derivApertureChange(int)));
 }
 
-HogWidget::~HogWidget()
+HogWidgetImp::~HogWidgetImp()
 {
 
 }
 
-void HogWidget::onWinSizeHeightChange(int height)
+void HogWidgetImp::onWinSizeHeightChange(int height)
 {
   emit winSizeChange(QSize(mWinSizeWidth->value(), height));
 }
 
-void HogWidget::onWinSizeWidthChange(int width)
+void HogWidgetImp::onWinSizeWidthChange(int width)
 {
   emit winSizeChange(QSize(width, mWinSizeHeight->value()));
 }
 
-void HogWidget::onBlockSizeXChange(int blockSizeX)
+void HogWidgetImp::onBlockSizeXChange(int blockSizeX)
 {
   emit blockSizeChange(QSize(blockSizeX,mBlockSizeY->value()));
 }
 
-void HogWidget::onBlockSizeYChange(int blockSizeY)
+void HogWidgetImp::onBlockSizeYChange(int blockSizeY)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(),blockSizeY));
 }
 
-void HogWidget::onBlockStrideXChange(int blockStrideX)
+void HogWidgetImp::onBlockStrideXChange(int blockStrideX)
 {
   emit blockStrideChange(QSize(blockStrideX,mBlockStrideY->value()));
 }
 
-void HogWidget::onBlockStrideYChange(int blockStrideY)
+void HogWidgetImp::onBlockStrideYChange(int blockStrideY)
 {
   emit blockStrideChange(QSize(mBlockStrideX->value(),blockStrideY));
 }
 
-void HogWidget::onCellSizeXChange(int cellSizeX)
+void HogWidgetImp::onCellSizeXChange(int cellSizeX)
 {
   emit cellSizeChange(QSize(cellSizeX,mCellSizeY->value()));
 }
 
-void HogWidget::onCellSizeYChange(int cellSizeY)
+void HogWidgetImp::onCellSizeYChange(int cellSizeY)
 {
   emit cellSizeChange(QSize(mCellSizeX->value(),cellSizeY));
 }
 
 
-QSize HogWidget::winSize() const
+QSize HogWidgetImp::winSize() const
 {
   return QSize(mWinSizeWidth->value(), mWinSizeHeight->value());
 }
 
-QSize HogWidget::blockSize() const
+QSize HogWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-QSize HogWidget::blockStride() const
+QSize HogWidgetImp::blockStride() const
 {
   return QSize(mBlockStrideX->value(), mBlockStrideY->value());
 }
 
-QSize HogWidget::cellSize() const
+QSize HogWidgetImp::cellSize() const
 {
   return QSize(mCellSizeX->value(), mCellSizeY->value());
 }
 
-int HogWidget::nbins() const
+int HogWidgetImp::nbins() const
 {
   return mNbins->value();
 }
 
-int HogWidget::derivAperture() const
+int HogWidgetImp::derivAperture() const
 {
   return mDerivAperture->value();
 }
@@ -156,7 +180,7 @@ int HogWidget::derivAperture() const
 //  return mSignedGradient->isChecked();
 //}
 
-void HogWidget::setWinSize(const QSize &winSize)
+void HogWidgetImp::setWinSize(const QSize &winSize)
 {
   const QSignalBlocker blockerWinSizeHeight(mWinSizeHeight);
   const QSignalBlocker blockerWinSizeWidth(mWinSizeWidth);
@@ -164,7 +188,7 @@ void HogWidget::setWinSize(const QSize &winSize)
   mWinSizeWidth->setValue(winSize.width());
 }
 
-void HogWidget::setBlockSize(const QSize &blockSize)
+void HogWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -172,7 +196,7 @@ void HogWidget::setBlockSize(const QSize &blockSize)
   mBlockSizeY->setValue(blockSize.height());
 }
 
-void HogWidget::setBlockStride(const QSize &blockStride)
+void HogWidgetImp::setBlockStride(const QSize &blockStride)
 {
   const QSignalBlocker blockerBlockStrideX(mBlockStrideX);
   const QSignalBlocker blockerBlockStrideY(mBlockStrideY);
@@ -180,7 +204,7 @@ void HogWidget::setBlockStride(const QSize &blockStride)
   mBlockStrideY->setValue(blockStride.height());
 }
 
-void HogWidget::setCellSize(const QSize &cellSize)
+void HogWidgetImp::setCellSize(const QSize &cellSize)
 {
   const QSignalBlocker blockerCellSizeX(mCellSizeX);
   const QSignalBlocker blockerCellSizeY(mCellSizeY);
@@ -188,13 +212,13 @@ void HogWidget::setCellSize(const QSize &cellSize)
   mCellSizeY->setValue(cellSize.height());
 }
 
-void HogWidget::setNbins(int nbins)
+void HogWidgetImp::setNbins(int nbins)
 {
   const QSignalBlocker blockerNbins(mNbins);
   mNbins->setValue(nbins);
 }
 
-void HogWidget::setDerivAperture(int derivAperture)
+void HogWidgetImp::setDerivAperture(int derivAperture)
 {
   const QSignalBlocker blockerDerivAperture(mDerivAperture);
   mDerivAperture->setValue(derivAperture);
@@ -240,16 +264,16 @@ void HogWidget::setDerivAperture(int derivAperture)
 //  mSignedGradient->setChecked(signedGradient);
 //}
 
-void HogWidget::update()
+void HogWidgetImp::update()
 {
 }
 
-void HogWidget::retranslate()
+void HogWidgetImp::retranslate()
 {
 
 }
 
-void HogWidget::reset()
+void HogWidgetImp::reset()
 {
   const QSignalBlocker blockerWinSizeHeight(mWinSizeHeight);
   const QSignalBlocker blockerWinSizeWidth(mWinSizeWidth);
@@ -286,7 +310,7 @@ void HogWidget::reset()
 //  mSignedGradient->setChecked(false);
 }
 
-void HogWidget::init()
+void HogWidgetImp::init()
 {
   this->setWindowTitle("HOG");
 

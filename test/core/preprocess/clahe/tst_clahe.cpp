@@ -20,6 +20,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
@@ -28,25 +30,39 @@ private slots:
   void test_tilesGridSize_data();
   void test_tilesGridSize();
   void test_tilesGridSize2();
-  void test_reset();
 
-//private:
-
-//  ClahePreprocess *mClahePreprocess;
 };
 
 TestClahe::TestClahe()
-  : ClahePreprocess() /*mClahePreprocess(new ClahePreprocess)*/
+  : ClahePreprocess()
 {
 
 }
 
 TestClahe::~TestClahe()
 {
-//  if (mClahePreprocess){
-//    delete mClahePreprocess;
-//    mClahePreprocess = nullptr;
-//  }
+
+}
+
+void TestClahe::initTestCase()
+{
+  QCOMPARE(40.0, this->clipLimit());
+  QCOMPARE(40.0, this->mCvClahe->getClipLimit());
+  QCOMPARE(QSize(8, 8), this->tilesGridSize());
+  QCOMPARE(cv::Size(8, 8), this->mCvClahe->getTilesGridSize());
+}
+
+void TestClahe::cleanupTestCase()
+{
+  this->setClipLimit(50.);
+  this->setTilesGridSize(QSize(5, 5));
+
+  this->reset();
+
+  QCOMPARE(40.0, this->clipLimit());
+  QCOMPARE(40.0, this->mCvClahe->getClipLimit());
+  QCOMPARE(QSize(8, 8), this->tilesGridSize());
+  QCOMPARE(cv::Size(8, 8), this->mCvClahe->getTilesGridSize());
 }
 
 void TestClahe::test_constructors()
@@ -121,18 +137,6 @@ void TestClahe::test_tilesGridSize2()
   QCOMPARE(cv::Size(5, 5), this->mCvClahe->getTilesGridSize());
 }
 
-void TestClahe::test_reset()
-{
-  this->setClipLimit(50.);
-  this->setTilesGridSize(QSize(5, 5));
-
-  this->reset();
-
-  QCOMPARE(40.0, this->clipLimit());
-  QCOMPARE(40.0, this->mCvClahe->getClipLimit());
-  QCOMPARE(QSize(8, 8), this->tilesGridSize());
-  QCOMPARE(cv::Size(8, 8), this->mCvClahe->getTilesGridSize());
-}
 
 
 QTEST_MAIN(TestClahe)

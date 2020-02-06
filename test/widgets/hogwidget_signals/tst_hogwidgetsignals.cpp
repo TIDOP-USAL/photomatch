@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestHogWidgetSignals : public HogWidget
+class TestHogWidgetSignals : public HogWidgetImp
 {
   Q_OBJECT
 
@@ -17,17 +17,19 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_winSizeChange();
   void test_blockSizeChange();
   void test_blockStrideChange();
   void test_cellSizeChange();
   void test_nbinsChange();
   void test_derivApertureChange();
-  void test_reset();
+
 };
 
 TestHogWidgetSignals::TestHogWidgetSignals()
-  : HogWidget()
+  : HogWidgetImp()
 {
 
 }
@@ -37,9 +39,40 @@ TestHogWidgetSignals::~TestHogWidgetSignals()
 
 }
 
+void TestHogWidgetSignals::initTestCase()
+{
+
+}
+
+void TestHogWidgetSignals::cleanupTestCase()
+{
+  QSignalSpy spy_winSizeChange(this, &HogWidgetImp::winSizeChange);
+  QSignalSpy spy_blockSizeChange(this, &HogWidgetImp::blockSizeChange);
+  QSignalSpy spy_blockStrideChange(this, &HogWidgetImp::blockStrideChange);
+  QSignalSpy spy_cellSizeChange(this, &HogWidgetImp::cellSizeChange);
+  QSignalSpy spy_nbinsChange(this, &HogWidgetImp::nbinsChange);
+  QSignalSpy spy_derivApertureChange(this, &HogWidgetImp::derivApertureChange);
+
+  this->setWinSize(QSize(30,30));
+  this->setBlockSize(QSize(30,30));
+  this->setBlockStride(QSize(30,30));
+  this->setCellSize(QSize(30,30));
+  this->setNbins(40);
+  this->setDerivAperture(40);
+
+  this->reset();
+
+  QCOMPARE(spy_winSizeChange.count(), 0);
+  QCOMPARE(spy_blockSizeChange.count(), 0);
+  QCOMPARE(spy_blockStrideChange.count(), 0);
+  QCOMPARE(spy_cellSizeChange.count(), 0);
+  QCOMPARE(spy_nbinsChange.count(), 0);
+  QCOMPARE(spy_derivApertureChange.count(), 0);
+}
+
 void TestHogWidgetSignals::test_winSizeChange()
 {
-  QSignalSpy spy_winSizeChange(this, &HogWidget::winSizeChange);
+  QSignalSpy spy_winSizeChange(this, &HogWidgetImp::winSizeChange);
 
   this->mWinSizeWidth->setValue(50);
 
@@ -60,7 +93,7 @@ void TestHogWidgetSignals::test_winSizeChange()
 
 void TestHogWidgetSignals::test_blockSizeChange()
 {
-  QSignalSpy spy_blockSizeChange(this, &HogWidget::blockSizeChange);
+  QSignalSpy spy_blockSizeChange(this, &HogWidgetImp::blockSizeChange);
 
   this->mBlockSizeX->setValue(50);
 
@@ -81,7 +114,7 @@ void TestHogWidgetSignals::test_blockSizeChange()
 
 void TestHogWidgetSignals::test_blockStrideChange()
 {
-  QSignalSpy spy_blockStrideChange(this, &HogWidget::blockStrideChange);
+  QSignalSpy spy_blockStrideChange(this, &HogWidgetImp::blockStrideChange);
 
   this->mBlockStrideX->setValue(50);
 
@@ -102,7 +135,7 @@ void TestHogWidgetSignals::test_blockStrideChange()
 
 void TestHogWidgetSignals::test_cellSizeChange()
 {
-  QSignalSpy spy_cellSizeChange(this, &HogWidget::cellSizeChange);
+  QSignalSpy spy_cellSizeChange(this, &HogWidgetImp::cellSizeChange);
 
   this->mCellSizeX->setValue(50);
 
@@ -123,7 +156,7 @@ void TestHogWidgetSignals::test_cellSizeChange()
 
 void TestHogWidgetSignals::test_nbinsChange()
 {
-  QSignalSpy spy_nbinsChange(this, &HogWidget::nbinsChange);
+  QSignalSpy spy_nbinsChange(this, &HogWidgetImp::nbinsChange);
 
   this->mNbins->setValue(10);
 
@@ -138,7 +171,7 @@ void TestHogWidgetSignals::test_nbinsChange()
 
 void TestHogWidgetSignals::test_derivApertureChange()
 {
-  QSignalSpy spy_derivApertureChange(this, &HogWidget::derivApertureChange);
+  QSignalSpy spy_derivApertureChange(this, &HogWidgetImp::derivApertureChange);
 
   this->mDerivAperture->setValue(10);
 
@@ -151,31 +184,7 @@ void TestHogWidgetSignals::test_derivApertureChange()
   QCOMPARE(spy_derivApertureChange.count(), 0);
 }
 
-void TestHogWidgetSignals::test_reset()
-{
-  QSignalSpy spy_winSizeChange(this, &HogWidget::winSizeChange);
-  QSignalSpy spy_blockSizeChange(this, &HogWidget::blockSizeChange);
-  QSignalSpy spy_blockStrideChange(this, &HogWidget::blockStrideChange);
-  QSignalSpy spy_cellSizeChange(this, &HogWidget::cellSizeChange);
-  QSignalSpy spy_nbinsChange(this, &HogWidget::nbinsChange);
-  QSignalSpy spy_derivApertureChange(this, &HogWidget::derivApertureChange);
 
-  this->setWinSize(QSize(30,30));
-  this->setBlockSize(QSize(30,30));
-  this->setBlockStride(QSize(30,30));
-  this->setCellSize(QSize(30,30));
-  this->setNbins(40);
-  this->setDerivAperture(40);
-
-  this->reset();
-
-  QCOMPARE(spy_winSizeChange.count(), 0);
-  QCOMPARE(spy_blockSizeChange.count(), 0);
-  QCOMPARE(spy_blockStrideChange.count(), 0);
-  QCOMPARE(spy_cellSizeChange.count(), 0);
-  QCOMPARE(spy_nbinsChange.count(), 0);
-  QCOMPARE(spy_derivApertureChange.count(), 0);
-}
 
 QTEST_MAIN(TestHogWidgetSignals)
 

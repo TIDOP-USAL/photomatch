@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestMsrcpWidgetSignals : public MsrcpWidget
+class TestMsrcpWidgetSignals : public MsrcpWidgetImp
 {
   Q_OBJECT
 
@@ -17,15 +17,16 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_smallScaleChange();
   void test_midScaleChange();
   void test_largeScaleChange();
-  void test_reset();
 
 };
 
 TestMsrcpWidgetSignals::TestMsrcpWidgetSignals()
-  : MsrcpWidget()
+  : MsrcpWidgetImp()
 {
 
 }
@@ -35,9 +36,31 @@ TestMsrcpWidgetSignals::~TestMsrcpWidgetSignals()
 
 }
 
+void TestMsrcpWidgetSignals::cleanupTestCase()
+{
+
+}
+
+void TestMsrcpWidgetSignals::initTestCase()
+{
+  QSignalSpy spy_smallScaleChange(this, &MsrcpWidgetImp::smallScaleChange);
+  QSignalSpy spy_midScaleChange(this, &MsrcpWidgetImp::midScaleChange);
+  QSignalSpy spy_largeScaleChange(this, &MsrcpWidgetImp::largeScaleChange);
+
+  this->setSmallScale(15.);
+  this->setMidScale(100.);
+  this->setLargeScale(250.);
+
+  this->reset();
+
+  QCOMPARE(spy_smallScaleChange.count(), 0);
+  QCOMPARE(spy_midScaleChange.count(), 0);
+  QCOMPARE(spy_largeScaleChange.count(), 0);
+}
+
 void TestMsrcpWidgetSignals::test_smallScaleChange()
 {
-  QSignalSpy spy_smallScaleChange(this, &MsrcpWidget::smallScaleChange);
+  QSignalSpy spy_smallScaleChange(this, &MsrcpWidgetImp::smallScaleChange);
 
   mSmallScale->setValue(5.);
 
@@ -52,7 +75,7 @@ void TestMsrcpWidgetSignals::test_smallScaleChange()
 
 void TestMsrcpWidgetSignals::test_midScaleChange()
 {
-  QSignalSpy spy_midScaleChange(this, &MsrcpWidget::midScaleChange);
+  QSignalSpy spy_midScaleChange(this, &MsrcpWidgetImp::midScaleChange);
 
   mMidScale->setValue(150.);
 
@@ -67,7 +90,7 @@ void TestMsrcpWidgetSignals::test_midScaleChange()
 
 void TestMsrcpWidgetSignals::test_largeScaleChange()
 {
-  QSignalSpy spy_largeScaleChange(this, &MsrcpWidget::largeScaleChange);
+  QSignalSpy spy_largeScaleChange(this, &MsrcpWidgetImp::largeScaleChange);
 
   mLargeScale->setValue(225.);
 
@@ -80,22 +103,6 @@ void TestMsrcpWidgetSignals::test_largeScaleChange()
   QCOMPARE(spy_largeScaleChange.count(), 0);
 }
 
-void TestMsrcpWidgetSignals::test_reset()
-{
-  QSignalSpy spy_smallScaleChange(this, &MsrcpWidget::smallScaleChange);
-  QSignalSpy spy_midScaleChange(this, &MsrcpWidget::midScaleChange);
-  QSignalSpy spy_largeScaleChange(this, &MsrcpWidget::largeScaleChange);
-
-  this->setSmallScale(15.);
-  this->setMidScale(100.);
-  this->setLargeScale(250.);
-
-  this->reset();
-
-  QCOMPARE(spy_smallScaleChange.count(), 0);
-  QCOMPARE(spy_midScaleChange.count(), 0);
-  QCOMPARE(spy_largeScaleChange.count(), 0);
-}
 
 
 QTEST_MAIN(TestMsrcpWidgetSignals)

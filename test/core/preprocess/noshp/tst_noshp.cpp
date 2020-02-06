@@ -18,12 +18,14 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
-  void test_reset();
+
 
 private:
 
@@ -42,6 +44,20 @@ TestNoshp::~TestNoshp()
     delete mNoshpPreprocess;
     mNoshpPreprocess = nullptr;
   }
+}
+
+void TestNoshp::initTestCase()
+{
+  QCOMPARE(QSize(127, 127), mNoshpPreprocess->blockSize());
+}
+
+void TestNoshp::cleanupTestCase()
+{
+  mNoshpPreprocess->setBlockSize(QSize(5, 5));
+
+  mNoshpPreprocess->reset();
+
+  QCOMPARE(QSize(127, 127), mNoshpPreprocess->blockSize());
 }
 
 void TestNoshp::test_constructors()
@@ -86,14 +102,6 @@ void TestNoshp::test_tilesGridSize()
   QCOMPARE(result, mNoshpPreprocess->blockSize());
 }
 
-void TestNoshp::test_reset()
-{
-  mNoshpPreprocess->setBlockSize(QSize(5, 5));
-
-  mNoshpPreprocess->reset();
-
-  QCOMPARE(QSize(127, 127), mNoshpPreprocess->blockSize());
-}
 
 
 QTEST_MAIN(TestNoshp)

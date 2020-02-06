@@ -38,7 +38,7 @@
 using namespace photomatch;
 
 class ProjectRWFake
-  : public ProjectRW
+  : public ProjectControllerImp
 {
 
 public:
@@ -236,7 +236,7 @@ public:
   // IProjectIO interface
 public:
 
-  bool read(const QString &file, IProject &prj) override
+  bool read(const QString &file, Project &prj) override
   {
 
     QXmlStreamReader stream;
@@ -285,7 +285,7 @@ public:
 
               if (stream.name() == "Session") {
 
-                std::shared_ptr<Session> session(new Session);
+                std::shared_ptr<Session> session(new SessionImp);
 
                 bool bActive = false;
                 for (auto &attr : stream.attributes()) {
@@ -309,52 +309,52 @@ public:
                     while (stream.readNextStartElement()) {
 
                       if (stream.name() == "Acebsf") {
-                        std::shared_ptr<IAcebsf> acebsf = std::make_shared<AcebsfProperties>();
-                        readACEBSF(&stream, acebsf.get());
+                        std::shared_ptr<Acebsf> acebsf = std::make_shared<AcebsfProperties>();
+                        readACEBSF(stream, acebsf.get());
                         session->setPreprocess(acebsf);
                       } else if (stream.name() == "Clahe") {
-                        std::shared_ptr<IClahe> clahe = std::make_shared<ClaheProperties>();
-                        readCLAHE(&stream, clahe.get());
+                        std::shared_ptr<Clahe> clahe = std::make_shared<ClaheProperties>();
+                        readCLAHE(stream, clahe.get());
                         session->setPreprocess(clahe);
                       } else if (stream.name() == "Cmbfhe") {
-                        std::shared_ptr<ICmbfhe> cmbfhe(new CmbfheProperties);
-                        readCMBFHE(&stream, cmbfhe.get());
+                        std::shared_ptr<Cmbfhe> cmbfhe(new CmbfheProperties);
+                        readCMBFHE(stream, cmbfhe.get());
                         session->setPreprocess(cmbfhe);
                       } else if (stream.name() == "Dhe") {
-                        std::shared_ptr<IDhe> dhe = std::make_shared<DheProperties>();
-                        readDHE(&stream, dhe.get());
+                        std::shared_ptr<Dhe> dhe = std::make_shared<DheProperties>();
+                        readDHE(stream, dhe.get());
                         session->setPreprocess(dhe);
                       } else if (stream.name() == "Fahe") {
-                        std::shared_ptr<IFahe> fahe(new FaheProperties);
-                        readFAHE(&stream, fahe.get());
+                        std::shared_ptr<Fahe> fahe(new FaheProperties);
+                        readFAHE(stream, fahe.get());
                         session->setPreprocess(fahe);
                       } else if (stream.name() == "Hmclahe") {
-                        std::shared_ptr<IHmclahe> hmclahe(new HmclaheProperties);
-                        readHMCLAHE(&stream, hmclahe.get());
+                        std::shared_ptr<Hmclahe> hmclahe(new HmclaheProperties);
+                        readHMCLAHE(stream, hmclahe.get());
                         session->setPreprocess(hmclahe);
                       } else if (stream.name() == "LceBsescs") {
-                        std::shared_ptr<ILceBsescs> lceBsescs(new LceBsescsProperties);
-                        readLCEBSESCS(&stream, lceBsescs.get());
+                        std::shared_ptr<LceBsescs> lceBsescs(new LceBsescsProperties);
+                        readLCEBSESCS(stream, lceBsescs.get());
                         session->setPreprocess(lceBsescs);
                       } else if (stream.name() == "Msrcp") {
-                        std::shared_ptr<IMsrcp> msrcp = std::make_shared<MsrcpProperties>();
-                        readMSRCP(&stream, msrcp.get());
+                        std::shared_ptr<Msrcp> msrcp = std::make_shared<MsrcpProperties>();
+                        readMSRCP(stream, msrcp.get());
                         session->setPreprocess(msrcp);
                       } else if (stream.name() == "Noshp") {
-                        std::shared_ptr<INoshp> noshp(new NoshpProperties);
-                        readNOSHP(&stream, noshp.get());
+                        std::shared_ptr<Noshp> noshp(new NoshpProperties);
+                        readNOSHP(stream, noshp.get());
                         session->setPreprocess(noshp);
                       } else if (stream.name() == "Pohe") {
-                        std::shared_ptr<IPohe> pohe(new PoheProperties);
-                        readPOHE(&stream, pohe.get());
+                        std::shared_ptr<Pohe> pohe(new PoheProperties);
+                        readPOHE(stream, pohe.get());
                         session->setPreprocess(pohe);
                       } else if (stream.name() == "Rswhe") {
-                        std::shared_ptr<IRswhe> rswhe = std::make_shared<RswheProperties>();
-                        readRSWHE(&stream, rswhe.get());
+                        std::shared_ptr<Rswhe> rswhe = std::make_shared<RswheProperties>();
+                        readRSWHE(stream, rswhe.get());
                         session->setPreprocess(rswhe);
                       } else if (stream.name() == "Wallis") {
-                        std::shared_ptr<IWallis> wallis = std::make_shared<WallisProperties>();
-                        readWALLIS(&stream, wallis.get());
+                        std::shared_ptr<Wallis> wallis = std::make_shared<WallisProperties>();
+                        readWALLIS(stream, wallis.get());
                         session->setPreprocess(wallis);
                       } else
                         stream.skipCurrentElement();
@@ -362,104 +362,104 @@ public:
                   } else if (stream.name() == "FeatureDetector") {
                     while (stream.readNextStartElement()){
                       if (stream.name() == "AGAST") {
-                        std::shared_ptr<IAgast> agast = std::make_shared<AgastProperties>();
-                        readAGAST(&stream, agast.get());
+                        std::shared_ptr<Agast> agast = std::make_shared<AgastProperties>();
+                        readAGAST(stream, agast.get());
                         session->setDetector(agast);
                       } else if (stream.name() == "AKAZE") {
-                        std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
-                        readAKAZE(&stream, akaze.get());
+                        std::shared_ptr<Akaze> akaze = std::make_shared<AkazeProperties>();
+                        readAKAZE(stream, akaze.get());
                         session->setDetector(akaze);
                       } else if (stream.name() == "BRISK") {
-                        std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
-                        readBRISK(&stream, brisk.get());
+                        std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
+                        readBRISK(stream, brisk.get());
                         session->setDetector(brisk);
                       } else if (stream.name() == "FAST") {
-                        std::shared_ptr<IFast> fast = std::make_shared<FastProperties>();
-                        readFAST(&stream, fast.get());
+                        std::shared_ptr<Fast> fast = std::make_shared<FastProperties>();
+                        readFAST(stream, fast.get());
                         session->setDetector(fast);
                       } else if (stream.name() == "GFTT") {
-                        std::shared_ptr<IGftt> gftt = std::make_shared<GfttProperties>();
-                        readGFTT(&stream, gftt.get());
+                        std::shared_ptr<Gftt> gftt = std::make_shared<GfttProperties>();
+                        readGFTT(stream, gftt.get());
                         session->setDetector(gftt);
                       } else if (stream.name() == "KAZE") {
-                        std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
-                        readKAZE(&stream, kaze.get());
+                        std::shared_ptr<Kaze> kaze = std::make_shared<KazeProperties>();
+                        readKAZE(stream, kaze.get());
                         session->setDetector(kaze);
                       } else if (stream.name() == "MSD") {
-                        std::shared_ptr<IMsd> msd = std::make_shared<MsdProperties>();
-                        readMSD(&stream, msd.get());
+                        std::shared_ptr<Msd> msd = std::make_shared<MsdProperties>();
+                        readMSD(stream, msd.get());
                         session->setDetector(msd);
                       } else if (stream.name() == "MSER") {
-                        std::shared_ptr<IMser> mser = std::make_shared<MserProperties>();
-                        readMSER(&stream, mser.get());
+                        std::shared_ptr<Mser> mser = std::make_shared<MserProperties>();
+                        readMSER(stream, mser.get());
                         session->setDetector(mser);
                       } else if (stream.name() == "ORB") {
-                        std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
-                        readORB(&stream, orb.get());
+                        std::shared_ptr<Orb> orb = std::make_shared<OrbProperties>();
+                        readORB(stream, orb.get());
                         session->setDetector(orb);
                       } else if (stream.name() == "SIFT") {
-                        std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
-                        readSIFT(&stream, sift.get());
+                        std::shared_ptr<Sift> sift = std::make_shared<SiftProperties>();
+                        readSIFT(stream, sift.get());
                         session->setDetector(sift);
                       } else if (stream.name() == "STAR") {
-                        std::shared_ptr<IStar> star = std::make_shared<StarProperties>();
-                        readSTAR(&stream, star.get());
+                        std::shared_ptr<Star> star = std::make_shared<StarProperties>();
+                        readSTAR(stream, star.get());
                         session->setDetector(star);
                       } else if (stream.name() == "SURF") {
-                        std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
-                        readSURF(&stream, surf.get());
+                        std::shared_ptr<Surf> surf = std::make_shared<SurfProperties>();
+                        readSURF(stream, surf.get());
                         session->setDetector(surf);
                       }
                     }
                   } else if (stream.name() == "FeatureDescriptor") {
                     while (stream.readNextStartElement()){
                       if (stream.name() == "AKAZE") {
-                        std::shared_ptr<IAkaze> akaze = std::make_shared<AkazeProperties>();
-                        readAKAZE(&stream, akaze.get());
+                        std::shared_ptr<Akaze> akaze = std::make_shared<AkazeProperties>();
+                        readAKAZE(stream, akaze.get());
                         session->setDescriptor(akaze);
                       } else if (stream.name() == "BRIEF") {
-                        std::shared_ptr<IBrief> brief = std::make_shared<BriefProperties>();
-                        readBRIEF(&stream, brief.get());
+                        std::shared_ptr<Brief> brief = std::make_shared<BriefProperties>();
+                        readBRIEF(stream, brief.get());
                         session->setDescriptor(brief);
                       } else if (stream.name() == "BRISK") {
-                        std::shared_ptr<IBrisk> brisk = std::make_shared<BriskProperties>();
-                        readBRISK(&stream, brisk.get());
+                        std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
+                        readBRISK(stream, brisk.get());
                         session->setDescriptor(brisk);
                       } else if (stream.name() == "DAISY") {
-                        std::shared_ptr<IDaisy> daisy = std::make_shared<DaisyProperties>();
-                        readDAISY(&stream, daisy.get());
+                        std::shared_ptr<Daisy> daisy = std::make_shared<DaisyProperties>();
+                        readDAISY(stream, daisy.get());
                         session->setDescriptor(daisy);
                       } else if (stream.name() == "FREAK") {
-                        std::shared_ptr<IFreak> freak = std::make_shared<FreakProperties>();
-                        readFREAK(&stream, freak.get());
+                        std::shared_ptr<Freak> freak = std::make_shared<FreakProperties>();
+                        readFREAK(stream, freak.get());
                         session->setDescriptor(freak);
                       } else if (stream.name() == "HOG") {
-                        std::shared_ptr<IHog> hog = std::make_shared<HogProperties>();
-                        readHOG(&stream, hog.get());
+                        std::shared_ptr<Hog> hog = std::make_shared<HogProperties>();
+                        readHOG(stream, hog.get());
                         session->setDescriptor(hog);
                       } else if (stream.name() == "KAZE") {
-                        std::shared_ptr<IKaze> kaze = std::make_shared<KazeProperties>();
-                        readKAZE(&stream, kaze.get());
+                        std::shared_ptr<Kaze> kaze = std::make_shared<KazeProperties>();
+                        readKAZE(stream, kaze.get());
                         session->setDescriptor(kaze);
                       } else if (stream.name() == "LATCH") {
-                        std::shared_ptr<ILatch> latch = std::make_shared<LatchProperties>();
-                        readLATCH(&stream, latch.get());
+                        std::shared_ptr<Latch> latch = std::make_shared<LatchProperties>();
+                        readLATCH(stream, latch.get());
                         session->setDescriptor(latch);
                       } else if (stream.name() == "LUCID") {
-                        std::shared_ptr<ILucid> lucid = std::make_shared<LucidProperties>();
-                        readLUCID(&stream, lucid.get());
+                        std::shared_ptr<Lucid> lucid = std::make_shared<LucidProperties>();
+                        readLUCID(stream, lucid.get());
                         session->setDescriptor(lucid);
                       } else if (stream.name() == "ORB") {
-                        std::shared_ptr<IOrb> orb = std::make_shared<OrbProperties>();
-                        readORB(&stream, orb.get());
+                        std::shared_ptr<Orb> orb = std::make_shared<OrbProperties>();
+                        readORB(stream, orb.get());
                         session->setDescriptor(orb);
                       } else if (stream.name() == "SIFT") {
-                        std::shared_ptr<ISift> sift = std::make_shared<SiftProperties>();
-                        readSIFT(&stream, sift.get());
+                        std::shared_ptr<Sift> sift = std::make_shared<SiftProperties>();
+                        readSIFT(stream, sift.get());
                         session->setDescriptor(sift);
                       } else if (stream.name() == "SURF") {
-                        std::shared_ptr<ISurf> surf = std::make_shared<SurfProperties>();
-                        readSURF(&stream, surf.get());
+                        std::shared_ptr<Surf> surf = std::make_shared<SurfProperties>();
+                        readSURF(stream, surf.get());
                         session->setDescriptor(surf);
                       }
                     }
@@ -485,7 +485,7 @@ public:
     return false;
   }
 
-  bool write(const QString &file, const IProject &prj) const override
+  bool write(const QString &file, const Project &prj) const override
   {
 //    QFileInfo file_info(file);
 //    QString tmpfile = file_info.path().append(file_info.baseName()).append(".bak");
@@ -612,19 +612,18 @@ private slots:
   void test_findSessionId();
   void test_sessionIterator();
   void test_currentSession();
-  void test_clear();
 
 protected:
 
-  IProjectRW *mProjectIOFake;
-  IProject *mProject;
-  IProject *mProjectXml;
+  ProjectController *mProjectIOFake;
+  Project *mProject;
+  Project *mProjectXml;
 };
 
 TestProject::TestProject()
   : mProjectIOFake(new ProjectRWFake),
-    mProject(new Project),
-    mProjectXml(new Project)
+    mProject(new ProjectImp),
+    mProjectXml(new ProjectImp)
 {
 
 }
@@ -654,7 +653,20 @@ void TestProject::initTestCase()
 
 void TestProject::cleanupTestCase()
 {
+  mProject->setName("Proj01");
+  mProject->setDescription("Descripción del proyecto 1");
+  mProject->setProjectFolder("c://PhotoMatch/project01");
+  mProject->setGroundTruth("c://GroundTruth.txt");
 
+  mProject->clear();
+
+  QCOMPARE(QString(), mProject->name());
+  QCOMPARE(QString(), mProject->description());
+  QCOMPARE(QString(), mProject->projectFolder());
+  QCOMPARE(QString("1.0"), mProject->version());
+  QCOMPARE(QString(), mProject->groundTruth());
+  QCOMPARE(0, mProject->imagesCount());
+  QCOMPARE(0, mProject->sessionCount());
 }
 
 void TestProject::testConstructor()
@@ -835,19 +847,19 @@ void TestProject::test_findSession()
   QCOMPARE(false, session1->fullImageSize());
   Preprocess *preprocess1 = session1->preprocess().get();
   QCOMPARE(Preprocess::Type::clahe, preprocess1->type());
-  IClahe *clahe = dynamic_cast<IClahe *>(preprocess1);
+  Clahe *clahe = dynamic_cast<Clahe *>(preprocess1);
   QCOMPARE(50., clahe->clipLimit());
   QCOMPARE(QSize(10, 10), clahe->tilesGridSize());
   Feature *detector = session1->detector().get();
   QCOMPARE(Feature::Type::sift, detector->type());
-  ISift *sift_detector = dynamic_cast<ISift *>(detector);
+  Sift *sift_detector = dynamic_cast<Sift *>(detector);
   QCOMPARE(5000, sift_detector->featuresNumber());
   QCOMPARE(3, sift_detector->octaveLayers());
   QCOMPARE(0.04, sift_detector->contrastThreshold());
   QCOMPARE(10, sift_detector->edgeThreshold());
   QCOMPARE(1.6, sift_detector->sigma());
   Feature *descriptor = session1->descriptor().get();
-  ISift *sift_descriptor = dynamic_cast<ISift *>(descriptor);
+  Sift *sift_descriptor = dynamic_cast<Sift *>(descriptor);
   QCOMPARE(Feature::Type::sift, sift_descriptor->type());
   QCOMPARE(5000, sift_descriptor->featuresNumber());
   QCOMPARE(3, sift_descriptor->octaveLayers());
@@ -862,7 +874,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session2->fullImageSize());
   Preprocess *preprocess2 = session2->preprocess().get();
   QCOMPARE(Preprocess::Type::cmbfhe, preprocess2->type());
-  ICmbfhe *cmbfhe = dynamic_cast<ICmbfhe *>(preprocess2);
+  Cmbfhe *cmbfhe = dynamic_cast<Cmbfhe *>(preprocess2);
   QCOMPARE(QSize(7, 7), cmbfhe->blockSize());
 
   std::shared_ptr<Session> session3 = mProjectXml->findSession("session003");
@@ -872,7 +884,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session3->fullImageSize());
   Preprocess *preprocess3 = session3->preprocess().get();
   QCOMPARE(Preprocess::Type::dhe, preprocess3->type());
-  IDhe *dhe = dynamic_cast<IDhe *>(preprocess3);
+  Dhe *dhe = dynamic_cast<Dhe *>(preprocess3);
   QCOMPARE(2, dhe->x());
 
   std::shared_ptr<Session> session4 = mProjectXml->findSession("session004");
@@ -882,7 +894,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session4->fullImageSize());
   Preprocess *preprocess4 = session4->preprocess().get();
   QCOMPARE(Preprocess::Type::fahe, preprocess4->type());
-  IFahe *fahe = dynamic_cast<IFahe *>(preprocess4);
+  Fahe *fahe = dynamic_cast<Fahe *>(preprocess4);
   QCOMPARE(QSize(9, 9), fahe->blockSize());
 
   std::shared_ptr<Session> session5 = mProjectXml->findSession("session005");
@@ -892,7 +904,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session5->fullImageSize());
   Preprocess *preprocess5 = session5->preprocess().get();
   QCOMPARE(Preprocess::Type::hmclahe, preprocess5->type());
-  IHmclahe *hmclahe = dynamic_cast<IHmclahe *>(preprocess5);
+  Hmclahe *hmclahe = dynamic_cast<Hmclahe *>(preprocess5);
   QCOMPARE(QSize(15, 15), hmclahe->blockSize());
   QCOMPARE(0.04, hmclahe->l());
   QCOMPARE(0.6, hmclahe->phi());
@@ -904,7 +916,7 @@ void TestProject::test_findSession()
   QCOMPARE(true, session6->fullImageSize());
   Preprocess *preprocess6 = session6->preprocess().get();
   QCOMPARE(Preprocess::Type::lce_bsescs, preprocess6->type());
-  ILceBsescs *lce_bsescs = dynamic_cast<ILceBsescs *>(preprocess6);
+  LceBsescs *lce_bsescs = dynamic_cast<LceBsescs *>(preprocess6);
   QCOMPARE(QSize(31, 31), lce_bsescs->blockSize());
 
   std::shared_ptr<Session> session7 = mProjectXml->findSession("session007");
@@ -914,7 +926,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session7->fullImageSize());
   Preprocess *preprocess7 = session7->preprocess().get();
   QCOMPARE(Preprocess::Type::msrcp, preprocess7->type());
-  IMsrcp *msrcp = dynamic_cast<IMsrcp *>(preprocess7);
+  Msrcp *msrcp = dynamic_cast<Msrcp *>(preprocess7);
   QCOMPARE(12, msrcp->smallScale());
   QCOMPARE(105, msrcp->midScale());
   QCOMPARE(210, msrcp->largeScale());
@@ -926,7 +938,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session8->fullImageSize());
   Preprocess *preprocess8 = session8->preprocess().get();
   QCOMPARE(Preprocess::Type::noshp, preprocess8->type());
-  INoshp *noshp = dynamic_cast<INoshp *>(preprocess8);
+  Noshp *noshp = dynamic_cast<Noshp *>(preprocess8);
   QCOMPARE(QSize(125, 125), noshp->blockSize());
 
   std::shared_ptr<Session> session9 = mProjectXml->findSession("session009");
@@ -936,7 +948,7 @@ void TestProject::test_findSession()
   QCOMPARE(true, session9->fullImageSize());
   Preprocess *preprocess9 = session9->preprocess().get();
   QCOMPARE(Preprocess::Type::pohe, preprocess9->type());
-  IPohe *pohe = dynamic_cast<IPohe *>(preprocess9);
+  Pohe *pohe = dynamic_cast<Pohe *>(preprocess9);
   QCOMPARE(QSize(125, 125), pohe->blockSize());
 
   std::shared_ptr<Session> session10 = mProjectXml->findSession("session010");
@@ -946,8 +958,8 @@ void TestProject::test_findSession()
   QCOMPARE(false, session10->fullImageSize());
   Preprocess *preprocess10 = session10->preprocess().get();
   QCOMPARE(Preprocess::Type::rswhe, preprocess10->type());
-  IRswhe *rswhe = dynamic_cast<IRswhe *>(preprocess10);
-  QCOMPARE(IRswhe::HistogramCut::by_mean, rswhe->histogramCut());
+  Rswhe *rswhe = dynamic_cast<Rswhe *>(preprocess10);
+  QCOMPARE(Rswhe::HistogramCut::by_mean, rswhe->histogramCut());
   QCOMPARE(4, rswhe->histogramDivisions());
 
   std::shared_ptr<Session> session11 = mProjectXml->findSession("session011");
@@ -957,7 +969,7 @@ void TestProject::test_findSession()
   QCOMPARE(false, session11->fullImageSize());
   Preprocess *preprocess11 = session11->preprocess().get();
   QCOMPARE(Preprocess::Type::wallis, preprocess11->type());
-  IWallis *wallis = dynamic_cast<IWallis *>(preprocess11);
+  Wallis *wallis = dynamic_cast<Wallis *>(preprocess11);
   QCOMPARE(1., wallis->contrast());
   QCOMPARE(0.2, wallis->brightness());
   QCOMPARE(41, wallis->imposedAverage());
@@ -1006,23 +1018,6 @@ void TestProject::test_currentSession()
   ///TODO: completar
 }
 
-void TestProject::test_clear()
-{
-  mProject->setName("Proj01");
-  mProject->setDescription("Descripción del proyecto 1");
-  mProject->setProjectFolder("c://PhotoMatch/project01");
-  mProject->setGroundTruth("c://GroundTruth.txt");
-
-  mProject->clear();
-
-  QCOMPARE(QString(), mProject->name());
-  QCOMPARE(QString(), mProject->description());
-  QCOMPARE(QString(), mProject->projectFolder());
-  QCOMPARE(QString("1.0"), mProject->version());
-  QCOMPARE(QString(), mProject->groundTruth());
-  QCOMPARE(0, mProject->imagesCount());
-  QCOMPARE(0, mProject->sessionCount());
-}
 
 QTEST_APPLESS_MAIN(TestProject)
 

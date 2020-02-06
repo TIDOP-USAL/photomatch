@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "FreakWidget.h"
 
 #include <QSpinBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-FreakWidget::FreakWidget(QWidget *parent)
-  : IFreakWidget(parent),
+FreakWidgetImp::FreakWidgetImp(QWidget *parent)
+  : FreakWidget(parent),
     mOrientationNormalized(new QCheckBox(this)),
     mScaleNormalized(new QCheckBox(this)),
     mPatternScale(new QDoubleSpinBox(this)),
@@ -25,63 +49,63 @@ FreakWidget::FreakWidget(QWidget *parent)
   connect(mOctaves,                SIGNAL(valueChanged(int)),            this, SIGNAL(octavesChange(int)));
 }
 
-FreakWidget::~FreakWidget()
+FreakWidgetImp::~FreakWidgetImp()
 {
 
 }
 
-bool FreakWidget::orientationNormalized() const
+bool FreakWidgetImp::orientationNormalized() const
 {
   return mOrientationNormalized->isChecked();
 }
 
-bool FreakWidget::scaleNormalized() const
+bool FreakWidgetImp::scaleNormalized() const
 {
   return mScaleNormalized->isChecked();
 }
 
-double FreakWidget::patternScale() const
+double FreakWidgetImp::patternScale() const
 {
   return mPatternScale->value();
 }
 
-int FreakWidget::octaves() const
+int FreakWidgetImp::octaves() const
 {
   return mOctaves->value();
 }
 
-void FreakWidget::setOrientationNormalized(bool orientationNormalized)
+void FreakWidgetImp::setOrientationNormalized(bool orientationNormalized)
 {
   mOrientationNormalized->setChecked(orientationNormalized);
 }
 
-void FreakWidget::setScaleNormalized(bool scaleNormalized)
+void FreakWidgetImp::setScaleNormalized(bool scaleNormalized)
 {
   mScaleNormalized->setChecked(scaleNormalized);
 }
 
-void FreakWidget::setPatternScale(double patternScale)
+void FreakWidgetImp::setPatternScale(double patternScale)
 {
   const QSignalBlocker blockerPatternScale(mPatternScale);
   mPatternScale->setValue(patternScale);
 }
 
-void FreakWidget::setOctaves(int octaves)
+void FreakWidgetImp::setOctaves(int octaves)
 {
   const QSignalBlocker blockerOctaves(mOctaves);
   mOctaves->setValue(octaves);
 }
 
-void FreakWidget::update()
+void FreakWidgetImp::update()
 {
 }
 
-void FreakWidget::retranslate()
+void FreakWidgetImp::retranslate()
 {
 
 }
 
-void FreakWidget::reset()
+void FreakWidgetImp::reset()
 {
   const QSignalBlocker blockerPatternScale(mPatternScale);
   const QSignalBlocker blockerOctaves(mOctaves);
@@ -92,7 +116,7 @@ void FreakWidget::reset()
   mOctaves->setValue(4);
 }
 
-void FreakWidget::init()
+void FreakWidgetImp::init()
 {
   this->setWindowTitle("FREAK");
 

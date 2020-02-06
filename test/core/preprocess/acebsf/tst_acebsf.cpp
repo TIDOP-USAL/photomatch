@@ -18,6 +18,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void testConstructors();
   void test_type();
   void test_name();
@@ -29,7 +31,6 @@ private slots:
   void test_k1();
   void test_k2_data();
   void test_k2();
-  void test_reset();
 
 private:
 
@@ -48,6 +49,29 @@ TestAcebsf::~TestAcebsf()
     delete mAcebsfPreprocess;
     mAcebsfPreprocess = nullptr;
   }
+}
+
+void TestAcebsf::initTestCase()
+{
+  QCOMPARE(QSize(8, 8), mAcebsfPreprocess->blockSize());
+  QCOMPARE(0.03, mAcebsfPreprocess->l());
+  QCOMPARE(10., mAcebsfPreprocess->k1());
+  QCOMPARE(0.5, mAcebsfPreprocess->k2());
+}
+
+void TestAcebsf::cleanupTestCase()
+{
+  mAcebsfPreprocess->setBlockSize(QSize(5, 5));
+  mAcebsfPreprocess->setL(0.05);
+  mAcebsfPreprocess->setK1(5.);
+  mAcebsfPreprocess->setK2(0.6);
+
+  mAcebsfPreprocess->reset();
+
+  QCOMPARE(QSize(8, 8), mAcebsfPreprocess->blockSize());
+  QCOMPARE(0.03, mAcebsfPreprocess->l());
+  QCOMPARE(10., mAcebsfPreprocess->k1());
+  QCOMPARE(0.5, mAcebsfPreprocess->k2());
 }
 
 void TestAcebsf::testConstructors()
@@ -155,22 +179,6 @@ void TestAcebsf::test_k2()
 
   mAcebsfPreprocess->setK2(value);
   QCOMPARE(result, mAcebsfPreprocess->k2());
-}
-
-void TestAcebsf::test_reset()
-{
-  mAcebsfPreprocess->setBlockSize(QSize(5, 5));
-  mAcebsfPreprocess->setL(0.05);
-  mAcebsfPreprocess->setK1(5.);
-  mAcebsfPreprocess->setK2(0.6);
-
-
-  mAcebsfPreprocess->reset();
-
-  QCOMPARE(QSize(8, 8), mAcebsfPreprocess->blockSize());
-  QCOMPARE(0.03, mAcebsfPreprocess->l());
-  QCOMPARE(10., mAcebsfPreprocess->k1());
-  QCOMPARE(0.5, mAcebsfPreprocess->k2());
 }
 
 

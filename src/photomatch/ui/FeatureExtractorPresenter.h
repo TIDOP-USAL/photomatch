@@ -20,28 +20,28 @@ class IProjectModel;
 class ISettingsModel;
 class HelpDialog;
 
-class IAgastWidget;
-class IAkazeWidget;
-class IBoostWidget;
-class IBriefWidget;
-class IBriskWidget;
-class IDaisyWidget;
-class IFastWidget;
-class IFreakWidget;
-class IGfttWidget;
-class IHogWidget;
-class IKazeWidget;
-class ILatchWidget;
+class AgastWidget;
+class AkazeWidget;
+class BoostWidget;
+class BriefWidget;
+class BriskWidget;
+class DaisyWidget;
+class FastWidget;
+class FreakWidget;
+class GfttWidget;
+class HogWidget;
+class KazeWidget;
+class LatchWidget;
 //class ILucidWidget;
-class ILssWidget;
-class IMsdWidget;
-class IMserWidget;
-class IOrbWidget;
-class ISiftWidget;
-class IStarWidget;
-class ISurfWidget;
-class IVggWidget;
-class IKeypointsFilterWidget;
+class LssWidget;
+class MsdWidget;
+class MserWidget;
+class OrbWidget;
+class SiftWidget;
+class StarWidget;
+class SurfWidget;
+class VggWidget;
+class KeypointsFilterWidget;
 
 class ProgressHandler;
 
@@ -128,45 +128,45 @@ protected:
   ISettingsModel *mSettingsModel;
   std::shared_ptr<HelpDialog> mHelp;
 
-  IAgastWidget *mAgastDetector;
-  IAkazeWidget *mAkazeDetector;
-  IBriskWidget *mBriskDetector;
-  IFastWidget *mFastDetector;
-  IGfttWidget *mGfttDetector;
-  IKazeWidget *mKazeDetector;
-  IMsdWidget *mMsdDetector;
-  IMserWidget *mMserDetector;
-  IOrbWidget *mOrbDetector;
+  AgastWidget *mAgastDetector;
+  AkazeWidget *mAkazeDetector;
+  BriskWidget *mBriskDetector;
+  FastWidget *mFastDetector;
+  GfttWidget *mGfttDetector;
+  KazeWidget *mKazeDetector;
+  MsdWidget *mMsdDetector;
+  MserWidget *mMserDetector;
+  OrbWidget *mOrbDetector;
 #ifdef OPENCV_ENABLE_NONFREE
-  ISiftWidget *mSiftDetector;
+  SiftWidget *mSiftDetector;
 #endif
-  IStarWidget *mStarDetector;
+  StarWidget *mStarDetector;
 #ifdef OPENCV_ENABLE_NONFREE
-  ISurfWidget *mSurfDetector;
+  SurfWidget *mSurfDetector;
 #endif
 
-  IAkazeWidget *mAkazeDescriptor;
+  AkazeWidget *mAkazeDescriptor;
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  IBoostWidget *mBoostDescriptor;
+  BoostWidget *mBoostDescriptor;
 #endif
-  IBriefWidget *mBriefDescriptor;
-  IBriskWidget *mBriskDescriptor;
-  IDaisyWidget *mDaisyDescriptor;
-  IFreakWidget *mFreakDescriptor;
-  IHogWidget *mHogDescriptor;
-  IKazeWidget *mKazeDescriptor;
-  ILatchWidget *mLatchDescriptor;
+  BriefWidget *mBriefDescriptor;
+  BriskWidget *mBriskDescriptor;
+  DaisyWidget *mDaisyDescriptor;
+  FreakWidget *mFreakDescriptor;
+  HogWidget *mHogDescriptor;
+  KazeWidget *mKazeDescriptor;
+  LatchWidget *mLatchDescriptor;
   //ILucidWidget *mLucidDescriptor;
-  ILssWidget *mLssDescriptor;
-  IOrbWidget *mOrbDescriptor;
+  LssWidget *mLssDescriptor;
+  OrbWidget *mOrbDescriptor;
 #ifdef OPENCV_ENABLE_NONFREE
-  ISiftWidget *mSiftDescriptor;
-  ISurfWidget *mSurfDescriptor;
+  SiftWidget *mSiftDescriptor;
+  SurfWidget *mSurfDescriptor;
 #endif
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  IVggWidget *mVggDescriptor;
+  VggWidget *mVggDescriptor;
 #endif
-  IKeypointsFilterWidget *mKeypointsFilterWidget;
+  KeypointsFilterWidget *mKeypointsFilterWidget;
   MultiProcess *mMultiProcess;
   ProgressHandler *mProgressHandler;
 };

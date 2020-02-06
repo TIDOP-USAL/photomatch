@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_LATCH_WIDGET_H
 #define PHOTOMATCH_LATCH_WIDGET_H
 
@@ -10,15 +34,15 @@ class QSpinBox;
 namespace photomatch
 {
 
-class PHOTOMATCH_EXPORT ILatchWidget
+class PHOTOMATCH_EXPORT LatchWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  ILatchWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~ILatchWidget() = default;
+  LatchWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~LatchWidget() = default;
 
   virtual QString bytes() const = 0;
   virtual bool rotationInvariance() const = 0;
@@ -39,15 +63,15 @@ public slots:
 };
 
 
-class PHOTOMATCH_EXPORT LatchWidget
-  : public ILatchWidget
+class PHOTOMATCH_EXPORT LatchWidgetImp
+  : public LatchWidget
 {
   Q_OBJECT
 
 public:
 
-  LatchWidget(QWidget *parent = nullptr);
-  ~LatchWidget() override;
+  LatchWidgetImp(QWidget *parent = nullptr);
+  ~LatchWidgetImp() override;
 
 // ILatchWidget interface
 

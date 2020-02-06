@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_delta_data();
   void test_delta();
@@ -38,15 +37,14 @@ private slots:
   void test_minMargin();
   void test_edgeBlurSize_data();
   void test_edgeBlurSize();
-  void test_reset();
 
 private:
 
-  IMserWidget *mMserWidget;
+  MserWidget *mMserWidget;
 };
 
 TestMserWidget::TestMserWidget()
-  : mMserWidget(new MserWidget)
+  : mMserWidget(new MserWidgetImp)
 {
 
 }
@@ -61,16 +59,32 @@ TestMserWidget::~TestMserWidget()
 
 void TestMserWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(5, mMserWidget->delta());
+  QCOMPARE(60, mMserWidget->minArea());
+  QCOMPARE(14400, mMserWidget->maxArea());
+  QCOMPARE(0.25, mMserWidget->maxVariation());
+  QCOMPARE(.2, mMserWidget->minDiversity());
+  QCOMPARE(200, mMserWidget->maxEvolution());
+  QCOMPARE(1.01, mMserWidget->areaThreshold());
+  QCOMPARE(0.003, mMserWidget->minMargin());
+  QCOMPARE(5, mMserWidget->edgeBlurSize());
 }
 
 void TestMserWidget::cleanupTestCase()
 {
+  mMserWidget->setDelta(10);
+  mMserWidget->setMinArea(50);
+  mMserWidget->setMaxArea(10000);
+  mMserWidget->setMaxVariation(0.5);
+  mMserWidget->setMinDiversity(0.3);
+  mMserWidget->setMaxEvolution(150);
+  mMserWidget->setAreaThreshold(1.1);
+  mMserWidget->setMinMargin(0.01);
+  mMserWidget->setEdgeBlurSize(6);
 
-}
+  mMserWidget->reset();
 
-void TestMserWidget::test_constructor()
-{
   /// Check default values
   QCOMPARE(5, mMserWidget->delta());
   QCOMPARE(60, mMserWidget->minArea());
@@ -263,32 +277,6 @@ void TestMserWidget::test_edgeBlurSize()
   QCOMPARE(result, mMserWidget->edgeBlurSize());
 }
 
-
-void TestMserWidget::test_reset()
-{
-  mMserWidget->setDelta(10);
-  mMserWidget->setMinArea(50);
-  mMserWidget->setMaxArea(10000);
-  mMserWidget->setMaxVariation(0.5);
-  mMserWidget->setMinDiversity(0.3);
-  mMserWidget->setMaxEvolution(150);
-  mMserWidget->setAreaThreshold(1.1);
-  mMserWidget->setMinMargin(0.01);
-  mMserWidget->setEdgeBlurSize(6);
-
-  mMserWidget->reset();
-
-  /// Check default values
-  QCOMPARE(5, mMserWidget->delta());
-  QCOMPARE(60, mMserWidget->minArea());
-  QCOMPARE(14400, mMserWidget->maxArea());
-  QCOMPARE(0.25, mMserWidget->maxVariation());
-  QCOMPARE(.2, mMserWidget->minDiversity());
-  QCOMPARE(200, mMserWidget->maxEvolution());
-  QCOMPARE(1.01, mMserWidget->areaThreshold());
-  QCOMPARE(0.003, mMserWidget->minMargin());
-  QCOMPARE(5, mMserWidget->edgeBlurSize());
-}
 
 
 QTEST_MAIN(TestMserWidget)

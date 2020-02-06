@@ -8,7 +8,7 @@
 using namespace photomatch;
 
 class TestKeypointsFilterWidgetSignals
-  : public KeypointsFilterWidget
+  : public KeypointsFilterWidgetImp
 {
   Q_OBJECT
 
@@ -27,7 +27,7 @@ private slots:
 };
 
 TestKeypointsFilterWidgetSignals::TestKeypointsFilterWidgetSignals()
-  : KeypointsFilterWidget()
+  : KeypointsFilterWidgetImp()
 {
 
 }
@@ -49,7 +49,7 @@ void TestKeypointsFilterWidgetSignals::cleanupTestCase()
 
 void TestKeypointsFilterWidgetSignals::test_nPointsChange()
 {
-  QSignalSpy spy_nPointsChange(this, &KeypointsFilterWidget::nPointsChange);
+  QSignalSpy spy_nPointsChange(this, &KeypointsFilterWidgetImp::nPointsChange);
 
   this->mPointsNumber->setValue(6000);
 
@@ -64,7 +64,7 @@ void TestKeypointsFilterWidgetSignals::test_nPointsChange()
 
 void TestKeypointsFilterWidgetSignals::test_minSizeChange()
 {
-  QSignalSpy spy_minSizeChange(this, &KeypointsFilterWidget::minSizeChange);
+  QSignalSpy spy_minSizeChange(this, &KeypointsFilterWidgetImp::minSizeChange);
 
   this->mMinSize->setValue(5.);
 
@@ -79,7 +79,7 @@ void TestKeypointsFilterWidgetSignals::test_minSizeChange()
 
 void TestKeypointsFilterWidgetSignals::test_maxSizeChange()
 {
-  QSignalSpy spy_maxSizeChange(this, &KeypointsFilterWidget::maxSizeChange);
+  QSignalSpy spy_maxSizeChange(this, &KeypointsFilterWidgetImp::maxSizeChange);
 
   this->mMaxSize->setValue(25.);
 

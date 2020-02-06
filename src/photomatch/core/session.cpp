@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "session.h"
 
 #include "photomatch/core/preprocess/preprocess.h"
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-Session::Session()
-  : ISession(),
+SessionImp::SessionImp()
+  : Session(),
     mName(""),
     mDescription(""),
     mMaxImageSize(2000)
@@ -18,8 +42,8 @@ Session::Session()
 
 }
 
-Session::Session(const QString &name, const QString &description)
-  : ISession(),
+SessionImp::SessionImp(const QString &name, const QString &description)
+  : Session(),
     mName(name),
     mDescription(description),
     mMaxImageSize(2000)
@@ -27,97 +51,97 @@ Session::Session(const QString &name, const QString &description)
 
 }
 
-QString Session::name() const
+QString SessionImp::name() const
 {
   return mName;
 }
 
-void Session::setName(const QString &name)
+void SessionImp::setName(const QString &name)
 {
   mName = name;
 }
 
-QString Session::description() const
+QString SessionImp::description() const
 {
   return mDescription;
 }
 
-void Session::setDescription(const QString &description)
+void SessionImp::setDescription(const QString &description)
 {
   mDescription = description;
 }
 
-int Session::maxImageSize() const
+int SessionImp::maxImageSize() const
 {
   return mMaxImageSize;
 }
 
-void Session::setMaxImageSize(int size)
+void SessionImp::setMaxImageSize(int size)
 {
   mMaxImageSize = size;
 }
 
-void Session::setFullImageSize(bool fullImageSize)
+void SessionImp::setFullImageSize(bool fullImageSize)
 {
   mMaxImageSize = fullImageSize ? -1 : 2000;
 }
 
-bool Session::fullImageSize() const
+bool SessionImp::fullImageSize() const
 {
   return (mMaxImageSize == -1);
 }
 
-std::shared_ptr<Preprocess> Session::preprocess()
+std::shared_ptr<Preprocess> SessionImp::preprocess()
 {
   return mPreprocess;
 }
 
-void Session::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
+void SessionImp::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
 {
   mPreprocess = preprocess;
 }
 
-std::shared_ptr<Feature> Session::detector()
+std::shared_ptr<Feature> SessionImp::detector()
 {
   return mFeatureDetector;
 }
 
-void Session::setDetector(const std::shared_ptr<Feature> &detector)
+void SessionImp::setDetector(const std::shared_ptr<Feature> &detector)
 {
   mFeatureDetector = detector;
 }
 
-std::shared_ptr<Feature> Session::descriptor()
+std::shared_ptr<Feature> SessionImp::descriptor()
 {
   return mFeatureDescriptor;
 }
 
-void Session::setDescriptor(const std::shared_ptr<Feature> &descriptor)
+void SessionImp::setDescriptor(const std::shared_ptr<Feature> &descriptor)
 {
   mFeatureDescriptor = descriptor;
 }
 
-std::shared_ptr<Match> Session::matcher()
+std::shared_ptr<MatchingMethod> SessionImp::matchingMethod()
 {
-  return mMatcher;
+  return mMatchingMethod;
 }
 
-void Session::setMatcher(const std::shared_ptr<Match> &matcher)
+void SessionImp::setMatchingMethod(const std::shared_ptr<MatchingMethod> &matcher)
 {
-  mMatcher = matcher;
+  mMatchingMethod = matcher;
 }
 
-std::shared_ptr<IRobustMatcherRefinement> Session::robustMatcherRefinement()
+std::shared_ptr<MatchingStrategy> SessionImp::matchingStrategy()
 {
-  return mRobustMatcherRefinement;
+  return mMatchingStrategy;
 }
 
-void Session::setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement)
+void SessionImp::setMatchingStrategy(const std::shared_ptr<MatchingStrategy> &matchingStrategy)
 {
-  mRobustMatcherRefinement = robustMatcherRefinement;
+  mMatchingStrategy = matchingStrategy;
 }
 
-void Session::addPreprocessImage(const QString &img)
+void SessionImp::addPreprocessImage(const QString &img)
 {
   for (auto &image : mPreprocessImages) {
     if (image.compare(img) == 0) {
@@ -127,7 +151,7 @@ void Session::addPreprocessImage(const QString &img)
   mPreprocessImages.push_back(img);
 }
 
-void Session::deletePreprocessImage(const QString &img)
+void SessionImp::deletePreprocessImage(const QString &img)
 {
   for (size_t i = 0; i < mPreprocessImages.size(); i++){
     if (mPreprocessImages[i].compare(img) == 0) {
@@ -137,17 +161,17 @@ void Session::deletePreprocessImage(const QString &img)
   }
 }
 
-void Session::deletePreprocessImages()
+void SessionImp::deletePreprocessImages()
 {
   mPreprocessImages.clear();
 }
 
-std::vector<QString> Session::preprocessImages() const
+std::vector<QString> SessionImp::preprocessImages() const
 {
   return mPreprocessImages;
 }
 
-QString Session::preprocessImage(const QString &image) const
+QString SessionImp::preprocessImage(const QString &image) const
 {
   QString preprocess_image;
   for (size_t i = 0; i < mPreprocessImages.size(); i++){
@@ -160,7 +184,7 @@ QString Session::preprocessImage(const QString &image) const
   return preprocess_image;
 }
 
-void Session::addFeatures(const QString &feat)
+void SessionImp::addFeatures(const QString &feat)
 {
   for (auto &f : mFeatures) {
     if (f.compare(feat) == 0) {
@@ -170,7 +194,7 @@ void Session::addFeatures(const QString &feat)
   mFeatures.push_back(feat);
 }
 
-void Session::deleteFeatures(const QString &feat)
+void SessionImp::deleteFeatures(const QString &feat)
 {
   for (size_t i = 0; i < mFeatures.size(); i++){
     if (mFeatures[i].compare(feat) == 0) {
@@ -180,17 +204,17 @@ void Session::deleteFeatures(const QString &feat)
   }
 }
 
-void Session::deleteFeatures()
+void SessionImp::deleteFeatures()
 {
   mFeatures.clear();
 }
 
-std::vector<QString> Session::features() const
+std::vector<QString> SessionImp::features() const
 {
   return mFeatures;
 }
 
-QString Session::features(const QString &image) const
+QString SessionImp::features(const QString &image) const
 {
   QString feat_file;
   for (size_t i = 0; i < mFeatures.size(); i++){
@@ -203,7 +227,7 @@ QString Session::features(const QString &image) const
   return feat_file;
 }
 
-void Session::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+void SessionImp::addMatches(const QString &img1, const QString &img2, const QString &fileMatch)
 {
   for (auto &f : mImagesPairs[img1]) {
     if (f.first.compare(img2) == 0 && f.second.compare(fileMatch) == 0) {
@@ -214,7 +238,7 @@ void Session::addMatches(const QString &img1, const QString &img2, const QString
   mImagesPairs[img2].push_back(std::make_pair(img1, fileMatch));
 }
 
-void Session::deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch)
+void SessionImp::deleteMatches(const QString &img1, const QString &img2, const QString &fileMatch)
 {
   for (size_t i = 0; i < mImagesPairs[img1].size(); i++){
     if (mImagesPairs[img1][i].first.compare(img2) == 0 && mImagesPairs[img1][i].second.compare(fileMatch) == 0) {
@@ -223,22 +247,22 @@ void Session::deleteMatches(const QString &img1, const QString &img2, const QStr
   }
 }
 
-void Session::deleteMatches(const QString &img1)
+void SessionImp::deleteMatches(const QString &img1)
 {
   mImagesPairs[img1].clear();
 }
 
-void Session::deleteMatches()
+void SessionImp::deleteMatches()
 {
   mImagesPairs.clear();
 }
 
-std::map<QString, std::vector<std::pair<QString, QString>>> Session::matches() const
+std::map<QString, std::vector<std::pair<QString, QString>>> SessionImp::matches() const
 {
   return mImagesPairs;
 }
 
-std::vector<std::pair<QString, QString>> Session::matches(const QString &image) const
+std::vector<std::pair<QString, QString>> SessionImp::matches(const QString &image) const
 {
   std::vector<std::pair<QString, QString>> pairs;
   for (auto &matches : mImagesPairs){
@@ -250,17 +274,17 @@ std::vector<std::pair<QString, QString>> Session::matches(const QString &image) 
   return pairs;
 }
 
-QString Session::passPoints() const
+QString SessionImp::passPoints() const
 {
   return mPassPoints;
 }
 
-void Session::setPassPoints(const QString &passPoint)
+void SessionImp::setPassPoints(const QString &passPoint)
 {
   mPassPoints = passPoint;
 }
 
-void Session::clear()
+void SessionImp::clear()
 {
   mName.clear();
   mDescription.clear();
@@ -268,8 +292,8 @@ void Session::clear()
   mPreprocess.reset();
   mFeatureDetector.reset();
   mFeatureDescriptor.reset();
-  mMatcher.reset();
-  mRobustMatcherRefinement.reset();
+  mMatchingMethod.reset();
+  mMatchingStrategy.reset();
   mPreprocessImages.clear();
   mFeatures.clear();
   mImagesPairs.clear();

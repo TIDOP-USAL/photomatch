@@ -18,12 +18,13 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
-  void test_reset();
 
 private:
 
@@ -42,6 +43,20 @@ TestPohe::~TestPohe()
     delete mPohePreprocess;
     mPohePreprocess = nullptr;
   }
+}
+
+void TestPohe::initTestCase()
+{
+  QCOMPARE(QSize(127, 127), mPohePreprocess->blockSize());
+}
+
+void TestPohe::cleanupTestCase()
+{
+  mPohePreprocess->setBlockSize(QSize(5, 5));
+
+  mPohePreprocess->reset();
+
+  QCOMPARE(QSize(127, 127), mPohePreprocess->blockSize());
 }
 
 void TestPohe::test_constructors()
@@ -84,15 +99,6 @@ void TestPohe::test_tilesGridSize()
 
   mPohePreprocess->setBlockSize(value);
   QCOMPARE(result, mPohePreprocess->blockSize());
-}
-
-void TestPohe::test_reset()
-{
-  mPohePreprocess->setBlockSize(QSize(5, 5));
-
-  mPohePreprocess->reset();
-
-  QCOMPARE(QSize(127, 127), mPohePreprocess->blockSize());
 }
 
 

@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_BRIEF_WIDGET_H
 #define PHOTOMATCH_BRIEF_WIDGET_H
 
@@ -17,15 +41,15 @@ namespace photomatch
  * Vision–ECCV 2010, pages 778–792. Springer, 2010
  * https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
  */
-class PHOTOMATCH_EXPORT IBriefWidget
+class PHOTOMATCH_EXPORT BriefWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IBriefWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IBriefWidget() = default;
+  BriefWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~BriefWidget() = default;
 
   /*!
    * \brief Legth of the descriptor in bytes
@@ -61,15 +85,15 @@ public slots:
 
 };
 
-class PHOTOMATCH_EXPORT BriefWidget
-  : public IBriefWidget
+class PHOTOMATCH_EXPORT BriefWidgetImp
+  : public BriefWidget
 {
   Q_OBJECT
 
 public:
 
-  BriefWidget(QWidget *parent = nullptr);
-  ~BriefWidget() override;
+  BriefWidgetImp(QWidget *parent = nullptr);
+  ~BriefWidgetImp() override;
 
 // IBriefWidget interface
 

@@ -15,7 +15,8 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_smallScale_data();
   void test_smallScale();
@@ -23,15 +24,14 @@ private slots:
   void test_midScale();
   void test_largeScale_data();
   void test_largeScale();
-  void test_reset();
 
 private:
 
-  IMsrcpWidget *mMsrcpWidget;
+  MsrcpWidget *mMsrcpWidget;
 };
 
 TestMsrcpWidget::TestMsrcpWidget()
-  : mMsrcpWidget(new MsrcpWidget)
+  : mMsrcpWidget(new MsrcpWidgetImp)
 {
 
 }
@@ -44,8 +44,21 @@ TestMsrcpWidget::~TestMsrcpWidget()
   }
 }
 
-void TestMsrcpWidget::test_constructor()
+void TestMsrcpWidget::initTestCase()
 {
+  QCOMPARE(10., mMsrcpWidget->smallScale());
+  QCOMPARE(100., mMsrcpWidget->midScale());
+  QCOMPARE(220., mMsrcpWidget->largeScale());
+}
+
+void TestMsrcpWidget::cleanupTestCase()
+{
+  mMsrcpWidget->setSmallScale(15.);
+  mMsrcpWidget->setMidScale(150.);
+  mMsrcpWidget->setLargeScale(250.);
+
+  mMsrcpWidget->reset();
+
   QCOMPARE(10., mMsrcpWidget->smallScale());
   QCOMPARE(100., mMsrcpWidget->midScale());
   QCOMPARE(220., mMsrcpWidget->largeScale());
@@ -113,19 +126,6 @@ void TestMsrcpWidget::test_largeScale()
 
   mMsrcpWidget->setLargeScale(value);
   QCOMPARE(result, mMsrcpWidget->largeScale());
-}
-
-void TestMsrcpWidget::test_reset()
-{
-  mMsrcpWidget->setSmallScale(15.);
-  mMsrcpWidget->setMidScale(150.);
-  mMsrcpWidget->setLargeScale(250.);
-
-  mMsrcpWidget->reset();
-
-  QCOMPARE(10., mMsrcpWidget->smallScale());
-  QCOMPARE(100., mMsrcpWidget->midScale());
-  QCOMPARE(220., mMsrcpWidget->largeScale());
 }
 
 

@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestBriefWidgetsSignals : public BriefWidget
+class TestBriefWidgetsSignals : public BriefWidgetImp
 {
   Q_OBJECT
 
@@ -18,14 +18,16 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_bytesChange();
   void test_useOrientationChange();
-  void test_reset();
+
 
 };
 
 TestBriefWidgetsSignals::TestBriefWidgetsSignals()
-  : BriefWidget()
+  : BriefWidgetImp()
 {
 
 }
@@ -35,9 +37,25 @@ TestBriefWidgetsSignals::~TestBriefWidgetsSignals()
 
 }
 
+void TestBriefWidgetsSignals::initTestCase()
+{
+
+}
+
+void TestBriefWidgetsSignals::cleanupTestCase()
+{
+  QSignalSpy spy_useOrientationChange(this, &BriefWidgetImp::useOrientationChange);
+
+  this->setUseOrientation(true);
+
+  this->reset();
+
+  QCOMPARE(spy_useOrientationChange.count(), 0);
+}
+
 void TestBriefWidgetsSignals::test_bytesChange()
 {
-  QSignalSpy spy_bytesChange(this, &BriefWidget::bytesChange);
+  QSignalSpy spy_bytesChange(this, &BriefWidgetImp::bytesChange);
 
   this->mBytes->setCurrentText("64");
 
@@ -55,7 +73,7 @@ void TestBriefWidgetsSignals::test_bytesChange()
 
 void TestBriefWidgetsSignals::test_useOrientationChange()
 {
-  QSignalSpy spy_useOrientationChange(this, &BriefWidget::useOrientationChange);
+  QSignalSpy spy_useOrientationChange(this, &BriefWidgetImp::useOrientationChange);
 
   QTest::mouseClick(mUseOrientation, Qt::MouseButton::LeftButton);
 
@@ -68,16 +86,7 @@ void TestBriefWidgetsSignals::test_useOrientationChange()
   QCOMPARE(spy_useOrientationChange.count(), 0);
 }
 
-void TestBriefWidgetsSignals::test_reset()
-{
-  QSignalSpy spy_useOrientationChange(this, &BriefWidget::useOrientationChange);
 
-  this->setUseOrientation(true);
-
-  this->reset();
-
-  QCOMPARE(spy_useOrientationChange.count(), 0);
-}
 
 QTEST_MAIN(TestBriefWidgetsSignals)
 

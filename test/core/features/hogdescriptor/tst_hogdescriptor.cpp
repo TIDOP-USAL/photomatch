@@ -36,7 +36,6 @@ private slots:
   void test_nbins();
   void test_derivAperture_data();
   void test_derivAperture();
-  void test_reset();
 
 private:
 
@@ -59,12 +58,31 @@ TestHogDescriptor::~TestHogDescriptor()
 
 void TestHogDescriptor::initTestCase()
 {
-
+  QCOMPARE(QSize(16, 16), mHogDescriptor->winSize());
+  QCOMPARE(QSize(4, 4), mHogDescriptor->blockSize());
+  QCOMPARE(QSize(2, 2), mHogDescriptor->blockStride());
+  QCOMPARE(QSize(2, 2), mHogDescriptor->cellSize());
+  QCOMPARE(9, mHogDescriptor->nbins());
+  QCOMPARE(1, mHogDescriptor->derivAperture());
 }
 
 void TestHogDescriptor::cleanupTestCase()
 {
+  mHogDescriptor->setWinSize(QSize(64,64));
+  mHogDescriptor->setBlockSize(QSize(64,64));
+  mHogDescriptor->setBlockStride(QSize(64,64));
+  mHogDescriptor->setCellSize(QSize(64,64));
+  mHogDescriptor->setNbins(250);
+  mHogDescriptor->setDerivAperture(250);
 
+  mHogDescriptor->reset();
+
+  QCOMPARE(QSize(16, 16), mHogDescriptor->winSize());
+  QCOMPARE(QSize(4, 4), mHogDescriptor->blockSize());
+  QCOMPARE(QSize(2, 2), mHogDescriptor->blockStride());
+  QCOMPARE(QSize(2, 2), mHogDescriptor->cellSize());
+  QCOMPARE(9, mHogDescriptor->nbins());
+  QCOMPARE(1, mHogDescriptor->derivAperture());
 }
 
 void TestHogDescriptor::test_defaultConstructor()
@@ -225,25 +243,6 @@ void TestHogDescriptor::test_derivAperture()
 
   mHogDescriptor->setDerivAperture(value);
   QCOMPARE(result, mHogDescriptor->derivAperture());
-}
-
-void TestHogDescriptor::test_reset()
-{
-  mHogDescriptor->setWinSize(QSize(64,64));
-  mHogDescriptor->setBlockSize(QSize(64,64));
-  mHogDescriptor->setBlockStride(QSize(64,64));
-  mHogDescriptor->setCellSize(QSize(64,64));
-  mHogDescriptor->setNbins(250);
-  mHogDescriptor->setDerivAperture(250);
-
-  mHogDescriptor->reset();
-
-  QCOMPARE(QSize(16, 16), mHogDescriptor->winSize());
-  QCOMPARE(QSize(4, 4), mHogDescriptor->blockSize());
-  QCOMPARE(QSize(2, 2), mHogDescriptor->blockStride());
-  QCOMPARE(QSize(2, 2), mHogDescriptor->cellSize());
-  QCOMPARE(9, mHogDescriptor->nbins());
-  QCOMPARE(1, mHogDescriptor->derivAperture());
 }
 
 

@@ -17,7 +17,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_featuresNumber_data();
   void test_featuresNumber();
@@ -29,17 +28,16 @@ private slots:
   void test_edgeThreshold();
   void test_sigma_data();
   void test_sigma();
-  void test_reset();
 
 private:
 
-  ISiftWidget *mSiftWidget;
+  SiftWidget *mSiftWidget;
 
 };
 
 TestSiftWidget::TestSiftWidget()
 {
-  mSiftWidget = new SiftWidget();
+  mSiftWidget = new SiftWidgetImp();
 }
 
 TestSiftWidget::~TestSiftWidget()
@@ -52,17 +50,24 @@ TestSiftWidget::~TestSiftWidget()
 
 void TestSiftWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(5000, mSiftWidget->featuresNumber());
+  QCOMPARE(3, mSiftWidget->octaveLayers());
+  QCOMPARE(0.04, mSiftWidget->contrastThreshold());
+  QCOMPARE(10., mSiftWidget->edgeThreshold());
+  QCOMPARE(1.6, mSiftWidget->sigma());
 }
 
 void TestSiftWidget::cleanupTestCase()
 {
+  mSiftWidget->setFeaturesNumber(500);
+  mSiftWidget->setOctaveLayers(4);
+  mSiftWidget->setContrastThreshold(0.5);
+  mSiftWidget->setEdgeThreshold(20.);
+  mSiftWidget->setSigma(3.);
 
-}
+  mSiftWidget->reset();
 
-void TestSiftWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(5000, mSiftWidget->featuresNumber());
   QCOMPARE(3, mSiftWidget->octaveLayers());
   QCOMPARE(0.04, mSiftWidget->contrastThreshold());
@@ -176,22 +181,6 @@ void TestSiftWidget::test_sigma()
   QCOMPARE(result, mSiftWidget->sigma());
 }
 
-void TestSiftWidget::test_reset()
-{
-  mSiftWidget->setFeaturesNumber(500);
-  mSiftWidget->setOctaveLayers(4);
-  mSiftWidget->setContrastThreshold(0.5);
-  mSiftWidget->setEdgeThreshold(20.);
-  mSiftWidget->setSigma(3.);
-
-  mSiftWidget->reset();
-
-  QCOMPARE(5000, mSiftWidget->featuresNumber());
-  QCOMPARE(3, mSiftWidget->octaveLayers());
-  QCOMPARE(0.04, mSiftWidget->contrastThreshold());
-  QCOMPARE(10., mSiftWidget->edgeThreshold());
-  QCOMPARE(1.6, mSiftWidget->sigma());
-}
 
 QTEST_MAIN(TestSiftWidget)
 

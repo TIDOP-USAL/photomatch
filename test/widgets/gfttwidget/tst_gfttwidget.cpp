@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_maxFeatures_data();
   void test_maxFeatures();
@@ -32,15 +31,14 @@ private slots:
   void test_harrisDetector();
   void test_k_data();
   void test_k();
-  void test_reset();
 
 private:
 
-  IGfttWidget *mGfttWidget;
+  GfttWidget *mGfttWidget;
 };
 
 TestGfttWidget::TestGfttWidget()
-  : mGfttWidget(new GfttWidget)
+  : mGfttWidget(new GfttWidgetImp)
 {
 
 }
@@ -53,20 +51,29 @@ TestGfttWidget::~TestGfttWidget()
 
 void TestGfttWidget::initTestCase()
 {
-
-}
-
-void TestGfttWidget::cleanupTestCase()
-{
-
-}
-
-void TestGfttWidget::test_constructor()
-{
   /// Check default values
   QCOMPARE(1000, mGfttWidget->maxFeatures());
   QCOMPARE(0.01, mGfttWidget->qualityLevel());
   QCOMPARE(1, mGfttWidget->minDistance());
+  QCOMPARE(3, mGfttWidget->blockSize());
+  QCOMPARE(false, mGfttWidget->harrisDetector());
+  QCOMPARE(0.04, mGfttWidget->k());
+}
+
+void TestGfttWidget::cleanupTestCase()
+{
+  mGfttWidget->setMaxFeatures(5000);
+  mGfttWidget->setQualityLevel(0.1);
+  mGfttWidget->setMinDistance(3.);
+  mGfttWidget->setBlockSize(1);
+  mGfttWidget->setHarrisDetector(true);
+  mGfttWidget->setK(0.1);
+
+  mGfttWidget->reset();
+
+  QCOMPARE(1000, mGfttWidget->maxFeatures());
+  QCOMPARE(0.01, mGfttWidget->qualityLevel());
+  QCOMPARE(1., mGfttWidget->minDistance());
   QCOMPARE(3, mGfttWidget->blockSize());
   QCOMPARE(false, mGfttWidget->harrisDetector());
   QCOMPARE(0.04, mGfttWidget->k());
@@ -195,24 +202,6 @@ void TestGfttWidget::test_k()
   QCOMPARE(result, mGfttWidget->k());
 }
 
-void TestGfttWidget::test_reset()
-{
-  mGfttWidget->setMaxFeatures(5000);
-  mGfttWidget->setQualityLevel(0.1);
-  mGfttWidget->setMinDistance(3.);
-  mGfttWidget->setBlockSize(1);
-  mGfttWidget->setHarrisDetector(true);
-  mGfttWidget->setK(0.1);
-
-  mGfttWidget->reset();
-
-  QCOMPARE(1000, mGfttWidget->maxFeatures());
-  QCOMPARE(0.01, mGfttWidget->qualityLevel());
-  QCOMPARE(1., mGfttWidget->minDistance());
-  QCOMPARE(3, mGfttWidget->blockSize());
-  QCOMPARE(false, mGfttWidget->harrisDetector());
-  QCOMPARE(0.04, mGfttWidget->k());
-}
 
 QTEST_MAIN(TestGfttWidget)
 

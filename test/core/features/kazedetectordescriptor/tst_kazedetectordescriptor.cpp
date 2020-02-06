@@ -38,36 +38,51 @@ private slots:
   void test_diffusivity();
   void test_diffusivity2_data();
   void test_diffusivity2();
-  void test_reset();
-
-//private:
-
-//  KazeDetectorDescriptor *mKazeDetectorDescriptor;
 
 };
 
 TestKazeDetectorDescriptor::TestKazeDetectorDescriptor()
   : KazeDetectorDescriptor()
 {
-  //mKazeDetectorDescriptor = new KazeDetectorDescriptor();
 }
 
 TestKazeDetectorDescriptor::~TestKazeDetectorDescriptor()
 {
-//  if (mKazeDetectorDescriptor){
-//    delete mKazeDetectorDescriptor;
-//    mKazeDetectorDescriptor = nullptr;
-//  }
 }
 
 void TestKazeDetectorDescriptor::initTestCase()
 {
-
+  QCOMPARE(false, this->extendedDescriptor());
+  QCOMPARE(false, this->upright());
+  QCOMPARE(0.001, this->threshold());
+  QCOMPARE(4, this->octaves());
+  QCOMPARE(4, this->octaveLayers());
+  QCOMPARE("DIFF_PM_G2", this->diffusivity());
 }
 
 void TestKazeDetectorDescriptor::cleanupTestCase()
 {
+  this->setThreshold(50.);
+  this->setOctaves(2);
+  this->setOctaveLayers(5);
+  this->setExtendedDescriptor(true);
+  this->setUpright(true);
+  this->setDiffusivity("DIFF_PM_G1");
 
+  this->reset();
+
+  QCOMPARE(false, this->extendedDescriptor());
+  QCOMPARE(false, this->mKaze->getExtended());
+  QCOMPARE(false, this->upright());
+  QCOMPARE(false, this->mKaze->getUpright());
+  QCOMPARE(0.001, this->threshold());
+  //QCOMPARE(0.001, this->mKaze->getThreshold());
+  QCOMPARE(4, this->octaves());
+  QCOMPARE(4, this->mKaze->getNOctaves());
+  QCOMPARE(4, this->octaveLayers());
+  QCOMPARE(4, this->mKaze->getNOctaveLayers());
+  QCOMPARE("DIFF_PM_G2", this->diffusivity());
+  QCOMPARE(1, this->mKaze->getDiffusivity());
 }
 
 void TestKazeDetectorDescriptor::test_defaultConstructor()
@@ -251,30 +266,6 @@ void TestKazeDetectorDescriptor::test_diffusivity2()
   QCOMPARE(result, this->mKaze->getDiffusivity());
 }
 
-void TestKazeDetectorDescriptor::test_reset()
-{
-  this->setThreshold(50.);
-  this->setOctaves(2);
-  this->setOctaveLayers(5);
-  this->setExtendedDescriptor(true);
-  this->setUpright(true);
-  this->setDiffusivity("DIFF_PM_G1");
-
-  this->reset();
-
-  QCOMPARE(false, this->extendedDescriptor());
-  QCOMPARE(false, this->mKaze->getExtended());
-  QCOMPARE(false, this->upright());
-  QCOMPARE(false, this->mKaze->getUpright());
-  QCOMPARE(0.001, this->threshold());
-  //QCOMPARE(0.001, this->mKaze->getThreshold());
-  QCOMPARE(4, this->octaves());
-  QCOMPARE(4, this->mKaze->getNOctaves());
-  QCOMPARE(4, this->octaveLayers());
-  QCOMPARE(4, this->mKaze->getNOctaveLayers());
-  QCOMPARE("DIFF_PM_G2", this->diffusivity());
-  QCOMPARE(1, this->mKaze->getDiffusivity());
-}
 
 QTEST_APPLESS_MAIN(TestKazeDetectorDescriptor)
 

@@ -18,19 +18,17 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
-  void test_reset();
 
 private:
 
-  ILceBsescsWidget *mLceBsescsWidget;
+  LceBsescsWidget *mLceBsescsWidget;
 };
 
 TestLceBsescsWidget::TestLceBsescsWidget()
-  : mLceBsescsWidget(new LceBsescsWidget)
+  : mLceBsescsWidget(new LceBsescsWidgetImp)
 {
 
 }
@@ -45,17 +43,16 @@ TestLceBsescsWidget::~TestLceBsescsWidget()
 
 void TestLceBsescsWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(QSize(33, 33), mLceBsescsWidget->blockSize());
 }
 
 void TestLceBsescsWidget::cleanupTestCase()
 {
+  mLceBsescsWidget->setBlockSize(QSize(5, 5));
 
-}
+  mLceBsescsWidget->reset();
 
-void TestLceBsescsWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(QSize(33, 33), mLceBsescsWidget->blockSize());
 }
 
@@ -85,14 +82,6 @@ void TestLceBsescsWidget::test_blockSize()
   QCOMPARE(result, mLceBsescsWidget->blockSize());
 }
 
-void TestLceBsescsWidget::test_reset()
-{
-  mLceBsescsWidget->setBlockSize(QSize(5, 5));
-
-  mLceBsescsWidget->reset();
-
-  QCOMPARE(QSize(33, 33), mLceBsescsWidget->blockSize());
-}
 
 
 QTEST_MAIN(TestLceBsescsWidget)

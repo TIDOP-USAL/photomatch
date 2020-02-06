@@ -8,7 +8,7 @@ using namespace photomatch;
 ///TODO: completar
 ///TODO: extraer la clase ProjectRWFake a un fichero externo para poder utilizarla en los test que la necesiten
 class ProjectRWFake
-  : public IProjectRW
+  : public ProjectController
 {
 
 public:
@@ -54,7 +54,7 @@ public:
   // IProjectIO interface
 public:
 
-  bool read(const QString &file, IProject &prj) override
+  bool read(const QString &file, Project &prj) override
   {
 
     QXmlStreamReader xmlReader;
@@ -100,7 +100,7 @@ public:
             while (xmlReader.readNextStartElement()) {
 
               if (xmlReader.name() == "Session") {
-                std::shared_ptr<Session> session(new Session);
+                std::shared_ptr<SessionImp> session(new SessionImp);
                 while (xmlReader.readNextStartElement()) {
                   if (xmlReader.name() == "Name") {
                     session->setName(xmlReader.readElementText());
@@ -123,7 +123,7 @@ public:
     return false;
   }
 
-  bool write(const QString &file, const IProject &prj) const override
+  bool write(const QString &file, const Project &prj) const override
   {
 
     return false;
@@ -183,14 +183,14 @@ private slots:
 
 protected:
 
-  IProjectRW *mProjectIOFake;
-  IProject *mProject;
+  ProjectController *mProjectIOFake;
+  Project *mProject;
   IProjectModel *mProjectModel;
 };
 
 TestProjectModel::TestProjectModel()
   : mProjectIOFake(new ProjectRWFake),
-    mProject(new Project),
+    mProject(new ProjectImp),
     mProjectModel(new ProjectModel(mProjectIOFake, mProject))
 {
 
@@ -228,7 +228,7 @@ void TestProjectModel::cleanupTestCase()
 void TestProjectModel::testConstructor()
 {
   ProjectRWFake *projectIOFake = new ProjectRWFake;
-  Project *project = new Project;
+  ProjectImp *project = new ProjectImp;
 
   ProjectModel prj(projectIOFake, project);
   QCOMPARE(QString(), prj.name());
@@ -441,7 +441,7 @@ void TestProjectModel::test_findSessionId()
 
 void TestProjectModel::test_sessionIterator()
 {
-  std::shared_ptr<Session> session;
+  std::shared_ptr<SessionImp> session;
   int i = 0;
   for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++, i++){
 

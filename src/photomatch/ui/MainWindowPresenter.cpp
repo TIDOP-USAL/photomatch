@@ -70,6 +70,8 @@
 #include <QImageReader>
 #include <QProgressBar>
 #include <QMenu>
+#include <QDesktopServices>
+#include <QUrl>
 
 namespace photomatch
 {
@@ -78,8 +80,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   : IPresenter(),
     mView(view),
     mModel(model),
-    mProject(new Project),
-    mProjectIO(new ProjectRW),
+    mProject(new ProjectImp),
+    mProjectIO(new ProjectControllerImp),
     mProjectModel(nullptr),
     mNewProjectPresenter(nullptr),
     mNewSessionPresenter(nullptr),
@@ -87,8 +89,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mExportFeaturesModel(nullptr),
     mExportMatchesPresenter(nullptr),
     mExportMatchesModel(nullptr),
-    mSettings(new Settings),
-    mSettingsRW(new SettingsRW),
+    mSettings(new SettingsImp),
+    mSettingsRW(new SettingsControllerImp),
     mSettingsModel(nullptr),
     mSettingsPresenter(nullptr),
     mPreprocessModel(nullptr),
@@ -169,6 +171,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
   /* Menú Ayuda */
 
   connect(mView, SIGNAL(openHelpDialog()),            this, SLOT(help()));
+  connect(mView, SIGNAL(openOnlineHelp()),            this, SLOT(openOnlineHelp()));
   connect(mView, SIGNAL(openAboutDialog()),           this, SLOT(openAboutDialog()));
 
   /* Panel de vistas en miniatura */
@@ -753,6 +756,11 @@ void MainWindowPresenter::openToolSettings()
   mSettingsPresenter->openPage(2);
 }
 
+void MainWindowPresenter::openOnlineHelp()
+{
+  QDesktopServices::openUrl(QUrl("https://elliestath.github.io/HelpTest/site/"));
+}
+
 void MainWindowPresenter::openAboutDialog()
 {
   initAboutDialog();
@@ -894,14 +902,14 @@ void MainWindowPresenter::selectPreprocess(const QString &session)
     if (preprocess){
       std::list<std::pair<QString, QString>> properties;
       if (preprocess->type() == Preprocess::Type::acebsf){
-        IAcebsf *acebsf = dynamic_cast<IAcebsf *>(preprocess.get());
+        Acebsf *acebsf = dynamic_cast<Acebsf *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), QString("ACEBSF")));
         properties.push_back(std::make_pair(QString("Block Size"), QString::number(acebsf->blockSize().width()).append("x").append(QString::number(acebsf->blockSize().height()))));
         properties.push_back(std::make_pair(QString("L"), QString::number(acebsf->l())));
         properties.push_back(std::make_pair(QString("K1"), QString::number(acebsf->k1())));
         properties.push_back(std::make_pair(QString("K2"), QString::number(acebsf->k2())));
       } else if (preprocess->type() == Preprocess::Type::clahe){
-        IClahe *clahe = dynamic_cast<IClahe *>(preprocess.get());
+        Clahe *clahe = dynamic_cast<Clahe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), QString("CLAHE")));
         properties.push_back(std::make_pair(QString("Clip Limit"), QString::number(clahe->clipLimit())));
         properties.push_back(std::make_pair(QString("Grid Size"),
@@ -909,25 +917,25 @@ void MainWindowPresenter::selectPreprocess(const QString &session)
                                             .append("x")
                                             .append(QString::number(clahe->tilesGridSize().height()))));
       } else if (preprocess->type() == Preprocess::Type::cmbfhe){
-        ICmbfhe *cmbfhe = dynamic_cast<ICmbfhe *>(preprocess.get());
+        Cmbfhe *cmbfhe = dynamic_cast<Cmbfhe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "CMBFHE"));
         properties.push_back(std::make_pair(QString("Block Size"),
                                             QString::number(cmbfhe->blockSize().width()).append("x").append(QString::number(cmbfhe->blockSize().height()))));
       } else if (preprocess->type() == Preprocess::Type::decolor){
         properties.push_back(std::make_pair(QString("Name"), "Decolor"));
       } else if (preprocess->type() == Preprocess::Type::dhe){
-        IDhe *dhe = dynamic_cast<IDhe *>(preprocess.get());
+        Dhe *dhe = dynamic_cast<Dhe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "DHE"));
         properties.push_back(std::make_pair(QString("X"), QString::number(dhe->x())));
       } else if (preprocess->type() == Preprocess::Type::fahe){
-        IFahe *fahe = dynamic_cast<IFahe *>(preprocess.get());
+        Fahe *fahe = dynamic_cast<Fahe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "FAHE"));
         properties.push_back(std::make_pair(QString("Block Size"),
                                             QString::number(fahe->blockSize().width())
                                             .append("x")
                                             .append(QString::number(fahe->blockSize().height()))));
       } else if (preprocess->type() == Preprocess::Type::hmclahe){
-        IHmclahe *hmclahe = dynamic_cast<IHmclahe *>(preprocess.get());
+        Hmclahe *hmclahe = dynamic_cast<Hmclahe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "HMCLAHE"));
         properties.push_back(std::make_pair(QString("Block Size"),
                                             QString::number(hmclahe->blockSize().width())
@@ -936,39 +944,39 @@ void MainWindowPresenter::selectPreprocess(const QString &session)
         properties.push_back(std::make_pair(QString("L"), QString::number(hmclahe->l())));
         properties.push_back(std::make_pair(QString("Phi"), QString::number(hmclahe->phi())));
       } else if (preprocess->type() == Preprocess::Type::lce_bsescs){
-        ILceBsescs *lceBsescs = dynamic_cast<ILceBsescs *>(preprocess.get());
+        LceBsescs *lceBsescs = dynamic_cast<LceBsescs *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "LCE_BSESCS"));
         properties.push_back(std::make_pair(QString("Block Size"),
                                             QString::number(lceBsescs->blockSize().width())
                                             .append("x")
                                             .append(QString::number(lceBsescs->blockSize().height()))));
       } else if (preprocess->type() == Preprocess::Type::msrcp){
-        IMsrcp *msrcp = dynamic_cast<IMsrcp *>(preprocess.get());
+        Msrcp *msrcp = dynamic_cast<Msrcp *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "MSRCP"));
         properties.push_back(std::make_pair(QString("Small Scale"), QString::number(msrcp->smallScale())));
         properties.push_back(std::make_pair(QString("Mid Scale"), QString::number(msrcp->midScale())));
         properties.push_back(std::make_pair(QString("Large Scale"), QString::number(msrcp->largeScale())));
       } else if (preprocess->type() == Preprocess::Type::noshp){
-        INoshp *noshp = dynamic_cast<INoshp *>(preprocess.get());
+        Noshp *noshp = dynamic_cast<Noshp *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "NOSHP"));
         properties.push_back(std::make_pair(QString("Block Size"),
                                             QString::number(noshp->blockSize().width())
                                             .append("x")
                                             .append(QString::number(noshp->blockSize().height()))));
       } else if (preprocess->type() == Preprocess::Type::pohe){
-        IPohe *pohe = dynamic_cast<IPohe *>(preprocess.get());
+        Pohe *pohe = dynamic_cast<Pohe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "POHE"));
         properties.push_back(std::make_pair(QString("Block Size"),
                                             QString::number(pohe->blockSize().width())
                                             .append("x")
                                             .append(QString::number(pohe->blockSize().height()))));
       } else if (preprocess->type() == Preprocess::Type::rswhe){
-        IRswhe *rswhe = dynamic_cast<IRswhe *>(preprocess.get());
+        Rswhe *rswhe = dynamic_cast<Rswhe *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "RSWHE"));
         properties.push_back(std::make_pair(QString("Histogram Divisions"), QString::number(rswhe->histogramDivisions())));
         properties.push_back(std::make_pair(QString("Histogram Cut"), QString::number(static_cast<int>(rswhe->histogramCut()))));
       } else if (preprocess->type() == Preprocess::Type::wallis){
-        IWallis *wallis = dynamic_cast<IWallis *>(preprocess.get());
+        Wallis *wallis = dynamic_cast<Wallis *>(preprocess.get());
         properties.push_back(std::make_pair(QString("Name"), "WALLIS"));
         properties.push_back(std::make_pair(QString("Contrast"), QString::number(wallis->contrast())));
         properties.push_back(std::make_pair(QString("Brightness"), QString::number(wallis->brightness())));
@@ -1003,13 +1011,13 @@ void MainWindowPresenter::selectDetector(const QString &session)
 
   std::list<std::pair<QString, QString>> properties;
   if (detector->type() == Feature::Type::agast){
-    IAgast *agast = dynamic_cast<IAgast *>(detector.get());
+    Agast *agast = dynamic_cast<Agast *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("AGAST")));
     properties.push_back(std::make_pair(QString("Threshold"), QString(agast->threshold())));
     properties.push_back(std::make_pair(QString("Nonmax Suppression"), agast->nonmaxSuppression() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Detector Type"), QString(agast->detectorType())));
   } else if (detector->type() == Feature::Type::akaze){
-    IAkaze *akaze = dynamic_cast<IAkaze *>(detector.get());
+    Akaze *akaze = dynamic_cast<Akaze *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("AKAZE")));
     properties.push_back(std::make_pair(QString("Descriptor Type"), QString(akaze->descriptorType())));
     properties.push_back(std::make_pair(QString("Descriptor Size"), QString::number(akaze->descriptorSize())));
@@ -1019,19 +1027,19 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(akaze->octaveLayers())));
     properties.push_back(std::make_pair(QString("Diffusivity"), akaze->diffusivity()));
   } else if (detector->type() == Feature::Type::brisk){
-    IBrisk *brisk = dynamic_cast<IBrisk *>(detector.get());
+    Brisk *brisk = dynamic_cast<Brisk *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("BRISK")));
     properties.push_back(std::make_pair(QString("Threshold"), QString::number(brisk->threshold())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(brisk->octaves())));
     properties.push_back(std::make_pair(QString("Pattern Scale"), QString::number(brisk->patternScale())));
   } else if (detector->type() == Feature::Type::fast){
-    IFast *fast = dynamic_cast<IFast *>(detector.get());
+    Fast *fast = dynamic_cast<Fast *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("FAST")));
     properties.push_back(std::make_pair(QString("Threshold"), QString::number(fast->threshold())));
     properties.push_back(std::make_pair(QString("Nonmax Suppression"), fast->nonmaxSuppression() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Detector Type"), QString(fast->detectorType())));
   } else if (detector->type() == Feature::Type::gftt){
-    IGftt *gftt = dynamic_cast<IGftt *>(detector.get());
+    Gftt *gftt = dynamic_cast<Gftt *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("GFTT")));
     properties.push_back(std::make_pair(QString("Max Features"), QString::number(gftt->maxFeatures())));
     properties.push_back(std::make_pair(QString("Quality Level"), QString::number(gftt->qualityLevel())));
@@ -1040,7 +1048,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Harris Detector"), gftt->harrisDetector() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("K"), QString::number(gftt->k())));
   } else if (detector->type() == Feature::Type::kaze){
-    IKaze *kaze = dynamic_cast<IKaze *>(detector.get());
+    Kaze *kaze = dynamic_cast<Kaze *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("KAZE")));
     properties.push_back(std::make_pair(QString("Extended Descriptor"), kaze->extendedDescriptor() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Upright"), kaze->upright() ? "true" : "false"));
@@ -1049,7 +1057,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(kaze->octaveLayers())));
     properties.push_back(std::make_pair(QString("Diffusivity"), kaze->diffusivity()));
   } else if (detector->type() == Feature::Type::msd){
-    IMsd *msd = dynamic_cast<IMsd *>(detector.get());
+    Msd *msd = dynamic_cast<Msd *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("MSD")));
     properties.push_back(std::make_pair(QString("Threshold Saliency"), QString::number(msd->thresholdSaliency())));
     properties.push_back(std::make_pair(QString("Patch Radius"), QString::number(msd->knn())));
@@ -1062,7 +1070,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Affine MSD"), msd->affineMSD() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Affine Tilts"),QString::number(msd->affineTilts())));
   } else if (detector->type() == Feature::Type::mser){
-    IMser *mser = dynamic_cast<IMser *>(detector.get());
+    Mser *mser = dynamic_cast<Mser *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("MSER")));
     properties.push_back(std::make_pair(QString("Delta"), QString::number(mser->delta())));
     properties.push_back(std::make_pair(QString("Min Area"), QString::number(mser->minArea())));
@@ -1074,7 +1082,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Min Margin"), QString::number(mser->minMargin())));
     properties.push_back(std::make_pair(QString("Edge Blur Size"), QString::number(mser->edgeBlurSize())));
   } else if (detector->type() == Feature::Type::orb){
-    IOrb *orb = dynamic_cast<IOrb *>(detector.get());
+    Orb *orb = dynamic_cast<Orb *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("ORB")));
     properties.push_back(std::make_pair(QString("Features Number"), QString::number(orb->featuresNumber())));
     properties.push_back(std::make_pair(QString("Scale Factor"), QString::number(orb->scaleFactor())));
@@ -1085,7 +1093,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Patch Size"), QString::number(orb->patchSize())));
     properties.push_back(std::make_pair(QString("Fast Threshold"), QString::number(orb->fastThreshold())));
   } else if (detector->type() == Feature::Type::sift){
-    ISift *sift = dynamic_cast<ISift *>(detector.get());
+    Sift *sift = dynamic_cast<Sift *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("SIFT")));
     properties.push_back(std::make_pair(QString("Features Number"), QString::number(sift->featuresNumber())));
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(sift->octaveLayers())));
@@ -1093,7 +1101,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Edge Threshold"), QString::number(sift->edgeThreshold())));
     properties.push_back(std::make_pair(QString("Sigma"), QString::number(sift->sigma())));
   } else if (detector->type() == Feature::Type::star){
-    IStar *star = dynamic_cast<IStar *>(detector.get());
+    Star *star = dynamic_cast<Star *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("STAR")));
     properties.push_back(std::make_pair(QString("Max Size"), QString::number(star->maxSize())));
     properties.push_back(std::make_pair(QString("Response Threshold"), QString::number(star->responseThreshold())));
@@ -1101,7 +1109,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     properties.push_back(std::make_pair(QString("Line Threshold Binarized"), QString::number(star->lineThresholdBinarized())));
     properties.push_back(std::make_pair(QString("Suppress Nonmax Size"), QString::number(star->suppressNonmaxSize())));
   } else if (detector->type() == Feature::Type::surf){
-    ISurf *surf = dynamic_cast<ISurf *>(detector.get());
+    Surf *surf = dynamic_cast<Surf *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("SURF")));
     properties.push_back(std::make_pair(QString("Hessian Threshold"), QString::number(surf->hessianThreshold())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(surf->octaves())));
@@ -1122,7 +1130,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
 
   std::list<std::pair<QString, QString>> properties;
   if (descriptor->type() == Feature::Type::akaze){
-    IAkaze *akaze = dynamic_cast<IAkaze *>(descriptor.get());
+    Akaze *akaze = dynamic_cast<Akaze *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("AKAZE")));
     properties.push_back(std::make_pair(QString("Descriptor Type"), QString(akaze->descriptorType())));
     properties.push_back(std::make_pair(QString("Descriptor Size"), QString::number(akaze->descriptorSize())));
@@ -1132,18 +1140,18 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(akaze->octaveLayers())));
     properties.push_back(std::make_pair(QString("Diffusivity"), akaze->diffusivity()));
   } else if (descriptor->type() == Feature::Type::brief){
-    IBrief *brief = dynamic_cast<IBrief *>(descriptor.get());
+    Brief *brief = dynamic_cast<Brief *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("BRIEF")));
     properties.push_back(std::make_pair(QString("Bytes"), brief->bytes()));
     properties.push_back(std::make_pair(QString("Use Orientation"), brief->useOrientation() ? "true" : "false"));
   } else if (descriptor->type() == Feature::Type::brisk){
-    IBrisk *brisk = dynamic_cast<IBrisk *>(descriptor.get());
+    Brisk *brisk = dynamic_cast<Brisk *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("BRISK")));
     properties.push_back(std::make_pair(QString("Threshold"), QString::number(brisk->threshold())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(brisk->octaves())));
     properties.push_back(std::make_pair(QString("Pattern Scale"), QString::number(brisk->patternScale())));
   } else if (descriptor->type() == Feature::Type::daisy){
-    IDaisy *daisy = dynamic_cast<IDaisy *>(descriptor.get());
+    Daisy *daisy = dynamic_cast<Daisy *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("DAISY")));
     properties.push_back(std::make_pair(QString("Q Radius"), QString::number(daisy->radius())));
     properties.push_back(std::make_pair(QString("Q Theta"), QString::number(daisy->qRadius())));
@@ -1153,14 +1161,14 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Interpolation"), daisy->interpolation() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Use Orientation"), daisy->useOrientation() ? "true" : "false"));
   } else if (descriptor->type() == Feature::Type::freak){
-    IFreak *freak = dynamic_cast<IFreak *>(descriptor.get());
+    Freak *freak = dynamic_cast<Freak *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("FREAK")));
     properties.push_back(std::make_pair(QString("Orientation Normalized"), freak->orientationNormalized() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Scale Normalized"), freak->scaleNormalized() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("PatternScale"), QString::number(freak->patternScale())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(freak->octaves())));
   } else if (descriptor->type() == Feature::Type::hog){
-    IHog *hog = dynamic_cast<IHog *>(descriptor.get());
+    Hog *hog = dynamic_cast<Hog *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("HOG")));
     properties.push_back(std::make_pair(QString("Window Size"), QString::number(hog->winSize().width()).append("x").append(QString::number(hog->winSize().height()))));
     properties.push_back(std::make_pair(QString("Block Size"), QString::number(hog->blockSize().width()).append("x").append(QString::number(hog->blockSize().height()))));
@@ -1169,7 +1177,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Nbins"), QString::number(hog->nbins())));
     properties.push_back(std::make_pair(QString("DerivAperture"), QString::number(hog->derivAperture())));
   } else if (descriptor->type() == Feature::Type::kaze){
-    IKaze *kaze = dynamic_cast<IKaze *>(descriptor.get());
+    Kaze *kaze = dynamic_cast<Kaze *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("KAZE")));
     properties.push_back(std::make_pair(QString("Extended Descriptor"), kaze->extendedDescriptor() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Upright"), kaze->upright() ? "true" : "false"));
@@ -1178,18 +1186,18 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(kaze->octaveLayers())));
     properties.push_back(std::make_pair(QString("Diffusivity"), kaze->diffusivity()));
   } else if (descriptor->type() == Feature::Type::latch){
-    ILatch *latch = dynamic_cast<ILatch *>(descriptor.get());
+    Latch *latch = dynamic_cast<Latch *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("LATCH")));
     properties.push_back(std::make_pair(QString("Bytes"), latch->bytes()));
     properties.push_back(std::make_pair(QString("Rotation Invariance"), latch->rotationInvariance() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Half SSD Size"), QString::number(latch->halfSsdSize())));
   } else if (descriptor->type() == Feature::Type::lucid){
-    ILucid *lucid = dynamic_cast<ILucid *>(descriptor.get());
+    Lucid *lucid = dynamic_cast<Lucid *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("LUCID")));
     properties.push_back(std::make_pair(QString("LUCID Kernel"), QString::number(lucid->lucidKernel())));
     properties.push_back(std::make_pair(QString("Blur Kernel"), QString::number(lucid->blurKernel())));
   } else if (descriptor->type() == Feature::Type::orb){
-    IOrb *orb = dynamic_cast<IOrb *>(descriptor.get());
+    Orb *orb = dynamic_cast<Orb *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("ORB")));
     properties.push_back(std::make_pair(QString("Features Number"), QString::number(orb->featuresNumber())));
     properties.push_back(std::make_pair(QString("Scale Factor"), QString::number(orb->scaleFactor())));
@@ -1200,7 +1208,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Patch Size"), QString::number(orb->patchSize())));
     properties.push_back(std::make_pair(QString("Fast Threshold"), QString::number(orb->fastThreshold())));
   } else if (descriptor->type() == Feature::Type::sift){
-    ISift *sift = dynamic_cast<ISift *>(descriptor.get());
+    Sift *sift = dynamic_cast<Sift *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("SIFT")));
     properties.push_back(std::make_pair(QString("Features Number"), QString::number(sift->featuresNumber())));
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(sift->octaveLayers())));
@@ -1208,7 +1216,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     properties.push_back(std::make_pair(QString("Edge Threshold"), QString::number(sift->edgeThreshold())));
     properties.push_back(std::make_pair(QString("Sigma"), QString::number(sift->sigma())));
   } else if (descriptor->type() == Feature::Type::surf){
-    ISurf *surf = dynamic_cast<ISurf *>(descriptor.get());
+    Surf *surf = dynamic_cast<Surf *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("SURF")));
     properties.push_back(std::make_pair(QString("Hessian Threshold"), QString::number(surf->hessianThreshold())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(surf->octaves())));
@@ -1748,7 +1756,7 @@ bool MainWindowPresenter::loadMatches(const QString &session)
 {
   if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
 
-    std::shared_ptr<Match> match = _session->matcher();
+    std::shared_ptr<MatchingMethod> match = _session->matchingMethod();
 
     QString currentSession = mProjectModel->currentSession()->name();
     if (currentSession.compare(session) == 0){

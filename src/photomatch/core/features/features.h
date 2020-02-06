@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_FEATURES_H
 #define PHOTOMATCH_FEATURES_H
 
@@ -127,14 +151,14 @@ public:
  * Lecture Notes in Computer Science, vol 6312. Springer, Berlin, Heidelberg
  * https://mediatum.ub.tum.de/doc/1287456/1287456.pdf
  */
-class PHOTOMATCH_EXPORT IAgast
+class PHOTOMATCH_EXPORT Agast
   : public Feature
 {
 
 public:
 
-  IAgast() : Feature(Feature::Type::agast) {}
-  virtual ~IAgast() = default;
+  Agast() : Feature(Feature::Type::agast) {}
+  virtual ~Agast() = default;
 
   /*!
    * \brief threshold
@@ -197,14 +221,14 @@ public:
 /*!
  * \brief The IAkaze class
  */
-class PHOTOMATCH_EXPORT IAkaze
+class PHOTOMATCH_EXPORT Akaze
   : public Feature
 {
 
 public:
 
-  IAkaze() : Feature(Feature::Type::akaze) {}
-  virtual ~IAkaze() = default;
+  Akaze() : Feature(Feature::Type::akaze) {}
+  virtual ~Akaze() = default;
 
   /*!
    * \brief Type of the extracted descriptor
@@ -298,14 +322,14 @@ public:
 /*!
  * \brief The Boost class
  */
-class PHOTOMATCH_EXPORT IBoost
+class PHOTOMATCH_EXPORT Boost
   : public Feature
 {
 
 public:
 
-  IBoost() : Feature(Feature::Type::boost){}
-  virtual ~IBoost() = default;
+  Boost() : Feature(Feature::Type::boost){}
+  virtual ~Boost() = default;
 
   /*!
    * \brief Type of descriptor used
@@ -361,14 +385,14 @@ public:
  * Vision–ECCV 2010, pages 778–792. Springer, 2010
  * https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
  */
-class PHOTOMATCH_EXPORT IBrief
+class PHOTOMATCH_EXPORT Brief
   : public Feature
 {
 
 public:
 
-  IBrief() : Feature(Feature::Type::brief) {}
-  virtual ~IBrief() = default;
+  Brief() : Feature(Feature::Type::brief) {}
+  virtual ~Brief() = default;
 
   /*!
    * \brief Legth of the descriptor in bytes
@@ -409,14 +433,14 @@ public:
  * 2548–2555. IEEE, 2011
  * http://margaritachli.com/papers/ICCV2011paper.pdf
  */
-class PHOTOMATCH_EXPORT IBrisk
+class PHOTOMATCH_EXPORT Brisk
   : public Feature
 {
 
 public:
 
-  IBrisk() : Feature(Feature::Type::brisk) {}
-  virtual ~IBrisk() = default;
+  Brisk() : Feature(Feature::Type::brisk) {}
+  virtual ~Brisk() = default;
 
   /*!
    * \brief AGAST detection threshold score (Default=30)
@@ -467,14 +491,14 @@ public:
  * Stereo. IEEE Transactions on Pattern Analysis and Machine
  * Intelligence, 32(5):815–830, May 2010.
  */
-class PHOTOMATCH_EXPORT IDaisy
+class PHOTOMATCH_EXPORT Daisy
   : public Feature
 {
 
 public:
 
-  IDaisy() : Feature(Feature::Type::daisy) {}
-  virtual ~IDaisy() = default;
+  Daisy() : Feature(Feature::Type::daisy) {}
+  virtual ~Daisy() = default;
 
   /*!
    * \brief Radius of the descriptor at the initial scale (Default=15.)
@@ -584,14 +608,14 @@ public:
  * In: Leonardis A., Bischof H., Pinz A. (eds) Computer Vision – ECCV 2006. ECCV 2006.
  * Lecture Notes in Computer Science, vol 3951. Springer, Berlin, Heidelberg
  */
-class PHOTOMATCH_EXPORT IFast
+class PHOTOMATCH_EXPORT Fast
   : public Feature
 {
 
 public:
 
-  IFast() : Feature(Feature::Type::fast) {}
-  virtual ~IFast() = default;
+  Fast() : Feature(Feature::Type::fast) {}
+  virtual ~Fast() = default;
 
   /*!
    * \brief threshold (Default=10)
@@ -649,14 +673,14 @@ public:
  * Freak: Fast retina keypoint. In Computer Vision and Pattern
  * Recognition (CVPR), 2012 IEEE Conference on, pages 510–517. Ieee, 2012.
  */
-class PHOTOMATCH_EXPORT IFreak
+class PHOTOMATCH_EXPORT Freak
   : public Feature
 {
 
 public:
 
-  IFreak() : Feature(Feature::Type::freak) {}
-  virtual ~IFreak() = default;
+  Freak() : Feature(Feature::Type::freak) {}
+  virtual ~Freak() = default;
 
   /*!
    * \brief Orientation normalization (Default=true)
@@ -712,14 +736,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IGftt
+class PHOTOMATCH_EXPORT Gftt
   : public Feature
 {
 
 public:
 
-  IGftt() : Feature(Feature::Type::gftt) {}
-  virtual ~IGftt() = default;
+  Gftt() : Feature(Feature::Type::gftt) {}
+  virtual ~Gftt() = default;
 
   virtual int maxFeatures() const = 0;
   virtual double qualityLevel() const = 0;
@@ -745,14 +769,14 @@ public:
  * \brief HOG (Histogram of Oriented Gradients)
  * Navneet Dalal and Bill Triggs @cite Dalal2005
  */
-class PHOTOMATCH_EXPORT IHog
+class PHOTOMATCH_EXPORT Hog
   : public Feature
 {
 
 public:
 
-  IHog() : Feature(Feature::Type::hog) {}
-  virtual ~IHog() = default;
+  Hog() : Feature(Feature::Type::hog) {}
+  virtual ~Hog() = default;
 
   virtual QSize winSize() const = 0;
   virtual QSize blockSize() const = 0;
@@ -800,14 +824,14 @@ public:
  *
  * https://www.doc.ic.ac.uk/~ajd/Publications/alcantarilla_etal_eccv2012.pdf
  */
-class PHOTOMATCH_EXPORT IKaze
+class PHOTOMATCH_EXPORT Kaze
   : public Feature
 {
 
 public:
 
-  IKaze() : Feature(Feature::Type::kaze) {}
-  virtual ~IKaze() = default;
+  Kaze() : Feature(Feature::Type::kaze) {}
+  virtual ~Kaze() = default;
 
   /*!
    * \brief Extended descriptor
@@ -887,14 +911,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT ILatch
+class PHOTOMATCH_EXPORT Latch
   : public Feature
 {
 
 public:
 
-  ILatch() : Feature(Feature::Type::latch) {}
-  virtual ~ILatch() = default;
+  Latch() : Feature(Feature::Type::latch) {}
+  virtual ~Latch() = default;
 
   virtual QString bytes() const = 0;
   virtual bool rotationInvariance() const = 0;
@@ -915,13 +939,13 @@ public:
  * Eric Christiansen David Kriegman Ziegler, Andrew and Serge J. Belongie.
  * Locally uniform comparison image descriptor
  */
-class PHOTOMATCH_EXPORT ILucid
+class PHOTOMATCH_EXPORT Lucid
   : public Feature
 {
 public:
 
-  ILucid() : Feature(Feature::Type::lucid) {}
-  virtual ~ILucid() = default;
+  Lucid() : Feature(Feature::Type::lucid) {}
+  virtual ~Lucid() = default;
 
   /*!
    * \brief kernel for descriptor construction
@@ -955,14 +979,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT ILss
+class PHOTOMATCH_EXPORT Lss
   : public Feature
 {
 
 public:
 
-  ILss() : Feature(Feature::Type::lss) {}
-  virtual ~ILss() = default;
+  Lss() : Feature(Feature::Type::lss) {}
+  virtual ~Lss() = default;
 
 };
 
@@ -970,14 +994,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IMsd
+class PHOTOMATCH_EXPORT Msd
   : public Feature
 {
 
 public:
 
-  IMsd() : Feature(Feature::Type::msd) {}
-  virtual ~IMsd() = default;
+  Msd() : Feature(Feature::Type::msd) {}
+  virtual ~Msd() = default;
 
   virtual double thresholdSaliency() const = 0;//
   virtual int patchRadius() const = 0;//
@@ -1009,14 +1033,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IMser
+class PHOTOMATCH_EXPORT Mser
   : public Feature
 {
 
 public:
 
-  IMser() : Feature(Feature::Type::mser) {}
-  virtual ~IMser() = default;
+  Mser() : Feature(Feature::Type::mser) {}
+  virtual ~Mser() = default;
 
   virtual int delta() const = 0;
   virtual int minArea() const = 0;
@@ -1047,14 +1071,14 @@ public:
 /*!
  * \brief Interface ORB
  */
-class PHOTOMATCH_EXPORT IOrb
+class PHOTOMATCH_EXPORT Orb
   : public Feature
 {
 
 public:
 
-  IOrb() : Feature(Feature::Type::orb)  {}
-  virtual ~IOrb() = default;
+  Orb() : Feature(Feature::Type::orb)  {}
+  virtual ~Orb() = default;
 
   /*!
    * \brief The maximum number of features to retain
@@ -1180,12 +1204,12 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT ISift
+class PHOTOMATCH_EXPORT Sift
   : public Feature
 {
 public:
-  ISift() : Feature(Feature::Type::sift)  {}
-  virtual ~ISift() = default;
+  Sift() : Feature(Feature::Type::sift)  {}
+  virtual ~Sift() = default;
 
   /*!
    * \brief The number of best features to retain
@@ -1261,14 +1285,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IStar
+class PHOTOMATCH_EXPORT Star
   : public Feature
 {
 
 public:
 
-  IStar() : Feature(Feature::Type::star) {}
-  virtual ~IStar() = default;
+  Star() : Feature(Feature::Type::star) {}
+  virtual ~Star() = default;
 
   virtual int maxSize() const  = 0;
   virtual int responseThreshold() const  = 0;
@@ -1288,13 +1312,13 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT ISurf
+class PHOTOMATCH_EXPORT Surf
   : public Feature
 {
 public:
 
-  ISurf() : Feature(Feature::Type::surf) {}
-  virtual ~ISurf() = default;
+  Surf() : Feature(Feature::Type::surf) {}
+  virtual ~Surf() = default;
 
   /*!
    * \brief Threshold for hessian keypoint detector used in SURF
@@ -1368,13 +1392,13 @@ public:
  * descriptors using convex optimisation. IEEE Transactions on Pattern
  * Analysis and Machine Intelligence, 2014.
  */
-class PHOTOMATCH_EXPORT IVgg
+class PHOTOMATCH_EXPORT Vgg
   : public Feature
 {
 public:
 
-  IVgg() : Feature(Feature::Type::vgg) {}
-  virtual ~IVgg() = default;
+  Vgg() : Feature(Feature::Type::vgg) {}
+  virtual ~Vgg() = default;
 
   /*!
    * \brief Type of descriptor to use
@@ -1417,8 +1441,12 @@ public:
 
 /*----------------------------------------------------------------*/
 
-PHOTOMATCH_EXPORT void featuresWrite(const QString &fname, const std::vector<cv::KeyPoint> &keyPoints, const cv::Mat &descriptors);
-PHOTOMATCH_EXPORT void featuresRead(const QString &fname, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors);
+PHOTOMATCH_EXPORT void featuresWrite(const QString &fname,
+                                     const std::vector<cv::KeyPoint> &keyPoints,
+                                     const cv::Mat &descriptors);
+PHOTOMATCH_EXPORT void featuresRead(const QString &fname,
+                                    std::vector<cv::KeyPoint> &keyPoints,
+                                    cv::Mat &descriptors);
 
 /*----------------------------------------------------------------*/
 

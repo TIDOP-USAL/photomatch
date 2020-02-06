@@ -204,7 +204,7 @@ void DescriptorMatcherView::init()
   QGridLayout *gridLayout = new QGridLayout();
   this->setLayout(gridLayout);
 
-  mDescriptorMatcherWidget = new DescriptorMatcherWidget(this);
+  mDescriptorMatcherWidget = new DescriptorMatcherWidgetImp(this);
   gridLayout->addWidget(mDescriptorMatcherWidget, 0, 0, 1, 2);
 
   mButtonBox = new QDialogButtonBox(this);

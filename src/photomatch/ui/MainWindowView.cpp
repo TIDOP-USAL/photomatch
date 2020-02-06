@@ -58,6 +58,7 @@ MainWindowView::MainWindowView(QWidget *parent)
     mActionViewSettings(new QAction(this)),
     mActionToolSettings(new QAction(this)),
     mActionHelp(new QAction(this)),
+    mActionOnlineHelp(new QAction(this)),
     mActionAbout(new QAction(this)),
     mActionExportTiePoints(new QAction(this)),
     mActionExportMatches(new QAction(this)),
@@ -131,6 +132,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   /* Menú Ayuda */
 
   connect(mActionHelp,               SIGNAL(triggered(bool)),   this,   SIGNAL(openHelpDialog()));
+  connect(mActionOnlineHelp,         SIGNAL(triggered(bool)),   this,   SIGNAL(openOnlineHelp()));
   connect(mActionAbout,              SIGNAL(triggered(bool)),   this,   SIGNAL(openAboutDialog()));
 
   /* Panel de vistas en miniatura */
@@ -1868,6 +1870,13 @@ void MainWindowView::init()
   iconHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionHelp->setIcon(iconHelp);
 
+  mActionOnlineHelp->setText(QApplication::translate("MainWindowView", "Online Help", nullptr));
+#ifndef QT_NO_SHORTCUT
+#endif // QT_NO_SHORTCUT
+  QIcon iconOnlineHelp;
+  iconOnlineHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionOnlineHelp->setIcon(iconOnlineHelp);
+
   mActionAbout->setText(QApplication::translate("MainWindowView", "About", nullptr));
   QIcon iconAbout;
   iconAbout.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_about_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -2064,6 +2073,8 @@ void MainWindowView::init()
   /* Menu Help */
 
   ui->menuHelp->addAction(mActionHelp);
+  ui->menuHelp->addAction(mActionOnlineHelp);
+  ui->menuHelp->addSeparator();
   ui->menuHelp->addAction(mActionAbout);
 
   /* Toolbars */

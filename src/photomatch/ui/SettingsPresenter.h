@@ -17,42 +17,42 @@ class ISettingsModel;
 class HelpDialog;
 
 /* Image preprocess */
-class IAcebsfWidget;
-class IClaheWidget;
-class ICmbfheWidget;
-class IDheWidget;
-class IFaheWidget;
-class IHmclaheWidget;
-class ILceBsescsWidget;
-class IMsrcpWidget;
-class INoshpWidget;
-class IPoheWidget;
-class IRswheWidget;
-class IWallisWidget;
+class AcebsfWidget;
+class ClaheWidget;
+class CmbfheWidget;
+class DheWidget;
+class FaheWidget;
+class HmclaheWidget;
+class LceBsescsWidget;
+class MsrcpWidget;
+class NoshpWidget;
+class PoheWidget;
+class RswheWidget;
+class WallisWidget;
 
 /* Feature detector/extractor */
-class IAgastWidget;
-class IAkazeWidget;
-class IBoostWidget;
-class IBriefWidget;
-class IBriskWidget;
-class IDaisyWidget;
-class IFastWidget;
-class IFreakWidget;
-class IGfttWidget;
-class IHogWidget;
-class IKazeWidget;
-class ILatchWidget;
+class AgastWidget;
+class AkazeWidget;
+class BoostWidget;
+class BriefWidget;
+class BriskWidget;
+class DaisyWidget;
+class FastWidget;
+class FreakWidget;
+class GfttWidget;
+class HogWidget;
+class KazeWidget;
+class LatchWidget;
 //class ILucidWidget;
-class IMsdWidget;
-class IMserWidget;
-class IOrbWidget;
-class ISiftWidget;
-class IStarWidget;
-class ISurfWidget;
-class IVggWidget;
+class MsdWidget;
+class MserWidget;
+class OrbWidget;
+class SiftWidget;
+class StarWidget;
+class SurfWidget;
+class VggWidget;
 
-class IDescriptorMatcherWidget;
+class DescriptorMatcherWidget;
 
 class ISettingsPresenter
   : public IPresenter
@@ -127,50 +127,50 @@ protected:
 
   /* Image preprocess */
 
-  IAcebsfWidget *mACEBSF;
-  IClaheWidget *mCLAHE;
-  ICmbfheWidget *mCMBFHE;
-  IDheWidget *mDHE;
-  IFaheWidget *mFAHE;
-  IHmclaheWidget *mHMCLAHE;
-  ILceBsescsWidget *mLCEBSESCS;
-  IMsrcpWidget *mMSRCP;
-  INoshpWidget *mNOSHP;
-  IPoheWidget *mPOHE;
-  IRswheWidget *mRSWHE;
-  IWallisWidget *mWallis;
+  AcebsfWidget *mACEBSF;
+  ClaheWidget *mCLAHE;
+  CmbfheWidget *mCMBFHE;
+  DheWidget *mDHE;
+  FaheWidget *mFAHE;
+  HmclaheWidget *mHMCLAHE;
+  LceBsescsWidget *mLCEBSESCS;
+  MsrcpWidget *mMSRCP;
+  NoshpWidget *mNOSHP;
+  PoheWidget *mPOHE;
+  RswheWidget *mRSWHE;
+  WallisWidget *mWallis;
 
   /* Feature detector/extractor */
 
-  IAgastWidget *mAgast;
-  IAkazeWidget *mAkaze;
+  AgastWidget *mAgast;
+  AkazeWidget *mAkaze;
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  IBoostWidget *mBoost;
+  BoostWidget *mBoost;
 #endif
-  IBriefWidget *mBrief;
-  IBriskWidget *mBrisk;
-  IDaisyWidget *mDaisy;
-  IFastWidget *mFast;
-  IFreakWidget *mFreak;
-  IGfttWidget *mGftt;
-  IHogWidget *mHog;
-  IKazeWidget *mKaze;
-  ILatchWidget *mLatch;
+  BriefWidget *mBrief;
+  BriskWidget *mBrisk;
+  DaisyWidget *mDaisy;
+  FastWidget *mFast;
+  FreakWidget *mFreak;
+  GfttWidget *mGftt;
+  HogWidget *mHog;
+  KazeWidget *mKaze;
+  LatchWidget *mLatch;
   //ILucidWidget *mLucid;
-  IMsdWidget *mMsd;
-  IMserWidget *mMser;
-  IOrbWidget *mOrb;
+  MsdWidget *mMsd;
+  MserWidget *mMser;
+  OrbWidget *mOrb;
 #ifdef OPENCV_ENABLE_NONFREE
-  ISiftWidget *mSift;
+  SiftWidget *mSift;
 #endif
-  IStarWidget *mStar;
+  StarWidget *mStar;
 #ifdef OPENCV_ENABLE_NONFREE
-  ISurfWidget *mSurf;
+  SurfWidget *mSurf;
 #endif
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  IVggWidget *mVgg;
+  VggWidget *mVgg;
 #endif
-  IDescriptorMatcherWidget *mMatcher;
+  DescriptorMatcherWidget *mMatcher;
 
   std::map<QString, QString> mLang;
 

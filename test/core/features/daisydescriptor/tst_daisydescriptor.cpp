@@ -38,7 +38,6 @@ private slots:
   void test_interpolation();
   void test_useOrientation_data();
   void test_useOrientation();
-  void test_reset();
 
 private:
 
@@ -61,12 +60,35 @@ TestDaisyDescriptor::~TestDaisyDescriptor()
 
 void TestDaisyDescriptor::initTestCase()
 {
-
+  QCOMPARE(15., mDaisyDescriptor->radius());
+  QCOMPARE(3, mDaisyDescriptor->qRadius());
+  QCOMPARE(8, mDaisyDescriptor->qTheta());
+  QCOMPARE(8, mDaisyDescriptor->qHist());
+  QCOMPARE("NRM_NONE", mDaisyDescriptor->norm());
+  QCOMPARE(true, mDaisyDescriptor->interpolation());
+  QCOMPARE(false, mDaisyDescriptor->useOrientation());
 }
 
 void TestDaisyDescriptor::cleanupTestCase()
 {
+  mDaisyDescriptor->setRadius(30.);
+  mDaisyDescriptor->setQRadius(5);
+  mDaisyDescriptor->setQTheta(4);
+  mDaisyDescriptor->setQHist(4);
+  mDaisyDescriptor->setNorm("NRM_FULL");
+  mDaisyDescriptor->setInterpolation(false);
+  mDaisyDescriptor->setUseOrientation(true);
 
+  mDaisyDescriptor->reset();
+
+  /// Check default values
+  QCOMPARE(15., mDaisyDescriptor->radius());
+  QCOMPARE(3, mDaisyDescriptor->qRadius());
+  QCOMPARE(8, mDaisyDescriptor->qTheta());
+  QCOMPARE(8, mDaisyDescriptor->qHist());
+  QCOMPARE("NRM_NONE", mDaisyDescriptor->norm());
+  QCOMPARE(true, mDaisyDescriptor->interpolation());
+  QCOMPARE(false, mDaisyDescriptor->useOrientation());
 }
 
 void TestDaisyDescriptor::test_defaultConstructor()
@@ -246,27 +268,6 @@ void TestDaisyDescriptor::test_useOrientation()
   QCOMPARE(result, mDaisyDescriptor->useOrientation());
 }
 
-void TestDaisyDescriptor::test_reset()
-{
-  mDaisyDescriptor->setRadius(30.);
-  mDaisyDescriptor->setQRadius(5);
-  mDaisyDescriptor->setQTheta(4);
-  mDaisyDescriptor->setQHist(4);
-  mDaisyDescriptor->setNorm("NRM_FULL");
-  mDaisyDescriptor->setInterpolation(false);
-  mDaisyDescriptor->setUseOrientation(true);
-
-  mDaisyDescriptor->reset();
-
-  /// Check default values
-  QCOMPARE(15., mDaisyDescriptor->radius());
-  QCOMPARE(3, mDaisyDescriptor->qRadius());
-  QCOMPARE(8, mDaisyDescriptor->qTheta());
-  QCOMPARE(8, mDaisyDescriptor->qHist());
-  QCOMPARE("NRM_NONE", mDaisyDescriptor->norm());
-  QCOMPARE(true, mDaisyDescriptor->interpolation());
-  QCOMPARE(false, mDaisyDescriptor->useOrientation());
-}
 
 QTEST_APPLESS_MAIN(TestDaisyDescriptor)
 

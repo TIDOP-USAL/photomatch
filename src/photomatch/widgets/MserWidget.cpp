@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "MserWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-MserWidget::MserWidget(QWidget *parent)
-  : IMserWidget (parent),
+MserWidgetImp::MserWidgetImp(QWidget *parent)
+  : MserWidget (parent),
     mDelta(new QSpinBox(this)),
     mMinArea(new QSpinBox(this)),
     mMaxArea(new QSpinBox(this)),
@@ -36,69 +60,69 @@ MserWidget::MserWidget(QWidget *parent)
 
 }
 
-MserWidget::~MserWidget()
+MserWidgetImp::~MserWidgetImp()
 {
 
 }
 
-int MserWidget::delta() const
+int MserWidgetImp::delta() const
 {
   return mDelta->value();
 }
 
-int MserWidget::minArea() const
+int MserWidgetImp::minArea() const
 {
   return mMinArea->value();
 }
 
-int MserWidget::maxArea() const
+int MserWidgetImp::maxArea() const
 {
   return mMaxArea->value();
 }
 
-double MserWidget::maxVariation() const
+double MserWidgetImp::maxVariation() const
 {
   return mMaxVariation->value();
 }
 
-double MserWidget::minDiversity() const
+double MserWidgetImp::minDiversity() const
 {
   return mMinDiversity->value();
 }
 
-int MserWidget::maxEvolution() const
+int MserWidgetImp::maxEvolution() const
 {
   return mMaxEvolution->value();
 }
 
-double MserWidget::areaThreshold() const
+double MserWidgetImp::areaThreshold() const
 {
   return mAreaThreshold->value();
 }
 
-double MserWidget::minMargin() const
+double MserWidgetImp::minMargin() const
 {
   return mMinMargin->value();
 }
 
-int MserWidget::edgeBlurSize() const
+int MserWidgetImp::edgeBlurSize() const
 {
   return mEdgeBlurSize->value();
 }
 
-void MserWidget::setDelta(int delta)
+void MserWidgetImp::setDelta(int delta)
 {
   const QSignalBlocker blockerDelta(mDelta);
   mDelta->setValue(delta);
 }
 
-void MserWidget::setMinArea(int minArea)
+void MserWidgetImp::setMinArea(int minArea)
 {
   const QSignalBlocker blockerMinArea(mMinArea);
   mMinArea->setValue(minArea);
 }
 
-void MserWidget::setMaxArea(int maxArea)
+void MserWidgetImp::setMaxArea(int maxArea)
 {
   const QSignalBlocker blockerMaxArea(mMaxArea);
   //mMinArea->setRange(0, mMaxArea->value() - 1);
@@ -106,54 +130,54 @@ void MserWidget::setMaxArea(int maxArea)
   mMaxArea->setValue(maxArea);
 }
 
-void MserWidget::setMaxVariation(double maxVariation)
+void MserWidgetImp::setMaxVariation(double maxVariation)
 {
   const QSignalBlocker blockerMaxVariation(mMaxVariation);
   mMaxVariation->setValue(maxVariation);
 }
 
-void MserWidget::setMinDiversity(double minDiversity)
+void MserWidgetImp::setMinDiversity(double minDiversity)
 {
   const QSignalBlocker blockerMinDiversity(mMinDiversity);
   mMinDiversity->setValue(minDiversity);
 }
 
-void MserWidget::setMaxEvolution(int maxEvolution)
+void MserWidgetImp::setMaxEvolution(int maxEvolution)
 {
   const QSignalBlocker blockerMaxEvolution(mMaxEvolution);
   mMaxEvolution->setValue(maxEvolution);
 }
 
-void MserWidget::setAreaThreshold(double areaThreshold)
+void MserWidgetImp::setAreaThreshold(double areaThreshold)
 {
   const QSignalBlocker blockerAreaThreshold(mAreaThreshold);
   mAreaThreshold->setValue(areaThreshold);
 }
 
-void MserWidget::setMinMargin(double minMargin)
+void MserWidgetImp::setMinMargin(double minMargin)
 {
   const QSignalBlocker blockerMinMargin(mMinMargin);
   mMinMargin->setValue(minMargin);
 }
 
-void MserWidget::setEdgeBlurSize(int edgeBlurSize)
+void MserWidgetImp::setEdgeBlurSize(int edgeBlurSize)
 {
   const QSignalBlocker blockerEdgeBlurSize(mEdgeBlurSize);
   mEdgeBlurSize->setValue(edgeBlurSize);
 }
 
-void MserWidget::update()
+void MserWidgetImp::update()
 {
   //mMinArea->setRange(0, mMaxArea->value() - 1);
   //mMaxArea->setRange(mMinArea->value() + 1, 100000);
 }
 
-void MserWidget::retranslate()
+void MserWidgetImp::retranslate()
 {
 
 }
 
-void MserWidget::reset()
+void MserWidgetImp::reset()
 {
   const QSignalBlocker blockerDelta(mDelta);
   const QSignalBlocker blockerMinArea(mMinArea);
@@ -176,7 +200,7 @@ void MserWidget::reset()
   mEdgeBlurSize->setValue(5);
 }
 
-void MserWidget::init()
+void MserWidgetImp::init()
 {
   this->setWindowTitle("MSER");
 

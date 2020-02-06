@@ -15,21 +15,21 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_histogramDivisions_data();
   void test_histogramDivisions();
   void test_histogramCut_data();
   void test_histogramCut();
-  void test_reset();
 
 private:
 
-  IRswheWidget *mRswheWidget;
+  RswheWidget *mRswheWidget;
 };
 
 TestRswheWidget::TestRswheWidget()
-  : mRswheWidget(new RswheWidget)
+  : mRswheWidget(new RswheWidgetImp)
 {
 
 }
@@ -42,10 +42,21 @@ TestRswheWidget::~TestRswheWidget()
   }
 }
 
-void TestRswheWidget::test_constructor()
+void TestRswheWidget::initTestCase()
 {
   QCOMPARE(2, mRswheWidget->histogramDivisions());
-  QCOMPARE(IRswheWidget::HistogramCut::by_mean, mRswheWidget->histogramCut());
+  QCOMPARE(RswheWidget::HistogramCut::by_mean, mRswheWidget->histogramCut());
+}
+
+void TestRswheWidget::cleanupTestCase()
+{
+  mRswheWidget->setHistogramDivisions(3);
+  mRswheWidget->setHistogramCut(RswheWidget::HistogramCut::by_median);
+
+  mRswheWidget->reset();
+
+  QCOMPARE(2, mRswheWidget->histogramDivisions());
+  QCOMPARE(RswheWidget::HistogramCut::by_mean, mRswheWidget->histogramCut());
 }
 
 void TestRswheWidget::test_windowTitle()
@@ -74,32 +85,22 @@ void TestRswheWidget::test_histogramDivisions()
 
 void TestRswheWidget::test_histogramCut_data()
 {
-  QTest::addColumn<IRswheWidget::HistogramCut>("value");
-  QTest::addColumn<IRswheWidget::HistogramCut>("result");
+  QTest::addColumn<RswheWidget::HistogramCut>("value");
+  QTest::addColumn<RswheWidget::HistogramCut>("result");
 
-  QTest::newRow("by_mean") << IRswheWidget::HistogramCut::by_mean << IRswheWidget::HistogramCut::by_mean;
-  QTest::newRow("by_median") << IRswheWidget::HistogramCut::by_median << IRswheWidget::HistogramCut::by_median;
+  QTest::newRow("by_mean") << RswheWidget::HistogramCut::by_mean << RswheWidget::HistogramCut::by_mean;
+  QTest::newRow("by_median") << RswheWidget::HistogramCut::by_median << RswheWidget::HistogramCut::by_median;
 }
 
 void TestRswheWidget::test_histogramCut()
 {
-  QFETCH(IRswheWidget::HistogramCut, value);
-  QFETCH(IRswheWidget::HistogramCut, result);
+  QFETCH(RswheWidget::HistogramCut, value);
+  QFETCH(RswheWidget::HistogramCut, result);
 
   mRswheWidget->setHistogramCut(value);
   QCOMPARE(result, mRswheWidget->histogramCut());
 }
 
-void TestRswheWidget::test_reset()
-{
-  mRswheWidget->setHistogramDivisions(3);
-  mRswheWidget->setHistogramCut(IRswheWidget::HistogramCut::by_median);
-
-  mRswheWidget->reset();
-
-  QCOMPARE(2, mRswheWidget->histogramDivisions());
-  QCOMPARE(IRswheWidget::HistogramCut::by_mean, mRswheWidget->histogramCut());
-}
 
 QTEST_MAIN(TestRswheWidget)
 

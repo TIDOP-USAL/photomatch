@@ -61,47 +61,47 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
     mView(view),
     mModel(model),
     mHelp(nullptr),
-    mACEBSF(new AcebsfWidget),
-    mCLAHE(new ClaheWidget),
-    mCMBFHE(new CmbfheWidget),
-    mDHE(new DheWidget),
-    mFAHE(new FaheWidget),
-    mHMCLAHE(new HmclaheWidget),
-    mLCEBSESCS(new LceBsescsWidget),
-    mMSRCP(new MsrcpWidget),
-    mNOSHP(new NoshpWidget),
-    mPOHE(new PoheWidget),
-    mRSWHE(new RswheWidget),
-    mWallis(new WallisWidget),
-    mAgast(new AgastWidget),
-    mAkaze(new AkazeWidget),
+    mACEBSF(new AcebsfWidgetImp),
+    mCLAHE(new ClaheWidgetImp),
+    mCMBFHE(new CmbfheWidgetImp),
+    mDHE(new DheWidgetImp),
+    mFAHE(new FaheWidgetImp),
+    mHMCLAHE(new HmclaheWidgetImp),
+    mLCEBSESCS(new LceBsescsWidgetImp),
+    mMSRCP(new MsrcpWidgetImp),
+    mNOSHP(new NoshpWidgetImp),
+    mPOHE(new PoheWidgetImp),
+    mRSWHE(new RswheWidgetImp),
+    mWallis(new WallisWidgetImp),
+    mAgast(new AgastWidgetImp),
+    mAkaze(new AkazeWidgetImp),
     #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-    mBoost(new BoostWidget),
+    mBoost(new BoostWidgetImp),
     #endif
-    mBrief(new BriefWidget),
-    mBrisk(new BriskWidget),
-    mDaisy(new DaisyWidget),
-    mFast(new FastWidget),
-    mFreak(new FreakWidget),
-    mGftt(new GfttWidget),
-    mHog(new HogWidget),
-    mKaze(new KazeWidget),
-    mLatch(new LatchWidget),
+    mBrief(new BriefWidgetImp),
+    mBrisk(new BriskWidgetImp),
+    mDaisy(new DaisyWidgetImp),
+    mFast(new FastWidgetImp),
+    mFreak(new FreakWidgetImp),
+    mGftt(new GfttWidgetImp),
+    mHog(new HogWidgetImp),
+    mKaze(new KazeWidgetImp),
+    mLatch(new LatchWidgetImp),
     //mLucid(new LucidWidget),
-    mMsd(new MsdWidget),
-    mMser(new MserWidget),
-    mOrb(new OrbWidget),
+    mMsd(new MsdWidgetImp),
+    mMser(new MserWidgetImp),
+    mOrb(new OrbWidgetImp),
 #ifdef OPENCV_ENABLE_NONFREE
-    mSift(new SiftWidget),
+    mSift(new SiftWidgetImp),
 #endif
-    mStar(new StarWidget),
+    mStar(new StarWidgetImp),
 #ifdef OPENCV_ENABLE_NONFREE
-    mSurf(new SurfWidget),
+    mSurf(new SurfWidgetImp),
 #endif
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-    mVgg(new VggWidget),
+    mVgg(new VggWidgetImp),
 #endif
-    mMatcher(new DescriptorMatcherWidget)
+    mMatcher(new DescriptorMatcherWidgetImp)
 {
   init();
 
@@ -321,18 +321,18 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
   connect(mVgg, SIGNAL(useNormalizeDescriptorChange(bool)),   mModel, SLOT(setVggUseScaleOrientation(bool)));
 #endif
 
-  connect(mMatcher, SIGNAL(matchingMethodChange(QString)),   mModel, SLOT(setMatchMethod(QString)));
-  connect(mMatcher, SIGNAL(normTypeChange(QString)),         mModel, SLOT(setMatchNormType(QString)));
-  connect(mMatcher, SIGNAL(ratioChange(double)),             mModel, SLOT(setMatchRatio(double)));
-  connect(mMatcher, SIGNAL(distanceChange(double)),          mModel, SLOT(setMatchDistance(double)));
-  connect(mMatcher, SIGNAL(confidenceChange(double)),        mModel, SLOT(setMatchConfidence(double)));
-  connect(mMatcher, SIGNAL(crossMatchingChange(bool)),       mModel, SLOT(setMatchCrossMatching(bool)));
-  connect(mMatcher, SIGNAL(maxItersChange(int)),             mModel, SLOT(setMatchMaxIters(int)));
-  connect(mMatcher, SIGNAL(geometricTestChange(QString)),    mModel, SLOT(setMatchGeometricTest(QString)));
-  connect(mMatcher, SIGNAL(homographyComputeMethodChange(QString)),  mModel, SLOT(setMatchHomographyComputeMethod(QString)));
-  connect(mMatcher, SIGNAL(fundamentalComputeMethodChange(QString)), mModel, SLOT(setMatchFundamentalComputeMethod(QString)));
-  connect(mMatcher, SIGNAL(essentialComputeMethodChange(QString)),   mModel, SLOT(setMatchEssentialComputeMethod(QString)));
-
+  /* Matching */
+  connect(mMatcher, SIGNAL(matchingMethodChange(QString)),                  mModel, SLOT(setMatchMethod(QString)));
+  connect(mMatcher, SIGNAL(normTypeChange(QString)),                        mModel, SLOT(setMatchNormType(QString)));
+  connect(mMatcher, SIGNAL(ratioChange(double)),                            mModel, SLOT(setMatchRatio(double)));
+  connect(mMatcher, SIGNAL(distanceChange(double)),                         mModel, SLOT(setMatchDistance(double)));
+  connect(mMatcher, SIGNAL(confidenceChange(double)),                       mModel, SLOT(setMatchConfidence(double)));
+  connect(mMatcher, SIGNAL(crossMatchingChange(bool)),                      mModel, SLOT(setMatchCrossMatching(bool)));
+  connect(mMatcher, SIGNAL(maxItersChange(int)),                            mModel, SLOT(setMatchMaxIters(int)));
+  connect(mMatcher, SIGNAL(geometricTestChange(QString)),                   mModel, SLOT(setMatchGeometricTest(QString)));
+  connect(mMatcher, SIGNAL(homographyComputeMethodChange(QString)),         mModel, SLOT(setMatchHomographyComputeMethod(QString)));
+  connect(mMatcher, SIGNAL(fundamentalComputeMethodChange(QString)),        mModel, SLOT(setMatchFundamentalComputeMethod(QString)));
+  connect(mMatcher, SIGNAL(essentialComputeMethodChange(QString)),          mModel, SLOT(setMatchEssentialComputeMethod(QString)));
 
   /* Keypoints Viewer */
   connect(mView, SIGNAL(keypointsViewerBGColorChange(QString)),             mModel, SLOT(setKeypointsViewerBGColor(QString)));
@@ -605,7 +605,7 @@ void SettingsPresenter::open()
 
   mPOHE->setBlockSize(mModel->poheBlockSize());
 
-  mRSWHE->setHistogramCut(static_cast<IRswheWidget::HistogramCut>(mModel->rswheHistogramCut()));
+  mRSWHE->setHistogramCut(static_cast<RswheWidget::HistogramCut>(mModel->rswheHistogramCut()));
   mRSWHE->setHistogramDivisions(mModel->rswheHistogramDivisions());
 
   mWallis->setContrast(mModel->wallisContrast());

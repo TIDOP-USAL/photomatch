@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "AkazeWidget.h"
 
 #include <QSpinBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-AkazeWidget::AkazeWidget(QWidget *parent)
-  : IAkazeWidget(parent),
+AkazeWidgetImp::AkazeWidgetImp(QWidget *parent)
+  : AkazeWidget(parent),
     mDescriptorType(new QComboBox(this)),
     mDescriptorSize(new QSpinBox(this)),
     mDescriptorChannels(new QSpinBox(this)),
@@ -31,99 +55,99 @@ AkazeWidget::AkazeWidget(QWidget *parent)
   connect(mDiffusivity,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(diffusivityChange(QString)));
 }
 
-AkazeWidget::~AkazeWidget()
+AkazeWidgetImp::~AkazeWidgetImp()
 {
 
 }
 
-QString AkazeWidget::descriptorType() const
+QString AkazeWidgetImp::descriptorType() const
 {
   return mDescriptorType->currentText();
 }
 
-int AkazeWidget::descriptorSize() const
+int AkazeWidgetImp::descriptorSize() const
 {
   return mDescriptorSize->value();
 }
 
-int AkazeWidget::descriptorChannels() const
+int AkazeWidgetImp::descriptorChannels() const
 {
   return mDescriptorChannels->value();
 }
 
-double AkazeWidget::threshold() const
+double AkazeWidgetImp::threshold() const
 {
   return mThreshold->value();
 }
 
-int AkazeWidget::octaves() const
+int AkazeWidgetImp::octaves() const
 {
   return mOctaves->value();
 }
 
-int AkazeWidget::octaveLayers() const
+int AkazeWidgetImp::octaveLayers() const
 {
   return mOctaveLayers->value();
 }
 
-QString AkazeWidget::diffusivity() const
+QString AkazeWidgetImp::diffusivity() const
 {
   return mDiffusivity->currentText();
 }
 
-void AkazeWidget::setDescriptorType(const QString &descriptorType)
+void AkazeWidgetImp::setDescriptorType(const QString &descriptorType)
 {
   const QSignalBlocker blockerDescriptorType(mDescriptorType);
   mDescriptorType->setCurrentText(descriptorType);
 }
 
-void AkazeWidget::setDescriptorSize(int descriptorSize)
+void AkazeWidgetImp::setDescriptorSize(int descriptorSize)
 {
   const QSignalBlocker blockerDescriptorSize(mDescriptorSize);
   mDescriptorSize->setValue(descriptorSize);
 }
 
-void AkazeWidget::setDescriptorChannels(int channels)
+void AkazeWidgetImp::setDescriptorChannels(int channels)
 {
   const QSignalBlocker blockerDescriptorChannels(mDescriptorChannels);
   mDescriptorChannels->setValue(channels);
 }
 
-void AkazeWidget::setThreshold(double threshold)
+void AkazeWidgetImp::setThreshold(double threshold)
 {
   const QSignalBlocker blockerThreshold(mThreshold);
   mThreshold->setValue(threshold);
 }
 
-void AkazeWidget::setOctaves(int octaves)
+void AkazeWidgetImp::setOctaves(int octaves)
 {
   const QSignalBlocker blockerOctaves(mOctaves);
   mOctaves->setValue(octaves);
 }
 
-void AkazeWidget::setOctaveLayers(int octaveLayers)
+void AkazeWidgetImp::setOctaveLayers(int octaveLayers)
 {
   const QSignalBlocker blockerOctaveLayers(mOctaveLayers);
   mOctaveLayers->setValue(octaveLayers);
 }
 
-void AkazeWidget::setDiffusivity(const QString &diffusivity)
+void AkazeWidgetImp::setDiffusivity(const QString &diffusivity)
 {
   const QSignalBlocker blockerDiffusivity(mDiffusivity);
   mDiffusivity->setCurrentText(diffusivity);
 }
 
-void AkazeWidget::update()
+void AkazeWidgetImp::update()
 {
 
 }
 
-void AkazeWidget::retranslate()
+void AkazeWidgetImp::retranslate()
 {
 
 }
 
-void AkazeWidget::reset()
+void AkazeWidgetImp::reset()
 {
   const QSignalBlocker blockerDescriptorType(mDescriptorType);
   const QSignalBlocker blockerDescriptorSize(mDescriptorSize);
@@ -142,7 +166,7 @@ void AkazeWidget::reset()
   mDiffusivity->setCurrentText("DIFF_PM_G2");
 }
 
-void AkazeWidget::init()
+void AkazeWidgetImp::init()
 {
   this->setWindowTitle("AKAZE");
 

@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestCmbfheWidgetSignals : public CmbfheWidget
+class TestCmbfheWidgetSignals : public CmbfheWidgetImp
 {
   Q_OBJECT
 
@@ -17,13 +17,14 @@ public:
 
 private slots:
 
-  void testTilesGridSizeChange();
-  void testReset();
+  void initTestCase();
+  void cleanupTestCase();
+  void test_tilesGridSizeChange();
 
 };
 
 TestCmbfheWidgetSignals::TestCmbfheWidgetSignals()
-  : CmbfheWidget()
+  : CmbfheWidgetImp()
 {
 
 }
@@ -33,9 +34,25 @@ TestCmbfheWidgetSignals::~TestCmbfheWidgetSignals()
 
 }
 
-void TestCmbfheWidgetSignals::testTilesGridSizeChange()
+void TestCmbfheWidgetSignals::initTestCase()
 {
-  QSignalSpy spy_blockSizeChange(this, &CmbfheWidget::blockSizeChange);
+
+}
+
+void TestCmbfheWidgetSignals::cleanupTestCase()
+{
+  QSignalSpy spy_blockSizeChange(this, &CmbfheWidgetImp::blockSizeChange);
+
+  this->setBlockSize(QSize(5, 7));
+
+  this->reset();
+
+  QCOMPARE(spy_blockSizeChange.count(), 0);
+}
+
+void TestCmbfheWidgetSignals::test_tilesGridSizeChange()
+{
+  QSignalSpy spy_blockSizeChange(this, &CmbfheWidgetImp::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
 
@@ -48,16 +65,7 @@ void TestCmbfheWidgetSignals::testTilesGridSizeChange()
   QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
-void TestCmbfheWidgetSignals::testReset()
-{
-  QSignalSpy spy_blockSizeChange(this, &CmbfheWidget::blockSizeChange);
 
-  this->setBlockSize(QSize(5, 7));
-
-  this->reset();
-
-  QCOMPARE(spy_blockSizeChange.count(), 0);
-}
 
 QTEST_MAIN(TestCmbfheWidgetSignals)
 

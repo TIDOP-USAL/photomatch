@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_WALLIS_WIDGET_H
 #define PHOTOMATCH_WALLIS_WIDGET_H
 
@@ -9,15 +33,15 @@ class QSpinBox;
 namespace photomatch
 {
 
-class PHOTOMATCH_EXPORT IWallisWidget
+class PHOTOMATCH_EXPORT WallisWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IWallisWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IWallisWidget() = default;
+  WallisWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~WallisWidget() = default;
 
   virtual double contrast() const = 0;
   virtual double brightness() const = 0;
@@ -43,15 +67,15 @@ public slots:
 
 };
 
-class PHOTOMATCH_EXPORT WallisWidget
-  : public IWallisWidget
+class PHOTOMATCH_EXPORT WallisWidgetImp
+  : public WallisWidget
 {
   Q_OBJECT
 
 public:
 
-  WallisWidget(QWidget *parent = nullptr);
-  ~WallisWidget() override;
+  WallisWidgetImp(QWidget *parent = nullptr);
+  ~WallisWidgetImp() override;
 
 // IWallisWidget interface
 

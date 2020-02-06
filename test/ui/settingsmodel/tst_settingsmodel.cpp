@@ -6,7 +6,7 @@ using namespace photomatch;
 
 
 class SettingsRWFake
-  : public ISettingsRW
+  : public SettingsController
 {
 
 protected:
@@ -19,7 +19,7 @@ protected:
 public:
 
   SettingsRWFake()
-    : ISettingsRW()
+    : SettingsController()
   {}
 
   ~SettingsRWFake() override {}
@@ -28,17 +28,17 @@ public:
 
 public:
 
-  void read(ISettings &settings) override
+  void read(Settings &settings) override
   {
     settings.setLanguage(this->data.lang);
   }
 
-  void write(const ISettings &settings) override
+  void write(const Settings &settings) override
   {
     this->data.lang = settings.language();
   }
 
-  void writeHistory(const ISettings &settings) override
+  void writeHistory(const Settings &settings) override
   {
     this->data.history = settings.history();
   }
@@ -273,14 +273,14 @@ private slots:
 
 protected:
 
-  ISettings *mSettings;
-  ISettingsRW *mSettingsRWFake;
+  Settings *mSettings;
+  SettingsController *mSettingsRWFake;
   ISettingsModel *mSettingsModel;
 
 };
 
 TestSettingsModel::TestSettingsModel()
-  : mSettings(new Settings),
+  : mSettings(new SettingsImp),
     mSettingsRWFake(new SettingsRWFake)
 {
   mSettingsModel = new SettingsModel(mSettings, mSettingsRWFake);
@@ -316,7 +316,7 @@ void TestSettingsModel::cleanupTestCase()
 
 void TestSettingsModel::test_defaultValues()
 {
-  Settings settings;
+  SettingsImp settings;
   SettingsRWFake rw;
   SettingsModel settingsModel(&settings, &rw);
 

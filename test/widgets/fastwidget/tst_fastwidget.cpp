@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_threshold_data();
   void test_threshold();
@@ -26,15 +25,14 @@ private slots:
   void test_nonmaxSuppression();
   void test_detectorType_data();
   void test_detectorType();
-  void test_reset();
 
 private:
 
-  IFastWidget *mFastWidget;
+  FastWidget *mFastWidget;
 };
 
 TestFastWidget::TestFastWidget()
-  : mFastWidget(new FastWidget)
+  : mFastWidget(new FastWidgetImp)
 {
 
 }
@@ -49,17 +47,20 @@ TestFastWidget::~TestFastWidget()
 
 void TestFastWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(10, mFastWidget->threshold());
+  QCOMPARE("TYPE_9_16", mFastWidget->detectorType());
+  QCOMPARE(true, mFastWidget->nonmaxSuppression());
 }
 
 void TestFastWidget::cleanupTestCase()
 {
+  mFastWidget->setThreshold(3);
+  mFastWidget->setDetectorType("TYPE_7_12");
+  mFastWidget->setNonmaxSuppression(false);
 
-}
+  mFastWidget->reset();
 
-void TestFastWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(10, mFastWidget->threshold());
   QCOMPARE("TYPE_9_16", mFastWidget->detectorType());
   QCOMPARE(true, mFastWidget->nonmaxSuppression());
@@ -129,18 +130,6 @@ void TestFastWidget::test_detectorType()
   QCOMPARE(result, mFastWidget->detectorType());
 }
 
-void TestFastWidget::test_reset()
-{
-  mFastWidget->setThreshold(3);
-  mFastWidget->setDetectorType("TYPE_7_12");
-  mFastWidget->setNonmaxSuppression(false);
-
-  mFastWidget->reset();
-
-  QCOMPARE(10, mFastWidget->threshold());
-  QCOMPARE("TYPE_9_16", mFastWidget->detectorType());
-  QCOMPARE(true, mFastWidget->nonmaxSuppression());
-}
 
 QTEST_MAIN(TestFastWidget)
 

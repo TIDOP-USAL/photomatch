@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestHmclaheWidgetSignals : public HmclaheWidget
+class TestHmclaheWidgetSignals : public HmclaheWidgetImp
 {
   Q_OBJECT
 
@@ -17,14 +17,15 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_blockSizeChange();
   void test_lChange();
   void test_phiChange();
-  void test_reset();
 };
 
 TestHmclaheWidgetSignals::TestHmclaheWidgetSignals()
-  : HmclaheWidget()
+  : HmclaheWidgetImp()
 {
 
 }
@@ -34,9 +35,31 @@ TestHmclaheWidgetSignals::~TestHmclaheWidgetSignals()
 
 }
 
+void TestHmclaheWidgetSignals::initTestCase()
+{
+
+}
+
+void TestHmclaheWidgetSignals::cleanupTestCase()
+{
+  QSignalSpy spy_blockSizeChange(this, &HmclaheWidgetImp::blockSizeChange);
+  QSignalSpy spy_lChange(this, &HmclaheWidgetImp::lChange);
+  QSignalSpy spy_phiChange(this, &HmclaheWidgetImp::phiChange);
+
+  this->setBlockSize(QSize(5, 7));
+  this->setL(0.5);
+  this->setPhi(.7);
+
+  this->reset();
+
+  QCOMPARE(spy_blockSizeChange.count(), 0);
+  QCOMPARE(spy_lChange.count(), 0);
+  QCOMPARE(spy_phiChange.count(), 0);
+}
+
 void TestHmclaheWidgetSignals::test_blockSizeChange()
 {
-  QSignalSpy spy_blockSizeChange(this, &HmclaheWidget::blockSizeChange);
+  QSignalSpy spy_blockSizeChange(this, &HmclaheWidgetImp::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
 
@@ -51,7 +74,7 @@ void TestHmclaheWidgetSignals::test_blockSizeChange()
 
 void TestHmclaheWidgetSignals::test_lChange()
 {
-  QSignalSpy spy_lChange(this, &HmclaheWidget::lChange);
+  QSignalSpy spy_lChange(this, &HmclaheWidgetImp::lChange);
 
   mL->setValue(0.25);
 
@@ -66,7 +89,7 @@ void TestHmclaheWidgetSignals::test_lChange()
 
 void TestHmclaheWidgetSignals::test_phiChange()
 {
-  QSignalSpy spy_phiChange(this, &HmclaheWidget::phiChange);
+  QSignalSpy spy_phiChange(this, &HmclaheWidgetImp::phiChange);
 
   mPhi->setValue(.4);
 
@@ -79,22 +102,6 @@ void TestHmclaheWidgetSignals::test_phiChange()
   QCOMPARE(spy_phiChange.count(), 0);
 }
 
-void TestHmclaheWidgetSignals::test_reset()
-{
-  QSignalSpy spy_blockSizeChange(this, &HmclaheWidget::blockSizeChange);
-  QSignalSpy spy_lChange(this, &HmclaheWidget::lChange);
-  QSignalSpy spy_phiChange(this, &HmclaheWidget::phiChange);
-
-  this->setBlockSize(QSize(5, 7));
-  this->setL(0.5);
-  this->setPhi(.7);
-
-  this->reset();
-
-  QCOMPARE(spy_blockSizeChange.count(), 0);
-  QCOMPARE(spy_lChange.count(), 0);
-  QCOMPARE(spy_phiChange.count(), 0);
-}
 
 
 QTEST_MAIN(TestHmclaheWidgetSignals)

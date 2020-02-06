@@ -8,7 +8,7 @@
 
 using namespace photomatch;
 
-class TestRswheWidgetSignals : public RswheWidget
+class TestRswheWidgetSignals : public RswheWidgetImp
 {
   Q_OBJECT
 
@@ -18,14 +18,15 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_histogramDivisionsChange();
   void test_histogramCutChange();
-  void test_reset();
 
 };
 
 TestRswheWidgetSignals::TestRswheWidgetSignals()
-  : RswheWidget()
+  : RswheWidgetImp()
 {
 
 }
@@ -35,9 +36,25 @@ TestRswheWidgetSignals::~TestRswheWidgetSignals()
 
 }
 
+void TestRswheWidgetSignals::initTestCase()
+{
+
+}
+
+void TestRswheWidgetSignals::cleanupTestCase()
+{
+  QSignalSpy spy_histogramDivisionsChange(this, &RswheWidgetImp::histogramDivisionsChange);
+
+  this->setHistogramDivisions(5);
+
+  this->reset();
+
+  QCOMPARE(spy_histogramDivisionsChange.count(), 0);
+}
+
 void TestRswheWidgetSignals::test_histogramDivisionsChange()
 {
-  QSignalSpy spy_histogramDivisionsChange(this, &RswheWidget::histogramDivisionsChange);
+  QSignalSpy spy_histogramDivisionsChange(this, &RswheWidgetImp::histogramDivisionsChange);
 
   mHistogramDivisions->setValue(4);
 
@@ -52,7 +69,7 @@ void TestRswheWidgetSignals::test_histogramDivisionsChange()
 
 void TestRswheWidgetSignals::test_histogramCutChange()
 {
-  QSignalSpy spy_histogramCutChange(this, &RswheWidget::histogramCutChange);
+  QSignalSpy spy_histogramCutChange(this, &RswheWidgetImp::histogramCutChange);
 
 //  QTest::mouseClick(mHistogramCutByMedian, Qt::MouseButton::LeftButton);
 
@@ -72,16 +89,6 @@ void TestRswheWidgetSignals::test_histogramCutChange()
 //  QCOMPARE(spy_histogramCutChange.count(), 0);
 }
 
-void TestRswheWidgetSignals::test_reset()
-{
-  QSignalSpy spy_histogramDivisionsChange(this, &RswheWidget::histogramDivisionsChange);
-
-  this->setHistogramDivisions(5);
-
-  this->reset();
-
-  QCOMPARE(spy_histogramDivisionsChange.count(), 0);
-}
 
 QTEST_MAIN(TestRswheWidgetSignals)
 

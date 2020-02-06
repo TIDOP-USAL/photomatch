@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_featuresNumber_data();
   void test_featuresNumber();
@@ -29,15 +28,14 @@ private slots:
   void test_scoreType();
   void test_patchSize();
   void test_fastThreshold();
-  void test_reset();
 
 private:
 
-  IOrbWidget *mOrbWidget;
+  OrbWidget *mOrbWidget;
 };
 
 TestOrbWidget::TestOrbWidget()
-  : mOrbWidget(new OrbWidget())
+  : mOrbWidget(new OrbWidgetImp())
 {
 
 }
@@ -52,16 +50,30 @@ TestOrbWidget::~TestOrbWidget()
 
 void TestOrbWidget::initTestCase()
 {
+  /// Check default values
+  QCOMPARE(5000, mOrbWidget->featuresNumber());
+  QCOMPARE(1.2, mOrbWidget->scaleFactor());
+  QCOMPARE(8, mOrbWidget->levelsNumber());
+  QCOMPARE(31, mOrbWidget->edgeThreshold());
+  QCOMPARE(2, mOrbWidget->wta_k());
+  QCOMPARE("Harris", mOrbWidget->scoreType());
+  QCOMPARE(31, mOrbWidget->patchSize());
+  QCOMPARE(20, mOrbWidget->fastThreshold());
 }
 
 void TestOrbWidget::cleanupTestCase()
 {
+  mOrbWidget->setFeaturesNumber(10000);
+  mOrbWidget->setScaleFactor(1.5);
+  mOrbWidget->setLevelsNumber(4);
+  mOrbWidget->setEdgeThreshold(11);
+  mOrbWidget->setWTA_K(3);
+  mOrbWidget->setScoreType("FAST");
+  mOrbWidget->setPatchSize(3);
+  mOrbWidget->setFastThreshold(3);
 
-}
+  mOrbWidget->reset();
 
-void TestOrbWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(5000, mOrbWidget->featuresNumber());
   QCOMPARE(1.2, mOrbWidget->scaleFactor());
   QCOMPARE(8, mOrbWidget->levelsNumber());
@@ -172,30 +184,6 @@ void TestOrbWidget::test_fastThreshold()
   /// Out of range value
   mOrbWidget->setFastThreshold(120);
   QCOMPARE(100, mOrbWidget->fastThreshold());
-}
-
-void TestOrbWidget::test_reset()
-{
-  mOrbWidget->setFeaturesNumber(10000);
-  mOrbWidget->setScaleFactor(1.5);
-  mOrbWidget->setLevelsNumber(4);
-  mOrbWidget->setEdgeThreshold(11);
-  mOrbWidget->setWTA_K(3);
-  mOrbWidget->setScoreType("FAST");
-  mOrbWidget->setPatchSize(3);
-  mOrbWidget->setFastThreshold(3);
-
-  mOrbWidget->reset();
-
-  QCOMPARE(5000, mOrbWidget->featuresNumber());
-  QCOMPARE(1.2, mOrbWidget->scaleFactor());
-  QCOMPARE(8, mOrbWidget->levelsNumber());
-  QCOMPARE(31, mOrbWidget->edgeThreshold());
-  QCOMPARE(2, mOrbWidget->wta_k());
-  QCOMPARE("Harris", mOrbWidget->scoreType());
-  QCOMPARE(31, mOrbWidget->patchSize());
-  QCOMPARE(20, mOrbWidget->fastThreshold());
-
 }
 
 QTEST_MAIN(TestOrbWidget)

@@ -34,7 +34,6 @@ private slots:
   void test_scoreType();
   void test_patchSize();
   void test_fastThreshold();
-  void test_reset();
 
 };
 
@@ -49,12 +48,45 @@ TestOrbDetectorDescriptor::~TestOrbDetectorDescriptor()
 
 void TestOrbDetectorDescriptor::initTestCase()
 {
-
+  QCOMPARE(5000, this->featuresNumber());
+  QCOMPARE(1.2, this->scaleFactor());
+  QCOMPARE(8, this->levelsNumber());
+  QCOMPARE(31, this->edgeThreshold());
+  QCOMPARE(2, this->wta_k());
+  QCOMPARE("Harris", this->scoreType());
+  QCOMPARE(31, this->patchSize());
+  QCOMPARE(20, this->fastThreshold());
 }
 
 void TestOrbDetectorDescriptor::cleanupTestCase()
 {
+  this->setFeaturesNumber(10000);
+  this->setScaleFactor(1.5);
+  this->setLevelsNumber(4);
+  this->setEdgeThreshold(11);
+  this->setWTA_K(3);
+  this->setScoreType("FAST");
+  this->setPatchSize(3);
+  this->setFastThreshold(3);
 
+  this->reset();
+
+  QCOMPARE(5000, this->featuresNumber());
+  QCOMPARE(5000, this->mOrb->getMaxFeatures());
+  QCOMPARE(1.2, this->scaleFactor());
+  QCOMPARE(1.2, this->mOrb->getScaleFactor());
+  QCOMPARE(8, this->levelsNumber());
+  QCOMPARE(8, this->mOrb->getNLevels());
+  QCOMPARE(31, this->edgeThreshold());
+  QCOMPARE(31, this->mOrb->getEdgeThreshold());
+  QCOMPARE(2, this->wta_k());
+  QCOMPARE(2, this->mOrb->getWTA_K());
+  QCOMPARE("Harris", this->scoreType());
+  QCOMPARE(0, this->mOrb->getScoreType());
+  QCOMPARE(31, this->patchSize());
+  QCOMPARE(31, this->mOrb->getPatchSize());
+  QCOMPARE(20, this->fastThreshold());
+  QCOMPARE(20, this->mOrb->getFastThreshold());
 }
 
 void TestOrbDetectorDescriptor::test_defaultConstructor()
@@ -186,36 +218,6 @@ void TestOrbDetectorDescriptor::test_fastThreshold()
   QCOMPARE(3, this->mOrb->getFastThreshold());
 }
 
-void TestOrbDetectorDescriptor::test_reset()
-{
-  this->setFeaturesNumber(10000);
-  this->setScaleFactor(1.5);
-  this->setLevelsNumber(4);
-  this->setEdgeThreshold(11);
-  this->setWTA_K(3);
-  this->setScoreType("FAST");
-  this->setPatchSize(3);
-  this->setFastThreshold(3);
-
-  this->reset();
-
-  QCOMPARE(5000, this->featuresNumber());
-  QCOMPARE(5000, this->mOrb->getMaxFeatures());
-  QCOMPARE(1.2, this->scaleFactor());
-  QCOMPARE(1.2, this->mOrb->getScaleFactor());
-  QCOMPARE(8, this->levelsNumber());
-  QCOMPARE(8, this->mOrb->getNLevels());
-  QCOMPARE(31, this->edgeThreshold());
-  QCOMPARE(31, this->mOrb->getEdgeThreshold());
-  QCOMPARE(2, this->wta_k());
-  QCOMPARE(2, this->mOrb->getWTA_K());
-  QCOMPARE("Harris", this->scoreType());
-  QCOMPARE(0, this->mOrb->getScoreType());
-  QCOMPARE(31, this->patchSize());
-  QCOMPARE(31, this->mOrb->getPatchSize());
-  QCOMPARE(20, this->fastThreshold());
-  QCOMPARE(20, this->mOrb->getFastThreshold());
-}
 
 QTEST_APPLESS_MAIN(TestOrbDetectorDescriptor)
 

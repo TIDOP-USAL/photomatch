@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "NoshpWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-NoshpWidget::NoshpWidget(QWidget *parent)
-  : INoshpWidget(parent),
+NoshpWidgetImp::NoshpWidgetImp(QWidget *parent)
+  : NoshpWidget(parent),
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
@@ -23,27 +47,27 @@ NoshpWidget::NoshpWidget(QWidget *parent)
 
 }
 
-NoshpWidget::~NoshpWidget()
+NoshpWidgetImp::~NoshpWidgetImp()
 {
 
 }
 
-void NoshpWidget::onBlockSizeXChange(int blockSizeX)
+void NoshpWidgetImp::onBlockSizeXChange(int blockSizeX)
 {
   emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
 }
 
-void NoshpWidget::onBlockSizeYChange(int blockSizeY)
+void NoshpWidgetImp::onBlockSizeYChange(int blockSizeY)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
 }
 
-QSize NoshpWidget::blockSize() const
+QSize NoshpWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-void NoshpWidget::setBlockSize(const QSize &blockSize)
+void NoshpWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerTilesGridX(mBlockSizeX);
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
@@ -52,16 +76,16 @@ void NoshpWidget::setBlockSize(const QSize &blockSize)
 
 }
 
-void NoshpWidget::update()
+void NoshpWidgetImp::update()
 {
 }
 
-void NoshpWidget::retranslate()
+void NoshpWidgetImp::retranslate()
 {
 
 }
 
-void NoshpWidget::reset()
+void NoshpWidgetImp::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -70,7 +94,7 @@ void NoshpWidget::reset()
   mBlockSizeY->setValue(127);
 }
 
-void NoshpWidget::init()
+void NoshpWidgetImp::init()
 {
   this->setWindowTitle("NOSHP");
 

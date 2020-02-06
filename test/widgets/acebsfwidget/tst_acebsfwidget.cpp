@@ -16,7 +16,8 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
@@ -26,16 +27,15 @@ private slots:
   void test_k1();
   void test_k2_data();
   void test_k2();
-  void test_reset();
 
   /// TODO: void test_FocusOrder();
 private:
 
-  IAcebsfWidget *mAcebsfWidget;
+  AcebsfWidget *mAcebsfWidget;
 };
 
 TestAcebsfWidget::TestAcebsfWidget()
-  : mAcebsfWidget(new AcebsfWidget)
+  : mAcebsfWidget(new AcebsfWidgetImp)
 {
 
 }
@@ -48,13 +48,28 @@ TestAcebsfWidget::~TestAcebsfWidget()
   }
 }
 
-void TestAcebsfWidget::test_constructor()
+void TestAcebsfWidget::initTestCase()
 {
-  AcebsfWidget acebsfWidget;
-  QCOMPARE(QSize(8, 8), acebsfWidget.blockSize());
-  QCOMPARE(0.03, acebsfWidget.l());
-  QCOMPARE(10., acebsfWidget.k1());
-  QCOMPARE(0.5, acebsfWidget.k2());
+  QCOMPARE(QSize(8, 8), mAcebsfWidget->blockSize());
+  QCOMPARE(0.03, mAcebsfWidget->l());
+  QCOMPARE(10., mAcebsfWidget->k1());
+  QCOMPARE(0.5, mAcebsfWidget->k2());
+}
+
+void TestAcebsfWidget::cleanupTestCase()
+{
+  mAcebsfWidget->setBlockSize(QSize(5, 5));
+  mAcebsfWidget->setL(0.05);
+  mAcebsfWidget->setK1(5.);
+  mAcebsfWidget->setK2(0.6);
+
+
+  mAcebsfWidget->reset();
+
+  QCOMPARE(QSize(8, 8), mAcebsfWidget->blockSize());
+  QCOMPARE(0.03, mAcebsfWidget->l());
+  QCOMPARE(10., mAcebsfWidget->k1());
+  QCOMPARE(0.5, mAcebsfWidget->k2());
 }
 
 void TestAcebsfWidget::test_windowTitle()
@@ -139,22 +154,6 @@ void TestAcebsfWidget::test_k2()
 
   mAcebsfWidget->setK2(value);
   QCOMPARE(result, mAcebsfWidget->k2());
-}
-
-void TestAcebsfWidget::test_reset()
-{
-  mAcebsfWidget->setBlockSize(QSize(5, 5));
-  mAcebsfWidget->setL(0.05);
-  mAcebsfWidget->setK1(5.);
-  mAcebsfWidget->setK2(0.6);
-
-
-  mAcebsfWidget->reset();
-
-  QCOMPARE(QSize(8, 8), mAcebsfWidget->blockSize());
-  QCOMPARE(0.03, mAcebsfWidget->l());
-  QCOMPARE(10., mAcebsfWidget->k1());
-  QCOMPARE(0.5, mAcebsfWidget->k2());
 }
 
 

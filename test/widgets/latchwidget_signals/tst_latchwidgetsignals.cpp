@@ -9,7 +9,7 @@
 
 using namespace photomatch;
 
-class TestLatchWidgetSignals : public LatchWidget
+class TestLatchWidgetSignals : public LatchWidgetImp
 {
   Q_OBJECT
 
@@ -24,12 +24,11 @@ private slots:
   void test_bytesChange();
   void test_rotationInvarianceChange();
   void test_halfSsdSizeChange();
-  void test_reset();
 
 };
 
 TestLatchWidgetSignals::TestLatchWidgetSignals()
-  : LatchWidget()
+  : LatchWidgetImp()
 {
 
 }
@@ -51,7 +50,7 @@ void TestLatchWidgetSignals::cleanupTestCase()
 
 void TestLatchWidgetSignals::test_bytesChange()
 {
-  QSignalSpy spy_bytesChange(this, &LatchWidget::bytesChange);
+  QSignalSpy spy_bytesChange(this, &LatchWidgetImp::bytesChange);
 
   this->mBytes->setCurrentText("4");
 
@@ -69,7 +68,7 @@ void TestLatchWidgetSignals::test_bytesChange()
 
 void TestLatchWidgetSignals::test_rotationInvarianceChange()
 {
-  QSignalSpy spy_rotationInvarianceChange(this, &LatchWidget::rotationInvarianceChange);
+  QSignalSpy spy_rotationInvarianceChange(this, &LatchWidgetImp::rotationInvarianceChange);
 
   QTest::mouseClick(mRotationInvariance, Qt::MouseButton::LeftButton);
 
@@ -84,7 +83,7 @@ void TestLatchWidgetSignals::test_rotationInvarianceChange()
 
 void TestLatchWidgetSignals::test_halfSsdSizeChange()
 {
-  QSignalSpy spy_halfSsdSizeChange(this, &LatchWidget::halfSsdSizeChange);
+  QSignalSpy spy_halfSsdSizeChange(this, &LatchWidgetImp::halfSsdSizeChange);
 
   this->mHalfSsdSize->setValue(7);
 
@@ -97,10 +96,6 @@ void TestLatchWidgetSignals::test_halfSsdSizeChange()
   QCOMPARE(spy_halfSsdSizeChange.count(), 0);
 }
 
-void TestLatchWidgetSignals::test_reset()
-{
-
-}
 
 QTEST_MAIN(TestLatchWidgetSignals)
 

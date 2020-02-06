@@ -226,6 +226,7 @@ public:
   virtual bool vggUseScaleOrientation() const = 0;
 
   virtual QString matchMethod() const = 0;
+  virtual QString matchStrategy() const = 0;
   virtual QString matchNormType() const = 0;
   virtual double matchRatio() const = 0;
   virtual double matchDistance() const = 0;
@@ -487,6 +488,7 @@ public slots:
   virtual void setVggUseScaleOrientation(bool useScaleOrientation) = 0;
 
   virtual void setMatchMethod(const QString &matchingMethod) = 0;
+  virtual void setMatchStrategy(const QString &matchingMethod) = 0;
   virtual void setMatchNormType(const QString &normType) = 0;
   virtual void setMatchRatio(double ratio) = 0;
   virtual void setMatchDistance(double distance) = 0;
@@ -541,8 +543,8 @@ class SettingsModel
 
 public:
 
-  explicit SettingsModel(ISettings *settings,
-                         ISettingsRW *settingsRW,
+  explicit SettingsModel(Settings *settings,
+                         SettingsController *settingsRW,
                          QObject *parent = nullptr);
   ~SettingsModel() override;
 
@@ -722,6 +724,7 @@ public:
   bool vggUseScaleOrientation() const override;
 
   QString matchMethod() const override;
+  QString matchStrategy() const override;
   QString matchNormType() const override;
   double matchRatio() const override;
   double matchDistance() const override;
@@ -939,6 +942,7 @@ public slots:
   void setVggUseScaleOrientation(bool useScaleOrientation) override;
 
   void setMatchMethod(const QString &matchingMethod) override;
+  void setMatchStrategy(const QString &matchingStrategy) override;
   void setMatchNormType(const QString &normType) override;
   void setMatchRatio(double ratio) override;
   void setMatchDistance(double distance) override;
@@ -983,8 +987,8 @@ private:
 
 protected:
 
-  ISettings *mSettings;
-  ISettingsRW *mSettingsRW;
+  Settings *mSettings;
+  SettingsController *mSettingsRW;
 
 };
 

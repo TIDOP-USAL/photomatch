@@ -18,6 +18,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_defaultConstructor();
   void test_constructor();
   void test_ratio_data();
@@ -38,17 +40,16 @@ private slots:
   void test_confidence();
   void test_maxIter_data();
   void test_maxIter();
-  void test_reset();
 
 private:
 
   std::shared_ptr<DescriptorMatcher> descriptorMatcher;
-  RobustMatchingStrategy *mRobustMatcher;
+  RobustMatchingImp *mRobustMatcher;
 };
 
 TestRobustMatcher::TestRobustMatcher()
-  : descriptorMatcher(new FlannMatcher()),
-    mRobustMatcher(new RobustMatchingStrategy(descriptorMatcher))
+  : descriptorMatcher(new FlannMatcherImp()),
+    mRobustMatcher(new RobustMatchingImp(descriptorMatcher))
 {
 
 }
@@ -61,10 +62,48 @@ TestRobustMatcher::~TestRobustMatcher()
   }
 }
 
+void TestRobustMatcher::initTestCase()
+{
+  QCOMPARE(0.8, mRobustMatcher->ratio());
+  QCOMPARE(true, mRobustMatcher->crossCheck());
+  QCOMPARE(RobustMatchingProperties::GeometricTest::fundamental, mRobustMatcher->geometricTest());
+  QCOMPARE(RobustMatchingProperties::HomographyComputeMethod::ransac, mRobustMatcher->homographyComputeMethod());
+  QCOMPARE(RobustMatchingProperties::FundamentalComputeMethod::ransac, mRobustMatcher->fundamentalComputeMethod());
+  QCOMPARE(RobustMatchingProperties::EssentialComputeMethod::ransac, mRobustMatcher->essentialComputeMethod());
+  QCOMPARE(0.7, mRobustMatcher->distance());
+  QCOMPARE(0.999, mRobustMatcher->confidence());
+  QCOMPARE(2000, mRobustMatcher->maxIter());
+}
+
+void TestRobustMatcher::cleanupTestCase()
+{
+  mRobustMatcher->setRatio(0.5);
+  mRobustMatcher->setCrossCheck(false);
+  mRobustMatcher->setGeometricTest(RobustMatchingProperties::GeometricTest::homography);
+  mRobustMatcher->setHomographyComputeMethod(RobustMatchingProperties::HomographyComputeMethod::rho);
+  mRobustMatcher->setFundamentalComputeMethod(RobustMatchingProperties::FundamentalComputeMethod::lmeds);
+  mRobustMatcher->setEssentialComputeMethod(RobustMatchingProperties::EssentialComputeMethod::lmeds);
+  mRobustMatcher->setDistance(3.);
+  mRobustMatcher->setConfidence(0.995);
+  mRobustMatcher->setMaxIters(3000);
+
+  mRobustMatcher->reset();
+
+  QCOMPARE(0.8, mRobustMatcher->ratio());
+  QCOMPARE(true, mRobustMatcher->crossCheck());
+  QCOMPARE(RobustMatchingProperties::GeometricTest::fundamental, mRobustMatcher->geometricTest());
+  QCOMPARE(RobustMatchingProperties::HomographyComputeMethod::ransac, mRobustMatcher->homographyComputeMethod());
+  QCOMPARE(RobustMatchingProperties::FundamentalComputeMethod::ransac, mRobustMatcher->fundamentalComputeMethod());
+  QCOMPARE(RobustMatchingProperties::EssentialComputeMethod::ransac, mRobustMatcher->essentialComputeMethod());
+  QCOMPARE(0.7, mRobustMatcher->distance());
+  QCOMPARE(0.999, mRobustMatcher->confidence());
+  QCOMPARE(2000, mRobustMatcher->maxIter());
+}
+
 void TestRobustMatcher::test_defaultConstructor()
 {
-  std::shared_ptr<DescriptorMatcher> descriptorMatcher(new FlannMatcher());
-  RobustMatchingStrategy robustMatcher(descriptorMatcher);
+  std::shared_ptr<DescriptorMatcher> descriptorMatcher(new FlannMatcherImp());
+  RobustMatchingImp robustMatcher(descriptorMatcher);
   QCOMPARE(0.8, robustMatcher.ratio());
   QCOMPARE(true, robustMatcher.crossCheck());
   QCOMPARE(RobustMatchingProperties::GeometricTest::fundamental, robustMatcher.geometricTest());
@@ -78,8 +117,8 @@ void TestRobustMatcher::test_defaultConstructor()
 
 void TestRobustMatcher::test_constructor()
 {
-  std::shared_ptr<DescriptorMatcher> descriptorMatcher(new FlannMatcher());
-  RobustMatchingStrategy robustMatcher(descriptorMatcher, 0.9, false,
+  std::shared_ptr<DescriptorMatcher> descriptorMatcher(new FlannMatcherImp());
+  RobustMatchingImp robustMatcher(descriptorMatcher, 0.9, false,
                                RobustMatchingProperties::GeometricTest::fundamental,
                                RobustMatchingProperties::HomographyComputeMethod::lmeds,
                                RobustMatchingProperties::FundamentalComputeMethod::algorithm_7_point,
@@ -266,31 +305,6 @@ void TestRobustMatcher::test_maxIter()
 
   mRobustMatcher->setMaxIters(value);
   QCOMPARE(result, mRobustMatcher->maxIter());
-}
-
-void TestRobustMatcher::test_reset()
-{
-  mRobustMatcher->setRatio(0.5);
-  mRobustMatcher->setCrossCheck(false);
-  mRobustMatcher->setGeometricTest(RobustMatchingProperties::GeometricTest::homography);
-  mRobustMatcher->setHomographyComputeMethod(RobustMatchingProperties::HomographyComputeMethod::rho);
-  mRobustMatcher->setFundamentalComputeMethod(RobustMatchingProperties::FundamentalComputeMethod::lmeds);
-  mRobustMatcher->setEssentialComputeMethod(RobustMatchingProperties::EssentialComputeMethod::lmeds);
-  mRobustMatcher->setDistance(3.);
-  mRobustMatcher->setConfidence(0.995);
-  mRobustMatcher->setMaxIters(3000);
-
-  mRobustMatcher->reset();
-
-  QCOMPARE(0.8, mRobustMatcher->ratio());
-  QCOMPARE(true, mRobustMatcher->crossCheck());
-  QCOMPARE(RobustMatchingProperties::GeometricTest::fundamental, mRobustMatcher->geometricTest());
-  QCOMPARE(RobustMatchingProperties::HomographyComputeMethod::ransac, mRobustMatcher->homographyComputeMethod());
-  QCOMPARE(RobustMatchingProperties::FundamentalComputeMethod::ransac, mRobustMatcher->fundamentalComputeMethod());
-  QCOMPARE(RobustMatchingProperties::EssentialComputeMethod::ransac, mRobustMatcher->essentialComputeMethod());
-  QCOMPARE(0.7, mRobustMatcher->distance());
-  QCOMPARE(0.999, mRobustMatcher->confidence());
-  QCOMPARE(2000, mRobustMatcher->maxIter());
 }
 
 

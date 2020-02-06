@@ -21,11 +21,11 @@ private slots:
 
 private:
 
-  IDecolorWidget *mDecolorWidget;
+  DecolorWidget *mDecolorWidget;
 };
 
 TestDecolorWidget::TestDecolorWidget()
-  : mDecolorWidget(new DecolorWidget)
+  : mDecolorWidget(new DecolorWidgetImp)
 {
 
 }

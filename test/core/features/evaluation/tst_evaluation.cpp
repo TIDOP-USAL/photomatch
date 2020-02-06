@@ -212,7 +212,7 @@ void TestEvaluation::test_roc()
   mROCCurve->compute(10);
 
   //QCOMPARE(0.970221, mROCCurve->auc());
-
+  qFuzzyCompare(0.970221, mROCCurve->auc());
   //std::vector<QPointF> curve = mROCCurve->curve();
 
 
@@ -223,6 +223,7 @@ void TestEvaluation::test_det()
   mDETCurve->compute(10);
 
   //QCOMPARE(0.970221, mDETCurve->auc());
+  qFuzzyCompare(0.970221, mDETCurve->auc());
 }
 
 

@@ -18,6 +18,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
@@ -31,7 +33,6 @@ private slots:
   void testImposedLocalStdDev();
   void testKernelSize_data();
   void testKernelSize();
-  void testReset();
 
 private:
 
@@ -50,6 +51,32 @@ TestWallis::~TestWallis()
     delete mWallisPreprocess;
     mWallisPreprocess = nullptr;
   }
+}
+
+void TestWallis::initTestCase()
+{
+  QCOMPARE(1.0, mWallisPreprocess->contrast());
+  QCOMPARE(0.2, mWallisPreprocess->brightness());
+  QCOMPARE(41, mWallisPreprocess->imposedAverage());
+  QCOMPARE(127, mWallisPreprocess->imposedLocalStdDev());
+  QCOMPARE(50, mWallisPreprocess->kernelSize());
+}
+
+void TestWallis::cleanupTestCase()
+{
+  mWallisPreprocess->setContrast(.5);
+  mWallisPreprocess->setBrightness(0.5);
+  mWallisPreprocess->setImposedAverage(35);
+  mWallisPreprocess->setImposedLocalStdDev(150);
+  mWallisPreprocess->setKernelSize(60);
+
+  mWallisPreprocess->reset();
+
+  QCOMPARE(1.0, mWallisPreprocess->contrast());
+  QCOMPARE(0.2, mWallisPreprocess->brightness());
+  QCOMPARE(41, mWallisPreprocess->imposedAverage());
+  QCOMPARE(127, mWallisPreprocess->imposedLocalStdDev());
+  QCOMPARE(50, mWallisPreprocess->kernelSize());
 }
 
 void TestWallis::test_constructors()
@@ -162,23 +189,6 @@ void TestWallis::testKernelSize()
 
   mWallisPreprocess->setKernelSize(value);
   QCOMPARE(result, mWallisPreprocess->kernelSize());
-}
-
-void TestWallis::testReset()
-{
-  mWallisPreprocess->setContrast(.5);
-  mWallisPreprocess->setBrightness(0.5);
-  mWallisPreprocess->setImposedAverage(35);
-  mWallisPreprocess->setImposedLocalStdDev(150);
-  mWallisPreprocess->setKernelSize(60);
-
-  mWallisPreprocess->reset();
-
-  QCOMPARE(1.0, mWallisPreprocess->contrast());
-  QCOMPARE(0.2, mWallisPreprocess->brightness());
-  QCOMPARE(41, mWallisPreprocess->imposedAverage());
-  QCOMPARE(127, mWallisPreprocess->imposedLocalStdDev());
-  QCOMPARE(50, mWallisPreprocess->kernelSize());
 }
 
 QTEST_MAIN(TestWallis)

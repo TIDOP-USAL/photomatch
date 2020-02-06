@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "FaheWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-FaheWidget::FaheWidget(QWidget *parent)
-  : IFaheWidget(parent),
+FaheWidgetImp::FaheWidgetImp(QWidget *parent)
+  : FaheWidget(parent),
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
@@ -23,27 +47,27 @@ FaheWidget::FaheWidget(QWidget *parent)
 
 }
 
-FaheWidget::~FaheWidget()
+FaheWidgetImp::~FaheWidgetImp()
 {
 
 }
 
-void FaheWidget::onBlockSizeXChange(int blockSizeX)
+void FaheWidgetImp::onBlockSizeXChange(int blockSizeX)
 {
   emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
 }
 
-void FaheWidget::onBlockSizeYChange(int blockSizeY)
+void FaheWidgetImp::onBlockSizeYChange(int blockSizeY)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
 }
 
-QSize FaheWidget::blockSize() const
+QSize FaheWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-void FaheWidget::setBlockSize(const QSize &blockSize)
+void FaheWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerTilesGridX(mBlockSizeX);
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
@@ -52,11 +76,11 @@ void FaheWidget::setBlockSize(const QSize &blockSize)
 
 }
 
-void FaheWidget::update()
+void FaheWidgetImp::update()
 {
 }
 
-void FaheWidget::retranslate()
+void FaheWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
@@ -64,7 +88,7 @@ void FaheWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void FaheWidget::reset()
+void FaheWidgetImp::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -73,7 +97,7 @@ void FaheWidget::reset()
   mBlockSizeY->setValue(11);
 }
 
-void FaheWidget::init()
+void FaheWidgetImp::init()
 {
   this->setWindowTitle("FAHE");
 

@@ -16,7 +16,9 @@ public:
 
 private slots:
 
-  void testConstructor();
+  void initTestCase();
+  void cleanupTestCase();
+  void test_constructor();
   void test_path_data();
   void test_path();
   void test_name_data();
@@ -45,13 +47,22 @@ TestImage::~TestImage()
   }
 }
 
-void TestImage::testConstructor()
+void TestImage::initTestCase()
 {
   QCOMPARE(QString(), mImage->path());
   QCOMPARE(QString(), mImage->name());
   QCOMPARE(0., mImage->longitudeExif());
   QCOMPARE(0., mImage->latitudeExif());
   QCOMPARE(0., mImage->altitudeExif());
+}
+
+void TestImage::cleanupTestCase()
+{
+
+}
+
+void TestImage::test_constructor()
+{
 
   mImage = new Image("C:\\Users\\User01\\Documents\\Graphos\\Projects\\images\\img001.png");
   QCOMPARE(QString("C:\\Users\\User01\\Documents\\Graphos\\Projects\\images\\img001.png"), mImage->path());

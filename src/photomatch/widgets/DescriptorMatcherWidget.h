@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_DESCRIPTOR_MATCHER_WIDGET_H
 #define PHOTOMATCH_DESCRIPTOR_MATCHER_WIDGET_H
 
@@ -13,16 +37,16 @@ class QGroupBox;
 namespace photomatch
 {
 
-class PHOTOMATCH_EXPORT IDescriptorMatcherWidget
+class PHOTOMATCH_EXPORT DescriptorMatcherWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IDescriptorMatcherWidget(QWidget *parent = nullptr)
+  DescriptorMatcherWidget(QWidget *parent = nullptr)
     : PhotoMatchWidget(parent){}
-  virtual ~IDescriptorMatcherWidget() = default;
+  virtual ~DescriptorMatcherWidget() = default;
 
   /*!
    * \brief matchingMethod
@@ -191,16 +215,16 @@ public slots:
   virtual void setGmsThreshold(double threshold) = 0;
 };
 
-class PHOTOMATCH_EXPORT DescriptorMatcherWidget
-  : public IDescriptorMatcherWidget
+class PHOTOMATCH_EXPORT DescriptorMatcherWidgetImp
+  : public DescriptorMatcherWidget
 {
 
   Q_OBJECT
 
 public:
 
-  DescriptorMatcherWidget(QWidget *parent = nullptr);
-  ~DescriptorMatcherWidget() override;
+  DescriptorMatcherWidgetImp(QWidget *parent = nullptr);
+  ~DescriptorMatcherWidgetImp() override;
 
 // IDescriptorMatcherWidget interface
 

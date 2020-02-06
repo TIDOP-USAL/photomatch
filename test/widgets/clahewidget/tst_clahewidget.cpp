@@ -18,21 +18,19 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_clipLimit_data();
   void test_clipLimit();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
-  void test_reset();
 
 private:
 
-  IClaheWidget *mClaheWidget;
+  ClaheWidget *mClaheWidget;
 };
 
 TestClaheWidget::TestClaheWidget()
-  : mClaheWidget(new ClaheWidget)
+  : mClaheWidget(new ClaheWidgetImp)
 {
 
 }
@@ -47,17 +45,18 @@ TestClaheWidget::~TestClaheWidget()
 
 void TestClaheWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(40.0, mClaheWidget->clipLimit());
+  QCOMPARE(QSize(8, 8), mClaheWidget->tileGridSize());
 }
 
 void TestClaheWidget::cleanupTestCase()
 {
+  mClaheWidget->setClipLimit(50.);
+  mClaheWidget->setTilesGridSize(QSize(5, 5));
 
-}
+  mClaheWidget->reset();
 
-void TestClaheWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(40.0, mClaheWidget->clipLimit());
   QCOMPARE(QSize(8, 8), mClaheWidget->tileGridSize());
 }
@@ -107,16 +106,6 @@ void TestClaheWidget::test_tilesGridSize()
   QCOMPARE(result, mClaheWidget->tileGridSize());
 }
 
-void TestClaheWidget::test_reset()
-{
-  mClaheWidget->setClipLimit(50.);
-  mClaheWidget->setTilesGridSize(QSize(5, 5));
-
-  mClaheWidget->reset();
-
-  QCOMPARE(40.0, mClaheWidget->clipLimit());
-  QCOMPARE(QSize(8, 8), mClaheWidget->tileGridSize());
-}
 
 
 QTEST_MAIN(TestClaheWidget)

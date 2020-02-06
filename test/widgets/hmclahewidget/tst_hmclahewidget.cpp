@@ -15,7 +15,8 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
@@ -23,15 +24,14 @@ private slots:
   void test_l();
   void test_phi_data();
   void test_phi();
-  void test_reset();
 
 private:
 
-  IHmclaheWidget *mHmclaheWidget;
+  HmclaheWidget *mHmclaheWidget;
 };
 
 TestHmclaheWidget::TestHmclaheWidget()
-  : mHmclaheWidget(new HmclaheWidget)
+  : mHmclaheWidget(new HmclaheWidgetImp)
 {
 
 }
@@ -44,12 +44,24 @@ TestHmclaheWidget::~TestHmclaheWidget()
   }
 }
 
-void TestHmclaheWidget::test_constructor()
+void TestHmclaheWidget::initTestCase()
 {
-  HmclaheWidget hmclaheWidget;
-  QCOMPARE(QSize(17, 17), hmclaheWidget.blockSize());
-  QCOMPARE(0.03, hmclaheWidget.l());
-  QCOMPARE(0.5, hmclaheWidget.phi());
+  QCOMPARE(QSize(17, 17), mHmclaheWidget->blockSize());
+  QCOMPARE(0.03, mHmclaheWidget->l());
+  QCOMPARE(0.5, mHmclaheWidget->phi());
+}
+
+void TestHmclaheWidget::cleanupTestCase()
+{
+  mHmclaheWidget->setBlockSize(QSize(5, 5));
+  mHmclaheWidget->setL(0.05);
+  mHmclaheWidget->setPhi(.8);
+
+  mHmclaheWidget->reset();
+
+  QCOMPARE(QSize(17, 17), mHmclaheWidget->blockSize());
+  QCOMPARE(0.03, mHmclaheWidget->l());
+  QCOMPARE(0.5, mHmclaheWidget->phi());
 }
 
 void TestHmclaheWidget::test_windowTitle()
@@ -115,19 +127,6 @@ void TestHmclaheWidget::test_phi()
 
   mHmclaheWidget->setPhi(value);
   QCOMPARE(result, mHmclaheWidget->phi());
-}
-
-void TestHmclaheWidget::test_reset()
-{
-  mHmclaheWidget->setBlockSize(QSize(5, 5));
-  mHmclaheWidget->setL(0.05);
-  mHmclaheWidget->setPhi(.8);
-
-  mHmclaheWidget->reset();
-
-  QCOMPARE(QSize(17, 17), mHmclaheWidget->blockSize());
-  QCOMPARE(0.03, mHmclaheWidget->l());
-  QCOMPARE(0.5, mHmclaheWidget->phi());
 }
 
 

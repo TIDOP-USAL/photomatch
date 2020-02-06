@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_CMBFHE_WIDGET_H
 #define PHOTOMATCH_CMBFHE_WIDGET_H
 
@@ -15,15 +39,15 @@ namespace photomatch
  * enhancement technique based on cascaded multistep binomial filtering 
  * histogram equalization," TCE, vol. 52, no. 3, 2006.
  */
-class PHOTOMATCH_EXPORT ICmbfheWidget
+class PHOTOMATCH_EXPORT CmbfheWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  ICmbfheWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~ICmbfheWidget() {}
+  CmbfheWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~CmbfheWidget() {}
 
   virtual QSize blockSize() const = 0;
    
@@ -46,15 +70,15 @@ public slots:
 };
 
 
-class PHOTOMATCH_EXPORT CmbfheWidget
-  : public ICmbfheWidget
+class PHOTOMATCH_EXPORT CmbfheWidgetImp
+  : public CmbfheWidget
 {
   Q_OBJECT
 
 public:
 
-  CmbfheWidget(QWidget *parent = nullptr);
-  ~CmbfheWidget() override;
+  CmbfheWidgetImp(QWidget *parent = nullptr);
+  ~CmbfheWidgetImp() override;
 
 protected slots:
 

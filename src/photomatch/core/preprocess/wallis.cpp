@@ -1,4 +1,30 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "wallis.h"
+
+#include "photomatch/core/utils.h"
 
 #include <tidop/core/messages.h>
 
@@ -12,7 +38,7 @@ namespace photomatch
 
 
 WallisProperties::WallisProperties()
-  : IWallis(),
+  : Wallis(),
     mContrast(1.0),
     mBrightness(0.2),
     mImposedAverage(41),
@@ -120,25 +146,27 @@ WallisPreprocess::~WallisPreprocess()
 
 }
 
+cv::Mat WallisPreprocess::convertToGray32F(const cv::Mat &imageGray)
+{
+  cv::Mat imageGray32F;
+  imageGray.convertTo(imageGray32F, CV_32F);
+  return imageGray32F;
+}
+
 bool WallisPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
 
   try {
-    cv::Mat color_boost;
-    cv::Mat temp;
-    if (imgIn.channels() >= 3) {
-      cv::decolor(imgIn, temp, color_boost);
-      color_boost.release();
-    } else {
-      imgIn.copyTo(temp);
-    }
 
-    temp.convertTo(temp, CV_32F);
+    cv::Mat imageGray = convertToGray(imgIn);
+    cv::Mat imageGray32F = convertToGray32F(imageGray);
+    imageGray.release();
 
     cv::Mat localMean;
-    cv::blur(temp, localMean, cv::Size(WallisProperties::kernelSize(), WallisProperties::kernelSize())); //Easier to compute this way
+    cv::Size kernelSize(WallisProperties::kernelSize(), WallisProperties::kernelSize());
+    cv::blur(imageGray32F, localMean, kernelSize); //Easier to compute this way
     cv::Mat differentialImage;
-    cv::blur(temp.mul(temp), differentialImage, cv::Size(WallisProperties::kernelSize(), WallisProperties::kernelSize()));
+    cv::blur(imageGray32F.mul(imageGray32F), differentialImage, kernelSize);
     cv::Mat localStandardDeviation;
     cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
     differentialImage.release();
@@ -149,8 +177,8 @@ bool WallisPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
     cv::Mat r0 = static_cast<double>(WallisProperties::brightness() * WallisProperties::imposedAverage())
                  + localMean.mul(1. - static_cast<double>(WallisProperties::brightness()) - r1);
     localMean.release();
-    imgOut = temp.mul(r1) + r0;
-    temp.release();
+    imgOut = imageGray32F.mul(r1) + r0;
+    imageGray32F.release();
     r0.release();
     r1.release();
 

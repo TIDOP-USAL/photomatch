@@ -1,4 +1,30 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "cmbfhe.h"
+
+#include "photomatch/core/utils.h"
 
 #include <tidop/core/messages.h>
 
@@ -11,12 +37,12 @@ namespace photomatch
 
 
 CmbfheProperties::CmbfheProperties()
-  : ICmbfhe(),
+  : Cmbfhe(),
     mBlockSize(11,11)
 {}
 
 CmbfheProperties::CmbfheProperties(const CmbfheProperties &cmbfheProperties)
-  : ICmbfhe(),
+  : Cmbfhe(),
     mBlockSize(cmbfheProperties.blockSize())
 {}
 
@@ -70,23 +96,11 @@ CmbfhePreprocess::~CmbfhePreprocess()
 
 bool CmbfhePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
-
   try {
 
-    cv::Mat temp;
-    if (imgIn.channels() >= 3) {
-      cv::Mat color_boost;
-      cv::decolor(imgIn, temp, color_boost);
-      color_boost.release();
-    } else {
-      imgIn.copyTo(temp);
-    }
-
-    pixkit::enhancement::local::LambertiMontrucchioSanna2006(temp, imgOut,
-                                                             cv::Size(CmbfheProperties::blockSize().width(),
-                                                                      CmbfheProperties::blockSize().height()),
+    pixkit::enhancement::local::LambertiMontrucchioSanna2006(convertToGray(imgIn), imgOut,
+                                                             qSizeToCvSize(CmbfheProperties::blockSize()),
                                                              cv::Size(44,44));
-
   } catch (cv::Exception &e) {
     msgError("CMBFHE image preprocess error: %s", e.what());
     return true;

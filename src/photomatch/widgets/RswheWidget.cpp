@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "RswheWidget.h"
 
 #include <QSpinBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-RswheWidget::RswheWidget(QWidget *parent)
-  : IRswheWidget(parent),
+RswheWidgetImp::RswheWidgetImp(QWidget *parent)
+  : RswheWidget(parent),
     mHistogramCut(HistogramCut::by_mean),
     mHistogramDivisions(new QSpinBox(this)),
     mHistogramCutByMean(new QRadioButton(this)),
@@ -27,44 +51,44 @@ RswheWidget::RswheWidget(QWidget *parent)
 
 }
 
-RswheWidget::~RswheWidget()
+RswheWidgetImp::~RswheWidgetImp()
 {
 
 }
 
-void RswheWidget::onHistogramCutByMean()
+void RswheWidgetImp::onHistogramCutByMean()
 {
   emit histogramCutChange(static_cast<int>(HistogramCut::by_mean));
 }
 
-void RswheWidget::onHistogramCutByMedian()
+void RswheWidgetImp::onHistogramCutByMedian()
 {
   emit histogramCutChange(static_cast<int>(HistogramCut::by_median));
 }
 
-int RswheWidget::histogramDivisions() const
+int RswheWidgetImp::histogramDivisions() const
 {
   return mHistogramDivisions->value();
 }
 
-IRswheWidget::HistogramCut RswheWidget::histogramCut() const
+RswheWidget::HistogramCut RswheWidgetImp::histogramCut() const
 {
   return mHistogramCut;
 }
 
-void RswheWidget::setHistogramDivisions(int histogramDivisions)
+void RswheWidgetImp::setHistogramDivisions(int histogramDivisions)
 {
   const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);
   mHistogramDivisions->setValue(histogramDivisions);
 }
 
-void RswheWidget::setHistogramCut(IRswheWidget::HistogramCut histogramCut)
+void RswheWidgetImp::setHistogramCut(RswheWidget::HistogramCut histogramCut)
 {
   mHistogramCut = histogramCut;
   update();
 }
 
-void RswheWidget::update()
+void RswheWidgetImp::update()
 {
   const QSignalBlocker blockerHistogramCutByMean(mHistogramCutByMean);
   const QSignalBlocker blockerHistogramCutByMedian(mHistogramCutByMedian);
@@ -75,12 +99,12 @@ void RswheWidget::update()
   }
 }
 
-void RswheWidget::retranslate()
+void RswheWidgetImp::retranslate()
 {
 
 }
 
-void RswheWidget::reset()
+void RswheWidgetImp::reset()
 {
   const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);
 
@@ -88,7 +112,7 @@ void RswheWidget::reset()
   mHistogramCut = HistogramCut::by_mean;
 }
 
-void RswheWidget::init()
+void RswheWidgetImp::init()
 {
   this->setWindowTitle("RSWHE");
 

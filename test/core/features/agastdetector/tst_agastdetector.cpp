@@ -33,7 +33,6 @@ private slots:
   void test_detectorType();
   void test_detectorType2_data();
   void test_detectorType2();
-  void test_reset();
 
 };
 
@@ -55,7 +54,18 @@ void TestAgastDetector::initTestCase()
 
 void TestAgastDetector::cleanupTestCase()
 {
+  this->setThreshold(3);
+  this->setDetectorType("AGAST_7_12s");
+  this->setNonmaxSuppression(false);
 
+  this->reset();
+
+  QCOMPARE(10, this->threshold());
+  QCOMPARE(10, this->mAgast->getThreshold());
+  QCOMPARE("OAST_9_16", this->detectorType());
+  QCOMPARE(3, this->mAgast->getType());
+  QCOMPARE(true, this->nonmaxSuppression());
+  QCOMPARE(true, this->mAgast->getNonmaxSuppression());
 }
 
 void TestAgastDetector::test_defaultConstructor()
@@ -174,21 +184,6 @@ void TestAgastDetector::test_detectorType2()
 
   this->setDetectorType(value);
   QCOMPARE(result, this->mAgast->getType());
-}
-void TestAgastDetector::test_reset()
-{
-  this->setThreshold(3);
-  this->setDetectorType("AGAST_7_12s");
-  this->setNonmaxSuppression(false);
-
-  this->reset();
-
-  QCOMPARE(10, this->threshold());
-  QCOMPARE(10, this->mAgast->getThreshold());
-  QCOMPARE("OAST_9_16", this->detectorType());
-  QCOMPARE(3, this->mAgast->getType());
-  QCOMPARE(true, this->nonmaxSuppression());
-  QCOMPARE(true, this->mAgast->getNonmaxSuppression());
 }
 
 QTEST_APPLESS_MAIN(TestAgastDetector)

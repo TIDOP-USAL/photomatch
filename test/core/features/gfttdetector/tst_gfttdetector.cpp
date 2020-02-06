@@ -37,7 +37,6 @@ private slots:
   void test_harrisDetector();
   void test_k_data();
   void test_k();
-  void test_reset();
 
 };
 
@@ -54,12 +53,37 @@ TestGfttDetector::~TestGfttDetector()
 
 void TestGfttDetector::initTestCase()
 {
-
+  QCOMPARE(1000, this->maxFeatures());
+  QCOMPARE(0.01, this->qualityLevel());
+  QCOMPARE(1, this->minDistance());
+  QCOMPARE(3, this->blockSize());
+  QCOMPARE(false, this->harrisDetector());
+  QCOMPARE(0.04, this->k());
 }
 
 void TestGfttDetector::cleanupTestCase()
 {
+  this->setMaxFeatures(5000);
+  this->setQualityLevel(0.1);
+  this->setMinDistance(3.);
+  this->setBlockSize(1);
+  this->setHarrisDetector(true);
+  this->setK(0.1);
 
+  this->reset();
+
+  QCOMPARE(1000, this->maxFeatures());
+  QCOMPARE(1000, this->mGFTT->getMaxFeatures());
+  QCOMPARE(0.01, this->qualityLevel());
+  QCOMPARE(0.01, this->mGFTT->getQualityLevel());
+  QCOMPARE(1., this->minDistance());
+  QCOMPARE(1., this->mGFTT->getMinDistance());
+  QCOMPARE(3, this->blockSize());
+  QCOMPARE(3, this->mGFTT->getBlockSize());
+  QCOMPARE(false, this->harrisDetector());
+  QCOMPARE(false, this->mGFTT->getHarrisDetector());
+  QCOMPARE(0.04, this->k());
+  QCOMPARE(0.04, this->mGFTT->getK());
 }
 
 void TestGfttDetector::test_defaultConstructor()
@@ -226,30 +250,6 @@ void TestGfttDetector::test_k()
   QCOMPARE(result, this->mGFTT->getK());
 }
 
-void TestGfttDetector::test_reset()
-{
-  this->setMaxFeatures(5000);
-  this->setQualityLevel(0.1);
-  this->setMinDistance(3.);
-  this->setBlockSize(1);
-  this->setHarrisDetector(true);
-  this->setK(0.1);
-
-  this->reset();
-
-  QCOMPARE(1000, this->maxFeatures());
-  QCOMPARE(1000, this->mGFTT->getMaxFeatures());
-  QCOMPARE(0.01, this->qualityLevel());
-  QCOMPARE(0.01, this->mGFTT->getQualityLevel());
-  QCOMPARE(1., this->minDistance());
-  QCOMPARE(1., this->mGFTT->getMinDistance());
-  QCOMPARE(3, this->blockSize());
-  QCOMPARE(3, this->mGFTT->getBlockSize());
-  QCOMPARE(false, this->harrisDetector());
-  QCOMPARE(false, this->mGFTT->getHarrisDetector());
-  QCOMPARE(0.04, this->k());
-  QCOMPARE(0.04, this->mGFTT->getK());
-}
 
 QTEST_APPLESS_MAIN(TestGfttDetector)
 

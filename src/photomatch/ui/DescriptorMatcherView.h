@@ -8,7 +8,7 @@ class QDialogButtonBox;
 namespace photomatch
 {
 
-class IDescriptorMatcherWidget;
+class DescriptorMatcherWidget;
 
 class IDescriptorMatcherView
   : public IDialogView
@@ -247,7 +247,7 @@ private slots:
 protected:
 
   QDialogButtonBox *mButtonBox;
-  IDescriptorMatcherWidget *mDescriptorMatcherWidget;
+  DescriptorMatcherWidget *mDescriptorMatcherWidget;
 
 };
 

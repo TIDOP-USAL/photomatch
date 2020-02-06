@@ -15,19 +15,19 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_x_data();
   void test_x();
-  void test_reset();
 
 private:
 
-  IDheWidget *mDheWidget;
+  DheWidget *mDheWidget;
 };
 
 TestDheWidget::TestDheWidget()
-  : mDheWidget(new DheWidget)
+  : mDheWidget(new DheWidgetImp)
 {
 
 }
@@ -40,8 +40,17 @@ TestDheWidget::~TestDheWidget()
   }
 }
 
-void TestDheWidget::test_constructor()
+void TestDheWidget::initTestCase()
 {
+  QCOMPARE(1, mDheWidget->x());
+}
+
+void TestDheWidget::cleanupTestCase()
+{
+  mDheWidget->setX(3);
+
+  mDheWidget->reset();
+
   QCOMPARE(1, mDheWidget->x());
 }
 
@@ -69,14 +78,6 @@ void TestDheWidget::test_x()
   QCOMPARE(result, mDheWidget->x());
 }
 
-void TestDheWidget::test_reset()
-{
-  mDheWidget->setX(3);
-
-  mDheWidget->reset();
-
-  QCOMPARE(1, mDheWidget->x());
-}
 
 QTEST_MAIN(TestDheWidget)
 

@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_SESSION_H
 #define PHOTOMATCH_SESSION_H
 
@@ -14,16 +38,16 @@ namespace photomatch
 
 class Preprocess;
 class Feature;
-class Match;
-class IRobustMatcherRefinement;
+class MatchingMethod;
+class MatchingStrategy;
 
-class PHOTOMATCH_EXPORT ISession
+class PHOTOMATCH_EXPORT Session
 {
 
 public:
 
-  ISession(){}
-  virtual ~ISession() = default;
+  Session(){}
+  virtual ~Session() = default;
 
   /*!
    * \brief Devuelve el nombre de la sesión
@@ -83,11 +107,11 @@ public:
   virtual std::shared_ptr<Feature> descriptor() = 0;
   virtual void setDescriptor(const std::shared_ptr<Feature> &descriptor) = 0;
 
-  virtual std::shared_ptr<Match> matcher() = 0;
-  virtual void setMatcher(const std::shared_ptr<Match> &matcher) = 0;
+  virtual std::shared_ptr<MatchingMethod> matchingMethod() = 0;
+  virtual void setMatchingMethod(const std::shared_ptr<MatchingMethod> &matchingMethod) = 0;
 
-  virtual std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement() = 0;
-  virtual void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) = 0;
+  virtual std::shared_ptr<MatchingStrategy> matchingStrategy() = 0;
+  virtual void setMatchingStrategy(const std::shared_ptr<MatchingStrategy> &matchingStrategy) = 0;
 
   virtual void addPreprocessImage(const QString &img) = 0;
   virtual void deletePreprocessImage(const QString &img) = 0;
@@ -119,15 +143,15 @@ public:
 };
 
 
-class PHOTOMATCH_EXPORT Session
-  : public ISession
+class PHOTOMATCH_EXPORT SessionImp
+  : public Session
 {
 
 public:
 
-  Session();
-  Session(const QString &name, const QString &description);
-  ~Session() override = default;
+  SessionImp();
+  SessionImp(const QString &name, const QString &description);
+  ~SessionImp() override = default;
 
 // ISession interface
 
@@ -147,10 +171,10 @@ public:
   void setDetector(const std::shared_ptr<Feature> &detector) override;
   std::shared_ptr<Feature> descriptor() override;
   void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
-  std::shared_ptr<Match> matcher() override;
-  void setMatcher(const std::shared_ptr<Match> &matcher) override;
-  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement() override;
-  void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) override;
+  std::shared_ptr<MatchingMethod> matchingMethod() override;
+  void setMatchingMethod(const std::shared_ptr<MatchingMethod> &matchingMethod) override;
+  std::shared_ptr<MatchingStrategy> matchingStrategy() override;
+  void setMatchingStrategy(const std::shared_ptr<MatchingStrategy> &matchingStrategy) override;
 
   void addPreprocessImage(const QString &img) override;
   void deletePreprocessImage(const QString &img) override;
@@ -184,8 +208,8 @@ protected:
   std::shared_ptr<Preprocess> mPreprocess;
   std::shared_ptr<Feature> mFeatureDetector;
   std::shared_ptr<Feature> mFeatureDescriptor;
-  std::shared_ptr<Match> mMatcher;
-  std::shared_ptr<IRobustMatcherRefinement> mRobustMatcherRefinement;
+  std::shared_ptr<MatchingMethod> mMatchingMethod;
+  std::shared_ptr<MatchingStrategy> mMatchingStrategy;
   std::vector<QString> mPreprocessImages;
   std::vector<QString> mFeatures;
   std::map<QString, std::vector<std::pair<QString, QString>>> mImagesPairs;

@@ -9,7 +9,7 @@
 
 using namespace photomatch;
 
-class TestFastWidgetSignals : public FastWidget
+class TestFastWidgetSignals : public FastWidgetImp
 {
   Q_OBJECT
 
@@ -25,12 +25,11 @@ private slots:
   void test_thresholdChange();
   void test_nonmaxSuppressionChange();
   void test_detectorTypeChange();
-  void test_reset();
 
 };
 
 TestFastWidgetSignals::TestFastWidgetSignals()
-  : FastWidget()
+  : FastWidgetImp()
 {
 
 }
@@ -46,12 +45,24 @@ void TestFastWidgetSignals::initTestCase()
 
 void TestFastWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spyThreshold(this, &FastWidgetImp::thresholdChange);
+  QSignalSpy spyNonmaxSuppressionChange(this, &FastWidgetImp::nonmaxSuppressionChange);
+  QSignalSpy spyDetectorTypeChange(this, &FastWidgetImp::detectorTypeChange);
 
+  this->setThreshold(25);
+  this->setNonmaxSuppression(false);
+  this->setDetectorType("TYPE_5_8");
+
+  this->reset();
+
+  QCOMPARE(spyThreshold.count(), 0);
+  QCOMPARE(spyNonmaxSuppressionChange.count(), 0);
+  QCOMPARE(spyDetectorTypeChange.count(), 0);
 }
 
 void TestFastWidgetSignals::test_thresholdChange()
 {
-  QSignalSpy spyThreshold(this, &FastWidget::thresholdChange);
+  QSignalSpy spyThreshold(this, &FastWidgetImp::thresholdChange);
 
   this->mThreshold->setValue(50);
 
@@ -66,7 +77,7 @@ void TestFastWidgetSignals::test_thresholdChange()
 
 void TestFastWidgetSignals::test_nonmaxSuppressionChange()
 {
-  QSignalSpy spyNonmaxSuppressionChange(this, &FastWidget::nonmaxSuppressionChange);
+  QSignalSpy spyNonmaxSuppressionChange(this, &FastWidgetImp::nonmaxSuppressionChange);
 
   QTest::mouseClick(mNonmaxSuppression, Qt::MouseButton::LeftButton);
 
@@ -81,7 +92,7 @@ void TestFastWidgetSignals::test_nonmaxSuppressionChange()
 
 void TestFastWidgetSignals::test_detectorTypeChange()
 {
-  QSignalSpy spyDetectorTypeChange(this, &FastWidget::detectorTypeChange);
+  QSignalSpy spyDetectorTypeChange(this, &FastWidgetImp::detectorTypeChange);
 
   this->mDetectorType->setCurrentText("TYPE_7_12");
 
@@ -94,23 +105,6 @@ void TestFastWidgetSignals::test_detectorTypeChange()
   QCOMPARE(spyDetectorTypeChange.count(), 0);
 
   this->setDetectorType("TYPE_5_8");
-  QCOMPARE(spyDetectorTypeChange.count(), 0);
-}
-
-void TestFastWidgetSignals::test_reset()
-{
-  QSignalSpy spyThreshold(this, &FastWidget::thresholdChange);
-  QSignalSpy spyNonmaxSuppressionChange(this, &FastWidget::nonmaxSuppressionChange);
-  QSignalSpy spyDetectorTypeChange(this, &FastWidget::detectorTypeChange);
-
-  this->setThreshold(25);
-  this->setNonmaxSuppression(false);
-  this->setDetectorType("TYPE_5_8");
-
-  this->reset();
-
-  QCOMPARE(spyThreshold.count(), 0);
-  QCOMPARE(spyNonmaxSuppressionChange.count(), 0);
   QCOMPARE(spyDetectorTypeChange.count(), 0);
 }
 

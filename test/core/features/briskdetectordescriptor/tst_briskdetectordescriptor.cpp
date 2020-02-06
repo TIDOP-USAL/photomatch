@@ -24,13 +24,12 @@ private slots:
   void test_copy_constructor();
   void test_type();
   void test_name();
-  void testThreshold_data();
-  void testThreshold();
-  void testOctaves_data();
-  void testOctaves();
-  void testPatternScale_data();
-  void testPatternScale();
-  void testReset();
+  void test_threshold_data();
+  void test_threshold();
+  void test_octaves_data();
+  void test_octaves();
+  void test_patternScale_data();
+  void test_patternScale();
 
 private:
 
@@ -51,12 +50,22 @@ TestBriskDetectorDescriptor::~TestBriskDetectorDescriptor()
 
 void TestBriskDetectorDescriptor::initTestCase()
 {
-
+  QCOMPARE(30, mBriskDetectorDescriptor->threshold());
+  QCOMPARE(3, mBriskDetectorDescriptor->octaves());
+  QCOMPARE(1.0, mBriskDetectorDescriptor->patternScale());
 }
 
 void TestBriskDetectorDescriptor::cleanupTestCase()
 {
+  mBriskDetectorDescriptor->setThreshold(50);
+  mBriskDetectorDescriptor->setOctaves(4);
+  mBriskDetectorDescriptor->setPatternScale(2.0);
 
+  mBriskDetectorDescriptor->reset();
+
+  QCOMPARE(30, mBriskDetectorDescriptor->threshold());
+  QCOMPARE(3, mBriskDetectorDescriptor->octaves());
+  QCOMPARE(1.0, mBriskDetectorDescriptor->patternScale());
 }
 
 void TestBriskDetectorDescriptor::test_defaultConstructor()
@@ -94,7 +103,7 @@ void TestBriskDetectorDescriptor::test_name()
   QCOMPARE("BRISK", mBriskDetectorDescriptor->name());
 }
 
-void TestBriskDetectorDescriptor::testThreshold_data()
+void TestBriskDetectorDescriptor::test_threshold_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -105,7 +114,7 @@ void TestBriskDetectorDescriptor::testThreshold_data()
   QTest::newRow("100") << 100 << 100;
 }
 
-void TestBriskDetectorDescriptor::testThreshold()
+void TestBriskDetectorDescriptor::test_threshold()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -114,7 +123,7 @@ void TestBriskDetectorDescriptor::testThreshold()
   QCOMPARE(result, mBriskDetectorDescriptor->threshold());
 }
 
-void TestBriskDetectorDescriptor::testOctaves_data()
+void TestBriskDetectorDescriptor::test_octaves_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -123,7 +132,7 @@ void TestBriskDetectorDescriptor::testOctaves_data()
   QTest::newRow("8") << 8 << 8;
 }
 
-void TestBriskDetectorDescriptor::testOctaves()
+void TestBriskDetectorDescriptor::test_octaves()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -132,7 +141,7 @@ void TestBriskDetectorDescriptor::testOctaves()
   QCOMPARE(result, mBriskDetectorDescriptor->octaves());
 }
 
-void TestBriskDetectorDescriptor::testPatternScale_data()
+void TestBriskDetectorDescriptor::test_patternScale_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -141,7 +150,7 @@ void TestBriskDetectorDescriptor::testPatternScale_data()
   QTest::newRow("8") << 8. << 8.;
 }
 
-void TestBriskDetectorDescriptor::testPatternScale()
+void TestBriskDetectorDescriptor::test_patternScale()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -150,18 +159,6 @@ void TestBriskDetectorDescriptor::testPatternScale()
   QCOMPARE(result, mBriskDetectorDescriptor->patternScale());
 }
 
-void TestBriskDetectorDescriptor::testReset()
-{
-  mBriskDetectorDescriptor->setThreshold(50);
-  mBriskDetectorDescriptor->setOctaves(4);
-  mBriskDetectorDescriptor->setPatternScale(2.0);
-
-  mBriskDetectorDescriptor->reset();
-
-  QCOMPARE(30, mBriskDetectorDescriptor->threshold());
-  QCOMPARE(3, mBriskDetectorDescriptor->octaves());
-  QCOMPARE(1.0, mBriskDetectorDescriptor->patternScale());
-}
 
 
 QTEST_APPLESS_MAIN(TestBriskDetectorDescriptor)

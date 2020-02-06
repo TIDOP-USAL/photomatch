@@ -1,4 +1,30 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "lce_bsescs.h"
+
+#include "photomatch/core/utils.h"
 
 #include <tidop/core/messages.h>
 
@@ -11,7 +37,7 @@ namespace photomatch
 
 
 LceBsescsProperties::LceBsescsProperties()
-  : ILceBsescs(),
+  : LceBsescs(),
     mBlockSize(33, 33)
 {}
 
@@ -66,19 +92,8 @@ bool LceBsescsPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 
   try {
 
-    cv::Mat temp;
-    cv::Mat color_boost;
-    if (imgIn.channels() >= 3) {
-      cv::decolor(imgIn, temp, color_boost);
-      color_boost.release();
-    } else {
-      imgIn.copyTo(temp);
-    }
-
-    pixkit::enhancement::local::LCE_BSESCS2014(temp, imgOut,
-                                               cv::Size(LceBsescsProperties::blockSize().width(),
-                                                        LceBsescsProperties::blockSize().height()));
-    temp.release();
+    pixkit::enhancement::local::LCE_BSESCS2014(convertToGray(imgIn), imgOut,
+                                               qSizeToCvSize(LceBsescsProperties::blockSize()));
 
   } catch (cv::Exception &e) {
     msgError("LCE-BSESCS Image preprocess error: %s", e.what());
