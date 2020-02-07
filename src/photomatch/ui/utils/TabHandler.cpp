@@ -69,7 +69,7 @@ void TabHandler::setImage(const QString &image)
     disconnect(mActionZoomOut,     SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
     disconnect(mActionZoomExtend,  SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
     disconnect(mActionZoom11,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
-    //mGraphicViewer->deleteKeyPoints();
+
     for (auto &item : mGraphicViewer->scene()->items()) {
       KeyPointGraphicsItem *keyPoints = dynamic_cast<KeyPointGraphicsItem *>(item);
       if (keyPoints){
@@ -111,9 +111,6 @@ void TabHandler::setImage(const QString &image)
   connect(mActionZoomExtend,  SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
   connect(mActionZoom11,      SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
 
-//  mFlags.activeFlag(Flag::image_open, true);
-
-//  emit selectImage(file);
   update();
 }
 
@@ -141,13 +138,6 @@ GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
     disconnect(mActionZoomOut,    SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomOut()));
     disconnect(mActionZoomExtend, SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoomExtend()));
     disconnect(mActionZoom11,     SIGNAL(triggered(bool)), mGraphicViewer, SLOT(zoom11()));
-
-//    for (auto &item : mGraphicViewer->scene()->items()) {
-//      QGraphicsEllipseItem *ellipse = dynamic_cast<QGraphicsEllipseItem *>(item);
-//      if (ellipse){
-//        mGraphicViewer->scene()->removeItem(item);
-//      }
-//    }
   }
 
   int id = this->graphicViewerId(name);

@@ -1160,64 +1160,69 @@ void matchesRead(const QString &fname,
                  std::vector<cv::DMatch> *matches,
                  std::vector<cv::DMatch> *wrongMatches)
 {
-  QByteArray ba = fname.toLocal8Bit();
-  const char *feat_file = ba.data();
-  QString ext = QFileInfo(fname).suffix();
-  if (ext.isEmpty() == false) {
-    if (ext.compare("bin") == 0) {
-      if (FILE* fp = std::fopen(feat_file, "rb")) {
-        //cabecera
-        char h[22];
-        uint64_t size;
-        uint64_t size_wm;
-        char extraHead[100];
-        std::fread(h, sizeof(char), 22, fp);
-        std::fread(&size, sizeof(uint64_t), 1, fp);
-        std::fread(&size_wm, sizeof(uint64_t), 1, fp);
-        std::fread(&extraHead, sizeof(char), 100, fp);
-        //Cuerpo
-        if (matches){
-          matches->resize(static_cast<size_t>(size));
-          for (auto &match : *matches) {
-            std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.distance, sizeof(float), 1, fp);
+  try {
+    QByteArray ba = fname.toLocal8Bit();
+    const char *feat_file = ba.data();
+    QString ext = QFileInfo(fname).suffix();
+    if (ext.isEmpty() == false) {
+      if (ext.compare("bin") == 0) {
+        if (FILE* fp = std::fopen(feat_file, "rb")) {
+          //cabecera
+          char h[22];
+          uint64_t size;
+          uint64_t size_wm;
+          char extraHead[100];
+          std::fread(h, sizeof(char), 22, fp);
+          std::fread(&size, sizeof(uint64_t), 1, fp);
+          std::fread(&size_wm, sizeof(uint64_t), 1, fp);
+          std::fread(&extraHead, sizeof(char), 100, fp);
+          //Cuerpo
+          if (matches){
+            matches->resize(static_cast<size_t>(size));
+            for (auto &match : *matches) {
+              std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+              std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+              std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+              std::fread(&match.distance, sizeof(float), 1, fp);
+            }
+          } else {
+            std::fseek(fp, sizeof(int32_t)*3*sizeof(float)*size, SEEK_CUR);
           }
+          if (wrongMatches){
+            wrongMatches->resize(static_cast<size_t>(size_wm));
+            for (auto &match : *wrongMatches) {
+              std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+              std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+              std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+              std::fread(&match.distance, sizeof(float), 1, fp);
+            }
+          }
+
+          std::fclose(fp);
+        } /*else
+          msgError("No pudo leer archivo %s", fname);*/
+      } else if (ext.compare("xml") == 0 || ext.compare("yml") == 0) {
+
+        cv::FileStorage fs(feat_file, cv::FileStorage::READ);
+        if (fs.isOpened()) {
+          if (matches) {
+            matches->resize(0);
+            fs["matches"] >> *matches;
+          }
+          if (wrongMatches) {
+            wrongMatches->resize(0);
+            fs["wrong_matches"] >> *wrongMatches;
+          }
+          fs.release();
         } else {
-          std::fseek(fp, sizeof(int32_t)*3*sizeof(float)*size, SEEK_CUR);
+          //msgError("No pudo leer archivo %s", fname.c_str());
         }
-        if (wrongMatches){
-          wrongMatches->resize(static_cast<size_t>(size_wm));
-          for (auto &match : *wrongMatches) {
-            std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.distance, sizeof(float), 1, fp);
-          }
-        }
-
-        std::fclose(fp);
-      } /*else
-        msgError("No pudo leer archivo %s", fname);*/
-    } else if (ext.compare("xml") == 0 || ext.compare("yml") == 0) {
-
-      cv::FileStorage fs(feat_file, cv::FileStorage::READ);
-      if (fs.isOpened()) {
-        if (matches) {
-          matches->resize(0);
-          fs["matches"] >> *matches;
-        }
-        if (wrongMatches) {
-          wrongMatches->resize(0);
-          fs["wrong_matches"] >> *wrongMatches;
-        }
-        fs.release();
-      } else {
-        //msgError("No pudo leer archivo %s", fname.c_str());
       }
-    }
-  } /*else msgError("Fichero no valido: %s", fname);*/
+    } /*else msgError("Fichero no valido: %s", fname);*/
+  } catch (std::exception &e) {
+    msgError(e.what());
+  }
+
 }
 
 

@@ -303,7 +303,7 @@ protected:
 
   TabHandler *mTabHandler;
   StartPageWidget *mStartPageWidget;
-  //QTextEdit *mConsole;
+
 };
 
 } // namespace photomatch

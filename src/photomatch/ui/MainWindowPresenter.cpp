@@ -587,7 +587,6 @@ void MainWindowPresenter::exit()
 {
   ///TODO: Se cierra la aplicación
   /// - Comprobar que no haya ningún procesos corriendo
-  /// - Si hay cambios sin guardar se debe preguntar
   if(mProjectModel->checkUnsavedChanges()){
     int i_ret = QMessageBox(QMessageBox::Information,
                             tr("Save Changes"),
@@ -742,7 +741,6 @@ void MainWindowPresenter::loadImages()
 
     mProjectModel->addImages(fileNames);
 
-    ///TODO: no pasar las imagenes directamente a la vista
     mView->addImages(fileNames);
 
     msgInfo("Load images");
@@ -861,7 +859,6 @@ void MainWindowPresenter::updateProject()
 
 void MainWindowPresenter::openImage(const QString &image)
 {
-  //mView->showImage(image);
   mTabHandler->setImage(image);
 }
 
@@ -1374,6 +1371,7 @@ void MainWindowPresenter::deletePreprocess()
     for (auto &preprocess : session->preprocessImages()){
       mView->deletePreprocess(session->name(), preprocess);
       QFile::remove(preprocess);
+      mTabHandler->hideTab(mTabHandler->graphicViewerId(preprocess));
     }
 
     mProjectModel->clearPreprocessedImages();
@@ -1414,6 +1412,11 @@ void MainWindowPresenter::deleteMatches()
         for (auto &pair : pairs){
           mView->deleteMatches(session->name(), pair.second);
           QFile::remove(pair.second);
+
+          /// Cierre de ficheros abiertos
+          QString name(session->name());
+          name.append("/").append(QFileInfo(pair.second).baseName());
+          mTabHandler->hideTab(mTabHandler->graphicViewerId(name));
         }
       }
     }
