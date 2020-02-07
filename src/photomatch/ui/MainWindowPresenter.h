@@ -12,10 +12,10 @@ class MainWindowView;
 class MainWindowModel;
 class INewProjectPresenter;
 class IProjectModel;
-class IProjectRW;
-class IProject;
-class ISettings;
-class ISettingsRW;
+class ProjectController;
+class Project;
+class Settings;
+class SettingsController;
 class ISettingsModel;
 class ISettingsPresenter;
 class INewSessionPresenter;
@@ -117,6 +117,7 @@ protected slots:
   void openToolSettings();
 
   /* Menú Ayuda */
+  void openOnlineHelp();
   void openAboutDialog();
 
   /*!
@@ -239,8 +240,8 @@ protected:
   MainWindowView *mView;
   MainWindowModel *mModel;
 
-  IProject *mProject;
-  IProjectRW *mProjectIO;
+  Project *mProject;
+  ProjectController *mProjectIO;
   IProjectModel *mProjectModel;
 
   INewProjectPresenter *mNewProjectPresenter;
@@ -253,8 +254,8 @@ protected:
   IExportMatchesPresenter *mExportMatchesPresenter;
   IExportMatchesModel *mExportMatchesModel;
 
-  ISettings *mSettings;
-  ISettingsRW *mSettingsRW;
+  Settings *mSettings;
+  SettingsController *mSettingsRW;
   ISettingsModel *mSettingsModel;
   ISettingsPresenter *mSettingsPresenter;
 

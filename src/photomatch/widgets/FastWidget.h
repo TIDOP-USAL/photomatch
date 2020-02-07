@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_FAST_WIDGET_H
 #define PHOTOMATCH_FAST_WIDGET_H
 
@@ -14,15 +38,15 @@ namespace photomatch
  * \brief Interface for FAST Widgets class
  *
  */
-class PHOTOMATCH_EXPORT IFastWidget
+class PHOTOMATCH_EXPORT FastWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IFastWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IFastWidget() = default;
+  FastWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~FastWidget() = default;
 
   /*!
    * \brief threshold (Default=10)
@@ -78,16 +102,16 @@ public slots:
 
 };
 
-class PHOTOMATCH_EXPORT FastWidget
-  : public IFastWidget
+class PHOTOMATCH_EXPORT FastWidgetImp
+  : public FastWidget
 {
 
   Q_OBJECT
 
 public:
 
-  FastWidget(QWidget *parent = nullptr);
-  ~FastWidget() override;
+  FastWidgetImp(QWidget *parent = nullptr);
+  ~FastWidgetImp() override;
 
 // IFastWidget interface
 

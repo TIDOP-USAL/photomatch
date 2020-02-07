@@ -11,7 +11,7 @@
 
 using namespace photomatch;
 
-class TestDescriptorMatcherWidgetSignals : public DescriptorMatcherWidget
+class TestDescriptorMatcherWidgetSignals : public DescriptorMatcherWidgetImp
 {
   Q_OBJECT
 
@@ -20,6 +20,7 @@ public:
   ~TestDescriptorMatcherWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_matchingMethodChange();
@@ -40,7 +41,7 @@ private slots:
 };
 
 TestDescriptorMatcherWidgetSignals::TestDescriptorMatcherWidgetSignals()
-  : DescriptorMatcherWidget()
+  : DescriptorMatcherWidgetImp()
 {
 
 }
@@ -57,20 +58,20 @@ void TestDescriptorMatcherWidgetSignals::initTestCase()
 
 void TestDescriptorMatcherWidgetSignals::cleanupTestCase()
 {
-  QSignalSpy spy_detectorMethodChange(this, &DescriptorMatcherWidget::matchingMethodChange);
-  QSignalSpy spy_detectorTypeChange(this, &DescriptorMatcherWidget::normTypeChange);
-  QSignalSpy spy_ratioChange(this, &DescriptorMatcherWidget::ratioChange);
-  QSignalSpy spy_distanceChange(this, &DescriptorMatcherWidget::distanceChange);
-  QSignalSpy spy_confidenceChange(this, &DescriptorMatcherWidget::confidenceChange);
-  QSignalSpy spy_crossMatchingChange(this, &DescriptorMatcherWidget::crossMatchingChange);
-  QSignalSpy spy_geometricTestChange(this, &DescriptorMatcherWidget::geometricTestChange);
-  QSignalSpy spy_homographyComputeMethodChange(this, &DescriptorMatcherWidget::homographyComputeMethodChange);
-  QSignalSpy spy_fundamentalComputeMethodChange(this, &DescriptorMatcherWidget::fundamentalComputeMethodChange);
-  QSignalSpy spy_essentialComputeMethodChange(this, &DescriptorMatcherWidget::essentialComputeMethodChange);
-  QSignalSpy spy_maxItersChange(this, &DescriptorMatcherWidget::maxItersChange);
-  QSignalSpy spy_gmsScaleChange(this, &DescriptorMatcherWidget::gmsScaleChange);
-  QSignalSpy spy_gmsRotationChange(this, &DescriptorMatcherWidget::gmsRotationChange);
-  QSignalSpy spy_gmsThresholdChange(this, &DescriptorMatcherWidget::gmsThresholdChange);
+  QSignalSpy spy_detectorMethodChange(this, &DescriptorMatcherWidgetImp::matchingMethodChange);
+  QSignalSpy spy_detectorTypeChange(this, &DescriptorMatcherWidgetImp::normTypeChange);
+  QSignalSpy spy_ratioChange(this, &DescriptorMatcherWidgetImp::ratioChange);
+  QSignalSpy spy_distanceChange(this, &DescriptorMatcherWidgetImp::distanceChange);
+  QSignalSpy spy_confidenceChange(this, &DescriptorMatcherWidgetImp::confidenceChange);
+  QSignalSpy spy_crossMatchingChange(this, &DescriptorMatcherWidgetImp::crossMatchingChange);
+  QSignalSpy spy_geometricTestChange(this, &DescriptorMatcherWidgetImp::geometricTestChange);
+  QSignalSpy spy_homographyComputeMethodChange(this, &DescriptorMatcherWidgetImp::homographyComputeMethodChange);
+  QSignalSpy spy_fundamentalComputeMethodChange(this, &DescriptorMatcherWidgetImp::fundamentalComputeMethodChange);
+  QSignalSpy spy_essentialComputeMethodChange(this, &DescriptorMatcherWidgetImp::essentialComputeMethodChange);
+  QSignalSpy spy_maxItersChange(this, &DescriptorMatcherWidgetImp::maxItersChange);
+  QSignalSpy spy_gmsScaleChange(this, &DescriptorMatcherWidgetImp::gmsScaleChange);
+  QSignalSpy spy_gmsRotationChange(this, &DescriptorMatcherWidgetImp::gmsRotationChange);
+  QSignalSpy spy_gmsThresholdChange(this, &DescriptorMatcherWidgetImp::gmsThresholdChange);
 
   this->setMatchingMethod("FLANN");
   this->setNormType("NORM_HAMMING");
@@ -107,7 +108,7 @@ void TestDescriptorMatcherWidgetSignals::cleanupTestCase()
 
 void TestDescriptorMatcherWidgetSignals::test_matchingMethodChange()
 {
-  QSignalSpy spy_detectorMethodChange(this, &DescriptorMatcherWidget::matchingMethodChange);
+  QSignalSpy spy_detectorMethodChange(this, &DescriptorMatcherWidgetImp::matchingMethodChange);
 
   this->mMatchingMethod->setCurrentText("FLANN");
 
@@ -129,7 +130,7 @@ void TestDescriptorMatcherWidgetSignals::test_matchingMethodChange()
 
 void TestDescriptorMatcherWidgetSignals::test_normTypeChange()
 {
-  QSignalSpy spy_detectorTypeChange(this, &DescriptorMatcherWidget::normTypeChange);
+  QSignalSpy spy_detectorTypeChange(this, &DescriptorMatcherWidgetImp::normTypeChange);
 
   this->mNormType->setCurrentText("NORM_L2");
 
@@ -147,7 +148,7 @@ void TestDescriptorMatcherWidgetSignals::test_normTypeChange()
 
 void TestDescriptorMatcherWidgetSignals::test_ratioChange()
 {
-  QSignalSpy spy_ratioChange(this, &DescriptorMatcherWidget::ratioChange);
+  QSignalSpy spy_ratioChange(this, &DescriptorMatcherWidgetImp::ratioChange);
 
   this->mRatio->setValue(0.5);
 
@@ -162,7 +163,7 @@ void TestDescriptorMatcherWidgetSignals::test_ratioChange()
 
 void TestDescriptorMatcherWidgetSignals::test_geometricTestChange()
 {
-  QSignalSpy spy_geometricTestChange(this, &DescriptorMatcherWidget::geometricTestChange);
+  QSignalSpy spy_geometricTestChange(this, &DescriptorMatcherWidgetImp::geometricTestChange);
 
   this->mGeometricTest->setCurrentText("Fundamental Matrix");
 
@@ -180,7 +181,7 @@ void TestDescriptorMatcherWidgetSignals::test_geometricTestChange()
 
 void TestDescriptorMatcherWidgetSignals::test_homographyComputeMethodChange()
 {
-  QSignalSpy spy_homographyComputeMethodChange(this, &DescriptorMatcherWidget::homographyComputeMethodChange);
+  QSignalSpy spy_homographyComputeMethodChange(this, &DescriptorMatcherWidgetImp::homographyComputeMethodChange);
 
   this->mHComputeMethod->setCurrentText("All Points");
 
@@ -198,7 +199,7 @@ void TestDescriptorMatcherWidgetSignals::test_homographyComputeMethodChange()
 
 void TestDescriptorMatcherWidgetSignals::test_fundamentalComputeMethodChange()
 {
-  QSignalSpy spy_fundamentalComputeMethodChange(this, &DescriptorMatcherWidget::fundamentalComputeMethodChange);
+  QSignalSpy spy_fundamentalComputeMethodChange(this, &DescriptorMatcherWidgetImp::fundamentalComputeMethodChange);
 
   this->mFComputeMethod->setCurrentText("7-point algorithm");
 
@@ -216,7 +217,7 @@ void TestDescriptorMatcherWidgetSignals::test_fundamentalComputeMethodChange()
 
 void TestDescriptorMatcherWidgetSignals::test_essentialComputeMethodChange()
 {
-  QSignalSpy spy_essentialComputeMethodChange(this, &DescriptorMatcherWidget::essentialComputeMethodChange);
+  QSignalSpy spy_essentialComputeMethodChange(this, &DescriptorMatcherWidgetImp::essentialComputeMethodChange);
 
   this->mEComputeMethod->setCurrentText("LMedS");
 
@@ -234,7 +235,7 @@ void TestDescriptorMatcherWidgetSignals::test_essentialComputeMethodChange()
 
 void TestDescriptorMatcherWidgetSignals::test_distanceChange()
 {
-  QSignalSpy spy_distanceChange(this, &DescriptorMatcherWidget::distanceChange);
+  QSignalSpy spy_distanceChange(this, &DescriptorMatcherWidgetImp::distanceChange);
 
   this->mDistance->setValue(0.5);
 
@@ -249,7 +250,7 @@ void TestDescriptorMatcherWidgetSignals::test_distanceChange()
 
 void TestDescriptorMatcherWidgetSignals::test_confidenceChange()
 {
-  QSignalSpy spy_confidenceChange(this, &DescriptorMatcherWidget::confidenceChange);
+  QSignalSpy spy_confidenceChange(this, &DescriptorMatcherWidgetImp::confidenceChange);
 
   this->mConfidence->setValue(0.5);
 
@@ -264,7 +265,7 @@ void TestDescriptorMatcherWidgetSignals::test_confidenceChange()
 
 void TestDescriptorMatcherWidgetSignals::test_crossMatchingChange()
 {
-  QSignalSpy spy_crossMatchingChange(this, &DescriptorMatcherWidget::crossMatchingChange);
+  QSignalSpy spy_crossMatchingChange(this, &DescriptorMatcherWidgetImp::crossMatchingChange);
 
   QTest::mouseClick(mCrossMatching, Qt::MouseButton::LeftButton);
 
@@ -279,7 +280,7 @@ void TestDescriptorMatcherWidgetSignals::test_crossMatchingChange()
 
 void TestDescriptorMatcherWidgetSignals::test_maxItersChange()
 {
-  QSignalSpy spy_maxItersChange(this, &DescriptorMatcherWidget::maxItersChange);
+  QSignalSpy spy_maxItersChange(this, &DescriptorMatcherWidgetImp::maxItersChange);
 
   this->mMaxIters->setValue(5000);
 
@@ -384,7 +385,7 @@ void TestDescriptorMatcherWidgetSignals::test_update()
 
 void TestDescriptorMatcherWidgetSignals::test_gmsRotationChange()
 {
-  QSignalSpy spy_gmsRotationChange(this, &DescriptorMatcherWidget::gmsRotationChange);
+  QSignalSpy spy_gmsRotationChange(this, &DescriptorMatcherWidgetImp::gmsRotationChange);
 
   QTest::mouseClick(mRotationGMS, Qt::MouseButton::LeftButton);
 
@@ -399,7 +400,7 @@ void TestDescriptorMatcherWidgetSignals::test_gmsRotationChange()
 
 void TestDescriptorMatcherWidgetSignals::test_gmsScaleChange()
 {
-  QSignalSpy spy_gmsScaleChange(this, &DescriptorMatcherWidget::gmsScaleChange);
+  QSignalSpy spy_gmsScaleChange(this, &DescriptorMatcherWidgetImp::gmsScaleChange);
 
   QTest::mouseClick(mScaleGMS, Qt::MouseButton::LeftButton);
 
@@ -414,7 +415,7 @@ void TestDescriptorMatcherWidgetSignals::test_gmsScaleChange()
 
 void TestDescriptorMatcherWidgetSignals::test_gmsThresholdChange()
 {
-  QSignalSpy spy_gmsThresholdChange(this, &DescriptorMatcherWidget::gmsThresholdChange);
+  QSignalSpy spy_gmsThresholdChange(this, &DescriptorMatcherWidgetImp::gmsThresholdChange);
 
   this->mThresholdGMS->setValue(5.0);
 

@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "GfttWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-GfttWidget::GfttWidget(QWidget *parent)
-  : IGfttWidget(parent),
+GfttWidgetImp::GfttWidgetImp(QWidget *parent)
+  : GfttWidget(parent),
     mMaxFeatures(new QSpinBox(this)),
     mQualityLevel(new QDoubleSpinBox(this)),
     mMinDistance(new QDoubleSpinBox(this)),
@@ -30,86 +54,86 @@ GfttWidget::GfttWidget(QWidget *parent)
   connect(mK,                 SIGNAL(valueChanged(double)),   this, SIGNAL(kChange(double)));
 }
 
-GfttWidget::~GfttWidget()
+GfttWidgetImp::~GfttWidgetImp()
 {
 
 }
 
-int GfttWidget::maxFeatures() const
+int GfttWidgetImp::maxFeatures() const
 {
   return mMaxFeatures->value();
 }
 
-double GfttWidget::qualityLevel() const
+double GfttWidgetImp::qualityLevel() const
 {
   return mQualityLevel->value();
 }
 
-double GfttWidget::minDistance() const
+double GfttWidgetImp::minDistance() const
 {
   return mMinDistance->value();
 }
 
-int GfttWidget::blockSize() const
+int GfttWidgetImp::blockSize() const
 {
   return mBlockSize->value();
 }
 
-bool GfttWidget::harrisDetector() const
+bool GfttWidgetImp::harrisDetector() const
 {
   return mHarrisDetector->isChecked();
 }
 
-double GfttWidget::k() const
+double GfttWidgetImp::k() const
 {
   return mK->value();
 }
 
-void GfttWidget::setMaxFeatures(int maxFeatures)
+void GfttWidgetImp::setMaxFeatures(int maxFeatures)
 {
   const QSignalBlocker blocker(mMaxFeatures);
   mMaxFeatures->setValue(maxFeatures);
 }
 
-void GfttWidget::setQualityLevel(double qlevel)
+void GfttWidgetImp::setQualityLevel(double qlevel)
 {
   const QSignalBlocker blocker(mQualityLevel);
   mQualityLevel->setValue(qlevel);
 }
 
-void GfttWidget::setMinDistance(double minDistance)
+void GfttWidgetImp::setMinDistance(double minDistance)
 {
   const QSignalBlocker blocker(mMinDistance);
   mMinDistance->setValue(minDistance);
 }
 
-void GfttWidget::setBlockSize(int blockSize)
+void GfttWidgetImp::setBlockSize(int blockSize)
 {
   const QSignalBlocker blocker(mBlockSize);
   mBlockSize->setValue(blockSize);
 }
 
-void GfttWidget::setHarrisDetector(bool value)
+void GfttWidgetImp::setHarrisDetector(bool value)
 {
   mHarrisDetector->setChecked(value);
 }
 
-void GfttWidget::setK(double k)
+void GfttWidgetImp::setK(double k)
 {
   const QSignalBlocker blocker(mK);
   mK->setValue(k);
 }
 
-void GfttWidget::update()
+void GfttWidgetImp::update()
 {
 }
 
-void GfttWidget::retranslate()
+void GfttWidgetImp::retranslate()
 {
 
 }
 
-void GfttWidget::reset()
+void GfttWidgetImp::reset()
 {
   const QSignalBlocker blocker1(mMaxFeatures);
   const QSignalBlocker blocker2(mQualityLevel);
@@ -125,7 +149,7 @@ void GfttWidget::reset()
   mK->setValue(0.04);
 }
 
-void GfttWidget::init()
+void GfttWidgetImp::init()
 {
   this->setWindowTitle("GFTT");
 

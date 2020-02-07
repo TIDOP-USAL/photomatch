@@ -5,7 +5,7 @@
 namespace photomatch
 {
 
-ProjectModel::ProjectModel(IProjectRW *projectIO, IProject *project, QObject *parent)
+ProjectModel::ProjectModel(ProjectController *projectIO, Project *project, QObject *parent)
   : IProjectModel(parent),
     mProjectIO(projectIO),
     mProject(project),
@@ -106,12 +106,12 @@ size_t ProjectModel::findImageId(const QString &path) const
   return mProject->findImageId(path);
 }
 
-IProject::image_const_iterator ProjectModel::imageBegin() const
+Project::image_const_iterator ProjectModel::imageBegin() const
 {
   return mProject->imageBegin();
 }
 
-IProject::image_const_iterator ProjectModel::imageEnd() const
+Project::image_const_iterator ProjectModel::imageEnd() const
 {
   return mProject->imageEnd();
 }
@@ -165,12 +165,12 @@ size_t ProjectModel::findSessionId(const QString &sessionName) const
   return mProject->findSessionId(sessionName);
 }
 
-IProject::session_const_iterator ProjectModel::sessionBegin() const
+Project::session_const_iterator ProjectModel::sessionBegin() const
 {
   return mProject->sessionBegin();
 }
 
-IProject::session_const_iterator ProjectModel::sessionEnd() const
+Project::session_const_iterator ProjectModel::sessionEnd() const
 {
   return mProject->sessionEnd();
 }
@@ -227,21 +227,21 @@ void ProjectModel::deleteDescriptor()
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setMatcher(const std::shared_ptr<Match> &matcher)
+void ProjectModel::setMatcher(const std::shared_ptr<MatchingMethod> &matcher)
 {
-  this->currentSession()->setMatcher(matcher);
+  this->currentSession()->setMatchingMethod(matcher);
   bUnsavedChanges = true;
 }
 
 void ProjectModel::deleteMatcher()
 {
-  this->currentSession()->setMatcher(nullptr);
+  this->currentSession()->setMatchingMethod(nullptr);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement)
+void ProjectModel::setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement)
 {
-  this->currentSession()->setRobustMatcherRefinement(robustMatcherRefinement);
+  this->currentSession()->setMatchingStrategy(robustMatcherRefinement);
   bUnsavedChanges = true;
 }
 

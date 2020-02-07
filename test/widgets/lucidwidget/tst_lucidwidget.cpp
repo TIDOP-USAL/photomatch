@@ -18,21 +18,19 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_lucidKernel_data();
   void test_lucidKernel();
   void test_blurKernel_data();
   void test_blurKernel();
-  void test_reset();
 
 private:
 
-  ILucidWidget *mLucidWidget;
+  LucidWidget *mLucidWidget;
 };
 
 TestLucidWidget::TestLucidWidget()
-  : mLucidWidget(new LucidWidget)
+  : mLucidWidget(new LucidWidgetImp)
 {
 
 }
@@ -47,17 +45,18 @@ TestLucidWidget::~TestLucidWidget()
 
 void TestLucidWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(1, mLucidWidget->lucidKernel());
+  QCOMPARE(2, mLucidWidget->blurKernel());
 }
 
 void TestLucidWidget::cleanupTestCase()
 {
+  mLucidWidget->setLucidKernel(3);
+  mLucidWidget->setBlurKernel(3);
 
-}
+  mLucidWidget->reset();
 
-void TestLucidWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(1, mLucidWidget->lucidKernel());
   QCOMPARE(2, mLucidWidget->blurKernel());
 }
@@ -109,16 +108,6 @@ void TestLucidWidget::test_blurKernel()
   QCOMPARE(result, mLucidWidget->blurKernel());
 }
 
-void TestLucidWidget::test_reset()
-{
-  mLucidWidget->setLucidKernel(3);
-  mLucidWidget->setBlurKernel(3);
-
-  mLucidWidget->reset();
-
-  QCOMPARE(1, mLucidWidget->lucidKernel());
-  QCOMPARE(2, mLucidWidget->blurKernel());
-}
 
 QTEST_MAIN(TestLucidWidget)
 

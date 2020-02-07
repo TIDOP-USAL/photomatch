@@ -8,7 +8,7 @@
 
 using namespace photomatch;
 
-class TestSurfWidgetSignals : public SurfWidget
+class TestSurfWidgetSignals : public SurfWidgetImp
 {
   Q_OBJECT
 
@@ -29,7 +29,7 @@ private slots:
 };
 
 TestSurfWidgetSignals::TestSurfWidgetSignals()
-  : SurfWidget()
+  : SurfWidgetImp()
 {
 
 }
@@ -45,11 +45,11 @@ void TestSurfWidgetSignals::initTestCase()
 
 void TestSurfWidgetSignals::cleanupTestCase()
 {
-  QSignalSpy spyHessianThresholdChange(this, &SurfWidget::hessianThresholdChange);
-  QSignalSpy spyOctavesChange(this, &SurfWidget::octavesChange);
-  QSignalSpy spyOctaveLayersChange(this, &SurfWidget::octaveLayersChange);
-  QSignalSpy spyExtendedDescriptorChange(this, &SurfWidget::extendedDescriptorChange);
-  QSignalSpy spyRotatedFeaturesChange(this, &SurfWidget::uprightChange);
+  QSignalSpy spyHessianThresholdChange(this, &SurfWidgetImp::hessianThresholdChange);
+  QSignalSpy spyOctavesChange(this, &SurfWidgetImp::octavesChange);
+  QSignalSpy spyOctaveLayersChange(this, &SurfWidgetImp::octaveLayersChange);
+  QSignalSpy spyExtendedDescriptorChange(this, &SurfWidgetImp::extendedDescriptorChange);
+  QSignalSpy spyRotatedFeaturesChange(this, &SurfWidgetImp::uprightChange);
 
   this->setHessianThreshold(120);
   this->setOctaves(6);
@@ -68,7 +68,7 @@ void TestSurfWidgetSignals::cleanupTestCase()
 
 void TestSurfWidgetSignals::test_hessianThresholdChange()
 {
-  QSignalSpy spyHessianThresholdChange(this, &SurfWidget::hessianThresholdChange);
+  QSignalSpy spyHessianThresholdChange(this, &SurfWidgetImp::hessianThresholdChange);
 
   mHessianThreshold->setValue(150);
 
@@ -83,7 +83,7 @@ void TestSurfWidgetSignals::test_hessianThresholdChange()
 
 void TestSurfWidgetSignals::test_octavesChange()
 {
-  QSignalSpy spyOctavesChange(this, &SurfWidget::octavesChange);
+  QSignalSpy spyOctavesChange(this, &SurfWidgetImp::octavesChange);
 
   mOctaves->setValue(8);
 
@@ -98,7 +98,7 @@ void TestSurfWidgetSignals::test_octavesChange()
 
 void TestSurfWidgetSignals::test_octaveLayersChange()
 {
-  QSignalSpy spyOctaveLayersChange(this, &SurfWidget::octaveLayersChange);
+  QSignalSpy spyOctaveLayersChange(this, &SurfWidgetImp::octaveLayersChange);
 
   mOctaveLayers->setValue(8);
 
@@ -113,7 +113,7 @@ void TestSurfWidgetSignals::test_octaveLayersChange()
 
 void TestSurfWidgetSignals::test_extendedDescriptorChange()
 {
-  QSignalSpy spyExtendedDescriptorChange(this, &SurfWidget::extendedDescriptorChange);
+  QSignalSpy spyExtendedDescriptorChange(this, &SurfWidgetImp::extendedDescriptorChange);
 
   QTest::mouseClick(mExtendedDescriptor, Qt::MouseButton::LeftButton);
 
@@ -128,7 +128,7 @@ void TestSurfWidgetSignals::test_extendedDescriptorChange()
 
 void TestSurfWidgetSignals::test_uprightChange()
 {
-  QSignalSpy spy_uprightChange(this, &SurfWidget::uprightChange);
+  QSignalSpy spy_uprightChange(this, &SurfWidgetImp::uprightChange);
 
   QTest::mouseClick(mUpright, Qt::MouseButton::LeftButton);
 

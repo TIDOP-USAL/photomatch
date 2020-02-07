@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "PoheWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-PoheWidget::PoheWidget(QWidget *parent)
-  : IPoheWidget(parent),
+PoheWidgetImp::PoheWidgetImp(QWidget *parent)
+  : PoheWidget(parent),
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
@@ -23,27 +47,27 @@ PoheWidget::PoheWidget(QWidget *parent)
 
 }
 
-PoheWidget::~PoheWidget()
+PoheWidgetImp::~PoheWidgetImp()
 {
 
 }
 
-void PoheWidget::onBlockSizeXChange(int blockSizeX)
+void PoheWidgetImp::onBlockSizeXChange(int blockSizeX)
 {
   emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
 }
 
-void PoheWidget::onBlockSizeYChange(int blockSizeY)
+void PoheWidgetImp::onBlockSizeYChange(int blockSizeY)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
 }
 
-QSize PoheWidget::blockSize() const
+QSize PoheWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-void PoheWidget::setBlockSize(const QSize &blockSize)
+void PoheWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerTilesGridX(mBlockSizeX);
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
@@ -52,11 +76,11 @@ void PoheWidget::setBlockSize(const QSize &blockSize)
 
 }
 
-void PoheWidget::update()
+void PoheWidgetImp::update()
 {
 }
 
-void PoheWidget::retranslate()
+void PoheWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
@@ -64,7 +88,7 @@ void PoheWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void PoheWidget::reset()
+void PoheWidgetImp::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -73,7 +97,7 @@ void PoheWidget::reset()
   mBlockSizeY->setValue(127);
 }
 
-void PoheWidget::init()
+void PoheWidgetImp::init()
 {
   this->setWindowTitle("POHE");
 

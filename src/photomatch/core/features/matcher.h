@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_MATCHER_H
 #define PHOTOMATCH_MATCHER_H
 
@@ -21,7 +45,7 @@ namespace photomatch
 {
 
 
-class PHOTOMATCH_EXPORT Match
+class PHOTOMATCH_EXPORT MatchingMethod
 {
 
 public:
@@ -34,8 +58,8 @@ public:
 
 public:
 
-  Match(Type type) : mMatchType(type) {}
-  virtual ~Match() = default;
+  MatchingMethod(Type type) : mMatchType(type) {}
+  virtual ~MatchingMethod() = default;
 
   /*!
    * \brief Recover the default values
@@ -59,7 +83,7 @@ protected:
   tl::EnumFlags<Type> mMatchType;
 
 };
-ALLOW_BITWISE_FLAG_OPERATIONS(Match::Type)
+ALLOW_BITWISE_FLAG_OPERATIONS(MatchingMethod::Type)
 
 
 /*----------------------------------------------------------------*/
@@ -107,8 +131,8 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IFlannMatcher
-  : public Match
+class PHOTOMATCH_EXPORT FlannMatcher
+  : public MatchingMethod
 {
 
 public:
@@ -123,8 +147,8 @@ public:
 
 public:
 
-  IFlannMatcher() : Match(Match::Type::flann) {}
-  virtual ~IFlannMatcher() override = default;
+  FlannMatcher() : MatchingMethod(MatchingMethod::Type::flann) {}
+  virtual ~FlannMatcher() override = default;
 
   virtual Index index() const = 0;
   virtual void setIndex(Index index) = 0;
@@ -134,7 +158,7 @@ public:
 /*----------------------------------------------------------------*/
 
 class PHOTOMATCH_EXPORT FlannMatcherProperties
-  : public IFlannMatcher
+  : public FlannMatcher
 {
 
 public:
@@ -163,16 +187,16 @@ private:
 
 /*----------------------------------------------------------------*/
 
-class PHOTOMATCH_EXPORT FlannMatcher
+class PHOTOMATCH_EXPORT FlannMatcherImp
   : public FlannMatcherProperties,
     public DescriptorMatcher
 {
 
 public:
 
-  FlannMatcher();
-  FlannMatcher(IFlannMatcher::Index index);
-  ~FlannMatcher() override;
+  FlannMatcherImp();
+  FlannMatcherImp(FlannMatcher::Index index);
+  ~FlannMatcherImp() override;
 
 private:
 
@@ -213,8 +237,8 @@ protected:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IBruteForceMatcher
-  : public Match
+class PHOTOMATCH_EXPORT BruteForceMatcher
+  : public MatchingMethod
 {
 public:
 
@@ -228,8 +252,8 @@ public:
 
 public:
 
-  IBruteForceMatcher() : Match(Match::Type::brute_force) {}
-  virtual ~IBruteForceMatcher() override = default;
+  BruteForceMatcher() : MatchingMethod(MatchingMethod::Type::brute_force) {}
+  virtual ~BruteForceMatcher() override = default;
 
   virtual Norm normType() const = 0;
   virtual void setNormType(Norm normType) = 0;
@@ -239,7 +263,7 @@ public:
 /*----------------------------------------------------------------*/
 
 class PHOTOMATCH_EXPORT BruteForceMatcherProperties
-  : public IBruteForceMatcher
+  : public BruteForceMatcher
 {
 
 public:
@@ -269,16 +293,16 @@ private:
 
 /*----------------------------------------------------------------*/
 
-class PHOTOMATCH_EXPORT BruteForceMatcher
+class PHOTOMATCH_EXPORT BruteForceMatcherImp
   : public BruteForceMatcherProperties,
     public DescriptorMatcher
 {
 
 public:
 
-  BruteForceMatcher();
-  BruteForceMatcher(Norm normType);
-  ~BruteForceMatcher() override {}
+  BruteForceMatcherImp();
+  BruteForceMatcherImp(Norm normType);
+  ~BruteForceMatcherImp() override {}
 
 private:
 
@@ -428,8 +452,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-
-class PHOTOMATCH_EXPORT IRobustMatcherRefinement
+/*!
+ * \brief The IRobustMatcherRefinement class
+ *
+ * Robust Matching:
+ *
+ * http://docs.opencv.org/3.1.0/dc/d2c/tutorial_real_time_pose.html
+ */
+class PHOTOMATCH_EXPORT RobustMatcher
   : public MatchingStrategy
 {
 
@@ -466,9 +496,9 @@ public:
 
 public:
 
-  IRobustMatcherRefinement()
+  RobustMatcher()
     : MatchingStrategy(MatchingStrategy::Strategy::robust_matching) {}
-  virtual ~IRobustMatcherRefinement() = default;
+  virtual ~RobustMatcher() = default;
 
   virtual double ratio() const = 0;
   virtual void setRatio(double ratio) = 0;
@@ -508,7 +538,7 @@ public:
 /*----------------------------------------------------------------*/
 
 class PHOTOMATCH_EXPORT RobustMatchingProperties
-  : public IRobustMatcherRefinement
+  : public RobustMatcher
 {
 
 public:
@@ -562,239 +592,15 @@ private:
 
 /*----------------------------------------------------------------*/
 
-/*!
- * \brief Matching robusto
- *
- * Basado en:
- *
- * http://docs.opencv.org/3.1.0/dc/d2c/tutorial_real_time_pose.html
- */
-//class PHOTOMATCH_EXPORT IRobustMatching
-//{
-
-//public:
-
-//  IRobustMatching() {}
-//  virtual ~IRobustMatching() = default;
-
-//public:
-
-//  /*!
-//   * \brief Establece el metodo de matching
-//   * \param[in] matcher
-//   */
-//  virtual void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher) = 0;
-
-//  /*!
-//   * \brief Test de ratio
-//   * \param[in] matches
-//   */
-//  /*!
-//   * \brief Ratio test
-//   * \param[in] matches
-//   * \param[in] ratio
-//   * \param[out] goodMatches
-//   * \param[out] wrongMatches
-//   */
-//  static std::vector<std::vector<cv::DMatch>> ratioTest(const std::vector<std::vector<cv::DMatch>> &matches,
-//                        double ratio,
-//                        std::vector<std::vector<cv::DMatch>> *wrongMatches = nullptr)
-//  {
-//    std::vector<std::vector<cv::DMatch>> goodMatches;
-
-//    for (size_t i = 0; i < matches.size(); i++){
-
-//      if (matches[i].size() > 1){
-//        // check distance ratio
-//        if (matches[i][0].distance / matches[i][1].distance <= static_cast<float>(ratio)) {
-//            goodMatches.push_back(matches[i]);
-//        } else {
-//          if (wrongMatches){
-//            wrongMatches->push_back(matches[i]);
-//          }
-//        }
-//      }
-
-//    }
-
-//    return goodMatches;
-//  }
-
-//  /*!
-//   * \brief test cruzado
-//   * Busqueda de matches simétricos
-//   * \param[in] matches12
-//   * \param[in] matches21
-//   * \param[out] goodMatches
-//   * \param[out] wrongMatches
-//   */
-//  static std::vector<cv::DMatch> crossCheckTest(const std::vector<std::vector<cv::DMatch>> &matches12,
-//                                                const std::vector<std::vector<cv::DMatch>> &matches21,
-//                                                std::vector<cv::DMatch> *wrongMatches = nullptr)
-//  {
-//    std::vector<cv::DMatch> goodMatches;
-
-//    for (size_t i = 0; i < matches12.size(); i++){
-
-//      if (matches12[i].empty() || matches12[i].size() < 2)
-//        continue;
-
-//      bool findGoodMatch = false;
-//      for (size_t j = 0; j < matches21.size(); j++){
-
-//        if (matches21[j].empty() || matches21[j].size() < 2)
-//          continue;
-
-//        if (matches12[i][0].queryIdx == matches21[j][0].trainIdx &&
-//            matches21[j][0].queryIdx == matches12[i][0].trainIdx) {
-//            goodMatches.push_back(matches12[i][0]);
-//          findGoodMatch = true;
-//          break;
-//        }
-
-//      }
-
-//      if (findGoodMatch == false && wrongMatches)
-//        wrongMatches->push_back(matches12[i][0]);
-
-//    }
-
-//    return goodMatches;
-//  }
-
-//  virtual std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
-//                                                  const std::vector<cv::KeyPoint>& keypoints1,
-//                                                  const std::vector<cv::KeyPoint>& keypoints2,
-//                                                  std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-
-//  virtual std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
-//                                                           const std::vector<cv::Point2f>& points1,
-//                                                           const std::vector<cv::Point2f>& points2,
-//                                                           std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-//  virtual std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
-//                                                          const std::vector<cv::Point2f>& points1,
-//                                                          const std::vector<cv::Point2f>& points2,
-//                                                          std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-//  virtual std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
-//                                                            const std::vector<cv::Point2f>& points1,
-//                                                            const std::vector<cv::Point2f>& points2,
-//                                                            std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-
-//  /*!
-//   * \brief Matching
-//   * \param[in] queryDescriptor Query descriptor
-//   * \param[in] trainDescriptor Train descriptor
-//   * \param[out] wrongMatches Wrong matches
-//   * \return Good matches
-//   */
-//  virtual std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
-//                                        const cv::Mat &trainDescriptor,
-//                                        std::vector<cv::DMatch> *wrongMatches = nullptr) = 0;
-
-//private:
-
-//  /*!
-//   * \brief Robust matching
-//   * Feature matching using ratio and symmetry tests
-//   * \param[in] queryDescriptor Query descriptor
-//   * \param[in] trainDescriptor Train descriptor
-//   * \param[out] wrongMatches Wrong matches
-//   * \return Good matches
-//   */
-//  virtual std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
-//                                              const cv::Mat &trainDescriptor,
-//                                              std::vector<cv::DMatch> *wrongMatches) = 0;
-
-//  /*!
-//   * \brief Robust matching
-//   * Feature matching using ratio test
-//   * \param[in] queryDescriptor Query descriptor
-//   * \param[in] trainDescriptor Train descriptor
-//   * \param[out] wrongMatches Wrong matches
-//   * \return Good matches
-//   */
-//  virtual std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
-//                                                  const cv::Mat &trainDescriptor,
-//                                                  std::vector<cv::DMatch> *wrongMatches) = 0;
-//};
-
-
-/*----------------------------------------------------------------*/
-
-
-//class PHOTOMATCH_EXPORT RobustMatching
-//  : public IRobustMatching,
-//    public RobustMatchingProperties
-//{
-
-//public:
-
-//  RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher);
-//  RobustMatching(const std::shared_ptr<DescriptorMatcher> &matcher,
-//                 double ratio,
-//                 bool crossCheck,
-//                 GeometricTest geometricTest,
-//                 HomographyComputeMethod homographyComputeMethod,
-//                 FundamentalComputeMethod fundamentalComputeMethod,
-//                 EssentialComputeMethod essentialComputeMethod,
-//                 double distance,
-//                 double confidence,
-//                 int maxIter);
-//  ~RobustMatching() override;
-
-//// IRobustMatching interface
-
-//public:
-
-//  void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &matcher) override;
-
-//  std::vector<cv::DMatch> match(const cv::Mat &queryDescriptor,
-//                                const cv::Mat &trainDescriptor,
-//                                std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-
-//  std::vector<cv::DMatch> geometricFilter(const std::vector<cv::DMatch> &matches,
-//                                          const std::vector<cv::KeyPoint>& keypoints1,
-//                                          const std::vector<cv::KeyPoint>& keypoints2,
-//                                          std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-
-//  std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
-//                                                   const std::vector<cv::Point2f>& points1,
-//                                                   const std::vector<cv::Point2f>& points2,
-//                                                   std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-//  std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
-//                                                  const std::vector<cv::Point2f>& points1,
-//                                                  const std::vector<cv::Point2f>& points2,
-//                                                  std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-//  std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
-//                                                    const std::vector<cv::Point2f>& points1,
-//                                                    const std::vector<cv::Point2f>& points2,
-//                                                    std::vector<cv::DMatch> *wrongMatches = nullptr) override;
-
-//private:
-
-//  std::vector<cv::DMatch> robustMatch(const cv::Mat &queryDescriptor,
-//                                      const cv::Mat &trainDescriptor,
-//                                      std::vector<cv::DMatch> *wrongMatches) override;
-//  std::vector<cv::DMatch> fastRobustMatch(const cv::Mat &queryDescriptor,
-//                                          const cv::Mat &trainDescriptor,
-//                                          std::vector<cv::DMatch> *wrongMatches) override;
-
-//protected:
-
-//  std::shared_ptr<DescriptorMatcher> mMatcher;
-//};
-
-/*----------------------------------------------------------------*/
-
-class PHOTOMATCH_EXPORT RobustMatchingStrategy
+class PHOTOMATCH_EXPORT RobustMatchingImp
   : public RobustMatchingProperties,
     public MatchingAlgorithm
 {
 
 public:
 
-  RobustMatchingStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
-  RobustMatchingStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+  RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
                          double ratio,
                          bool crossCheck,
                          GeometricTest geometricTest,
@@ -804,7 +610,7 @@ public:
                          double distance,
                          double confidence,
                          int maxIter);
-  ~RobustMatchingStrategy() override;
+  ~RobustMatchingImp() override;
 
   /*!
    * \brief Establece el metodo de matching
@@ -967,14 +773,14 @@ protected:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IGms
+class PHOTOMATCH_EXPORT Gms
   : public MatchingStrategy
 {
 
 public:
 
-  IGms() : MatchingStrategy(MatchingStrategy::Strategy::gms) {}
-  virtual ~IGms() = default;
+  Gms() : MatchingStrategy(MatchingStrategy::Strategy::gms) {}
+  virtual ~Gms() = default;
 
   virtual bool rotation() const = 0;
   virtual void setRotation(bool rotation) = 0;
@@ -991,7 +797,7 @@ public:
 
 
 class PHOTOMATCH_EXPORT GmsProperties
-  : public IGms
+  : public Gms
 {
 
 public:
@@ -1029,19 +835,19 @@ protected:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT GsmStrategy
+class PHOTOMATCH_EXPORT GsmImp
   : public GmsProperties,
     public MatchingAlgorithm
 {
 
 public:
 
-  GsmStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
-  GsmStrategy(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+  GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
               bool rotation,
               bool scale,
               double threshold);
-  ~GsmStrategy() override;
+  ~GsmImp() override;
 
 // MatchingAlgorithm interface
 
@@ -1108,10 +914,10 @@ PHOTOMATCH_EXPORT void passPointsRead(const QString &fname,
 
 } // namespace photomatch
 
-Q_DECLARE_METATYPE(photomatch::IBruteForceMatcher::Norm)
-Q_DECLARE_METATYPE(photomatch::IRobustMatcherRefinement::GeometricTest)
-Q_DECLARE_METATYPE(photomatch::IRobustMatcherRefinement::HomographyComputeMethod)
-Q_DECLARE_METATYPE(photomatch::IRobustMatcherRefinement::FundamentalComputeMethod)
-Q_DECLARE_METATYPE(photomatch::IRobustMatcherRefinement::EssentialComputeMethod)
+Q_DECLARE_METATYPE(photomatch::BruteForceMatcher::Norm)
+Q_DECLARE_METATYPE(photomatch::RobustMatcher::GeometricTest)
+Q_DECLARE_METATYPE(photomatch::RobustMatcher::HomographyComputeMethod)
+Q_DECLARE_METATYPE(photomatch::RobustMatcher::FundamentalComputeMethod)
+Q_DECLARE_METATYPE(photomatch::RobustMatcher::EssentialComputeMethod)
 
 #endif // PHOTOMATCH_MATCHER_H

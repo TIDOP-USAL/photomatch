@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "OrbWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-OrbWidget::OrbWidget(QWidget *parent)
-  : IOrbWidget(parent),
+OrbWidgetImp::OrbWidgetImp(QWidget *parent)
+  : OrbWidget(parent),
     mFeaturesNumber(new QSpinBox(this)),
     mScaleFactor(new QDoubleSpinBox(this)),
     mLevelsNumber(new QSpinBox(this)),
@@ -37,14 +61,14 @@ OrbWidget::OrbWidget(QWidget *parent)
 
 }
 
-OrbWidget::~OrbWidget()
+OrbWidgetImp::~OrbWidgetImp()
 {
 
 }
 
 /// private:
 
-void OrbWidget::init()
+void OrbWidgetImp::init()
 {
   this->setWindowTitle("ORB");
 
@@ -100,104 +124,104 @@ void OrbWidget::init()
   update();
 }
 
-int OrbWidget::featuresNumber() const
+int OrbWidgetImp::featuresNumber() const
 {
   return mFeaturesNumber->value();
 }
 
-double OrbWidget::scaleFactor() const
+double OrbWidgetImp::scaleFactor() const
 {
   return mScaleFactor->value();
 }
 
-int OrbWidget::levelsNumber() const
+int OrbWidgetImp::levelsNumber() const
 {
   return mLevelsNumber->value();
 }
 
-int OrbWidget::edgeThreshold() const
+int OrbWidgetImp::edgeThreshold() const
 {
   return mEdgeThreshold->value();
 }
 
-int OrbWidget::wta_k() const
+int OrbWidgetImp::wta_k() const
 {
   return mWTA_K->value();
 }
 
-QString OrbWidget::scoreType() const
+QString OrbWidgetImp::scoreType() const
 {
   return mScoreType->currentText();
 }
 
-int OrbWidget::patchSize() const
+int OrbWidgetImp::patchSize() const
 {
   return mPatchSize->value();
 }
 
-int OrbWidget::fastThreshold() const
+int OrbWidgetImp::fastThreshold() const
 {
   return mFastThreshold->value();
 }
 
-void OrbWidget::setFeaturesNumber(int featuresNumber)
+void OrbWidgetImp::setFeaturesNumber(int featuresNumber)
 {
   const QSignalBlocker blockerFeaturesNumber(mFeaturesNumber);
   mFeaturesNumber->setValue(featuresNumber);
 }
 
-void OrbWidget::setScaleFactor(double scaleFactor)
+void OrbWidgetImp::setScaleFactor(double scaleFactor)
 {
   const QSignalBlocker blockerScaleFactor(mScaleFactor);
   mScaleFactor->setValue(scaleFactor);
 }
 
-void OrbWidget::setLevelsNumber(int levelsNumber)
+void OrbWidgetImp::setLevelsNumber(int levelsNumber)
 {
   const QSignalBlocker blockerLevelsNumber(mLevelsNumber);
   mLevelsNumber->setValue(levelsNumber);
 }
 
-void OrbWidget::setEdgeThreshold(int edgeThreshold)
+void OrbWidgetImp::setEdgeThreshold(int edgeThreshold)
 {
   const QSignalBlocker blockerEdgeThreshold(mEdgeThreshold);
   mEdgeThreshold->setValue(edgeThreshold);
 }
 
-void OrbWidget::setWTA_K(int WTA_K)
+void OrbWidgetImp::setWTA_K(int WTA_K)
 {
   const QSignalBlocker blockerWTA_K(mWTA_K);
   mWTA_K->setValue(WTA_K);
 }
 
-void OrbWidget::setScoreType(const QString &scoreType)
+void OrbWidgetImp::setScoreType(const QString &scoreType)
 {
   const QSignalBlocker blockerScoreType(mScoreType);
   mScoreType->setCurrentText(scoreType);
 }
 
-void OrbWidget::setPatchSize(int patchSize)
+void OrbWidgetImp::setPatchSize(int patchSize)
 {
   const QSignalBlocker blockerPatchSize(mPatchSize);
   mPatchSize->setValue(patchSize);
 }
 
-void OrbWidget::setFastThreshold(int fastThreshold)
+void OrbWidgetImp::setFastThreshold(int fastThreshold)
 {
   const QSignalBlocker blockerFastThreshold(mFastThreshold);
   mFastThreshold->setValue(fastThreshold);
 }
 
-void OrbWidget::update()
+void OrbWidgetImp::update()
 {
 }
 
-void OrbWidget::retranslate()
+void OrbWidgetImp::retranslate()
 {
 
 }
 
-void OrbWidget::reset()
+void OrbWidgetImp::reset()
 {
   const QSignalBlocker blockerFeaturesNumber(mFeaturesNumber);
   const QSignalBlocker blockerScaleFactor(mScaleFactor);

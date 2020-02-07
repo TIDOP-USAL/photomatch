@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "StarWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-StarWidget::StarWidget(QWidget *parent)
-  : IStarWidget(parent),
+StarWidgetImp::StarWidgetImp(QWidget *parent)
+  : StarWidget(parent),
     mMaxSize(new QSpinBox(this)),
     mResponseThreshold(new QSpinBox(this)),
     mLineThresholdProjected(new QSpinBox(this)),
@@ -27,76 +51,76 @@ StarWidget::StarWidget(QWidget *parent)
 
 }
 
-StarWidget::~StarWidget()
+StarWidgetImp::~StarWidgetImp()
 {
 
 }
 
-int StarWidget::maxSize() const
+int StarWidgetImp::maxSize() const
 {
   return mMaxSize->value();
 }
 
-int StarWidget::responseThreshold() const
+int StarWidgetImp::responseThreshold() const
 {
   return mResponseThreshold->value();
 }
 
-int StarWidget::lineThresholdProjected() const
+int StarWidgetImp::lineThresholdProjected() const
 {
   return mLineThresholdProjected->value();
 }
 
-int StarWidget::lineThresholdBinarized() const
+int StarWidgetImp::lineThresholdBinarized() const
 {
   return mLineThresholdBinarized->value();
 }
 
-int StarWidget::suppressNonmaxSize() const
+int StarWidgetImp::suppressNonmaxSize() const
 {
   return mSuppressNonmaxSize->value();
 }
 
-void StarWidget::setMaxSize(int maxSize)
+void StarWidgetImp::setMaxSize(int maxSize)
 {
   const QSignalBlocker blockerMaxSize(mMaxSize);
   mMaxSize->setValue(maxSize);
 }
 
-void StarWidget::setResponseThreshold(int responseThreshold)
+void StarWidgetImp::setResponseThreshold(int responseThreshold)
 {
   const QSignalBlocker blockerResponseThreshold(mResponseThreshold);
   mResponseThreshold->setValue(responseThreshold);
 }
 
-void StarWidget::setLineThresholdProjected(int lineThresholdProjected)
+void StarWidgetImp::setLineThresholdProjected(int lineThresholdProjected)
 {
   const QSignalBlocker blockerLineThresholdProjected(mLineThresholdProjected);
   mLineThresholdProjected->setValue(lineThresholdProjected);
 }
 
-void StarWidget::setLineThresholdBinarized(int lineThresholdBinarized)
+void StarWidgetImp::setLineThresholdBinarized(int lineThresholdBinarized)
 {
   const QSignalBlocker blockerLineThresholdBinarized(mLineThresholdBinarized);
   mLineThresholdBinarized->setValue(lineThresholdBinarized);
 }
 
-void StarWidget::setSuppressNonmaxSize(int suppressNonmaxSize)
+void StarWidgetImp::setSuppressNonmaxSize(int suppressNonmaxSize)
 {
   const QSignalBlocker blockerSuppressNonmaxSize(mSuppressNonmaxSize);
   mSuppressNonmaxSize->setValue(suppressNonmaxSize);
 }
 
-void StarWidget::update()
+void StarWidgetImp::update()
 {
 }
 
-void StarWidget::retranslate()
+void StarWidgetImp::retranslate()
 {
 
 }
 
-void StarWidget::reset()
+void StarWidgetImp::reset()
 {
   const QSignalBlocker blockerMaxSize(mMaxSize);
   const QSignalBlocker blockerResponseThreshold(mResponseThreshold);
@@ -111,7 +135,7 @@ void StarWidget::reset()
   mSuppressNonmaxSize->setValue(5);
 }
 
-void StarWidget::init()
+void StarWidgetImp::init()
 {
   this->setWindowTitle("STAR");
 

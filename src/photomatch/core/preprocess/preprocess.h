@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_PREPROCESS_H
 #define PHOTOMATCH_PREPROCESS_H
 
@@ -107,14 +131,14 @@ public:
  * natural images," The International Arab Journal of Information Technology,
  * vol. 11, no. 1, January 2014.
  */
-class PHOTOMATCH_EXPORT IAcebsf
+class PHOTOMATCH_EXPORT Acebsf
   : public Preprocess
 {
 
 public:
 
-  IAcebsf() : Preprocess(Preprocess::Type::acebsf) {}
-  virtual ~IAcebsf() = default;
+  Acebsf() : Preprocess(Preprocess::Type::acebsf) {}
+  virtual ~Acebsf() = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -136,14 +160,14 @@ public:
  * Equalizes the histogram of a grayscale image using Contrast Limited
  * Adaptive Histogram Equalization.
  */
-class PHOTOMATCH_EXPORT IClahe
+class PHOTOMATCH_EXPORT Clahe
   : public Preprocess
 {
 
 public:
 
-  IClahe() : Preprocess(Preprocess::Type::clahe) {}
-  virtual ~IClahe() = default;
+  Clahe() : Preprocess(Preprocess::Type::clahe) {}
+  virtual ~Clahe() = default;
 
   virtual double clipLimit() const = 0;
   virtual void setClipLimit(double clipLimit) = 0;
@@ -161,14 +185,14 @@ public:
  * enhancement technique based on cascaded multistep binomial filtering
  * histogram equalization," TCE, vol. 52, no. 3, 2006.
  */
-class PHOTOMATCH_EXPORT ICmbfhe
+class PHOTOMATCH_EXPORT Cmbfhe
   : public Preprocess
 {
 
 public:
 
-  ICmbfhe() : Preprocess(Preprocess::Type::cmbfhe) {}
-  virtual ~ICmbfhe() = default;
+  Cmbfhe() : Preprocess(Preprocess::Type::cmbfhe) {}
+  virtual ~Cmbfhe() = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -184,14 +208,14 @@ public:
  * Intl. Conf. Consumer Electronics, pp. 1-2, 2007.
  * dynamic histogram equalization (DHE)
  */
-class PHOTOMATCH_EXPORT IDhe
+class PHOTOMATCH_EXPORT Dhe
   : public Preprocess
 {
 
 public:
 
-  IDhe() : Preprocess(Preprocess::Type::dhe) {}
-  virtual ~IDhe() = default;
+  Dhe() : Preprocess(Preprocess::Type::dhe) {}
+  virtual ~Dhe() = default;
 
   virtual int x() const = 0;
   virtual void setX(int x) = 0;
@@ -207,14 +231,14 @@ public:
  * Cewu Lu, Li Xu, Jiaya Jia, “Contrast Preserving Decolorization”,
  * IEEE International Conference on Computational Photography (ICCP), 2012.
  */
-class PHOTOMATCH_EXPORT IDecolor
+class PHOTOMATCH_EXPORT Decolor
   : public Preprocess
 {
 
 public:
 
-  IDecolor() : Preprocess(Preprocess::Type::decolor) {}
-  virtual ~IDecolor() = default;
+  Decolor() : Preprocess(Preprocess::Type::decolor) {}
+  virtual ~Decolor() = default;
 
 };
 
@@ -227,14 +251,14 @@ public:
  * Z. Wang and J. Tao, "A fast implementation of adaptive
  * histogram equalization," in Proc. ICSP, 2006.
  */
-class PHOTOMATCH_EXPORT IFahe
+class PHOTOMATCH_EXPORT Fahe
   : public Preprocess
 {
 
 public:
 
-  IFahe() : Preprocess(Preprocess::Type::fahe) {}
-  virtual ~IFahe() = default;
+  Fahe() : Preprocess(Preprocess::Type::fahe) {}
+  virtual ~Fahe() = default;
 
   ///TODO: las dimensiones tienen que ser iguales
   virtual QSize blockSize() const = 0;
@@ -251,14 +275,14 @@ public:
  * for mammogram images," International Conference on Signal Processing, Communication,
  * Computing and Networking Technologies, 2011.
  */
-class PHOTOMATCH_EXPORT IHmclahe
+class PHOTOMATCH_EXPORT Hmclahe
   : public Preprocess
 {
 
 public:
 
-  IHmclahe() : Preprocess(Preprocess::Type::hmclahe) {}
-  virtual ~IHmclahe() = default;
+  Hmclahe() : Preprocess(Preprocess::Type::hmclahe) {}
+  virtual ~Hmclahe() = default;
 
   ///TODO: las dimensiones tienen que ser iguales
   virtual QSize blockSize() const = 0;
@@ -278,14 +302,14 @@ public:
  * bidirectional switching equalization of separated and clipped subhistograms,”
  * Mathematical Problems in Engineering, vol. 2014, 2014.
  */
-class PHOTOMATCH_EXPORT ILceBsescs
+class PHOTOMATCH_EXPORT LceBsescs
   : public Preprocess
 {
 
 public:
 
-  ILceBsescs() : Preprocess(Preprocess::Type::lce_bsescs) {}
-  virtual ~ILceBsescs() {}
+  LceBsescs() : Preprocess(Preprocess::Type::lce_bsescs) {}
+  virtual ~LceBsescs() {}
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -300,14 +324,14 @@ public:
  * Ana Belén Petro, Catalina Sbert, Jean-Michel Morel,
  * "Multiscale Retinex," Image Processing On Line, 2014.
  */
-class PHOTOMATCH_EXPORT IMsrcp
+class PHOTOMATCH_EXPORT Msrcp
   : public Preprocess
 {
 
 public:
 
-  IMsrcp() : Preprocess(Preprocess::Type::msrcp) {}
-  virtual ~IMsrcp() = default;
+  Msrcp() : Preprocess(Preprocess::Type::msrcp) {}
+  virtual ~Msrcp() = default;
 
   virtual double smallScale() const = 0;
   virtual void setSmallScale(double smallScale) = 0;
@@ -328,14 +352,14 @@ public:
  * using non-overlapped sub-blocks and local histogram projection,"
  * TCE, vol. 57, no. 2, 2011.
  */
-class PHOTOMATCH_EXPORT INoshp
+class PHOTOMATCH_EXPORT Noshp
   : public Preprocess
 {
 
 public:
 
-  INoshp() : Preprocess(Preprocess::Type::noshp) {}
-  virtual ~INoshp() {}
+  Noshp() : Preprocess(Preprocess::Type::noshp) {}
+  virtual ~Noshp() {}
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -352,14 +376,14 @@ public:
  * contrast enhancement using parametric approximation,"
  * in Proc. IEEE ICASSP, pp. 2444-2448, 26-31 May 2013.
  */
-class PHOTOMATCH_EXPORT IPohe
+class PHOTOMATCH_EXPORT Pohe
   : public Preprocess
 {
 
 public:
 
-  IPohe() : Preprocess(Preprocess::Type::pohe) {}
-  virtual ~IPohe() {}
+  Pohe() : Preprocess(Preprocess::Type::pohe) {}
+  virtual ~Pohe() {}
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -375,7 +399,7 @@ public:
  * Histogram Equalization for Brightness Preservation and Contrast
  * Enhancement," 2008.
  */
-class PHOTOMATCH_EXPORT IRswhe
+class PHOTOMATCH_EXPORT Rswhe
   : public Preprocess
 {
 
@@ -388,8 +412,8 @@ public:
 
 public:
 
-  IRswhe() : Preprocess(Preprocess::Type::rswhe) {}
-  virtual ~IRswhe() = default;
+  Rswhe() : Preprocess(Preprocess::Type::rswhe) {}
+  virtual ~Rswhe() = default;
 
   virtual int histogramDivisions() const = 0;
   virtual void setHistogramDivisions(int histogramDivisions) = 0;
@@ -401,13 +425,13 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IWallis
+class PHOTOMATCH_EXPORT Wallis
   : public Preprocess
 {
 public:
 
-  IWallis() : Preprocess(Preprocess::Type::wallis) {}
-  virtual ~IWallis() = default;
+  Wallis() : Preprocess(Preprocess::Type::wallis) {}
+  virtual ~Wallis() = default;
 
   virtual double contrast() const = 0;
   virtual void setContrast(double contrast) = 0;
@@ -425,6 +449,6 @@ public:
 
 } // namespace photomatch
 
-Q_DECLARE_METATYPE(photomatch::IRswhe::HistogramCut)
+Q_DECLARE_METATYPE(photomatch::Rswhe::HistogramCut)
 
 #endif // PHOTOMATCH_PREPROCESS_H

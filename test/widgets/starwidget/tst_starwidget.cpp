@@ -15,7 +15,8 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_maxSize_data();
   void test_maxSize();
@@ -27,15 +28,14 @@ private slots:
   void test_lineThresholdBinarized();
   void test_suppressNonmaxSize_data();
   void test_suppressNonmaxSize();
-  void test_reset();
 
 private:
 
-  IStarWidget *mStarWidget;
+  StarWidget *mStarWidget;
 };
 
 TestStarWidget::TestStarWidget()
-  : mStarWidget(new StarWidget)
+  : mStarWidget(new StarWidgetImp)
 {
 }
 
@@ -47,8 +47,26 @@ TestStarWidget::~TestStarWidget()
   }
 }
 
-void TestStarWidget::test_constructor()
+void TestStarWidget::initTestCase()
 {
+  /// Check default values
+  QCOMPARE(45, mStarWidget->maxSize());
+  QCOMPARE(30, mStarWidget->responseThreshold());
+  QCOMPARE(10, mStarWidget->lineThresholdProjected());
+  QCOMPARE(8, mStarWidget->lineThresholdBinarized());
+  QCOMPARE(5, mStarWidget->suppressNonmaxSize());
+}
+
+void TestStarWidget::cleanupTestCase()
+{
+  mStarWidget->setMaxSize(35);
+  mStarWidget->setResponseThreshold(20);
+  mStarWidget->setLineThresholdProjected(20);
+  mStarWidget->setLineThresholdBinarized(10);
+  mStarWidget->setSuppressNonmaxSize(20);
+
+  mStarWidget->reset();
+
   /// Check default values
   QCOMPARE(45, mStarWidget->maxSize());
   QCOMPARE(30, mStarWidget->responseThreshold());
@@ -167,23 +185,6 @@ void TestStarWidget::test_suppressNonmaxSize()
   QCOMPARE(result, mStarWidget->suppressNonmaxSize());
 }
 
-void TestStarWidget::test_reset()
-{
-  mStarWidget->setMaxSize(35);
-  mStarWidget->setResponseThreshold(20);
-  mStarWidget->setLineThresholdProjected(20);
-  mStarWidget->setLineThresholdBinarized(10);
-  mStarWidget->setSuppressNonmaxSize(20);
-
-  mStarWidget->reset();
-
-  /// Check default values
-  QCOMPARE(45, mStarWidget->maxSize());
-  QCOMPARE(30, mStarWidget->responseThreshold());
-  QCOMPARE(10, mStarWidget->lineThresholdProjected());
-  QCOMPARE(8, mStarWidget->lineThresholdBinarized());
-  QCOMPARE(5, mStarWidget->suppressNonmaxSize());
-}
 
 QTEST_MAIN(TestStarWidget)
 

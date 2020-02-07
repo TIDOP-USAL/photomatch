@@ -18,19 +18,17 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
-  void test_reset();
 
 private:
 
-  INoshpWidget *mNoshpWidget;
+  NoshpWidget *mNoshpWidget;
 };
 
 TestNoshpWidget::TestNoshpWidget()
-  : mNoshpWidget(new NoshpWidget)
+  : mNoshpWidget(new NoshpWidgetImp)
 {
 
 }
@@ -45,17 +43,16 @@ TestNoshpWidget::~TestNoshpWidget()
 
 void TestNoshpWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(QSize(127, 127), mNoshpWidget->blockSize());
 }
 
 void TestNoshpWidget::cleanupTestCase()
 {
+  mNoshpWidget->setBlockSize(QSize(5, 5));
 
-}
+  mNoshpWidget->reset();
 
-void TestNoshpWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(QSize(127, 127), mNoshpWidget->blockSize());
 }
 
@@ -83,16 +80,6 @@ void TestNoshpWidget::test_blockSize()
   mNoshpWidget->setBlockSize(value);
   QCOMPARE(result, mNoshpWidget->blockSize());
 }
-
-void TestNoshpWidget::test_reset()
-{
-  mNoshpWidget->setBlockSize(QSize(5, 5));
-
-  mNoshpWidget->reset();
-
-  QCOMPARE(QSize(127, 127), mNoshpWidget->blockSize());
-}
-
 
 QTEST_MAIN(TestNoshpWidget)
 

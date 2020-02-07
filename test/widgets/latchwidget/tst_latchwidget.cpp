@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_bytes_data();
   void test_bytes();
@@ -26,16 +25,15 @@ private slots:
   void test_rotationInvariance();
   void test_halfSsdSize_data();
   void test_halfSsdSize();
-  void test_reset();
 
 private:
 
-  ILatchWidget *mLatchWidget;
+  LatchWidget *mLatchWidget;
 
 };
 
 TestLatchWidget::TestLatchWidget()
-  : mLatchWidget(new LatchWidget)
+  : mLatchWidget(new LatchWidgetImp)
 {
 
 }
@@ -50,16 +48,19 @@ TestLatchWidget::~TestLatchWidget()
 
 void TestLatchWidget::initTestCase()
 {
-
+  QCOMPARE("32", mLatchWidget->bytes());
+  QCOMPARE(true, mLatchWidget->rotationInvariance());
+  QCOMPARE(3, mLatchWidget->halfSsdSize());
 }
 
 void TestLatchWidget::cleanupTestCase()
 {
+  mLatchWidget->setBytes("4");
+  mLatchWidget->setRotationInvariance(false);
+  mLatchWidget->setHalfSsdSize(5);
 
-}
+  mLatchWidget->reset();
 
-void TestLatchWidget::test_constructor()
-{
   QCOMPARE("32", mLatchWidget->bytes());
   QCOMPARE(true, mLatchWidget->rotationInvariance());
   QCOMPARE(3, mLatchWidget->halfSsdSize());
@@ -132,19 +133,6 @@ void TestLatchWidget::test_halfSsdSize()
 
   mLatchWidget->setHalfSsdSize(value);
   QCOMPARE(result, mLatchWidget->halfSsdSize());
-}
-
-void TestLatchWidget::test_reset()
-{
-  mLatchWidget->setBytes("4");
-  mLatchWidget->setRotationInvariance(false);
-  mLatchWidget->setHalfSsdSize(5);
-
-  mLatchWidget->reset();
-
-  QCOMPARE("32", mLatchWidget->bytes());
-  QCOMPARE(true, mLatchWidget->rotationInvariance());
-  QCOMPARE(3, mLatchWidget->halfSsdSize());
 }
 
 QTEST_MAIN(TestLatchWidget)

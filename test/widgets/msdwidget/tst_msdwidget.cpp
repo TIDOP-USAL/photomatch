@@ -17,7 +17,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_thresholdSaliency_data();
   void test_thresholdSaliency();
@@ -41,16 +40,16 @@ private slots:
   void test_affineMSD();
   void test_tilts_data();
   void test_tilts();
-  void test_reset();
+
 
 protected:
 
-  IMsdWidget *mMsdWidget;
+  MsdWidget *mMsdWidget;
 
 };
 
 TestMsdWidget::TestMsdWidget()
-  : mMsdWidget(new MsdWidget)
+  : mMsdWidget(new MsdWidgetImp)
 {
 
 }
@@ -63,17 +62,36 @@ TestMsdWidget::~TestMsdWidget()
 
 void TestMsdWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(250, mMsdWidget->thresholdSaliency());
+  QCOMPARE(3, mMsdWidget->pathRadius());
+  QCOMPARE(4, mMsdWidget->knn());
+  QCOMPARE(5, mMsdWidget->areaRadius());
+  QCOMPARE(1.25, mMsdWidget->scaleFactor());
+  QCOMPARE(5, mMsdWidget->NMSRadius());
+  QCOMPARE(-1, mMsdWidget->nScales());
+  QCOMPARE(0, mMsdWidget->NMSScaleR());
+  QCOMPARE(false, mMsdWidget->computeOrientations());
+  QCOMPARE(false, mMsdWidget->affineMSD());
+  QCOMPARE(3, mMsdWidget->tilts());
 }
 
 void TestMsdWidget::cleanupTestCase()
 {
+  mMsdWidget->setThresholdSaliency(200);
+  mMsdWidget->setPatchRadius(4);
+  mMsdWidget->setKNN(5);
+  mMsdWidget->setAreaRadius(3);
+  mMsdWidget->setScaleFactor(1.5);
+  mMsdWidget->setNMSRadius(4);
+  mMsdWidget->setNScales(3);
+  mMsdWidget->setNMSScaleR(1);
+  mMsdWidget->setComputeOrientations(true);
+  mMsdWidget->setAffineMSD(true);
+  mMsdWidget->setTilts(4);
 
-}
+  mMsdWidget->reset();
 
-void TestMsdWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(250, mMsdWidget->thresholdSaliency());
   QCOMPARE(3, mMsdWidget->pathRadius());
   QCOMPARE(4, mMsdWidget->knn());
@@ -310,34 +328,6 @@ void TestMsdWidget::test_tilts()
   QCOMPARE(result, mMsdWidget->tilts());
 }
 
-void TestMsdWidget::test_reset()
-{
-  mMsdWidget->setThresholdSaliency(200);
-  mMsdWidget->setPatchRadius(4);
-  mMsdWidget->setKNN(5);
-  mMsdWidget->setAreaRadius(3);
-  mMsdWidget->setScaleFactor(1.5);
-  mMsdWidget->setNMSRadius(4);
-  mMsdWidget->setNScales(3);
-  mMsdWidget->setNMSScaleR(1);
-  mMsdWidget->setComputeOrientations(true);
-  mMsdWidget->setAffineMSD(true);
-  mMsdWidget->setTilts(4);
-
-  mMsdWidget->reset();
-
-  QCOMPARE(250, mMsdWidget->thresholdSaliency());
-  QCOMPARE(3, mMsdWidget->pathRadius());
-  QCOMPARE(4, mMsdWidget->knn());
-  QCOMPARE(5, mMsdWidget->areaRadius());
-  QCOMPARE(1.25, mMsdWidget->scaleFactor());
-  QCOMPARE(5, mMsdWidget->NMSRadius());
-  QCOMPARE(-1, mMsdWidget->nScales());
-  QCOMPARE(0, mMsdWidget->NMSScaleR());
-  QCOMPARE(false, mMsdWidget->computeOrientations());
-  QCOMPARE(false, mMsdWidget->affineMSD());
-  QCOMPARE(3, mMsdWidget->tilts());
-}
 
 QTEST_MAIN(TestMsdWidget)
 

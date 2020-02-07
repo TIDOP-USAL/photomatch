@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "DescriptorMatcherWidget.h"
 
 #include <QComboBox>
@@ -11,8 +35,8 @@
 namespace photomatch
 {
 
-DescriptorMatcherWidget::DescriptorMatcherWidget(QWidget *parent)
-  : IDescriptorMatcherWidget(parent),
+DescriptorMatcherWidgetImp::DescriptorMatcherWidgetImp(QWidget *parent)
+  : DescriptorMatcherWidget(parent),
     mMatchingMethod(new QComboBox(this)),
     mMatchingStrategy(new QComboBox(this)),
     mNormType(new QComboBox(this)),
@@ -56,164 +80,164 @@ DescriptorMatcherWidget::DescriptorMatcherWidget(QWidget *parent)
   connect(this, SIGNAL(essentialComputeMethodChange(QString)),   this,  SLOT(update()));
 }
 
-DescriptorMatcherWidget::~DescriptorMatcherWidget()
+DescriptorMatcherWidgetImp::~DescriptorMatcherWidgetImp()
 {
 
 }
 
-QString DescriptorMatcherWidget::matchingMethod() const
+QString DescriptorMatcherWidgetImp::matchingMethod() const
 {
   return mMatchingMethod->currentText();
 }
 
-QString DescriptorMatcherWidget::matchingStrategy() const
+QString DescriptorMatcherWidgetImp::matchingStrategy() const
 {
   return mMatchingStrategy->currentText();
 }
 
-QString DescriptorMatcherWidget::normType() const
+QString DescriptorMatcherWidgetImp::normType() const
 {
   return mNormType->currentText();
 }
 
-double DescriptorMatcherWidget::ratio() const
+double DescriptorMatcherWidgetImp::ratio() const
 {
   return mRatio->value();
 }
 
-QString DescriptorMatcherWidget::geometricTest() const
+QString DescriptorMatcherWidgetImp::geometricTest() const
 {
   return mGeometricTest->currentText();
 }
 
-QString DescriptorMatcherWidget::homographyComputeMethod() const
+QString DescriptorMatcherWidgetImp::homographyComputeMethod() const
 {
   return mHComputeMethod->currentText();
 }
 
-QString DescriptorMatcherWidget::fundamentalComputeMethod() const
+QString DescriptorMatcherWidgetImp::fundamentalComputeMethod() const
 {
   return mFComputeMethod->currentText();
 }
 
-QString DescriptorMatcherWidget::essentialComputeMethod() const
+QString DescriptorMatcherWidgetImp::essentialComputeMethod() const
 {
   return mEComputeMethod->currentText();
 }
 
-double DescriptorMatcherWidget::distance() const
+double DescriptorMatcherWidgetImp::distance() const
 {
   return mDistance->value();
 }
 
-double DescriptorMatcherWidget::confidence() const
+double DescriptorMatcherWidgetImp::confidence() const
 {
   return mConfidence->value();
 }
 
-int DescriptorMatcherWidget::maxIters() const
+int DescriptorMatcherWidgetImp::maxIters() const
 {
   return mMaxIters->value();
 }
 
-bool DescriptorMatcherWidget::crossMatching() const
+bool DescriptorMatcherWidgetImp::crossMatching() const
 {
   return mCrossMatching->isChecked();
 }
 
-bool DescriptorMatcherWidget::gmsRotation() const
+bool DescriptorMatcherWidgetImp::gmsRotation() const
 {
   return mRotationGMS->isChecked();
 }
 
-bool DescriptorMatcherWidget::gmsScale() const
+bool DescriptorMatcherWidgetImp::gmsScale() const
 {
   return mScaleGMS->isChecked();
 }
 
-double DescriptorMatcherWidget::gmsThreshold() const
+double DescriptorMatcherWidgetImp::gmsThreshold() const
 {
   return mThresholdGMS->value();
 }
 
-void DescriptorMatcherWidget::setMatchingMethod(const QString &matchingMethod)
+void DescriptorMatcherWidgetImp::setMatchingMethod(const QString &matchingMethod)
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
   mMatchingMethod->setCurrentText(matchingMethod);
   update();
 }
 
-void DescriptorMatcherWidget::setMatchingStrategy(const QString &matchingStrategy)
+void DescriptorMatcherWidgetImp::setMatchingStrategy(const QString &matchingStrategy)
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingStrategy);
   mMatchingStrategy->setCurrentText(matchingStrategy);
   update();
 }
 
-void DescriptorMatcherWidget::setNormType(const QString &normType)
+void DescriptorMatcherWidgetImp::setNormType(const QString &normType)
 {
   const QSignalBlocker blockerNormType(mNormType);
   mNormType->setCurrentText(normType);
 }
 
-void DescriptorMatcherWidget::setRatio(double ratio)
+void DescriptorMatcherWidgetImp::setRatio(double ratio)
 {
   const QSignalBlocker blockerRatio(mRatio);
   mRatio->setValue(ratio);
 }
 
-void DescriptorMatcherWidget::setGeometricTest(const QString &geometricTest)
+void DescriptorMatcherWidgetImp::setGeometricTest(const QString &geometricTest)
 {
   const QSignalBlocker blockerGeometricTest(mGeometricTest);
   mGeometricTest->setCurrentText(geometricTest);
   update();
 }
 
-void DescriptorMatcherWidget::setHomographyComputeMethod(const QString &computeMethod)
+void DescriptorMatcherWidgetImp::setHomographyComputeMethod(const QString &computeMethod)
 {
   const QSignalBlocker blockerHomographyComputeMethod(mHComputeMethod);
   mHComputeMethod->setCurrentText(computeMethod);
   update();
 }
 
-void DescriptorMatcherWidget::setFundamentalComputeMethod(const QString &computeMethod)
+void DescriptorMatcherWidgetImp::setFundamentalComputeMethod(const QString &computeMethod)
 {
   const QSignalBlocker blockerFundamentalComputeMethod(mFComputeMethod);
   mFComputeMethod->setCurrentText(computeMethod);
   update();
 }
 
-void DescriptorMatcherWidget::setEssentialComputeMethod(const QString &computeMethod)
+void DescriptorMatcherWidgetImp::setEssentialComputeMethod(const QString &computeMethod)
 {
   const QSignalBlocker blockerEssentialComputeMethod(mEComputeMethod);
   mEComputeMethod->setCurrentText(computeMethod);
   update();
 }
 
-void DescriptorMatcherWidget::setDistance(double distance)
+void DescriptorMatcherWidgetImp::setDistance(double distance)
 {
   const QSignalBlocker blockerDistance(mDistance);
   mDistance->setValue(distance);
 }
 
-void DescriptorMatcherWidget::setConfidence(double confidence)
+void DescriptorMatcherWidgetImp::setConfidence(double confidence)
 {
   const QSignalBlocker blockerConfidence(mConfidence);
   mConfidence->setValue(confidence);
 }
 
-void DescriptorMatcherWidget::setMaxIters(int maxIter)
+void DescriptorMatcherWidgetImp::setMaxIters(int maxIter)
 {
   const QSignalBlocker blockerMaxIters(mMaxIters);
   mMaxIters->setValue(maxIter);
 }
 
-void DescriptorMatcherWidget::setCrossMatching(bool crossMatching)
+void DescriptorMatcherWidgetImp::setCrossMatching(bool crossMatching)
 {
   mCrossMatching->setChecked(crossMatching);
 }
 
-void DescriptorMatcherWidget::disableBruteForceNorm(const QString &norm)
+void DescriptorMatcherWidgetImp::disableBruteForceNorm(const QString &norm)
 {
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>(mNormType->model());
   if (model != nullptr) {
@@ -224,7 +248,7 @@ void DescriptorMatcherWidget::disableBruteForceNorm(const QString &norm)
   }
 }
 
-void DescriptorMatcherWidget::enableBruteForceNorm(const QString &norm)
+void DescriptorMatcherWidgetImp::enableBruteForceNorm(const QString &norm)
 {
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>(mNormType->model());
   if (model != nullptr) {
@@ -235,23 +259,23 @@ void DescriptorMatcherWidget::enableBruteForceNorm(const QString &norm)
   }
 }
 
-void DescriptorMatcherWidget::setGmsRotation(bool active)
+void DescriptorMatcherWidgetImp::setGmsRotation(bool active)
 {
   mRotationGMS->setChecked(active);
 }
 
-void DescriptorMatcherWidget::setGmsScale(bool active)
+void DescriptorMatcherWidgetImp::setGmsScale(bool active)
 {
   mScaleGMS->setChecked(active);
 }
 
-void DescriptorMatcherWidget::setGmsThreshold(double threshold)
+void DescriptorMatcherWidgetImp::setGmsThreshold(double threshold)
 {
   const QSignalBlocker blocker(mThresholdGMS);
   mThresholdGMS->setValue(threshold);
 }
 
-void DescriptorMatcherWidget::update()
+void DescriptorMatcherWidgetImp::update()
 {
   if (mMatchingMethod->currentText().compare("FLANN") == 0){
     mGroupBoxBFParameters->hide();
@@ -352,12 +376,12 @@ void DescriptorMatcherWidget::update()
   }
 }
 
-void DescriptorMatcherWidget::retranslate()
+void DescriptorMatcherWidgetImp::retranslate()
 {
 
 }
 
-void DescriptorMatcherWidget::reset()
+void DescriptorMatcherWidgetImp::reset()
 {
   const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
   const QSignalBlocker blockerMatchingStrategy(mMatchingStrategy);
@@ -394,7 +418,7 @@ void DescriptorMatcherWidget::reset()
   update();
 }
 
-void DescriptorMatcherWidget::init()
+void DescriptorMatcherWidgetImp::init()
 {
   this->setWindowTitle("Descriptor Matcher");
 

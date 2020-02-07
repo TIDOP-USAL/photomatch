@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "KeypointsFilterWidget.h"
 
 #include <QSpinBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-KeypointsFilterWidget::KeypointsFilterWidget(QWidget *parent)
-  : IKeypointsFilterWidget(parent),
+KeypointsFilterWidgetImp::KeypointsFilterWidgetImp(QWidget *parent)
+  : KeypointsFilterWidget(parent),
     mCheckBoxPointsNumber(new QCheckBox(this)),
     mPointsNumber(new QSpinBox(this)),
     mCheckBoxSize(new QCheckBox(this)),
@@ -32,79 +56,79 @@ KeypointsFilterWidget::KeypointsFilterWidget(QWidget *parent)
 
 }
 
-KeypointsFilterWidget::~KeypointsFilterWidget()
+KeypointsFilterWidgetImp::~KeypointsFilterWidgetImp()
 {
 }
 
-int KeypointsFilterWidget::nPoints() const
+int KeypointsFilterWidgetImp::nPoints() const
 {
   return mPointsNumber->value();
 }
 
-double KeypointsFilterWidget::minSize() const
+double KeypointsFilterWidgetImp::minSize() const
 {
   return mMinSize->value();
 }
 
-double KeypointsFilterWidget::maxSize() const
+double KeypointsFilterWidgetImp::maxSize() const
 {
   return mMaxSize->value();
 }
 
-bool KeypointsFilterWidget::isActiveFilterBest() const
+bool KeypointsFilterWidgetImp::isActiveFilterBest() const
 {
   return bActiveFilterBest;
 }
 
-bool KeypointsFilterWidget::isActiveFilterSize() const
+bool KeypointsFilterWidgetImp::isActiveFilterSize() const
 {
   return bActiveFilterSize;
 }
 
-bool KeypointsFilterWidget::isActiveRemoveDuplicated() const
+bool KeypointsFilterWidgetImp::isActiveRemoveDuplicated() const
 {
   return bActiveRemoveDuplicated;
 }
 
-void KeypointsFilterWidget::setNPoints(int nPoints)
+void KeypointsFilterWidgetImp::setNPoints(int nPoints)
 {
   const QSignalBlocker blockerNPoints(mPointsNumber);
   mPointsNumber->setValue(nPoints);
 }
 
-void KeypointsFilterWidget::setMinSize(double minSize)
+void KeypointsFilterWidgetImp::setMinSize(double minSize)
 {
   const QSignalBlocker blockerMinSize(mMinSize);
   mMinSize->setValue(minSize);
   update();
 }
 
-void KeypointsFilterWidget::setMaxSize(double maxSize)
+void KeypointsFilterWidgetImp::setMaxSize(double maxSize)
 {
   const QSignalBlocker blockerMaxSizee(mMaxSize);
   mMaxSize->setValue(maxSize);
   update();
 }
 
-void KeypointsFilterWidget::setActiveFilterBest(bool active)
+void KeypointsFilterWidgetImp::setActiveFilterBest(bool active)
 {
   mCheckBoxPointsNumber->setChecked(active);
   update();
 }
 
-void KeypointsFilterWidget::setActiveFilterSize(bool active)
+void KeypointsFilterWidgetImp::setActiveFilterSize(bool active)
 {
   mCheckBoxSize->setChecked(active);
   update();
 }
 
-void KeypointsFilterWidget::setActiveRemoveDuplicated(bool active)
+void KeypointsFilterWidgetImp::setActiveRemoveDuplicated(bool active)
 {
   mCheckBoxRemoveDuplicated->setChecked(active);
   update();
 }
 
-void KeypointsFilterWidget::update()
+void KeypointsFilterWidgetImp::update()
 {
   bActiveFilterBest = mCheckBoxPointsNumber->isChecked();
   bActiveFilterSize = mCheckBoxSize->isChecked();
@@ -117,12 +141,12 @@ void KeypointsFilterWidget::update()
   mMinSize->setMaximum(mMaxSize->value());
 }
 
-void KeypointsFilterWidget::retranslate()
+void KeypointsFilterWidgetImp::retranslate()
 {
 
 }
 
-void KeypointsFilterWidget::reset()
+void KeypointsFilterWidgetImp::reset()
 {
   const QSignalBlocker blockerNPoints(mPointsNumber);
   const QSignalBlocker blockerMinSize(mMinSize);
@@ -138,7 +162,7 @@ void KeypointsFilterWidget::reset()
   update();
 }
 
-void KeypointsFilterWidget::init()
+void KeypointsFilterWidgetImp::init()
 {
   this->setWindowTitle("Keypoints Filter");
 

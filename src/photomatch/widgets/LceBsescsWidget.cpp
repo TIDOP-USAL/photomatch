@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "LceBsescsWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-LceBsescsWidget::LceBsescsWidget(QWidget *parent)
-  : ILceBsescsWidget(parent),
+LceBsescsWidgetImp::LceBsescsWidgetImp(QWidget *parent)
+  : LceBsescsWidget(parent),
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
@@ -23,27 +47,27 @@ LceBsescsWidget::LceBsescsWidget(QWidget *parent)
 
 }
 
-LceBsescsWidget::~LceBsescsWidget()
+LceBsescsWidgetImp::~LceBsescsWidgetImp()
 {
 
 }
 
-void LceBsescsWidget::onBlockSizeXChange(int gx)
+void LceBsescsWidgetImp::onBlockSizeXChange(int gx)
 {
   emit blockSizeChange(QSize(gx, mBlockSizeY->value()));
 }
 
-void LceBsescsWidget::onBlockSizeYChange(int gy)
+void LceBsescsWidgetImp::onBlockSizeYChange(int gy)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(), gy));
 }
 
-QSize LceBsescsWidget::blockSize() const
+QSize LceBsescsWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-void LceBsescsWidget::setBlockSize(const QSize &blockSize)
+void LceBsescsWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerTilesGridX(mBlockSizeX);
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
@@ -52,11 +76,11 @@ void LceBsescsWidget::setBlockSize(const QSize &blockSize)
 
 }
 
-void LceBsescsWidget::update()
+void LceBsescsWidgetImp::update()
 {
 }
 
-void LceBsescsWidget::retranslate()
+void LceBsescsWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
@@ -64,7 +88,7 @@ void LceBsescsWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void LceBsescsWidget::reset()
+void LceBsescsWidgetImp::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -73,7 +97,7 @@ void LceBsescsWidget::reset()
   mBlockSizeY->setValue(33);
 }
 
-void LceBsescsWidget::init()
+void LceBsescsWidgetImp::init()
 {
   this->setWindowTitle("LCE-BSESCS");
 

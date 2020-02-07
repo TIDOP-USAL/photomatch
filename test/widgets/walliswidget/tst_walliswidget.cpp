@@ -17,7 +17,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void tes_constructor();
   void test_windowTitle();
   void test_contrast_data();
   void test_contrast();
@@ -29,15 +28,14 @@ private slots:
   void test_imposedLocalStdDev();
   void test_kernelSize_data();
   void test_kernelSize();
-  void test_reset();
 
 private:
 
-  IWallisWidget *mWallisWidget;
+  WallisWidget *mWallisWidget;
 };
 
 TestWallisWidget::TestWallisWidget()
-  : mWallisWidget(new WallisWidget)
+  : mWallisWidget(new WallisWidgetImp)
 {
 
 }
@@ -52,23 +50,28 @@ TestWallisWidget::~TestWallisWidget()
 
 void TestWallisWidget::initTestCase()
 {
-
+  QCOMPARE(1.0, mWallisWidget->contrast());
+  QCOMPARE(0.2, mWallisWidget->brightness());
+  QCOMPARE(41, mWallisWidget->imposedAverage());
+  QCOMPARE(127, mWallisWidget->imposedLocalStdDev());
+  QCOMPARE(50, mWallisWidget->kernelSize());
 }
 
 void TestWallisWidget::cleanupTestCase()
 {
+  mWallisWidget->setContrast(.5);
+  mWallisWidget->setBrightness(0.5);
+  mWallisWidget->setImposedAverage(35);
+  mWallisWidget->setImposedLocalStdDev(150);
+  mWallisWidget->setKernelSize(60);
 
-}
+  mWallisWidget->reset();
 
-void TestWallisWidget::tes_constructor()
-{
-  /// Check default values
-  WallisWidget wallisWidget;
-  QCOMPARE(1.0, wallisWidget.contrast());
-  QCOMPARE(0.2, wallisWidget.brightness());
-  QCOMPARE(41, wallisWidget.imposedAverage());
-  QCOMPARE(127, wallisWidget.imposedLocalStdDev());
-  QCOMPARE(50, wallisWidget.kernelSize());
+  QCOMPARE(1.0, mWallisWidget->contrast());
+  QCOMPARE(0.2, mWallisWidget->brightness());
+  QCOMPARE(41, mWallisWidget->imposedAverage());
+  QCOMPARE(127, mWallisWidget->imposedLocalStdDev());
+  QCOMPARE(50, mWallisWidget->kernelSize());
 }
 
 void TestWallisWidget::test_windowTitle()
@@ -173,22 +176,6 @@ void TestWallisWidget::test_kernelSize()
   QCOMPARE(result, mWallisWidget->kernelSize());
 }
 
-void TestWallisWidget::test_reset()
-{
-  mWallisWidget->setContrast(.5);
-  mWallisWidget->setBrightness(0.5);
-  mWallisWidget->setImposedAverage(35);
-  mWallisWidget->setImposedLocalStdDev(150);
-  mWallisWidget->setKernelSize(60);
-
-  mWallisWidget->reset();
-
-  QCOMPARE(1.0, mWallisWidget->contrast());
-  QCOMPARE(0.2, mWallisWidget->brightness());
-  QCOMPARE(41, mWallisWidget->imposedAverage());
-  QCOMPARE(127, mWallisWidget->imposedLocalStdDev());
-  QCOMPARE(50, mWallisWidget->kernelSize());
-}
 
 QTEST_MAIN(TestWallisWidget)
 

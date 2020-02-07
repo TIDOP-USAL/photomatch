@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "AgastWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-AgastWidget::AgastWidget(QWidget *parent)
-  : IAgastWidget(parent),
+AgastWidgetImp::AgastWidgetImp(QWidget *parent)
+  : AgastWidget(parent),
     mThreshold(new QSpinBox(this)),
     mNonmaxSuppression(new QCheckBox(this)),
     mDetectorType(new QComboBox(this))
@@ -27,49 +51,49 @@ AgastWidget::AgastWidget(QWidget *parent)
   connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
 }
 
-AgastWidget::~AgastWidget()
+AgastWidgetImp::~AgastWidgetImp()
 {
 
 }
 
-int AgastWidget::threshold() const
+int AgastWidgetImp::threshold() const
 {
   return mThreshold->value();
 }
 
-bool AgastWidget::nonmaxSuppression() const
+bool AgastWidgetImp::nonmaxSuppression() const
 {
   return mNonmaxSuppression->isChecked();
 }
 
-QString AgastWidget::detectorType() const
+QString AgastWidgetImp::detectorType() const
 {
   return mDetectorType->currentText();
 }
 
-void AgastWidget::setThreshold(int threshold)
+void AgastWidgetImp::setThreshold(int threshold)
 {
   const QSignalBlocker blockerFastThreshold(mThreshold);
   mThreshold->setValue(threshold);
 }
 
-void AgastWidget::setNonmaxSuppression(bool nonmaxSuppression)
+void AgastWidgetImp::setNonmaxSuppression(bool nonmaxSuppression)
 {
   mNonmaxSuppression->setChecked(nonmaxSuppression);
 }
 
-void AgastWidget::setDetectorType(const QString &detectorType)
+void AgastWidgetImp::setDetectorType(const QString &detectorType)
 {
   const QSignalBlocker blockerDetectorType(mDetectorType);
   mDetectorType->setCurrentText(detectorType);
 }
 
-void AgastWidget::update()
+void AgastWidgetImp::update()
 {
 
 }
 
-void AgastWidget::retranslate()
+void AgastWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mThreshold->setWhatsThis(tr("<html><head/><body><p>The <strong>AST (Accelerated Segment Test)</strong> applies a minimum difference <strong>threshold</strong> when comparing&nbsp;the value of a pixel on the circular pattern with the brightness of the nucleus.&nbsp;This parameter controls the sensitivity of the corner response. A large <strong>threshold</strong>&nbsp;value&nbsp;results in few but therefore only strong corners, while a small <strong>threshold</strong> value yields also&nbsp;corners with smoother gradients.</p></body></html>"));
@@ -84,7 +108,7 @@ void AgastWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void AgastWidget::reset()
+void AgastWidgetImp::reset()
 {
   const QSignalBlocker blockerFastThreshold(mThreshold);
   const QSignalBlocker blockerDetectorType(mDetectorType);
@@ -94,7 +118,7 @@ void AgastWidget::reset()
   mDetectorType->setCurrentText("OAST_9_16");
 }
 
-void AgastWidget::init()
+void AgastWidgetImp::init()
 {
   this->setWindowTitle("AGAST");
 

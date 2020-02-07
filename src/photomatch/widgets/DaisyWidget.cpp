@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "DaisyWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-DaisyWidget::DaisyWidget(QWidget *parent)
-  : IDaisyWidget(parent),
+DaisyWidgetImp::DaisyWidgetImp(QWidget *parent)
+  : DaisyWidget(parent),
     mRadius(new QDoubleSpinBox(this)),
     mQRadius(new QSpinBox(this)),
     mQTheta(new QSpinBox(this)),
@@ -33,96 +57,96 @@ DaisyWidget::DaisyWidget(QWidget *parent)
 
 }
 
-DaisyWidget::~DaisyWidget()
+DaisyWidgetImp::~DaisyWidgetImp()
 {
 
 }
 
-double DaisyWidget::radius() const
+double DaisyWidgetImp::radius() const
 {
   return mRadius->value();
 }
 
-int DaisyWidget::qRadius() const
+int DaisyWidgetImp::qRadius() const
 {
   return mQRadius->value();
 }
 
-int DaisyWidget::qTheta() const
+int DaisyWidgetImp::qTheta() const
 {
   return mQTheta->value();
 }
 
-int DaisyWidget::qHist() const
+int DaisyWidgetImp::qHist() const
 {
   return mQHist->value();
 }
 
-QString DaisyWidget::norm() const
+QString DaisyWidgetImp::norm() const
 {
   return mNorm->currentText();
 }
 
-bool DaisyWidget::interpolation() const
+bool DaisyWidgetImp::interpolation() const
 {
   return mInterpolation->isChecked();
 }
 
-bool DaisyWidget::useOrientation() const
+bool DaisyWidgetImp::useOrientation() const
 {
   return mUseOrientation->isChecked();
 }
 
-void DaisyWidget::setRadius(double radius)
+void DaisyWidgetImp::setRadius(double radius)
 {
   const QSignalBlocker blockerRadius(mRadius);
   mRadius->setValue(radius);
 }
 
-void DaisyWidget::setQRadius(int qRadius)
+void DaisyWidgetImp::setQRadius(int qRadius)
 {
   const QSignalBlocker blockerQRadius(mQRadius);
   mQRadius->setValue(qRadius);
 }
 
-void DaisyWidget::setQTheta(int qTheta)
+void DaisyWidgetImp::setQTheta(int qTheta)
 {
   const QSignalBlocker blockerQTheta(mQTheta);
   mQTheta->setValue(qTheta);
 }
 
-void DaisyWidget::setQHist(int qHist)
+void DaisyWidgetImp::setQHist(int qHist)
 {
   const QSignalBlocker blockerQHist(mQHist);
   mQHist->setValue(qHist);
 }
 
-void DaisyWidget::setNorm(const QString &norm)
+void DaisyWidgetImp::setNorm(const QString &norm)
 {
   const QSignalBlocker blockerNorm(mNorm);
   mNorm->setCurrentText(norm);
 }
 
-void DaisyWidget::setInterpolation(bool interpolation)
+void DaisyWidgetImp::setInterpolation(bool interpolation)
 {
   mInterpolation->setChecked(interpolation);
 }
 
-void DaisyWidget::setUseOrientation(bool useOrientation)
+void DaisyWidgetImp::setUseOrientation(bool useOrientation)
 {
   mUseOrientation->setChecked(useOrientation);
 }
 
-void DaisyWidget::update()
+void DaisyWidgetImp::update()
 {
 }
 
-void DaisyWidget::retranslate()
+void DaisyWidgetImp::retranslate()
 {
 
 }
 
-void DaisyWidget::reset()
+void DaisyWidgetImp::reset()
 {
   const QSignalBlocker blockerRadius(mRadius);
   const QSignalBlocker blockerQRadius(mQRadius);
@@ -139,7 +163,7 @@ void DaisyWidget::reset()
   mUseOrientation->setChecked(false);
 }
 
-void DaisyWidget::init()
+void DaisyWidgetImp::init()
 {
   this->setWindowTitle("DAISY");
 

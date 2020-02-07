@@ -17,7 +17,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_windowTitle();
   void test_descriptorMatcher_data();
   void test_descriptorMatcher();
@@ -50,12 +49,12 @@ private slots:
 
 private:
 
-  IDescriptorMatcherWidget *mDescriptorMatcherWidget;
+  DescriptorMatcherWidget *mDescriptorMatcherWidget;
 
 };
 
 TestDescriptorMatcherWidget::TestDescriptorMatcherWidget()
-  : mDescriptorMatcherWidget(new DescriptorMatcherWidget)
+  : mDescriptorMatcherWidget(new DescriptorMatcherWidgetImp)
 {
 
 }
@@ -70,7 +69,21 @@ TestDescriptorMatcherWidget::~TestDescriptorMatcherWidget()
 
 void TestDescriptorMatcherWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
+  QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
+  QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
+  QCOMPARE("Homography Matrix", mDescriptorMatcherWidget->geometricTest());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->homographyComputeMethod());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->fundamentalComputeMethod());
+  QCOMPARE("RANSAC", mDescriptorMatcherWidget->essentialComputeMethod());
+  QCOMPARE(0.7, mDescriptorMatcherWidget->distance());
+  QCOMPARE(0.999, mDescriptorMatcherWidget->confidence());
+  QCOMPARE(2000, mDescriptorMatcherWidget->maxIters());
+  QCOMPARE(true, mDescriptorMatcherWidget->crossMatching());
+  QCOMPARE(false, mDescriptorMatcherWidget->gmsScale());
+  QCOMPARE(false, mDescriptorMatcherWidget->gmsRotation());
+  QCOMPARE(6.0, mDescriptorMatcherWidget->gmsThreshold());
 }
 
 void TestDescriptorMatcherWidget::cleanupTestCase()
@@ -106,26 +119,6 @@ void TestDescriptorMatcherWidget::cleanupTestCase()
   QCOMPARE(false, mDescriptorMatcherWidget->gmsScale());
   QCOMPARE(false, mDescriptorMatcherWidget->gmsRotation());
   QCOMPARE(6.0, mDescriptorMatcherWidget->gmsThreshold());
-}
-
-void TestDescriptorMatcherWidget::test_defaultConstructor()
-{
-  /// Check default values
-  DescriptorMatcherWidget descriptorMatcherWidget;
-  QCOMPARE("Brute-Force", descriptorMatcherWidget.matchingMethod());
-  QCOMPARE("NORM_L1", descriptorMatcherWidget.normType());
-  QCOMPARE(0.8, descriptorMatcherWidget.ratio());
-  QCOMPARE("Homography Matrix", descriptorMatcherWidget.geometricTest());
-  QCOMPARE("RANSAC", descriptorMatcherWidget.homographyComputeMethod());
-  QCOMPARE("RANSAC", descriptorMatcherWidget.fundamentalComputeMethod());
-  QCOMPARE("RANSAC", descriptorMatcherWidget.essentialComputeMethod());
-  QCOMPARE(0.7, descriptorMatcherWidget.distance());
-  QCOMPARE(0.999, descriptorMatcherWidget.confidence());
-  QCOMPARE(2000, descriptorMatcherWidget.maxIters());
-  QCOMPARE(true, descriptorMatcherWidget.crossMatching());
-  QCOMPARE(false, descriptorMatcherWidget.gmsScale());
-  QCOMPARE(false, descriptorMatcherWidget.gmsRotation());
-  QCOMPARE(6.0, descriptorMatcherWidget.gmsThreshold());
 }
 
 void TestDescriptorMatcherWidget::test_windowTitle()

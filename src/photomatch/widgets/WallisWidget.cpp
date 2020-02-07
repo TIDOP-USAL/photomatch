@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "WallisWidget.h"
 
 #include <QSpinBox>
@@ -7,8 +31,8 @@
 namespace photomatch
 {
 
-WallisWidget::WallisWidget(QWidget *parent)
-  : IWallisWidget(parent),
+WallisWidgetImp::WallisWidgetImp(QWidget *parent)
+  : WallisWidget(parent),
     mContrast(new QDoubleSpinBox(this)),
     mBrightness(new QDoubleSpinBox(this)),
     mImposedAverage(new QSpinBox(this)),
@@ -28,76 +52,76 @@ WallisWidget::WallisWidget(QWidget *parent)
   connect(mKernelSize,          SIGNAL(valueChanged(int)),        this, SIGNAL(kernelSizeChange(int)));
 }
 
-WallisWidget::~WallisWidget()
+WallisWidgetImp::~WallisWidgetImp()
 {
 
 }
 
-double WallisWidget::contrast() const
+double WallisWidgetImp::contrast() const
 {
   return mContrast->value();
 }
 
-double WallisWidget::brightness() const
+double WallisWidgetImp::brightness() const
 {
   return mBrightness->value();
 }
 
-int WallisWidget::imposedAverage() const
+int WallisWidgetImp::imposedAverage() const
 {
   return mImposedAverage->value();
 }
 
-int WallisWidget::imposedLocalStdDev() const
+int WallisWidgetImp::imposedLocalStdDev() const
 {
   return mImposedLocalStdDev->value();
 }
 
-int WallisWidget::kernelSize() const
+int WallisWidgetImp::kernelSize() const
 {
   return mKernelSize->value();
 }
 
-void WallisWidget::setContrast(double contrast)
+void WallisWidgetImp::setContrast(double contrast)
 {
   const QSignalBlocker blockerContrast(mContrast);
   mContrast->setValue(contrast);
 }
 
-void WallisWidget::setBrightness(double brightness)
+void WallisWidgetImp::setBrightness(double brightness)
 {
   const QSignalBlocker blockerBrightness(mBrightness);
   mBrightness->setValue(brightness);
 }
 
-void WallisWidget::setImposedAverage(int imposedAverage)
+void WallisWidgetImp::setImposedAverage(int imposedAverage)
 {
   const QSignalBlocker blockerImposedAverage(mImposedAverage);
   mImposedAverage->setValue(imposedAverage);
 }
 
-void WallisWidget::setImposedLocalStdDev(int imposedLocalStdDev)
+void WallisWidgetImp::setImposedLocalStdDev(int imposedLocalStdDev)
 {
   const QSignalBlocker blockerImposedLocalStdDev(mImposedLocalStdDev);
   mImposedLocalStdDev->setValue(imposedLocalStdDev);
 }
 
-void WallisWidget::setKernelSize(int kernelSize)
+void WallisWidgetImp::setKernelSize(int kernelSize)
 {
   const QSignalBlocker blockerKernelSize(mKernelSize);
   mKernelSize->setValue(kernelSize);
 }
 
-void WallisWidget::update()
+void WallisWidgetImp::update()
 {
 }
 
-void WallisWidget::retranslate()
+void WallisWidgetImp::retranslate()
 {
 
 }
 
-void WallisWidget::reset()
+void WallisWidgetImp::reset()
 {
   const QSignalBlocker blockerContrast(mContrast);
   const QSignalBlocker blockerBrightness(mBrightness);
@@ -112,7 +136,7 @@ void WallisWidget::reset()
   mKernelSize->setValue(50);
 }
 
-void WallisWidget::init()
+void WallisWidgetImp::init()
 {
   this->setWindowTitle("Wallis Filter");
 

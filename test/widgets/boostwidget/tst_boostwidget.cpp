@@ -16,7 +16,8 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_descriptorType_data();
   void test_descriptorType();
@@ -24,15 +25,14 @@ private slots:
   void test_scaleFactor();
   void test_useOrientation_data();
   void test_useOrientation();
-  void test_reset();
 
 private:
 
-  IBoostWidget *mBoostWidget;
+  BoostWidget *mBoostWidget;
 };
 
 TestBoostWidget::TestBoostWidget()
-  : mBoostWidget(new BoostWidget)
+  : mBoostWidget(new BoostWidgetImp)
 {
 
 }
@@ -45,13 +45,24 @@ TestBoostWidget::~TestBoostWidget()
   }
 }
 
-void TestBoostWidget::test_constructor()
+void TestBoostWidget::initTestCase()
 {
-  /// Check default values
-  BoostWidget boostWidget;
-  QCOMPARE("BINBOOST_256", boostWidget.descriptorType());
-  QCOMPARE(true, boostWidget.useOrientation());
-  QCOMPARE(6.25, boostWidget.scaleFactor());
+  QCOMPARE("BINBOOST_256", mBoostWidget->descriptorType());
+  QCOMPARE(true, mBoostWidget->useOrientation());
+  QCOMPARE(6.25, mBoostWidget->scaleFactor());
+}
+
+void TestBoostWidget::cleanupTestCase()
+{
+  mBoostWidget->setDescriptorType("BGM");
+  mBoostWidget->setUseOrientation(false);
+  mBoostWidget->setScaleFactor(6.75);
+
+  mBoostWidget->reset();
+
+  QCOMPARE("BINBOOST_256", mBoostWidget->descriptorType());
+  QCOMPARE(true, mBoostWidget->useOrientation());
+  QCOMPARE(6.25, mBoostWidget->scaleFactor());
 }
 
 void TestBoostWidget::test_windowTitle()
@@ -123,18 +134,7 @@ void TestBoostWidget::test_useOrientation()
   QCOMPARE(result, mBoostWidget->useOrientation());
 }
 
-void TestBoostWidget::test_reset()
-{
-  mBoostWidget->setDescriptorType("BGM");
-  mBoostWidget->setUseOrientation(false);
-  mBoostWidget->setScaleFactor(6.75);
 
-  mBoostWidget->reset();
-
-  QCOMPARE("BINBOOST_256", mBoostWidget->descriptorType());
-  QCOMPARE(true, mBoostWidget->useOrientation());
-  QCOMPARE(6.25, mBoostWidget->scaleFactor());
-}
 
 QTEST_MAIN(TestBoostWidget)
 

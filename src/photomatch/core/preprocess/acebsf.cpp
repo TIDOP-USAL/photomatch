@@ -1,6 +1,32 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "acebsf.h"
 
 #include <tidop/core/messages.h>
+
+#include "photomatch/core/utils.h"
 
 #include <pixkit-image.hpp>
 
@@ -11,7 +37,7 @@ namespace photomatch
 
 
 AcebsfProperties::AcebsfProperties()
-  : IAcebsf(),
+  : Acebsf(),
     mBlockSize(8, 8),
     mL(0.03),
     mK1(10.),
@@ -20,7 +46,7 @@ AcebsfProperties::AcebsfProperties()
 }
 
 AcebsfProperties::AcebsfProperties(const AcebsfProperties &acebsfProperties)
-  : IAcebsf(),
+  : Acebsf(),
     mBlockSize(acebsfProperties.mBlockSize),
     mL(acebsfProperties.mL),
     mK1(acebsfProperties.mK1),
@@ -29,7 +55,7 @@ AcebsfProperties::AcebsfProperties(const AcebsfProperties &acebsfProperties)
 }
 
 AcebsfProperties::AcebsfProperties(AcebsfProperties &&acebsfProperties) PHOTOMATCH_NOEXCEPT
-  : IAcebsf(),
+  : Acebsf(),
     mBlockSize(std::move(acebsfProperties.mBlockSize)),
     mL(acebsfProperties.mL),
     mK1(acebsfProperties.mK1),
@@ -156,18 +182,8 @@ bool AcebsfPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 
   try {
 
-    cv::Mat temp;
-    if (imgIn.channels() >= 3) {
-      cv::Mat color_boost;
-      cv::decolor(imgIn, temp, color_boost);
-      color_boost.release();
-    } else {
-      imgIn.copyTo(temp);
-    }
-
-    pixkit::enhancement::local::Lal2014(temp, imgOut,
-                                        cv::Size(AcebsfProperties::blockSize().width(),
-                                                 AcebsfProperties::blockSize().height()),
+    pixkit::enhancement::local::Lal2014(convertToGray(imgIn), imgOut,
+                                        qSizeToCvSize(AcebsfProperties::blockSize()),
                                         static_cast<float>(AcebsfProperties::l()),
                                         static_cast<float>(AcebsfProperties::k1()),
                                         static_cast<float>(AcebsfProperties::k2()));

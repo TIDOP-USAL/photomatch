@@ -18,19 +18,19 @@ class IProjectModel;
 class ISettingsModel;
 class HelpDialog;
 
-class IAcebsfWidget;
-class IClaheWidget;
-class ICmbfheWidget;
-class IDecolorWidget;
-class IDheWidget;
-class IFaheWidget;
-class IHmclaheWidget;
-class ILceBsescsWidget;
-class IMsrcpWidget;
-class INoshpWidget;
-class IPoheWidget;
-class IRswheWidget;
-class IWallisWidget;
+class AcebsfWidget;
+class ClaheWidget;
+class CmbfheWidget;
+class DecolorWidget;
+class DheWidget;
+class FaheWidget;
+class HmclaheWidget;
+class LceBsescsWidget;
+class MsrcpWidget;
+class NoshpWidget;
+class PoheWidget;
+class RswheWidget;
+class WallisWidget;
 class ProgressHandler;
 
 class IPreprocessPresenter
@@ -112,19 +112,19 @@ protected:
   ISettingsModel *mSettingsModel;
   std::shared_ptr<HelpDialog> mHelp;
 
-  IAcebsfWidget *mACEBSF;
-  IClaheWidget *mCLAHE;
-  ICmbfheWidget *mCMBFHE;
-  IDecolorWidget *mDecolor;
-  IDheWidget *mDHE;
-  IFaheWidget *mFAHE;
-  IHmclaheWidget *mHMCLAHE;
-  ILceBsescsWidget *mLCEBSESCS;
-  IMsrcpWidget *mMSRCP;
-  INoshpWidget *mNOSHP;
-  IPoheWidget *mPOHE;
-  IRswheWidget *mRSWHE;
-  IWallisWidget *mWallis;
+  AcebsfWidget *mACEBSF;
+  ClaheWidget *mCLAHE;
+  CmbfheWidget *mCMBFHE;
+  DecolorWidget *mDecolor;
+  DheWidget *mDHE;
+  FaheWidget *mFAHE;
+  HmclaheWidget *mHMCLAHE;
+  LceBsescsWidget *mLCEBSESCS;
+  MsrcpWidget *mMSRCP;
+  NoshpWidget *mNOSHP;
+  PoheWidget *mPOHE;
+  RswheWidget *mRSWHE;
+  WallisWidget *mWallis;
 
   MultiProcess *mMultiProcess;
 

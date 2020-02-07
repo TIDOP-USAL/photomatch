@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "ClaheWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-ClaheWidget::ClaheWidget(QWidget *parent)
-  : IClaheWidget(parent),
+ClaheWidgetImp::ClaheWidgetImp(QWidget *parent)
+  : ClaheWidget(parent),
     mClipLimit(new QDoubleSpinBox(this)),
     mTilesGridX(new QSpinBox(this)),
     mTilesGridY(new QSpinBox(this))
@@ -25,38 +49,38 @@ ClaheWidget::ClaheWidget(QWidget *parent)
 
 }
 
-ClaheWidget::~ClaheWidget()
+ClaheWidgetImp::~ClaheWidgetImp()
 {
 
 }
 
-void ClaheWidget::onTilesGridXChange(int gx)
+void ClaheWidgetImp::onTilesGridXChange(int gx)
 {
   emit tileGridSizeChange(QSize(gx, mTilesGridY->value()));
 }
 
-void ClaheWidget::onTilesGridYChange(int gy)
+void ClaheWidgetImp::onTilesGridYChange(int gy)
 {
   emit tileGridSizeChange(QSize(mTilesGridX->value(), gy));
 }
 
-double ClaheWidget::clipLimit() const
+double ClaheWidgetImp::clipLimit() const
 {
   return mClipLimit->value();
 }
 
-QSize ClaheWidget::tileGridSize() const
+QSize ClaheWidgetImp::tileGridSize() const
 {
   return QSize(mTilesGridX->value(), mTilesGridY->value());
 }
 
-void ClaheWidget::setClipLimit(double clipLimit)
+void ClaheWidgetImp::setClipLimit(double clipLimit)
 {
   const QSignalBlocker blockerClipLimit(mClipLimit);
   mClipLimit->setValue(clipLimit);
 }
 
-void ClaheWidget::setTilesGridSize(const QSize &tileGridSize)
+void ClaheWidgetImp::setTilesGridSize(const QSize &tileGridSize)
 {
   const QSignalBlocker blockerTilesGridX(mTilesGridX);
   const QSignalBlocker blockerTilesGridY(mTilesGridY);
@@ -65,11 +89,11 @@ void ClaheWidget::setTilesGridSize(const QSize &tileGridSize)
 
 }
 
-void ClaheWidget::update()
+void ClaheWidgetImp::update()
 {
 }
 
-void ClaheWidget::retranslate()
+void ClaheWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mClipLimit->setWhatsThis(tr("<html><head/><body><p>Threshold value for contrast limiting.</p></body></html>"));
@@ -78,7 +102,7 @@ void ClaheWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void ClaheWidget::reset()
+void ClaheWidgetImp::reset()
 {
   const QSignalBlocker blockerClipLimit(mClipLimit);
   const QSignalBlocker blockerTilesGridX(mTilesGridX);
@@ -89,7 +113,7 @@ void ClaheWidget::reset()
   mTilesGridY->setValue(8);
 }
 
-void ClaheWidget::init()
+void ClaheWidgetImp::init()
 {
   this->setWindowTitle("CLAHE");
 

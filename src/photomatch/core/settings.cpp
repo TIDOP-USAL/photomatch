@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "settings.h"
 
 #include "photomatch/core/features/agast.h"
@@ -46,8 +70,8 @@ namespace photomatch
 {
 
 
-Settings::Settings()
-  : ISettings(),
+SettingsImp::SettingsImp()
+  : Settings(),
     mHistoyMaxSize(10),
     mImageViewerBGcolor("#dcdcdc"),
     mKeypointsFormat("XML"),
@@ -86,9 +110,11 @@ Settings::Settings()
     mSurf(new SurfProperties),
     mVgg(new VggProperties),
     mMatchMethod("Flann Based Matching"),
+    mMatchStrategy("Robust Matcher"),
     mFlannMatcher(new FlannMatcherProperties),
     mBruteForceMatcher(new BruteForceMatcherProperties),
-    mRobustMatcherRefinement(new RobustMatchingProperties),
+    mRobustMatcher(new RobustMatchingProperties),
+    mGms(new GmsProperties),
     mKeypointViewerBGColor("#dcdcdc"),
     mKeypointsViewerMarkerType(0),
     mKeypointViewerMarkerSize(20),
@@ -116,7 +142,7 @@ Settings::Settings()
   reset();
 }
 
-Settings::~Settings()
+SettingsImp::~SettingsImp()
 {
   if (mAcebsf){
     delete mAcebsf;
@@ -288,28 +314,33 @@ Settings::~Settings()
     mBruteForceMatcher = nullptr;
   }
 
-  if (mRobustMatcherRefinement){
-    delete mRobustMatcherRefinement;
-    mRobustMatcherRefinement = nullptr;
+  if (mRobustMatcher){
+    delete mRobustMatcher;
+    mRobustMatcher = nullptr;
+  }
+
+  if (mGms){
+    delete mGms;
+    mGms = nullptr;
   }
 }
 
-QString Settings::language() const
+QString SettingsImp::language() const
 {
   return mLanguage;
 }
 
-void Settings::setLanguage(const QString &language)
+void SettingsImp::setLanguage(const QString &language)
 {
   mLanguage = language;
 }
 
-QStringList Settings::history() const
+QStringList SettingsImp::history() const
 {
   return mHistory;
 }
 
-void Settings::addToHistory(const QString &project)
+void SettingsImp::addToHistory(const QString &project)
 {
   mHistory.removeAll(project);
   mHistory.prepend(project);
@@ -318,642 +349,662 @@ void Settings::addToHistory(const QString &project)
     mHistory.removeLast();
 }
 
-void Settings::clearHistory()
+void SettingsImp::clearHistory()
 {
   mHistory.clear();
 }
 
-int Settings::historyMaxSize() const
+int SettingsImp::historyMaxSize() const
 {
   return mHistoyMaxSize;
 }
 
-void Settings::setHistoryMaxSize(int maxSize)
+void SettingsImp::setHistoryMaxSize(int maxSize)
 {
   mHistoyMaxSize = maxSize;
 }
 
-QString Settings::imageViewerBGcolor() const
+QString SettingsImp::imageViewerBGcolor() const
 {
   return mImageViewerBGcolor;
 }
 
-void Settings::setImageViewerBGcolor(const QString &bgColor)
+void SettingsImp::setImageViewerBGcolor(const QString &bgColor)
 {
   mImageViewerBGcolor = bgColor;
 }
 
-QString Settings::keypointsFormat() const
+QString SettingsImp::keypointsFormat() const
 {
   return mKeypointsFormat;
 }
 
-void Settings::setKeypointsFormat(const QString &format)
+void SettingsImp::setKeypointsFormat(const QString &format)
 {
   mKeypointsFormat = format;
 }
 
-QString Settings::matchesFormat() const
+QString SettingsImp::matchesFormat() const
 {
   return mMatchesFormat;
 }
 
-void Settings::setMatchesFormat(const QString &format)
+void SettingsImp::setMatchesFormat(const QString &format)
 {
   mMatchesFormat = format;
 }
 
-bool Settings::useCuda() const
+bool SettingsImp::useCuda() const
 {
   return mUseCuda;
 }
 
-void Settings::setUseCuda(bool active)
+void SettingsImp::setUseCuda(bool active)
 {
   mUseCuda = active;
 }
 
-IAcebsf *Settings::acebsf()
+Acebsf *SettingsImp::acebsf()
 {
   return mAcebsf;
 }
 
-const IAcebsf *Settings::acebsf() const
+const Acebsf *SettingsImp::acebsf() const
 {
   return mAcebsf;
 }
 
-IClahe *Settings::clahe()
+Clahe *SettingsImp::clahe()
 {
   return mClahe;
 }
 
-const IClahe *Settings::clahe() const
+const Clahe *SettingsImp::clahe() const
 {
   return mClahe;
 }
 
-ICmbfhe *Settings::cmbfhe()
+Cmbfhe *SettingsImp::cmbfhe()
 {
   return mCmbfhe;
 }
 
-const ICmbfhe *Settings::cmbfhe() const
+const Cmbfhe *SettingsImp::cmbfhe() const
 {
   return mCmbfhe;
 }
 
-IDhe *Settings::dhe()
+Dhe *SettingsImp::dhe()
 {
   return mDhe;
 }
 
-const IDhe *Settings::dhe() const
+const Dhe *SettingsImp::dhe() const
 {
   return mDhe;
 }
 
-IFahe *Settings::fahe()
+Fahe *SettingsImp::fahe()
 {
   return mFahe;
 }
 
-const IFahe *Settings::fahe() const
+const Fahe *SettingsImp::fahe() const
 {
   return mFahe;
 }
 
-IHmclahe *Settings::hmclahe()
+Hmclahe *SettingsImp::hmclahe()
 {
   return mHmclahe;
 }
 
-const IHmclahe *Settings::hmclahe() const
+const Hmclahe *SettingsImp::hmclahe() const
 {
   return mHmclahe;
 }
 
-ILceBsescs *Settings::lceBsescs()
+LceBsescs *SettingsImp::lceBsescs()
 {
   return mLceBsescs;
 }
 
-const ILceBsescs *Settings::lceBsescs() const
+const LceBsescs *SettingsImp::lceBsescs() const
 {
   return mLceBsescs;
 }
 
-IMsrcp *Settings::msrcp()
+Msrcp *SettingsImp::msrcp()
 {
   return mMsrcp;
 }
 
-const IMsrcp *Settings::msrcp() const
+const Msrcp *SettingsImp::msrcp() const
 {
   return mMsrcp;
 }
 
-INoshp *Settings::noshp()
+Noshp *SettingsImp::noshp()
 {
   return mNoshp;
 }
 
-const INoshp *Settings::noshp() const
+const Noshp *SettingsImp::noshp() const
 {
   return mNoshp;
 }
 
-IPohe *Settings::pohe()
+Pohe *SettingsImp::pohe()
 {
   return mPohe;
 }
 
-const IPohe *Settings::pohe() const
+const Pohe *SettingsImp::pohe() const
 {
   return mPohe;
 }
 
-IRswhe *Settings::rswhe()
+Rswhe *SettingsImp::rswhe()
 {
   return mRswhe;
 }
 
-const IRswhe *Settings::rswhe() const
+const Rswhe *SettingsImp::rswhe() const
 {
   return mRswhe;
 }
 
-IWallis *Settings::wallis()
+Wallis *SettingsImp::wallis()
 {
   return mWallis;
 }
 
-const IWallis *Settings::wallis() const
+const Wallis *SettingsImp::wallis() const
 {
   return mWallis;
 }
 
-IAgast *Settings::agast()
+Agast *SettingsImp::agast()
 {
   return mAgast;
 }
 
-const IAgast *Settings::agast() const
+const Agast *SettingsImp::agast() const
 {
   return mAgast;
 }
 
-IAkaze *Settings::akaze()
+Akaze *SettingsImp::akaze()
 {
   return mAkaze;
 }
 
-const IAkaze *Settings::akaze() const
+const Akaze *SettingsImp::akaze() const
 {
   return mAkaze;
 }
 
-IBoost *Settings::boost()
+Boost *SettingsImp::boost()
 {
   return mBoost;
 }
 
-const IBoost *Settings::boost() const
+const Boost *SettingsImp::boost() const
 {
   return mBoost;
 }
 
-IBrief *Settings::brief()
+Brief *SettingsImp::brief()
 {
   return mBrief;
 }
 
-const IBrief *Settings::brief() const
+const Brief *SettingsImp::brief() const
 {
   return mBrief;
 }
 
-IBrisk *Settings::brisk()
+Brisk *SettingsImp::brisk()
 {
   return mBrisk;
 }
 
-const IBrisk *Settings::brisk() const
+const Brisk *SettingsImp::brisk() const
 {
   return mBrisk;
 }
 
-IDaisy *Settings::daisy()
+Daisy *SettingsImp::daisy()
 {
   return mDaisy;
 }
 
-const IDaisy *Settings::daisy() const
+const Daisy *SettingsImp::daisy() const
 {
   return mDaisy;
 }
 
-IFast *Settings::fast()
+Fast *SettingsImp::fast()
 {
   return mFast;
 }
 
-const IFast *Settings::fast() const
+const Fast *SettingsImp::fast() const
 {
   return mFast;
 }
 
-IFreak *Settings::freak()
+Freak *SettingsImp::freak()
 {
   return mFreak;
 }
 
-const IFreak *Settings::freak() const
+const Freak *SettingsImp::freak() const
 {
   return mFreak;
 }
 
-IGftt *Settings::gftt()
+Gftt *SettingsImp::gftt()
 {
   return mGftt;
 }
 
-const IGftt *Settings::gftt() const
+const Gftt *SettingsImp::gftt() const
 {
   return mGftt;
 }
 
-IHog *Settings::hog()
+Hog *SettingsImp::hog()
 {
   return mHog;
 }
 
-const IHog *Settings::hog() const
+const Hog *SettingsImp::hog() const
 {
   return mHog;
 }
 
-IKaze *Settings::kaze()
+Kaze *SettingsImp::kaze()
 {
   return mKaze;
 }
 
-const IKaze *Settings::kaze() const
+const Kaze *SettingsImp::kaze() const
 {
   return mKaze;
 }
 
-ILatch *Settings::latch()
+Latch *SettingsImp::latch()
 {
   return mLatch;
 }
 
-const ILatch *Settings::latch() const
+const Latch *SettingsImp::latch() const
 {
   return mLatch;
 }
 
-ILucid *Settings::lucid()
+Lucid *SettingsImp::lucid()
 {
   return mLucid;
 }
 
-const ILucid *Settings::lucid() const
+const Lucid *SettingsImp::lucid() const
 {
   return mLucid;
 }
 
-IMsd *Settings::msd()
+Msd *SettingsImp::msd()
 {
   return mMsd;
 }
 
-const IMsd *Settings::msd() const
+const Msd *SettingsImp::msd() const
 {
   return mMsd;
 }
 
-IMser *Settings::mser()
+Mser *SettingsImp::mser()
 {
   return mMser;
 }
 
-const IMser *Settings::mser() const
+const Mser *SettingsImp::mser() const
 {
   return mMser;
 }
 
-IOrb *Settings::orb()
+Orb *SettingsImp::orb()
 {
   return mOrb;
 }
 
-const IOrb *Settings::orb() const
+const Orb *SettingsImp::orb() const
 {
   return mOrb;
 }
 
-ISift *Settings::sift()
+Sift *SettingsImp::sift()
 {
   return mSift;
 }
 
-const ISift *Settings::sift() const
+const Sift *SettingsImp::sift() const
 {
   return mSift;
 }
 
-IStar *Settings::star()
+Star *SettingsImp::star()
 {
   return mStar;
 }
 
-const IStar *Settings::star() const
+const Star *SettingsImp::star() const
 {
   return mStar;
 }
 
-ISurf *photomatch::Settings::surf()
+Surf *photomatch::SettingsImp::surf()
 {
   return mSurf;
 }
 
-const ISurf *Settings::surf() const
+const Surf *SettingsImp::surf() const
 {
   return mSurf;
 }
 
-IVgg *Settings::vgg()
+Vgg *SettingsImp::vgg()
 {
   return mVgg;
 }
 
-const IVgg *Settings::vgg() const
+const Vgg *SettingsImp::vgg() const
 {
   return mVgg;
 }
 
-QString Settings::matchMethod() const
+QString SettingsImp::matchMethod() const
 {
   return mMatchMethod;
 }
 
-void Settings::setMatchMethod(const QString &matchingMethod)
+void SettingsImp::setMatchMethod(const QString &matchingMethod)
 {
   mMatchMethod = matchingMethod;
 }
 
-IFlannMatcher *Settings::flannMatcher()
+QString SettingsImp::matchStrategy() const
+{
+  return mMatchStrategy;
+}
+
+void SettingsImp::setMatchStrategy(const QString &matchingStrategy)
+{
+  mMatchStrategy = matchingStrategy;
+}
+
+FlannMatcher *SettingsImp::flannMatcher()
 {
   return mFlannMatcher;
 }
 
-const IFlannMatcher *Settings::flannMatcher() const
+const FlannMatcher *SettingsImp::flannMatcher() const
 {
   return mFlannMatcher;
 }
 
-IBruteForceMatcher *Settings::bruteForceMatcher()
+BruteForceMatcher *SettingsImp::bruteForceMatcher()
 {
   return mBruteForceMatcher;
 }
 
-const IBruteForceMatcher *Settings::bruteForceMatcher() const
+const BruteForceMatcher *SettingsImp::bruteForceMatcher() const
 {
   return mBruteForceMatcher;
 }
 
-IRobustMatcherRefinement *Settings::robustMatcherRefinement()
+RobustMatcher *SettingsImp::robustMatcher()
 {
-  return mRobustMatcherRefinement;
+  return mRobustMatcher;
 }
 
-const IRobustMatcherRefinement *Settings::robustMatcherRefinement() const
+const RobustMatcher *SettingsImp::robustMatcher() const
 {
-  return mRobustMatcherRefinement;
+  return mRobustMatcher;
 }
 
-QString Settings::keypointsViewerBGColor() const
+Gms *SettingsImp::gms()
+{
+  return mGms;
+}
+
+const Gms *SettingsImp::gms() const
+{
+  return mGms;
+}
+
+QString SettingsImp::keypointsViewerBGColor() const
 {
   return mKeypointViewerBGColor;
 }
 
-void Settings::setKeypointsViewerBGColor(const QString &color)
+void SettingsImp::setKeypointsViewerBGColor(const QString &color)
 {
   mKeypointViewerBGColor = color;
 }
 
-int Settings::keypointsViewerMarkerType() const
+int SettingsImp::keypointsViewerMarkerType() const
 {
   return mKeypointsViewerMarkerType;
 }
 
-void Settings::setKeypointsViewerMarkerType(int type)
+void SettingsImp::setKeypointsViewerMarkerType(int type)
 {
   mKeypointsViewerMarkerType = type;
 }
 
-int Settings::keypointsViewerMarkerSize() const
+int SettingsImp::keypointsViewerMarkerSize() const
 {
   return mKeypointViewerMarkerSize;
 }
 
-void Settings::setKeypointsViewerMarkerSize(int size)
+void SettingsImp::setKeypointsViewerMarkerSize(int size)
 {
   mKeypointViewerMarkerSize = size;
 }
 
-int Settings::keypointsViewerMarkerWidth() const
+int SettingsImp::keypointsViewerMarkerWidth() const
 {
   return mKeypointViewerMarkerWidth;
 }
 
-void Settings::setKeypointsViewerMarkerWidth(int width)
+void SettingsImp::setKeypointsViewerMarkerWidth(int width)
 {
   mKeypointViewerMarkerWidth = width;
 }
 
-QString Settings::keypointsViewerMarkerColor() const
+QString SettingsImp::keypointsViewerMarkerColor() const
 {
   return mKeypointViewerMarkerColor;
 }
 
-void Settings::setKeypointsViewerMarkerColor(const QString &color)
+void SettingsImp::setKeypointsViewerMarkerColor(const QString &color)
 {
   mKeypointViewerMarkerColor = color;
 }
 
-int Settings::keypointsViewerSelectMarkerWidth() const
+int SettingsImp::keypointsViewerSelectMarkerWidth() const
 {
   return mKeypointViewerSelectMarkerWidth;
 }
 
-void Settings::setKeypointsViewerSelectMarkerWidth(int width)
+void SettingsImp::setKeypointsViewerSelectMarkerWidth(int width)
 {
   mKeypointViewerSelectMarkerWidth = width;
 }
 
-QString Settings::keypointsViewerSelectMarkerColor() const
+QString SettingsImp::keypointsViewerSelectMarkerColor() const
 {
   return mKeypointViewerSelectMarkerColor;
 }
 
-void Settings::setKeypointsViewerSelectMarkerColor(const QString &color)
+void SettingsImp::setKeypointsViewerSelectMarkerColor(const QString &color)
 {
   mKeypointViewerSelectMarkerColor = color;
 }
 
-QString Settings::matchesViewerBGColor() const
+QString SettingsImp::matchesViewerBGColor() const
 {
   return mMatchesViewerBGColor;
 }
 
-void Settings::setMatchesViewerBGColor(const QString &color)
+void SettingsImp::setMatchesViewerBGColor(const QString &color)
 {
   mMatchesViewerBGColor = color;
 }
 
-int Settings::matchesViewerMarkerType() const
+int SettingsImp::matchesViewerMarkerType() const
 {
   return mMatchesViewerMarkerType;
 }
 
-void Settings::setMatchesViewerMarkerType(int type)
+void SettingsImp::setMatchesViewerMarkerType(int type)
 {
   mMatchesViewerMarkerType = type;
 }
 
-int Settings::matchesViewerMarkerSize() const
+int SettingsImp::matchesViewerMarkerSize() const
 {
   return mMatchesViewerMarkerSize;
 }
 
-void Settings::setMatchesViewerMarkerSize(int size)
+void SettingsImp::setMatchesViewerMarkerSize(int size)
 {
   mMatchesViewerMarkerSize = size;
 }
 
-int Settings::matchesViewerMarkerWidth() const
+int SettingsImp::matchesViewerMarkerWidth() const
 {
   return mMatchesViewerMarkerWidth;
 }
 
-void Settings::setMatchesViewerMarkerWidth(int width)
+void SettingsImp::setMatchesViewerMarkerWidth(int width)
 {
   mMatchesViewerMarkerWidth = width;
 }
 
-QString Settings::matchesViewerMarkerColor() const
+QString SettingsImp::matchesViewerMarkerColor() const
 {
   return mMatchesViewerMarkerColor;
 }
 
-void Settings::setMatchesViewerMarkerColor(const QString &color)
+void SettingsImp::setMatchesViewerMarkerColor(const QString &color)
 {
   mMatchesViewerMarkerColor = color;
 }
 
-int Settings::matchesViewerSelectMarkerWidth() const
+int SettingsImp::matchesViewerSelectMarkerWidth() const
 {
   return mMatchesViewerSelectMarkerWidth;
 }
 
-void Settings::setMatchesViewerSelectMarkerWidth(int width)
+void SettingsImp::setMatchesViewerSelectMarkerWidth(int width)
 {
   mMatchesViewerSelectMarkerWidth = width;
 }
 
-QString Settings::matchesViewerSelectMarkerColor() const
+QString SettingsImp::matchesViewerSelectMarkerColor() const
 {
   return mMatchesViewerSelectMarkerColor;
 }
 
-void Settings::setMatchesViewerSelectMarkerColor(const QString &color)
+void SettingsImp::setMatchesViewerSelectMarkerColor(const QString &color)
 {
   mMatchesViewerSelectMarkerColor = color;
 }
 
-QString Settings::matchesViewerLineColor() const
+QString SettingsImp::matchesViewerLineColor() const
 {
   return mMatchesViewerLineColor;
 }
 
-void Settings::setMatchesViewerLineColor(const QString &color)
+void SettingsImp::setMatchesViewerLineColor(const QString &color)
 {
   mMatchesViewerLineColor = color;
 }
 
-int Settings::matchesViewerLineWidth() const
+int SettingsImp::matchesViewerLineWidth() const
 {
   return mMatchesViewerLineWidth;
 }
 
-void Settings::setMatchesViewerLineWidth(int width)
+void SettingsImp::setMatchesViewerLineWidth(int width)
 {
   mMatchesViewerLineWidth = width;
 }
 
-QString Settings::groundTruthEditorBGColor() const
+QString SettingsImp::groundTruthEditorBGColor() const
 {
   return mGroundTruthEditorBGColor;
 }
 
-void Settings::setGroundTruthEditorBGColor(const QString &bgColor)
+void SettingsImp::setGroundTruthEditorBGColor(const QString &bgColor)
 {
   mGroundTruthEditorBGColor = bgColor;
 }
 
-int Settings::groundTruthEditorMarkerSize() const
+int SettingsImp::groundTruthEditorMarkerSize() const
 {
   return mGroundTruthEditorMarkerSize;
 }
 
-void Settings::setGroundTruthEditorMarkerSize(int size)
+void SettingsImp::setGroundTruthEditorMarkerSize(int size)
 {
   mGroundTruthEditorMarkerSize = size;
 }
 
-int Settings::groundTruthEditorMarkerWidth() const
+int SettingsImp::groundTruthEditorMarkerWidth() const
 {
   return mGroundTruthEditorMarkerWidth;
 }
 
-void Settings::setGroundTruthEditorMarkerWidth(int width)
+void SettingsImp::setGroundTruthEditorMarkerWidth(int width)
 {
   mGroundTruthEditorMarkerWidth = width;
 }
 
-QString Settings::groundTruthEditorMarkerColor() const
+QString SettingsImp::groundTruthEditorMarkerColor() const
 {
   return mGroundTruthEditorMarkerColor;
 }
 
-void Settings::setGroundTruthEditorMarkerColor(const QString &color)
+void SettingsImp::setGroundTruthEditorMarkerColor(const QString &color)
 {
   mGroundTruthEditorMarkerColor = color;
 }
 
-int Settings::groundTruthEditorSelectMarkerWidth() const
+int SettingsImp::groundTruthEditorSelectMarkerWidth() const
 {
   return mGroundTruthEditorSelectMarkerWidth;
 }
 
-void Settings::setGroundTruthEditorSelectMarkerWidth(int width)
+void SettingsImp::setGroundTruthEditorSelectMarkerWidth(int width)
 {
   mGroundTruthEditorSelectMarkerWidth = width;
 }
 
-QString Settings::groundTruthEditorSelectMarkerColor() const
+QString SettingsImp::groundTruthEditorSelectMarkerColor() const
 {
   return mGroundTruthEditorSelectMarkerColor;
 }
 
-void Settings::setGroundTruthEditorSelectMarkerColor(const QString &color)
+void SettingsImp::setGroundTruthEditorSelectMarkerColor(const QString &color)
 {
   mGroundTruthEditorSelectMarkerColor = color;
 }
 
-void Settings::reset()
+void SettingsImp::reset()
 {
   mLanguage = "en";
 
@@ -1001,9 +1052,11 @@ void Settings::reset()
   mVgg->reset();
 
   mMatchMethod = "Flann Based Matching";
+  mMatchStrategy = "Robust Matcher";
   mFlannMatcher->reset();
   mBruteForceMatcher->reset();
-  mRobustMatcherRefinement->reset();
+  mRobustMatcher->reset();
+  mGms->reset();
 
   mKeypointViewerBGColor = "#dcdcdc";
   mKeypointsViewerMarkerType = 0;
@@ -1033,29 +1086,29 @@ void Settings::reset()
 /*----------------------------------------------------------------*/
 
 
-SettingsRW::SettingsRW()
-  : ISettingsRW(),
-    mSettingsRW(nullptr)
+SettingsControllerImp::SettingsControllerImp()
+  : SettingsController(),
+    mSettingsController(nullptr)
 {
-  mSettingsRW = new QSettings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "PhotoMatch");
+  mSettingsController = new QSettings(QSettings::IniFormat, QSettings::UserScope, "TIDOP", "PhotoMatch");
 }
 
-SettingsRW::~SettingsRW()
+SettingsControllerImp::~SettingsControllerImp()
 {
-  if (mSettingsRW){
-    delete mSettingsRW;
-    mSettingsRW = nullptr;
+  if (mSettingsController){
+    delete mSettingsController;
+    mSettingsController = nullptr;
   }
 }
 
-void SettingsRW::read(ISettings &settings)
+void SettingsControllerImp::read(Settings &settings)
 {
   QString lang = QLocale::system().name();
   lang.truncate(lang.lastIndexOf('_'));
-  settings.setLanguage(mSettingsRW->value("lang", lang).toString());
+  settings.setLanguage(mSettingsController->value("lang", lang).toString());
 
-  settings.setHistoryMaxSize(mSettingsRW->value("HISTORY/MaxSize", settings.historyMaxSize()).toInt());
-  QStringList history = mSettingsRW->value("HISTORY/RecentProjects", settings.history()).toStringList();
+  settings.setHistoryMaxSize(mSettingsController->value("HISTORY/MaxSize", settings.historyMaxSize()).toInt());
+  QStringList history = mSettingsController->value("HISTORY/RecentProjects", settings.history()).toStringList();
   settings.clearHistory();
   for(auto &prj : history){
     if (QFileInfo(prj).exists()){
@@ -1063,497 +1116,505 @@ void SettingsRW::read(ISettings &settings)
     }
   }
 
-  settings.setImageViewerBGcolor(mSettingsRW->value("ImageViewer/BGColor", settings.imageViewerBGcolor()).toString());
+  settings.setImageViewerBGcolor(mSettingsController->value("ImageViewer/BGColor", settings.imageViewerBGcolor()).toString());
 
-  settings.setKeypointsFormat(mSettingsRW->value("MATCH/KeypointsFormat", settings.keypointsFormat()).toString());
-  settings.setMatchesFormat(mSettingsRW->value("MATCH/MatchesFormat", settings.matchesFormat()).toString());
+  settings.setKeypointsFormat(mSettingsController->value("MATCH/KeypointsFormat", settings.keypointsFormat()).toString());
+  settings.setMatchesFormat(mSettingsController->value("MATCH/MatchesFormat", settings.matchesFormat()).toString());
 
-  settings.setUseCuda(mSettingsRW->value("General/UseCuda", settings.useCuda()).toBool());
+  settings.setUseCuda(mSettingsController->value("General/UseCuda", settings.useCuda()).toBool());
 
   /* CLAHE */
-  settings.clahe()->setClipLimit(mSettingsRW->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
-  settings.clahe()->setTilesGridSize(mSettingsRW->value("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize()).toSize());
+  settings.clahe()->setClipLimit(mSettingsController->value("CLAHE/ClipLimit", settings.clahe()->clipLimit()).toDouble());
+  settings.clahe()->setTilesGridSize(mSettingsController->value("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize()).toSize());
 
   /* CMBFHE */
-  settings.cmbfhe()->setBlockSize(mSettingsRW->value("CMBFHE/BlockSize", settings.cmbfhe()->blockSize()).toSize());
+  settings.cmbfhe()->setBlockSize(mSettingsController->value("CMBFHE/BlockSize", settings.cmbfhe()->blockSize()).toSize());
 
   /* DHE */
-  settings.dhe()->setX(mSettingsRW->value("DHE/x", settings.dhe()->x()).toInt());
+  settings.dhe()->setX(mSettingsController->value("DHE/x", settings.dhe()->x()).toInt());
 
   /* FAHE */
-  settings.fahe()->setBlockSize(mSettingsRW->value("FAHE/BlockSize", settings.fahe()->blockSize()).toSize());
+  settings.fahe()->setBlockSize(mSettingsController->value("FAHE/BlockSize", settings.fahe()->blockSize()).toSize());
 
   /* HMCLAHE */
-  settings.hmclahe()->setL(mSettingsRW->value("HMCLAHE/L", settings.hmclahe()->l()).toDouble());
-  settings.hmclahe()->setPhi(mSettingsRW->value("HMCLAHE/Phi", settings.hmclahe()->phi()).toDouble());
-  settings.hmclahe()->setBlockSize(mSettingsRW->value("HMCLAHE/BlockSize", settings.hmclahe()->blockSize()).toSize());
+  settings.hmclahe()->setL(mSettingsController->value("HMCLAHE/L", settings.hmclahe()->l()).toDouble());
+  settings.hmclahe()->setPhi(mSettingsController->value("HMCLAHE/Phi", settings.hmclahe()->phi()).toDouble());
+  settings.hmclahe()->setBlockSize(mSettingsController->value("HMCLAHE/BlockSize", settings.hmclahe()->blockSize()).toSize());
 
   /* LCE_BSESCS */
-  settings.lceBsescs()->setBlockSize(mSettingsRW->value("LCE_BSESCS/BlockSize", settings.lceBsescs()->blockSize()).toSize());
+  settings.lceBsescs()->setBlockSize(mSettingsController->value("LCE_BSESCS/BlockSize", settings.lceBsescs()->blockSize()).toSize());
 
   /* MSRCP */
-  settings.msrcp()->setMidScale(mSettingsRW->value("MSRCP/MidScale", settings.msrcp()->midScale()).toDouble());
-  settings.msrcp()->setLargeScale(mSettingsRW->value("MSRCP/LargeScale", settings.msrcp()->largeScale()).toDouble());
-  settings.msrcp()->setSmallScale(mSettingsRW->value("MSRCP/SmallScale", settings.msrcp()->smallScale()).toDouble());
+  settings.msrcp()->setMidScale(mSettingsController->value("MSRCP/MidScale", settings.msrcp()->midScale()).toDouble());
+  settings.msrcp()->setLargeScale(mSettingsController->value("MSRCP/LargeScale", settings.msrcp()->largeScale()).toDouble());
+  settings.msrcp()->setSmallScale(mSettingsController->value("MSRCP/SmallScale", settings.msrcp()->smallScale()).toDouble());
 
   /* NOSHP */
-  settings.noshp()->setBlockSize(mSettingsRW->value("NOSHP/BlockSize", settings.noshp()->blockSize()).toSize());
+  settings.noshp()->setBlockSize(mSettingsController->value("NOSHP/BlockSize", settings.noshp()->blockSize()).toSize());
 
   /* POHE */
-  settings.pohe()->setBlockSize(mSettingsRW->value("POHE/BlockSize", settings.pohe()->blockSize()).toSize());
+  settings.pohe()->setBlockSize(mSettingsController->value("POHE/BlockSize", settings.pohe()->blockSize()).toSize());
 
   /* RSWHE */
   int histogramCutDef = static_cast<int>(settings.rswhe()->histogramCut());
-  IRswhe::HistogramCut value = static_cast<IRswhe::HistogramCut>(mSettingsRW->value("RSWHE/HistogramCut", histogramCutDef).toInt());
+  Rswhe::HistogramCut value = static_cast<Rswhe::HistogramCut>(mSettingsController->value("RSWHE/HistogramCut", histogramCutDef).toInt());
   settings.rswhe()->setHistogramCut(value);
-  settings.rswhe()->setHistogramDivisions(mSettingsRW->value("RSWHE/HistogramDivisions", settings.rswhe()->histogramDivisions()).toInt());
+  settings.rswhe()->setHistogramDivisions(mSettingsController->value("RSWHE/HistogramDivisions", settings.rswhe()->histogramDivisions()).toInt());
 
   /* WALLIS */
-  settings.wallis()->setContrast(mSettingsRW->value("WALLIS/Contrast", settings.wallis()->contrast()).toDouble());
-  settings.wallis()->setBrightness(mSettingsRW->value("WALLIS/Brightness", settings.wallis()->brightness()).toDouble());
-  settings.wallis()->setImposedAverage(mSettingsRW->value("WALLIS/ImposedAverage", settings.wallis()->imposedAverage()).toInt());
-  settings.wallis()->setImposedLocalStdDev(mSettingsRW->value("WALLIS/ImposedLocalStdDev", settings.wallis()->imposedLocalStdDev()).toInt());
-  settings.wallis()->setKernelSize(mSettingsRW->value("WALLIS/KernelSize", settings.wallis()->kernelSize()).toInt());
+  settings.wallis()->setContrast(mSettingsController->value("WALLIS/Contrast", settings.wallis()->contrast()).toDouble());
+  settings.wallis()->setBrightness(mSettingsController->value("WALLIS/Brightness", settings.wallis()->brightness()).toDouble());
+  settings.wallis()->setImposedAverage(mSettingsController->value("WALLIS/ImposedAverage", settings.wallis()->imposedAverage()).toInt());
+  settings.wallis()->setImposedLocalStdDev(mSettingsController->value("WALLIS/ImposedLocalStdDev", settings.wallis()->imposedLocalStdDev()).toInt());
+  settings.wallis()->setKernelSize(mSettingsController->value("WALLIS/KernelSize", settings.wallis()->kernelSize()).toInt());
 
   /* AGAST */
-  settings.agast()->setThreshold(mSettingsRW->value("AGAST/Threshold", settings.agast()->threshold()).toInt());
-  settings.agast()->setNonmaxSuppression(mSettingsRW->value("AGAST/NonmaxSuppression", settings.agast()->nonmaxSuppression()).toBool());
-  settings.agast()->setDetectorType(mSettingsRW->value("AGAST/DetectorType", settings.agast()->detectorType()).toString());
+  settings.agast()->setThreshold(mSettingsController->value("AGAST/Threshold", settings.agast()->threshold()).toInt());
+  settings.agast()->setNonmaxSuppression(mSettingsController->value("AGAST/NonmaxSuppression", settings.agast()->nonmaxSuppression()).toBool());
+  settings.agast()->setDetectorType(mSettingsController->value("AGAST/DetectorType", settings.agast()->detectorType()).toString());
 
   /* AKAZE */
-  settings.akaze()->setOctaves(mSettingsRW->value("AKAZE/Octaves", settings.akaze()->octaves()).toInt());
-  settings.akaze()->setThreshold(mSettingsRW->value("AKAZE/Threshold", settings.akaze()->threshold()).toDouble());
-  settings.akaze()->setDiffusivity(mSettingsRW->value("AKAZE/Diffusivity", settings.akaze()->diffusivity()).toString());
-  settings.akaze()->setOctaveLayers(mSettingsRW->value("AKAZE/OctaveLayers", settings.akaze()->octaveLayers()).toInt());
-  settings.akaze()->setDescriptorSize(mSettingsRW->value("AKAZE/DescriptorSize", settings.akaze()->descriptorSize()).toInt());
-  settings.akaze()->setDescriptorType(mSettingsRW->value("AKAZE/DescriptorType", settings.akaze()->descriptorType()).toString());
-  settings.akaze()->setDescriptorChannels(mSettingsRW->value("AKAZE/DescriptorChannels", settings.akaze()->descriptorChannels()).toInt());
+  settings.akaze()->setOctaves(mSettingsController->value("AKAZE/Octaves", settings.akaze()->octaves()).toInt());
+  settings.akaze()->setThreshold(mSettingsController->value("AKAZE/Threshold", settings.akaze()->threshold()).toDouble());
+  settings.akaze()->setDiffusivity(mSettingsController->value("AKAZE/Diffusivity", settings.akaze()->diffusivity()).toString());
+  settings.akaze()->setOctaveLayers(mSettingsController->value("AKAZE/OctaveLayers", settings.akaze()->octaveLayers()).toInt());
+  settings.akaze()->setDescriptorSize(mSettingsController->value("AKAZE/DescriptorSize", settings.akaze()->descriptorSize()).toInt());
+  settings.akaze()->setDescriptorType(mSettingsController->value("AKAZE/DescriptorType", settings.akaze()->descriptorType()).toString());
+  settings.akaze()->setDescriptorChannels(mSettingsController->value("AKAZE/DescriptorChannels", settings.akaze()->descriptorChannels()).toInt());
 
   /* BOOST */
-  settings.boost()->setDescriptorType(mSettingsRW->value("BOOST/DescriptorType", settings.boost()->descriptorType()).toString());
-  settings.boost()->setUseOrientation(mSettingsRW->value("BOOST/UseOrientation", settings.boost()->useOrientation()).toBool());
-  settings.boost()->setScaleFactor(mSettingsRW->value("BOOST/ScaleFactor", settings.boost()->scaleFactor()).toDouble());
+  settings.boost()->setDescriptorType(mSettingsController->value("BOOST/DescriptorType", settings.boost()->descriptorType()).toString());
+  settings.boost()->setUseOrientation(mSettingsController->value("BOOST/UseOrientation", settings.boost()->useOrientation()).toBool());
+  settings.boost()->setScaleFactor(mSettingsController->value("BOOST/ScaleFactor", settings.boost()->scaleFactor()).toDouble());
 
   /* BRIEF */
-  settings.brief()->setBytes(mSettingsRW->value("BRIEF/Bytes", settings.brief()->bytes()).toString());
-  settings.brief()->setUseOrientation(mSettingsRW->value("BRIEF/Orientation", settings.brief()->useOrientation()).toBool());
+  settings.brief()->setBytes(mSettingsController->value("BRIEF/Bytes", settings.brief()->bytes()).toString());
+  settings.brief()->setUseOrientation(mSettingsController->value("BRIEF/Orientation", settings.brief()->useOrientation()).toBool());
 
   /* BRISK */
-  settings.brisk()->setOctaves(mSettingsRW->value("BRISK/Octaves", settings.brisk()->octaves()).toInt());
-  settings.brisk()->setThreshold(mSettingsRW->value("BRISK/Threshold", settings.brisk()->threshold()).toInt());
-  settings.brisk()->setPatternScale(mSettingsRW->value("BRISK/PatternScale", settings.brisk()->patternScale()).toDouble());
+  settings.brisk()->setOctaves(mSettingsController->value("BRISK/Octaves", settings.brisk()->octaves()).toInt());
+  settings.brisk()->setThreshold(mSettingsController->value("BRISK/Threshold", settings.brisk()->threshold()).toInt());
+  settings.brisk()->setPatternScale(mSettingsController->value("BRISK/PatternScale", settings.brisk()->patternScale()).toDouble());
 
   /* DAISY */
-  settings.daisy()->setNorm(mSettingsRW->value("DAISY/Norm", settings.daisy()->norm()).toString());
-  settings.daisy()->setQHist(mSettingsRW->value("DAISY/QHist", settings.daisy()->qHist()).toInt());
-  settings.daisy()->setQTheta(mSettingsRW->value("DAISY/QTheta", settings.daisy()->qTheta()).toInt());
-  settings.daisy()->setRadius(mSettingsRW->value("DAISY/Radius", settings.daisy()->radius()).toInt());
-  settings.daisy()->setQRadius(mSettingsRW->value("DAISY/QRadius", settings.daisy()->qRadius()).toInt());
-  settings.daisy()->setInterpolation(mSettingsRW->value("DAISY/Interpolation", settings.daisy()->interpolation()).toBool());
-  settings.daisy()->setUseOrientation(mSettingsRW->value("DAISY/UseOrientation", settings.daisy()->useOrientation()).toBool());
+  settings.daisy()->setNorm(mSettingsController->value("DAISY/Norm", settings.daisy()->norm()).toString());
+  settings.daisy()->setQHist(mSettingsController->value("DAISY/QHist", settings.daisy()->qHist()).toInt());
+  settings.daisy()->setQTheta(mSettingsController->value("DAISY/QTheta", settings.daisy()->qTheta()).toInt());
+  settings.daisy()->setRadius(mSettingsController->value("DAISY/Radius", settings.daisy()->radius()).toInt());
+  settings.daisy()->setQRadius(mSettingsController->value("DAISY/QRadius", settings.daisy()->qRadius()).toInt());
+  settings.daisy()->setInterpolation(mSettingsController->value("DAISY/Interpolation", settings.daisy()->interpolation()).toBool());
+  settings.daisy()->setUseOrientation(mSettingsController->value("DAISY/UseOrientation", settings.daisy()->useOrientation()).toBool());
 
   /* FAST */
-  settings.fast()->setThreshold(mSettingsRW->value("FAST/Threshold", settings.fast()->threshold()).toInt());
-  settings.fast()->setDetectorType(mSettingsRW->value("FAST/DetectorType", settings.fast()->detectorType()).toString());
-  settings.fast()->setNonmaxSuppression(mSettingsRW->value("FAST/NonmaxSuppression", settings.fast()->nonmaxSuppression()).toBool());
+  settings.fast()->setThreshold(mSettingsController->value("FAST/Threshold", settings.fast()->threshold()).toInt());
+  settings.fast()->setDetectorType(mSettingsController->value("FAST/DetectorType", settings.fast()->detectorType()).toString());
+  settings.fast()->setNonmaxSuppression(mSettingsController->value("FAST/NonmaxSuppression", settings.fast()->nonmaxSuppression()).toBool());
 
   /* FREAK */
-  settings.freak()->setOctaves(mSettingsRW->value("FREAK/Octaves", settings.freak()->octaves()).toInt());
-  settings.freak()->setPatternScale(mSettingsRW->value("FREAK/PatternScale", settings.freak()->patternScale()).toDouble());
-  settings.freak()->setScaleNormalized(mSettingsRW->value("FREAK/ScaleNormalized", settings.freak()->scaleNormalized()).toBool());
-  settings.freak()->setOrientationNormalized(mSettingsRW->value("FREAK/OrientationNormalized", settings.freak()->orientationNormalized()).toBool());
+  settings.freak()->setOctaves(mSettingsController->value("FREAK/Octaves", settings.freak()->octaves()).toInt());
+  settings.freak()->setPatternScale(mSettingsController->value("FREAK/PatternScale", settings.freak()->patternScale()).toDouble());
+  settings.freak()->setScaleNormalized(mSettingsController->value("FREAK/ScaleNormalized", settings.freak()->scaleNormalized()).toBool());
+  settings.freak()->setOrientationNormalized(mSettingsController->value("FREAK/OrientationNormalized", settings.freak()->orientationNormalized()).toBool());
 
   /* GFTT */
-  settings.gftt()->setK(mSettingsRW->value("GFTT/K", settings.gftt()->k()).toDouble());
-  settings.gftt()->setBlockSize(mSettingsRW->value("GFTT/BlockSize", settings.gftt()->blockSize()).toInt());
-  settings.gftt()->setMaxFeatures(mSettingsRW->value("GFTT/MaxFeatures", settings.gftt()->maxFeatures()).toInt());
-  settings.gftt()->setMinDistance(mSettingsRW->value("GFTT/MinDistance", settings.gftt()->minDistance()).toDouble());
-  settings.gftt()->setQualityLevel(mSettingsRW->value("GFTT/QualityLevel", settings.gftt()->qualityLevel()).toDouble());
-  settings.gftt()->setHarrisDetector(mSettingsRW->value("GFTT/HarrisDetector", settings.gftt()->harrisDetector()).toBool());
+  settings.gftt()->setK(mSettingsController->value("GFTT/K", settings.gftt()->k()).toDouble());
+  settings.gftt()->setBlockSize(mSettingsController->value("GFTT/BlockSize", settings.gftt()->blockSize()).toInt());
+  settings.gftt()->setMaxFeatures(mSettingsController->value("GFTT/MaxFeatures", settings.gftt()->maxFeatures()).toInt());
+  settings.gftt()->setMinDistance(mSettingsController->value("GFTT/MinDistance", settings.gftt()->minDistance()).toDouble());
+  settings.gftt()->setQualityLevel(mSettingsController->value("GFTT/QualityLevel", settings.gftt()->qualityLevel()).toDouble());
+  settings.gftt()->setHarrisDetector(mSettingsController->value("GFTT/HarrisDetector", settings.gftt()->harrisDetector()).toBool());
 
   /* HOG */
-  settings.hog()->setNbins(mSettingsRW->value("HOG/Nbins", settings.hog()->nbins()).toInt());
-  settings.hog()->setWinSize(mSettingsRW->value("HOG/WinSize", settings.hog()->winSize()).toSize());
-  settings.hog()->setCellSize(mSettingsRW->value("HOG/CellSize", settings.hog()->cellSize()).toSize());
-  settings.hog()->setBlockSize(mSettingsRW->value("HOG/BlockSize", settings.hog()->blockSize()).toSize());
-  settings.hog()->setBlockStride(mSettingsRW->value("HOG/BlockStride", settings.hog()->blockStride()).toSize());
-  settings.hog()->setDerivAperture(mSettingsRW->value("HOG/DerivAperture", settings.hog()->derivAperture()).toInt());
+  settings.hog()->setNbins(mSettingsController->value("HOG/Nbins", settings.hog()->nbins()).toInt());
+  settings.hog()->setWinSize(mSettingsController->value("HOG/WinSize", settings.hog()->winSize()).toSize());
+  settings.hog()->setCellSize(mSettingsController->value("HOG/CellSize", settings.hog()->cellSize()).toSize());
+  settings.hog()->setBlockSize(mSettingsController->value("HOG/BlockSize", settings.hog()->blockSize()).toSize());
+  settings.hog()->setBlockStride(mSettingsController->value("HOG/BlockStride", settings.hog()->blockStride()).toSize());
+  settings.hog()->setDerivAperture(mSettingsController->value("HOG/DerivAperture", settings.hog()->derivAperture()).toInt());
 
   /* KAZE */
-  settings.kaze()->setOctaves(mSettingsRW->value("KAZE/Octaves", settings.kaze()->octaves()).toInt());
-  settings.kaze()->setUpright(mSettingsRW->value("KAZE/Upright", settings.kaze()->upright()).toBool());
-  settings.kaze()->setThreshold(mSettingsRW->value("KAZE/Threshold", settings.kaze()->threshold()).toDouble());
-  settings.kaze()->setDiffusivity(mSettingsRW->value("KAZE/Diffusivity", settings.kaze()->diffusivity()).toString());
-  settings.kaze()->setOctaveLayers(mSettingsRW->value("KAZE/OctaveLayers", settings.kaze()->octaveLayers()).toInt());
-  settings.kaze()->setExtendedDescriptor(mSettingsRW->value("KAZE/ExtendedDescriptor", settings.kaze()->extendedDescriptor()).toBool());
+  settings.kaze()->setOctaves(mSettingsController->value("KAZE/Octaves", settings.kaze()->octaves()).toInt());
+  settings.kaze()->setUpright(mSettingsController->value("KAZE/Upright", settings.kaze()->upright()).toBool());
+  settings.kaze()->setThreshold(mSettingsController->value("KAZE/Threshold", settings.kaze()->threshold()).toDouble());
+  settings.kaze()->setDiffusivity(mSettingsController->value("KAZE/Diffusivity", settings.kaze()->diffusivity()).toString());
+  settings.kaze()->setOctaveLayers(mSettingsController->value("KAZE/OctaveLayers", settings.kaze()->octaveLayers()).toInt());
+  settings.kaze()->setExtendedDescriptor(mSettingsController->value("KAZE/ExtendedDescriptor", settings.kaze()->extendedDescriptor()).toBool());
 
   /* LATCH */
-  settings.latch()->setBytes(mSettingsRW->value("LATCH/Bytes", settings.latch()->bytes()).toString());
-  settings.latch()->setHalfSsdSize(mSettingsRW->value("LATCH/HalfSsdSize", settings.latch()->halfSsdSize()).toInt());
-  settings.latch()->setRotationInvariance(mSettingsRW->value("LATCH/RotationInvariance", settings.latch()->rotationInvariance()).toBool());
+  settings.latch()->setBytes(mSettingsController->value("LATCH/Bytes", settings.latch()->bytes()).toString());
+  settings.latch()->setHalfSsdSize(mSettingsController->value("LATCH/HalfSsdSize", settings.latch()->halfSsdSize()).toInt());
+  settings.latch()->setRotationInvariance(mSettingsController->value("LATCH/RotationInvariance", settings.latch()->rotationInvariance()).toBool());
 
   /* LUCID */
-  settings.lucid()->setBlurKernel(mSettingsRW->value("LUCID/BlurKernel", settings.lucid()->blurKernel()).toInt());
-  settings.lucid()->setLucidKernel(mSettingsRW->value("LUCID/LucidKernel", settings.lucid()->lucidKernel()).toInt());
+  settings.lucid()->setBlurKernel(mSettingsController->value("LUCID/BlurKernel", settings.lucid()->blurKernel()).toInt());
+  settings.lucid()->setLucidKernel(mSettingsController->value("LUCID/LucidKernel", settings.lucid()->lucidKernel()).toInt());
 
   /* MSD */
-  settings.msd()->setKNN(mSettingsRW->value("MSD/KNN", settings.msd()->knn()).toInt());
-  settings.msd()->setAffineTilts(mSettingsRW->value("MSD/AffineTilts", settings.msd()->affineTilts()).toInt());
-  settings.msd()->setNScales(mSettingsRW->value("MSD/NScales", settings.msd()->nScales()).toInt());
-  settings.msd()->setAffineMSD(mSettingsRW->value("MSD/AffineMSD", settings.msd()->affineMSD()).toBool());
-  settings.msd()->setNMSRadius(mSettingsRW->value("MSD/NMSRadius", settings.msd()->NMSRadius()).toInt());
-  settings.msd()->setNMSScaleRadius(mSettingsRW->value("MSD/NMSScaleRadius", settings.msd()->NMSScaleRadius()).toInt());
-  settings.msd()->setSearchAreaRadius(mSettingsRW->value("MSD/AreaRadius", settings.msd()->searchAreaRadius()).toInt());
-  settings.msd()->setPatchRadius(mSettingsRW->value("MSD/PathRadius", settings.msd()->patchRadius()).toInt());
-  settings.msd()->setScaleFactor(mSettingsRW->value("MSD/ScaleFactor", settings.msd()->scaleFactor()).toDouble());
-  settings.msd()->setThresholdSaliency(mSettingsRW->value("MSD/ThresholdSaliency", settings.msd()->thresholdSaliency()).toDouble());
-  settings.msd()->setComputeOrientation(mSettingsRW->value("MSD/ComputeOrientations", settings.msd()->computeOrientation()).toBool());
+  settings.msd()->setKNN(mSettingsController->value("MSD/KNN", settings.msd()->knn()).toInt());
+  settings.msd()->setAffineTilts(mSettingsController->value("MSD/AffineTilts", settings.msd()->affineTilts()).toInt());
+  settings.msd()->setNScales(mSettingsController->value("MSD/NScales", settings.msd()->nScales()).toInt());
+  settings.msd()->setAffineMSD(mSettingsController->value("MSD/AffineMSD", settings.msd()->affineMSD()).toBool());
+  settings.msd()->setNMSRadius(mSettingsController->value("MSD/NMSRadius", settings.msd()->NMSRadius()).toInt());
+  settings.msd()->setNMSScaleRadius(mSettingsController->value("MSD/NMSScaleRadius", settings.msd()->NMSScaleRadius()).toInt());
+  settings.msd()->setSearchAreaRadius(mSettingsController->value("MSD/AreaRadius", settings.msd()->searchAreaRadius()).toInt());
+  settings.msd()->setPatchRadius(mSettingsController->value("MSD/PathRadius", settings.msd()->patchRadius()).toInt());
+  settings.msd()->setScaleFactor(mSettingsController->value("MSD/ScaleFactor", settings.msd()->scaleFactor()).toDouble());
+  settings.msd()->setThresholdSaliency(mSettingsController->value("MSD/ThresholdSaliency", settings.msd()->thresholdSaliency()).toDouble());
+  settings.msd()->setComputeOrientation(mSettingsController->value("MSD/ComputeOrientations", settings.msd()->computeOrientation()).toBool());
 
   /* MSER */
-  settings.mser()->setDelta(mSettingsRW->value("MSER/Delta", settings.mser()->delta()).toInt());
-  settings.mser()->setMaxArea(mSettingsRW->value("MSER/MaxArea", settings.mser()->maxArea()).toInt());
-  settings.mser()->setMinArea(mSettingsRW->value("MSER/MinArea", settings.mser()->minArea()).toInt());
-  settings.mser()->setMinMargin(mSettingsRW->value("MSER/MinMargin", settings.mser()->minMargin()).toInt());
-  settings.mser()->setEdgeBlurSize(mSettingsRW->value("MSER/EdgeBlurSize", settings.mser()->edgeBlurSize()).toInt());
-  settings.mser()->setMaxEvolution(mSettingsRW->value("MSER/MaxEvolution", settings.mser()->maxEvolution()).toInt());
-  settings.mser()->setMaxVariation(mSettingsRW->value("MSER/MaxVariation", settings.mser()->maxVariation()).toDouble());
-  settings.mser()->setMinDiversity(mSettingsRW->value("MSER/MinDiversity", settings.mser()->minDiversity()).toDouble());
-  settings.mser()->setAreaThreshold(mSettingsRW->value("MSER/AreaThreshold", settings.mser()->areaThreshold()).toDouble());
+  settings.mser()->setDelta(mSettingsController->value("MSER/Delta", settings.mser()->delta()).toInt());
+  settings.mser()->setMaxArea(mSettingsController->value("MSER/MaxArea", settings.mser()->maxArea()).toInt());
+  settings.mser()->setMinArea(mSettingsController->value("MSER/MinArea", settings.mser()->minArea()).toInt());
+  settings.mser()->setMinMargin(mSettingsController->value("MSER/MinMargin", settings.mser()->minMargin()).toInt());
+  settings.mser()->setEdgeBlurSize(mSettingsController->value("MSER/EdgeBlurSize", settings.mser()->edgeBlurSize()).toInt());
+  settings.mser()->setMaxEvolution(mSettingsController->value("MSER/MaxEvolution", settings.mser()->maxEvolution()).toInt());
+  settings.mser()->setMaxVariation(mSettingsController->value("MSER/MaxVariation", settings.mser()->maxVariation()).toDouble());
+  settings.mser()->setMinDiversity(mSettingsController->value("MSER/MinDiversity", settings.mser()->minDiversity()).toDouble());
+  settings.mser()->setAreaThreshold(mSettingsController->value("MSER/AreaThreshold", settings.mser()->areaThreshold()).toDouble());
 
   /* ORB */
-  settings.orb()->setWTA_K(mSettingsRW->value("ORB/WTA_K", settings.orb()->wta_k()).toInt());
-  settings.orb()->setPatchSize(mSettingsRW->value("ORB/PatchSize", settings.orb()->patchSize()).toInt());
-  settings.orb()->setScoreType(mSettingsRW->value("ORB/ScoreType", settings.orb()->scoreType()).toString());
-  settings.orb()->setScaleFactor(mSettingsRW->value("ORB/ScaleFactor", settings.orb()->scaleFactor()).toDouble());
-  settings.orb()->setLevelsNumber(mSettingsRW->value("ORB/LevelsNumber", settings.orb()->levelsNumber()).toInt());
-  settings.orb()->setEdgeThreshold(mSettingsRW->value("ORB/EdgeThreshold", settings.orb()->edgeThreshold()).toInt());
-  settings.orb()->setFastThreshold(mSettingsRW->value("ORB/FastThreshold", settings.orb()->fastThreshold()).toInt());
-  settings.orb()->setFeaturesNumber(mSettingsRW->value("ORB/FeaturesNumber", settings.orb()->featuresNumber()).toInt());
+  settings.orb()->setWTA_K(mSettingsController->value("ORB/WTA_K", settings.orb()->wta_k()).toInt());
+  settings.orb()->setPatchSize(mSettingsController->value("ORB/PatchSize", settings.orb()->patchSize()).toInt());
+  settings.orb()->setScoreType(mSettingsController->value("ORB/ScoreType", settings.orb()->scoreType()).toString());
+  settings.orb()->setScaleFactor(mSettingsController->value("ORB/ScaleFactor", settings.orb()->scaleFactor()).toDouble());
+  settings.orb()->setLevelsNumber(mSettingsController->value("ORB/LevelsNumber", settings.orb()->levelsNumber()).toInt());
+  settings.orb()->setEdgeThreshold(mSettingsController->value("ORB/EdgeThreshold", settings.orb()->edgeThreshold()).toInt());
+  settings.orb()->setFastThreshold(mSettingsController->value("ORB/FastThreshold", settings.orb()->fastThreshold()).toInt());
+  settings.orb()->setFeaturesNumber(mSettingsController->value("ORB/FeaturesNumber", settings.orb()->featuresNumber()).toInt());
 
   /* SIFT */
-  settings.sift()->setSigma(mSettingsRW->value("SIFT/Sigma", settings.sift()->sigma()).toDouble());
-  settings.sift()->setOctaveLayers(mSettingsRW->value("SIFT/OctaveLayers", settings.sift()->octaveLayers()).toInt());
-  settings.sift()->setEdgeThreshold(mSettingsRW->value("SIFT/EdgeThreshold", settings.sift()->edgeThreshold()).toDouble());
-  settings.sift()->setFeaturesNumber(mSettingsRW->value("SIFT/FeaturesNumber", settings.sift()->featuresNumber()).toInt());
-  settings.sift()->setContrastThreshold(mSettingsRW->value("SIFT/ContrastThreshold", settings.sift()->contrastThreshold()).toDouble());
+  settings.sift()->setSigma(mSettingsController->value("SIFT/Sigma", settings.sift()->sigma()).toDouble());
+  settings.sift()->setOctaveLayers(mSettingsController->value("SIFT/OctaveLayers", settings.sift()->octaveLayers()).toInt());
+  settings.sift()->setEdgeThreshold(mSettingsController->value("SIFT/EdgeThreshold", settings.sift()->edgeThreshold()).toDouble());
+  settings.sift()->setFeaturesNumber(mSettingsController->value("SIFT/FeaturesNumber", settings.sift()->featuresNumber()).toInt());
+  settings.sift()->setContrastThreshold(mSettingsController->value("SIFT/ContrastThreshold", settings.sift()->contrastThreshold()).toDouble());
 
   /* STAR */
-  settings.star()->setMaxSize(mSettingsRW->value("STAR/MaxSize", settings.star()->maxSize()).toInt());
-  settings.star()->setResponseThreshold(mSettingsRW->value("STAR/ResponseThreshold", settings.star()->responseThreshold()).toInt());
-  settings.star()->setSuppressNonmaxSize(mSettingsRW->value("STAR/SuppressNonmaxSize", settings.star()->suppressNonmaxSize()).toInt());
-  settings.star()->setLineThresholdBinarized(mSettingsRW->value("STAR/LineThresholdBinarized", settings.star()->lineThresholdBinarized()).toInt());
-  settings.star()->setLineThresholdProjected(mSettingsRW->value("STAR/LineThresholdProjected", settings.star()->lineThresholdProjected()).toInt());
+  settings.star()->setMaxSize(mSettingsController->value("STAR/MaxSize", settings.star()->maxSize()).toInt());
+  settings.star()->setResponseThreshold(mSettingsController->value("STAR/ResponseThreshold", settings.star()->responseThreshold()).toInt());
+  settings.star()->setSuppressNonmaxSize(mSettingsController->value("STAR/SuppressNonmaxSize", settings.star()->suppressNonmaxSize()).toInt());
+  settings.star()->setLineThresholdBinarized(mSettingsController->value("STAR/LineThresholdBinarized", settings.star()->lineThresholdBinarized()).toInt());
+  settings.star()->setLineThresholdProjected(mSettingsController->value("STAR/LineThresholdProjected", settings.star()->lineThresholdProjected()).toInt());
 
   /* SURF */
-  settings.surf()->setOctaves(mSettingsRW->value("SURF/Octaves", settings.surf()->octaves()).toInt());
-  settings.surf()->setOctaveLayers(mSettingsRW->value("SURF/OctaveLayers", settings.surf()->octaveLayers()).toInt());
-  settings.surf()->setUpright(mSettingsRW->value("SURF/RotatedFeatures", settings.surf()->upright()).toBool());
-  settings.surf()->setHessianThreshold(mSettingsRW->value("SURF/HessianThreshold", settings.surf()->hessianThreshold()).toDouble());
-  settings.surf()->setExtendedDescriptor(mSettingsRW->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
+  settings.surf()->setOctaves(mSettingsController->value("SURF/Octaves", settings.surf()->octaves()).toInt());
+  settings.surf()->setOctaveLayers(mSettingsController->value("SURF/OctaveLayers", settings.surf()->octaveLayers()).toInt());
+  settings.surf()->setUpright(mSettingsController->value("SURF/RotatedFeatures", settings.surf()->upright()).toBool());
+  settings.surf()->setHessianThreshold(mSettingsController->value("SURF/HessianThreshold", settings.surf()->hessianThreshold()).toDouble());
+  settings.surf()->setExtendedDescriptor(mSettingsController->value("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor()).toBool());
 
   /* VGG */
-  settings.vgg()->setDescriptorType(mSettingsRW->value("VGG/DescriptorType", settings.vgg()->descriptorType()).toString());
-  settings.vgg()->setScaleFactor(mSettingsRW->value("VGG/ScaleFactor", settings.vgg()->scaleFactor()).toDouble());
-  settings.vgg()->setSigma(mSettingsRW->value("VGG/Sigma", settings.vgg()->sigma()).toDouble());
-  settings.vgg()->setUseNormalizeDescriptor(mSettingsRW->value("VGG/UseNormalizeDescriptor", settings.vgg()->useNormalizeDescriptor()).toBool());
-  settings.vgg()->setUseNormalizeImage(mSettingsRW->value("VGG/UseNormalizeImage", settings.vgg()->useNormalizeImage()).toBool());
-  settings.vgg()->setUseScaleOrientation(mSettingsRW->value("VGG/UseScaleOrientation", settings.vgg()->useScaleOrientation()).toBool());
+  settings.vgg()->setDescriptorType(mSettingsController->value("VGG/DescriptorType", settings.vgg()->descriptorType()).toString());
+  settings.vgg()->setScaleFactor(mSettingsController->value("VGG/ScaleFactor", settings.vgg()->scaleFactor()).toDouble());
+  settings.vgg()->setSigma(mSettingsController->value("VGG/Sigma", settings.vgg()->sigma()).toDouble());
+  settings.vgg()->setUseNormalizeDescriptor(mSettingsController->value("VGG/UseNormalizeDescriptor", settings.vgg()->useNormalizeDescriptor()).toBool());
+  settings.vgg()->setUseNormalizeImage(mSettingsController->value("VGG/UseNormalizeImage", settings.vgg()->useNormalizeImage()).toBool());
+  settings.vgg()->setUseScaleOrientation(mSettingsController->value("VGG/UseScaleOrientation", settings.vgg()->useScaleOrientation()).toBool());
 
   /* Matching */
-  settings.setMatchMethod(mSettingsRW->value("MATCH/MatchMethod", settings.matchMethod()).toString());
-  int normType = mSettingsRW->value("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType())).toInt();
-  settings.bruteForceMatcher()->setNormType(static_cast<IBruteForceMatcher::Norm>(normType));
-  settings.robustMatcherRefinement()->setRatio(mSettingsRW->value("MATCH/RefinementRatio", settings.robustMatcherRefinement()->ratio()).toDouble());
-  settings.robustMatcherRefinement()->setDistance(mSettingsRW->value("MATCH/RefinementDistance", settings.robustMatcherRefinement()->distance()).toDouble());
-  settings.robustMatcherRefinement()->setConfidence(mSettingsRW->value("MATCH/RefinementConfidence", settings.robustMatcherRefinement()->confidence()).toDouble());
-  settings.robustMatcherRefinement()->setCrossCheck(mSettingsRW->value("MATCH/RefinementCrossCheck", settings.robustMatcherRefinement()->crossCheck()).toBool());
-  settings.robustMatcherRefinement()->setMaxIters(mSettingsRW->value("MATCH/RefinementMaxIters", settings.robustMatcherRefinement()->maxIter()).toInt());
-  int geometricTest = mSettingsRW->value("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcherRefinement()->geometricTest())).toInt();
-  settings.robustMatcherRefinement()->setGeometricTest(static_cast<IRobustMatcherRefinement::GeometricTest>(geometricTest));
-  int homographyComputeMethod = mSettingsRW->value("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->homographyComputeMethod())).toInt();
-  settings.robustMatcherRefinement()->setHomographyComputeMethod(static_cast<IRobustMatcherRefinement::HomographyComputeMethod>(homographyComputeMethod));
-  int fundamentalComputeMethod = mSettingsRW->value("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->fundamentalComputeMethod())).toInt();
-  settings.robustMatcherRefinement()->setFundamentalComputeMethod(static_cast<IRobustMatcherRefinement::FundamentalComputeMethod>(fundamentalComputeMethod));
-  int essentialComputeMethod = mSettingsRW->value("MATCH/RefinementEssentialComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->essentialComputeMethod())).toInt();
-  settings.robustMatcherRefinement()->setEssentialComputeMethod(static_cast<IRobustMatcherRefinement::EssentialComputeMethod>(essentialComputeMethod));
+  settings.setMatchMethod(mSettingsController->value("MATCH/MatchMethod", settings.matchMethod()).toString());
+  settings.setMatchStrategy(mSettingsController->value("MATCH/MatchStrategy", settings.matchStrategy()).toString());
+  int normType = mSettingsController->value("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType())).toInt();
+  settings.bruteForceMatcher()->setNormType(static_cast<BruteForceMatcher::Norm>(normType));
+  settings.robustMatcher()->setRatio(mSettingsController->value("MATCH/RefinementRatio", settings.robustMatcher()->ratio()).toDouble());
+  settings.robustMatcher()->setDistance(mSettingsController->value("MATCH/RefinementDistance", settings.robustMatcher()->distance()).toDouble());
+  settings.robustMatcher()->setConfidence(mSettingsController->value("MATCH/RefinementConfidence", settings.robustMatcher()->confidence()).toDouble());
+  settings.robustMatcher()->setCrossCheck(mSettingsController->value("MATCH/RefinementCrossCheck", settings.robustMatcher()->crossCheck()).toBool());
+  settings.robustMatcher()->setMaxIters(mSettingsController->value("MATCH/RefinementMaxIters", settings.robustMatcher()->maxIter()).toInt());
+  int geometricTest = mSettingsController->value("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcher()->geometricTest())).toInt();
+  settings.robustMatcher()->setGeometricTest(static_cast<RobustMatcher::GeometricTest>(geometricTest));
+  int homographyComputeMethod = mSettingsController->value("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcher()->homographyComputeMethod())).toInt();
+  settings.robustMatcher()->setHomographyComputeMethod(static_cast<RobustMatcher::HomographyComputeMethod>(homographyComputeMethod));
+  int fundamentalComputeMethod = mSettingsController->value("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcher()->fundamentalComputeMethod())).toInt();
+  settings.robustMatcher()->setFundamentalComputeMethod(static_cast<RobustMatcher::FundamentalComputeMethod>(fundamentalComputeMethod));
+  int essentialComputeMethod = mSettingsController->value("MATCH/RefinementEssentialComputeMethod", static_cast<int>(settings.robustMatcher()->essentialComputeMethod())).toInt();
+  settings.robustMatcher()->setEssentialComputeMethod(static_cast<RobustMatcher::EssentialComputeMethod>(essentialComputeMethod));
+  settings.gms()->setScale(mSettingsController->value("MATCH/GMS_Scale", settings.gms()->scale()).toBool());
+  settings.gms()->setRotation(mSettingsController->value("MATCH/GMS_Rotation", settings.gms()->rotation()).toBool());
+  settings.gms()->setThreshold(mSettingsController->value("MATCH/GMS_Threshold", settings.gms()->threshold()).toDouble());
 
   /* Keypoints Viewer */
-  settings.setKeypointsViewerBGColor(mSettingsRW->value("KeypointsViewer/BGColor", settings.keypointsViewerBGColor()).toString());
-  settings.setKeypointsViewerMarkerType(mSettingsRW->value("KeypointsViewer/Type",  settings.keypointsViewerMarkerType()).toInt());
-  settings.setKeypointsViewerMarkerSize(mSettingsRW->value("KeypointsViewer/MarkerSize", settings.keypointsViewerMarkerSize()).toInt());
-  settings.setKeypointsViewerMarkerWidth(mSettingsRW->value("KeypointsViewer/MarkerWidth", settings.keypointsViewerMarkerWidth()).toInt());
-  settings.setKeypointsViewerMarkerColor(mSettingsRW->value("KeypointsViewer/MarkerColor", settings.keypointsViewerMarkerColor()).toString());
-  settings.setKeypointsViewerSelectMarkerWidth(mSettingsRW->value("KeypointsViewer/SelectMarkerWidth", settings.keypointsViewerSelectMarkerWidth()).toInt());
-  settings.setKeypointsViewerSelectMarkerColor(mSettingsRW->value("KeypointsViewer/SelectMarkerColor", settings.keypointsViewerSelectMarkerColor()).toString());
+  settings.setKeypointsViewerBGColor(mSettingsController->value("KeypointsViewer/BGColor", settings.keypointsViewerBGColor()).toString());
+  settings.setKeypointsViewerMarkerType(mSettingsController->value("KeypointsViewer/Type",  settings.keypointsViewerMarkerType()).toInt());
+  settings.setKeypointsViewerMarkerSize(mSettingsController->value("KeypointsViewer/MarkerSize", settings.keypointsViewerMarkerSize()).toInt());
+  settings.setKeypointsViewerMarkerWidth(mSettingsController->value("KeypointsViewer/MarkerWidth", settings.keypointsViewerMarkerWidth()).toInt());
+  settings.setKeypointsViewerMarkerColor(mSettingsController->value("KeypointsViewer/MarkerColor", settings.keypointsViewerMarkerColor()).toString());
+  settings.setKeypointsViewerSelectMarkerWidth(mSettingsController->value("KeypointsViewer/SelectMarkerWidth", settings.keypointsViewerSelectMarkerWidth()).toInt());
+  settings.setKeypointsViewerSelectMarkerColor(mSettingsController->value("KeypointsViewer/SelectMarkerColor", settings.keypointsViewerSelectMarkerColor()).toString());
 
   /* Matches Viewer */
-  settings.setMatchesViewerBGColor(mSettingsRW->value("MatchesViewer/BGColor", settings.matchesViewerBGColor()).toString());
-  settings.setMatchesViewerMarkerType(mSettingsRW->value("MatchesViewer/MarkerType",  settings.matchesViewerMarkerType()).toInt());
-  settings.setMatchesViewerMarkerSize(mSettingsRW->value("MatchesViewer/MarkerSize", settings.matchesViewerMarkerSize()).toInt());
-  settings.setMatchesViewerMarkerWidth(mSettingsRW->value("MatchesViewer/MarkerWidth", settings.matchesViewerMarkerWidth()).toInt());
-  settings.setMatchesViewerMarkerColor(mSettingsRW->value("MatchesViewer/MarkerColor", settings.matchesViewerMarkerColor()).toString());
-  settings.setMatchesViewerSelectMarkerWidth(mSettingsRW->value("MatchesViewer/SelectMarkerWidth", settings.matchesViewerSelectMarkerWidth()).toInt());
-  settings.setMatchesViewerSelectMarkerColor(mSettingsRW->value("MatchesViewer/SelectMarkerColor", settings.matchesViewerSelectMarkerColor()).toString());
-  settings.setMatchesViewerLineColor(mSettingsRW->value("MatchesViewer/LineColor", settings.matchesViewerLineColor()).toString());
-  settings.setMatchesViewerLineWidth(mSettingsRW->value("MatchesViewer/LineWidth", settings.matchesViewerLineWidth()).toInt());
+  settings.setMatchesViewerBGColor(mSettingsController->value("MatchesViewer/BGColor", settings.matchesViewerBGColor()).toString());
+  settings.setMatchesViewerMarkerType(mSettingsController->value("MatchesViewer/MarkerType",  settings.matchesViewerMarkerType()).toInt());
+  settings.setMatchesViewerMarkerSize(mSettingsController->value("MatchesViewer/MarkerSize", settings.matchesViewerMarkerSize()).toInt());
+  settings.setMatchesViewerMarkerWidth(mSettingsController->value("MatchesViewer/MarkerWidth", settings.matchesViewerMarkerWidth()).toInt());
+  settings.setMatchesViewerMarkerColor(mSettingsController->value("MatchesViewer/MarkerColor", settings.matchesViewerMarkerColor()).toString());
+  settings.setMatchesViewerSelectMarkerWidth(mSettingsController->value("MatchesViewer/SelectMarkerWidth", settings.matchesViewerSelectMarkerWidth()).toInt());
+  settings.setMatchesViewerSelectMarkerColor(mSettingsController->value("MatchesViewer/SelectMarkerColor", settings.matchesViewerSelectMarkerColor()).toString());
+  settings.setMatchesViewerLineColor(mSettingsController->value("MatchesViewer/LineColor", settings.matchesViewerLineColor()).toString());
+  settings.setMatchesViewerLineWidth(mSettingsController->value("MatchesViewer/LineWidth", settings.matchesViewerLineWidth()).toInt());
 
   /* Ground Truth Editor */
-  settings.setGroundTruthEditorBGColor(mSettingsRW->value("GroundTruthEditor/BGColor", settings.groundTruthEditorBGColor()).toString());
-  settings.setGroundTruthEditorMarkerSize(mSettingsRW->value("GroundTruthEditor/MarkerSize", settings.groundTruthEditorMarkerSize()).toInt());
-  settings.setGroundTruthEditorMarkerWidth(mSettingsRW->value("GroundTruthEditor/MarkerWidth", settings.groundTruthEditorMarkerWidth()).toInt());
-  settings.setGroundTruthEditorMarkerColor(mSettingsRW->value("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor()).toString());
-  settings.setGroundTruthEditorSelectMarkerWidth(mSettingsRW->value("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth()).toInt());
-  settings.setGroundTruthEditorSelectMarkerColor(mSettingsRW->value("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor()).toString());
+  settings.setGroundTruthEditorBGColor(mSettingsController->value("GroundTruthEditor/BGColor", settings.groundTruthEditorBGColor()).toString());
+  settings.setGroundTruthEditorMarkerSize(mSettingsController->value("GroundTruthEditor/MarkerSize", settings.groundTruthEditorMarkerSize()).toInt());
+  settings.setGroundTruthEditorMarkerWidth(mSettingsController->value("GroundTruthEditor/MarkerWidth", settings.groundTruthEditorMarkerWidth()).toInt());
+  settings.setGroundTruthEditorMarkerColor(mSettingsController->value("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor()).toString());
+  settings.setGroundTruthEditorSelectMarkerWidth(mSettingsController->value("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth()).toInt());
+  settings.setGroundTruthEditorSelectMarkerColor(mSettingsController->value("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor()).toString());
 
 }
 
-void SettingsRW::write(const ISettings &settings)
+void SettingsControllerImp::write(const Settings &settings)
 {
-  mSettingsRW->setValue("lang", settings.language());
+  mSettingsController->setValue("lang", settings.language());
 
-  mSettingsRW->setValue("HISTORY/MaxSize", settings.historyMaxSize());
-  mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
+  mSettingsController->setValue("HISTORY/MaxSize", settings.historyMaxSize());
+  mSettingsController->setValue("HISTORY/RecentProjects", settings.history());
 
-  mSettingsRW->setValue("ImageViewer/BGColor", settings.imageViewerBGcolor());
+  mSettingsController->setValue("ImageViewer/BGColor", settings.imageViewerBGcolor());
 
-  mSettingsRW->setValue("MATCH/KeypointsFormat", settings.keypointsFormat());
-  mSettingsRW->setValue("MATCH/MatchFormat", settings.matchesFormat());
+  mSettingsController->setValue("MATCH/KeypointsFormat", settings.keypointsFormat());
+  mSettingsController->setValue("MATCH/MatchFormat", settings.matchesFormat());
 
-  mSettingsRW->setValue("General/UseCuda", settings.useCuda());
+  mSettingsController->setValue("General/UseCuda", settings.useCuda());
 
   /* CLAHE */
-  mSettingsRW->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());
-  mSettingsRW->setValue("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize());
+  mSettingsController->setValue("CLAHE/ClipLimit", settings.clahe()->clipLimit());
+  mSettingsController->setValue("CLAHE/TilesGridSize", settings.clahe()->tilesGridSize());
 
   /* CMBFHE */
-  mSettingsRW->setValue("CMBFHE/BlockSize", settings.cmbfhe()->blockSize());
+  mSettingsController->setValue("CMBFHE/BlockSize", settings.cmbfhe()->blockSize());
 
   /* DHE */
-  mSettingsRW->setValue("DHE/x", settings.dhe()->x());
+  mSettingsController->setValue("DHE/x", settings.dhe()->x());
 
   /* FAHE */
-  mSettingsRW->setValue("FAHE/BlockSize", settings.fahe()->blockSize());
+  mSettingsController->setValue("FAHE/BlockSize", settings.fahe()->blockSize());
 
   /* HMCLAHE */
-  mSettingsRW->setValue("HMCLAHE/L", settings.hmclahe()->l());
-  mSettingsRW->setValue("HMCLAHE/Phi", settings.hmclahe()->phi());
-  mSettingsRW->setValue("HMCLAHE/BlockSize", settings.hmclahe()->blockSize());
+  mSettingsController->setValue("HMCLAHE/L", settings.hmclahe()->l());
+  mSettingsController->setValue("HMCLAHE/Phi", settings.hmclahe()->phi());
+  mSettingsController->setValue("HMCLAHE/BlockSize", settings.hmclahe()->blockSize());
 
   /* LCE_BSESCS */
-  mSettingsRW->setValue("LCE_BSESCS/BlockSize", settings.lceBsescs()->blockSize());
+  mSettingsController->setValue("LCE_BSESCS/BlockSize", settings.lceBsescs()->blockSize());
 
   /* MSRCP */
-  mSettingsRW->setValue("MSRCP/MidScale", settings.msrcp()->midScale());
-  mSettingsRW->setValue("MSRCP/LargeScale", settings.msrcp()->largeScale());
-  mSettingsRW->setValue("MSRCP/SmallScale", settings.msrcp()->smallScale());
+  mSettingsController->setValue("MSRCP/MidScale", settings.msrcp()->midScale());
+  mSettingsController->setValue("MSRCP/LargeScale", settings.msrcp()->largeScale());
+  mSettingsController->setValue("MSRCP/SmallScale", settings.msrcp()->smallScale());
 
   /* NOSHP */
-  mSettingsRW->setValue("NOSHP/BlockSize", settings.noshp()->blockSize());
+  mSettingsController->setValue("NOSHP/BlockSize", settings.noshp()->blockSize());
 
   /* POHE */
-  mSettingsRW->setValue("POHE/BlockSize", settings.pohe()->blockSize());
+  mSettingsController->setValue("POHE/BlockSize", settings.pohe()->blockSize());
 
   /* RSWHE */
-  mSettingsRW->setValue("RSWHE/HistogramCut", static_cast<int>(settings.rswhe()->histogramCut()));
-  mSettingsRW->setValue("RSWHE/HistogramDivisions", settings.rswhe()->histogramDivisions());
+  mSettingsController->setValue("RSWHE/HistogramCut", static_cast<int>(settings.rswhe()->histogramCut()));
+  mSettingsController->setValue("RSWHE/HistogramDivisions", settings.rswhe()->histogramDivisions());
 
   /* WALLIS */
-  mSettingsRW->setValue("WALLIS/Contrast", settings.wallis()->contrast());
-  mSettingsRW->setValue("WALLIS/Brightness", settings.wallis()->brightness());
-  mSettingsRW->setValue("WALLIS/ImposedAverage", settings.wallis()->imposedAverage());
-  mSettingsRW->setValue("WALLIS/ImposedLocalStdDev", settings.wallis()->imposedLocalStdDev());
-  mSettingsRW->setValue("WALLIS/KernelSize", settings.wallis()->kernelSize());
+  mSettingsController->setValue("WALLIS/Contrast", settings.wallis()->contrast());
+  mSettingsController->setValue("WALLIS/Brightness", settings.wallis()->brightness());
+  mSettingsController->setValue("WALLIS/ImposedAverage", settings.wallis()->imposedAverage());
+  mSettingsController->setValue("WALLIS/ImposedLocalStdDev", settings.wallis()->imposedLocalStdDev());
+  mSettingsController->setValue("WALLIS/KernelSize", settings.wallis()->kernelSize());
 
 
   /* AGAST */
-  mSettingsRW->setValue("AGAST/Threshold", settings.agast()->threshold());
-  mSettingsRW->setValue("AGAST/NonmaxSuppression", settings.agast()->nonmaxSuppression());
-  mSettingsRW->setValue("AGAST/DetectorType", settings.agast()->detectorType());
+  mSettingsController->setValue("AGAST/Threshold", settings.agast()->threshold());
+  mSettingsController->setValue("AGAST/NonmaxSuppression", settings.agast()->nonmaxSuppression());
+  mSettingsController->setValue("AGAST/DetectorType", settings.agast()->detectorType());
 
   /* AKAZE */
-  mSettingsRW->setValue("AKAZE/Octaves", settings.akaze()->octaves());
-  mSettingsRW->setValue("AKAZE/Threshold", settings.akaze()->threshold());
-  mSettingsRW->setValue("AKAZE/Diffusivity", settings.akaze()->diffusivity());
-  mSettingsRW->setValue("AKAZE/OctaveLayers", settings.akaze()->octaveLayers());
-  mSettingsRW->setValue("AKAZE/DescriptorSize", settings.akaze()->descriptorSize());
-  mSettingsRW->setValue("AKAZE/DescriptorType", settings.akaze()->descriptorType());
-  mSettingsRW->setValue("AKAZE/DescriptorChannels", settings.akaze()->descriptorChannels());
+  mSettingsController->setValue("AKAZE/Octaves", settings.akaze()->octaves());
+  mSettingsController->setValue("AKAZE/Threshold", settings.akaze()->threshold());
+  mSettingsController->setValue("AKAZE/Diffusivity", settings.akaze()->diffusivity());
+  mSettingsController->setValue("AKAZE/OctaveLayers", settings.akaze()->octaveLayers());
+  mSettingsController->setValue("AKAZE/DescriptorSize", settings.akaze()->descriptorSize());
+  mSettingsController->setValue("AKAZE/DescriptorType", settings.akaze()->descriptorType());
+  mSettingsController->setValue("AKAZE/DescriptorChannels", settings.akaze()->descriptorChannels());
 
   /* BOOST */
-  mSettingsRW->setValue("BOOST/DescriptorType", settings.boost()->descriptorType());
-  mSettingsRW->setValue("BOOST/UseOrientation", settings.boost()->useOrientation());
-  mSettingsRW->setValue("BOOST/ScaleFactor", settings.boost()->scaleFactor());
+  mSettingsController->setValue("BOOST/DescriptorType", settings.boost()->descriptorType());
+  mSettingsController->setValue("BOOST/UseOrientation", settings.boost()->useOrientation());
+  mSettingsController->setValue("BOOST/ScaleFactor", settings.boost()->scaleFactor());
 
   /* BRIEF */
-  mSettingsRW->setValue("BRIEF/Bytes", settings.brief()->bytes());
-  mSettingsRW->setValue("BRIEF/Orientation", settings.brief()->useOrientation());
+  mSettingsController->setValue("BRIEF/Bytes", settings.brief()->bytes());
+  mSettingsController->setValue("BRIEF/Orientation", settings.brief()->useOrientation());
 
   /* BRISK */
-  mSettingsRW->setValue("BRISK/Octaves", settings.brisk()->octaves());
-  mSettingsRW->setValue("BRISK/Threshold", settings.brisk()->threshold());
-  mSettingsRW->setValue("BRISK/PatternScale", settings.brisk()->patternScale());
+  mSettingsController->setValue("BRISK/Octaves", settings.brisk()->octaves());
+  mSettingsController->setValue("BRISK/Threshold", settings.brisk()->threshold());
+  mSettingsController->setValue("BRISK/PatternScale", settings.brisk()->patternScale());
 
   /* DAISY */
-  mSettingsRW->setValue("DAISY/Norm", settings.daisy()->norm());
-  mSettingsRW->setValue("DAISY/QHist", settings.daisy()->qHist());
-  mSettingsRW->setValue("DAISY/QTheta", settings.daisy()->qTheta());
-  mSettingsRW->setValue("DAISY/Radius", settings.daisy()->radius());
-  mSettingsRW->setValue("DAISY/QRadius", settings.daisy()->qRadius());
-  mSettingsRW->setValue("DAISY/Interpolation", settings.daisy()->interpolation());
-  mSettingsRW->setValue("DAISY/UseOrientation", settings.daisy()->useOrientation());
+  mSettingsController->setValue("DAISY/Norm", settings.daisy()->norm());
+  mSettingsController->setValue("DAISY/QHist", settings.daisy()->qHist());
+  mSettingsController->setValue("DAISY/QTheta", settings.daisy()->qTheta());
+  mSettingsController->setValue("DAISY/Radius", settings.daisy()->radius());
+  mSettingsController->setValue("DAISY/QRadius", settings.daisy()->qRadius());
+  mSettingsController->setValue("DAISY/Interpolation", settings.daisy()->interpolation());
+  mSettingsController->setValue("DAISY/UseOrientation", settings.daisy()->useOrientation());
 
   /* FAST */
-  mSettingsRW->setValue("FAST/Threshold", settings.fast()->threshold());
-  mSettingsRW->setValue("FAST/DetectorType", settings.fast()->detectorType());
-  mSettingsRW->setValue("FAST/NonmaxSuppression", settings.fast()->nonmaxSuppression());
+  mSettingsController->setValue("FAST/Threshold", settings.fast()->threshold());
+  mSettingsController->setValue("FAST/DetectorType", settings.fast()->detectorType());
+  mSettingsController->setValue("FAST/NonmaxSuppression", settings.fast()->nonmaxSuppression());
 
   /* FREAK */
-  mSettingsRW->setValue("FREAK/Octaves", settings.freak()->octaves());
-  mSettingsRW->setValue("FREAK/PatternScale", settings.freak()->patternScale());
-  mSettingsRW->setValue("FREAK/ScaleNormalized", settings.freak()->scaleNormalized());
-  mSettingsRW->setValue("FREAK/OrientationNormalized", settings.freak()->orientationNormalized());
+  mSettingsController->setValue("FREAK/Octaves", settings.freak()->octaves());
+  mSettingsController->setValue("FREAK/PatternScale", settings.freak()->patternScale());
+  mSettingsController->setValue("FREAK/ScaleNormalized", settings.freak()->scaleNormalized());
+  mSettingsController->setValue("FREAK/OrientationNormalized", settings.freak()->orientationNormalized());
 
   /* GFTT */
-  mSettingsRW->setValue("GFTT/K", settings.gftt()->k());
-  mSettingsRW->setValue("GFTT/BlockSize", settings.gftt()->blockSize());
-  mSettingsRW->setValue("GFTT/MaxFeatures", settings.gftt()->maxFeatures());
-  mSettingsRW->setValue("GFTT/MinDistance", settings.gftt()->minDistance());
-  mSettingsRW->setValue("GFTT/QualityLevel", settings.gftt()->qualityLevel());
-  mSettingsRW->setValue("GFTT/HarrisDetector", settings.gftt()->harrisDetector());
+  mSettingsController->setValue("GFTT/K", settings.gftt()->k());
+  mSettingsController->setValue("GFTT/BlockSize", settings.gftt()->blockSize());
+  mSettingsController->setValue("GFTT/MaxFeatures", settings.gftt()->maxFeatures());
+  mSettingsController->setValue("GFTT/MinDistance", settings.gftt()->minDistance());
+  mSettingsController->setValue("GFTT/QualityLevel", settings.gftt()->qualityLevel());
+  mSettingsController->setValue("GFTT/HarrisDetector", settings.gftt()->harrisDetector());
 
   /* HOG */
-  mSettingsRW->setValue("HOG/Nbins", settings.hog()->nbins());
-  mSettingsRW->setValue("HOG/WinSize", settings.hog()->winSize());
-  mSettingsRW->setValue("HOG/CellSize", settings.hog()->cellSize());
-  mSettingsRW->setValue("HOG/BlockSize", settings.hog()->blockSize());
-  mSettingsRW->setValue("HOG/BlockStride", settings.hog()->blockStride());
-  mSettingsRW->setValue("HOG/DerivAperture", settings.hog()->derivAperture());
+  mSettingsController->setValue("HOG/Nbins", settings.hog()->nbins());
+  mSettingsController->setValue("HOG/WinSize", settings.hog()->winSize());
+  mSettingsController->setValue("HOG/CellSize", settings.hog()->cellSize());
+  mSettingsController->setValue("HOG/BlockSize", settings.hog()->blockSize());
+  mSettingsController->setValue("HOG/BlockStride", settings.hog()->blockStride());
+  mSettingsController->setValue("HOG/DerivAperture", settings.hog()->derivAperture());
 
   /* KAZE */
-  mSettingsRW->setValue("KAZE/Octaves", settings.kaze()->octaves());
-  mSettingsRW->setValue("KAZE/Upright", settings.kaze()->upright());
-  mSettingsRW->setValue("KAZE/Threshold", settings.kaze()->threshold());
-  mSettingsRW->setValue("KAZE/Diffusivity", settings.kaze()->diffusivity());
-  mSettingsRW->setValue("KAZE/OctaveLayers", settings.kaze()->octaveLayers());
-  mSettingsRW->setValue("KAZE/ExtendedDescriptor", settings.kaze()->extendedDescriptor());
+  mSettingsController->setValue("KAZE/Octaves", settings.kaze()->octaves());
+  mSettingsController->setValue("KAZE/Upright", settings.kaze()->upright());
+  mSettingsController->setValue("KAZE/Threshold", settings.kaze()->threshold());
+  mSettingsController->setValue("KAZE/Diffusivity", settings.kaze()->diffusivity());
+  mSettingsController->setValue("KAZE/OctaveLayers", settings.kaze()->octaveLayers());
+  mSettingsController->setValue("KAZE/ExtendedDescriptor", settings.kaze()->extendedDescriptor());
 
   /* LATCH */
-  mSettingsRW->setValue("LATCH/Bytes", settings.latch()->bytes());
-  mSettingsRW->setValue("LATCH/HalfSsdSize", settings.latch()->halfSsdSize());
-  mSettingsRW->setValue("LATCH/RotationInvariance", settings.latch()->rotationInvariance());
+  mSettingsController->setValue("LATCH/Bytes", settings.latch()->bytes());
+  mSettingsController->setValue("LATCH/HalfSsdSize", settings.latch()->halfSsdSize());
+  mSettingsController->setValue("LATCH/RotationInvariance", settings.latch()->rotationInvariance());
 
   /* LUCID */
-  mSettingsRW->setValue("LUCID/BlurKernel", settings.lucid()->blurKernel());
-  mSettingsRW->setValue("LUCID/LucidKernel", settings.lucid()->lucidKernel());
+  mSettingsController->setValue("LUCID/BlurKernel", settings.lucid()->blurKernel());
+  mSettingsController->setValue("LUCID/LucidKernel", settings.lucid()->lucidKernel());
 
   /* MSD */
-  mSettingsRW->setValue("MSD/KNN", settings.msd()->knn());
-  mSettingsRW->setValue("MSD/AfineTilts", settings.msd()->affineTilts());
-  mSettingsRW->setValue("MSD/NScales", settings.msd()->nScales());
-  mSettingsRW->setValue("MSD/AffineMSD", settings.msd()->affineMSD());
-  mSettingsRW->setValue("MSD/NMSRadius", settings.msd()->NMSRadius());
-  mSettingsRW->setValue("MSD/NMSScaleRadius", settings.msd()->NMSScaleRadius());
-  mSettingsRW->setValue("MSD/AreaRadius", settings.msd()->searchAreaRadius());
-  mSettingsRW->setValue("MSD/PathRadius", settings.msd()->patchRadius());
-  mSettingsRW->setValue("MSD/ScaleFactor", settings.msd()->scaleFactor());
-  mSettingsRW->setValue("MSD/ThresholdSaliency", settings.msd()->thresholdSaliency());
-  mSettingsRW->setValue("MSD/ComputeOrientations", settings.msd()->computeOrientation());
+  mSettingsController->setValue("MSD/KNN", settings.msd()->knn());
+  mSettingsController->setValue("MSD/AfineTilts", settings.msd()->affineTilts());
+  mSettingsController->setValue("MSD/NScales", settings.msd()->nScales());
+  mSettingsController->setValue("MSD/AffineMSD", settings.msd()->affineMSD());
+  mSettingsController->setValue("MSD/NMSRadius", settings.msd()->NMSRadius());
+  mSettingsController->setValue("MSD/NMSScaleRadius", settings.msd()->NMSScaleRadius());
+  mSettingsController->setValue("MSD/AreaRadius", settings.msd()->searchAreaRadius());
+  mSettingsController->setValue("MSD/PathRadius", settings.msd()->patchRadius());
+  mSettingsController->setValue("MSD/ScaleFactor", settings.msd()->scaleFactor());
+  mSettingsController->setValue("MSD/ThresholdSaliency", settings.msd()->thresholdSaliency());
+  mSettingsController->setValue("MSD/ComputeOrientations", settings.msd()->computeOrientation());
 
   /* MSER */
-  mSettingsRW->setValue("MSER/Delta", settings.mser()->delta());
-  mSettingsRW->setValue("MSER/MaxArea", settings.mser()->maxArea());
-  mSettingsRW->setValue("MSER/MinArea", settings.mser()->minArea());
-  mSettingsRW->setValue("MSER/MinMargin", settings.mser()->minMargin());
-  mSettingsRW->setValue("MSER/EdgeBlurSize", settings.mser()->edgeBlurSize());
-  mSettingsRW->setValue("MSER/MaxEvolution", settings.mser()->maxEvolution());
-  mSettingsRW->setValue("MSER/MaxVariation", settings.mser()->maxVariation());
-  mSettingsRW->setValue("MSER/MinDiversity", settings.mser()->minDiversity());
-  mSettingsRW->setValue("MSER/AreaThreshold", settings.mser()->areaThreshold());
+  mSettingsController->setValue("MSER/Delta", settings.mser()->delta());
+  mSettingsController->setValue("MSER/MaxArea", settings.mser()->maxArea());
+  mSettingsController->setValue("MSER/MinArea", settings.mser()->minArea());
+  mSettingsController->setValue("MSER/MinMargin", settings.mser()->minMargin());
+  mSettingsController->setValue("MSER/EdgeBlurSize", settings.mser()->edgeBlurSize());
+  mSettingsController->setValue("MSER/MaxEvolution", settings.mser()->maxEvolution());
+  mSettingsController->setValue("MSER/MaxVariation", settings.mser()->maxVariation());
+  mSettingsController->setValue("MSER/MinDiversity", settings.mser()->minDiversity());
+  mSettingsController->setValue("MSER/AreaThreshold", settings.mser()->areaThreshold());
 
   /* ORB */
-  mSettingsRW->setValue("ORB/WTA_K", settings.orb()->wta_k());
-  mSettingsRW->setValue("ORB/PatchSize", settings.orb()->patchSize());
-  mSettingsRW->setValue("ORB/ScoreType", settings.orb()->scoreType());
-  mSettingsRW->setValue("ORB/ScaleFactor", settings.orb()->scaleFactor());
-  mSettingsRW->setValue("ORB/LevelsNumber", settings.orb()->levelsNumber());
-  mSettingsRW->setValue("ORB/EdgeThreshold", settings.orb()->edgeThreshold());
-  mSettingsRW->setValue("ORB/FastThreshold", settings.orb()->fastThreshold());
-  mSettingsRW->setValue("ORB/FeaturesNumber", settings.orb()->featuresNumber());
+  mSettingsController->setValue("ORB/WTA_K", settings.orb()->wta_k());
+  mSettingsController->setValue("ORB/PatchSize", settings.orb()->patchSize());
+  mSettingsController->setValue("ORB/ScoreType", settings.orb()->scoreType());
+  mSettingsController->setValue("ORB/ScaleFactor", settings.orb()->scaleFactor());
+  mSettingsController->setValue("ORB/LevelsNumber", settings.orb()->levelsNumber());
+  mSettingsController->setValue("ORB/EdgeThreshold", settings.orb()->edgeThreshold());
+  mSettingsController->setValue("ORB/FastThreshold", settings.orb()->fastThreshold());
+  mSettingsController->setValue("ORB/FeaturesNumber", settings.orb()->featuresNumber());
 
   /* SIFT */
-  mSettingsRW->setValue("SIFT/Sigma", settings.sift()->sigma());
-  mSettingsRW->setValue("SIFT/OctaveLayers", settings.sift()->octaveLayers());
-  mSettingsRW->setValue("SIFT/EdgeThreshold", settings.sift()->edgeThreshold());
-  mSettingsRW->setValue("SIFT/FeaturesNumber", settings.sift()->featuresNumber());
-  mSettingsRW->setValue("SIFT/ContrastThreshold", settings.sift()->contrastThreshold());
+  mSettingsController->setValue("SIFT/Sigma", settings.sift()->sigma());
+  mSettingsController->setValue("SIFT/OctaveLayers", settings.sift()->octaveLayers());
+  mSettingsController->setValue("SIFT/EdgeThreshold", settings.sift()->edgeThreshold());
+  mSettingsController->setValue("SIFT/FeaturesNumber", settings.sift()->featuresNumber());
+  mSettingsController->setValue("SIFT/ContrastThreshold", settings.sift()->contrastThreshold());
 
   /* STAR */
-  mSettingsRW->setValue("STAR/MaxSize", settings.star()->maxSize());
-  mSettingsRW->setValue("STAR/ResponseThreshold", settings.star()->responseThreshold());
-  mSettingsRW->setValue("STAR/SuppressNonmaxSize", settings.star()->suppressNonmaxSize());
-  mSettingsRW->setValue("STAR/LineThresholdBinarized", settings.star()->lineThresholdBinarized());
-  mSettingsRW->setValue("STAR/LineThresholdProjected", settings.star()->lineThresholdProjected());
+  mSettingsController->setValue("STAR/MaxSize", settings.star()->maxSize());
+  mSettingsController->setValue("STAR/ResponseThreshold", settings.star()->responseThreshold());
+  mSettingsController->setValue("STAR/SuppressNonmaxSize", settings.star()->suppressNonmaxSize());
+  mSettingsController->setValue("STAR/LineThresholdBinarized", settings.star()->lineThresholdBinarized());
+  mSettingsController->setValue("STAR/LineThresholdProjected", settings.star()->lineThresholdProjected());
 
   /* SURF */
-  mSettingsRW->setValue("SURF/Octaves", settings.surf()->octaves());
-  mSettingsRW->setValue("SURF/OctaveLayers", settings.surf()->octaveLayers());
-  mSettingsRW->setValue("SURF/RotatedFeatures", settings.surf()->upright());
-  mSettingsRW->setValue("SURF/HessianThreshold", settings.surf()->hessianThreshold());
-  mSettingsRW->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
+  mSettingsController->setValue("SURF/Octaves", settings.surf()->octaves());
+  mSettingsController->setValue("SURF/OctaveLayers", settings.surf()->octaveLayers());
+  mSettingsController->setValue("SURF/RotatedFeatures", settings.surf()->upright());
+  mSettingsController->setValue("SURF/HessianThreshold", settings.surf()->hessianThreshold());
+  mSettingsController->setValue("SURF/ExtendedDescriptor", settings.surf()->extendedDescriptor());
 
   /* VGG */
-  mSettingsRW->setValue("VGG/DescriptorType", settings.vgg()->descriptorType());
-  mSettingsRW->setValue("VGG/ScaleFactor", settings.vgg()->scaleFactor());
-  mSettingsRW->setValue("VGG/Sigma", settings.vgg()->sigma());
-  mSettingsRW->setValue("VGG/UseNormalizeDescriptor", settings.vgg()->useNormalizeDescriptor());
-  mSettingsRW->setValue("VGG/UseNormalizeImage", settings.vgg()->useNormalizeImage());
-  mSettingsRW->setValue("VGG/UseScaleOrientation", settings.vgg()->useScaleOrientation());
+  mSettingsController->setValue("VGG/DescriptorType", settings.vgg()->descriptorType());
+  mSettingsController->setValue("VGG/ScaleFactor", settings.vgg()->scaleFactor());
+  mSettingsController->setValue("VGG/Sigma", settings.vgg()->sigma());
+  mSettingsController->setValue("VGG/UseNormalizeDescriptor", settings.vgg()->useNormalizeDescriptor());
+  mSettingsController->setValue("VGG/UseNormalizeImage", settings.vgg()->useNormalizeImage());
+  mSettingsController->setValue("VGG/UseScaleOrientation", settings.vgg()->useScaleOrientation());
 
   /* Matching */
-  mSettingsRW->setValue("MATCH/MatchMethod", settings.matchMethod());
-  mSettingsRW->setValue("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType()));
-  mSettingsRW->setValue("MATCH/RefinementRatio", settings.robustMatcherRefinement()->ratio());
-  mSettingsRW->setValue("MATCH/RefinementDistance", settings.robustMatcherRefinement()->distance());
-  mSettingsRW->setValue("MATCH/RefinementConfidence", settings.robustMatcherRefinement()->confidence());
-  mSettingsRW->setValue("MATCH/RefinementCrossCheck", settings.robustMatcherRefinement()->crossCheck());
-  mSettingsRW->setValue("MATCH/RefinementMaxIters", settings.robustMatcherRefinement()->maxIter());
-  mSettingsRW->setValue("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcherRefinement()->geometricTest()));
-  mSettingsRW->setValue("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->homographyComputeMethod()));
-  mSettingsRW->setValue("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->fundamentalComputeMethod()));
-  mSettingsRW->setValue("MATCH/RefinementEssentialComputeMethod", static_cast<int>(settings.robustMatcherRefinement()->essentialComputeMethod()));
+  mSettingsController->setValue("MATCH/MatchMethod", settings.matchMethod());
+  mSettingsController->setValue("MATCH/MatchStrategy", settings.matchStrategy());
+  mSettingsController->setValue("MATCH/BFNormType", static_cast<int>(settings.bruteForceMatcher()->normType()));
+  mSettingsController->setValue("MATCH/RefinementRatio", settings.robustMatcher()->ratio());
+  mSettingsController->setValue("MATCH/RefinementDistance", settings.robustMatcher()->distance());
+  mSettingsController->setValue("MATCH/RefinementConfidence", settings.robustMatcher()->confidence());
+  mSettingsController->setValue("MATCH/RefinementCrossCheck", settings.robustMatcher()->crossCheck());
+  mSettingsController->setValue("MATCH/RefinementMaxIters", settings.robustMatcher()->maxIter());
+  mSettingsController->setValue("MATCH/RefinementGeometricTest", static_cast<int>(settings.robustMatcher()->geometricTest()));
+  mSettingsController->setValue("MATCH/RefinementHomographyComputeMethod", static_cast<int>(settings.robustMatcher()->homographyComputeMethod()));
+  mSettingsController->setValue("MATCH/RefinementFundamentalComputeMethod", static_cast<int>(settings.robustMatcher()->fundamentalComputeMethod()));
+  mSettingsController->setValue("MATCH/RefinementEssentialComputeMethod", static_cast<int>(settings.robustMatcher()->essentialComputeMethod()));
+  mSettingsController->setValue("MATCH/GMS_Scale", settings.gms()->scale());
+  mSettingsController->setValue("MATCH/GMS_Rotation", settings.gms()->rotation());
+  mSettingsController->setValue("MATCH/GMS_Threshold", settings.gms()->threshold());
 
   /* Keypoints Viewer */
-  mSettingsRW->setValue("KeypointsViewer/BGColor", settings.keypointsViewerBGColor());
-  mSettingsRW->setValue("KeypointsViewer/Type",  settings.keypointsViewerMarkerType());
-  mSettingsRW->setValue("KeypointsViewer/MarkerSize", settings.keypointsViewerMarkerSize());
-  mSettingsRW->setValue("KeypointsViewer/MarkerWidth", settings.keypointsViewerMarkerWidth());
-  mSettingsRW->setValue("KeypointsViewer/MarkerColor", settings.keypointsViewerMarkerColor());
-  mSettingsRW->setValue("KeypointsViewer/SelectMarkerWidth", settings.keypointsViewerSelectMarkerWidth());
-  mSettingsRW->setValue("KeypointsViewer/SelectMarkerColor", settings.keypointsViewerSelectMarkerColor());
+  mSettingsController->setValue("KeypointsViewer/BGColor", settings.keypointsViewerBGColor());
+  mSettingsController->setValue("KeypointsViewer/Type",  settings.keypointsViewerMarkerType());
+  mSettingsController->setValue("KeypointsViewer/MarkerSize", settings.keypointsViewerMarkerSize());
+  mSettingsController->setValue("KeypointsViewer/MarkerWidth", settings.keypointsViewerMarkerWidth());
+  mSettingsController->setValue("KeypointsViewer/MarkerColor", settings.keypointsViewerMarkerColor());
+  mSettingsController->setValue("KeypointsViewer/SelectMarkerWidth", settings.keypointsViewerSelectMarkerWidth());
+  mSettingsController->setValue("KeypointsViewer/SelectMarkerColor", settings.keypointsViewerSelectMarkerColor());
 
   /* Matches Viewer */
-  mSettingsRW->setValue("MatchesViewer/BGColor", settings.matchesViewerBGColor());
-  mSettingsRW->setValue("MatchesViewer/MarkerType", settings.matchesViewerMarkerType());
-  mSettingsRW->setValue("MatchesViewer/MarkerSize", settings.matchesViewerMarkerSize());
-  mSettingsRW->setValue("MatchesViewer/MarkerWidth", settings.matchesViewerMarkerWidth());
-  mSettingsRW->setValue("MatchesViewer/MarkerColor", settings.matchesViewerMarkerColor());
-  mSettingsRW->setValue("MatchesViewer/SelectMarkerWidth", settings.matchesViewerSelectMarkerWidth());
-  mSettingsRW->setValue("MatchesViewer/SelectMarkerColor", settings.matchesViewerSelectMarkerColor());
-  mSettingsRW->setValue("MatchesViewer/LineColor", settings.matchesViewerLineColor());
-  mSettingsRW->setValue("MatchesViewer/LineWidth", settings.matchesViewerLineWidth());
+  mSettingsController->setValue("MatchesViewer/BGColor", settings.matchesViewerBGColor());
+  mSettingsController->setValue("MatchesViewer/MarkerType", settings.matchesViewerMarkerType());
+  mSettingsController->setValue("MatchesViewer/MarkerSize", settings.matchesViewerMarkerSize());
+  mSettingsController->setValue("MatchesViewer/MarkerWidth", settings.matchesViewerMarkerWidth());
+  mSettingsController->setValue("MatchesViewer/MarkerColor", settings.matchesViewerMarkerColor());
+  mSettingsController->setValue("MatchesViewer/SelectMarkerWidth", settings.matchesViewerSelectMarkerWidth());
+  mSettingsController->setValue("MatchesViewer/SelectMarkerColor", settings.matchesViewerSelectMarkerColor());
+  mSettingsController->setValue("MatchesViewer/LineColor", settings.matchesViewerLineColor());
+  mSettingsController->setValue("MatchesViewer/LineWidth", settings.matchesViewerLineWidth());
 
   /* Ground Truth Editor */
-  mSettingsRW->setValue("GroundTruthEditor/BGColor", settings.groundTruthEditorBGColor());
-  mSettingsRW->setValue("GroundTruthEditor/MarkerSize", settings.groundTruthEditorMarkerSize());
-  mSettingsRW->setValue("GroundTruthEditor/MarkerWidth", settings.groundTruthEditorMarkerWidth());
-  mSettingsRW->setValue("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor());
-  mSettingsRW->setValue("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth());
-  mSettingsRW->setValue("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor());
+  mSettingsController->setValue("GroundTruthEditor/BGColor", settings.groundTruthEditorBGColor());
+  mSettingsController->setValue("GroundTruthEditor/MarkerSize", settings.groundTruthEditorMarkerSize());
+  mSettingsController->setValue("GroundTruthEditor/MarkerWidth", settings.groundTruthEditorMarkerWidth());
+  mSettingsController->setValue("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor());
+  mSettingsController->setValue("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth());
+  mSettingsController->setValue("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor());
 }
 
-void SettingsRW::writeHistory(const ISettings &settings)
+void SettingsControllerImp::writeHistory(const Settings &settings)
 {
-  mSettingsRW->setValue("HISTORY/RecentProjects", settings.history());
+  mSettingsController->setValue("HISTORY/RecentProjects", settings.history());
 }
 
 

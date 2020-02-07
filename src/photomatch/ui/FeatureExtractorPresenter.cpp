@@ -88,44 +88,44 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
-    mAgastDetector(new AgastWidget),
-    mAkazeDetector(new AkazeWidget),
-    mBriskDetector(new BriskWidget),
-    mFastDetector(new FastWidget),
-    mGfttDetector(new GfttWidget),
-    mKazeDetector(new KazeWidget),
-    mMsdDetector(new MsdWidget),
-    mMserDetector(new MserWidget),
-    mOrbDetector(new OrbWidget),
+    mAgastDetector(new AgastWidgetImp),
+    mAkazeDetector(new AkazeWidgetImp),
+    mBriskDetector(new BriskWidgetImp),
+    mFastDetector(new FastWidgetImp),
+    mGfttDetector(new GfttWidgetImp),
+    mKazeDetector(new KazeWidgetImp),
+    mMsdDetector(new MsdWidgetImp),
+    mMserDetector(new MserWidgetImp),
+    mOrbDetector(new OrbWidgetImp),
 #ifdef OPENCV_ENABLE_NONFREE
-    mSiftDetector(new SiftWidget),
+    mSiftDetector(new SiftWidgetImp),
 #endif
-    mStarDetector(new StarWidget),
+    mStarDetector(new StarWidgetImp),
 #ifdef OPENCV_ENABLE_NONFREE
-    mSurfDetector(new SurfWidget),
+    mSurfDetector(new SurfWidgetImp),
 #endif
-    mAkazeDescriptor(new AkazeWidget),
+    mAkazeDescriptor(new AkazeWidgetImp),
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-    mBoostDescriptor(new BoostWidget),
+    mBoostDescriptor(new BoostWidgetImp),
 #endif
-    mBriefDescriptor(new BriefWidget),
-    mBriskDescriptor(new BriskWidget),
-    mDaisyDescriptor(new DaisyWidget),
-    mFreakDescriptor(new FreakWidget),
-    mHogDescriptor(new HogWidget),
-    mKazeDescriptor(new KazeWidget),
-    mLatchDescriptor(new LatchWidget),
+    mBriefDescriptor(new BriefWidgetImp),
+    mBriskDescriptor(new BriskWidgetImp),
+    mDaisyDescriptor(new DaisyWidgetImp),
+    mFreakDescriptor(new FreakWidgetImp),
+    mHogDescriptor(new HogWidgetImp),
+    mKazeDescriptor(new KazeWidgetImp),
+    mLatchDescriptor(new LatchWidgetImp),
     //mLucidDescriptor(new LucidWidget),
-    mLssDescriptor(new LssWidget),
-    mOrbDescriptor(new OrbWidget),
+    mLssDescriptor(new LssWidgetImp),
+    mOrbDescriptor(new OrbWidgetImp),
 #ifdef OPENCV_ENABLE_NONFREE
-    mSiftDescriptor(new SiftWidget),
-    mSurfDescriptor(new SurfWidget),
+    mSiftDescriptor(new SiftWidgetImp),
+    mSurfDescriptor(new SurfWidgetImp),
 #endif
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-    mVggDescriptor(new VggWidget),
+    mVggDescriptor(new VggWidgetImp),
 #endif
-    mKeypointsFilterWidget(new KeypointsFilterWidget),
+    mKeypointsFilterWidget(new KeypointsFilterWidgetImp),
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
@@ -321,249 +321,249 @@ void FeatureExtractorPresenter::open()
   /* AGAST */
 
   mAgastDetector->setThreshold(detector && detector->type() == Feature::Type::agast ?
-                                 dynamic_cast<IAgast *>(detector)->threshold() :
+                                 dynamic_cast<Agast *>(detector)->threshold() :
                                  mSettingsModel->agastThreshold());
   mAgastDetector->setDetectorType(detector && detector->type() == Feature::Type::agast ?
-                                    dynamic_cast<IAgast *>(detector)->detectorType() :
+                                    dynamic_cast<Agast *>(detector)->detectorType() :
                                     mSettingsModel->agastDetectorType());
   mAgastDetector->setNonmaxSuppression(detector && detector->type() == Feature::Type::agast ?
-                                         dynamic_cast<IAgast *>(detector)->nonmaxSuppression() :
+                                         dynamic_cast<Agast *>(detector)->nonmaxSuppression() :
                                          mSettingsModel->agastNonmaxSuppression());
 
   /* AKAZE */
 
   mAkazeDetector->setOctaves(detector && detector->type() == Feature::Type::akaze ?
-                               dynamic_cast<IAkaze *>(detector)->octaves() :
+                               dynamic_cast<Akaze *>(detector)->octaves() :
                                mSettingsModel->akazeOctaves());
   mAkazeDetector->setThreshold(detector && detector->type() == Feature::Type::akaze ?
-                               dynamic_cast<IAkaze *>(detector)->threshold() :
+                               dynamic_cast<Akaze *>(detector)->threshold() :
                                mSettingsModel->akazeThreshold());
   mAkazeDetector->setDiffusivity(detector && detector->type() == Feature::Type::akaze ?
-                                 dynamic_cast<IAkaze *>(detector)->diffusivity() :
+                                 dynamic_cast<Akaze *>(detector)->diffusivity() :
                                  mSettingsModel->akazeDiffusivity());
   mAkazeDetector->setOctaveLayers(detector && detector->type() == Feature::Type::akaze ?
-                                  dynamic_cast<IAkaze *>(detector)->octaveLayers() :
+                                  dynamic_cast<Akaze *>(detector)->octaveLayers() :
                                   mSettingsModel->akazeOctaveLayers());
   mAkazeDetector->setDescriptorSize(detector && detector->type() == Feature::Type::akaze ?
-                                    dynamic_cast<IAkaze *>(detector)->descriptorSize() :
+                                    dynamic_cast<Akaze *>(detector)->descriptorSize() :
                                     mSettingsModel->akazeDescriptorSize());
   mAkazeDetector->setDescriptorType(detector && detector->type() == Feature::Type::akaze ?
-                                    dynamic_cast<IAkaze *>(detector)->descriptorType() :
+                                    dynamic_cast<Akaze *>(detector)->descriptorType() :
                                     mSettingsModel->akazeDescriptorType());
   mAkazeDetector->setDescriptorChannels(detector && detector->type() == Feature::Type::akaze ?
-                                        dynamic_cast<IAkaze *>(detector)->descriptorChannels() :
+                                        dynamic_cast<Akaze *>(detector)->descriptorChannels() :
                                         mSettingsModel->akazeDescriptorChannels());
   mAkazeDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::akaze ?
-                               dynamic_cast<IAkaze *>(descriptor)->octaves() :
+                               dynamic_cast<Akaze *>(descriptor)->octaves() :
                                mSettingsModel->akazeOctaves());
   mAkazeDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::akaze ?
-                                 dynamic_cast<IAkaze *>(descriptor)->threshold() :
+                                 dynamic_cast<Akaze *>(descriptor)->threshold() :
                                  mSettingsModel->akazeThreshold());
   mAkazeDescriptor->setDiffusivity(descriptor && descriptor->type() == Feature::Type::akaze ?
-                                   dynamic_cast<IAkaze *>(descriptor)->diffusivity() :
+                                   dynamic_cast<Akaze *>(descriptor)->diffusivity() :
                                    mSettingsModel->akazeDiffusivity());
   mAkazeDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::akaze ?
-                                    dynamic_cast<IAkaze *>(descriptor)->octaveLayers() :
+                                    dynamic_cast<Akaze *>(descriptor)->octaveLayers() :
                                     mSettingsModel->akazeOctaveLayers());
   mAkazeDescriptor->setDescriptorSize(descriptor && descriptor->type() == Feature::Type::akaze ?
-                                      dynamic_cast<IAkaze *>(descriptor)->descriptorSize() :
+                                      dynamic_cast<Akaze *>(descriptor)->descriptorSize() :
                                       mSettingsModel->akazeDescriptorSize());
   mAkazeDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::akaze ?
-                                      dynamic_cast<IAkaze *>(descriptor)->descriptorType() :
+                                      dynamic_cast<Akaze *>(descriptor)->descriptorType() :
                                       mSettingsModel->akazeDescriptorType());
   mAkazeDescriptor->setDescriptorChannels(descriptor && descriptor->type() == Feature::Type::akaze ?
-                                          dynamic_cast<IAkaze *>(descriptor)->descriptorChannels() :
+                                          dynamic_cast<Akaze *>(descriptor)->descriptorChannels() :
                                           mSettingsModel->akazeDescriptorChannels());
 
   /* Boost */
 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mBoostDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::boost ?
-                                        dynamic_cast<IBoost *>(descriptor)->descriptorType() :
+                                        dynamic_cast<Boost *>(descriptor)->descriptorType() :
                                         mSettingsModel->boostDescriptorType());
   mBoostDescriptor->setUseOrientation(descriptor && descriptor->type() == Feature::Type::boost ?
-                                        dynamic_cast<IBoost *>(descriptor)->useOrientation() :
+                                        dynamic_cast<Boost *>(descriptor)->useOrientation() :
                                         mSettingsModel->boostUseOrientation());
 
   mBoostDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::boost ?
-                                     dynamic_cast<IBoost *>(descriptor)->scaleFactor() :
+                                     dynamic_cast<Boost *>(descriptor)->scaleFactor() :
                                      mSettingsModel->boostScaleFactor());
 #endif
 
   /* BRIEF */
 
   mBriefDescriptor->setBytes(descriptor && descriptor->type() == Feature::Type::brief ?
-                               dynamic_cast<IBrief *>(descriptor)->bytes() :
+                               dynamic_cast<Brief *>(descriptor)->bytes() :
                                mSettingsModel->briefBytes());
   mBriefDescriptor->setUseOrientation(descriptor && descriptor->type() == Feature::Type::brief ?
-                                        dynamic_cast<IBrief *>(descriptor)->useOrientation() :
+                                        dynamic_cast<Brief *>(descriptor)->useOrientation() :
                                         mSettingsModel->briefUseOrientation());
 
   /* BRISK */
 
   mBriskDetector->setThreshold(detector && detector->type() == Feature::Type::brisk ?
-                                 dynamic_cast<IBrisk *>(detector)->threshold() :
+                                 dynamic_cast<Brisk *>(detector)->threshold() :
                                  mSettingsModel->briskThreshold());
   mBriskDetector->setOctaves(detector && detector->type() == Feature::Type::brisk ?
-                               dynamic_cast<IBrisk *>(detector)->octaves() :
+                               dynamic_cast<Brisk *>(detector)->octaves() :
                                mSettingsModel->briskOctaves());
   mBriskDetector->setPatternScale(detector && detector->type() == Feature::Type::brisk ?
-                                    dynamic_cast<IBrisk *>(detector)->patternScale() :
+                                    dynamic_cast<Brisk *>(detector)->patternScale() :
                                     mSettingsModel->briskPatternScale());
 
   mBriskDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::brisk ?
-                                   dynamic_cast<IBrisk *>(descriptor)->threshold() :
+                                   dynamic_cast<Brisk *>(descriptor)->threshold() :
                                    mSettingsModel->briskThreshold());
   mBriskDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::brisk ?
-                                 dynamic_cast<IBrisk *>(descriptor)->threshold() :
+                                 dynamic_cast<Brisk *>(descriptor)->threshold() :
                                  mSettingsModel->briskOctaves());
   mBriskDescriptor->setPatternScale(descriptor && descriptor->type() == Feature::Type::brisk ?
-                                      dynamic_cast<IBrisk *>(descriptor)->patternScale() :
+                                      dynamic_cast<Brisk *>(descriptor)->patternScale() :
                                       mSettingsModel->briskPatternScale());
 
   /* DAISY */
 
   mDaisyDescriptor->setRadius(descriptor && descriptor->type() == Feature::Type::daisy ?
-                                dynamic_cast<IDaisy *>(descriptor)->radius() :
+                                dynamic_cast<Daisy *>(descriptor)->radius() :
                                 mSettingsModel->daisyRadius());
   mDaisyDescriptor->setQRadius(descriptor && descriptor->type() == Feature::Type::daisy ?
-                                 dynamic_cast<IDaisy *>(descriptor)->qRadius() :
+                                 dynamic_cast<Daisy *>(descriptor)->qRadius() :
                                  mSettingsModel->daisyQRadius());
   mDaisyDescriptor->setQTheta(descriptor && descriptor->type() == Feature::Type::daisy ?
-                                dynamic_cast<IDaisy *>(descriptor)->qTheta() :
+                                dynamic_cast<Daisy *>(descriptor)->qTheta() :
                                 mSettingsModel->daisyQTheta());
   mDaisyDescriptor->setQHist(descriptor && descriptor->type() == Feature::Type::daisy ?
-                               dynamic_cast<IDaisy *>(descriptor)->qHist() :
+                               dynamic_cast<Daisy *>(descriptor)->qHist() :
                                mSettingsModel->daisyQHist());
   mDaisyDescriptor->setNorm(descriptor && descriptor->type() == Feature::Type::daisy ?
-                              dynamic_cast<IDaisy *>(descriptor)->norm() :
+                              dynamic_cast<Daisy *>(descriptor)->norm() :
                               mSettingsModel->daisyNorm());
   mDaisyDescriptor->setInterpolation(descriptor && descriptor->type() == Feature::Type::daisy ?
-                                       dynamic_cast<IDaisy *>(descriptor)->interpolation() :
+                                       dynamic_cast<Daisy *>(descriptor)->interpolation() :
                                        mSettingsModel->daisyInterpolation());
   mDaisyDescriptor->setUseOrientation(descriptor && descriptor->type() == Feature::Type::daisy ?
-                                        dynamic_cast<IDaisy *>(descriptor)->useOrientation() :
+                                        dynamic_cast<Daisy *>(descriptor)->useOrientation() :
                                         mSettingsModel->daisyUseOrientation());
 
   /* FAST */
 
   mFastDetector->setThreshold(detector && detector->type() == Feature::Type::fast ?
-                                dynamic_cast<IFast *>(detector)->threshold() :
+                                dynamic_cast<Fast *>(detector)->threshold() :
                                 mSettingsModel->fastThreshold());
   mFastDetector->setNonmaxSuppression(detector && detector->type() == Feature::Type::fast ?
-                                        dynamic_cast<IFast *>(detector)->nonmaxSuppression() :
+                                        dynamic_cast<Fast *>(detector)->nonmaxSuppression() :
                                         mSettingsModel->fastNonmaxSuppression());
   mFastDetector->setDetectorType(detector && detector->type() == Feature::Type::fast ?
-                                   dynamic_cast<IFast *>(detector)->detectorType() :
+                                   dynamic_cast<Fast *>(detector)->detectorType() :
                                    mSettingsModel->fastdetectorType());
 
   /* FREAK */
 
   mFreakDescriptor->setOrientationNormalized(descriptor && descriptor->type() == Feature::Type::freak ?
-                                               dynamic_cast<IFreak *>(descriptor)->orientationNormalized() :
+                                               dynamic_cast<Freak *>(descriptor)->orientationNormalized() :
                                                mSettingsModel->freakOrientationNormalized());
   mFreakDescriptor->setScaleNormalized(descriptor && descriptor->type() == Feature::Type::freak ?
-                                         dynamic_cast<IFreak *>(descriptor)->scaleNormalized() :
+                                         dynamic_cast<Freak *>(descriptor)->scaleNormalized() :
                                          mSettingsModel->freakScaleNormalized());
   mFreakDescriptor->setPatternScale(descriptor && descriptor->type() == Feature::Type::freak ?
-                                      dynamic_cast<IFreak *>(descriptor)->patternScale() :
+                                      dynamic_cast<Freak *>(descriptor)->patternScale() :
                                       mSettingsModel->freakPatternScale());
   mFreakDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::freak ?
-                                 dynamic_cast<IFreak *>(descriptor)->octaves() :
+                                 dynamic_cast<Freak *>(descriptor)->octaves() :
                                  mSettingsModel->freakOctaves());
 
   /* GFTT */
 
   mGfttDetector->setMaxFeatures(detector && detector->type() == Feature::Type::gftt ?
-                                  dynamic_cast<IGftt *>(detector)->maxFeatures() :
+                                  dynamic_cast<Gftt *>(detector)->maxFeatures() :
                                   mSettingsModel->gfttMaxFeatures());
   mGfttDetector->setQualityLevel(detector && detector->type() == Feature::Type::gftt ?
-                                   dynamic_cast<IGftt *>(detector)->qualityLevel() :
+                                   dynamic_cast<Gftt *>(detector)->qualityLevel() :
                                    mSettingsModel->gfttQualityLevel());
   mGfttDetector->setMinDistance(detector && detector->type() == Feature::Type::gftt ?
-                                  dynamic_cast<IGftt *>(detector)->minDistance() :
+                                  dynamic_cast<Gftt *>(detector)->minDistance() :
                                   mSettingsModel->gfttMinDistance());
   mGfttDetector->setBlockSize(detector && detector->type() == Feature::Type::gftt ?
-                                dynamic_cast<IGftt *>(detector)->blockSize() :
+                                dynamic_cast<Gftt *>(detector)->blockSize() :
                                 mSettingsModel->gfttBlockSize());
   mGfttDetector->setHarrisDetector(detector && detector->type() == Feature::Type::gftt ?
-                                     dynamic_cast<IGftt *>(detector)->harrisDetector() :
+                                     dynamic_cast<Gftt *>(detector)->harrisDetector() :
                                      mSettingsModel->gfttHarrisDetector());
   mGfttDetector->setK(detector && detector->type() == Feature::Type::gftt ?
-                        dynamic_cast<IGftt *>(detector)->k() :
+                        dynamic_cast<Gftt *>(detector)->k() :
                         mSettingsModel->gfttK());
 
   /* HOG */
 
   mHogDescriptor->setWinSize(descriptor && descriptor->type() == Feature::Type::hog ?
-                               dynamic_cast<IHog *>(descriptor)->winSize() :
+                               dynamic_cast<Hog *>(descriptor)->winSize() :
                                mSettingsModel->hogWinSize());
   mHogDescriptor->setBlockSize(descriptor && descriptor->type() == Feature::Type::hog ?
-                                 dynamic_cast<IHog *>(descriptor)->blockSize() :
+                                 dynamic_cast<Hog *>(descriptor)->blockSize() :
                                  mSettingsModel->hogBlockSize());
   mHogDescriptor->setBlockStride(descriptor && descriptor->type() == Feature::Type::hog ?
-                                   dynamic_cast<IHog *>(descriptor)->blockStride() :
+                                   dynamic_cast<Hog *>(descriptor)->blockStride() :
                                    mSettingsModel->hogBlockStride());
   mHogDescriptor->setCellSize(descriptor && descriptor->type() == Feature::Type::hog ?
-                                dynamic_cast<IHog *>(descriptor)->cellSize() :
+                                dynamic_cast<Hog *>(descriptor)->cellSize() :
                                 mSettingsModel->hogCellSize());
   mHogDescriptor->setNbins(descriptor && descriptor->type() == Feature::Type::hog ?
-                             dynamic_cast<IHog *>(descriptor)->nbins() :
+                             dynamic_cast<Hog *>(descriptor)->nbins() :
                              mSettingsModel->hogNbins());
   mHogDescriptor->setDerivAperture(descriptor && descriptor->type() == Feature::Type::hog ?
-                                     dynamic_cast<IHog *>(descriptor)->derivAperture() :
+                                     dynamic_cast<Hog *>(descriptor)->derivAperture() :
                                      mSettingsModel->hogDerivAperture());
 
   /* KAZE */
 
   mKazeDetector->setExtendedDescriptor(detector && detector->type() == Feature::Type::kaze ?
-                                         dynamic_cast<IKaze *>(detector)->extendedDescriptor() :
+                                         dynamic_cast<Kaze *>(detector)->extendedDescriptor() :
                                          mSettingsModel->kazeExtendedDescriptor());
   mKazeDetector->setUpright(detector && detector->type() == Feature::Type::kaze ?
-                              dynamic_cast<IKaze *>(detector)->upright() :
+                              dynamic_cast<Kaze *>(detector)->upright() :
                               mSettingsModel->kazeUpright());
   mKazeDetector->setThreshold(detector && detector->type() == Feature::Type::kaze ?
-                                dynamic_cast<IKaze *>(detector)->threshold() :
+                                dynamic_cast<Kaze *>(detector)->threshold() :
                                 mSettingsModel->kazeThreshold());
   mKazeDetector->setOctaves(detector && detector->type() == Feature::Type::kaze ?
-                              dynamic_cast<IKaze *>(detector)->octaves() :
+                              dynamic_cast<Kaze *>(detector)->octaves() :
                               mSettingsModel->kazeOctaves());
   mKazeDetector->setOctaveLayers(detector && detector->type() == Feature::Type::kaze ?
-                                   dynamic_cast<IKaze *>(detector)->octaveLayers() :
+                                   dynamic_cast<Kaze *>(detector)->octaveLayers() :
                                    mSettingsModel->kazeOctaveLayers());
   mKazeDetector->setDiffusivity(detector && detector->type() == Feature::Type::kaze ?
-                                  dynamic_cast<IKaze *>(detector)->diffusivity() :
+                                  dynamic_cast<Kaze *>(detector)->diffusivity() :
                                   mSettingsModel->kazeDiffusivity());
 
   mKazeDescriptor->setExtendedDescriptor(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                           dynamic_cast<IKaze *>(descriptor)->extendedDescriptor() :
+                                           dynamic_cast<Kaze *>(descriptor)->extendedDescriptor() :
                                            mSettingsModel->kazeExtendedDescriptor());
   mKazeDescriptor->setUpright(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                dynamic_cast<IKaze *>(descriptor)->upright() :
+                                dynamic_cast<Kaze *>(descriptor)->upright() :
                                 mSettingsModel->kazeUpright());
   mKazeDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                  dynamic_cast<IKaze *>(descriptor)->threshold() :
+                                  dynamic_cast<Kaze *>(descriptor)->threshold() :
                                   mSettingsModel->kazeThreshold());
   mKazeDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                dynamic_cast<IKaze *>(descriptor)->octaves() :
+                                dynamic_cast<Kaze *>(descriptor)->octaves() :
                                 mSettingsModel->kazeOctaves());
   mKazeDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                     dynamic_cast<IKaze *>(descriptor)->octaveLayers() :
+                                     dynamic_cast<Kaze *>(descriptor)->octaveLayers() :
                                      mSettingsModel->kazeOctaveLayers());
   mKazeDescriptor->setDiffusivity(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                    dynamic_cast<IKaze *>(descriptor)->diffusivity() :
+                                    dynamic_cast<Kaze *>(descriptor)->diffusivity() :
                                     mSettingsModel->kazeDiffusivity());
 
   /* LATCH */
 
   mLatchDescriptor->setBytes(descriptor && descriptor->type() == Feature::Type::latch ?
-                               dynamic_cast<ILatch *>(descriptor)->bytes() :
+                               dynamic_cast<Latch *>(descriptor)->bytes() :
                                mSettingsModel->latchBytes());
   mLatchDescriptor->setRotationInvariance(descriptor && descriptor->type() == Feature::Type::latch ?
-                                            dynamic_cast<ILatch *>(descriptor)->rotationInvariance() :
+                                            dynamic_cast<Latch *>(descriptor)->rotationInvariance() :
                                             mSettingsModel->latchRotationInvariance());
   mLatchDescriptor->setHalfSsdSize(descriptor && descriptor->type() == Feature::Type::latch ?
-                                     dynamic_cast<ILatch *>(descriptor)->halfSsdSize() :
+                                     dynamic_cast<Latch *>(descriptor)->halfSsdSize() :
                                      mSettingsModel->latchHalfSsdSize());
 
 //  /* LUCID */
@@ -578,206 +578,206 @@ void FeatureExtractorPresenter::open()
   /* MSD */
 
   mMsdDetector->setThresholdSaliency(detector && detector->type() == Feature::Type::msd ?
-                                       dynamic_cast<IMsd *>(detector)->thresholdSaliency() :
+                                       dynamic_cast<Msd *>(detector)->thresholdSaliency() :
                                        mSettingsModel->msdThresholdSaliency());
   mMsdDetector->setPatchRadius(detector && detector->type() == Feature::Type::msd ?
-                                dynamic_cast<IMsd *>(detector)->patchRadius() :
+                                dynamic_cast<Msd *>(detector)->patchRadius() :
                                 mSettingsModel->msdPathRadius());
   mMsdDetector->setKNN(detector && detector->type() == Feature::Type::msd ?
-                         dynamic_cast<IMsd *>(detector)->knn() :
+                         dynamic_cast<Msd *>(detector)->knn() :
                          mSettingsModel->msdKnn());
   mMsdDetector->setAreaRadius(detector && detector->type() == Feature::Type::msd ?
-                                dynamic_cast<IMsd *>(detector)->searchAreaRadius() :
+                                dynamic_cast<Msd *>(detector)->searchAreaRadius() :
                                 mSettingsModel->msdAreaRadius());
   mMsdDetector->setScaleFactor(detector && detector->type() == Feature::Type::msd ?
-                                 dynamic_cast<IMsd *>(detector)->scaleFactor() :
+                                 dynamic_cast<Msd *>(detector)->scaleFactor() :
                                  mSettingsModel->msdScaleFactor());
   mMsdDetector->setNMSRadius(detector && detector->type() == Feature::Type::msd ?
-                               dynamic_cast<IMsd *>(detector)->NMSRadius() :
+                               dynamic_cast<Msd *>(detector)->NMSRadius() :
                                mSettingsModel->msdNMSRadius());
   mMsdDetector->setNScales(detector && detector->type() == Feature::Type::msd ?
-                             dynamic_cast<IMsd *>(detector)->nScales() :
+                             dynamic_cast<Msd *>(detector)->nScales() :
                              mSettingsModel->msdNScales());
   mMsdDetector->setNMSScaleR(detector && detector->type() == Feature::Type::msd ?
-                               dynamic_cast<IMsd *>(detector)->NMSScaleRadius() :
+                               dynamic_cast<Msd *>(detector)->NMSScaleRadius() :
                                mSettingsModel->msdNMSScaleR());
   mMsdDetector->setComputeOrientations(detector && detector->type() == Feature::Type::msd ?
-                                         dynamic_cast<IMsd *>(detector)->computeOrientation() :
+                                         dynamic_cast<Msd *>(detector)->computeOrientation() :
                                          mSettingsModel->msdComputeOrientations());
   mMsdDetector->setAffineMSD(detector && detector->type() == Feature::Type::msd ?
-                               dynamic_cast<IMsd *>(detector)->affineMSD() :
+                               dynamic_cast<Msd *>(detector)->affineMSD() :
                                mSettingsModel->msdAffineMSD());
   mMsdDetector->setTilts(detector && detector->type() == Feature::Type::msd ?
-                           dynamic_cast<IMsd *>(detector)->affineTilts() :
+                           dynamic_cast<Msd *>(detector)->affineTilts() :
                            mSettingsModel->msdTilts());
 
   /* MSER */
 
   mMserDetector->setDelta(detector && detector->type() == Feature::Type::mser ?
-                            dynamic_cast<IMser *>(detector)->delta() :
+                            dynamic_cast<Mser *>(detector)->delta() :
                             mSettingsModel->mserDelta());
   mMserDetector->setMaxArea(detector && detector->type() == Feature::Type::mser ?
-                              dynamic_cast<IMser *>(detector)->maxArea() :
+                              dynamic_cast<Mser *>(detector)->maxArea() :
                               mSettingsModel->mserMaxArea());
   mMserDetector->setMinArea(detector && detector->type() == Feature::Type::mser ?
-                              dynamic_cast<IMser *>(detector)->minArea() :
+                              dynamic_cast<Mser *>(detector)->minArea() :
                               mSettingsModel->mserMinArea());
   mMserDetector->setMaxVariation(detector && detector->type() == Feature::Type::mser ?
-                                   dynamic_cast<IMser *>(detector)->maxVariation() :
+                                   dynamic_cast<Mser *>(detector)->maxVariation() :
                                    mSettingsModel->mserMaxVariation());
   mMserDetector->setMinDiversity(detector && detector->type() == Feature::Type::mser ?
-                                   dynamic_cast<IMser *>(detector)->minDiversity() :
+                                   dynamic_cast<Mser *>(detector)->minDiversity() :
                                    mSettingsModel->mserMinDiversity());
   mMserDetector->setMaxEvolution(detector && detector->type() == Feature::Type::mser ?
-                                   dynamic_cast<IMser *>(detector)->maxEvolution() :
+                                   dynamic_cast<Mser *>(detector)->maxEvolution() :
                                    mSettingsModel->mserMaxEvolution());
   mMserDetector->setAreaThreshold(detector && detector->type() == Feature::Type::mser ?
-                                    dynamic_cast<IMser *>(detector)->areaThreshold() :
+                                    dynamic_cast<Mser *>(detector)->areaThreshold() :
                                     mSettingsModel->mserAreaThreshold());
   mMserDetector->setMinMargin(detector && detector->type() == Feature::Type::mser ?
-                                dynamic_cast<IMser *>(detector)->minMargin() :
+                                dynamic_cast<Mser *>(detector)->minMargin() :
                                 mSettingsModel->mserMinMargin());
   mMserDetector->setEdgeBlurSize(detector && detector->type() == Feature::Type::mser ?
-                                   dynamic_cast<IMser *>(detector)->edgeBlurSize() :
+                                   dynamic_cast<Mser *>(detector)->edgeBlurSize() :
                                    mSettingsModel->mserEdgeBlurSize());
 
   /* ORB */
 
   mOrbDetector->setScaleFactor(detector && detector->type() == Feature::Type::orb ?
-                                 dynamic_cast<IOrb *>(detector)->scaleFactor() :
+                                 dynamic_cast<Orb *>(detector)->scaleFactor() :
                                  mSettingsModel->orbScaleFactor());
   mOrbDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::orb ?
-                                    dynamic_cast<IOrb *>(detector)->featuresNumber() :
+                                    dynamic_cast<Orb *>(detector)->featuresNumber() :
                                     mSettingsModel->orbFeaturesNumber());
   mOrbDetector->setLevelsNumber(detector && detector->type() == Feature::Type::orb ?
-                                  dynamic_cast<IOrb *>(detector)->levelsNumber() :
+                                  dynamic_cast<Orb *>(detector)->levelsNumber() :
                                   mSettingsModel->orbLevelsNumber());
   mOrbDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::orb ?
-                                   dynamic_cast<IOrb *>(detector)->edgeThreshold() :
+                                   dynamic_cast<Orb *>(detector)->edgeThreshold() :
                                    mSettingsModel->orbEdgeThreshold());
   mOrbDetector->setWTA_K(detector && detector->type() == Feature::Type::orb ?
-                           dynamic_cast<IOrb *>(detector)->wta_k() :
+                           dynamic_cast<Orb *>(detector)->wta_k() :
                            mSettingsModel->orbWta_k());
   mOrbDetector->setScoreType(detector && detector->type() == Feature::Type::orb ?
-                               dynamic_cast<IOrb *>(detector)->scoreType() :
+                               dynamic_cast<Orb *>(detector)->scoreType() :
                                mSettingsModel->orbScoreType());
   mOrbDetector->setPatchSize(detector && detector->type() == Feature::Type::orb ?
-                               dynamic_cast<IOrb *>(detector)->patchSize() :
+                               dynamic_cast<Orb *>(detector)->patchSize() :
                                mSettingsModel->orbPatchSize());
   mOrbDetector->setFastThreshold(detector && detector->type() == Feature::Type::orb ?
-                                   dynamic_cast<IOrb *>(detector)->fastThreshold() :
+                                   dynamic_cast<Orb *>(detector)->fastThreshold() :
                                    mSettingsModel->orbFastThreshold());
 
   mOrbDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::orb ?
-                                   dynamic_cast<IOrb *>(descriptor)->scaleFactor() :
+                                   dynamic_cast<Orb *>(descriptor)->scaleFactor() :
                                    mSettingsModel->orbScaleFactor());
   mOrbDescriptor->setFeaturesNumber(descriptor && descriptor->type() == Feature::Type::orb ?
-                                      dynamic_cast<IOrb *>(descriptor)->featuresNumber() :
+                                      dynamic_cast<Orb *>(descriptor)->featuresNumber() :
                                       mSettingsModel->orbFeaturesNumber());
   mOrbDescriptor->setLevelsNumber(descriptor && descriptor->type() == Feature::Type::orb ?
-                                    dynamic_cast<IOrb *>(descriptor)->levelsNumber() :
+                                    dynamic_cast<Orb *>(descriptor)->levelsNumber() :
                                     mSettingsModel->orbLevelsNumber());
   mOrbDescriptor->setEdgeThreshold(descriptor && descriptor->type() == Feature::Type::orb ?
-                                     dynamic_cast<IOrb *>(descriptor)->edgeThreshold() :
+                                     dynamic_cast<Orb *>(descriptor)->edgeThreshold() :
                                      mSettingsModel->orbEdgeThreshold());
   mOrbDescriptor->setWTA_K(descriptor && descriptor->type() == Feature::Type::orb ?
-                             dynamic_cast<IOrb *>(descriptor)->wta_k() :
+                             dynamic_cast<Orb *>(descriptor)->wta_k() :
                              mSettingsModel->orbWta_k());
   mOrbDescriptor->setScoreType(descriptor && descriptor->type() == Feature::Type::orb ?
-                                 dynamic_cast<IOrb *>(descriptor)->scoreType() :
+                                 dynamic_cast<Orb *>(descriptor)->scoreType() :
                                  mSettingsModel->orbScoreType());
   mOrbDescriptor->setPatchSize(descriptor && descriptor->type() == Feature::Type::orb ?
-                                 dynamic_cast<IOrb *>(descriptor)->patchSize() :
+                                 dynamic_cast<Orb *>(descriptor)->patchSize() :
                                  mSettingsModel->orbPatchSize());
   mOrbDescriptor->setFastThreshold(descriptor && descriptor->type() == Feature::Type::orb ?
-                                     dynamic_cast<IOrb *>(descriptor)->fastThreshold() :
+                                     dynamic_cast<Orb *>(descriptor)->fastThreshold() :
                                      mSettingsModel->orbFastThreshold());
 
   /* SIFT */
 #ifdef OPENCV_ENABLE_NONFREE
   mSiftDetector->setSigma(detector && detector->type() == Feature::Type::sift ?
-                            dynamic_cast<ISift *>(detector)->sigma() :
+                            dynamic_cast<Sift *>(detector)->sigma() :
                             mSettingsModel->siftSigma());
   mSiftDetector->setOctaveLayers(detector && detector->type() == Feature::Type::sift ?
-                                   dynamic_cast<ISift *>(detector)->octaveLayers() :
+                                   dynamic_cast<Sift *>(detector)->octaveLayers() :
                                    mSettingsModel->siftOctaveLayers());
   mSiftDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::sift ?
-                                    dynamic_cast<ISift *>(detector)->edgeThreshold() :
+                                    dynamic_cast<Sift *>(detector)->edgeThreshold() :
                                     mSettingsModel->siftEdgeThreshold());
   mSiftDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::sift ?
-                                     dynamic_cast<ISift *>(detector)->featuresNumber() :
+                                     dynamic_cast<Sift *>(detector)->featuresNumber() :
                                      mSettingsModel->siftFeaturesNumber());
   mSiftDetector->setContrastThreshold(detector && detector->type() == Feature::Type::sift ?
-                                        dynamic_cast<ISift *>(detector)->contrastThreshold() :
+                                        dynamic_cast<Sift *>(detector)->contrastThreshold() :
                                         mSettingsModel->siftContrastThreshold());
 
   mSiftDescriptor->setSigma(descriptor && descriptor->type() == Feature::Type::sift ?
-                              dynamic_cast<ISift *>(descriptor)->sigma() :
+                              dynamic_cast<Sift *>(descriptor)->sigma() :
                               mSettingsModel->siftSigma());
   mSiftDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::sift ?
-                                     dynamic_cast<ISift *>(descriptor)->octaveLayers() :
+                                     dynamic_cast<Sift *>(descriptor)->octaveLayers() :
                                      mSettingsModel->siftOctaveLayers());
   mSiftDescriptor->setEdgeThreshold(descriptor && descriptor->type() == Feature::Type::sift ?
-                                      dynamic_cast<ISift *>(descriptor)->edgeThreshold() :
+                                      dynamic_cast<Sift *>(descriptor)->edgeThreshold() :
                                       mSettingsModel->siftEdgeThreshold());
   mSiftDescriptor->setFeaturesNumber(descriptor && descriptor->type() == Feature::Type::sift ?
-                                       dynamic_cast<ISift *>(descriptor)->featuresNumber() :
+                                       dynamic_cast<Sift *>(descriptor)->featuresNumber() :
                                        mSettingsModel->siftFeaturesNumber());
   mSiftDescriptor->setContrastThreshold(descriptor && descriptor->type() == Feature::Type::sift ?
-                                          dynamic_cast<ISift *>(descriptor)->contrastThreshold() :
+                                          dynamic_cast<Sift *>(descriptor)->contrastThreshold() :
                                           mSettingsModel->siftContrastThreshold());
 #endif
 
   /* STAR */
 
   mStarDetector->setMaxSize(detector && detector->type() == Feature::Type::star ?
-                              dynamic_cast<IStar *>(descriptor)->maxSize() :
+                              dynamic_cast<Star *>(descriptor)->maxSize() :
                               mSettingsModel->starMaxSize());
   mStarDetector->setResponseThreshold(detector && detector->type() == Feature::Type::star ?
-                                        dynamic_cast<IStar *>(descriptor)->responseThreshold() :
+                                        dynamic_cast<Star *>(descriptor)->responseThreshold() :
                                         mSettingsModel->starResponseThreshold());
   mStarDetector->setLineThresholdProjected(detector && detector->type() == Feature::Type::star ?
-                                             dynamic_cast<IStar *>(descriptor)->lineThresholdProjected() :
+                                             dynamic_cast<Star *>(descriptor)->lineThresholdProjected() :
                                              mSettingsModel->starLineThresholdProjected());
   mStarDetector->setLineThresholdBinarized(detector && detector->type() == Feature::Type::star ?
-                                             dynamic_cast<IStar *>(descriptor)->lineThresholdBinarized() :
+                                             dynamic_cast<Star *>(descriptor)->lineThresholdBinarized() :
                                              mSettingsModel->starLineThresholdBinarized());
   mStarDetector->setSuppressNonmaxSize(detector && detector->type() == Feature::Type::star ?
-                                         dynamic_cast<IStar *>(descriptor)->suppressNonmaxSize() :
+                                         dynamic_cast<Star *>(descriptor)->suppressNonmaxSize() :
                                          mSettingsModel->starSuppressNonmaxSize());
 
   /* SURF */
 #ifdef OPENCV_ENABLE_NONFREE
   mSurfDetector->setOctaves(detector && detector->type() == Feature::Type::surf ?
-                            dynamic_cast<ISurf *>(detector)->octaves() :
+                            dynamic_cast<Surf *>(detector)->octaves() :
                             mSettingsModel->surfOctaves());
   mSurfDetector->setOctaveLayers(detector && detector->type() == Feature::Type::surf ?
-                                 dynamic_cast<ISurf *>(detector)->octaveLayers() :
+                                 dynamic_cast<Surf *>(detector)->octaveLayers() :
                                  mSettingsModel->surfOctaveLayers());
   mSurfDetector->seUpright(detector && detector->type() == Feature::Type::surf ?
-                                    dynamic_cast<ISurf *>(detector)->upright() :
+                                    dynamic_cast<Surf *>(detector)->upright() :
                                     mSettingsModel->surfRotatedFeatures());
   mSurfDetector->setHessianThreshold(detector && detector->type() == Feature::Type::surf ?
-                                     dynamic_cast<ISurf *>(detector)->hessianThreshold() :
+                                     dynamic_cast<Surf *>(detector)->hessianThreshold() :
                                      mSettingsModel->surfHessianThreshold());
   mSurfDetector->setExtendedDescriptor(detector && detector->type() == Feature::Type::surf ?
-                                       dynamic_cast<ISurf *>(detector)->extendedDescriptor() :
+                                       dynamic_cast<Surf *>(detector)->extendedDescriptor() :
                                        mSettingsModel->surfExtendedDescriptor());
 
   mSurfDescriptor->setOctaves(descriptor && descriptor->type() == Feature::Type::surf ?
-                              dynamic_cast<ISurf *>(descriptor)->octaves() :
+                              dynamic_cast<Surf *>(descriptor)->octaves() :
                               mSettingsModel->surfOctaves());
   mSurfDescriptor->setOctaveLayers(descriptor && descriptor->type() == Feature::Type::surf ?
-                                   dynamic_cast<ISurf *>(descriptor)->octaveLayers() :
+                                   dynamic_cast<Surf *>(descriptor)->octaveLayers() :
                                    mSettingsModel->surfOctaveLayers());
   mSurfDescriptor->seUpright(descriptor && descriptor->type() == Feature::Type::surf ?
-                                      dynamic_cast<ISurf *>(descriptor)->upright() :
+                                      dynamic_cast<Surf *>(descriptor)->upright() :
                                       mSettingsModel->surfRotatedFeatures());
   mSurfDescriptor->setHessianThreshold(descriptor && descriptor->type() == Feature::Type::surf ?
-                                       dynamic_cast<ISurf *>(descriptor)->hessianThreshold() :
+                                       dynamic_cast<Surf *>(descriptor)->hessianThreshold() :
                                        mSettingsModel->surfHessianThreshold());
   mSurfDescriptor->setExtendedDescriptor(descriptor && descriptor->type() == Feature::Type::surf ?
-                                         dynamic_cast<ISurf *>(descriptor)->extendedDescriptor() :
+                                         dynamic_cast<Surf *>(descriptor)->extendedDescriptor() :
                                          mSettingsModel->surfExtendedDescriptor());
 
 #endif
@@ -786,22 +786,22 @@ void FeatureExtractorPresenter::open()
 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mVggDescriptor->setDescriptorType(descriptor && descriptor->type() == Feature::Type::vgg ?
-                                        dynamic_cast<IVgg *>(descriptor)->descriptorType() :
+                                        dynamic_cast<Vgg *>(descriptor)->descriptorType() :
                                         mSettingsModel->vggDescriptorType());
   mVggDescriptor->setScaleFactor(descriptor && descriptor->type() == Feature::Type::vgg ?
-                                     dynamic_cast<IVgg *>(descriptor)->scaleFactor() :
+                                     dynamic_cast<Vgg *>(descriptor)->scaleFactor() :
                                      mSettingsModel->vggScaleFactor());
   mVggDescriptor->setSigma(descriptor && descriptor->type() == Feature::Type::vgg ?
-                                        dynamic_cast<IVgg *>(descriptor)->sigma() :
+                                        dynamic_cast<Vgg *>(descriptor)->sigma() :
                                         mSettingsModel->vggSigma());
   mVggDescriptor->setUseNormalizeDescriptor(descriptor && descriptor->type() == Feature::Type::vgg ?
-                                        dynamic_cast<IVgg *>(descriptor)->useNormalizeDescriptor() :
+                                        dynamic_cast<Vgg *>(descriptor)->useNormalizeDescriptor() :
                                         mSettingsModel->vggUseNormalizeDescriptor());
   mVggDescriptor->setUseNormalizeImage(descriptor && descriptor->type() == Feature::Type::vgg ?
-                                        dynamic_cast<IVgg *>(descriptor)->useNormalizeImage() :
+                                        dynamic_cast<Vgg *>(descriptor)->useNormalizeImage() :
                                         mSettingsModel->vggUseNormalizeImage());
   mVggDescriptor->setUseScaleOrientation(descriptor && descriptor->type() == Feature::Type::vgg ?
-                                     dynamic_cast<IVgg *>(descriptor)->useScaleOrientation() :
+                                     dynamic_cast<Vgg *>(descriptor)->useScaleOrientation() :
                                      mSettingsModel->vggUseScaleOrientation());
 #endif
 

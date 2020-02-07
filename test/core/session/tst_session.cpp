@@ -39,15 +39,14 @@ private slots:
   void test_features();
   void test_matches();
   void test_passPoints();
-  void test_clear();
 
 protected:
 
-  ISession *mSession;
+  Session *mSession;
 };
 
 TestSession::TestSession()
-  : mSession(new Session)
+  : mSession(new SessionImp)
 {
 
 }
@@ -62,17 +61,67 @@ TestSession::~TestSession()
 
 void TestSession::initTestCase()
 {
-  
+  QCOMPARE(QString(), mSession->name());
+  QCOMPARE(QString(), mSession->description());
+  QCOMPARE(2000, mSession->maxImageSize());
+  QCOMPARE(false, mSession->fullImageSize());
+  QCOMPARE(nullptr, mSession->preprocess());
+  QCOMPARE(nullptr, mSession->detector());
+  QCOMPARE(nullptr, mSession->descriptor());
+  QCOMPARE(nullptr, mSession->matchingMethod());
+  QCOMPARE(nullptr, mSession->matchingStrategy());
+  QCOMPARE(std::vector<QString>(), mSession->preprocessImages());
+  QCOMPARE(std::vector<QString>(), mSession->features());
+  QCOMPARE(QString(), mSession->passPoints());
 }
 
 void TestSession::cleanupTestCase()
 {
+  mSession->setName("Session03");
+  mSession->setDescription("Descripción de la sesión 3");
+  mSession->setMaxImageSize(3000);
+  mSession->setFullImageSize(true);
+  std::shared_ptr<Preprocess> preprocess(new AcebsfProperties());
+  mSession->setPreprocess(preprocess);
+  std::shared_ptr<Feature> detector(new AgastProperties());
+  mSession->setDetector(detector);
+  std::shared_ptr<Feature> descriptor(new BriefProperties());
+  mSession->setDescriptor(descriptor);
+  std::shared_ptr<MatchingMethod> matcher(new BruteForceMatcherImp());
+  mSession->setMatchingMethod(matcher);
+  std::shared_ptr<RobustMatcher> robustMatcherRefinement(new RobustMatchingProperties());
+  robustMatcherRefinement->setGeometricTest(RobustMatcher::GeometricTest::homography);
+  mSession->setMatchingStrategy(robustMatcherRefinement);
+  mSession->addPreprocessImage("c:/prj/session01/image01.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image02.jpg");
+  mSession->addPreprocessImage("c:/prj/session01/image03.jpg");
+  mSession->addFeatures("c:/prj/session01/image01.xml");
+  mSession->addFeatures("c:/prj/session01/image02.xml");
+  mSession->addFeatures("c:/prj/session01/image03.xml");
+  mSession->addMatches("image01", "image02", "c:/prj/session01/image01_image02.xml");
+  mSession->addMatches("image01", "image03", "c:/prj/session01/image01_image03.xml");
+  mSession->addMatches("image02", "image03", "c:/prj/session01/image02_image03.xml");
+  mSession->setPassPoints("c:/prj/session01/pass_points_ids.txt");
 
+  mSession->clear();
+
+  QCOMPARE(QString(), mSession->name());
+  QCOMPARE(QString(), mSession->description());
+  QCOMPARE(2000, mSession->maxImageSize());
+  QCOMPARE(false, mSession->fullImageSize());
+  QCOMPARE(nullptr, mSession->preprocess());
+  QCOMPARE(nullptr, mSession->detector());
+  QCOMPARE(nullptr, mSession->descriptor());
+  QCOMPARE(nullptr, mSession->matchingMethod());
+  QCOMPARE(nullptr, mSession->matchingStrategy());
+  QCOMPARE(std::vector<QString>(), mSession->preprocessImages());
+  QCOMPARE(std::vector<QString>(), mSession->features());
+  QCOMPARE(QString(), mSession->passPoints());
 }
 
 void TestSession::test_constructor()
 {
-  Session session;
+  SessionImp session;
   QCOMPARE(QString(), session.name());
   QCOMPARE(QString(), session.description());
   QCOMPARE(2000, session.maxImageSize());
@@ -80,8 +129,8 @@ void TestSession::test_constructor()
   QCOMPARE(nullptr, session.preprocess());
   QCOMPARE(nullptr, session.detector());
   QCOMPARE(nullptr, session.descriptor());
-  QCOMPARE(nullptr, session.matcher());
-  QCOMPARE(nullptr, session.robustMatcherRefinement());
+  QCOMPARE(nullptr, session.matchingMethod());
+  QCOMPARE(nullptr, session.matchingStrategy());
   QCOMPARE(std::vector<QString>(), session.preprocessImages());
   QCOMPARE(std::vector<QString>(), session.features());
   QCOMPARE(QString(), session.passPoints());
@@ -179,20 +228,20 @@ void TestSession::test_descriptor()
 
 void TestSession::test_matcher()
 {
-  std::shared_ptr<Match> matcher(new BruteForceMatcher());
-  mSession->setMatcher(matcher);
+  std::shared_ptr<MatchingMethod> matcher(new BruteForceMatcherImp());
+  mSession->setMatchingMethod(matcher);
 
-  std::shared_ptr<Match> matcher2 = mSession->matcher();
+  std::shared_ptr<MatchingMethod> matcher2 = mSession->matchingMethod();
   QCOMPARE(QString("Brute Force Matching"), matcher2->name());
 }
 
 void TestSession::test_robustMatcherRefinement()
 {
-  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatchingProperties());
-  robustMatcherRefinement->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
-  mSession->setRobustMatcherRefinement(robustMatcherRefinement);
+  std::shared_ptr<RobustMatcher> robustMatcherRefinement(new RobustMatchingProperties());
+  robustMatcherRefinement->setGeometricTest(RobustMatcher::GeometricTest::homography);
+  mSession->setMatchingStrategy(robustMatcherRefinement);
 
-  QCOMPARE(IRobustMatcherRefinement::GeometricTest::homography, mSession->robustMatcherRefinement()->geometricTest());
+  QCOMPARE(RobustMatcher::GeometricTest::homography, dynamic_cast<RobustMatcher *>(mSession->matchingStrategy().get())->geometricTest());
 }
 
 void TestSession::test_preprocessImages()
@@ -237,50 +286,6 @@ void TestSession::test_passPoints()
   QCOMPARE("c:/prj/session01/pass_points_ids.txt", mSession->passPoints());
 }
 
-void TestSession::test_clear()
-{
-  mSession->setName("Session03");
-  mSession->setDescription("Descripción de la sesión 3");
-  mSession->setMaxImageSize(3000);
-  mSession->setFullImageSize(true);
-  std::shared_ptr<Preprocess> preprocess(new AcebsfProperties());
-  mSession->setPreprocess(preprocess);
-  std::shared_ptr<Feature> detector(new AgastProperties());
-  mSession->setDetector(detector);
-  std::shared_ptr<Feature> descriptor(new BriefProperties());
-  mSession->setDescriptor(descriptor);
-  std::shared_ptr<Match> matcher(new BruteForceMatcher());
-  mSession->setMatcher(matcher);
-  std::shared_ptr<IRobustMatcherRefinement> robustMatcherRefinement(new RobustMatchingProperties());
-  robustMatcherRefinement->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
-  mSession->setRobustMatcherRefinement(robustMatcherRefinement);
-  mSession->addPreprocessImage("c:/prj/session01/image01.jpg");
-  mSession->addPreprocessImage("c:/prj/session01/image02.jpg");
-  mSession->addPreprocessImage("c:/prj/session01/image03.jpg");
-  mSession->addFeatures("c:/prj/session01/image01.xml");
-  mSession->addFeatures("c:/prj/session01/image02.xml");
-  mSession->addFeatures("c:/prj/session01/image03.xml");
-  mSession->addMatches("image01", "image02", "c:/prj/session01/image01_image02.xml");
-  mSession->addMatches("image01", "image03", "c:/prj/session01/image01_image03.xml");
-  mSession->addMatches("image02", "image03", "c:/prj/session01/image02_image03.xml");
-  mSession->setPassPoints("c:/prj/session01/pass_points_ids.txt");
-
-  mSession->clear();
-  
-  QCOMPARE(QString(), mSession->name());
-  QCOMPARE(QString(), mSession->description());
-  QCOMPARE(2000, mSession->maxImageSize());
-  QCOMPARE(false, mSession->fullImageSize());
-  QCOMPARE(nullptr, mSession->preprocess());
-  QCOMPARE(nullptr, mSession->detector());
-  QCOMPARE(nullptr, mSession->descriptor());
-  QCOMPARE(nullptr, mSession->matcher());
-  QCOMPARE(nullptr, mSession->robustMatcherRefinement());
-  QCOMPARE(std::vector<QString>(), mSession->preprocessImages());
-  QCOMPARE(std::vector<QString>(), mSession->features());
-  QCOMPARE(QString(), mSession->passPoints());
-
-}
 
 QTEST_APPLESS_MAIN(TestSession)
 

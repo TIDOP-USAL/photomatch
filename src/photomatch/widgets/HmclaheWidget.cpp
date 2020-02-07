@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "HmclaheWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-HmclaheWidget::HmclaheWidget(QWidget *parent)
-  : IHmclaheWidget(parent),
+HmclaheWidgetImp::HmclaheWidgetImp(QWidget *parent)
+  : HmclaheWidget(parent),
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this)),
     mL(new QDoubleSpinBox(this)),
@@ -27,37 +51,37 @@ HmclaheWidget::HmclaheWidget(QWidget *parent)
 
 }
 
-HmclaheWidget::~HmclaheWidget()
+HmclaheWidgetImp::~HmclaheWidgetImp()
 {
 
 }
 
-void HmclaheWidget::onBlockSizeXChange(int blockSizeX)
+void HmclaheWidgetImp::onBlockSizeXChange(int blockSizeX)
 {
   emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
 }
 
-void HmclaheWidget::onBlockSizeYChange(int blockSizeY)
+void HmclaheWidgetImp::onBlockSizeYChange(int blockSizeY)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
 }
 
-QSize HmclaheWidget::blockSize() const
+QSize HmclaheWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-double HmclaheWidget::l() const
+double HmclaheWidgetImp::l() const
 {
   return mL->value();
 }
 
-double HmclaheWidget::phi() const
+double HmclaheWidgetImp::phi() const
 {
   return mPhi->value();
 }
 
-void HmclaheWidget::setBlockSize(const QSize &blockSize)
+void HmclaheWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerTilesGridX(mBlockSizeX);
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
@@ -65,23 +89,23 @@ void HmclaheWidget::setBlockSize(const QSize &blockSize)
   mBlockSizeY->setValue(blockSize.height());
 }
 
-void HmclaheWidget::setL(double l)
+void HmclaheWidgetImp::setL(double l)
 {
   const QSignalBlocker blockerL(mL);
   mL->setValue(static_cast<double>(l));
 }
 
-void HmclaheWidget::setPhi(double phi)
+void HmclaheWidgetImp::setPhi(double phi)
 {
   const QSignalBlocker blockerPhi(mPhi);
   mPhi->setValue(static_cast<double>(phi));
 }
 
-void HmclaheWidget::update()
+void HmclaheWidgetImp::update()
 {
 }
 
-void HmclaheWidget::retranslate()
+void HmclaheWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mL->setWhatsThis(tr("<html><head/><body><p>Use to district the range of histogram. Range between 0 and 1.</p></body></html>"));
@@ -91,7 +115,7 @@ void HmclaheWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void HmclaheWidget::reset()
+void HmclaheWidgetImp::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -104,7 +128,7 @@ void HmclaheWidget::reset()
   mPhi->setValue(0.5);
 }
 
-void HmclaheWidget::init()
+void HmclaheWidgetImp::init()
 {
   this->setWindowTitle("HMCLAHE");
 

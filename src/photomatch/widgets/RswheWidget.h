@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_RSWHE_WIDGET_H
 #define PHOTOMATCH_RSWHE_WIDGET_H
 
@@ -9,7 +33,7 @@ class QRadioButton;
 namespace photomatch
 {
 
-class IRswheWidget
+class RswheWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
@@ -23,8 +47,8 @@ public:
 
 public:
 
-  IRswheWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IRswheWidget() = default;
+  RswheWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~RswheWidget() = default;
 
   virtual int histogramDivisions() const = 0;
   virtual HistogramCut histogramCut() const = 0;
@@ -41,15 +65,15 @@ public slots:
 
 };
 
-class RswheWidget
-  : public IRswheWidget
+class RswheWidgetImp
+  : public RswheWidget
 {
   Q_OBJECT
 
 public:
 
-  RswheWidget(QWidget *parent = nullptr);
-  ~RswheWidget() override;
+  RswheWidgetImp(QWidget *parent = nullptr);
+  ~RswheWidgetImp() override;
 
 protected slots:
 
@@ -93,6 +117,6 @@ protected:
 
 } // namespace photomatch
 
-Q_DECLARE_METATYPE(photomatch::IRswheWidget::HistogramCut)
+Q_DECLARE_METATYPE(photomatch::RswheWidget::HistogramCut)
 
 #endif // PHOTOMATCH_RSWHE_WIDGET_H

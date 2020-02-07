@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "VggWidget.h"
 
 #include <QCheckBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-VggWidget::VggWidget(QWidget *parent)
-  : IVggWidget(parent),
+VggWidgetImp::VggWidgetImp(QWidget *parent)
+  : VggWidget(parent),
     mDescriptorType(new QComboBox(this)),
     mScaleFactor(new QDoubleSpinBox(this)),
     mSigma(new QDoubleSpinBox(this)),
@@ -30,84 +54,84 @@ VggWidget::VggWidget(QWidget *parent)
   connect(mUseScaleOrientation,     SIGNAL(clicked(bool)),                 this, SIGNAL(useScaleOrientationChange(bool)));
 }
 
-VggWidget::~VggWidget()
+VggWidgetImp::~VggWidgetImp()
 {
 
 }
 
-QString VggWidget::descriptorType() const
+QString VggWidgetImp::descriptorType() const
 {
   return mDescriptorType->currentText();
 }
 
-double VggWidget::scaleFactor() const
+double VggWidgetImp::scaleFactor() const
 {
   return mScaleFactor->value();
 }
 
-double VggWidget::sigma() const
+double VggWidgetImp::sigma() const
 {
   return mSigma->value();
 }
 
-bool VggWidget::useNormalizeDescriptor() const
+bool VggWidgetImp::useNormalizeDescriptor() const
 {
   return mUseNormalizeDescriptor->isChecked();
 }
 
-bool VggWidget::useNormalizeImage() const
+bool VggWidgetImp::useNormalizeImage() const
 {
   return mUseNormalizeImage->isChecked();
 }
 
-bool VggWidget::useScaleOrientation() const
+bool VggWidgetImp::useScaleOrientation() const
 {
   return mUseScaleOrientation->isChecked();
 }
 
-void VggWidget::setDescriptorType(const QString &descriptorType)
+void VggWidgetImp::setDescriptorType(const QString &descriptorType)
 {
   const QSignalBlocker blockerBytes(mDescriptorType);
   mDescriptorType->setCurrentText(descriptorType);
 }
 
-void VggWidget::setScaleFactor(double scaleFactor)
+void VggWidgetImp::setScaleFactor(double scaleFactor)
 {
   const QSignalBlocker blockerScaleFactor(mScaleFactor);
   mScaleFactor->setValue(scaleFactor);
 }
 
-void VggWidget::setSigma(double sigma)
+void VggWidgetImp::setSigma(double sigma)
 {
   const QSignalBlocker blockerSigma(mSigma);
   mSigma->setValue(sigma);
 }
 
-void VggWidget::setUseNormalizeDescriptor(bool active)
+void VggWidgetImp::setUseNormalizeDescriptor(bool active)
 {
   mUseNormalizeDescriptor->setChecked(active);
 }
 
-void VggWidget::setUseNormalizeImage(bool active)
+void VggWidgetImp::setUseNormalizeImage(bool active)
 {
   mUseNormalizeImage->setChecked(active);
 }
 
-void VggWidget::setUseScaleOrientation(bool active)
+void VggWidgetImp::setUseScaleOrientation(bool active)
 {
   mUseScaleOrientation->setChecked(active);
 }
 
-void VggWidget::update()
+void VggWidgetImp::update()
 {
 }
 
-void VggWidget::retranslate()
+void VggWidgetImp::retranslate()
 {
 
 }
 
-void VggWidget::reset()
+void VggWidgetImp::reset()
 {
   const QSignalBlocker blockerBytes(mDescriptorType);
   const QSignalBlocker blockerScaleFactor(mScaleFactor);
@@ -121,7 +145,7 @@ void VggWidget::reset()
   mUseScaleOrientation->setChecked(true);
 }
 
-void VggWidget::init()
+void VggWidgetImp::init()
 {
   this->setWindowTitle("VGG");
 

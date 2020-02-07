@@ -17,9 +17,7 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testDefaultConstructor();
   void test_windowTitle();
-  void testReset();
 
 private:
 
@@ -50,21 +48,9 @@ void TestThumbnailsWidget::cleanupTestCase()
 
 }
 
-void TestThumbnailsWidget::testDefaultConstructor()
-{
-  ///// Check default values
-}
-
 void TestThumbnailsWidget::test_windowTitle()
 {
   QCOMPARE("Thumbnails", mThumbnailsWidget->windowTitle());
-}
-
-void TestThumbnailsWidget::testReset()
-{
-
-  mThumbnailsWidget->reset();
-
 }
 
 QTEST_MAIN(TestThumbnailsWidget)

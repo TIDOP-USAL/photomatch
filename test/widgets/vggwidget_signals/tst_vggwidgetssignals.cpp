@@ -8,7 +8,7 @@
 
 using namespace photomatch;
 
-class TestVggWidgetsSignals : public VggWidget
+class TestVggWidgetsSignals : public VggWidgetImp
 {
   Q_OBJECT
 
@@ -29,7 +29,7 @@ private slots:
 };
 
 TestVggWidgetsSignals::TestVggWidgetsSignals()
-  : VggWidget()
+  : VggWidgetImp()
 {
 
 }
@@ -41,7 +41,7 @@ TestVggWidgetsSignals::~TestVggWidgetsSignals()
 
 void TestVggWidgetsSignals::test_descriptorTypeChange()
 {
-  QSignalSpy spy_descriptorTypeChange(this, &VggWidget::descriptorTypeChange);
+  QSignalSpy spy_descriptorTypeChange(this, &VggWidgetImp::descriptorTypeChange);
 
   this->mDescriptorType->setCurrentText("VGG_80");
 
@@ -59,7 +59,7 @@ void TestVggWidgetsSignals::test_descriptorTypeChange()
 
 void TestVggWidgetsSignals::test_scaleFactorChange()
 {
-  QSignalSpy spy_scaleFactorChange(this, &VggWidget::scaleFactorChange);
+  QSignalSpy spy_scaleFactorChange(this, &VggWidgetImp::scaleFactorChange);
 
   mScaleFactor->setValue(5.00);
 
@@ -74,7 +74,7 @@ void TestVggWidgetsSignals::test_scaleFactorChange()
 
 void TestVggWidgetsSignals::test_sigmaChange()
 {
-  QSignalSpy spy_sigmaChange(this, &VggWidget::sigmaChange);
+  QSignalSpy spy_sigmaChange(this, &VggWidgetImp::sigmaChange);
 
   mSigma->setValue(1.6);
 
@@ -89,7 +89,7 @@ void TestVggWidgetsSignals::test_sigmaChange()
 
 void TestVggWidgetsSignals::test_useNormalizeDescriptorChange()
 {
-  QSignalSpy spy_useNormalizeDescriptorChange(this, &VggWidget::useNormalizeDescriptorChange);
+  QSignalSpy spy_useNormalizeDescriptorChange(this, &VggWidgetImp::useNormalizeDescriptorChange);
 
   QTest::mouseClick(mUseNormalizeDescriptor, Qt::MouseButton::LeftButton);
 
@@ -104,7 +104,7 @@ void TestVggWidgetsSignals::test_useNormalizeDescriptorChange()
 
 void TestVggWidgetsSignals::test_useNormalizeImageChange()
 {
-  QSignalSpy spy_useNormalizeImageChange(this, &VggWidget::useNormalizeImageChange);
+  QSignalSpy spy_useNormalizeImageChange(this, &VggWidgetImp::useNormalizeImageChange);
 
   QTest::mouseClick(mUseNormalizeImage, Qt::MouseButton::LeftButton);
 
@@ -119,7 +119,7 @@ void TestVggWidgetsSignals::test_useNormalizeImageChange()
 
 void TestVggWidgetsSignals::test_useScaleOrientationChange()
 {
-  QSignalSpy spy_useScaleOrientationChange(this, &VggWidget::useScaleOrientationChange);
+  QSignalSpy spy_useScaleOrientationChange(this, &VggWidgetImp::useScaleOrientationChange);
 
   QTest::mouseClick(mUseScaleOrientation, Qt::MouseButton::LeftButton);
 

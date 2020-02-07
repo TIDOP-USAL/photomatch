@@ -58,19 +58,19 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
-    mACEBSF(new AcebsfWidget),
-    mCLAHE(new ClaheWidget),
-    mCMBFHE(new CmbfheWidget),
-    mDecolor(new DecolorWidget),
-    mDHE(new DheWidget),
-    mFAHE(new FaheWidget),
-    mHMCLAHE(new HmclaheWidget),
-    mLCEBSESCS(new LceBsescsWidget),
-    mMSRCP(new MsrcpWidget),
-    mNOSHP(new NoshpWidget),
-    mPOHE(new PoheWidget),
-    mRSWHE(new RswheWidget),
-    mWallis(new WallisWidget),
+    mACEBSF(new AcebsfWidgetImp),
+    mCLAHE(new ClaheWidgetImp),
+    mCMBFHE(new CmbfheWidgetImp),
+    mDecolor(new DecolorWidgetImp),
+    mDHE(new DheWidgetImp),
+    mFAHE(new FaheWidgetImp),
+    mHMCLAHE(new HmclaheWidgetImp),
+    mLCEBSESCS(new LceBsescsWidgetImp),
+    mMSRCP(new MsrcpWidgetImp),
+    mNOSHP(new NoshpWidgetImp),
+    mPOHE(new PoheWidgetImp),
+    mRSWHE(new RswheWidgetImp),
+    mWallis(new WallisWidgetImp),
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
@@ -176,90 +176,90 @@ void PreprocessPresenter::open()
   if (preprocess) setCurrentPreprocess(preprocess->name());
 
   mACEBSF->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
-                          dynamic_cast<IAcebsf *>(preprocess)->blockSize() :
+                          dynamic_cast<Acebsf *>(preprocess)->blockSize() :
                           mSettingsModel->acebsfBlockSize());
   mACEBSF->setL(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
-                  dynamic_cast<IAcebsf *>(preprocess)->l() :
+                  dynamic_cast<Acebsf *>(preprocess)->l() :
                   mSettingsModel->acebsfL());
   mACEBSF->setK1(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
-                   dynamic_cast<IAcebsf *>(preprocess)->k1() :
+                   dynamic_cast<Acebsf *>(preprocess)->k1() :
                    mSettingsModel->acebsfK1());
   mACEBSF->setK2(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
-                   dynamic_cast<IAcebsf *>(preprocess)->k2() :
+                   dynamic_cast<Acebsf *>(preprocess)->k2() :
                    mSettingsModel->acebsfK2());
 
   mCLAHE->setClipLimit(preprocess && preprocess->type() == Preprocess::Type::clahe ?
-                         dynamic_cast<IClahe *>(preprocess)->clipLimit() :
+                         dynamic_cast<Clahe *>(preprocess)->clipLimit() :
                          mSettingsModel->claheClipLimit());
   mCLAHE->setTilesGridSize(preprocess && preprocess->type() == Preprocess::Type::clahe ?
-                             dynamic_cast<IClahe *>(preprocess)->tilesGridSize() :
+                             dynamic_cast<Clahe *>(preprocess)->tilesGridSize() :
                              mSettingsModel->claheTilesGridSize());
 
   mCMBFHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::cmbfhe ?
-                          dynamic_cast<ICmbfhe *>(preprocess)->blockSize() :
+                          dynamic_cast<Cmbfhe *>(preprocess)->blockSize() :
                           mSettingsModel->faheBlockSize());
 
   mDHE->setX(preprocess && preprocess->type() == Preprocess::Type::dhe ?
-               dynamic_cast<IDhe *>(preprocess)->x() :
+               dynamic_cast<Dhe *>(preprocess)->x() :
                mSettingsModel->dheX());
 
   mFAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::fahe ?
-                        dynamic_cast<IFahe *>(preprocess)->blockSize() :
+                        dynamic_cast<Fahe *>(preprocess)->blockSize() :
                         mSettingsModel->faheBlockSize());
 
   mHMCLAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
-                           dynamic_cast<IHmclahe *>(preprocess)->blockSize() :
+                           dynamic_cast<Hmclahe *>(preprocess)->blockSize() :
                            mSettingsModel->hmclaheBlockSize());
   mHMCLAHE->setL(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
-                   dynamic_cast<IHmclahe *>(preprocess)->l() :
+                   dynamic_cast<Hmclahe *>(preprocess)->l() :
                    mSettingsModel->hmclaheL());
   mHMCLAHE->setPhi(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
-                     dynamic_cast<IHmclahe *>(preprocess)->phi() :
+                     dynamic_cast<Hmclahe *>(preprocess)->phi() :
                      mSettingsModel->hmclahePhi());
 
   mLCEBSESCS->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::lce_bsescs ?
-                             dynamic_cast<ILceBsescs *>(preprocess)->blockSize() :
+                             dynamic_cast<LceBsescs *>(preprocess)->blockSize() :
                              mSettingsModel->lceBsescsBlockSize());
 
   mMSRCP->setMidScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
-                        dynamic_cast<IMsrcp *>(preprocess)->midScale() :
+                        dynamic_cast<Msrcp *>(preprocess)->midScale() :
                         mSettingsModel->msrcpMidScale());
   mMSRCP->setLargeScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
-                          dynamic_cast<IMsrcp *>(preprocess)->largeScale() :
+                          dynamic_cast<Msrcp *>(preprocess)->largeScale() :
                           mSettingsModel->msrcpLargeScale());
   mMSRCP->setSmallScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
-                          dynamic_cast<IMsrcp *>(preprocess)->smallScale() :
+                          dynamic_cast<Msrcp *>(preprocess)->smallScale() :
                           mSettingsModel->msrcpSmallScale());
 
   mNOSHP->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::noshp ?
-                         dynamic_cast<INoshp *>(preprocess)->blockSize() :
+                         dynamic_cast<Noshp *>(preprocess)->blockSize() :
                          mSettingsModel->noshpBlockSize());
 
   mPOHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::pohe ?
-                        dynamic_cast<IPohe *>(preprocess)->blockSize() :
+                        dynamic_cast<Pohe *>(preprocess)->blockSize() :
                         mSettingsModel->poheBlockSize());
 
   mRSWHE->setHistogramCut(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
-                            static_cast<IRswheWidget::HistogramCut>(dynamic_cast<IRswhe *>(preprocess)->histogramCut()) :
-                            static_cast<IRswheWidget::HistogramCut>(mSettingsModel->rswheHistogramCut()));
+                            static_cast<RswheWidget::HistogramCut>(dynamic_cast<Rswhe *>(preprocess)->histogramCut()) :
+                            static_cast<RswheWidget::HistogramCut>(mSettingsModel->rswheHistogramCut()));
   mRSWHE->setHistogramDivisions(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
-                                  dynamic_cast<IRswhe *>(preprocess)->histogramDivisions() :
+                                  dynamic_cast<Rswhe *>(preprocess)->histogramDivisions() :
                                   mSettingsModel->rswheHistogramDivisions());
 
   mWallis->setContrast(preprocess && preprocess->type() == Preprocess::Type::wallis ?
-                         dynamic_cast<IWallis *>(preprocess)->contrast() :
+                         dynamic_cast<Wallis *>(preprocess)->contrast() :
                          mSettingsModel->wallisContrast());
   mWallis->setBrightness(preprocess && preprocess->type() == Preprocess::Type::wallis ?
-                           dynamic_cast<IWallis *>(preprocess)->brightness() :
+                           dynamic_cast<Wallis *>(preprocess)->brightness() :
                            mSettingsModel->wallisBrightness());
   mWallis->setKernelSize(preprocess && preprocess->type() == Preprocess::Type::wallis ?
-                           dynamic_cast<IWallis *>(preprocess)->kernelSize() :
+                           dynamic_cast<Wallis *>(preprocess)->kernelSize() :
                            mSettingsModel->wallisKernelSize());
   mWallis->setImposedAverage(preprocess && preprocess->type() == Preprocess::Type::wallis ?
-                               dynamic_cast<IWallis *>(preprocess)->imposedAverage() :
+                               dynamic_cast<Wallis *>(preprocess)->imposedAverage() :
                                mSettingsModel->wallisImposedAverage());
   mWallis->setImposedLocalStdDev(preprocess && preprocess->type() == Preprocess::Type::wallis ?
-                                   dynamic_cast<IWallis *>(preprocess)->imposedLocalStdDev() :
+                                   dynamic_cast<Wallis *>(preprocess)->imposedLocalStdDev() :
                                    mSettingsModel->wallisImposedLocalStdDev());
 
   mView->setSessionName(current_session->name());

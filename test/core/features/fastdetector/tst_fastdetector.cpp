@@ -33,7 +33,6 @@ private slots:
   void test_detectorType();
   void test_detectorType2_data();
   void test_detectorType2();
-  void test_reset();
 
 };
 
@@ -49,12 +48,25 @@ TestFastDetector::~TestFastDetector()
 
 void TestFastDetector::initTestCase()
 {
-
+  QCOMPARE(10, this->threshold());
+  QCOMPARE("TYPE_9_16", this->detectorType());
+  QCOMPARE(true, this->nonmaxSuppression());
 }
 
 void TestFastDetector::cleanupTestCase()
 {
+  this->setThreshold(3);
+  this->setDetectorType("TYPE_7_12");
+  this->setNonmaxSuppression(false);
 
+  this->reset();
+
+  QCOMPARE(10, this->threshold());
+  QCOMPARE(10, this->mFast->getThreshold());
+  QCOMPARE("TYPE_9_16", this->detectorType());
+  QCOMPARE(2, this->mFast->getType());
+  QCOMPARE(true, this->nonmaxSuppression());
+  QCOMPARE(true, this->mFast->getNonmaxSuppression());
 }
 
 void TestFastDetector::test_defaultConstructor()
@@ -169,22 +181,6 @@ void TestFastDetector::test_detectorType2()
 
   this->setDetectorType(value);
   QCOMPARE(result, this->mFast->getType());
-}
-
-void TestFastDetector::test_reset()
-{
-  this->setThreshold(3);
-  this->setDetectorType("TYPE_7_12");
-  this->setNonmaxSuppression(false);
-
-  this->reset();
-
-  QCOMPARE(10, this->threshold());
-  QCOMPARE(10, this->mFast->getThreshold());
-  QCOMPARE("TYPE_9_16", this->detectorType());
-  QCOMPARE(2, this->mFast->getType());
-  QCOMPARE(true, this->nonmaxSuppression());
-  QCOMPARE(true, this->mFast->getNonmaxSuppression());
 }
 
 QTEST_APPLESS_MAIN(TestFastDetector)

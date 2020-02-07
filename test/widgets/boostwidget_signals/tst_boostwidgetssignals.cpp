@@ -8,7 +8,7 @@
 
 using namespace photomatch;
 
-class TestBoostWidgetsSignals : public BoostWidget
+class TestBoostWidgetsSignals : public BoostWidgetImp
 {
   Q_OBJECT
 
@@ -19,15 +19,16 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_descriptorTypeChange();
   void test_scaleFactorChange();
   void test_useOrientationChange();
-  void test_reset();
 
 };
 
 TestBoostWidgetsSignals::TestBoostWidgetsSignals()
-  : BoostWidget()
+  : BoostWidgetImp()
 {
 
 }
@@ -37,9 +38,25 @@ TestBoostWidgetsSignals::~TestBoostWidgetsSignals()
 
 }
 
+void TestBoostWidgetsSignals::initTestCase()
+{
+
+}
+
+void TestBoostWidgetsSignals::cleanupTestCase()
+{
+  QSignalSpy spy_useOrientationChange(this, &BoostWidgetImp::useOrientationChange);
+
+  this->setUseOrientation(true);
+
+  this->reset();
+
+  QCOMPARE(spy_useOrientationChange.count(), 0);
+}
+
 void TestBoostWidgetsSignals::test_descriptorTypeChange()
 {
-  QSignalSpy spy_descriptorTypeChange(this, &BoostWidget::descriptorTypeChange);
+  QSignalSpy spy_descriptorTypeChange(this, &BoostWidgetImp::descriptorTypeChange);
 
   this->mDescriptorType->setCurrentText("BGM");
 
@@ -57,7 +74,7 @@ void TestBoostWidgetsSignals::test_descriptorTypeChange()
 
 void TestBoostWidgetsSignals::test_scaleFactorChange()
 {
-  QSignalSpy spy_scaleFactorChange(this, &BoostWidget::scaleFactorChange);
+  QSignalSpy spy_scaleFactorChange(this, &BoostWidgetImp::scaleFactorChange);
 
   mScaleFactor->setValue(5.00);
 
@@ -72,7 +89,7 @@ void TestBoostWidgetsSignals::test_scaleFactorChange()
 
 void TestBoostWidgetsSignals::test_useOrientationChange()
 {
-  QSignalSpy spy_useOrientationChange(this, &BoostWidget::useOrientationChange);
+  QSignalSpy spy_useOrientationChange(this, &BoostWidgetImp::useOrientationChange);
 
   QTest::mouseClick(mUseOrientation, Qt::MouseButton::LeftButton);
 
@@ -85,16 +102,6 @@ void TestBoostWidgetsSignals::test_useOrientationChange()
   QCOMPARE(spy_useOrientationChange.count(), 0);
 }
 
-void TestBoostWidgetsSignals::test_reset()
-{
-  QSignalSpy spy_useOrientationChange(this, &BoostWidget::useOrientationChange);
-
-  this->setUseOrientation(true);
-
-  this->reset();
-
-  QCOMPARE(spy_useOrientationChange.count(), 0);
-}
 
 QTEST_MAIN(TestBoostWidgetsSignals)
 

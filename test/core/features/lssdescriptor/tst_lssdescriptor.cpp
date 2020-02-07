@@ -21,7 +21,6 @@ private slots:
   void test_defaultConstructor();
   void test_type();
   void test_name();
-  void test_reset();
 
 private:
 
@@ -54,8 +53,7 @@ void TestLssDescriptor::cleanupTestCase()
 
 void TestLssDescriptor::test_defaultConstructor()
 {
-  /// Check default values
-  //LssDescriptor lssDescriptor;
+
 }
 
 void TestLssDescriptor::test_type()
@@ -68,10 +66,6 @@ void TestLssDescriptor::test_name()
   QCOMPARE("LSS", mLssDescriptor->name());
 }
 
-void TestLssDescriptor::test_reset()
-{
-
-}
 
 QTEST_APPLESS_MAIN(TestLssDescriptor)
 

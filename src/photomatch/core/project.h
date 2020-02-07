@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_PROJECT_H
 #define PHOTOMATCH_PROJECT_H
 
@@ -24,7 +48,7 @@ namespace photomatch
 /*!
  * \brief Interfaz Project
  */
-class PHOTOMATCH_EXPORT IProject
+class PHOTOMATCH_EXPORT Project
 {
 
 public:
@@ -36,8 +60,8 @@ public:
 
 public:
 
-  IProject() {}
-  virtual ~IProject() = default;
+  Project() {}
+  virtual ~Project() = default;
 
   /*!
    * \brief Devuelve el nombre del proyecto
@@ -270,13 +294,13 @@ public:
 /*!
  * \brief Interfaz para las operaciones de lectura y escritura del proyecto
  */
-class PHOTOMATCH_EXPORT IProjectRW
+class PHOTOMATCH_EXPORT ProjectController
 {
 
 public:
 
-  IProjectRW() {}
-  virtual ~IProjectRW() = default;
+  ProjectController() {}
+  virtual ~ProjectController() = default;
 
   /*!
    * \brief read
@@ -284,7 +308,7 @@ public:
    * \param[out] prj
    * \return
    */
-  virtual bool read(const QString &file, IProject &prj) = 0;
+  virtual bool read(const QString &file, Project &prj) = 0;
 
   /*!
    * \brief write
@@ -292,7 +316,7 @@ public:
    * \param file
    * \return
    */
-  virtual bool write(const QString &file, const IProject &prj) const = 0;
+  virtual bool write(const QString &file, const Project &prj) const = 0;
 
   /*!
    * \brief checkOldVersion
@@ -310,14 +334,14 @@ public:
 };
 
 
-class PHOTOMATCH_EXPORT Project
-  : public IProject
+class PHOTOMATCH_EXPORT ProjectImp
+  : public Project
 {
 
 public:
 
-  Project();
-  ~Project() override = default;
+  ProjectImp();
+  ~ProjectImp() override = default;
 
 // IProject interface
 
@@ -380,90 +404,163 @@ protected:
 };
 
 
-class PHOTOMATCH_EXPORT ProjectRW
-  : public IProjectRW
+class PHOTOMATCH_EXPORT ProjectControllerImp
+  : public ProjectController
 {
 
 public:
 
-  ProjectRW();
+  ProjectControllerImp();
 
 // IProjectIO interface
 
 public:
 
-  bool read(const QString &file, IProject &prj) override;
-  bool write(const QString &file, const IProject &prj) const override;
+  bool read(const QString &file, Project &prj) override;
+  bool write(const QString &file, const Project &prj) const override;
   bool checkOldVersion(const QString &file) const override;
   void oldVersionBak(const QString &file) const override;
 
+
 protected:
 
-  void readACEBSF(QXmlStreamReader *stream, IAcebsf *acebsf) const;
-  void readCLAHE(QXmlStreamReader *stream, IClahe *clahe) const;
-  void readCMBFHE(QXmlStreamReader *stream, ICmbfhe *cmbfhe) const;
-  void readDHE(QXmlStreamReader *stream, IDhe *dhe) const;
-  void readFAHE(QXmlStreamReader *stream, IFahe *fahe) const;
-  void readHMCLAHE(QXmlStreamReader *stream, IHmclahe *hmclahe) const;
-  void readLCEBSESCS(QXmlStreamReader *stream, ILceBsescs *lceBsescs) const;
-  void readMSRCP(QXmlStreamReader *stream, IMsrcp *msrcp) const;
-  void readNOSHP(QXmlStreamReader *stream, INoshp *noshp) const;
-  void readPOHE(QXmlStreamReader *stream, IPohe *pohe) const;
-  void readRSWHE(QXmlStreamReader *stream, IRswhe *rswhe) const;
-  void readWALLIS(QXmlStreamReader *stream, IWallis *wallis) const;
+  void readGeneral(QXmlStreamReader &stream, Project &prj);
+  void readImages(QXmlStreamReader &stream, Project &prj);
+  std::shared_ptr<Image> readImage(QXmlStreamReader &stream);
+  void readGroundTruth(QXmlStreamReader &stream, Project &prj);
+  void readSessions(QXmlStreamReader &stream, Project &prj);
+  bool readActiveSession(QXmlStreamReader &stream);
+  std::shared_ptr<Session> readSession(QXmlStreamReader &stream);
+  void readSessionName(QXmlStreamReader &stream, Session *session);
+  void readSessionDescription(QXmlStreamReader &stream, Session *session);
+  void readSessionMaxImageSize(QXmlStreamReader &stream, Session *session);
+  void readPreprocess(QXmlStreamReader &stream, Session *session);
+  void readFeatures(QXmlStreamReader &stream, Session *session);
+  void readFeaturesDetector(QXmlStreamReader &stream, Session *session);
+  void readFeaturesDescriptor(QXmlStreamReader &stream, Session *session);
+  void readFeaturesFiles(QXmlStreamReader &stream, Session *session);
+  void readMatches(QXmlStreamReader &stream, Session *session);
+  void readMatchingMethod(QXmlStreamReader &stream, Session *session);
+  void readBruteForceMatching(QXmlStreamReader &stream, Session *session);
+  BruteForceMatcher::Norm readBruteForceMatchingNormType(QXmlStreamReader &stream);
+  void readFlannMatcher(QXmlStreamReader &stream, Session *session);
+  void readMatchingStrategy(QXmlStreamReader &stream, Session *session);
+  void readRobustMatching(QXmlStreamReader &stream, Session *session);
+  void readRobustMatchingGeometricTest(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
+  void readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
+  RobustMatcher::HomographyComputeMethod readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream);
+  void readRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
+  RobustMatcher::FundamentalComputeMethod readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream);
+  void readRobustMatchingGeometricTestEssentialMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
+  RobustMatcher::EssentialComputeMethod readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream);
+  void readGms(QXmlStreamReader &stream, Session *session);
+  void readMatchesImages(QXmlStreamReader &stream, Session *session);
+  void readPassPoints(QXmlStreamReader &stream, Session *session);
+  void readACEBSF(QXmlStreamReader &stream, Acebsf *acebsf) const;
+  void readCLAHE(QXmlStreamReader &stream, Clahe *clahe) const;
+  void readCMBFHE(QXmlStreamReader &stream, Cmbfhe *cmbfhe) const;
+  void readDHE(QXmlStreamReader &stream, Dhe *dhe) const;
+  void readFAHE(QXmlStreamReader &stream, Fahe *fahe) const;
+  void readHMCLAHE(QXmlStreamReader &stream, Hmclahe *hmclahe) const;
+  void readLCEBSESCS(QXmlStreamReader &stream, LceBsescs *lceBsescs) const;
+  void readMSRCP(QXmlStreamReader &stream, Msrcp *msrcp) const;
+  void readNOSHP(QXmlStreamReader &stream, Noshp *noshp) const;
+  void readPOHE(QXmlStreamReader &stream, Pohe *pohe) const;
+  void readRSWHE(QXmlStreamReader &stream, Rswhe *rswhe) const;
+  void readWALLIS(QXmlStreamReader &stream, Wallis *wallis) const;
 
-  void readAGAST(QXmlStreamReader *stream, IAgast *agast) const;
-  void readAKAZE(QXmlStreamReader *stream, IAkaze *akaze) const;
-  void readBRIEF(QXmlStreamReader *stream, IBrief *brief) const;
-  void readBRISK(QXmlStreamReader *stream, IBrisk *brisk) const;
-  void readDAISY(QXmlStreamReader *stream, IDaisy *daisy) const;
-  void readFAST(QXmlStreamReader *stream, IFast *fast) const;
-  void readFREAK(QXmlStreamReader *stream, IFreak *freak) const;
-  void readGFTT(QXmlStreamReader *stream, IGftt *gftt) const;
-  void readHOG(QXmlStreamReader *stream, IHog *hog) const;
-  void readKAZE(QXmlStreamReader *stream, IKaze *kaze) const;
-  void readLATCH(QXmlStreamReader *stream, ILatch *latch) const;
-  void readLUCID(QXmlStreamReader *stream, ILucid *lucid) const;
-  void readMSD(QXmlStreamReader *stream, IMsd *msd) const;
-  void readMSER(QXmlStreamReader *stream, IMser *mser) const;
-  void readORB(QXmlStreamReader *stream, IOrb *orb) const;
-  void readSIFT(QXmlStreamReader *stream, ISift *sift) const;
-  void readSTAR(QXmlStreamReader *stream, IStar *star) const;
-  void readSURF(QXmlStreamReader *stream, ISurf *surf) const;
+  void readAGAST(QXmlStreamReader &stream, Agast *agast) const;
+  void readAKAZE(QXmlStreamReader &stream, Akaze *akaze) const;
+  void readBOOST(QXmlStreamReader &stream, Boost *boost) const;
+  void readBRIEF(QXmlStreamReader &stream, Brief *brief) const;
+  void readBRISK(QXmlStreamReader &stream, Brisk *brisk) const;
+  void readDAISY(QXmlStreamReader &stream, Daisy *daisy) const;
+  void readFAST(QXmlStreamReader &stream, Fast *fast) const;
+  void readFREAK(QXmlStreamReader &stream, Freak *freak) const;
+  void readGFTT(QXmlStreamReader &stream, Gftt *gftt) const;
+  void readHOG(QXmlStreamReader &stream, Hog *hog) const;
+  void readKAZE(QXmlStreamReader &stream, Kaze *kaze) const;
+  void readLATCH(QXmlStreamReader &stream, Latch *latch) const;
+  void readLUCID(QXmlStreamReader &stream, Lucid *lucid) const;
+  void readMSD(QXmlStreamReader &stream, Msd *msd) const;
+  void readMSER(QXmlStreamReader &stream, Mser *mser) const;
+  void readORB(QXmlStreamReader &stream, Orb *orb) const;
+  void readSIFT(QXmlStreamReader &stream, Sift *sift) const;
+  void readSTAR(QXmlStreamReader &stream, Star *star) const;
+  void readSURF(QXmlStreamReader &stream, Surf *surf) const;
+  void readVGG(QXmlStreamReader &stream, Vgg *vgg) const;
 
-  void writeACEBSF(QXmlStreamWriter *stream, IAcebsf *acebsf) const;
-  void writeCLAHE(QXmlStreamWriter *stream, IClahe *clahe) const;
-  void writeCMBFHE(QXmlStreamWriter *stream, ICmbfhe *cmbfhe) const;
-  void writeDecolor(QXmlStreamWriter *stream, IDecolor *decolor) const;
-  void writeDHE(QXmlStreamWriter *stream, IDhe *dhe) const;
-  void writeFAHE(QXmlStreamWriter *stream, IFahe *fahe) const;
-  void writeHMCLAHE(QXmlStreamWriter *stream, IHmclahe *hmclahe) const;
-  void writeLCEBSESCS(QXmlStreamWriter *stream, ILceBsescs *lceBsescs) const;
-  void writeMSRCP(QXmlStreamWriter *stream, IMsrcp *msrcp) const;
-  void writeNOSHP(QXmlStreamWriter *stream, INoshp *noshp) const;
-  void writePOHE(QXmlStreamWriter *stream, IPohe *pohe) const;
-  void writeRSWHE(QXmlStreamWriter *stream, IRswhe *rswhe) const;
-  void writeWALLIS(QXmlStreamWriter *stream, IWallis *wallis) const;
+  void writeVersion(QXmlStreamWriter &stream, const QString &version) const;
+  void writeGeneral(QXmlStreamWriter &stream, const Project &prj) const;
+  void writeImages(QXmlStreamWriter &stream, const Project &prj) const;
+  void writeImage(QXmlStreamWriter &stream, const Image *image) const;
+  void writeGroundTruth(QXmlStreamWriter &stream, const QString &groundTruth) const;
+  void writeSessions(QXmlStreamWriter &stream, const Project &prj) const;
+  void writeSession(QXmlStreamWriter &stream, Session *session, bool activeSession) const;
+  void writeSessionName(QXmlStreamWriter &stream, const QString &name) const;
+  void writeSessionDescription(QXmlStreamWriter &stream, const QString &description) const;
+  void writeSessionMaxImageSize(QXmlStreamWriter &stream, int maxImageSize) const;
+  void writePreprocess(QXmlStreamWriter &stream, Session *session) const;
+  void writePreprocessMethod(QXmlStreamWriter &stream, Preprocess *preprocess) const;
+  void writePreprocessedImages(QXmlStreamWriter &stream, const std::vector<QString> &preprocessImages) const;
+  void writeFeatures(QXmlStreamWriter &stream, Session *session) const;
+  void writeFeatureDetector(QXmlStreamWriter &stream, Feature *detector) const;
+  void writeFeatureExtractor(QXmlStreamWriter &stream, Feature *descriptor) const;
+  void writeFeaturesFiles(QXmlStreamWriter &stream, const std::vector<QString> &features) const;
+  void writeMatches(QXmlStreamWriter &stream, Session *session) const;
+  void writeMatchingMethod(QXmlStreamWriter &stream, MatchingMethod *matchingMethod) const;
+  void writeFlann(QXmlStreamWriter &stream, MatchingMethod *matchingMethod) const;
+  void writeBruteForceMatching(QXmlStreamWriter &stream, MatchingMethod *matchingMethod) const;
+  void writeMatchingStrategy(QXmlStreamWriter &stream, MatchingStrategy *matchingStrategy) const;
+  void writeRobustMatching(QXmlStreamWriter &stream, MatchingStrategy *matchingStrategy) const;
+  void writeRobustMatchingRatio(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const;
+  void writeRobustMatchingCrossCheck(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const;
+  void writeRobustMatchingGeometricTest(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const;
+  void writeRobustMatchingGeometricTestHomographyMatrix(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const;
+  void writeRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const;
+  void writeRobustMatchingGeometricTestEssentialMatrix(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const;
+  void writeGms(QXmlStreamWriter &stream, MatchingStrategy *matchingStrategy) const;
+  void writeMatchingImages(QXmlStreamWriter &stream, const std::map<QString, std::vector<std::pair<QString, QString>>> &matches) const;
+  void writeACEBSF(QXmlStreamWriter &stream, Acebsf *acebsf) const;
+  void writeCLAHE(QXmlStreamWriter &stream, Clahe *clahe) const;
+  void writeCMBFHE(QXmlStreamWriter &stream, Cmbfhe *cmbfhe) const;
+  void writeDecolor(QXmlStreamWriter &stream, Decolor *decolor) const;
+  void writeDHE(QXmlStreamWriter &stream, Dhe *dhe) const;
+  void writeFAHE(QXmlStreamWriter &stream, Fahe *fahe) const;
+  void writeHMCLAHE(QXmlStreamWriter &stream, Hmclahe *hmclahe) const;
+  void writeLCEBSESCS(QXmlStreamWriter &stream, LceBsescs *lceBsescs) const;
+  void writeMSRCP(QXmlStreamWriter &stream, Msrcp *msrcp) const;
+  void writeNOSHP(QXmlStreamWriter &stream, Noshp *noshp) const;
+  void writePOHE(QXmlStreamWriter &stream, Pohe *pohe) const;
+  void writeRSWHE(QXmlStreamWriter &stream, Rswhe *rswhe) const;
+  void writeWALLIS(QXmlStreamWriter &stream, Wallis *wallis) const;
 
-  void writeAGAST(QXmlStreamWriter *stream, IAgast *agast) const;
-  void writeAKAZE(QXmlStreamWriter *stream, IAkaze *akaze) const;
-  void writeBRIEF(QXmlStreamWriter *stream, IBrief *brief) const;
-  void writeBRISK(QXmlStreamWriter *stream, IBrisk *brisk) const;
-  void writeDAISY(QXmlStreamWriter *stream, IDaisy *daisy) const;
-  void writeFAST(QXmlStreamWriter *stream, IFast *fast) const;
-  void writeFREAK(QXmlStreamWriter *stream, IFreak *freak) const;
-  void writeGFTT(QXmlStreamWriter *stream, IGftt *gftt) const;
-  void writeHOG(QXmlStreamWriter *stream, IHog *hog) const;
-  void writeKAZE(QXmlStreamWriter *stream, IKaze *kaze) const;
-  void writeLATCH(QXmlStreamWriter *stream, ILatch *latch) const;
-  void writeLUCID(QXmlStreamWriter *stream, ILucid *lucid) const;
-  void writeLSS(QXmlStreamWriter *stream, ILss *lss) const;
-  void writeMSD(QXmlStreamWriter *stream, IMsd *msd) const;
-  void writeMSER(QXmlStreamWriter *stream, IMser *mser) const;
-  void writeORB(QXmlStreamWriter *stream, IOrb *orb) const;
-  void writeSIFT(QXmlStreamWriter *stream, ISift *sift) const;
-  void writeSTAR(QXmlStreamWriter *stream, IStar *star) const;
-  void writeSURF(QXmlStreamWriter *stream, ISurf *surf) const;
+  void writeAGAST(QXmlStreamWriter &stream, Agast *agast) const;
+  void writeAKAZE(QXmlStreamWriter &stream, Akaze *akaze) const;
+  void writeBOOST(QXmlStreamWriter &stream, Boost *boost) const;
+  void writeBRIEF(QXmlStreamWriter &stream, Brief *brief) const;
+  void writeBRISK(QXmlStreamWriter &stream, Brisk *brisk) const;
+  void writeDAISY(QXmlStreamWriter &stream, Daisy *daisy) const;
+  void writeFAST(QXmlStreamWriter &stream, Fast *fast) const;
+  void writeFREAK(QXmlStreamWriter &stream, Freak *freak) const;
+  void writeGFTT(QXmlStreamWriter &stream, Gftt *gftt) const;
+  void writeHOG(QXmlStreamWriter &stream, Hog *hog) const;
+  void writeKAZE(QXmlStreamWriter &stream, Kaze *kaze) const;
+  void writeLATCH(QXmlStreamWriter &stream, Latch *latch) const;
+  void writeLUCID(QXmlStreamWriter &stream, Lucid *lucid) const;
+  void writeLSS(QXmlStreamWriter &stream, Lss *lss) const;
+  void writeMSD(QXmlStreamWriter &stream, Msd *msd) const;
+  void writeMSER(QXmlStreamWriter &stream, Mser *mser) const;
+  void writeORB(QXmlStreamWriter &stream, Orb *orb) const;
+  void writeSIFT(QXmlStreamWriter &stream, Sift *sift) const;
+  void writeSTAR(QXmlStreamWriter &stream, Star *star) const;
+  void writeSURF(QXmlStreamWriter &stream, Surf *surf) const;
+  void writeVGG(QXmlStreamWriter &stream, Vgg *vgg) const;
+
+  QSize readSize(QXmlStreamReader &stream) const;
+  int readInt(QXmlStreamReader &stream) const;
+  double readDouble(QXmlStreamReader &stream) const;
+  bool readBoolean(QXmlStreamReader &stream) const;
 
 protected:
 

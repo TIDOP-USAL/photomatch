@@ -8,7 +8,7 @@
 using namespace photomatch;
 
 
-class TestLceBsescsWidgetSignals : public LceBsescsWidget
+class TestLceBsescsWidgetSignals : public LceBsescsWidgetImp
 {
   Q_OBJECT
 
@@ -17,15 +17,15 @@ public:
   ~TestLceBsescsWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_blockSizeChange();
-  void test_reset();
 
 };
 
 TestLceBsescsWidgetSignals::TestLceBsescsWidgetSignals()
-  : LceBsescsWidget()
+  : LceBsescsWidgetImp()
 {
 
 }
@@ -42,12 +42,18 @@ void TestLceBsescsWidgetSignals::initTestCase()
 
 void TestLceBsescsWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spy_blockSizeChange(this, &LceBsescsWidgetImp::blockSizeChange);
 
+  this->setBlockSize(QSize(5, 7));
+
+  this->reset();
+
+  QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
 void TestLceBsescsWidgetSignals::test_blockSizeChange()
 {
-  QSignalSpy spy_blockSizeChange(this, &LceBsescsWidget::blockSizeChange);
+  QSignalSpy spy_blockSizeChange(this, &LceBsescsWidgetImp::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
 
@@ -60,16 +66,6 @@ void TestLceBsescsWidgetSignals::test_blockSizeChange()
   QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
-void TestLceBsescsWidgetSignals::test_reset()
-{
-  QSignalSpy spy_blockSizeChange(this, &LceBsescsWidget::blockSizeChange);
-
-  this->setBlockSize(QSize(5, 7));
-
-  this->reset();
-
-  QCOMPARE(spy_blockSizeChange.count(), 0);
-}
 
 QTEST_MAIN(TestLceBsescsWidgetSignals)
 

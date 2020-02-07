@@ -17,7 +17,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_radius_data();
   void test_radius();
@@ -33,15 +32,14 @@ private slots:
   void test_interpolation();
   void test_useOrientation_data();
   void test_useOrientation();
-  void test_reset();
 
 private:
 
-  IDaisyWidget *mDaisyWidget;
+  DaisyWidget *mDaisyWidget;
 };
 
 TestDaisyWidget::TestDaisyWidget()
-  : mDaisyWidget(new DaisyWidget)
+  : mDaisyWidget(new DaisyWidgetImp)
 {
 
 }
@@ -56,25 +54,36 @@ TestDaisyWidget::~TestDaisyWidget()
 
 void TestDaisyWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(15., mDaisyWidget->radius());
+  QCOMPARE(3, mDaisyWidget->qRadius());
+  QCOMPARE(8, mDaisyWidget->qTheta());
+  QCOMPARE(8, mDaisyWidget->qHist());
+  QCOMPARE("NRM_NONE", mDaisyWidget->norm());
+  QCOMPARE(true, mDaisyWidget->interpolation());
+  QCOMPARE(false, mDaisyWidget->useOrientation());
 }
 
 void TestDaisyWidget::cleanupTestCase()
 {
+  mDaisyWidget->setRadius(30.);
+  mDaisyWidget->setQRadius(5);
+  mDaisyWidget->setQTheta(4);
+  mDaisyWidget->setQHist(4);
+  mDaisyWidget->setNorm("NRM_FULL");
+  mDaisyWidget->setInterpolation(false);
+  mDaisyWidget->setUseOrientation(true);
 
-}
+  mDaisyWidget->reset();
 
-void TestDaisyWidget::test_constructor()
-{
   /// Check default values
-  DaisyWidget daisyWidget;
-  QCOMPARE(15., daisyWidget.radius());
-  QCOMPARE(3, daisyWidget.qRadius());
-  QCOMPARE(8, daisyWidget.qTheta());
-  QCOMPARE(8, daisyWidget.qHist());
-  QCOMPARE("NRM_NONE", daisyWidget.norm());
-  QCOMPARE(true, daisyWidget.interpolation());
-  QCOMPARE(false, daisyWidget.useOrientation());
+  QCOMPARE(15., mDaisyWidget->radius());
+  QCOMPARE(3, mDaisyWidget->qRadius());
+  QCOMPARE(8, mDaisyWidget->qTheta());
+  QCOMPARE(8, mDaisyWidget->qHist());
+  QCOMPARE("NRM_NONE", mDaisyWidget->norm());
+  QCOMPARE(true, mDaisyWidget->interpolation());
+  QCOMPARE(false, mDaisyWidget->useOrientation());
 }
 
 void TestDaisyWidget::test_windowTitle()
@@ -216,27 +225,6 @@ void TestDaisyWidget::test_useOrientation()
   QCOMPARE(result, mDaisyWidget->useOrientation());
 }
 
-void TestDaisyWidget::test_reset()
-{
-  mDaisyWidget->setRadius(30.);
-  mDaisyWidget->setQRadius(5);
-  mDaisyWidget->setQTheta(4);
-  mDaisyWidget->setQHist(4);
-  mDaisyWidget->setNorm("NRM_FULL");
-  mDaisyWidget->setInterpolation(false);
-  mDaisyWidget->setUseOrientation(true);
-
-  mDaisyWidget->reset();
-
-  /// Check default values
-  QCOMPARE(15., mDaisyWidget->radius());
-  QCOMPARE(3, mDaisyWidget->qRadius());
-  QCOMPARE(8, mDaisyWidget->qTheta());
-  QCOMPARE(8, mDaisyWidget->qHist());
-  QCOMPARE("NRM_NONE", mDaisyWidget->norm());
-  QCOMPARE(true, mDaisyWidget->interpolation());
-  QCOMPARE(false, mDaisyWidget->useOrientation());
-}
 
 
 QTEST_MAIN(TestDaisyWidget)

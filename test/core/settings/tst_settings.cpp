@@ -48,6 +48,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_language_data();
   void test_language();
@@ -112,15 +114,14 @@ private slots:
   void test_groundTruthEditorSelectMarkerColor();
 
   void test_history();
-  void test_reset();
 
 protected:
 
-  ISettings *mSettings;
+  Settings *mSettings;
 };
 
 TestSettings::TestSettings()
-  : mSettings(new Settings)
+  : mSettings(new SettingsImp)
 {
 
 }
@@ -130,9 +131,149 @@ TestSettings::~TestSettings()
 
 }
 
+void TestSettings::initTestCase()
+{
+
+  QCOMPARE("en", mSettings->language());
+  QCOMPARE(10, mSettings->historyMaxSize());
+  QCOMPARE(QStringList(), mSettings->history());
+  QCOMPARE(QString("#dcdcdc"), mSettings->imageViewerBGcolor());
+  QCOMPARE(QString("XML"), mSettings->keypointsFormat());
+  QCOMPARE(QString("XML"), mSettings->matchesFormat());
+  QCOMPARE(false, mSettings->useCuda());
+  QCOMPARE("#dcdcdc", mSettings->keypointsViewerBGColor());
+  QCOMPARE(0, mSettings->keypointsViewerMarkerType());
+  QCOMPARE(20, mSettings->keypointsViewerMarkerSize());
+  QCOMPARE(2, mSettings->keypointsViewerMarkerWidth());
+  QCOMPARE("#00aa00", mSettings->keypointsViewerMarkerColor());
+  QCOMPARE(2, mSettings->keypointsViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettings->keypointsViewerSelectMarkerColor());
+  QCOMPARE("#dcdcdc", mSettings->matchesViewerBGColor());
+  QCOMPARE(0, mSettings->matchesViewerMarkerType());
+  QCOMPARE(20, mSettings->matchesViewerMarkerSize());
+  QCOMPARE(2, mSettings->matchesViewerMarkerWidth());
+  QCOMPARE("#00aa00", mSettings->matchesViewerMarkerColor());
+  QCOMPARE("#0000ff", mSettings->matchesViewerLineColor());
+  QCOMPARE(2, mSettings->matchesViewerLineWidth());
+  QCOMPARE(2, mSettings->matchesViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettings->matchesViewerSelectMarkerColor());
+  QCOMPARE("#dcdcdc", mSettings->groundTruthEditorBGColor());
+  QCOMPARE(20, mSettings->groundTruthEditorMarkerSize());
+  QCOMPARE(2, mSettings->groundTruthEditorMarkerWidth());
+  QCOMPARE("#00aa00", mSettings->groundTruthEditorMarkerColor());
+  QCOMPARE(2, mSettings->groundTruthEditorSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettings->groundTruthEditorSelectMarkerColor());
+
+  QCOMPARE(0.03, mSettings->acebsf()->l());
+  QCOMPARE(40., mSettings->clahe()->clipLimit());
+  QCOMPARE(QSize(11,11), mSettings->cmbfhe()->blockSize());
+  QCOMPARE(1, mSettings->dhe()->x());
+  QCOMPARE(QSize(11,11), mSettings->fahe()->blockSize());
+  QCOMPARE(0.03, mSettings->hmclahe()->l());
+  QCOMPARE(QSize(33, 33), mSettings->lceBsescs()->blockSize());
+  QCOMPARE(100., mSettings->msrcp()->midScale());
+  QCOMPARE(QSize(127, 127), mSettings->noshp()->blockSize());
+  QCOMPARE(QSize(127, 127), mSettings->pohe()->blockSize());
+  QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
+  QCOMPARE(1.0, mSettings->wallis()->contrast());
+
+}
+
+void TestSettings::cleanupTestCase()
+{
+  mSettings->setLanguage("es");
+  mSettings->setHistoryMaxSize(20);
+  mSettings->setImageViewerBGcolor("#ff00ff");
+  mSettings->setKeypointsFormat("YML");
+  mSettings->setMatchesFormat("YML");
+  mSettings->setUseCuda(true);
+  mSettings->setKeypointsViewerBGColor("#ffffff");
+  mSettings->setKeypointsViewerMarkerType(2);
+  mSettings->setKeypointsViewerMarkerSize(30);
+  mSettings->setKeypointsViewerMarkerWidth(5);
+  mSettings->setKeypointsViewerMarkerColor("#ffffff");
+  mSettings->setKeypointsViewerSelectMarkerWidth(1);
+  mSettings->setKeypointsViewerSelectMarkerColor("#ffffff");
+  mSettings->setMatchesViewerBGColor("#ffffff");
+  mSettings->setMatchesViewerMarkerType(2);
+  mSettings->setMatchesViewerMarkerSize(25);
+  mSettings->setMatchesViewerMarkerWidth(5);
+  mSettings->setMatchesViewerMarkerColor("#ffffff");
+  mSettings->setMatchesViewerLineColor("#ffffff");
+  mSettings->setMatchesViewerLineWidth(5);
+  mSettings->setMatchesViewerSelectMarkerWidth(3);
+  mSettings->setMatchesViewerSelectMarkerColor("#ffffff");
+  mSettings->setGroundTruthEditorBGColor("#ffffff");
+  mSettings->setGroundTruthEditorMarkerSize(25);
+  mSettings->setGroundTruthEditorMarkerWidth(5);
+  mSettings->setGroundTruthEditorMarkerColor("#ffffff");
+  mSettings->setGroundTruthEditorSelectMarkerWidth(4);
+  mSettings->setGroundTruthEditorSelectMarkerColor("#ffffff");
+
+  mSettings->acebsf()->setL(0.05);
+  mSettings->clahe()->setClipLimit(30.);
+  mSettings->cmbfhe()->setBlockSize(QSize(7,7));
+  mSettings->dhe()->setX(2);
+  mSettings->fahe()->setBlockSize(QSize(11,11));
+  mSettings->hmclahe()->setL(0.5);
+  mSettings->lceBsescs()->setBlockSize(QSize(33, 33));
+  mSettings->msrcp()->setMidScale(110.);
+  mSettings->noshp()->setBlockSize(QSize(111, 111));
+  mSettings->pohe()->setBlockSize(QSize(111, 111));
+  mSettings->rswhe()->setHistogramDivisions(4);
+  mSettings->wallis()->setContrast(0.5);
+
+  mSettings->reset();
+
+
+  QCOMPARE("en", mSettings->language());
+  QCOMPARE(10, mSettings->historyMaxSize());
+  QCOMPARE(QStringList(), mSettings->history());
+  QCOMPARE(QString("#dcdcdc"), mSettings->imageViewerBGcolor());
+  QCOMPARE(QString("XML"), mSettings->keypointsFormat());
+  QCOMPARE(QString("XML"), mSettings->matchesFormat());
+  QCOMPARE(false, mSettings->useCuda());
+  QCOMPARE("#dcdcdc", mSettings->keypointsViewerBGColor());
+  QCOMPARE(0, mSettings->keypointsViewerMarkerType());
+  QCOMPARE(20, mSettings->keypointsViewerMarkerSize());
+  QCOMPARE(2, mSettings->keypointsViewerMarkerWidth());
+  QCOMPARE("#00aa00", mSettings->keypointsViewerMarkerColor());
+  QCOMPARE(2, mSettings->keypointsViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettings->keypointsViewerSelectMarkerColor());
+  QCOMPARE("#dcdcdc", mSettings->matchesViewerBGColor());
+  QCOMPARE(0, mSettings->matchesViewerMarkerType());
+  QCOMPARE(20, mSettings->matchesViewerMarkerSize());
+  QCOMPARE(2, mSettings->matchesViewerMarkerWidth());
+  QCOMPARE("#00aa00", mSettings->matchesViewerMarkerColor());
+  QCOMPARE("#0000ff", mSettings->matchesViewerLineColor());
+  QCOMPARE(2, mSettings->matchesViewerLineWidth());
+  QCOMPARE(2, mSettings->matchesViewerSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettings->matchesViewerSelectMarkerColor());
+  QCOMPARE("#dcdcdc", mSettings->groundTruthEditorBGColor());
+  QCOMPARE(20, mSettings->groundTruthEditorMarkerSize());
+  QCOMPARE(2, mSettings->groundTruthEditorMarkerWidth());
+  QCOMPARE("#00aa00", mSettings->groundTruthEditorMarkerColor());
+  QCOMPARE(2, mSettings->groundTruthEditorSelectMarkerWidth());
+  QCOMPARE("#e5097e", mSettings->groundTruthEditorSelectMarkerColor());
+
+  QCOMPARE(0.03, mSettings->acebsf()->l());
+  QCOMPARE(40., mSettings->clahe()->clipLimit());
+  QCOMPARE(QSize(11,11), mSettings->cmbfhe()->blockSize());
+  QCOMPARE(1, mSettings->dhe()->x());
+  QCOMPARE(QSize(11,11), mSettings->fahe()->blockSize());
+  QCOMPARE(0.03, mSettings->hmclahe()->l());
+  QCOMPARE(QSize(33, 33), mSettings->lceBsescs()->blockSize());
+  QCOMPARE(100., mSettings->msrcp()->midScale());
+  QCOMPARE(QSize(127, 127), mSettings->noshp()->blockSize());
+  QCOMPARE(QSize(127, 127), mSettings->pohe()->blockSize());
+  QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
+  QCOMPARE(1.0, mSettings->wallis()->contrast());
+
+}
+
 void TestSettings::test_constructors()
 {
-  Settings settings;
+  SettingsImp settings;
   QCOMPARE("en", settings.language());
   QCOMPARE(10, settings.historyMaxSize());
   QCOMPARE(QStringList(), settings.history());
@@ -690,98 +831,6 @@ void TestSettings::test_history()
   QCOMPARE(0, h.size());
 }
 
-void TestSettings::test_reset()
-{
-  mSettings->setLanguage("es");
-  mSettings->setHistoryMaxSize(20);
-  mSettings->setImageViewerBGcolor("#ff00ff");
-  mSettings->setKeypointsFormat("YML");
-  mSettings->setMatchesFormat("YML");
-  mSettings->setUseCuda(true);
-  mSettings->setKeypointsViewerBGColor("#ffffff");
-  mSettings->setKeypointsViewerMarkerType(2);
-  mSettings->setKeypointsViewerMarkerSize(30);
-  mSettings->setKeypointsViewerMarkerWidth(5);
-  mSettings->setKeypointsViewerMarkerColor("#ffffff");
-  mSettings->setKeypointsViewerSelectMarkerWidth(1);
-  mSettings->setKeypointsViewerSelectMarkerColor("#ffffff");
-  mSettings->setMatchesViewerBGColor("#ffffff");
-  mSettings->setMatchesViewerMarkerType(2);
-  mSettings->setMatchesViewerMarkerSize(25);
-  mSettings->setMatchesViewerMarkerWidth(5);
-  mSettings->setMatchesViewerMarkerColor("#ffffff");
-  mSettings->setMatchesViewerLineColor("#ffffff");
-  mSettings->setMatchesViewerLineWidth(5);
-  mSettings->setMatchesViewerSelectMarkerWidth(3);
-  mSettings->setMatchesViewerSelectMarkerColor("#ffffff");
-  mSettings->setGroundTruthEditorBGColor("#ffffff");
-  mSettings->setGroundTruthEditorMarkerSize(25);
-  mSettings->setGroundTruthEditorMarkerWidth(5);
-  mSettings->setGroundTruthEditorMarkerColor("#ffffff");
-  mSettings->setGroundTruthEditorSelectMarkerWidth(4);
-  mSettings->setGroundTruthEditorSelectMarkerColor("#ffffff");
-
-  mSettings->acebsf()->setL(0.05);
-  mSettings->clahe()->setClipLimit(30.);
-  mSettings->cmbfhe()->setBlockSize(QSize(7,7));
-  mSettings->dhe()->setX(2);
-  mSettings->fahe()->setBlockSize(QSize(11,11));
-  mSettings->hmclahe()->setL(0.5);
-  mSettings->lceBsescs()->setBlockSize(QSize(33, 33));
-  mSettings->msrcp()->setMidScale(110.);
-  mSettings->noshp()->setBlockSize(QSize(111, 111));
-  mSettings->pohe()->setBlockSize(QSize(111, 111));
-  mSettings->rswhe()->setHistogramDivisions(4);
-  mSettings->wallis()->setContrast(0.5);
-
-  mSettings->reset();
-
-
-  QCOMPARE("en", mSettings->language());
-  QCOMPARE(10, mSettings->historyMaxSize());
-  QCOMPARE(QStringList(), mSettings->history());
-  QCOMPARE(QString("#dcdcdc"), mSettings->imageViewerBGcolor());
-  QCOMPARE(QString("XML"), mSettings->keypointsFormat());
-  QCOMPARE(QString("XML"), mSettings->matchesFormat());
-  QCOMPARE(false, mSettings->useCuda());
-  QCOMPARE("#dcdcdc", mSettings->keypointsViewerBGColor());
-  QCOMPARE(0, mSettings->keypointsViewerMarkerType());
-  QCOMPARE(20, mSettings->keypointsViewerMarkerSize());
-  QCOMPARE(2, mSettings->keypointsViewerMarkerWidth());
-  QCOMPARE("#00aa00", mSettings->keypointsViewerMarkerColor());
-  QCOMPARE(2, mSettings->keypointsViewerSelectMarkerWidth());
-  QCOMPARE("#e5097e", mSettings->keypointsViewerSelectMarkerColor());
-  QCOMPARE("#dcdcdc", mSettings->matchesViewerBGColor());
-  QCOMPARE(0, mSettings->matchesViewerMarkerType());
-  QCOMPARE(20, mSettings->matchesViewerMarkerSize());
-  QCOMPARE(2, mSettings->matchesViewerMarkerWidth());
-  QCOMPARE("#00aa00", mSettings->matchesViewerMarkerColor());
-  QCOMPARE("#0000ff", mSettings->matchesViewerLineColor());
-  QCOMPARE(2, mSettings->matchesViewerLineWidth());
-  QCOMPARE(2, mSettings->matchesViewerSelectMarkerWidth());
-  QCOMPARE("#e5097e", mSettings->matchesViewerSelectMarkerColor());
-  QCOMPARE("#dcdcdc", mSettings->groundTruthEditorBGColor());
-  QCOMPARE(20, mSettings->groundTruthEditorMarkerSize());
-  QCOMPARE(2, mSettings->groundTruthEditorMarkerWidth());
-  QCOMPARE("#00aa00", mSettings->groundTruthEditorMarkerColor());
-  QCOMPARE(2, mSettings->groundTruthEditorSelectMarkerWidth());
-  QCOMPARE("#e5097e", mSettings->groundTruthEditorSelectMarkerColor());
-
-  QCOMPARE(0.03, mSettings->acebsf()->l());
-  QCOMPARE(40., mSettings->clahe()->clipLimit());
-  QCOMPARE(QSize(11,11), mSettings->cmbfhe()->blockSize());
-  QCOMPARE(1, mSettings->dhe()->x());
-  QCOMPARE(QSize(11,11), mSettings->fahe()->blockSize());
-  QCOMPARE(0.03, mSettings->hmclahe()->l());
-  QCOMPARE(QSize(33, 33), mSettings->lceBsescs()->blockSize());
-  QCOMPARE(100., mSettings->msrcp()->midScale());
-  QCOMPARE(QSize(127, 127), mSettings->noshp()->blockSize());
-  QCOMPARE(QSize(127, 127), mSettings->pohe()->blockSize());
-  QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
-  QCOMPARE(1.0, mSettings->wallis()->contrast());
-
-
-}
 
 QTEST_APPLESS_MAIN(TestSettings)
 

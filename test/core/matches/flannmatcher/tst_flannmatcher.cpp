@@ -23,11 +23,11 @@ private slots:
 
 private:
 
-  FlannMatcher *mFlannMatcher;
+  FlannMatcherImp *mFlannMatcher;
 };
 
 TestFlannMatcher::TestFlannMatcher()
-  : mFlannMatcher(new FlannMatcher)
+  : mFlannMatcher(new FlannMatcherImp)
 {
 
 }
@@ -42,7 +42,7 @@ TestFlannMatcher::~TestFlannMatcher()
 
 void TestFlannMatcher::test_type()
 {
-  QCOMPARE(Match::Type::flann, mFlannMatcher->type());
+  QCOMPARE(MatchingMethod::Type::flann, mFlannMatcher->type());
 }
 
 void TestFlannMatcher::test_name()

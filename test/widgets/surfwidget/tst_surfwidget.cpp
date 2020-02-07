@@ -14,9 +14,9 @@ public:
   ~TestSurfWidget();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_hessianThreshold_data();
   void test_hessianThreshold();
@@ -28,17 +28,16 @@ private slots:
   void test_extendedDescriptor();
   void test_rotatedFeatures_data();
   void test_rotatedFeatures();
-  void test_reset();
 
 private:
 
-  ISurfWidget *mSurfWidget;
+  SurfWidget *mSurfWidget;
 
 };
 
 TestSurfWidget::TestSurfWidget()
 {
-  mSurfWidget = new SurfWidget();
+  mSurfWidget = new SurfWidgetImp();
 }
 
 TestSurfWidget::~TestSurfWidget()
@@ -51,17 +50,24 @@ TestSurfWidget::~TestSurfWidget()
 
 void TestSurfWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(100, mSurfWidget->hessianThreshold());
+  QCOMPARE(4, mSurfWidget->octaves());
+  QCOMPARE(3, mSurfWidget->octaveLayers());
+  QCOMPARE(false, mSurfWidget->extendedDescriptor());
+  QCOMPARE(false, mSurfWidget->upright());
 }
 
 void TestSurfWidget::cleanupTestCase()
 {
+  mSurfWidget->setHessianThreshold(50.);
+  mSurfWidget->setOctaves(2);
+  mSurfWidget->setOctaveLayers(5);
+  mSurfWidget->setExtendedDescriptor(true);
+  mSurfWidget->seUpright(true);
 
-}
+  mSurfWidget->reset();
 
-void TestSurfWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(100, mSurfWidget->hessianThreshold());
   QCOMPARE(4, mSurfWidget->octaves());
   QCOMPARE(3, mSurfWidget->octaveLayers());
@@ -168,22 +174,6 @@ void TestSurfWidget::test_rotatedFeatures()
   QCOMPARE(result, mSurfWidget->upright());
 }
 
-void TestSurfWidget::test_reset()
-{
-  mSurfWidget->setHessianThreshold(50.);
-  mSurfWidget->setOctaves(2);
-  mSurfWidget->setOctaveLayers(5);
-  mSurfWidget->setExtendedDescriptor(true);
-  mSurfWidget->seUpright(true);
-
-  mSurfWidget->reset();
-
-  QCOMPARE(100, mSurfWidget->hessianThreshold());
-  QCOMPARE(4, mSurfWidget->octaves());
-  QCOMPARE(3, mSurfWidget->octaveLayers());
-  QCOMPARE(false, mSurfWidget->extendedDescriptor());
-  QCOMPARE(false, mSurfWidget->upright());
-}
 
 QTEST_MAIN(TestSurfWidget)
 

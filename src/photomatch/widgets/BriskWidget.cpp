@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "BriskWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-BriskWidget::BriskWidget(QWidget *parent)
-  : IBriskWidget(parent),
+BriskWidgetImp::BriskWidgetImp(QWidget *parent)
+  : BriskWidget(parent),
     mThreshold(new QSpinBox(this)),
     mOctaves(new QSpinBox(this)),
     mPatternScale(new QDoubleSpinBox(this))
@@ -23,54 +47,54 @@ BriskWidget::BriskWidget(QWidget *parent)
 
 }
 
-BriskWidget::~BriskWidget()
+BriskWidgetImp::~BriskWidgetImp()
 {
 
 }
 
-int BriskWidget::threshold() const
+int BriskWidgetImp::threshold() const
 {
   return mThreshold->value();
 }
 
-int BriskWidget::octaves() const
+int BriskWidgetImp::octaves() const
 {
   return mOctaves->value();
 }
 
-double BriskWidget::patternScale() const
+double BriskWidgetImp::patternScale() const
 {
   return mPatternScale->value();
 }
 
-void BriskWidget::setThreshold(int threshold)
+void BriskWidgetImp::setThreshold(int threshold)
 {
   const QSignalBlocker blockerThreshold(mThreshold);
   mThreshold->setValue(threshold);
 }
 
-void BriskWidget::setOctaves(int octaves)
+void BriskWidgetImp::setOctaves(int octaves)
 {
   const QSignalBlocker blockerOctaves(mOctaves);
   mOctaves->setValue(octaves);
 }
 
-void BriskWidget::setPatternScale(double patternScale)
+void BriskWidgetImp::setPatternScale(double patternScale)
 {
   const QSignalBlocker blockerPatternScale(mPatternScale);
   mPatternScale->setValue(patternScale);
 }
 
-void BriskWidget::update()
+void BriskWidgetImp::update()
 {
 }
 
-void BriskWidget::retranslate()
+void BriskWidgetImp::retranslate()
 {
 
 }
 
-void BriskWidget::reset()
+void BriskWidgetImp::reset()
 {
   const QSignalBlocker blockerThreshold(mThreshold);
   const QSignalBlocker blockerOctaves(mOctaves);
@@ -81,7 +105,7 @@ void BriskWidget::reset()
   mPatternScale->setValue(1.0);
 }
 
-void BriskWidget::init()
+void BriskWidgetImp::init()
 {
   this->setWindowTitle("BRISK");
 

@@ -156,13 +156,13 @@ public:
    * \brief Returns a constant iterator at the beginning of the image list
    * \return Iterator to the first element of the image list
    */
-  virtual IProject::image_const_iterator imageBegin() const = 0;
+  virtual Project::image_const_iterator imageBegin() const = 0;
 
   /*!
    * \brief Return a constant iterator to the next element after the last image
    * \return Constant Iterator to the next element after the last image
    */
-  virtual IProject::image_const_iterator imageEnd() const = 0;
+  virtual Project::image_const_iterator imageEnd() const = 0;
 
   /*!
    * \brief Number of images of the project
@@ -239,13 +239,13 @@ public:
    * \brief Returns a constant iterator at the beginning of the session list
    * \return Iterador al primer elemento del listado de sessiones
    */
-  virtual IProject::session_const_iterator sessionBegin() const = 0;
+  virtual Project::session_const_iterator sessionBegin() const = 0;
 
   /*!
    * \brief Return a constant iterator to the next item after the last session
    * \return Constant Iterator to the next element after the last session
    */
-  virtual IProject::session_const_iterator sessionEnd() const = 0;
+  virtual Project::session_const_iterator sessionEnd() const = 0;
 
   /*!
    * \brief Number of project sessions
@@ -302,7 +302,7 @@ public:
    * \brief setMatcher
    * \param[in] matcher
    */
-  virtual void setMatcher(const std::shared_ptr<Match> &matcher) = 0;
+  virtual void setMatcher(const std::shared_ptr<MatchingMethod> &matcher) = 0;
 
   /*!
    * \brief deleteMatcher
@@ -313,7 +313,7 @@ public:
    * \brief Set Robust Matcher Refinement
    * \param[in] robustMatcherRefinement
    */
-  virtual void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) = 0;
+  virtual void setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement) = 0;
 
   /*!
    * \brief Returns Maximum image size
@@ -420,7 +420,7 @@ class ProjectModel
 
 public:
 
-  explicit ProjectModel(IProjectRW *projectIO, IProject *project, QObject *parent = nullptr);
+  explicit ProjectModel(ProjectController *projectIO, Project *project, QObject *parent = nullptr);
   ~ProjectModel() override;
 
 signals:
@@ -447,8 +447,8 @@ public:
   const std::shared_ptr<Image> findImageById(size_t id) const override;
   const std::shared_ptr<Image> findImageByName(const QString &imgName) const override;
   size_t findImageId(const QString &path) const override;
-  IProject::image_const_iterator imageBegin() const override;
-  IProject::image_const_iterator imageEnd() const override;
+  Project::image_const_iterator imageBegin() const override;
+  Project::image_const_iterator imageEnd() const override;
   size_t imagesCount() const override;
   void addSession(const QString &name, const QString &description) override;
   void addSession(const std::shared_ptr<Session> &session) override;
@@ -458,8 +458,8 @@ public:
   const std::shared_ptr<Session> findSession(const QString &sessionName) const override;
   size_t findSessionId(const QString &sessionName) override;
   size_t findSessionId(const QString &sessionName) const override;
-  IProject::session_const_iterator sessionBegin() const override;
-  IProject::session_const_iterator sessionEnd() const override;
+  Project::session_const_iterator sessionBegin() const override;
+  Project::session_const_iterator sessionEnd() const override;
   size_t sessionCount() const override;
   const std::shared_ptr<Session> currentSession() const override;
   void setCurrentSession(const QString &sessionName) override;
@@ -469,9 +469,9 @@ public:
   void deleteDetector() override;
   void setDescriptor(const std::shared_ptr<Feature> &descriptor) override;
   void deleteDescriptor() override;
-  void setMatcher(const std::shared_ptr<Match> &matcher) override;
+  void setMatcher(const std::shared_ptr<MatchingMethod> &matcher) override;
   void deleteMatcher() override;
-  void setRobustMatcherRefinement(const std::shared_ptr<IRobustMatcherRefinement> &robustMatcherRefinement) override;
+  void setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement) override;
   int maxImageSize() const override;
   void setMaxImageSize(int size) override;
   bool fullImageSize() const override;
@@ -512,8 +512,8 @@ private:
 
 protected:
 
-  IProjectRW *mProjectIO;
-  IProject *mProject;
+  ProjectController *mProjectIO;
+  Project *mProject;
   QString mPrjFile;
   bool bUnsavedChanges;
 

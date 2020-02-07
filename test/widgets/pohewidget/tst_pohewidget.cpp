@@ -18,19 +18,17 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
-  void test_reset();
 
 private:
 
-  IPoheWidget *mPoheWidget;
+  PoheWidget *mPoheWidget;
 };
 
 TestPoheWidget::TestPoheWidget()
-  : mPoheWidget(new PoheWidget)
+  : mPoheWidget(new PoheWidgetImp)
 {
 
 }
@@ -45,17 +43,16 @@ TestPoheWidget::~TestPoheWidget()
 
 void TestPoheWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(QSize(127, 127), mPoheWidget->blockSize());
 }
 
 void TestPoheWidget::cleanupTestCase()
 {
+  mPoheWidget->setBlockSize(QSize(5, 5));
 
-}
+  mPoheWidget->reset();
 
-void TestPoheWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(QSize(127, 127), mPoheWidget->blockSize());
 }
 
@@ -82,15 +79,6 @@ void TestPoheWidget::test_blockSize()
 
   mPoheWidget->setBlockSize(value);
   QCOMPARE(result, mPoheWidget->blockSize());
-}
-
-void TestPoheWidget::test_reset()
-{
-  mPoheWidget->setBlockSize(QSize(5, 5));
-
-  mPoheWidget->reset();
-
-  QCOMPARE(QSize(127, 127), mPoheWidget->blockSize());
 }
 
 

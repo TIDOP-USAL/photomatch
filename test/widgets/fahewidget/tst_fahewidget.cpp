@@ -18,19 +18,17 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_blockSize_data();
   void test_blockSize();
-  void test_reset();
 
 private:
 
-  IFaheWidget *mFaheWidget;
+  FaheWidget *mFaheWidget;
 };
 
 TestFaheWidget::TestFaheWidget()
-  : mFaheWidget(new FaheWidget)
+  : mFaheWidget(new FaheWidgetImp)
 {
 
 }
@@ -45,17 +43,16 @@ TestFaheWidget::~TestFaheWidget()
 
 void TestFaheWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(QSize(11, 11), mFaheWidget->blockSize());
 }
 
 void TestFaheWidget::cleanupTestCase()
 {
+  mFaheWidget->setBlockSize(QSize(5, 5));
 
-}
+  mFaheWidget->reset();
 
-void TestFaheWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(QSize(11, 11), mFaheWidget->blockSize());
 }
 
@@ -63,7 +60,6 @@ void TestFaheWidget::test_windowTitle()
 {
   QCOMPARE("FAHE", mFaheWidget->windowTitle());
 }
-
 
 void TestFaheWidget::test_blockSize_data()
 {
@@ -83,15 +79,6 @@ void TestFaheWidget::test_blockSize()
 
   mFaheWidget->setBlockSize(value);
   QCOMPARE(result, mFaheWidget->blockSize());
-}
-
-void TestFaheWidget::test_reset()
-{
-  mFaheWidget->setBlockSize(QSize(5, 5));
-
-  mFaheWidget->reset();
-
-  QCOMPARE(QSize(11, 11), mFaheWidget->blockSize());
 }
 
 

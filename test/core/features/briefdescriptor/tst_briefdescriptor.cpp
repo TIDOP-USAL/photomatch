@@ -28,7 +28,6 @@ private slots:
   void test_bytes();
   void test_useOrientation_data();
   void test_useOrientation();
-  void test_reset();
 
 private:
 
@@ -51,12 +50,19 @@ TestBriefDescriptor::~TestBriefDescriptor()
 
 void TestBriefDescriptor::initTestCase()
 {
-
+  QCOMPARE("32", mBriefDescriptor->bytes());
+  QCOMPARE(false, mBriefDescriptor->useOrientation());
 }
 
 void TestBriefDescriptor::cleanupTestCase()
 {
+  mBriefDescriptor->setBytes("16");
+  mBriefDescriptor->setUseOrientation(true);
 
+  mBriefDescriptor->reset();
+
+  QCOMPARE("32", mBriefDescriptor->bytes());
+  QCOMPARE(false, mBriefDescriptor->useOrientation());
 }
 
 void TestBriefDescriptor::test_defaultConstructor()
@@ -132,16 +138,6 @@ void TestBriefDescriptor::test_useOrientation()
   QCOMPARE(result, mBriefDescriptor->useOrientation());
 }
 
-void TestBriefDescriptor::test_reset()
-{
-  mBriefDescriptor->setBytes("16");
-  mBriefDescriptor->setUseOrientation(true);
-
-  mBriefDescriptor->reset();
-
-  QCOMPARE("32", mBriefDescriptor->bytes());
-  QCOMPARE(false, mBriefDescriptor->useOrientation());
-}
 
 QTEST_APPLESS_MAIN(TestBriefDescriptor)
 

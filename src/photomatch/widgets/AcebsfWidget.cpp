@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "AcebsfWidget.h"
 
 #include <QSpinBox>
@@ -8,8 +32,8 @@
 namespace photomatch
 {
 
-AcebsfWidget::AcebsfWidget(QWidget *parent)
-  : IAcebsfWidget(parent),
+AcebsfWidgetImp::AcebsfWidgetImp(QWidget *parent)
+  : AcebsfWidget(parent),
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this)),
     mL(new QDoubleSpinBox(this)),
@@ -29,42 +53,42 @@ AcebsfWidget::AcebsfWidget(QWidget *parent)
 
 }
 
-AcebsfWidget::~AcebsfWidget()
+AcebsfWidgetImp::~AcebsfWidgetImp()
 {
 
 }
 
-void AcebsfWidget::onBlockSizeXChange(int blockSizeX)
+void AcebsfWidgetImp::onBlockSizeXChange(int blockSizeX)
 {
   emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
 }
 
-void AcebsfWidget::onBlockSizeYChange(int blockSizeY)
+void AcebsfWidgetImp::onBlockSizeYChange(int blockSizeY)
 {
   emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
 }
 
-QSize AcebsfWidget::blockSize() const
+QSize AcebsfWidgetImp::blockSize() const
 {
   return QSize(mBlockSizeX->value(), mBlockSizeY->value());
 }
 
-double AcebsfWidget::l() const
+double AcebsfWidgetImp::l() const
 {
   return mL->value();
 }
 
-double AcebsfWidget::k1() const
+double AcebsfWidgetImp::k1() const
 {
   return mK1->value();
 }
 
-double AcebsfWidget::k2() const
+double AcebsfWidgetImp::k2() const
 {
   return mK2->value();
 }
 
-void AcebsfWidget::setBlockSize(const QSize &blockSize)
+void AcebsfWidgetImp::setBlockSize(const QSize &blockSize)
 {
   const QSignalBlocker blockerTilesGridX(mBlockSizeX);
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
@@ -72,29 +96,29 @@ void AcebsfWidget::setBlockSize(const QSize &blockSize)
   mBlockSizeY->setValue(blockSize.height());
 }
 
-void AcebsfWidget::setL(double l)
+void AcebsfWidgetImp::setL(double l)
 {
   const QSignalBlocker blockerL(mL);
   mL->setValue(l);
 }
 
-void AcebsfWidget::setK1(double k1)
+void AcebsfWidgetImp::setK1(double k1)
 {
   const QSignalBlocker blockerK1(mK1);
   mK1->setValue(k1);
 }
 
-void AcebsfWidget::setK2(double k2)
+void AcebsfWidgetImp::setK2(double k2)
 {
   const QSignalBlocker blockerK2(mK2);
   mK2->setValue(k2);
 }
 
-void AcebsfWidget::update()
+void AcebsfWidgetImp::update()
 {
 }
 
-void AcebsfWidget::retranslate()
+void AcebsfWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mK1->setWhatsThis(tr("<html><head/><body><p><strong>K1</strong> controls the&nbsp;actual contrast of input image. If the value of <strong>K1</strong> is&nbsp;selected <strong>5</strong> then its effect on the input image is little&nbsp;change in the contrast, if the value of <strong>K1</strong> is selected <strong>1&nbsp;</strong>then its reduces contrast to about 20% of original and if&nbsp;the value of <strong>K1</strong> is selected <strong>10</strong> then its increase contrast&nbsp;about to 2.5 times the input image. Therefore a&nbsp;reasonable range of values of K1 is to be selected in the&nbsp;experiments. For effective contrast enhancement of&nbsp;input images <strong>the value of K1 should be lies between 10&nbsp;to 25</strong>.</p></body></html>"));
@@ -105,7 +129,7 @@ void AcebsfWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void AcebsfWidget::reset()
+void AcebsfWidgetImp::reset()
 {
   const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
   const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
@@ -120,7 +144,7 @@ void AcebsfWidget::reset()
   mK2->setValue(0.5);
 }
 
-void AcebsfWidget::init()
+void AcebsfWidgetImp::init()
 {
   this->setWindowTitle("ACEBSF");
 

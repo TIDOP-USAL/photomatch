@@ -36,7 +36,6 @@ private slots:
   void test_useNormalizeImage();
   void test_useScaleOrientation_data();
   void test_useScaleOrientation();
-  void test_reset();
 
 private:
 
@@ -59,12 +58,31 @@ TestVggDescriptor::~TestVggDescriptor()
 
 void TestVggDescriptor::initTestCase()
 {
-
+  QCOMPARE("VGG_120", mVggDescriptor->descriptorType());
+  QCOMPARE(6.25, mVggDescriptor->scaleFactor());
+  QCOMPARE(1.4, mVggDescriptor->sigma());
+  QCOMPARE(false, mVggDescriptor->useNormalizeDescriptor());
+  QCOMPARE(true, mVggDescriptor->useNormalizeImage());
+  QCOMPARE(true, mVggDescriptor->useScaleOrientation());
 }
 
 void TestVggDescriptor::cleanupTestCase()
 {
+  mVggDescriptor->setDescriptorType("16");
+  mVggDescriptor->setScaleFactor(6.75);
+  mVggDescriptor->setSigma(1.5);
+  mVggDescriptor->setUseNormalizeDescriptor(true);
+  mVggDescriptor->setUseNormalizeImage(false);
+  mVggDescriptor->setUseScaleOrientation(false);
 
+  mVggDescriptor->reset();
+
+  QCOMPARE("VGG_120", mVggDescriptor->descriptorType());
+  QCOMPARE(6.25, mVggDescriptor->scaleFactor());
+  QCOMPARE(1.4, mVggDescriptor->sigma());
+  QCOMPARE(false, mVggDescriptor->useNormalizeDescriptor());
+  QCOMPARE(true, mVggDescriptor->useNormalizeImage());
+  QCOMPARE(true, mVggDescriptor->useScaleOrientation());
 }
 
 void TestVggDescriptor::test_defaultConstructor()
@@ -223,25 +241,6 @@ void TestVggDescriptor::test_useScaleOrientation()
 
   mVggDescriptor->setUseScaleOrientation(value);
   QCOMPARE(result, mVggDescriptor->useScaleOrientation());
-}
-
-void TestVggDescriptor::test_reset()
-{
-  mVggDescriptor->setDescriptorType("16");
-  mVggDescriptor->setScaleFactor(6.75);
-  mVggDescriptor->setSigma(1.5);
-  mVggDescriptor->setUseNormalizeDescriptor(true);
-  mVggDescriptor->setUseNormalizeImage(false);
-  mVggDescriptor->setUseScaleOrientation(false);
-
-  mVggDescriptor->reset();
-
-  QCOMPARE("VGG_120", mVggDescriptor->descriptorType());
-  QCOMPARE(6.25, mVggDescriptor->scaleFactor());
-  QCOMPARE(1.4, mVggDescriptor->sigma());
-  QCOMPARE(false, mVggDescriptor->useNormalizeDescriptor());
-  QCOMPARE(true, mVggDescriptor->useNormalizeImage());
-  QCOMPARE(true, mVggDescriptor->useScaleOrientation());
 }
 
 QTEST_APPLESS_MAIN(TestVggDescriptor)

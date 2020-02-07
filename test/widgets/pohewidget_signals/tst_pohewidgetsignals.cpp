@@ -8,7 +8,7 @@
 using namespace photomatch;
 
 
-class TestPoheWidgetSignals : public PoheWidget
+class TestPoheWidgetSignals : public PoheWidgetImp
 {
   Q_OBJECT
 
@@ -17,15 +17,15 @@ public:
   ~TestPoheWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_blockSizeChange();
-  void test_reset();
 
 };
 
 TestPoheWidgetSignals::TestPoheWidgetSignals()
-  : PoheWidget()
+  : PoheWidgetImp()
 {
 
 }
@@ -42,12 +42,18 @@ void TestPoheWidgetSignals::initTestCase()
 
 void TestPoheWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spy_blockSizeChange(this, &PoheWidgetImp::blockSizeChange);
 
+  this->setBlockSize(QSize(5, 7));
+
+  this->reset();
+
+  QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
 void TestPoheWidgetSignals::test_blockSizeChange()
 {
-  QSignalSpy spy_blockSizeChange(this, &PoheWidget::blockSizeChange);
+  QSignalSpy spy_blockSizeChange(this, &PoheWidgetImp::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
 
@@ -60,16 +66,6 @@ void TestPoheWidgetSignals::test_blockSizeChange()
   QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
-void TestPoheWidgetSignals::test_reset()
-{
-  QSignalSpy spy_blockSizeChange(this, &PoheWidget::blockSizeChange);
-
-  this->setBlockSize(QSize(5, 7));
-
-  this->reset();
-
-  QCOMPARE(spy_blockSizeChange.count(), 0);
-}
 
 QTEST_MAIN(TestPoheWidgetSignals)
 

@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "LatchWidget.h"
 
 #include <QComboBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-LatchWidget::LatchWidget(QWidget *parent)
-  : ILatchWidget(parent),
+LatchWidgetImp::LatchWidgetImp(QWidget *parent)
+  : LatchWidget(parent),
     mBytes(new QComboBox(this)),
     mRotationInvariance(new QCheckBox(this)),
     mHalfSsdSize(new QSpinBox(this))
@@ -25,53 +49,53 @@ LatchWidget::LatchWidget(QWidget *parent)
 
 }
 
-LatchWidget::~LatchWidget()
+LatchWidgetImp::~LatchWidgetImp()
 {
 
 }
 
-QString LatchWidget::bytes() const
+QString LatchWidgetImp::bytes() const
 {
   return mBytes->currentText();
 }
 
-bool LatchWidget::rotationInvariance() const
+bool LatchWidgetImp::rotationInvariance() const
 {
   return mRotationInvariance->isChecked();
 }
 
-int LatchWidget::halfSsdSize() const
+int LatchWidgetImp::halfSsdSize() const
 {
   return mHalfSsdSize->value();
 }
 
-void LatchWidget::setBytes(const QString &bytes)
+void LatchWidgetImp::setBytes(const QString &bytes)
 {
   const QSignalBlocker blockerBytes(mBytes);
   mBytes->setCurrentText(bytes);
 }
 
-void LatchWidget::setRotationInvariance(bool rotationInvariance)
+void LatchWidgetImp::setRotationInvariance(bool rotationInvariance)
 {
   mRotationInvariance->setChecked(rotationInvariance);
 }
 
-void LatchWidget::setHalfSsdSize(int halfSsdSize)
+void LatchWidgetImp::setHalfSsdSize(int halfSsdSize)
 {
   const QSignalBlocker blockerHalfSsdSize(mHalfSsdSize);
   mHalfSsdSize->setValue(halfSsdSize);
 }
 
-void LatchWidget::update()
+void LatchWidgetImp::update()
 {
 }
 
-void LatchWidget::retranslate()
+void LatchWidgetImp::retranslate()
 {
 
 }
 
-void LatchWidget::reset()
+void LatchWidgetImp::reset()
 {
   const QSignalBlocker blockerBytes(mBytes);
   const QSignalBlocker blockerHalfSsdSize(mHalfSsdSize);
@@ -81,7 +105,7 @@ void LatchWidget::reset()
   mHalfSsdSize->setValue(3);
 }
 
-void LatchWidget::init()
+void LatchWidgetImp::init()
 {
   this->setWindowTitle("LATCH");
 

@@ -18,12 +18,13 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
   void test_x_data();
   void test_x();
-  void test_reset();
 
 private:
 
@@ -42,6 +43,20 @@ TestDhe::~TestDhe()
     delete mDhePreprocess;
     mDhePreprocess = nullptr;
   }
+}
+
+void TestDhe::initTestCase()
+{
+  QCOMPARE(1, mDhePreprocess->x());
+}
+
+void TestDhe::cleanupTestCase()
+{
+  mDhePreprocess->setX(3);
+
+  mDhePreprocess->reset();
+
+  QCOMPARE(1, mDhePreprocess->x());
 }
 
 void TestDhe::test_constructors()
@@ -84,15 +99,6 @@ void TestDhe::test_x()
 
   mDhePreprocess->setX(value);
   QCOMPARE(result, mDhePreprocess->x());
-}
-
-void TestDhe::test_reset()
-{
-  mDhePreprocess->setX(3);
-
-  mDhePreprocess->reset();
-
-  QCOMPARE(1, mDhePreprocess->x());
 }
 
 

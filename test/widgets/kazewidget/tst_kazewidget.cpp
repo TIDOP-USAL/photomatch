@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_extendedDescriptor_data();
   void test_extendedDescriptor();
@@ -32,17 +31,16 @@ private slots:
   void test_octaveLayers();
   void test_diffusivity_data();
   void test_diffusivity();
-  void test_reset();
 
 private:
 
-  IKazeWidget *mKazeWidget;
+  KazeWidget *mKazeWidget;
 
 };
 
 TestKazeWidget::TestKazeWidget()
 {
-  mKazeWidget = new KazeWidget();
+  mKazeWidget = new KazeWidgetImp();
 }
 
 TestKazeWidget::~TestKazeWidget()
@@ -55,17 +53,26 @@ TestKazeWidget::~TestKazeWidget()
 
 void TestKazeWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(false, mKazeWidget->extendedDescriptor());
+  QCOMPARE(false, mKazeWidget->upright());
+  QCOMPARE(0.001, mKazeWidget->threshold());
+  QCOMPARE(4, mKazeWidget->octaves());
+  QCOMPARE(4, mKazeWidget->octaveLayers());
+  QCOMPARE("DIFF_PM_G2", mKazeWidget->diffusivity());
 }
 
 void TestKazeWidget::cleanupTestCase()
 {
+  mKazeWidget->setThreshold(50.);
+  mKazeWidget->setOctaves(2);
+  mKazeWidget->setOctaveLayers(5);
+  mKazeWidget->setExtendedDescriptor(true);
+  mKazeWidget->setUpright(true);
+  mKazeWidget->setDiffusivity("DIFF_PM_G1");
 
-}
+  mKazeWidget->reset();
 
-void TestKazeWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(false, mKazeWidget->extendedDescriptor());
   QCOMPARE(false, mKazeWidget->upright());
   QCOMPARE(0.001, mKazeWidget->threshold());
@@ -194,24 +201,6 @@ void TestKazeWidget::test_diffusivity()
   QCOMPARE(result, mKazeWidget->diffusivity());
 }
 
-void TestKazeWidget::test_reset()
-{
-  mKazeWidget->setThreshold(50.);
-  mKazeWidget->setOctaves(2);
-  mKazeWidget->setOctaveLayers(5);
-  mKazeWidget->setExtendedDescriptor(true);
-  mKazeWidget->setUpright(true);
-  mKazeWidget->setDiffusivity("DIFF_PM_G1");
-
-  mKazeWidget->reset();
-
-  QCOMPARE(false, mKazeWidget->extendedDescriptor());
-  QCOMPARE(false, mKazeWidget->upright());
-  QCOMPARE(0.001, mKazeWidget->threshold());
-  QCOMPARE(4, mKazeWidget->octaves());
-  QCOMPARE(4, mKazeWidget->octaveLayers());
-  QCOMPARE("DIFF_PM_G2", mKazeWidget->diffusivity());
-}
 
 QTEST_MAIN(TestKazeWidget)
 

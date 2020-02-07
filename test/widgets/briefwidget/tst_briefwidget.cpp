@@ -16,21 +16,21 @@ public:
 
 private slots:
 
-  void test_constructor();
+  void initTestCase();
+  void cleanupTestCase();
   void test_windowTitle();
   void test_bytes_data();
   void test_bytes();
   void test_useOrientation_data();
   void test_useOrientation();
-  void test_reset();
 
 private:
 
-  IBriefWidget *mBriefWidget;
+  BriefWidget *mBriefWidget;
 };
 
 TestBriefWidget::TestBriefWidget()
-  : mBriefWidget(new BriefWidget)
+  : mBriefWidget(new BriefWidgetImp)
 {
 
 }
@@ -43,9 +43,19 @@ TestBriefWidget::~TestBriefWidget()
   }
 }
 
-void TestBriefWidget::test_constructor()
+void TestBriefWidget::initTestCase()
 {
-  /// Check default values
+  QCOMPARE("32", mBriefWidget->bytes());
+  QCOMPARE(false, mBriefWidget->useOrientation());
+}
+
+void TestBriefWidget::cleanupTestCase()
+{
+  mBriefWidget->setBytes("16");
+  mBriefWidget->setUseOrientation(true);
+
+  mBriefWidget->reset();
+
   QCOMPARE("32", mBriefWidget->bytes());
   QCOMPARE(false, mBriefWidget->useOrientation());
 }
@@ -94,16 +104,6 @@ void TestBriefWidget::test_useOrientation()
   QCOMPARE(result, mBriefWidget->useOrientation());
 }
 
-void TestBriefWidget::test_reset()
-{
-  mBriefWidget->setBytes("16");
-  mBriefWidget->setUseOrientation(true);
-
-  mBriefWidget->reset();
-
-  QCOMPARE("32", mBriefWidget->bytes());
-  QCOMPARE(false, mBriefWidget->useOrientation());
-}
 
 QTEST_MAIN(TestBriefWidget)
 

@@ -33,7 +33,6 @@ private slots:
   void test_edgeThreshold();
   void test_sigma_data();
   void test_sigma();
-  void test_reset();
 
 private:
 
@@ -63,12 +62,28 @@ TestSiftDetectorDescriptor::~TestSiftDetectorDescriptor()
 
 void TestSiftDetectorDescriptor::initTestCase()
 {
-
+  QCOMPARE(5000, mSiftDetectorDescriptor->featuresNumber());
+  QCOMPARE(3, mSiftDetectorDescriptor->octaveLayers());
+  QCOMPARE(0.04, mSiftDetectorDescriptor->contrastThreshold());
+  QCOMPARE(10., mSiftDetectorDescriptor->edgeThreshold());
+  QCOMPARE(1.6, mSiftDetectorDescriptor->sigma());
 }
 
 void TestSiftDetectorDescriptor::cleanupTestCase()
 {
+  mSiftDetectorDescriptor->setFeaturesNumber(500);
+  mSiftDetectorDescriptor->setOctaveLayers(4);
+  mSiftDetectorDescriptor->setContrastThreshold(0.5);
+  mSiftDetectorDescriptor->setEdgeThreshold(20.);
+  mSiftDetectorDescriptor->setSigma(3.);
 
+  mSiftDetectorDescriptor->reset();
+
+  QCOMPARE(5000, mSiftDetectorDescriptor->featuresNumber());
+  QCOMPARE(3, mSiftDetectorDescriptor->octaveLayers());
+  QCOMPARE(0.04, mSiftDetectorDescriptor->contrastThreshold());
+  QCOMPARE(10., mSiftDetectorDescriptor->edgeThreshold());
+  QCOMPARE(1.6, mSiftDetectorDescriptor->sigma());
 }
 
 #ifdef OPENCV_ENABLE_NONFREE
@@ -210,22 +225,6 @@ void TestSiftDetectorDescriptor::test_sigma()
   QCOMPARE(result, mSiftDetectorDescriptor->sigma());
 }
 
-void TestSiftDetectorDescriptor::test_reset()
-{
-  mSiftDetectorDescriptor->setFeaturesNumber(500);
-  mSiftDetectorDescriptor->setOctaveLayers(4);
-  mSiftDetectorDescriptor->setContrastThreshold(0.5);
-  mSiftDetectorDescriptor->setEdgeThreshold(20.);
-  mSiftDetectorDescriptor->setSigma(3.);
-
-  mSiftDetectorDescriptor->reset();
-
-  QCOMPARE(5000, mSiftDetectorDescriptor->featuresNumber());
-  QCOMPARE(3, mSiftDetectorDescriptor->octaveLayers());
-  QCOMPARE(0.04, mSiftDetectorDescriptor->contrastThreshold());
-  QCOMPARE(10., mSiftDetectorDescriptor->edgeThreshold());
-  QCOMPARE(1.6, mSiftDetectorDescriptor->sigma());
-}
 
 #endif
 

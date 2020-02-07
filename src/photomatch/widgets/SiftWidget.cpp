@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "SiftWidget.h"
 
 #include <QSpinBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-SiftWidget::SiftWidget(QWidget *parent)
-  : ISiftWidget(parent),
+SiftWidgetImp::SiftWidgetImp(QWidget *parent)
+  : SiftWidget(parent),
     mFeaturesNumber(new QSpinBox(this)),
     mOctaveLayers(new QSpinBox(this)),
     mContrastThreshold(new QDoubleSpinBox(this)),
@@ -31,72 +55,72 @@ SiftWidget::SiftWidget(QWidget *parent)
 
 }
 
-SiftWidget::~SiftWidget()
+SiftWidgetImp::~SiftWidgetImp()
 {
 
 }
 
-int SiftWidget::featuresNumber() const
+int SiftWidgetImp::featuresNumber() const
 {
   return mFeaturesNumber->value();
 }
 
-int SiftWidget::octaveLayers() const
+int SiftWidgetImp::octaveLayers() const
 {
   return mOctaveLayers->value();
 }
 
-double SiftWidget::contrastThreshold()
+double SiftWidgetImp::contrastThreshold()
 {
   return mContrastThreshold->value();
 }
 
-double SiftWidget::edgeThreshold()
+double SiftWidgetImp::edgeThreshold()
 {
   return mEdgeThreshold->value();
 }
 
-double SiftWidget::sigma()
+double SiftWidgetImp::sigma()
 {
   return mSigma->value();
 }
 
-void SiftWidget::setFeaturesNumber(int featuresNumber)
+void SiftWidgetImp::setFeaturesNumber(int featuresNumber)
 {
   const QSignalBlocker blockerFeaturesNumber(mFeaturesNumber);
   mFeaturesNumber->setValue(featuresNumber);
 }
 
-void SiftWidget::setOctaveLayers(int octaveLayers)
+void SiftWidgetImp::setOctaveLayers(int octaveLayers)
 {
   const QSignalBlocker blockerFeaturesNumber(mOctaveLayers);
   mOctaveLayers->setValue(octaveLayers);
 }
 
-void SiftWidget::setContrastThreshold(double contrastThreshold)
+void SiftWidgetImp::setContrastThreshold(double contrastThreshold)
 {
   const QSignalBlocker blockerContrastThreshold(mContrastThreshold);
   mContrastThreshold->setValue(contrastThreshold);
 }
 
-void SiftWidget::setEdgeThreshold(double edgeThreshold)
+void SiftWidgetImp::setEdgeThreshold(double edgeThreshold)
 {
   const QSignalBlocker blockerEdgeThreshold(mEdgeThreshold);
   mEdgeThreshold->setValue(edgeThreshold);
 }
 
-void SiftWidget::setSigma(double sigma)
+void SiftWidgetImp::setSigma(double sigma)
 {
   const QSignalBlocker blockerSigma(mSigma);
   mSigma->setValue(sigma);
 }
 
-void SiftWidget::update()
+void SiftWidgetImp::update()
 {
 
 }
 
-void SiftWidget::retranslate()
+void SiftWidgetImp::retranslate()
 {
 #ifndef QT_NO_WHATSTHIS
   mFeaturesNumber->setWhatsThis(tr("<html><head/><body><p>The number of best features to retain.</p></body></html>"));
@@ -107,7 +131,7 @@ void SiftWidget::retranslate()
 #endif // QT_NO_WHATSTHIS
 }
 
-void SiftWidget::reset()
+void SiftWidgetImp::reset()
 {
   const QSignalBlocker blockerFeaturesNumber(mFeaturesNumber);
   const QSignalBlocker blockerOctaveLayers(mOctaveLayers);
@@ -122,7 +146,7 @@ void SiftWidget::reset()
   mSigma->setValue(1.6);
 }
 
-void SiftWidget::init()
+void SiftWidgetImp::init()
 {
   this->setWindowTitle("SIFT");
 

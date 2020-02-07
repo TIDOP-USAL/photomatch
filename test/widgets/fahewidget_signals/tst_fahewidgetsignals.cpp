@@ -8,7 +8,7 @@
 using namespace photomatch;
 
 
-class TestFaheWidgetSignals : public FaheWidget
+class TestFaheWidgetSignals : public FaheWidgetImp
 {
   Q_OBJECT
 
@@ -17,15 +17,15 @@ public:
   ~TestFaheWidgetSignals();
 
 private slots:
+
   void initTestCase();
   void cleanupTestCase();
   void test_blockSizeChange();
-  void test_reset();
 
 };
 
 TestFaheWidgetSignals::TestFaheWidgetSignals()
-  : FaheWidget()
+  : FaheWidgetImp()
 {
 
 }
@@ -42,12 +42,18 @@ void TestFaheWidgetSignals::initTestCase()
 
 void TestFaheWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spy_blockSizeChange(this, &FaheWidgetImp::blockSizeChange);
 
+  this->setBlockSize(QSize(5, 7));
+
+  this->reset();
+
+  QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
 void TestFaheWidgetSignals::test_blockSizeChange()
 {
-  QSignalSpy spy_blockSizeChange(this, &FaheWidget::blockSizeChange);
+  QSignalSpy spy_blockSizeChange(this, &FaheWidgetImp::blockSizeChange);
 
   this->mBlockSizeX->setValue(10);
 
@@ -60,16 +66,6 @@ void TestFaheWidgetSignals::test_blockSizeChange()
   QCOMPARE(spy_blockSizeChange.count(), 0);
 }
 
-void TestFaheWidgetSignals::test_reset()
-{
-  QSignalSpy spy_blockSizeChange(this, &FaheWidget::blockSizeChange);
-
-  this->setBlockSize(QSize(5, 7));
-
-  this->reset();
-
-  QCOMPARE(spy_blockSizeChange.count(), 0);
-}
 
 QTEST_MAIN(TestFaheWidgetSignals)
 

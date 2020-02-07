@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestLucidWidgetSignals : public LucidWidget
+class TestLucidWidgetSignals : public LucidWidgetImp
 {
   Q_OBJECT
 
@@ -24,7 +24,7 @@ private slots:
 };
 
 TestLucidWidgetSignals::TestLucidWidgetSignals()
-  : LucidWidget()
+  : LucidWidgetImp()
 {
 
 }
@@ -36,7 +36,7 @@ TestLucidWidgetSignals::~TestLucidWidgetSignals()
 
 void TestLucidWidgetSignals::test_lucidKernelChange()
 {
-  QSignalSpy spy_lucidKernelChange(this, &LucidWidget::lucidKernelChange);
+  QSignalSpy spy_lucidKernelChange(this, &LucidWidgetImp::lucidKernelChange);
 
   this->mLucidKernel->setValue(3);
 
@@ -51,7 +51,7 @@ void TestLucidWidgetSignals::test_lucidKernelChange()
 
 void TestLucidWidgetSignals::test_blurKernelChange()
 {
-  QSignalSpy spy_blurKernelChange(this, &LucidWidget::blurKernelChange);
+  QSignalSpy spy_blurKernelChange(this, &LucidWidgetImp::blurKernelChange);
 
   this->mBlurKernel->setValue(3);
 

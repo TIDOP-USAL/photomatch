@@ -32,7 +32,6 @@ private slots:
   void test_patternScale();
   void test_octaves_data();
   void test_octaves();
-  void test_reset();
 
 private:
 
@@ -55,12 +54,25 @@ TestFreakDescriptor::~TestFreakDescriptor()
 
 void TestFreakDescriptor::initTestCase()
 {
-
+  QCOMPARE(true, mFreakDescriptor->orientationNormalized());
+  QCOMPARE(true, mFreakDescriptor->scaleNormalized());
+  QCOMPARE(22., mFreakDescriptor->patternScale());
+  QCOMPARE(4, mFreakDescriptor->octaves());
 }
 
 void TestFreakDescriptor::cleanupTestCase()
 {
+  mFreakDescriptor->setOrientationNormalized(false);
+  mFreakDescriptor->setScaleNormalized(false);
+  mFreakDescriptor->setPatternScale(35.);
+  mFreakDescriptor->setOctaves(8);
 
+  mFreakDescriptor->reset();
+
+  QCOMPARE(true, mFreakDescriptor->orientationNormalized());
+  QCOMPARE(true, mFreakDescriptor->scaleNormalized());
+  QCOMPARE(22., mFreakDescriptor->patternScale());
+  QCOMPARE(4, mFreakDescriptor->octaves());
 }
 
 void TestFreakDescriptor::test_defaultConstructor()
@@ -174,21 +186,6 @@ void TestFreakDescriptor::test_octaves()
 
   mFreakDescriptor->setOctaves(value);
   QCOMPARE(result, mFreakDescriptor->octaves());
-}
-
-void TestFreakDescriptor::test_reset()
-{
-  mFreakDescriptor->setOrientationNormalized(false);
-  mFreakDescriptor->setScaleNormalized(false);
-  mFreakDescriptor->setPatternScale(35.);
-  mFreakDescriptor->setOctaves(8);
-
-  mFreakDescriptor->reset();
-
-  QCOMPARE(true, mFreakDescriptor->orientationNormalized());
-  QCOMPARE(true, mFreakDescriptor->scaleNormalized());
-  QCOMPARE(22., mFreakDescriptor->patternScale());
-  QCOMPARE(4, mFreakDescriptor->octaves());
 }
 
 

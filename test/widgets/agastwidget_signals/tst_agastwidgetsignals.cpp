@@ -9,7 +9,7 @@
 
 using namespace photomatch;
 
-class TestAgastWidgetSignals : public AgastWidget
+class TestAgastWidgetSignals : public AgastWidgetImp
 {
   Q_OBJECT
 
@@ -22,15 +22,14 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testThresholdChange();
-  void testNonmaxSuppressionChange();
-  void testDetectorTypeChange();
-  void testReset();
+  void test_thresholdChange();
+  void test_nonmaxSuppressionChange();
+  void test_detectorTypeChange();
 
 };
 
 TestAgastWidgetSignals::TestAgastWidgetSignals()
-  : AgastWidget()
+  : AgastWidgetImp()
 {
 
 }
@@ -46,12 +45,24 @@ void TestAgastWidgetSignals::initTestCase()
 
 void TestAgastWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spyThreshold(this, &AgastWidgetImp::thresholdChange);
+  QSignalSpy spyNonmaxSuppressionChange(this, &AgastWidgetImp::nonmaxSuppressionChange);
+  QSignalSpy spyDetectorTypeChange(this, &AgastWidgetImp::detectorTypeChange);
 
+  this->setThreshold(25);
+  this->setNonmaxSuppression(false);
+  this->setDetectorType("AGAST_5_8");
+
+  this->reset();
+
+  QCOMPARE(spyThreshold.count(), 0);
+  QCOMPARE(spyNonmaxSuppressionChange.count(), 0);
+  QCOMPARE(spyDetectorTypeChange.count(), 0);
 }
 
-void TestAgastWidgetSignals::testThresholdChange()
+void TestAgastWidgetSignals::test_thresholdChange()
 {
-  QSignalSpy spyThreshold(this, &AgastWidget::thresholdChange);
+  QSignalSpy spyThreshold(this, &AgastWidgetImp::thresholdChange);
 
   this->mThreshold->setValue(50);
 
@@ -64,9 +75,9 @@ void TestAgastWidgetSignals::testThresholdChange()
   QCOMPARE(spyThreshold.count(), 0);
 }
 
-void TestAgastWidgetSignals::testNonmaxSuppressionChange()
+void TestAgastWidgetSignals::test_nonmaxSuppressionChange()
 {
-  QSignalSpy spyNonmaxSuppressionChange(this, &AgastWidget::nonmaxSuppressionChange);
+  QSignalSpy spyNonmaxSuppressionChange(this, &AgastWidgetImp::nonmaxSuppressionChange);
 
   QTest::mouseClick(mNonmaxSuppression, Qt::MouseButton::LeftButton);
 
@@ -79,9 +90,9 @@ void TestAgastWidgetSignals::testNonmaxSuppressionChange()
   QCOMPARE(spyNonmaxSuppressionChange.count(), 0);
 }
 
-void TestAgastWidgetSignals::testDetectorTypeChange()
+void TestAgastWidgetSignals::test_detectorTypeChange()
 {
-  QSignalSpy spyDetectorTypeChange(this, &AgastWidget::detectorTypeChange);
+  QSignalSpy spyDetectorTypeChange(this, &AgastWidgetImp::detectorTypeChange);
 
   this->mDetectorType->setCurrentText("AGAST_7_12d");
 
@@ -97,22 +108,6 @@ void TestAgastWidgetSignals::testDetectorTypeChange()
   QCOMPARE(spyDetectorTypeChange.count(), 0);
 }
 
-void TestAgastWidgetSignals::testReset()
-{
-  QSignalSpy spyThreshold(this, &AgastWidget::thresholdChange);
-  QSignalSpy spyNonmaxSuppressionChange(this, &AgastWidget::nonmaxSuppressionChange);
-  QSignalSpy spyDetectorTypeChange(this, &AgastWidget::detectorTypeChange);
-
-  this->setThreshold(25);
-  this->setNonmaxSuppression(false);
-  this->setDetectorType("AGAST_5_8");
-
-  this->reset();
-
-  QCOMPARE(spyThreshold.count(), 0);
-  QCOMPARE(spyNonmaxSuppressionChange.count(), 0);
-  QCOMPARE(spyDetectorTypeChange.count(), 0);
-}
 
 
 QTEST_MAIN(TestAgastWidgetSignals)

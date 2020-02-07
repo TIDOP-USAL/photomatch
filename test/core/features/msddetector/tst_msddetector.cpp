@@ -47,7 +47,6 @@ private slots:
   void test_affineMSD();
   void test_tilts_data();
   void test_tilts();
-  void test_reset();
 
 };
 
@@ -59,7 +58,17 @@ TestMsdDetector::TestMsdDetector()
 
 TestMsdDetector::~TestMsdDetector()
 {
-
+  QCOMPARE(250, this->thresholdSaliency());
+  QCOMPARE(3, this->patchRadius());
+  QCOMPARE(4, this->knn());
+  QCOMPARE(5, this->searchAreaRadius());
+  QCOMPARE(1.25, this->scaleFactor());
+  QCOMPARE(5, this->NMSRadius());
+  QCOMPARE(-1, this->nScales());
+  QCOMPARE(0, this->NMSScaleRadius());
+  QCOMPARE(false, this->computeOrientation());
+  QCOMPARE(false, this->affineMSD());
+  QCOMPARE(3, this->affineTilts());
 }
 
 void TestMsdDetector::initTestCase()
@@ -69,7 +78,39 @@ void TestMsdDetector::initTestCase()
 
 void TestMsdDetector::cleanupTestCase()
 {
+  this->setThresholdSaliency(200);
+  this->setPatchRadius(4);
+  this->setKNN(5);
+  this->setSearchAreaRadius(3);
+  this->setScaleFactor(1.5);
+  this->setNMSRadius(4);
+  this->setNScales(3);
+  this->setNMSScaleRadius(1);
+  this->setComputeOrientation(true);
+  this->setAffineMSD(true);
+  this->setAffineTilts(4);
 
+  this->reset();
+
+  QCOMPARE(250, this->thresholdSaliency());
+  QCOMPARE(250, this->mMSD->getThSaliency());
+  QCOMPARE(3, this->patchRadius());
+  QCOMPARE(3, this->mMSD->getPatchRadius());
+  QCOMPARE(4, this->knn());
+  QCOMPARE(4, this->mMSD->getKNN());
+  QCOMPARE(5, this->searchAreaRadius());
+  QCOMPARE(5, this->mMSD->getSearchAreaRadius());
+  QCOMPARE(1.25, this->scaleFactor());
+  QCOMPARE(1.25, this->mMSD->getScaleFactor());
+  QCOMPARE(5, this->NMSRadius());
+  QCOMPARE(5, this->mMSD->getNMSRadius());
+  QCOMPARE(-1, this->nScales());
+  QCOMPARE(-1, this->mMSD->getNScales());
+  QCOMPARE(0, this->NMSScaleRadius());
+  QCOMPARE(0, this->mMSD->getNMSScaleRadius());
+  QCOMPARE(false, this->computeOrientation());
+  QCOMPARE(false, this->affineMSD());
+  QCOMPARE(3, this->affineTilts());
 }
 
 void TestMsdDetector::test_defaultConstructor()
@@ -346,43 +387,6 @@ void TestMsdDetector::test_tilts()
 
   this->setAffineTilts(value);
   QCOMPARE(result, this->affineTilts());
-}
-
-void TestMsdDetector::test_reset()
-{
-  this->setThresholdSaliency(200);
-  this->setPatchRadius(4);
-  this->setKNN(5);
-  this->setSearchAreaRadius(3);
-  this->setScaleFactor(1.5);
-  this->setNMSRadius(4);
-  this->setNScales(3);
-  this->setNMSScaleRadius(1);
-  this->setComputeOrientation(true);
-  this->setAffineMSD(true);
-  this->setAffineTilts(4);
-
-  this->reset();
-
-  QCOMPARE(250, this->thresholdSaliency());
-  QCOMPARE(250, this->mMSD->getThSaliency());
-  QCOMPARE(3, this->patchRadius());
-  QCOMPARE(3, this->mMSD->getPatchRadius());
-  QCOMPARE(4, this->knn());
-  QCOMPARE(4, this->mMSD->getKNN());
-  QCOMPARE(5, this->searchAreaRadius());
-  QCOMPARE(5, this->mMSD->getSearchAreaRadius());
-  QCOMPARE(1.25, this->scaleFactor());
-  QCOMPARE(1.25, this->mMSD->getScaleFactor());
-  QCOMPARE(5, this->NMSRadius());
-  QCOMPARE(5, this->mMSD->getNMSRadius());
-  QCOMPARE(-1, this->nScales());
-  QCOMPARE(-1, this->mMSD->getNScales());
-  QCOMPARE(0, this->NMSScaleRadius());
-  QCOMPARE(0, this->mMSD->getNMSScaleRadius());
-  QCOMPARE(false, this->computeOrientation());
-  QCOMPARE(false, this->affineMSD());
-  QCOMPARE(3, this->affineTilts());
 }
 
 QTEST_APPLESS_MAIN(TestMsdDetector)

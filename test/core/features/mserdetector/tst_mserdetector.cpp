@@ -42,7 +42,6 @@ private slots:
   void test_minMargin();
   void test_edgeBlurSize_data();
   void test_edgeBlurSize();
-  void test_reset();
 
 protected:
 
@@ -65,12 +64,41 @@ TestMserDetector::~TestMserDetector()
 
 void TestMserDetector::initTestCase()
 {
-
+  QCOMPARE(5, mMserDetector->delta());
+  QCOMPARE(60, mMserDetector->minArea());
+  QCOMPARE(14400, mMserDetector->maxArea());
+  QCOMPARE(0.25, mMserDetector->maxVariation());
+  QCOMPARE(.2, mMserDetector->minDiversity());
+  QCOMPARE(200, mMserDetector->maxEvolution());
+  QCOMPARE(1.01, mMserDetector->areaThreshold());
+  QCOMPARE(0.003, mMserDetector->minMargin());
+  QCOMPARE(5, mMserDetector->edgeBlurSize());
 }
 
 void TestMserDetector::cleanupTestCase()
 {
+  mMserDetector->setDelta(10);
+  mMserDetector->setMinArea(50);
+  mMserDetector->setMaxArea(10000);
+  mMserDetector->setMaxVariation(0.5);
+  mMserDetector->setMinDiversity(0.3);
+  mMserDetector->setMaxEvolution(150);
+  mMserDetector->setAreaThreshold(1.1);
+  mMserDetector->setMinMargin(0.01);
+  mMserDetector->setEdgeBlurSize(6);
 
+  mMserDetector->reset();
+
+  /// Check default values
+  QCOMPARE(5, mMserDetector->delta());
+  QCOMPARE(60, mMserDetector->minArea());
+  QCOMPARE(14400, mMserDetector->maxArea());
+  QCOMPARE(0.25, mMserDetector->maxVariation());
+  QCOMPARE(.2, mMserDetector->minDiversity());
+  QCOMPARE(200, mMserDetector->maxEvolution());
+  QCOMPARE(1.01, mMserDetector->areaThreshold());
+  QCOMPARE(0.003, mMserDetector->minMargin());
+  QCOMPARE(5, mMserDetector->edgeBlurSize());
 }
 
 void TestMserDetector::test_defaultConstructor()
@@ -293,32 +321,6 @@ void TestMserDetector::test_edgeBlurSize()
   QCOMPARE(result, mMserDetector->edgeBlurSize());
 }
 
-
-void TestMserDetector::test_reset()
-{
-  mMserDetector->setDelta(10);
-  mMserDetector->setMinArea(50);
-  mMserDetector->setMaxArea(10000);
-  mMserDetector->setMaxVariation(0.5);
-  mMserDetector->setMinDiversity(0.3);
-  mMserDetector->setMaxEvolution(150);
-  mMserDetector->setAreaThreshold(1.1);
-  mMserDetector->setMinMargin(0.01);
-  mMserDetector->setEdgeBlurSize(6);
-
-  mMserDetector->reset();
-
-  /// Check default values
-  QCOMPARE(5, mMserDetector->delta());
-  QCOMPARE(60, mMserDetector->minArea());
-  QCOMPARE(14400, mMserDetector->maxArea());
-  QCOMPARE(0.25, mMserDetector->maxVariation());
-  QCOMPARE(.2, mMserDetector->minDiversity());
-  QCOMPARE(200, mMserDetector->maxEvolution());
-  QCOMPARE(1.01, mMserDetector->areaThreshold());
-  QCOMPARE(0.003, mMserDetector->minMargin());
-  QCOMPARE(5, mMserDetector->edgeBlurSize());
-}
 
 QTEST_APPLESS_MAIN(TestMserDetector)
 

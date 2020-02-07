@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "BriefWidget.h"
 
 #include <QCheckBox>
@@ -9,8 +33,8 @@
 namespace photomatch
 {
 
-BriefWidget::BriefWidget(QWidget *parent)
-  : IBriefWidget(parent),
+BriefWidgetImp::BriefWidgetImp(QWidget *parent)
+  : BriefWidget(parent),
     mBytes(new QComboBox(this)),
     mUseOrientation(new QCheckBox(this))
 {
@@ -21,42 +45,42 @@ BriefWidget::BriefWidget(QWidget *parent)
   connect(mUseOrientation,    SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
 }
 
-BriefWidget::~BriefWidget()
+BriefWidgetImp::~BriefWidgetImp()
 {
 
 }
 
-QString BriefWidget::bytes() const
+QString BriefWidgetImp::bytes() const
 {
   return mBytes->currentText();
 }
 
-bool BriefWidget::useOrientation() const
+bool BriefWidgetImp::useOrientation() const
 {
   return mUseOrientation->isChecked();
 }
 
-void BriefWidget::setBytes(const QString &bytes)
+void BriefWidgetImp::setBytes(const QString &bytes)
 {
   const QSignalBlocker blockerBytes(mBytes);
   mBytes->setCurrentText(bytes);
 }
 
-void BriefWidget::setUseOrientation(bool useOrientation)
+void BriefWidgetImp::setUseOrientation(bool useOrientation)
 {
   mUseOrientation->setChecked(useOrientation);
 }
 
-void BriefWidget::update()
+void BriefWidgetImp::update()
 {
 }
 
-void BriefWidget::retranslate()
+void BriefWidgetImp::retranslate()
 {
 
 }
 
-void BriefWidget::reset()
+void BriefWidgetImp::reset()
 {
   const QSignalBlocker blockerBytes(mBytes);
 
@@ -64,7 +88,7 @@ void BriefWidget::reset()
   mUseOrientation->setChecked(false);
 }
 
-void BriefWidget::init()
+void BriefWidgetImp::init()
 {
   this->setWindowTitle("BRIEF");
 

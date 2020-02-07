@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_VGG_WIDGET_H
 #define PHOTOMATCH_VGG_WIDGET_H
 
@@ -13,15 +37,15 @@ namespace photomatch
 /*!
  * \brief Interface for VGG Widgets
  */
-class PHOTOMATCH_EXPORT IVggWidget
+class PHOTOMATCH_EXPORT VggWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IVggWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IVggWidget() = default;
+  VggWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~VggWidget() = default;
 
   virtual QString descriptorType() const = 0;
   virtual double scaleFactor() const = 0;
@@ -52,15 +76,15 @@ public slots:
 
 
 
-class PHOTOMATCH_EXPORT VggWidget
-  : public IVggWidget
+class PHOTOMATCH_EXPORT VggWidgetImp
+  : public VggWidget
 {
   Q_OBJECT
 
 public:
 
-  VggWidget(QWidget *parent = nullptr);
-  ~VggWidget() override;
+  VggWidgetImp(QWidget *parent = nullptr);
+  ~VggWidgetImp() override;
 
 // IVggWidget interface
 

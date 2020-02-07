@@ -18,19 +18,17 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
-  void test_reset();
 
 private:
 
-  ICmbfheWidget *mCmbfheWidget;
+  CmbfheWidget *mCmbfheWidget;
 };
 
 TestCmbfheWidget::TestCmbfheWidget()
-  : mCmbfheWidget(new CmbfheWidget)
+  : mCmbfheWidget(new CmbfheWidgetImp)
 {
 
 }
@@ -45,19 +43,19 @@ TestCmbfheWidget::~TestCmbfheWidget()
 
 void TestCmbfheWidget::initTestCase()
 {
-
+  /// Check default values
+  QCOMPARE(QSize(11, 11), mCmbfheWidget->blockSize());
 }
 
 void TestCmbfheWidget::cleanupTestCase()
 {
+  mCmbfheWidget->setBlockSize(QSize(5, 5));
 
-}
+  mCmbfheWidget->reset();
 
-void TestCmbfheWidget::test_constructor()
-{
-  /// Check default values
   QCOMPARE(QSize(11, 11), mCmbfheWidget->blockSize());
 }
+
 
 void TestCmbfheWidget::test_windowTitle()
 {
@@ -85,14 +83,6 @@ void TestCmbfheWidget::test_tilesGridSize()
   QCOMPARE(result, mCmbfheWidget->blockSize());
 }
 
-void TestCmbfheWidget::test_reset()
-{
-  mCmbfheWidget->setBlockSize(QSize(5, 5));
-
-  mCmbfheWidget->reset();
-
-  QCOMPARE(QSize(11, 11), mCmbfheWidget->blockSize());
-}
 
 
 QTEST_MAIN(TestCmbfheWidget)

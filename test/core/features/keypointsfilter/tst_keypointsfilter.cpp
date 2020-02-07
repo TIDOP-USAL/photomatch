@@ -23,7 +23,6 @@ private slots:
   void test_filterNBest();
   void test_filterBySize();
   void test_filterRemoveDuplicated();
-  void test_reset();
 
 private:
 
@@ -68,7 +67,15 @@ void TestKeypointsFilter::initTestCase()
 
 void TestKeypointsFilter::cleanupTestCase()
 {
+  mKeyPointsFilterNBest.setNPoints(10000);
+  mKeyPointsFilterNBest.reset();
+  QCOMPARE(5000, mKeyPointsFilterNBest.nPoints());
 
+  mKeyPointsFilterBySize.setMinSize(0.5);
+  mKeyPointsFilterBySize.setMaxSize(100.);
+  mKeyPointsFilterBySize.reset();
+  QCOMPARE(0., mKeyPointsFilterBySize.minSize());
+  QCOMPARE(TL_DOUBLE_MAX, mKeyPointsFilterBySize.maxSize());
 }
 
 void TestKeypointsFilter::test_constructor()
@@ -105,30 +112,11 @@ void TestKeypointsFilter::test_filterBySize()
 
 void TestKeypointsFilter::test_filterRemoveDuplicated()
 {
-
+  std::vector<cv::KeyPoint> filtered_keypoints;
+  mKeyPointsFilterRemoveDuplicated.filter(keypoints, filtered_keypoints);
+  QCOMPARE(19, filtered_keypoints.size());
 }
 
-//void TestKeypointsFilter::test_halfSsdSize()
-//{
-//  QFETCH(int, value);
-//  QFETCH(int, result);
-
-//  mLatchDescriptor->setHalfSsdSize(value);
-//  QCOMPARE(result, mLatchDescriptor->halfSsdSize());
-//}
-
-void TestKeypointsFilter::test_reset()
-{
-  mKeyPointsFilterNBest.setNPoints(10000);
-  mKeyPointsFilterNBest.reset();
-  QCOMPARE(5000, mKeyPointsFilterNBest.nPoints());
-
-  mKeyPointsFilterBySize.setMinSize(0.5);
-  mKeyPointsFilterBySize.setMaxSize(100.);
-  mKeyPointsFilterBySize.reset();
-  QCOMPARE(0., mKeyPointsFilterBySize.minSize());
-  QCOMPARE(TL_DOUBLE_MAX, mKeyPointsFilterBySize.maxSize());
-}
 
 QTEST_APPLESS_MAIN(TestKeypointsFilter)
 

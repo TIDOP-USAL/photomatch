@@ -267,6 +267,7 @@ void TestSettingsView::test_keypointsFormat_data()
 
   QTest::newRow("XML") << "XML" << "XML";
   QTest::newRow("YML") << "YML" << "YML";
+  QSKIP("Formato Binary desactivado debido a unos problemas con ciertos descriptores");
   QTest::newRow("Binary") << "Binary" << "Binary";
 }
 
@@ -281,6 +282,8 @@ void TestSettingsView::test_keypointsFormat()
 
 void TestSettingsView::test_keypointsFormatChange()
 {
+  this->mKeypointsFormat->setCurrentText("XML");
+
   QSignalSpy spy_keypointsFormatChange(this, &SettingsView::keypointsFormatChange);
 
   this->mKeypointsFormat->setCurrentText("YML");
@@ -301,6 +304,7 @@ void TestSettingsView::test_matchesFormat_data()
 
   QTest::newRow("XML") << "XML" << "XML";
   QTest::newRow("YML") << "YML" << "YML";
+  QSKIP("Formato Binary desactivado debido a unos problemas con ciertos descriptores");
   QTest::newRow("Binary") << "Binary" << "Binary";
 }
 

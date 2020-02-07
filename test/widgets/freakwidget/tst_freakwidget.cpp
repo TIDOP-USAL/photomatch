@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_windowTitle();
   void test_orientationNormalized_data();
   void test_orientationNormalized();
@@ -28,15 +27,14 @@ private slots:
   void test_patternScale();
   void test_octaves_data();
   void test_octaves();
-  void test_reset();
 
 protected:
 
-  IFreakWidget *mFreakWidget;
+  FreakWidget *mFreakWidget;
 };
 
 TestFreakWidget::TestFreakWidget()
-  : mFreakWidget(new FreakWidget)
+  : mFreakWidget(new FreakWidgetImp)
 {
 
 }
@@ -51,16 +49,21 @@ TestFreakWidget::~TestFreakWidget()
 
 void TestFreakWidget::initTestCase()
 {
-
+  QCOMPARE(true, mFreakWidget->orientationNormalized());
+  QCOMPARE(true, mFreakWidget->scaleNormalized());
+  QCOMPARE(22., mFreakWidget->patternScale());
+  QCOMPARE(4, mFreakWidget->octaves());
 }
 
 void TestFreakWidget::cleanupTestCase()
 {
+  mFreakWidget->setOrientationNormalized(false);
+  mFreakWidget->setScaleNormalized(false);
+  mFreakWidget->setPatternScale(35.);
+  mFreakWidget->setOctaves(8);
 
-}
+  mFreakWidget->reset();
 
-void TestFreakWidget::test_constructor()
-{
   QCOMPARE(true, mFreakWidget->orientationNormalized());
   QCOMPARE(true, mFreakWidget->scaleNormalized());
   QCOMPARE(22., mFreakWidget->patternScale());
@@ -148,20 +151,6 @@ void TestFreakWidget::test_octaves()
   QCOMPARE(result, mFreakWidget->octaves());
 }
 
-void TestFreakWidget::test_reset()
-{
-  mFreakWidget->setOrientationNormalized(false);
-  mFreakWidget->setScaleNormalized(false);
-  mFreakWidget->setPatternScale(35.);
-  mFreakWidget->setOctaves(8);
-
-  mFreakWidget->reset();
-
-  QCOMPARE(true, mFreakWidget->orientationNormalized());
-  QCOMPARE(true, mFreakWidget->scaleNormalized());
-  QCOMPARE(22., mFreakWidget->patternScale());
-  QCOMPARE(4, mFreakWidget->octaves());
-}
 
 QTEST_MAIN(TestFreakWidget)
 

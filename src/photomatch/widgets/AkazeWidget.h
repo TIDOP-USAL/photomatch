@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_AKAZE_WIDGET_H
 #define PHOTOMATCH_AKAZE_WIDGET_H
 
@@ -11,15 +35,15 @@ class QComboBox;
 namespace photomatch
 {
 
-class PHOTOMATCH_EXPORT IAkazeWidget
+class PHOTOMATCH_EXPORT AkazeWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IAkazeWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IAkazeWidget() = default;
+  AkazeWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~AkazeWidget() = default;
 
   /*!
    * \brief Type of the extracted descriptor
@@ -119,15 +143,15 @@ public slots:
 
 };
 
-class PHOTOMATCH_EXPORT AkazeWidget
-  : public IAkazeWidget
+class PHOTOMATCH_EXPORT AkazeWidgetImp
+  : public AkazeWidget
 {
   Q_OBJECT
 
 public:
 
-  AkazeWidget(QWidget *parent = nullptr);
-  ~AkazeWidget() override;
+  AkazeWidgetImp(QWidget *parent = nullptr);
+  ~AkazeWidgetImp() override;
 
 // IAkazeWidget interface
 

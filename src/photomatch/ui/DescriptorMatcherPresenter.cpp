@@ -65,10 +65,10 @@ void DescriptorMatcherPresenter::open()
     return;
   }
 
-  if (Match *matcher = current_session->matcher().get()){
-    if (matcher->type() == Match::Type::brute_force){
+  if (MatchingMethod *matcher = current_session->matchingMethod().get()){
+    if (matcher->type() == MatchingMethod::Type::brute_force){
       mView->setMatchingMethod("Brute-Force");
-      BruteForceMatcher::Norm norm = dynamic_cast<IBruteForceMatcher *>(matcher)->normType();
+      BruteForceMatcherImp::Norm norm = dynamic_cast<BruteForceMatcher *>(matcher)->normType();
       QString s_norm = "NORM_L2";
       if (norm == BruteForceMatcherProperties::Norm::l1) {
         s_norm = "NORM_L1";
@@ -88,55 +88,65 @@ void DescriptorMatcherPresenter::open()
     mView->setNormType(mSettingsModel->matchNormType());
   }
 
+  if (MatchingStrategy *matchingStrategy = current_session->matchingStrategy().get()){
 
-  if (IRobustMatcherRefinement *robustMatcherRefinement = current_session->robustMatcherRefinement().get()){
+    if (matchingStrategy->strategy() == MatchingStrategy::Strategy::robust_matching) {
+      RobustMatcher *robustMatcherRefinement = dynamic_cast<RobustMatcher *>(matchingStrategy);
+      mView->setRatio(robustMatcherRefinement->ratio());
+      mView->setCrossMatching(robustMatcherRefinement->crossCheck());
 
-    mView->setRatio(robustMatcherRefinement->ratio());
-    mView->setCrossMatching(robustMatcherRefinement->crossCheck());
-
-    IRobustMatcherRefinement::GeometricTest geometricTest = robustMatcherRefinement->geometricTest();
-    if (geometricTest == IRobustMatcherRefinement::GeometricTest::homography){
-      mView->setGeometricTest("Homography Matrix");
-      mView->setConfidence(robustMatcherRefinement->confidence());
-      IRobustMatcherRefinement::HomographyComputeMethod hcm = robustMatcherRefinement->homographyComputeMethod();
-      if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::all_points){
-        mView->setHomographyComputeMethod("All Points");
-      } else if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::ransac){
-        mView->setHomographyComputeMethod("RANSAC");
-        mView->setDistance(robustMatcherRefinement->distance());
-        mView->setMaxIters(robustMatcherRefinement->maxIter());
-      } else if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::lmeds){
-        mView->setHomographyComputeMethod("LMedS");
-      } else if (hcm == IRobustMatcherRefinement::HomographyComputeMethod::rho){
-        mView->setHomographyComputeMethod("RHO");
-        mView->setDistance(robustMatcherRefinement->distance());
-      }
-    } else if (geometricTest == IRobustMatcherRefinement::GeometricTest::fundamental){
-      mView->setGeometricTest("Fundamental Matrix");
-      IRobustMatcherRefinement::FundamentalComputeMethod fcm =  robustMatcherRefinement->fundamentalComputeMethod();
-      if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::lmeds){
-        mView->setFundamentalComputeMethod("LMedS");
+      RobustMatcher::GeometricTest geometricTest = robustMatcherRefinement->geometricTest();
+      if (geometricTest == RobustMatcher::GeometricTest::homography){
+        mView->setGeometricTest("Homography Matrix");
         mView->setConfidence(robustMatcherRefinement->confidence());
-      } else if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::ransac){
-        mView->setFundamentalComputeMethod("RANSAC");
-        mView->setDistance(robustMatcherRefinement->distance());
+        RobustMatcher::HomographyComputeMethod hcm = robustMatcherRefinement->homographyComputeMethod();
+        if (hcm == RobustMatcher::HomographyComputeMethod::all_points){
+          mView->setHomographyComputeMethod("All Points");
+        } else if (hcm == RobustMatcher::HomographyComputeMethod::ransac){
+          mView->setHomographyComputeMethod("RANSAC");
+          mView->setDistance(robustMatcherRefinement->distance());
+          mView->setMaxIters(robustMatcherRefinement->maxIter());
+        } else if (hcm == RobustMatcher::HomographyComputeMethod::lmeds){
+          mView->setHomographyComputeMethod("LMedS");
+        } else if (hcm == RobustMatcher::HomographyComputeMethod::rho){
+          mView->setHomographyComputeMethod("RHO");
+          mView->setDistance(robustMatcherRefinement->distance());
+        }
+      } else if (geometricTest == RobustMatcher::GeometricTest::fundamental){
+        mView->setGeometricTest("Fundamental Matrix");
+        RobustMatcher::FundamentalComputeMethod fcm =  robustMatcherRefinement->fundamentalComputeMethod();
+        if (fcm == RobustMatcher::FundamentalComputeMethod::lmeds){
+          mView->setFundamentalComputeMethod("LMedS");
+          mView->setConfidence(robustMatcherRefinement->confidence());
+        } else if (fcm == RobustMatcher::FundamentalComputeMethod::ransac){
+          mView->setFundamentalComputeMethod("RANSAC");
+          mView->setDistance(robustMatcherRefinement->distance());
+          mView->setConfidence(robustMatcherRefinement->confidence());
+        } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_7_point){
+          mView->setFundamentalComputeMethod("7-point algorithm");
+        } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_8_point){
+          mView->setFundamentalComputeMethod("8-point algorithm");
+        }
+      } else if (geometricTest == RobustMatcher::GeometricTest::essential){
+        mView->setGeometricTest("Essential Matrix");
         mView->setConfidence(robustMatcherRefinement->confidence());
-      } else if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point){
-        mView->setFundamentalComputeMethod("7-point algorithm");
-      } else if (fcm == IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point){
-        mView->setFundamentalComputeMethod("8-point algorithm");
+        RobustMatcher::EssentialComputeMethod ecm = robustMatcherRefinement->essentialComputeMethod();
+        if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
+          mView->setEssentialComputeMethod("RANSAC");
+          mView->setDistance(robustMatcherRefinement->distance());
+        } else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
+          mView->setEssentialComputeMethod("LMedS");
+        }
       }
-    } else if (geometricTest == IRobustMatcherRefinement::GeometricTest::essential){
-      mView->setGeometricTest("Essential Matrix");
-      mView->setConfidence(robustMatcherRefinement->confidence());
-      IRobustMatcherRefinement::EssentialComputeMethod ecm = robustMatcherRefinement->essentialComputeMethod();
-      if (ecm == IRobustMatcherRefinement::EssentialComputeMethod::ransac){
-        mView->setEssentialComputeMethod("RANSAC");
-        mView->setDistance(robustMatcherRefinement->distance());
-      } else if (ecm == IRobustMatcherRefinement::EssentialComputeMethod::lmeds){
-        mView->setEssentialComputeMethod("LMedS");
-      }
+
+    } else {
+      Gms *gms = dynamic_cast<Gms *>(matchingStrategy);
+      ///TODO: leer de proyecto o de configuración
+      mView->setGmsScale(gms->scale());
+      mView->setGmsRotation(gms->rotation());
+      mView->setGmsThreshold(gms->threshold());
     }
+
   } else {
     mView->setGeometricTest("Homography Matrix");
     mView->setHomographyComputeMethod("RANSAC");
@@ -149,7 +159,7 @@ void DescriptorMatcherPresenter::open()
   if (Feature *descriptor = current_session->descriptor().get()){
 
     if (descriptor->type() == Feature::Type::akaze){
-      QString descriptorType = dynamic_cast<IAkaze *>(descriptor)->descriptorType();
+      QString descriptorType = dynamic_cast<Akaze *>(descriptor)->descriptorType();
 
       if (descriptorType.compare("KAZE") == 0 ||
           descriptorType.compare("KAZE_UPRIGHT") == 0){
@@ -170,7 +180,7 @@ void DescriptorMatcherPresenter::open()
       mView->enableBruteForceNorm("NORM_HAMMING2");
       mView->setNormType("NORM_HAMMING");
     } else if (descriptor->type() == Feature::Type::orb){
-      int wta_k = dynamic_cast<IOrb *>(descriptor)->wta_k();
+      int wta_k = dynamic_cast<Orb *>(descriptor)->wta_k();
       if (wta_k == 3 || wta_k == 4){
         mView->setNormType("NORM_HAMMING2");
       } else {
@@ -240,7 +250,7 @@ void DescriptorMatcherPresenter::run()
     return;
   }
 
-  if(Match *matcher = current_session->matcher().get()){
+  if(MatchingMethod *matcher = current_session->matchingMethod().get()){
     int i_ret = QMessageBox(QMessageBox::Warning,
                             tr("Previous results"),
                             tr("The previous results will be overwritten. Do you wish to continue?"),
@@ -255,7 +265,7 @@ void DescriptorMatcherPresenter::run()
   QString matchingMethod = mView->matchingMethod();
 
   QString normType = mView->normType();
-  BruteForceMatcher::Norm norm = BruteForceMatcherProperties::Norm::l2;
+  BruteForceMatcherImp::Norm norm = BruteForceMatcherProperties::Norm::l2;
   if (normType.compare("NORM_L1") == 0) {
     norm = BruteForceMatcherProperties::Norm::l1;
   } else if (normType.compare("NORM_L2") == 0) {
@@ -273,13 +283,13 @@ void DescriptorMatcherPresenter::run()
       descriptorMatcher = std::make_shared<BruteForceMatcherCuda>(norm);
     } else {
 #endif // HAVE_CUDA
-      descriptorMatcher = std::make_shared<BruteForceMatcher>(norm);
+      descriptorMatcher = std::make_shared<BruteForceMatcherImp>(norm);
 #ifdef HAVE_CUDA
     }
 #endif // HAVE_CUDA
   } else if (matchingMethod.compare("FLANN") == 0){
 
-    FlannMatcher::Index index;
+    FlannMatcherImp::Index index;
     Feature *descriptor = mProjectModel->currentSession()->descriptor().get();
     if (descriptor->type() == Feature::Type::orb ||
         descriptor->type() == Feature::Type::brief ||
@@ -287,73 +297,73 @@ void DescriptorMatcherPresenter::run()
         descriptor->type() == Feature::Type::latch ||
         descriptor->type() == Feature::Type::lucid ||
         descriptor->type() == Feature::Type::brisk){
-      index = FlannMatcher::Index::lsh;
+      index = FlannMatcherImp::Index::lsh;
     } else if (descriptor->type() == Feature::Type::akaze) {
-      QString descriptorType = dynamic_cast<IAkaze *>(descriptor)->descriptorType();
+      QString descriptorType = dynamic_cast<Akaze *>(descriptor)->descriptorType();
       if (descriptorType.compare("KAZE") == 0 ||
           descriptorType.compare("KAZE_UPRIGHT") == 0){
-        index = FlannMatcher::Index::kdtree;
+        index = FlannMatcherImp::Index::kdtree;
       } else if (descriptorType.compare("MLDB") == 0 ||
                  descriptorType.compare("MLDB_UPRIGHT") == 0){
-        index = FlannMatcher::Index::lsh;
+        index = FlannMatcherImp::Index::lsh;
       }
     } else {
-      index = FlannMatcher::Index::kdtree;
+      index = FlannMatcherImp::Index::kdtree;
     }
 
-    descriptorMatcher = std::make_shared<FlannMatcher>(index);
+    descriptorMatcher = std::make_shared<FlannMatcherImp>(index);
   } else {
     ///TODO: error
     return;
   }
 
-  mProjectModel->setMatcher(std::dynamic_pointer_cast<Match>(descriptorMatcher));
+  mProjectModel->setMatcher(std::dynamic_pointer_cast<MatchingMethod>(descriptorMatcher));
 
   std::shared_ptr<MatchingAlgorithm> matchingAlgorithm;
 
   QString matchingStrategy = mView->matchingStrategy();
   if (matchingStrategy.compare("Robust Matching") == 0){
-    matchingAlgorithm = std::make_shared<RobustMatchingStrategy>(descriptorMatcher);
-    std::shared_ptr<RobustMatchingStrategy> robustMatchingStrategy = std::dynamic_pointer_cast<RobustMatchingStrategy>(matchingAlgorithm);
+    matchingAlgorithm = std::make_shared<RobustMatchingImp>(descriptorMatcher);
+    std::shared_ptr<RobustMatchingImp> robustMatchingStrategy = std::dynamic_pointer_cast<RobustMatchingImp>(matchingAlgorithm);
     robustMatchingStrategy->setRatio(mView->ratio());
     robustMatchingStrategy->setCrossCheck(mView->crossMatching());
     QString geometricTest = mView->geometricTest();
     if (geometricTest == "Homography Matrix"){
-      robustMatchingStrategy->setGeometricTest(IRobustMatcherRefinement::GeometricTest::homography);
+      robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::homography);
       QString computeMethod = mView->homographyComputeMethod();
-      IRobustMatcherRefinement::HomographyComputeMethod hcm = IRobustMatcherRefinement::HomographyComputeMethod::ransac;
+      RobustMatcher::HomographyComputeMethod hcm = RobustMatcher::HomographyComputeMethod::ransac;
       if (computeMethod.compare("All Points") == 0){
-        hcm = IRobustMatcherRefinement::HomographyComputeMethod::all_points;
+        hcm = RobustMatcher::HomographyComputeMethod::all_points;
       } else if (computeMethod.compare("RANSAC") == 0){
-        hcm = IRobustMatcherRefinement::HomographyComputeMethod::ransac;
+        hcm = RobustMatcher::HomographyComputeMethod::ransac;
       } else if (computeMethod.compare("LMedS") == 0){
-        hcm = IRobustMatcherRefinement::HomographyComputeMethod::lmeds;
+        hcm = RobustMatcher::HomographyComputeMethod::lmeds;
       } else if (computeMethod.compare("RHO") == 0){
-        hcm = IRobustMatcherRefinement::HomographyComputeMethod::rho;
+        hcm = RobustMatcher::HomographyComputeMethod::rho;
       }
       robustMatchingStrategy->setHomographyComputeMethod(hcm);
     } else if (geometricTest == "Fundamental Matrix"){
-      robustMatchingStrategy->setGeometricTest(IRobustMatcherRefinement::GeometricTest::fundamental);
+      robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::fundamental);
       QString computeMethod = mView->fundamentalComputeMethod();
-      IRobustMatcherRefinement::FundamentalComputeMethod fcm = IRobustMatcherRefinement::FundamentalComputeMethod::ransac;
+      RobustMatcher::FundamentalComputeMethod fcm = RobustMatcher::FundamentalComputeMethod::ransac;
       if (computeMethod.compare("LMedS") == 0){
-        fcm = IRobustMatcherRefinement::FundamentalComputeMethod::lmeds;
+        fcm = RobustMatcher::FundamentalComputeMethod::lmeds;
       } else if (computeMethod.compare("RANSAC") == 0){
-        fcm = IRobustMatcherRefinement::FundamentalComputeMethod::ransac;
+        fcm = RobustMatcher::FundamentalComputeMethod::ransac;
       } else if (computeMethod.compare("7-point algorithm") == 0){
-        fcm = IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_7_point;
+        fcm = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
       } else if (computeMethod.compare("8-point algorithm") == 0){
-        fcm = IRobustMatcherRefinement::FundamentalComputeMethod::algorithm_8_point;
+        fcm = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
       }
       robustMatchingStrategy->setFundamentalComputeMethod(fcm);
     } else if (geometricTest == "Essential Matrix"){
-      robustMatchingStrategy->setGeometricTest(IRobustMatcherRefinement::GeometricTest::essential);
+      robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::essential);
       QString computeMethod = mView->essentialComputeMethod();
-      IRobustMatcherRefinement::EssentialComputeMethod ecm = IRobustMatcherRefinement::EssentialComputeMethod::ransac;
+      RobustMatcher::EssentialComputeMethod ecm = RobustMatcher::EssentialComputeMethod::ransac;
       if (computeMethod.compare("RANSAC") == 0){
-        ecm = IRobustMatcherRefinement::EssentialComputeMethod::ransac;
+        ecm = RobustMatcher::EssentialComputeMethod::ransac;
       } else if (computeMethod.compare("LMedS") == 0){
-        ecm = IRobustMatcherRefinement::EssentialComputeMethod::lmeds;
+        ecm = RobustMatcher::EssentialComputeMethod::lmeds;
       }
       robustMatchingStrategy->setEssentialComputeMethod(ecm);
     }
@@ -362,10 +372,10 @@ void DescriptorMatcherPresenter::run()
     robustMatchingStrategy->setMaxIters(mView->maxIters());
   } else {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1)
-    matchingAlgorithm = std::make_shared<GsmStrategy>(descriptorMatcher,
-                                                      mView->gmsRotation(),
-                                                      mView->gmsScale(),
-                                                      mView->gmsThreshold());
+    matchingAlgorithm = std::make_shared<GsmImp>(descriptorMatcher,
+                                                 mView->gmsRotation(),
+                                                 mView->gmsScale(),
+                                                 mView->gmsThreshold());
 #else
     int i_ret = QMessageBox(QMessageBox::Information,
                             tr("GMS not supported"),

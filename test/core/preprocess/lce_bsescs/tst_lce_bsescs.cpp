@@ -18,12 +18,13 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
   void test_tilesGridSize();
-  void test_reset();
 
 private:
 
@@ -44,6 +45,20 @@ TestLceBsescs::~TestLceBsescs()
   }
 }
 
+void TestLceBsescs::initTestCase()
+{
+  QCOMPARE(QSize(33, 33), mLceBsescsPreprocess->blockSize());
+}
+
+void TestLceBsescs::cleanupTestCase()
+{
+  mLceBsescsPreprocess->setBlockSize(QSize(5, 5));
+
+  mLceBsescsPreprocess->reset();
+
+  QCOMPARE(QSize(33, 33), mLceBsescsPreprocess->blockSize());
+}
+
 void TestLceBsescs::test_constructors()
 {
   LceBsescsPreprocess lceBsescsPreprocess;
@@ -58,7 +73,7 @@ void TestLceBsescs::test_constructors()
 
 void TestLceBsescs::test_type()
 {
-  QCOMPARE(IAcebsf::Type::lce_bsescs, mLceBsescsPreprocess->type());
+  QCOMPARE(Acebsf::Type::lce_bsescs, mLceBsescsPreprocess->type());
 }
 
 void TestLceBsescs::test_name()
@@ -82,15 +97,6 @@ void TestLceBsescs::test_tilesGridSize()
 
   mLceBsescsPreprocess->setBlockSize(value);
   QCOMPARE(result, mLceBsescsPreprocess->blockSize());
-}
-
-void TestLceBsescs::test_reset()
-{
-  mLceBsescsPreprocess->setBlockSize(QSize(5, 5));
-
-  mLceBsescsPreprocess->reset();
-
-  QCOMPARE(QSize(33, 33), mLceBsescsPreprocess->blockSize());
 }
 
 

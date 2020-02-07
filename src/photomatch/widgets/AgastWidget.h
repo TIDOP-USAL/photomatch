@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #ifndef PHOTOMATCH_AGAST_WIDGET_H
 #define PHOTOMATCH_AGAST_WIDGET_H
 
@@ -20,15 +44,15 @@ namespace photomatch
  * ecture Notes in Computer Science, vol 6312. Springer, Berlin, Heidelberg
  * https://mediatum.ub.tum.de/doc/1287456/1287456.pdf
  */
-class PHOTOMATCH_EXPORT IAgastWidget
+class PHOTOMATCH_EXPORT AgastWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
 
 public:
 
-  IAgastWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
-  virtual ~IAgastWidget() = default;
+  AgastWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~AgastWidget() = default;
 
   /*!
    * \brief threshold
@@ -93,15 +117,15 @@ public slots:
 
 };
 
-class PHOTOMATCH_EXPORT AgastWidget
-  : public IAgastWidget
+class PHOTOMATCH_EXPORT AgastWidgetImp
+  : public AgastWidget
 {
   Q_OBJECT
 
 public:
 
-  AgastWidget(QWidget *parent = nullptr);
-  ~AgastWidget() override;
+  AgastWidgetImp(QWidget *parent = nullptr);
+  ~AgastWidgetImp() override;
 
 // IFastWidget interface
 

@@ -42,7 +42,6 @@ private slots:
   void test_diffusivity();
   void test_diffusivity2_data();
   void test_diffusivity2();
-  void test_reset();
 };
 
 TestAkazeDetectorDescriptor::TestAkazeDetectorDescriptor()
@@ -57,12 +56,41 @@ TestAkazeDetectorDescriptor::~TestAkazeDetectorDescriptor()
 
 void TestAkazeDetectorDescriptor::initTestCase()
 {
-
+  QCOMPARE("MLDB", this->descriptorType());
+  QCOMPARE(0, this->descriptorSize());
+  QCOMPARE(3, this->descriptorChannels());
+  qFuzzyCompare(0.001, this->threshold());
+  QCOMPARE(4, this->octaves());
+  QCOMPARE(4, this->octaveLayers());
+  QCOMPARE("DIFF_PM_G2", this->diffusivity());
 }
 
 void TestAkazeDetectorDescriptor::cleanupTestCase()
 {
+  this->setDescriptorType("KAZE");
+  this->setDescriptorSize(32);
+  this->setDescriptorChannels(2);
+  this->setThreshold(50.);
+  this->setOctaves(2);
+  this->setOctaveLayers(5);
+  this->setDiffusivity("DIFF_PM_G1");
 
+  this->reset();
+
+  QCOMPARE("MLDB", this->descriptorType());
+  QCOMPARE(5, this->mAkaze->getDescriptorType());
+  QCOMPARE(0, this->descriptorSize());
+  QCOMPARE(0, this->mAkaze->getDescriptorSize());
+  QCOMPARE(3, this->descriptorChannels());
+  QCOMPARE(3, this->mAkaze->getDescriptorChannels());
+  qFuzzyCompare(0.001, this->threshold());
+  qFuzzyCompare(0.001, this->mAkaze->getThreshold());
+  QCOMPARE(4, this->octaves());
+  QCOMPARE(4, mAkaze->getNOctaves());
+  QCOMPARE(4, this->octaveLayers());
+  QCOMPARE(4, this->mAkaze->getNOctaveLayers());
+  QCOMPARE("DIFF_PM_G2", this->diffusivity());
+  QCOMPARE(1, this->mAkaze->getDiffusivity());
 }
 
 void TestAkazeDetectorDescriptor::test_defaultConstructor()
@@ -72,12 +100,7 @@ void TestAkazeDetectorDescriptor::test_defaultConstructor()
   QCOMPARE("MLDB", akazeDetectorDescriptor.descriptorType());
   QCOMPARE(0, akazeDetectorDescriptor.descriptorSize());
   QCOMPARE(3, akazeDetectorDescriptor.descriptorChannels());
-  /// No se porque da error el test cuando los valores son iguales
-  /// TestAkazeDetectorDescriptor::testDefaultConstructor
-  //  Compared doubles are not the same (fuzzy compare)
-  //     Actual   (0.001)                              : 0.001
-  //     Expected (akazeDetectorDescriptor.threshold()): 0.001
-  //QCOMPARE(0.001, akazeDetectorDescriptor.threshold());
+  qFuzzyCompare(0.001, akazeDetectorDescriptor.threshold());
   QCOMPARE(4, akazeDetectorDescriptor.octaves());
   QCOMPARE(4, akazeDetectorDescriptor.octaveLayers());
   QCOMPARE("DIFF_PM_G2", akazeDetectorDescriptor.diffusivity());
@@ -294,34 +317,6 @@ void TestAkazeDetectorDescriptor::test_diffusivity2()
 
   this->setDiffusivity(value);
   QCOMPARE(result, this->mAkaze->getDiffusivity());
-}
-
-void TestAkazeDetectorDescriptor::test_reset()
-{
-  this->setDescriptorType("KAZE");
-  this->setDescriptorSize(32);
-  this->setDescriptorChannels(2);
-  this->setThreshold(50.);
-  this->setOctaves(2);
-  this->setOctaveLayers(5);
-  this->setDiffusivity("DIFF_PM_G1");
-
-  this->reset();
-
-  QCOMPARE("MLDB", this->descriptorType());
-  QCOMPARE(5, this->mAkaze->getDescriptorType());
-  QCOMPARE(0, this->descriptorSize());
-  QCOMPARE(0, this->mAkaze->getDescriptorSize());
-  QCOMPARE(3, this->descriptorChannels());
-  QCOMPARE(3, this->mAkaze->getDescriptorChannels());
-  //QCOMPARE(0.001, mAkazeDetectorDescriptor->threshold());
-  //QCOMPARE(0.001, this->mAkaze->getThreshold());
-  QCOMPARE(4, this->octaves());
-  QCOMPARE(4, mAkaze->getNOctaves());
-  QCOMPARE(4, this->octaveLayers());
-  QCOMPARE(4, this->mAkaze->getNOctaveLayers());
-  QCOMPARE("DIFF_PM_G2", this->diffusivity());
-  QCOMPARE(1, this->mAkaze->getDiffusivity());
 }
 
 QTEST_APPLESS_MAIN(TestAkazeDetectorDescriptor)

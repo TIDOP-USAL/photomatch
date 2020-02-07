@@ -7,7 +7,7 @@
 
 using namespace photomatch;
 
-class TestBriskWidgetSignals : public BriskWidget
+class TestBriskWidgetSignals : public BriskWidgetImp
 {
     Q_OBJECT
 
@@ -20,14 +20,14 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testThresholdChange();
-  void testOctavesChange();
-  void testPatternScaleChange();
-  void testReset();
+  void test_thresholdChange();
+  void test_octavesChange();
+  void test_patternScaleChange();
+
 };
 
 TestBriskWidgetSignals::TestBriskWidgetSignals()
-  : BriskWidget()
+  : BriskWidgetImp()
 {
 
 }
@@ -44,12 +44,24 @@ void TestBriskWidgetSignals::initTestCase()
 
 void TestBriskWidgetSignals::cleanupTestCase()
 {
+  QSignalSpy spyThresholdChange(this, &BriskWidgetImp::thresholdChange);
+  QSignalSpy spyOctavesChange(this, &BriskWidgetImp::octavesChange);
+  QSignalSpy spyPatternScaleChange(this, &BriskWidgetImp::patternScaleChange);
 
+  this->setThreshold(20);
+  this->setOctaves(4);
+  this->setPatternScale(50.);
+
+  this->reset();
+
+  QCOMPARE(spyThresholdChange.count(), 0);
+  QCOMPARE(spyOctavesChange.count(), 0);
+  QCOMPARE(spyPatternScaleChange.count(), 0);
 }
 
-void TestBriskWidgetSignals::testThresholdChange()
+void TestBriskWidgetSignals::test_thresholdChange()
 {
-  QSignalSpy spyThresholdChange(this, &BriskWidget::thresholdChange);
+  QSignalSpy spyThresholdChange(this, &BriskWidgetImp::thresholdChange);
 
   mThreshold->setValue(20);
 
@@ -62,9 +74,9 @@ void TestBriskWidgetSignals::testThresholdChange()
   QCOMPARE(spyThresholdChange.count(), 0);
 }
 
-void TestBriskWidgetSignals::testOctavesChange()
+void TestBriskWidgetSignals::test_octavesChange()
 {
-  QSignalSpy spyOctavesChange(this, &BriskWidget::octavesChange);
+  QSignalSpy spyOctavesChange(this, &BriskWidgetImp::octavesChange);
 
   mOctaves->setValue(8);
 
@@ -77,9 +89,9 @@ void TestBriskWidgetSignals::testOctavesChange()
   QCOMPARE(spyOctavesChange.count(), 0);
 }
 
-void TestBriskWidgetSignals::testPatternScaleChange()
+void TestBriskWidgetSignals::test_patternScaleChange()
 {
-  QSignalSpy spyPatternScaleChange(this, &BriskWidget::patternScaleChange);
+  QSignalSpy spyPatternScaleChange(this, &BriskWidgetImp::patternScaleChange);
 
   mPatternScale->setValue(20.);
 
@@ -92,22 +104,7 @@ void TestBriskWidgetSignals::testPatternScaleChange()
   QCOMPARE(spyPatternScaleChange.count(), 0);
 }
 
-void TestBriskWidgetSignals::testReset()
-{
-  QSignalSpy spyThresholdChange(this, &BriskWidget::thresholdChange);
-  QSignalSpy spyOctavesChange(this, &BriskWidget::octavesChange);
-  QSignalSpy spyPatternScaleChange(this, &BriskWidget::patternScaleChange);
 
-  this->setThreshold(20);
-  this->setOctaves(4);
-  this->setPatternScale(50.);
-
-  this->reset();
-
-  QCOMPARE(spyThresholdChange.count(), 0);
-  QCOMPARE(spyOctavesChange.count(), 0);
-  QCOMPARE(spyPatternScaleChange.count(), 0);
-}
 
 QTEST_MAIN(TestBriskWidgetSignals)
 

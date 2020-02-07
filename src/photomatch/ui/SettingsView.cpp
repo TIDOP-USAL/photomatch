@@ -111,6 +111,8 @@ void SettingsView::onPreprocessChange(const QString &method)
         item->widget()->setVisible(false);
     }
   }
+  mListWidgetPreprocess->setMinimumHeight(150);
+  mListWidgetPreprocess->setMaximumHeight(150);
 }
 
 void SettingsView::onFeatureDetectorDescriptorChange(const QString &method)
@@ -124,6 +126,8 @@ void SettingsView::onFeatureDetectorDescriptorChange(const QString &method)
         item->widget()->setVisible(false);
     }
   }
+  mListWidgetFeatures->setMinimumHeight(150);
+  mListWidgetFeatures->setMaximumHeight(150);
 }
 
 void SettingsView::onPushButtonImageViewerBGColorClicked()
@@ -290,13 +294,13 @@ void SettingsView::init()
   QWidget *scrollAreaWidgetContentsToolsGeneral = new QWidget(this);
   QGridLayout *gridLayoutContentsToolsGeneral = new QGridLayout(scrollAreaWidgetContentsToolsGeneral);
   gridLayoutContentsToolsGeneral->addWidget(new QLabel(tr("Keypoints Format")), 0, 0, 1, 1);
-  mKeypointsFormat->addItem("Binary");
+  //mKeypointsFormat->addItem("Binary");
   mKeypointsFormat->addItem("XML");
   mKeypointsFormat->addItem("YML");
   mKeypointsFormat->setCurrentText("XML");
   gridLayoutContentsToolsGeneral->addWidget(mKeypointsFormat, 0, 1, 1, 1);
   gridLayoutContentsToolsGeneral->addWidget(new QLabel(tr("Matches Format")), 1, 0, 1, 1);
-  mMatchesFormat->addItem("Binary");
+  //mMatchesFormat->addItem("Binary");
   mMatchesFormat->addItem("XML");
   mMatchesFormat->addItem("YML");
   mMatchesFormat->setCurrentText("XML");

@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "FeatureExtractorProcess.h"
 
 #include <tidop/core/messages.h>
@@ -11,14 +35,16 @@
 namespace photomatch
 {
 
-FeatureExtractor::FeatureExtractor(const QString &img, const QString &features, double scale,
+FeatureExtractor::FeatureExtractor(const QString &image,
+                                   const QString &features,
+                                   double imageScale,
                                    const std::shared_ptr<KeypointDetector> &keypointDetector,
                                    const std::shared_ptr<DescriptorExtractor> &descriptorExtractor,
                                    const std::list<std::shared_ptr<KeyPointsFilterProcess>> &keyPointsFiltersProcess)
   : ProcessConcurrent(),
-    mImage(img),
+    mImage(image),
     mFeatures(features),
-    mScale(scale),
+    mImageScale(imageScale),
     mKeypointDetector(keypointDetector),
     mDescriptorExtractor(descriptorExtractor),
     mKeyPointsFiltersProcess(keyPointsFiltersProcess)
@@ -61,19 +87,27 @@ void FeatureExtractor::run()
   const char *img_file = ba.data();
   cv::Mat img = cv::imread(img_file, cv::IMREAD_IGNORE_ORIENTATION);
 
-  if (img.empty()) return;
+  if (img.empty()) {
+    emit error(0, QString("Could not load image :").append(mImage));
+    return;
+  }
 
-  if (mKeypointDetector == nullptr) return;
-
-  msgInfo("Searching Keypoints for image %s", img_file);
-  tl::Chrono chrono;
-  chrono.run();
-  std::vector<cv::KeyPoint> key_points;
-  bool _error = mKeypointDetector->detect(img, key_points);
-  if (_error){
+  if (mKeypointDetector == nullptr) {
     emit error(0, "Keypoint Detector error");
     return;
   }
+
+  msgInfo("Searching Keypoints for image %s", img_file);
+
+  tl::Chrono chrono;
+  chrono.run();
+
+  std::vector<cv::KeyPoint> key_points;
+  if (bool _error = mKeypointDetector->detect(img, key_points)){
+    emit error(0, "Keypoint Detector error");
+    return;
+  }
+
   uint64_t time = chrono.stop();
   msgInfo("%i Keypoints detected in image %s [Time: %f seconds]", key_points.size(), img_file, time/1000.);
 
@@ -82,23 +116,28 @@ void FeatureExtractor::run()
     filter->filter(key_points, key_points);
   }
 
-  if (mDescriptorExtractor == nullptr) return;
-
-  msgInfo("Computing keypoints descriptors for image %s", img_file);
-  chrono.reset();
-  chrono.run();
-  cv::Mat descriptors;
-  _error = mDescriptorExtractor->extract(img, key_points, descriptors);
-  if (_error){
-    emit error(0, "Keypoint Descriptor error");
+  if (mDescriptorExtractor == nullptr) {
+    emit error(0, "Descriptor Extractor Error");
     return;
   }
+
+  msgInfo("Computing keypoints descriptors for image %s", img_file);
+
+  chrono.reset();
+  chrono.run();
+
+  cv::Mat descriptors;
+  if (bool _error = mDescriptorExtractor->extract(img, key_points, descriptors)){
+    emit error(0, "Descriptor Extractor Error");
+    return;
+  }
+
   time = chrono.stop();
   msgInfo("Descriptors computed for image %s [Time: %f seconds]", img_file, time/1000.);
 
   for (size_t i = 0; i < key_points.size(); i++){
-    key_points[i].pt *= mScale;
-    key_points[i].size *= static_cast<float>(mScale);
+    key_points[i].pt *= mImageScale;
+    key_points[i].size *= static_cast<float>(mImageScale);
   }
 
   featuresWrite(mFeatures, key_points, descriptors);

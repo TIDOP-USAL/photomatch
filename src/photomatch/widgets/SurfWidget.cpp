@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "SurfWidget.h"
 
 #include <QSpinBox>
@@ -10,8 +34,8 @@
 namespace photomatch
 {
 
-SurfWidget::SurfWidget(QWidget *parent)
-  : ISurfWidget(parent),
+SurfWidgetImp::SurfWidgetImp(QWidget *parent)
+  : SurfWidget(parent),
     mHessianThreshold(new QDoubleSpinBox(this)),
     mOctaves(new QSpinBox(this)),
     mOctaveLayers(new QSpinBox(this)),
@@ -28,73 +52,73 @@ SurfWidget::SurfWidget(QWidget *parent)
   connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(uprightChange(bool)));
 }
 
-SurfWidget::~SurfWidget()
+SurfWidgetImp::~SurfWidgetImp()
 {
 }
 
-double SurfWidget::hessianThreshold() const
+double SurfWidgetImp::hessianThreshold() const
 {
   return mHessianThreshold->value();
 }
 
-int SurfWidget::octaves() const
+int SurfWidgetImp::octaves() const
 {
   return mOctaves->value();
 }
 
-int SurfWidget::octaveLayers() const
+int SurfWidgetImp::octaveLayers() const
 {
   return mOctaveLayers->value();
 }
 
-bool SurfWidget::extendedDescriptor() const
+bool SurfWidgetImp::extendedDescriptor() const
 {
   return mExtendedDescriptor->isChecked();
 }
 
-bool SurfWidget::upright() const
+bool SurfWidgetImp::upright() const
 {
   return mUpright->isChecked();
 }
 
-void SurfWidget::setHessianThreshold(double hessianThreshold)
+void SurfWidgetImp::setHessianThreshold(double hessianThreshold)
 {
   const QSignalBlocker blockerHessianThreshold(mHessianThreshold);
   mHessianThreshold->setValue(hessianThreshold);
 }
 
-void SurfWidget::setOctaves(int octaves)
+void SurfWidgetImp::setOctaves(int octaves)
 {
   const QSignalBlocker blockerOctaves(mOctaves);
   mOctaves->setValue(octaves);
 }
 
-void SurfWidget::setOctaveLayers(int octaveLayers)
+void SurfWidgetImp::setOctaveLayers(int octaveLayers)
 {
   const QSignalBlocker blockerOctaveLayers(mOctaveLayers);
   mOctaveLayers->setValue(octaveLayers);
 }
 
-void SurfWidget::setExtendedDescriptor(bool extendedDescriptor)
+void SurfWidgetImp::setExtendedDescriptor(bool extendedDescriptor)
 {
   mExtendedDescriptor->setChecked(extendedDescriptor);
 }
 
-void SurfWidget::seUpright(bool upright)
+void SurfWidgetImp::seUpright(bool upright)
 {
   mUpright->setChecked(upright);
 }
 
-void SurfWidget::update()
+void SurfWidgetImp::update()
 {
 }
 
-void SurfWidget::retranslate()
+void SurfWidgetImp::retranslate()
 {
 
 }
 
-void SurfWidget::reset()
+void SurfWidgetImp::reset()
 {
   const QSignalBlocker blockerHessianThreshold(mHessianThreshold);
   const QSignalBlocker blockerOctaves(mOctaves);
@@ -107,7 +131,7 @@ void SurfWidget::reset()
   mUpright->setChecked(false);
 }
 
-void SurfWidget::init()
+void SurfWidgetImp::init()
 {
   this->setWindowTitle("SURF");
 
