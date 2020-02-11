@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "MainWindowModel.h"
 
 #include "photomatch/core/features/features.h"
@@ -118,9 +142,9 @@ std::vector<QPointF> MainWindowModel::loadKeyPointsCoordinates(const QString &fi
 {
   std::vector<QPointF> keyPoints;
 
-  std::vector<cv::KeyPoint> cvKeyPoints;
-  cv::Mat descriptors;
-  featuresRead(file, cvKeyPoints, descriptors);
+  std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(file);
+  featuresRead->read();
+  std::vector<cv::KeyPoint> cvKeyPoints = featuresRead->keyPoints();
 
   if (cvKeyPoints.size() > 0){
 
@@ -139,9 +163,9 @@ std::vector<std::tuple<QPointF, double, double>> MainWindowModel::loadKeyPoints(
 {
   std::vector<std::tuple<QPointF, double, double>> keyPoints;
 
-  std::vector<cv::KeyPoint> cvKeyPoints;
-  cv::Mat descriptors;
-  featuresRead(file, cvKeyPoints, descriptors);
+  std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(file);
+  featuresRead->read();
+  std::vector<cv::KeyPoint> cvKeyPoints = featuresRead->keyPoints();
 
   if (cvKeyPoints.size() > 0){
 
@@ -164,10 +188,14 @@ std::vector<std::pair<QPointF, QPointF> > MainWindowModel::loadMatches(const QSt
 
   std::vector<cv::DMatch> match;
   matchesRead(fileMatches, &match);
-  std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
-  cv::Mat descriptors;
-  featuresRead(fileKeyPoints1, keyPoints1, descriptors);
-  featuresRead(fileKeyPoints2, keyPoints2, descriptors);
+
+  std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(fileKeyPoints1);
+  featuresRead->read();
+  std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+  featuresRead = FeaturesReaderFactory::createReader(fileKeyPoints2);
+  featuresRead->read();
+  std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
+
   /// Un tanto artificioso.... Revisar
   QString nameMatchesFile = QFileInfo(fileMatches).baseName();
   QString nameKeyPoints1File = QFileInfo(fileKeyPoints1).baseName();

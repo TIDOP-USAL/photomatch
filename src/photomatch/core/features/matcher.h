@@ -879,7 +879,7 @@ protected:
  * \param[in] wrongMatches Wrong matches
  */
 PHOTOMATCH_EXPORT void matchesWrite(const QString &fname,
-                                    const std::vector<cv::DMatch> &matches,
+                                    const std::vector<cv::DMatch> &goodMatches,
                                     const std::vector<cv::DMatch> &wrongMatches = std::vector<cv::DMatch>());
 
 /*!
