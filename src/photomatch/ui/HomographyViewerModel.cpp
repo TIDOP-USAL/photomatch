@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "HomographyViewerModel.h"
 
 #include <tidop/core/messages.h>
@@ -86,11 +110,17 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
         if (m.first.compare(imgName2) == 0){
           std::vector<cv::DMatch> match;
           matchesRead(m.second, &match);
-          std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
-          cv::Mat descriptors;
-          featuresRead(session->features(imgName1), keyPoints1, descriptors);
-          featuresRead(session->features(imgName2), keyPoints2, descriptors);
-          descriptors.release();
+//          std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
+//          cv::Mat descriptors;
+//          featuresRead(session->features(imgName1), keyPoints1, descriptors);
+//          featuresRead(session->features(imgName2), keyPoints2, descriptors);
+//          descriptors.release();
+          std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(session->features(imgName1));
+          featuresRead->read();
+          std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+          featuresRead = FeaturesReaderFactory::createReader(session->features(imgName2));
+          featuresRead->read();
+          std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
 
           /// Un tanto artificioso.... Revisar
           QString nameMatchesFile = QFileInfo(m.second).baseName();

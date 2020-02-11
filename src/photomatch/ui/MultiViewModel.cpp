@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "MultiViewModel.h"
 
 #include "photomatch/ui/ProjectModel.h"
@@ -74,14 +98,11 @@ std::vector<std::pair<QString, QPointF>> MultiViewModel::images(size_t passPoint
         size_t pt_id = static_cast<size_t>(mPassPoints[passPointId][j].second);
         for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++) {
           if ((*it)->name().compare(img_name) == 0){
-            /// Fichero imagen
             QString img_file = (*it)->path();
 
-            /// Busqueda del punto
-            std::vector<cv::KeyPoint> keyPoints;
-            cv::Mat descriptors;
-            featuresRead(session->features(img_name), keyPoints, descriptors);
-            descriptors.release();
+            std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(session->features(img_name));
+            featuresRead->read();
+            std::vector<cv::KeyPoint> keyPoints = featuresRead->keyPoints();
 
             QPointF pt(static_cast<double>(keyPoints[pt_id].pt.x),
                        static_cast<double>(keyPoints[pt_id].pt.y));

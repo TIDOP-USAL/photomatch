@@ -140,7 +140,11 @@ void FeatureExtractor::run()
     key_points[i].size *= static_cast<float>(mImageScale);
   }
 
-  featuresWrite(mFeatures, key_points, descriptors);
+  std::unique_ptr<FeaturesWriter> writer = FeaturesWriterFactory::createWriter(mFeatures);
+  writer->setKeyPoints(key_points);
+  writer->setDescriptors(descriptors);
+  writer->write();
+  //featuresWrite(mFeatures, key_points, descriptors);
   ba = mFeatures.toLocal8Bit();
   const char *cfeat = ba.data();
   msgInfo("Write features at: %s", cfeat);

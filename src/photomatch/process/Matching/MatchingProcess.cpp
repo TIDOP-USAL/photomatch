@@ -83,38 +83,44 @@ void MatchingProcess::setMatches(const QString &matches)
 
 void MatchingProcess::run()
 {
+  try {
 
-  std::vector<cv::KeyPoint> keyPoints1;
-  cv::Mat descriptors1;
-  featuresRead(mQueryDescriptors, keyPoints1, descriptors1);
+    std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(mQueryDescriptors);
+    featuresRead->read();
+    std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+    cv::Mat descriptors1 = featuresRead->descriptors();
 
-  std::vector<cv::KeyPoint> keyPoints2;
-  cv::Mat descriptors2;
-  featuresRead(mTrainDescriptors, keyPoints2, descriptors2);
+    featuresRead = FeaturesReaderFactory::createReader(mTrainDescriptors);
+    featuresRead->read();
+    std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
+    cv::Mat descriptors2 = featuresRead->descriptors();
 
-  std::vector<cv::DMatch> wrongMatches;
-  std::vector<cv::DMatch> goodMatches;
+    std::vector<cv::DMatch> wrongMatches;
+    std::vector<cv::DMatch> goodMatches;
 
-  QSize query_size;
-  QSize train_size;
-  if (mQueryImage.isEmpty() == false && mTrainImage.isEmpty() == false){
-    QImageReader imageReader(mQueryImage);
-    query_size = imageReader.size();
-    imageReader.setFileName(mTrainImage);
-    train_size = imageReader.size();
+    QSize query_size;
+    QSize train_size;
+    if (mQueryImage.isEmpty() == false && mTrainImage.isEmpty() == false){
+      QImageReader imageReader(mQueryImage);
+      query_size = imageReader.size();
+      imageReader.setFileName(mTrainImage);
+      train_size = imageReader.size();
+    }
+
+    mDescriptorMatcher->compute(descriptors1, descriptors2, keyPoints1, keyPoints2, &goodMatches, &wrongMatches, query_size, train_size);
+
+    matchesWrite(mMatches, goodMatches, wrongMatches);
+
+    QByteArray ba = mMatches.toLocal8Bit();
+    const char *cfeat = ba.data();
+    msgInfo("Write matches at: %s", cfeat);
+
+    emit matchCompute(QFileInfo(mQueryDescriptors).baseName(), QFileInfo(mTrainDescriptors).baseName(), mMatches);
+    emit statusChangedNext();
+
+  } catch (std::exception &e) {
+    msgError(e.what());
   }
-
-  mDescriptorMatcher->compute(descriptors1, descriptors2, keyPoints1, keyPoints2, &goodMatches, &wrongMatches, query_size, train_size);
-
-  matchesWrite(mMatches, goodMatches, wrongMatches);
-
-  QByteArray ba = mMatches.toLocal8Bit();
-  const char *cfeat = ba.data();
-  msgInfo("Write matches at: %s", cfeat);
-
-  emit matchCompute(QFileInfo(mQueryDescriptors).baseName(), QFileInfo(mTrainDescriptors).baseName(), mMatches);
-  emit statusChangedNext();
-
 }
 
 QString MatchingProcess::trainImage() const

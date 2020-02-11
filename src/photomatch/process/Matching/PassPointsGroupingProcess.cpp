@@ -54,13 +54,15 @@ void PassPointsGroupingProcess::run()
     QString matches;
     std::tie(features1, features2, matches) = pair;
 
-    std::vector<cv::KeyPoint> keyPoints1;
-    cv::Mat descriptors1;
-    featuresRead(features1, keyPoints1, descriptors1);
+    std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(features1);
+    featuresRead->read();
+    std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+    cv::Mat descriptors1 = featuresRead->descriptors();
 
-    std::vector<cv::KeyPoint> keyPoints2;
-    cv::Mat descriptors2;
-    featuresRead(features2, keyPoints2, descriptors2);
+    featuresRead = FeaturesReaderFactory::createReader(features2);
+    featuresRead->read();
+    std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
+    cv::Mat descriptors2 = featuresRead->descriptors();
 
     std::vector<cv::DMatch> match;
     matchesRead(matches, &match);
@@ -76,38 +78,51 @@ void PassPointsGroupingProcess::run()
       idx2 = match[i].trainIdx;
 
       //Busqueda de si ya esta añadido ese punto
-      bool b_exist_pt1 = false;
-      bool b_exist_pt2 = false;
+
+      bool b_new_point = true;
       for (size_t id_pp = 0; id_pp < idx_pass_points.size(); id_pp++) {
 
+        bool b_exist_pt1 = false;
+        bool b_exist_image1 = false;
+        bool b_exist_pt2 = false;
+        bool b_exist_image2 = false;
         for (size_t j = 0; j < idx_pass_points[id_pp].size(); j++){
 
-          if (idx_pass_points[id_pp][j].first.compare(idImage1) == 0 && idx_pass_points[id_pp][j].second == idx1) {
-            b_exist_pt1 = true;
+          if (idx_pass_points[id_pp][j].first.compare(idImage1) == 0) {
+            if (idx_pass_points[id_pp][j].second == idx1) {
+              b_exist_pt1 = true;
+            } 
+            b_exist_image1 = true;
           }
 
-          if (idx_pass_points[id_pp][j].first.compare(idImage2) == 0 && idx_pass_points[id_pp][j].second == idx2){
-            b_exist_pt2 = true;
+          if (idx_pass_points[id_pp][j].first.compare(idImage2) == 0) {
+            if (idx_pass_points[id_pp][j].second == idx2) {
+              b_exist_pt2 = true;
+            }
+            b_exist_image2 = true;
           }
 
-          if (b_exist_pt1 == true && b_exist_pt2 == true){
+          if (b_exist_pt1 == true && b_exist_pt2 == true) {
             break;
           }
         }
 
-        if (b_exist_pt1 == true && b_exist_pt2 == false){
+        if (b_exist_pt1 == true && (b_exist_pt2 == false && b_exist_image2 == false)) {
           idx_pass_points[id_pp].push_back(std::make_pair(idImage2,idx2));
+          b_new_point = false;
           break;
-        } else if (b_exist_pt1 == false && b_exist_pt2 == true){
+        } else if ((b_exist_pt1 == false && b_exist_image1 == false) && b_exist_pt2 == true) {
           idx_pass_points[id_pp].push_back(std::make_pair(idImage1,idx1));
+          b_new_point = false;
           break;
-        } else if (b_exist_pt1 == true && b_exist_pt2 == true){
+        } else if (b_exist_pt1 == true && b_exist_pt2 == true) {
+          b_new_point = false;
           break;
         }
 
       }
 
-      if (b_exist_pt1 == false && b_exist_pt2 == false){
+      if (b_new_point){
         std::vector<std::pair<QString,int>> pass_point;
         pass_point.push_back(std::make_pair(idImage1,idx1));
         pass_point.push_back(std::make_pair(idImage2,idx2));

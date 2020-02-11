@@ -514,6 +514,8 @@ std::vector<cv::DMatch> RobustMatchingImp::geometricFilter(const std::vector<cv:
     pts2[igm] = keypoints2[static_cast<size_t>(matches[igm].trainIdx)].pt;
   }
 
+  ///TODO: Sería mejor 3 clases GeometricTest (GeometricTestHomography, GeometricTestFundamental y GeometricTestEssential)
+  ///      Se crearia una clase GeometricTestFactory que cree la clase adecuada
   RobustMatcher::GeometricTest geometric_test = RobustMatchingProperties::geometricTest();
   if (geometric_test == RobustMatcher::GeometricTest::essential) {
 
@@ -855,70 +857,214 @@ bool GsmImp::compute(const cv::Mat &queryDescriptor,
 
 
 
+void matchesWriteOpenCV(const char *matchesFile,
+                        const std::vector<cv::DMatch> &goodMatches,
+                        const std::vector<cv::DMatch> &wrongMatches,
+                        int flags)
+{
+  cv::FileStorage fs(matchesFile, flags);
+  if (fs.isOpened()) {
+    if (!goodMatches.empty()) write(fs, "matches", goodMatches);
+    if (!wrongMatches.empty()) write(fs, "wrong_matches", wrongMatches);
+    fs.release();
+  } else {
+    //msgError("No pudo escribir archivo %s", matches_file);
+  }
+}
+
+void writeMatchesXml(const char *matchesFile,
+                     const std::vector<cv::DMatch> &goodMatches,
+                     const std::vector<cv::DMatch> &wrongMatches)
+{
+  matchesWriteOpenCV(matchesFile, goodMatches, wrongMatches, cv::FileStorage::WRITE | cv::FileStorage::FORMAT_XML);
+}
+
+void writeMatchesYml(const char *matchesFile,
+                     const std::vector<cv::DMatch> &goodMatches,
+                     const std::vector<cv::DMatch> &wrongMatches)
+{
+  matchesWriteOpenCV(matchesFile, goodMatches, wrongMatches, cv::FileStorage::WRITE | cv::FileStorage::FORMAT_YAML);
+}
+
+void matchesWriteBinHeader(FILE *fp,
+                           const std::vector<cv::DMatch> &goodMatches,
+                           const std::vector<cv::DMatch> &wrongMatches)
+{
+  uint64_t size = goodMatches.size();
+  uint64_t size_wm = wrongMatches.size();
+  std::fwrite("TIDOPLIB-Matching-#01", sizeof("TIDOPLIB-Matching-#01"), 1, fp);
+  std::fwrite(&size, sizeof(uint64_t), 1, fp);
+  std::fwrite(&size_wm, sizeof(uint64_t), 1, fp);
+  char extraHead[100]; // Reserva de espacio para futuros usos
+  std::fwrite(&extraHead, sizeof(char), 100, fp);
+}
+
+void matchesWriteBinaryGoodMatches(FILE *fp,
+                                   const std::vector<cv::DMatch> &goodMatches)
+{
+  for (size_t i = 0; i < goodMatches.size(); i++) {
+    std::fwrite(&goodMatches[i].queryIdx, sizeof(int32_t), 1, fp);
+    std::fwrite(&goodMatches[i].trainIdx, sizeof(int32_t), 1, fp);
+    std::fwrite(&goodMatches[i].imgIdx, sizeof(int32_t), 1, fp);
+    std::fwrite(&goodMatches[i].distance, sizeof(float), 1, fp);
+  }
+}
+
+void matchesWriteBinaryWrongMatches(FILE *fp,
+                                    const std::vector<cv::DMatch> &wrongMatches)
+{
+  for (size_t i = 0; i < wrongMatches.size(); i++) {
+    std::fwrite(&wrongMatches[i].queryIdx, sizeof(int32_t), 1, fp);
+    std::fwrite(&wrongMatches[i].trainIdx, sizeof(int32_t), 1, fp);
+    std::fwrite(&wrongMatches[i].imgIdx, sizeof(int32_t), 1, fp);
+    std::fwrite(&wrongMatches[i].distance, sizeof(float), 1, fp);
+  }
+}
+
+void matchesWriteBinary(const char *matchesFile,
+                     const std::vector<cv::DMatch> &goodMatches,
+                     const std::vector<cv::DMatch> &wrongMatches)
+{
+  FILE *fp = std::fopen(matchesFile, "wb");
+  if (fp) {
+    matchesWriteBinHeader(fp, goodMatches, wrongMatches);
+    matchesWriteBinaryGoodMatches(fp, goodMatches);
+    matchesWriteBinaryWrongMatches(fp, wrongMatches);
+    std::fclose(fp);
+  } else {
+    //msgError("No pudo escribir archivo %s", matches_file);
+  }
+}
+
 void matchesWrite(const QString &fname,
-                  const std::vector<cv::DMatch> &matches,
+                  const std::vector<cv::DMatch> &goodMatches,
                   const std::vector<cv::DMatch> &wrongMatches)
 {
 
   QByteArray ba = fname.toLocal8Bit();
   const char *matches_file = ba.data();
   QString ext = QFileInfo(fname).suffix();
-  int flags = 0;
   if (ext.compare("xml") == 0) {
-    flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_XML;
+    writeMatchesXml(matches_file, goodMatches, wrongMatches);
   } else if (ext.compare("yml") == 0) {
-    flags = cv::FileStorage::WRITE | cv::FileStorage::FORMAT_YAML;
+    writeMatchesYml(matches_file, goodMatches, wrongMatches);
   } else if (ext.compare("bin") == 0) {
-
+    matchesWriteBinary(matches_file, goodMatches, wrongMatches);
   } else {
     ba = ext.toLocal8Bit();
     const char *cext = ba.data();
     msgError("file extension '%s' not valid", cext);
     return;
   }
+}
 
-  if (ext.compare("bin") == 0) {
-    FILE* fp = std::fopen(matches_file, "wb");
-    if (fp) {
-      // Cabecera
-      uint64_t size = matches.size();
-      uint64_t size_wm = wrongMatches.size();
-      std::fwrite("TIDOPLIB-Matching-#01", sizeof("TIDOPLIB-Matching-#01"), 1, fp);
-      std::fwrite(&size, sizeof(uint64_t), 1, fp);
-      std::fwrite(&size_wm, sizeof(uint64_t), 1, fp);
-      char extraHead[100]; // Reserva de espacio para futuros usos
-      std::fwrite(&extraHead, sizeof(char), 100, fp);
-      //Cuerpo
-      for (size_t i = 0; i < size; i++) {
-        std::fwrite(&matches[i].queryIdx, sizeof(int32_t), 1, fp);
-        std::fwrite(&matches[i].trainIdx, sizeof(int32_t), 1, fp);
-        std::fwrite(&matches[i].imgIdx, sizeof(int32_t), 1, fp);
-        std::fwrite(&matches[i].distance, sizeof(float), 1, fp);
-      }
-      for (size_t i = 0; i < size_wm; i++) {
-        std::fwrite(&wrongMatches[i].queryIdx, sizeof(int32_t), 1, fp);
-        std::fwrite(&wrongMatches[i].trainIdx, sizeof(int32_t), 1, fp);
-        std::fwrite(&wrongMatches[i].imgIdx, sizeof(int32_t), 1, fp);
-        std::fwrite(&wrongMatches[i].distance, sizeof(float), 1, fp);
-      }
-      std::fclose(fp);
-    } else {
-      //msgError("No pudo escribir archivo %s", matches_file);
-    }
+void matchesReadOpenCVGoodMatches(cv::FileStorage &fs,
+                                  std::vector<cv::DMatch> *goodMatches)
+{
+  if (goodMatches) {
+    goodMatches->resize(0);
+    fs["matches"] >> *goodMatches;
+  }
+}
+
+void matchesReadOpenCVWrongMatches(cv::FileStorage &fs,
+                                   std::vector<cv::DMatch> *wrongMatches)
+{
+  if (wrongMatches) {
+    wrongMatches->resize(0);
+    fs["wrong_matches"] >> *wrongMatches;
+  }
+}
+
+void matchesReadOpenCV(const char *featFile,
+                       std::vector<cv::DMatch> *goodMatches,
+                       std::vector<cv::DMatch> *wrongMatches)
+{
+  cv::FileStorage fs(featFile, cv::FileStorage::READ);
+  if (fs.isOpened()) {
+    matchesReadOpenCVGoodMatches(fs, goodMatches);
+    matchesReadOpenCVWrongMatches(fs, wrongMatches);
   } else {
-    cv::FileStorage fs(matches_file, flags);
-    if (fs.isOpened()) {
-      if (!matches.empty()) write(fs, "matches", matches);
-      if (!wrongMatches.empty()) write(fs, "wrong_matches", wrongMatches);
-      fs.release();
-    } else {
-      //msgError("No pudo escribir archivo %s", matches_file);
+    //msgError("No pudo leer archivo %s", fname.c_str());
+  }
+}
+
+void matchesReadXml(const char *featFile,
+                    std::vector<cv::DMatch> *goodMatches,
+                    std::vector<cv::DMatch> *wrongMatches)
+{
+  matchesReadOpenCV(featFile, goodMatches, wrongMatches);
+}
+
+void matchesReadYml(const char *featFile,
+                    std::vector<cv::DMatch> *goodMatches,
+                    std::vector<cv::DMatch> *wrongMatches)
+{
+  matchesReadOpenCV(featFile, goodMatches, wrongMatches);
+}
+
+void matchesReadBinaryHeader(FILE *fp, uint64_t *sizeGoodMatches, uint64_t *sizeWrongMatches)
+{
+  char h[22];
+  char extraHead[100];
+  std::fread(h, sizeof(char), 22, fp);
+  std::fread(&sizeGoodMatches, sizeof(uint64_t), 1, fp);
+  std::fread(&sizeWrongMatches, sizeof(uint64_t), 1, fp);
+  std::fread(&extraHead, sizeof(char), 100, fp);
+}
+
+void matchesReadGoodMatches(FILE *fp,
+                            std::vector<cv::DMatch> *goodMatches)
+{
+  if (goodMatches){
+    for (auto &match : *goodMatches) {
+      std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+      std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+      std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+      std::fread(&match.distance, sizeof(float), 1, fp);
     }
   }
 }
 
+void matchesReadWrongMatches(FILE *fp,
+                          std::vector<cv::DMatch> *wrongMatches)
+{
+  if (wrongMatches){
+    for (auto &match : *wrongMatches) {
+      std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
+      std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
+      std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
+      std::fread(&match.distance, sizeof(float), 1, fp);
+    }
+  }
+}
+
+void matchesReadBinary(const char *featFile,
+                       std::vector<cv::DMatch> *goodMatches,
+                       std::vector<cv::DMatch> *wrongMatches)
+{
+  if (FILE *fp = std::fopen(featFile, "rb")) {
+    uint64_t sizeGoodMatches;
+    uint64_t sizeWrongMatches;
+    matchesReadBinaryHeader(fp, &sizeGoodMatches, &sizeWrongMatches);
+    if (goodMatches) {
+      goodMatches->resize(static_cast<size_t>(sizeGoodMatches));
+      matchesReadGoodMatches(fp, goodMatches);
+    } else {
+      std::fseek(fp, sizeof(int32_t)*3*sizeof(float)*sizeGoodMatches, SEEK_CUR);
+    }
+    if (wrongMatches){
+      wrongMatches->resize(static_cast<size_t>(sizeWrongMatches));
+      matchesReadWrongMatches(fp, wrongMatches);
+    }
+
+
+    std::fclose(fp);
+  }
+}
+
 void matchesRead(const QString &fname,
-                 std::vector<cv::DMatch> *matches,
+                 std::vector<cv::DMatch> *goodMatches,
                  std::vector<cv::DMatch> *wrongMatches)
 {
   QByteArray ba = fname.toLocal8Bit();
@@ -926,57 +1072,11 @@ void matchesRead(const QString &fname,
   QString ext = QFileInfo(fname).suffix();
   if (ext.isEmpty() == false) {
     if (ext.compare("bin") == 0) {
-      if (FILE* fp = std::fopen(feat_file, "rb")) {
-        //cabecera
-        char h[22];
-        uint64_t size;
-        uint64_t size_wm;
-        char extraHead[100];
-        std::fread(h, sizeof(char), 22, fp);
-        std::fread(&size, sizeof(uint64_t), 1, fp);
-        std::fread(&size_wm, sizeof(uint64_t), 1, fp);
-        std::fread(&extraHead, sizeof(char), 100, fp);
-        //Cuerpo
-        if (matches){
-          matches->resize(static_cast<size_t>(size));
-          for (auto &match : *matches) {
-            std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.distance, sizeof(float), 1, fp);
-          }
-        } else {
-          std::fseek(fp, sizeof(int32_t)*3*sizeof(float)*size, SEEK_CUR);
-        }
-        if (wrongMatches){
-          wrongMatches->resize(static_cast<size_t>(size_wm));
-          for (auto &match : *wrongMatches) {
-            std::fread(&match.queryIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.trainIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.imgIdx, sizeof(int32_t), 1, fp);
-            std::fread(&match.distance, sizeof(float), 1, fp);
-          }
-        }
-
-        std::fclose(fp);
-      } /*else
-        msgError("No pudo leer archivo %s", fname);*/
-    } else if (ext.compare("xml") == 0 || ext.compare("yml") == 0) {
-
-      cv::FileStorage fs(feat_file, cv::FileStorage::READ);
-      if (fs.isOpened()) {
-        if (matches) {
-          matches->resize(0);
-          fs["matches"] >> *matches;
-        }
-        if (wrongMatches) {
-          wrongMatches->resize(0);
-          fs["wrong_matches"] >> *wrongMatches;
-        }
-        fs.release();
-      } else {
-        //msgError("No pudo leer archivo %s", fname.c_str());
-      }
+      matchesReadBinary(feat_file, goodMatches, wrongMatches);
+    } else if (ext.compare("xml") == 0){
+      matchesReadXml(feat_file, goodMatches, wrongMatches);
+    } else if (ext.compare("yml") == 0) {
+      matchesReadYml(feat_file, goodMatches, wrongMatches);
     }
   } /*else msgError("Fichero no valido: %s", fname);*/
 }

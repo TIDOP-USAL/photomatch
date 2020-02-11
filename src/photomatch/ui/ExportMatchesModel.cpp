@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "ExportMatchesModel.h"
 
 #include "photomatch/core/features/matcher.h"
@@ -76,10 +100,10 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
         for (auto &feat : session->features()){
           QString image_id = QFileInfo(feat).baseName();
 
-          std::vector<cv::KeyPoint> keyPoints;
-          cv::Mat descriptors;
-          featuresRead(feat, keyPoints, descriptors);
-          descriptors.release();
+          std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(feat);
+          featuresRead->read();
+          std::vector<cv::KeyPoint> keyPoints = featuresRead->keyPoints();
+          featuresRead.reset(nullptr);
 
           for (size_t i = 0; i < pass_points.size(); i++) {
 
@@ -108,10 +132,13 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
           QString image_id = QFileInfo(feat).baseName();
           ofs << image_id.toStdString() << std::endl;
 
-          std::vector<cv::KeyPoint> keyPoints;
-          cv::Mat descriptors;
-          featuresRead(feat, keyPoints, descriptors);
-          descriptors.release();
+//          std::vector<cv::KeyPoint> keyPoints;
+//          cv::Mat descriptors;
+//          featuresRead(feat, keyPoints, descriptors);
+//          descriptors.release();
+          std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(feat);
+          featuresRead->read();
+          std::vector<cv::KeyPoint> keyPoints = featuresRead->keyPoints();
 
           for (size_t i = 0; i < pass_points.size(); i++) {
 

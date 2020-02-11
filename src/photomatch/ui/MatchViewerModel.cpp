@@ -1,3 +1,27 @@
+/************************************************************************
+ *                                                                      *
+ * Copyright 2020 by Tidop Research Group <daguilera@usal.se>           *
+ *                                                                      *
+ * This file is part of PhotoMatch                                      *
+ *                                                                      *
+ * PhotoMatch is free software: you can redistribute it and/or modify   *
+ * it under the terms of the GNU General Public License as published by *
+ * the Free Software Foundation, either version 3 of the License, or    *
+ * (at your option) any later version.                                  *
+ *                                                                      *
+ * PhotoMatch is distributed in the hope that it will be useful,        *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        *
+ * GNU General Public License for more details.                         *
+ *                                                                      *
+ * You should have received a copy of the GNU General Public License    *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ *                                                                      *
+ * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ *                                                                      *
+ ************************************************************************/
+
+
 #include "MatchViewerModel.h"
 
 #include "photomatch/ui/ProjectModel.h"
@@ -68,11 +92,12 @@ MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) 
 
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
 
-    std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
-    cv::Mat descriptors;
-    featuresRead(session->features(imgName1), keyPoints1, descriptors);
-    featuresRead(session->features(imgName2), keyPoints2, descriptors);
-    descriptors.release();
+    std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(session->features(imgName1));
+    featuresRead->read();
+    std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+    featuresRead = FeaturesReaderFactory::createReader(session->features(imgName2));
+    featuresRead->read();
+    std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
 
     std::vector<std::pair<QString, QString>> matches = session->matches(imgName1);
     std::vector<cv::DMatch> match;
