@@ -18,6 +18,8 @@ add_executable(${the_target}
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicItem.cpp
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicItem.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/TabHandler.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/TabHandler.h
     )
 
 target_link_libraries(${the_target} PRIVATE
