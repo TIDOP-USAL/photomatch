@@ -165,17 +165,17 @@ void TestDescriptorMatcherWidgetSignals::test_geometricTestChange()
 {
   QSignalSpy spy_geometricTestChange(this, &DescriptorMatcherWidgetImp::geometricTestChange);
 
-  this->mGeometricTest->setCurrentText("Fundamental Matrix");
+  this->mGeometricTest->setCurrentText("Homography Matrix");
 
   QCOMPARE(spy_geometricTestChange.count(), 1);
 
   QList<QVariant> args = spy_geometricTestChange.takeFirst();
-  QCOMPARE(args.at(0).toString(), "Fundamental Matrix");
+  QCOMPARE(args.at(0).toString(), "Homography Matrix");
 
-  this->mGeometricTest->setCurrentText("Fundamental Matrix");
+  this->mGeometricTest->setCurrentText("Homography Matrix");
   QCOMPARE(spy_geometricTestChange.count(), 0);
 
-  this->setGeometricTest("Essential Matrix");
+  this->setGeometricTest("Fundamental Matrix");
   QCOMPARE(spy_geometricTestChange.count(), 0);
 }
 

@@ -31,7 +31,7 @@
 namespace photomatch
 {
 
-MultiViewPresenter::MultiViewPresenter(IMultiViewView *view,
+MultiViewPresenter::MultiViewPresenter(IMultiviewView *view,
                                        IMultiViewModel *model)
   : IMultiViewPresenter(),
     mView(view),

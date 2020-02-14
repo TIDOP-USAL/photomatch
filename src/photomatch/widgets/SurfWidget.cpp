@@ -49,7 +49,7 @@ SurfWidgetImp::SurfWidgetImp(QWidget *parent)
   connect(mOctaves,             SIGNAL(valueChanged(int)),       this, SIGNAL(octavesChange(int)));
   connect(mOctaveLayers,        SIGNAL(valueChanged(int)),       this, SIGNAL(octaveLayersChange(int)));
   connect(mExtendedDescriptor,  SIGNAL(clicked(bool)),           this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(uprightChange(bool)));
+  connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(rotatedFeaturesChange(bool)));
 }
 
 SurfWidgetImp::~SurfWidgetImp()

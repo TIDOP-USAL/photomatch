@@ -22,90 +22,110 @@
  ************************************************************************/
 
 
-#ifndef PHOTOMATCH_THUMBNAILS_WIDGET_H
-#define PHOTOMATCH_THUMBNAILS_WIDGET_H
+#ifndef MATCHIO_H
+#define MATCHIO_H
 
-#include <QImage>
+#include "photomatch/photomatch_global.h"
 
-#include "photomatch/widgets/PhotoMatchWidget.h"
+#include <memory>
 
-class QListWidget;
-class QListWidgetItem;
-class QGridLayout;
-template <typename T> class QFutureWatcher;
+#include <QString>
+
+#include <opencv2/features2d.hpp>
 
 namespace photomatch
 {
 
-class PHOTOMATCH_EXPORT ThumbnailsWidget
-  : public PhotoMatchWidget
+
+
+class PHOTOMATCH_EXPORT MatchesReader
 {
-  Q_OBJECT
 
 public:
 
-  explicit ThumbnailsWidget(QWidget *parent = nullptr);
-  virtual ~ThumbnailsWidget() override {}
+  MatchesReader(const QString &fileName);
+  virtual ~MatchesReader() = default;
 
-  void setActiveImage(const QString &image);
-  void setActiveImages(const QStringList &images);
+  virtual bool read() = 0;
 
-signals:
-
-  void openImage(QString);
-  void selectImage(QString);
-  void selectImages(QStringList);
-  void deleteImages(QStringList);
-  void imagesLoaded();
-
-public slots:
-
-  void addThumbnail(const QString &thumb);
-  void addThumbnails(const QStringList &thumb);
-  void deleteThumbnail(const QString &thumb);
-  void clear();
-
-private slots:
-
-  void onThumbnailDoubleClicked(QListWidgetItem *item);
-  void onSelectionChanged();
-
-  void onThumbnailToggled(bool active);
-  void onThumbnailSmallToggled(bool active);
-  void onDetailsToggled(bool active);
-  void onDeleteImageClicked();
-
-  void showThumbnail(int id);
-  void finished();
-
-// PhotoMatchWidget interface
-
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
-private:
-
-  virtual void init() override;
+  std::vector<cv::DMatch> goodMatches() const;
+  std::vector<cv::DMatch> wrongMatches() const;
 
 protected:
 
-  QListWidget *mListWidget;
-  QGridLayout *mGridLayout;
-  QSize mIconSize;
-  QAction *mThumbnailAction;
-  QAction *mThumbnailSmallAction;
-  QAction *mDetailsAction;
-  QAction *mDeleteImageAction;
-  QFutureWatcher<QImage> *mFutureWatcherThumbnail;
-  int mThumbnaislSize;
+  QString mFileName;
+  std::vector<cv::DMatch> mGoodMatches;
+  std::vector<cv::DMatch> mWrongMatches;
 };
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT MatchesWriter
+{
+
+public:
+
+  MatchesWriter(const QString &fileName);
+  virtual ~MatchesWriter() = default;
+
+  virtual bool write() = 0;
+
+  void setGoodMatches(const std::vector<cv::DMatch> &goodMatches);
+  void setWrongMatches(const std::vector<cv::DMatch> &wrongMatches);
+
+protected:
+
+  QString mFileName;
+  std::vector<cv::DMatch> mGoodMatches;
+  std::vector<cv::DMatch> mWrongMatches;
+};
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT MatchesReaderFactory
+{
+
+private:
+
+  MatchesReaderFactory() {}
+
+public:
+
+  static std::unique_ptr<MatchesReader> createReader(const QString &fileName);
+};
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT MatchesWriterFactory
+{
+public:
+
+private:
+
+  MatchesWriterFactory() {}
+
+public:
+
+  static std::unique_ptr<MatchesWriter> createWriter(const QString &fileName);
+};
+
+
+
+
 
 } // namespace photomatch
 
-#endif // PHOTOMATCH_THUMBNAILS_WIDGET_H
+
+#endif // MATCHIO_H

@@ -26,9 +26,11 @@
 
 #include <tidop/core/messages.h>
 
-#include "photomatch/ui/ProjectModel.h"
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
 #include "photomatch/core/utils.h"
 #include "photomatch/core/features/evaluation.h"
+#include "photomatch/ui/ProjectModel.h"
 
 #include <opencv2/features2d.hpp>
 #include <opencv2/calib3d.hpp>
@@ -179,9 +181,12 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
       for (auto &m : matches){
         if (m.first.compare(imgRight) == 0){
 
-          std::vector<cv::DMatch> goodMatches;
-          std::vector<cv::DMatch> wrongMatches;
-          matchesRead(m.second, &goodMatches, &wrongMatches);
+          ///TODO: Codigo repetido
+          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+          matchesReader->read();
+          std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
+          std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
+          matchesReader.reset();
 
           std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
           featuresRead->read();
@@ -311,14 +316,12 @@ double PRCurvesViewerModel::computeCurve(const QString &session, const QString &
       for (auto &m : matches){
         if (m.first.compare(imgRight) == 0) {
 
-          std::vector<cv::DMatch> goodMatches;
-          std::vector<cv::DMatch> wrongMatches;
-          matchesRead(m.second, &goodMatches, &wrongMatches);
+          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+          matchesReader->read();
+          std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
+          std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
+          matchesReader.reset();
 
-//          std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
-//          cv::Mat descriptors;
-//          featuresRead(_session->features(imgLeft), keyPoints1, descriptors);
-//          featuresRead(_session->features(imgRight), keyPoints2, descriptors);
           std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
           featuresRead->read();
           std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
@@ -444,14 +447,12 @@ double DETCurvesViewerModel::computeCurve(const QString &session, const QString 
       for (auto &m : matches){
         if (m.first.compare(imgRight) == 0) {
 
-          std::vector<cv::DMatch> goodMatches;
-          std::vector<cv::DMatch> wrongMatches;
-          matchesRead(m.second, &goodMatches, &wrongMatches);
+          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+          matchesReader->read();
+          std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
+          std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
+          matchesReader.reset();
 
-//          std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
-//          cv::Mat descriptors;
-//          featuresRead(_session->features(imgLeft), keyPoints1, descriptors);
-//          featuresRead(_session->features(imgRight), keyPoints2, descriptors);
           std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
           featuresRead->read();
           std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();

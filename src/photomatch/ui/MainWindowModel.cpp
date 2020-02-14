@@ -24,8 +24,9 @@
 
 #include "MainWindowModel.h"
 
-#include "photomatch/core/features/features.h"
-#include "photomatch/core/features/matcher.h"
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
+//#include "photomatch/core/features/matcher.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <tidop/core/messages.h>
@@ -186,8 +187,10 @@ std::vector<std::pair<QPointF, QPointF> > MainWindowModel::loadMatches(const QSt
 {
   std::vector<std::pair<QPointF, QPointF>> r_matches;
 
-  std::vector<cv::DMatch> match;
-  matchesRead(fileMatches, &match);
+  std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(fileMatches);
+  matchesReader->read();
+  std::vector<cv::DMatch> match = matchesReader->goodMatches();
+  matchesReader.reset();
 
   std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(fileKeyPoints1);
   featuresRead->read();

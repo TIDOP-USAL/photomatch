@@ -73,7 +73,7 @@ void TestDescriptorMatcherWidget::initTestCase()
   QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
   QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
   QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
-  QCOMPARE("Homography Matrix", mDescriptorMatcherWidget->geometricTest());
+  QCOMPARE("Fundamental Matrix", mDescriptorMatcherWidget->geometricTest());
   QCOMPARE("RANSAC", mDescriptorMatcherWidget->homographyComputeMethod());
   QCOMPARE("RANSAC", mDescriptorMatcherWidget->fundamentalComputeMethod());
   QCOMPARE("RANSAC", mDescriptorMatcherWidget->essentialComputeMethod());
@@ -91,7 +91,7 @@ void TestDescriptorMatcherWidget::cleanupTestCase()
   mDescriptorMatcherWidget->setMatchingMethod("FLANN");
   mDescriptorMatcherWidget->setNormType("NORM_L2");
   mDescriptorMatcherWidget->setRatio(0.5);
-  mDescriptorMatcherWidget->setGeometricTest("Fundamental Matrix");
+  mDescriptorMatcherWidget->setGeometricTest("Homography Matrix");
   mDescriptorMatcherWidget->setHomographyComputeMethod("All Points");
   mDescriptorMatcherWidget->setFundamentalComputeMethod("LMedS");
   mDescriptorMatcherWidget->setEssentialComputeMethod("LMedS");
@@ -108,7 +108,7 @@ void TestDescriptorMatcherWidget::cleanupTestCase()
   QCOMPARE("Brute-Force", mDescriptorMatcherWidget->matchingMethod());
   QCOMPARE("NORM_L1", mDescriptorMatcherWidget->normType());
   QCOMPARE(0.8, mDescriptorMatcherWidget->ratio());
-  QCOMPARE("Homography Matrix", mDescriptorMatcherWidget->geometricTest());
+  QCOMPARE("Fundamental Matrix", mDescriptorMatcherWidget->geometricTest());
   QCOMPARE("RANSAC", mDescriptorMatcherWidget->homographyComputeMethod());
   QCOMPARE("RANSAC", mDescriptorMatcherWidget->fundamentalComputeMethod());
   QCOMPARE("RANSAC", mDescriptorMatcherWidget->essentialComputeMethod());

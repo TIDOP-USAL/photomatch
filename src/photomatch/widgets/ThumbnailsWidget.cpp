@@ -68,7 +68,8 @@ ThumbnailsWidget::ThumbnailsWidget(QWidget *parent)
     mGridLayout(new QGridLayout(this)),
     mThumbnailAction(nullptr),
     mDetailsAction(nullptr),
-    mDeleteImageAction(nullptr)
+    mDeleteImageAction(nullptr),
+    mThumbnaislSize(0)
 {
   init();
 
@@ -251,14 +252,14 @@ void ThumbnailsWidget::onDeleteImageClicked()
     for (const auto &item : mListWidget->selectedItems()){
       selectImages.push_back(item->toolTip());
     }
-
     emit deleteImages(selectImages);
   }
+  mThumbnaislSize = mListWidget->count();
 }
 
 void ThumbnailsWidget::showThumbnail(int id)
 {
-  QListWidgetItem *item = mListWidget->item(id);
+  QListWidgetItem *item = mListWidget->item(mThumbnaislSize+id);
   QPixmap pixmap = QPixmap::fromImage(mFutureWatcherThumbnail->resultAt(id));
   QIcon icon(pixmap);
   item->setIcon(icon);
@@ -266,7 +267,8 @@ void ThumbnailsWidget::showThumbnail(int id)
 
 void ThumbnailsWidget::finished()
 {
-
+  mThumbnaislSize = mListWidget->count();
+  emit imagesLoaded();
 }
 
 void ThumbnailsWidget::update()
@@ -285,6 +287,7 @@ void ThumbnailsWidget::reset()
     mFutureWatcherThumbnail->cancel();
   }
   mListWidget->clear();
+  mThumbnaislSize = 0;
 }
 
 /* Private */

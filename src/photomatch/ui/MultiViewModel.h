@@ -55,7 +55,7 @@ public:
 
 
 
-class MultiViewModel
+class MultiviewModel
   : public IMultiViewModel
 {
 
@@ -63,8 +63,8 @@ class MultiViewModel
 
 public:
 
-  MultiViewModel(IProjectModel *mProjectModel);
-  ~MultiViewModel() override;
+  MultiviewModel(IProjectModel *mProjectModel);
+  ~MultiviewModel() override;
 
 // IMatchViewerModel interface
 

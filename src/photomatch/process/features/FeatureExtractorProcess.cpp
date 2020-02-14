@@ -26,6 +26,8 @@
 
 #include <tidop/core/messages.h>
 
+#include "photomatch/core/features/featio.h"
+
 #include <opencv2/core.hpp>
 #include <opencv2/features2d.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -144,7 +146,7 @@ void FeatureExtractor::run()
   writer->setKeyPoints(key_points);
   writer->setDescriptors(descriptors);
   writer->write();
-  //featuresWrite(mFeatures, key_points, descriptors);
+
   ba = mFeatures.toLocal8Bit();
   const char *cfeat = ba.data();
   msgInfo("Write features at: %s", cfeat);

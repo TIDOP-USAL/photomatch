@@ -24,10 +24,12 @@
 
 #include "HomographyViewerModel.h"
 
-#include <tidop/core/messages.h>
-
-#include "photomatch/ui/ProjectModel.h"
 #include "photomatch/core/utils.h"
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
+#include "photomatch/ui/ProjectModel.h"
+
+#include <tidop/core/messages.h>
 
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
@@ -108,13 +110,11 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
     if (!matches.empty()){
       for (auto &m : matches){
         if (m.first.compare(imgName2) == 0){
-          std::vector<cv::DMatch> match;
-          matchesRead(m.second, &match);
-//          std::vector<cv::KeyPoint> keyPoints1, keyPoints2;
-//          cv::Mat descriptors;
-//          featuresRead(session->features(imgName1), keyPoints1, descriptors);
-//          featuresRead(session->features(imgName2), keyPoints2, descriptors);
-//          descriptors.release();
+          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+          matchesReader->read();
+          std::vector<cv::DMatch> match = matchesReader->goodMatches();
+          matchesReader.reset();
+
           std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(session->features(imgName1));
           featuresRead->read();
           std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();

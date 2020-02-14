@@ -162,6 +162,7 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mThumbnailsWidget,  SIGNAL(selectImage(QString)),      this, SIGNAL(selectImage(QString)));
   connect(mThumbnailsWidget,  SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
   connect(mThumbnailsWidget,  SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
+  connect(mThumbnailsWidget,  SIGNAL(imagesLoaded()),            this, SIGNAL(imagesLoaded()));
 
   connect(mTreeWidgetProject, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTreeContextMenu(const QPoint &)));
   connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
@@ -1177,6 +1178,7 @@ void MainWindowView::update()
   bool bProjectModified = mFlags.isActive(Flag::project_modified);
   bool bImageOpen = mFlags.isActive(Flag::image_open);
   bool bProcessing = mFlags.isActive(Flag::processing);
+  bool bLoadingImages = mFlags.isActive(Flag::loading_images);
 
   mActionNewProject->setEnabled(!bProcessing);
   mActionOpenProject->setEnabled(!bProcessing);
@@ -1211,6 +1213,8 @@ void MainWindowView::update()
   mComboBoxActiveSession->setDisabled(bProcessing);
   mActionSetSession->setDisabled(bProcessing);
   mActionDeleteSession->setDisabled(bProcessing);
+
+  mActionLoadImages->setDisabled(bLoadingImages);
 }
 
 void MainWindowView::openFromHistory()
@@ -1551,7 +1555,7 @@ void MainWindowView::init()
 
   mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
 
-  mActionPassPointsViewer->setText(QApplication::translate("MainWindowView", "Pass Points Viewer", nullptr));
+  mActionPassPointsViewer->setText(QApplication::translate("MainWindowView", "Multiview Matching Assessment", nullptr));
 
   mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
 

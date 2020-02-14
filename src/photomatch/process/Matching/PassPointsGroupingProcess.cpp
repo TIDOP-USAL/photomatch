@@ -24,7 +24,8 @@
 
 #include "PassPointsGroupingProcess.h"
 
-#include "photomatch/core/features/features.h"
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
 #include "photomatch/core/features/matcher.h"
 
 #include <tidop/core/messages.h>
@@ -64,8 +65,10 @@ void PassPointsGroupingProcess::run()
     std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
     cv::Mat descriptors2 = featuresRead->descriptors();
 
-    std::vector<cv::DMatch> match;
-    matchesRead(matches, &match);
+    std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(matches);
+    matchesReader->read();
+    std::vector<cv::DMatch> match = matchesReader->goodMatches();
+    matchesReader.reset();
 
     QString idImage1 = QFileInfo(features1).baseName();
     QString idImage2 = QFileInfo(features2).baseName();

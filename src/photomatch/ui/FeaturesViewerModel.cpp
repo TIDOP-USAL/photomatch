@@ -24,6 +24,7 @@
 
 #include "FeaturesViewerModel.h"
 
+#include "photomatch/core/features/featio.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <tidop/core/messages.h>

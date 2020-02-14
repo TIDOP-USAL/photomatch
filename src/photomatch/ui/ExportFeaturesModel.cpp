@@ -25,6 +25,7 @@
 #include "ExportFeaturesModel.h"
 
 #include "photomatch/ui/ProjectModel.h"
+#include "photomatch/core/features/featio.h"
 
 #include <QImageReader>
 #include <QFileInfo>

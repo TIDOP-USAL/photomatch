@@ -35,7 +35,7 @@
 namespace photomatch
 {
 
-class IMultiViewView;
+class IMultiviewView;
 class IMultiViewModel;
 class HelpDialog;
 
@@ -67,7 +67,7 @@ class MultiViewPresenter
 
 public:
 
-  MultiViewPresenter(IMultiViewView *view,
+  MultiViewPresenter(IMultiviewView *view,
                      IMultiViewModel *model);
 
 private slots:
@@ -94,7 +94,7 @@ private:
 
 private:
 
-  IMultiViewView *mView;
+  IMultiviewView *mView;
   IMultiViewModel *mModel;
   std::shared_ptr<HelpDialog> mHelp;
 

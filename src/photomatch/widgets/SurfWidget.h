@@ -84,7 +84,7 @@ signals:
   void octavesChange(int);
   void octaveLayersChange(int);
   void extendedDescriptorChange(bool);
-  void uprightChange(bool);
+  void rotatedFeaturesChange(bool);
 
 public slots:
 

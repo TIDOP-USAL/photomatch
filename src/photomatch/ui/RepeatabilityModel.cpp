@@ -28,6 +28,8 @@
 
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/core/utils.h"
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
 #include "photomatch/core/features/evaluation.h"
 
 #include <opencv2/features2d.hpp>
@@ -172,9 +174,11 @@ RepeatabilityModel::computeRepeatability(const QString &session) const
             for (auto &m : matches){
               if (m.first.compare(imgRight) == 0){
 
-                std::vector<cv::DMatch> goodMatches;
-                std::vector<cv::DMatch> wrongMatches;
-                matchesRead(m.second, &goodMatches, &wrongMatches);
+                std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+                matchesReader->read();
+                std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
+                std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
+                matchesReader.reset();
 
                 std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
                 featuresRead->read();

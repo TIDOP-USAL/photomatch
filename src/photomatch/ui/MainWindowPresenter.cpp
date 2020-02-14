@@ -146,8 +146,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
     mCurvesDETViewerModel(nullptr),
     mRepeatabilityPresenter(nullptr),
     mRepeatabilityModel(nullptr),
-    mMultiViewModel(nullptr),
-    mMultiViewPresenter(nullptr),
+    mMultiviewModel(nullptr),
+    mMultiviewPresenter(nullptr),
     mAboutDialog(nullptr),
     mHelpDialog(nullptr),
     mProgressHandler(nullptr),
@@ -180,7 +180,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   connect(mView,  SIGNAL(featuresViewer()),           this, SLOT(openKeypointsViewer()));
   connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
-  connect(mView,  SIGNAL(passPointsViewer()),         this, SLOT(openMultiViewViewer()));
+  connect(mView,  SIGNAL(passPointsViewer()),         this, SLOT(openMultiviewMatchingAssessment()));
   connect(mView,  SIGNAL(groundTruthEditor()),        this, SLOT(groundTruthEditor()));
   connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
   connect(mView,  SIGNAL(repeatability()),            this, SLOT(openRepeatability()));
@@ -230,7 +230,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view, MainWindowModel *
 
   connect(mView, SIGNAL(openFeatures(QString, QString)),          this, SLOT(openKeypointsViewer(QString, QString)));
   connect(mView, SIGNAL(openMatches(QString, QString, QString)),  this, SLOT(openMatchesViewer(QString, QString, QString)));
-  connect(mView, SIGNAL(openMultiView(QString)),                  this, SLOT(openMultiViewViewer(QString)));
+  connect(mView, SIGNAL(openMultiView(QString)),                  this, SLOT(openMultiviewMatchingAssessment(QString)));
 
 }
 
@@ -426,14 +426,14 @@ MainWindowPresenter::~MainWindowPresenter()
     mRepeatabilityPresenter = nullptr;
   }
 
-  if (mMultiViewModel){
-    delete mMultiViewModel;
-    mMultiViewModel = nullptr;
+  if (mMultiviewModel){
+    delete mMultiviewModel;
+    mMultiviewModel = nullptr;
   }
 
-  if (mMultiViewPresenter){
-    delete mMultiViewPresenter;
-    mMultiViewPresenter = nullptr;
+  if (mMultiviewPresenter){
+    delete mMultiviewPresenter;
+    mMultiviewPresenter = nullptr;
   }
 
   if (mRepeatabilityModel){
@@ -700,18 +700,18 @@ void MainWindowPresenter::openMatchesViewer(const QString &session, const QStrin
   }
 }
 
-void MainWindowPresenter::openMultiViewViewer()
+void MainWindowPresenter::openMultiviewMatchingAssessment()
 {
-  initMultiViewViewer();
-  mMultiViewPresenter->setSession(mProjectModel->currentSession()->name());
-  mMultiViewPresenter->open();
+  initMultiviewMatchingAssessment();
+  mMultiviewPresenter->setSession(mProjectModel->currentSession()->name());
+  mMultiviewPresenter->open();
 }
 
-void MainWindowPresenter::openMultiViewViewer(const QString &session)
+void MainWindowPresenter::openMultiviewMatchingAssessment(const QString &session)
 {
-  initMultiViewViewer();
-  mMultiViewPresenter->setSession(session);
-  mMultiViewPresenter->open();
+  initMultiviewMatchingAssessment();
+  mMultiviewPresenter->setSession(session);
+  mMultiviewPresenter->open();
 }
 
 void MainWindowPresenter::groundTruthEditor()
@@ -772,6 +772,9 @@ void MainWindowPresenter::loadImages()
 
     mView->setFlag(MainWindowView::Flag::project_modified, true);
     mView->setFlag(MainWindowView::Flag::images_added, true);
+    mView->setFlag(MainWindowView::Flag::loading_images, true);
+
+    connect(mView, SIGNAL(imagesLoaded()),   this,  SLOT(onLoadImages()));
   }
 }
 
@@ -854,6 +857,8 @@ void MainWindowPresenter::loadProject()
   if (images.size() > 0){
     mView->addImages(images);
     mView->setFlag(MainWindowView::Flag::images_added, true);
+    mView->setFlag(MainWindowView::Flag::loading_images, true);
+    connect(mView, SIGNAL(imagesLoaded()),   this,  SLOT(onLoadImages()));
   }
 
   if (mProjectModel->sessionCount() > 0 && mProjectModel->currentSession() == nullptr){
@@ -1483,6 +1488,12 @@ void MainWindowPresenter::processRunning()
   mView->setFlag(MainWindowView::Flag::processing, true);
 }
 
+void MainWindowPresenter::onLoadImages()
+{
+  mView->setFlag(MainWindowView::Flag::loading_images, false);
+  disconnect(mView, SIGNAL(imagesLoaded()),   this,  SLOT(onLoadImages()));
+}
+
 void MainWindowPresenter::help()
 {
   mHelpDialog->navigateHome();
@@ -1701,14 +1712,14 @@ void MainWindowPresenter::initMatchesViewer()
   }
 }
 
-void MainWindowPresenter::initMultiViewViewer()
+void MainWindowPresenter::initMultiviewMatchingAssessment()
 {
-  if (mMultiViewPresenter == nullptr){
-    mMultiViewModel = new MultiViewModel(mProjectModel);
+  if (mMultiviewPresenter == nullptr){
+    mMultiviewModel = new MultiviewModel(mProjectModel);
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-    IMultiViewView *multiViewView = new MultiViewView(mView, f);
-    mMultiViewPresenter = new MultiViewPresenter(multiViewView, mMultiViewModel);
-    mMultiViewPresenter->setHelp(mHelpDialog);
+    IMultiviewView *multiviewView = new MultiviewView(mView, f);
+    mMultiviewPresenter = new MultiViewPresenter(multiviewView, mMultiviewModel);
+    mMultiviewPresenter->setHelp(mHelpDialog);
   }
 }
 

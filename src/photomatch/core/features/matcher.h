@@ -619,10 +619,6 @@ public:
   void setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
 
   /*!
-   * \brief Test de ratio
-   * \param[in] matches
-   */
-  /*!
    * \brief Ratio test
    * \param[in] matches
    * \param[in] ratio
@@ -871,26 +867,6 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-
-/*!
- * \brief Matches write
- * \param[in] fname File name
- * \param[in] matches Correct matches
- * \param[in] wrongMatches Wrong matches
- */
-PHOTOMATCH_EXPORT void matchesWrite(const QString &fname,
-                                    const std::vector<cv::DMatch> &goodMatches,
-                                    const std::vector<cv::DMatch> &wrongMatches = std::vector<cv::DMatch>());
-
-/*!
- * \brief Matches read
- * \param[in] fname File name
- * \param[out] matches Correct matches
- * \param[out] wrongMatches Wrong matches
- */
-PHOTOMATCH_EXPORT void matchesRead(const QString &fname,
-                                   std::vector<cv::DMatch> *matches,
-                                   std::vector<cv::DMatch> *wrongMatches = nullptr);
 
 /*!
  * \brief Pass Points write

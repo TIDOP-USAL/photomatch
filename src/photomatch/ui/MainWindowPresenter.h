@@ -120,8 +120,8 @@ protected slots:
   void openKeypointsViewer(const QString &session, const QString &image);
   void openMatchesViewer();
   void openMatchesViewer(const QString &session, const QString &imageLeft, const QString &imageRight = QString());
-  void openMultiViewViewer();
-  void openMultiViewViewer(const QString &session);
+  void openMultiviewMatchingAssessment();
+  void openMultiviewMatchingAssessment(const QString &session);
   void groundTruthEditor();
   void openHomographyViewer();
   void openRepeatability();
@@ -177,6 +177,8 @@ protected slots:
 
   void processFinish();
   void processRunning();
+
+  void onLoadImages();
 
 // IPresenter interface
 
@@ -239,7 +241,7 @@ private:
    */
   void initMatchesViewer();
 
-  void initMultiViewViewer();
+  void initMultiviewMatchingAssessment();
 
   void initGroundTruthEditor();
 
@@ -317,8 +319,8 @@ protected:
   IRepeatabilityPresenter *mRepeatabilityPresenter;
   IRepeatabilityModel *mRepeatabilityModel;
 
-  IMultiViewModel *mMultiViewModel;
-  IMultiViewPresenter *mMultiViewPresenter;
+  IMultiViewModel *mMultiviewModel;
+  IMultiViewPresenter *mMultiviewPresenter;
 
   AboutDialog *mAboutDialog;
   std::shared_ptr<HelpDialog> mHelpDialog;

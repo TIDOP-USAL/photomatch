@@ -24,6 +24,8 @@
 
 #include "MatchViewerModel.h"
 
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <QImageReader>
@@ -104,7 +106,10 @@ MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) 
     if (!matches.empty()){
       for (auto &m : matches){
         if (m.first.compare(imgName2) == 0){
-          matchesRead(m.second, &match);
+          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+          matchesReader->read();
+          std::vector<cv::DMatch> match = matchesReader->goodMatches();
+          matchesReader.reset();
           break;
         }
       }
@@ -161,9 +166,12 @@ void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgNa
       if (!matches.empty()){
         for (auto &m : matches){
           if (m.first.compare(imgName2) == 0){
-            std::vector<cv::DMatch> good_matches;
-            std::vector<cv::DMatch> wrong_matches;
-            matchesRead(m.second, &good_matches, &wrong_matches);
+
+            std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+            matchesReader->read();
+            std::vector<cv::DMatch> good_matches = matchesReader->goodMatches();
+            std::vector<cv::DMatch> wrong_matches = matchesReader->wrongMatches();
+            matchesReader.reset();
 
             for (size_t i = 0; i < good_matches.size(); i++){
               if (good_matches[i].queryIdx == query_id &&
@@ -174,7 +182,11 @@ void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgNa
               }
             }
 
-            matchesWrite(m.second, good_matches, wrong_matches);
+            //matchesWrite(m.second, good_matches, wrong_matches);
+            std::unique_ptr<MatchesWriter> matchesWriter = MatchesWriterFactory::createWriter(m.second);
+            matchesWriter->setGoodMatches(good_matches);
+            matchesWriter->setWrongMatches(wrong_matches);
+            matchesWriter->write();
 
             break;
           }

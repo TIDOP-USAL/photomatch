@@ -24,6 +24,7 @@
 
 #include "MultiViewModel.h"
 
+#include "photomatch/core/features/featio.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <QImageReader>
@@ -31,29 +32,29 @@
 namespace photomatch
 {
 
-MultiViewModel::MultiViewModel(IProjectModel *mProjectModel)
+MultiviewModel::MultiviewModel(IProjectModel *mProjectModel)
   : IMultiViewModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-MultiViewModel::~MultiViewModel()
+MultiviewModel::~MultiviewModel()
 {
 
 }
 
-QString MultiViewModel::sessionName() const
+QString MultiviewModel::sessionName() const
 {
   return mSession;
 }
 
-void MultiViewModel::setSessionName(const QString &session)
+void MultiviewModel::setSessionName(const QString &session)
 {
   mSession = session;
 }
 
-void MultiViewModel::loadPassPoints()
+void MultiviewModel::loadPassPoints()
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
     passPointsRead(session->passPoints(), mPassPoints);
@@ -62,7 +63,7 @@ void MultiViewModel::loadPassPoints()
   }
 }
 
-std::vector<size_t> MultiViewModel::passPointIds() const
+std::vector<size_t> MultiviewModel::passPointIds() const
 {
   std::vector<size_t> ids;
 
@@ -74,7 +75,7 @@ std::vector<size_t> MultiViewModel::passPointIds() const
   return ids;
 }
 
-std::vector<std::pair<size_t, size_t> > MultiViewModel::passPointIdsAndSize() const
+std::vector<std::pair<size_t, size_t> > MultiviewModel::passPointIdsAndSize() const
 {
   std::vector<std::pair<size_t, size_t>> ids;
 
@@ -86,7 +87,7 @@ std::vector<std::pair<size_t, size_t> > MultiViewModel::passPointIdsAndSize() co
   return ids;
 }
 
-std::vector<std::pair<QString, QPointF>> MultiViewModel::images(size_t passPointId) const
+std::vector<std::pair<QString, QPointF>> MultiviewModel::images(size_t passPointId) const
 {
   std::vector<std::pair<QString, QPointF>> images;
 
@@ -117,7 +118,7 @@ std::vector<std::pair<QString, QPointF>> MultiViewModel::images(size_t passPoint
   return images;
 }
 
-void MultiViewModel::init()
+void MultiviewModel::init()
 {
   if (mProjectModel->currentSession())
     mSession = mProjectModel->currentSession()->name();

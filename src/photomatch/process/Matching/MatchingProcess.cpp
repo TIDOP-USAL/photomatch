@@ -24,7 +24,8 @@
 
 #include "MatchingProcess.h"
 
-#include "photomatch/core/features/features.h"
+#include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
 
 #include <tidop/core/messages.h>
 
@@ -109,7 +110,10 @@ void MatchingProcess::run()
 
     mDescriptorMatcher->compute(descriptors1, descriptors2, keyPoints1, keyPoints2, &goodMatches, &wrongMatches, query_size, train_size);
 
-    matchesWrite(mMatches, goodMatches, wrongMatches);
+    std::unique_ptr<MatchesWriter> writer = MatchesWriterFactory::createWriter(mMatches);
+    writer->setGoodMatches(goodMatches);
+    writer->setWrongMatches(wrongMatches);
+    writer->write();
 
     QByteArray ba = mMatches.toLocal8Bit();
     const char *cfeat = ba.data();

@@ -163,7 +163,6 @@ void TestAgastDetector::test_detectorType()
 
   this->setDetectorType(value);
   QCOMPARE(result, this->detectorType());
-
 }
 
 void TestAgastDetector::test_detectorType2_data()

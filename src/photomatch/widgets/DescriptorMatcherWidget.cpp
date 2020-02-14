@@ -403,7 +403,7 @@ void DescriptorMatcherWidgetImp::reset()
   mGroupBoxFilteringTest->show();
   mGroupBoxGMS->hide();
   mRatio->setValue(0.8);
-  mGeometricTest->setCurrentText("Homography Matrix");
+  mGeometricTest->setCurrentText("Fundamental Matrix");
   mHComputeMethod->setCurrentText("RANSAC");
   mFComputeMethod->setCurrentText("RANSAC");
   mEComputeMethod->setCurrentText("RANSAC");

@@ -89,12 +89,11 @@ bool KeyPointsFilterNBest::filter(const std::vector<cv::KeyPoint> &keypoints, st
       filteredKeypoints.resize(static_cast<size_t>(KeyPointsFilterNBestProperties::nPoints()));
     }
     msgInfo("Filtered retaining %i best keypoints", KeyPointsFilterNBestProperties::nPoints());
+    return false;
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
     return true;
   }
-
-  return false;
 }
 
 void KeyPointsFilterNBest::reset()
@@ -177,11 +176,11 @@ bool KeyPointsFilterBySize::filter(const std::vector<cv::KeyPoint> &keypoints, s
     cv::KeyPointsFilter::runByKeypointSize(filteredKeypoints, static_cast<float>(min_size), static_cast<float>(max_size));
     size_t new_size = filteredKeypoints.size();
     msgInfo("Filtered keypoints by size (min=%f,max=%f): %i", min_size, max_size, size - new_size);
+    return false;
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
     return true;
   }
-  return false;
 }
 
 void KeyPointsFilterBySize::reset()
@@ -206,12 +205,11 @@ bool KeyPointsFilterRemoveDuplicated::filter(const std::vector<cv::KeyPoint>& ke
     cv::KeyPointsFilter::removeDuplicated(filteredKeypoints);
     int new_size = static_cast<int>(filteredKeypoints.size());
     msgInfo("Remove duplicated keypoints: %i", size - new_size);
-
+    return false;
   } catch (cv::Exception &e) {
     msgError("Filtered keypoints error: %s", e.what());
     return true;
   }
-  return false;
 }
 
 } // namespace photomatch

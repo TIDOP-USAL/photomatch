@@ -24,9 +24,10 @@
 
 #include "ExportMatchesModel.h"
 
+#include "photomatch/ui/ProjectModel.h"
 #include "photomatch/core/features/matcher.h"
 #include "photomatch/core/features/features.h"
-#include "photomatch/ui/ProjectModel.h"
+#include "photomatch/core/features/featio.h"
 
 #include <tidop/core/messages.h>
 

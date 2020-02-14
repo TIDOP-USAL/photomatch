@@ -92,7 +92,9 @@ protected:
 ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT KeypointDetector
@@ -117,7 +119,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT DescriptorExtractor
@@ -142,7 +146,10 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
+
 
 /*!
  * \brief Agast Interface
@@ -219,7 +226,12 @@ public:
 };
 
 
+
+
 /*----------------------------------------------------------------*/
+
+
+
 
 /*!
  * \brief The IAkaze class
@@ -320,7 +332,12 @@ public:
 };
 
 
+
+
 /*----------------------------------------------------------------*/
+
+
+
 
 /*!
  * \brief The Boost class
@@ -376,6 +393,7 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
 
 
@@ -425,7 +443,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -484,7 +504,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -602,7 +624,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -667,7 +691,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -736,7 +762,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Gftt
@@ -765,7 +793,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -812,7 +842,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -911,7 +943,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Latch
@@ -934,7 +968,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -979,7 +1015,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Lss
@@ -994,7 +1032,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Msd
@@ -1033,7 +1073,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Mser
@@ -1068,7 +1110,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 /*!
@@ -1204,7 +1248,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Sift
@@ -1285,7 +1331,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Star
@@ -1312,7 +1360,9 @@ public:
 };
 
 
+
 /*----------------------------------------------------------------*/
+
 
 
 class PHOTOMATCH_EXPORT Surf
@@ -1387,7 +1437,11 @@ public:
 
 };
 
+
+
 /*----------------------------------------------------------------*/
+
+
 
 /*!
  * \brief The IVgg class
@@ -1442,126 +1496,6 @@ public:
   virtual void 	setUseScaleOrientation(bool useScaleOrientation) = 0;
 };
 
-/*----------------------------------------------------------------*/
-
-//PHOTOMATCH_EXPORT void featuresWrite(const QString &fname,
-//                                     const std::vector<cv::KeyPoint> &keyPoints,
-//                                     const cv::Mat &descriptors);
-//PHOTOMATCH_EXPORT void featuresRead(const QString &fname,
-//                                    std::vector<cv::KeyPoint> &keyPoints,
-//                                    cv::Mat &descriptors);
-
-
-/*----------------------------------------------------------------*/
-
-
-
-/*!
- * \brief FeaturesWriter class allows the writing of the detected features in different formats
- */
-class FeaturesWriter
-{
-
-public:
-
-  FeaturesWriter(const QString &fileName) : mFileName(fileName) {}
-  virtual ~FeaturesWriter() = default;
-
-  virtual bool write() = 0;
-
-  void setKeyPoints(const std::vector<cv::KeyPoint> &keyPoints);
-  void setDescriptors(const cv::Mat &descriptors);
-
-protected:
-
-  QString mFileName;
-  std::vector<cv::KeyPoint> mKeyPoints;
-  cv::Mat mDescriptors;
-};
-
-
-/*----------------------------------------------------------------*/
-
-
-/*!
- * \brief The FeaturesWriter class allows the reading of the different formats of features files
- */
-class FeaturesReader
-{
-
-public:
-
-  FeaturesReader(const QString &fileName) : mFileName(fileName) {}
-  virtual ~FeaturesReader() = default;
-
-  virtual bool read() = 0;
-
-  std::vector<cv::KeyPoint> keyPoints() const;
-  cv::Mat descriptors() const;
-
-protected:
-
-  QString mFileName;
-  std::vector<cv::KeyPoint> mKeyPoints;
-  cv::Mat mDescriptors;
-};
-
-/*!
- * \brief Factory class to create different reading formats
- */
-class FeaturesReaderFactory
-{
-
-private:
-
-  FeaturesReaderFactory() {}
-
-public:
-
-  static std::unique_ptr<FeaturesReader> createReader(const QString &fileName);
-};
-
-/*!
- * \brief Factory class to create different writing formats
- */
-class FeaturesWriterFactory
-{
-public:
-
-private:
-
-  FeaturesWriterFactory() {}
-
-public:
-
-  static std::unique_ptr<FeaturesWriter> createWriter(const QString &fileName);
-};
-
-
-
-/*----------------------------------------------------------------*/
-
-
-
-class PHOTOMATCH_EXPORT FeaturesIOHandler
-{
-
-public:
-
-  FeaturesIOHandler();
-  virtual ~FeaturesIOHandler() = default;
-
-  bool read(const QString &file);
-  bool write(const QString &file);
-
-protected:
-
-  std::unique_ptr<FeaturesReader> mReader;
-  std::unique_ptr<FeaturesWriter> mWriter;
-};
-
-
-/*----------------------------------------------------------------*/
 
 } // namespace photomatch
 

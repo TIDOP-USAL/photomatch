@@ -16,7 +16,6 @@ add_library(libcore ${LIB_TYPE}
             session.cpp
             session.h
             features/features.h
-            features/features.cpp
             features/agast.h
             features/agast.cpp
             features/akaze.h
@@ -61,11 +60,15 @@ add_library(libcore ${LIB_TYPE}
             features/vgg.cpp
             features/matcher.cpp
             features/matcher.h
+            features/matchio.cpp
+            features/matchio.h
             features/evaluation.h
             features/groundtruth.cpp
             features/groundtruth.h
             features/keypointsfilter.h
             features/keypointsfilter.cpp
+            features/featio.cpp
+            features/featio.h
             preprocess/preprocess.h
             preprocess/acebsf.cpp
             preprocess/acebsf.h

@@ -65,6 +65,7 @@ public:
     feature_extraction    = (1 << 6),
     feature_matching      = (1 << 7),
     processing            = (1 << 20),
+    loading_images        = (1 << 21),
     ground_truth          = (1 << 30),
   };
 
@@ -198,6 +199,7 @@ signals:
   void selectDetector(QString);
   void selectDescriptor(QString);
   void selectImageFeatures(QString);
+  void imagesLoaded();
 
   void openImageMatches(QString, QString, QString);
 
