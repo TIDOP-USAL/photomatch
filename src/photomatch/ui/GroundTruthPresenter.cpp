@@ -259,7 +259,7 @@ void GroundTruthPresenter::open()
   }
 }
 
-void GroundTruthPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void GroundTruthPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

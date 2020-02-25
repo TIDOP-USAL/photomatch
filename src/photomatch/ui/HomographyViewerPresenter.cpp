@@ -79,7 +79,7 @@ void HomographyViewerPresenter::open()
   }
 }
 
-void HomographyViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void HomographyViewerPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

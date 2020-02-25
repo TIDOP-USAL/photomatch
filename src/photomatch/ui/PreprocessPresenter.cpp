@@ -38,7 +38,7 @@
 #include "photomatch/core/preprocess/rswhe.h"
 #include "photomatch/core/preprocess/wallis.h"
 
-#include "photomatch/ui/PreprocessModel.h"
+//#include "photomatch/ui/PreprocessModel.h"
 #include "photomatch/ui/PreprocessView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
@@ -73,12 +73,12 @@ namespace photomatch
 {
 
 PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
-                                         IPreprocessModel *model,
+                                         //IPreprocessModel *model,
                                          IProjectModel *projectModel,
                                          ISettingsModel *settingsModel)
   : IPreprocessPresenter(),
     mView(view),
-    mModel(model),
+    //mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
@@ -290,7 +290,7 @@ void PreprocessPresenter::open()
   mView->exec();
 }
 
-void PreprocessPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void PreprocessPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

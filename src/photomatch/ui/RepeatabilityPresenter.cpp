@@ -93,7 +93,7 @@ void RepeatabilityPresenter::open()
   mView->show();
 }
 
-void RepeatabilityPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void RepeatabilityPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

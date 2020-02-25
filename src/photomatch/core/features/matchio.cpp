@@ -209,8 +209,6 @@ private:
 
   void open();
   bool isOpen();
-  void readHeader();
-  void readMatches(std::vector<cv::DMatch> *matches);
   void readGoodMatches();
   void readWrongMatches();
   void close();

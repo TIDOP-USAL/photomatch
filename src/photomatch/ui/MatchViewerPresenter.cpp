@@ -84,6 +84,11 @@ void MatchViewerPresenter::setRightImage(const QString &image)
   mView->setRightImage(image);
 }
 
+//void MatchViewerPresenter::openImageFromSession(const QString &session, const QString &image)
+//{
+//  open();
+//}
+
 void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
 {
   std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(imageLeft, imageRight);
@@ -133,7 +138,7 @@ void MatchViewerPresenter::open()
 
 }
 
-void MatchViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void MatchViewerPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

@@ -64,7 +64,7 @@ void NewSessionPresenter::open()
   mView->exec();
 }
 
-void NewSessionPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void NewSessionPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

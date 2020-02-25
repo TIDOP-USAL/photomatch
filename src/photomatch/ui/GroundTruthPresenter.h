@@ -111,7 +111,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -122,7 +122,7 @@ private:
   IGroundTruthView *mView;
   IGroundTruthModel *mModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
 
 };
 

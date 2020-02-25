@@ -110,7 +110,7 @@ void CurvesViewerPresenter::open()
   mView->show();
 }
 
-void CurvesViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void CurvesViewerPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

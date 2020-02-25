@@ -58,6 +58,7 @@ public slots:
   virtual void setSession(const QString &session) = 0;
   virtual void setLeftImage(const QString &image) = 0;
   virtual void setRightImage(const QString &image) = 0;
+  //virtual void openImageFromSession(const QString &session, const QString &image) = 0;
 
 protected slots:
 
@@ -88,6 +89,7 @@ public slots:
   void setSession(const QString &session) override;
   void setLeftImage(const QString &image) override;
   void setRightImage(const QString &image) override;
+  //void openImageFromSession(const QString &session, const QString &image) override;
 
 protected slots:
 
@@ -105,7 +107,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -125,7 +127,7 @@ private:
   IMatchViewerView *mView;
   IMatchViewerModel *mModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
 
 };
 

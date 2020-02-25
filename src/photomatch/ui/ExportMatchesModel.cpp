@@ -111,7 +111,7 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
             for (size_t j = 0; j < pass_points[i].size(); j++){
               if (pass_points[i][j].first.compare(image_id) == 0){
                 size_t pt_id = static_cast<size_t>(pass_points[i][j].second);
-                ofs << image_id.toStdString() << " " << i << " "
+                ofs << "\"" << image_id.toStdString() << "\" " << i << " "
                     << keyPoints[pt_id].pt.x << " " << keyPoints[pt_id].pt.y
                     << " 0 M" << std::endl;
                 break;

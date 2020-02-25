@@ -37,7 +37,7 @@ namespace photomatch
 {
 
 class IDescriptorMatcherView;
-class IDescriptorMatcherModel;
+//class IDescriptorMatcherModel;
 class IProjectModel;
 class ISettingsModel;
 class HelpDialog;
@@ -80,7 +80,7 @@ class DescriptorMatcherPresenter
 public:
 
   DescriptorMatcherPresenter(IDescriptorMatcherView *view,
-                             IDescriptorMatcherModel *model,
+                             //IDescriptorMatcherModel *model,
                              IProjectModel *projectModel,
                              ISettingsModel *settingsModel);
   ~DescriptorMatcherPresenter() override;
@@ -91,7 +91,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -114,10 +114,10 @@ private slots:
 protected:
 
   IDescriptorMatcherView *mView;
-  IDescriptorMatcherModel *mModel;  /// Por ahora es una clase vacia
+  //IDescriptorMatcherModel *mModel;  /// Por ahora es una clase vacia
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
   MultiProcess *mMultiProcess;
   ProgressHandler *mProgressHandler;
 };

@@ -811,7 +811,7 @@ void SettingsPresenter::open()
   mView->exec();
 }
 
-void SettingsPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void SettingsPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

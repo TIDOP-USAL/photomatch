@@ -78,7 +78,7 @@ void MultiViewPresenter::open()
   mView->show();
 }
 
-void MultiViewPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void MultiViewPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

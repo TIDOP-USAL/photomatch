@@ -85,7 +85,14 @@ void FeaturesViewerPresenter::open()
   }
 }
 
-void FeaturesViewerPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void FeaturesViewerPresenter::openImageFromSession(const QString &session, const QString &image)
+{
+  this->setSession(session);
+  this->open();
+  this->setImageActive(image);
+}
+
+void FeaturesViewerPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

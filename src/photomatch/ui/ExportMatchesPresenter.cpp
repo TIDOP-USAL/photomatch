@@ -71,7 +71,7 @@ void ExportMatchesPresenter::open()
   mView->exec();
 }
 
-void ExportMatchesPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void ExportMatchesPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

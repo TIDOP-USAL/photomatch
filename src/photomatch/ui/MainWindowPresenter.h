@@ -22,8 +22,8 @@
  ************************************************************************/
 
 
-#ifndef MAINWINDOWPRESENTER_H
-#define MAINWINDOWPRESENTER_H
+#ifndef PHOTOMATCH_MAIN_WINDOW_PRESENTER_H
+#define PHOTOMATCH_MAIN_WINDOW_PRESENTER_H
 
 #include "mvp.h"
 
@@ -34,44 +34,44 @@ namespace photomatch
 
 class MainWindowView;
 class MainWindowModel;
-class INewProjectPresenter;
+//class INewProjectPresenter;
 class IProjectModel;
-class ProjectController;
-class Project;
-class Settings;
-class SettingsController;
+//class ProjectController;
+//class Project;
+//class Settings;
+//class SettingsController;
 class ISettingsModel;
-class ISettingsPresenter;
-class INewSessionPresenter;
-class IPreprocessPresenter;
-class IPreprocessModel;
-class IFeatureExtractorModel;
-class IFeatureExtractorPresenter;
-class IDescriptorMatcherModel;
-class IDescriptorMatcherPresenter;
-class IMatchViewerPresenter;
-class IMatchViewerModel;
-class IHomographyViewerPresenter;
-class IHomographyViewerModel;
-class ICurvesViewerPresenter;
-class ICurvesViewerModel;
-class IGroundTruthModel;
-class IGroundTruthPresenter;
-class IRepeatabilityModel;
-class IRepeatabilityPresenter;
-class IFeaturesViewerModel;
-class IFeaturesViewerPresenter;
-class IExportFeaturesModel;
-class IExportFeaturesPresenter;
-class IExportMatchesModel;
-class IExportMatchesPresenter;
+//class ISettingsPresenter;
+//class INewSessionPresenter;
+//class IPreprocessPresenter;
+//class IPreprocessModel;
+//class IFeatureExtractorModel;
+//class IFeatureExtractorPresenter;
+//class IDescriptorMatcherModel;
+//class IDescriptorMatcherPresenter;
+//class IMatchViewerPresenter;
+//class IMatchViewerModel;
+//class IHomographyViewerPresenter;
+//class IHomographyViewerModel;
+//class ICurvesViewerPresenter;
+//class ICurvesViewerModel;
+//class IGroundTruthModel;
+//class IGroundTruthPresenter;
+//class IRepeatabilityModel;
+//class IRepeatabilityPresenter;
+//class IFeaturesViewerModel;
+//class IFeaturesViewerPresenter;
+//class IExportFeaturesModel;
+//class IExportFeaturesPresenter;
+//class IExportMatchesModel;
+//class IExportMatchesPresenter;
 //class IBatchModel;
 //class IBatchPresenter;
-class IMultiViewModel;
-class IMultiViewPresenter;
-class ProgressHandler;
-class IProgressDialog;
-class AboutDialog;
+//class IMultiViewModel;
+//class IMultiViewPresenter;
+//class ProgressHandler;
+//class IProgressDialog;
+//class AboutDialog;
 class HelpDialog;
 class TabHandler;
 class StartPageWidget;
@@ -83,10 +83,22 @@ class MainWindowPresenter
 
 public:
 
-  explicit MainWindowPresenter(MainWindowView *view, MainWindowModel *model);
+  explicit MainWindowPresenter(MainWindowView *view,
+                               MainWindowModel *model,
+                               IProjectModel *projectModel,
+                               ISettingsModel *settingsModel);
   ~MainWindowPresenter() override;
 
 signals:
+
+  void openNewProjectDialog();
+  void openNewSessionDialog();
+  void openPreprocessDialog();
+  void openFeatureExtractionDialog();
+  void openFeatureMatchingDialog();
+  void openKeypointsViewerDialog();
+  void openKeypointsViewerDialog(QString, QString);
+  void openMatchesViewerDialog();
 
 public slots:
 
@@ -186,7 +198,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -195,67 +207,67 @@ private:
   /*!
    * \brief Inicializa el dialogo de creación de un nuevo proyecto
    */
-  void initNewProjectDialog();
+  //void initNewProjectDialog();
 
   /*!
    * \brief Inicializa la herramienta de creación de una nueva sesión
    */
-  void initNewSessionDialog();
+  //void initNewSessionDialog();
 
-  void initExportFeaturesDialog();
-  void initExportMatchesDialog();
+//  void initExportFeaturesDialog();
+//  void initExportMatchesDialog();
 
   void initStartPage();
 
   /*!
    * \brief Inicializa la herramienta de configuración de la aplicación
    */
-  void initSettingsDialog();
+  //void initSettingsDialog();
 
   /*!
    * \brief Inicializa la herramienta de preprocesado
    */
-  void initPreprocessDialog();
+  //void initPreprocessDialog();
 
   /*!
    * \brief Inicializa la herramienta de extracción de caracteristicas
    */
-  void initFeatureExtractionDialog();
+  //void initFeatureExtractionDialog();
 
   /*!
    * \brief Inicializa la herramienta de matching
    */
-  void initFeatureMatching();
+  //void initFeatureMatching();
 
   //void initBatch();
 
-  void initProgress();
+  //void initProgress();
 
   /*!
    * \brief Inicializa el visor de puntos de interés
    */
-  void initFeaturesViewer();
+  //void initFeaturesViewer();
 
   /*!
    * \brief Inicializa el visor de matches
    */
-  void initMatchesViewer();
+  //void initMatchesViewer();
 
-  void initMultiviewMatchingAssessment();
+  //void initMultiviewMatchingAssessment();
 
-  void initGroundTruthEditor();
+  //void initGroundTruthEditor();
 
   /*!
    * \brief Inicializa el visor de homografía
    */
-  void initHomographyViewer();
-  void initRepeatability();
-  void initPRCurvesViewer();
-  void initROCCurvesViewer();
-  void initDETCurvesViewer();
+//  void initHomographyViewer();
+//  void initRepeatability();
+//  void initPRCurvesViewer();
+//  void initROCCurvesViewer();
+//  void initDETCurvesViewer();
 
-  void initAboutDialog();
-  void initHelpDialog();
+//  void initAboutDialog();
+//  void initHelpDialog();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);
@@ -266,67 +278,67 @@ protected:
   MainWindowView *mView;
   MainWindowModel *mModel;
 
-  Project *mProject;
-  ProjectController *mProjectIO;
+  //Project *mProject;
+  //ProjectController *mProjectIO;
   IProjectModel *mProjectModel;
 
-  INewProjectPresenter *mNewProjectPresenter;
+//  INewProjectPresenter *mNewProjectPresenter;
 
-  INewSessionPresenter *mNewSessionPresenter;
+//  INewSessionPresenter *mNewSessionPresenter;
 
-  IExportFeaturesPresenter *mExportFeaturesPresenter;
-  IExportFeaturesModel *mExportFeaturesModel;
+//  IExportFeaturesPresenter *mExportFeaturesPresenter;
+//  IExportFeaturesModel *mExportFeaturesModel;
 
-  IExportMatchesPresenter *mExportMatchesPresenter;
-  IExportMatchesModel *mExportMatchesModel;
+//  IExportMatchesPresenter *mExportMatchesPresenter;
+//  IExportMatchesModel *mExportMatchesModel;
 
-  Settings *mSettings;
-  SettingsController *mSettingsRW;
+//  Settings *mSettings;
+//  SettingsController *mSettingsRW;
   ISettingsModel *mSettingsModel;
-  ISettingsPresenter *mSettingsPresenter;
+//  ISettingsPresenter *mSettingsPresenter;
 
-  IPreprocessModel *mPreprocessModel;
-  IPreprocessPresenter *mPreprocessPresenter;
+//  IPreprocessModel *mPreprocessModel;
+//  IPreprocessPresenter *mPreprocessPresenter;
 
-  IFeatureExtractorModel *mFeatureExtractorModel;
-  IFeatureExtractorPresenter *mFeatureExtractorPresenter;
+//  IFeatureExtractorModel *mFeatureExtractorModel;
+//  IFeatureExtractorPresenter *mFeatureExtractorPresenter;
 
-  IDescriptorMatcherModel *mDescriptorMatcherModel;
-  IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
+//  IDescriptorMatcherModel *mDescriptorMatcherModel;
+//  IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
 
   //IBatchModel *mBatchmodel;
   //IBatchPresenter *mBatchPresenter;
 
-  IFeaturesViewerPresenter *mFeaturesViewerPresenter;
-  IFeaturesViewerModel *mFeaturesViewerModel;
+//  IFeaturesViewerPresenter *mFeaturesViewerPresenter;
+//  IFeaturesViewerModel *mFeaturesViewerModel;
 
-  IMatchViewerPresenter *mMatchesViewerPresenter;
-  IMatchViewerModel *mMatchesViewerModel;
+//  IMatchViewerPresenter *mMatchesViewerPresenter;
+//  IMatchViewerModel *mMatchesViewerModel;
 
-  IGroundTruthPresenter *mGroundTruthPresenter;
-  IGroundTruthModel *mGroundTruthModel;
+//  IGroundTruthPresenter *mGroundTruthPresenter;
+//  IGroundTruthModel *mGroundTruthModel;
 
-  IHomographyViewerPresenter *mHomographyViewerPresenter;
-  IHomographyViewerModel *mHomographyViewerModel;
+//  IHomographyViewerPresenter *mHomographyViewerPresenter;
+//  IHomographyViewerModel *mHomographyViewerModel;
 
-  ICurvesViewerPresenter *mCurvesPRViewerPresenter;
-  ICurvesViewerModel *mCurvesPRViewerModel;
-  ICurvesViewerPresenter *mCurvesROCViewerPresenter;
-  ICurvesViewerModel *mCurvesROCViewerModel;
-  ICurvesViewerPresenter *mCurvesDETViewerPresenter;
-  ICurvesViewerModel *mCurvesDETViewerModel;
+//  ICurvesViewerPresenter *mCurvesPRViewerPresenter;
+//  ICurvesViewerModel *mCurvesPRViewerModel;
+//  ICurvesViewerPresenter *mCurvesROCViewerPresenter;
+//  ICurvesViewerModel *mCurvesROCViewerModel;
+//  ICurvesViewerPresenter *mCurvesDETViewerPresenter;
+//  ICurvesViewerModel *mCurvesDETViewerModel;
 
-  IRepeatabilityPresenter *mRepeatabilityPresenter;
-  IRepeatabilityModel *mRepeatabilityModel;
+//  IRepeatabilityPresenter *mRepeatabilityPresenter;
+//  IRepeatabilityModel *mRepeatabilityModel;
 
-  IMultiViewModel *mMultiviewModel;
-  IMultiViewPresenter *mMultiviewPresenter;
+//  IMultiViewModel *mMultiviewModel;
+//  IMultiViewPresenter *mMultiviewPresenter;
 
-  AboutDialog *mAboutDialog;
-  std::shared_ptr<HelpDialog> mHelpDialog;
+//  AboutDialog *mAboutDialog;
+  HelpDialog *mHelpDialog;
 
-  ProgressHandler *mProgressHandler;
-  IProgressDialog *mProgressDialog;
+  //ProgressHandler *mProgressHandler;
+  //IProgressDialog *mProgressDialog;
 
   TabHandler *mTabHandler;
   StartPageWidget *mStartPageWidget;
@@ -335,4 +347,4 @@ protected:
 
 } // namespace photomatch
 
-#endif // MAINWINDOWPRESENTER_H
+#endif // PHOTOMATCH_MAIN_WINDOW_PRESENTER_H

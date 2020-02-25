@@ -55,6 +55,7 @@ public slots:
 
   virtual void setSession(const QString &session) = 0;
   virtual void setImageActive(const QString &image) = 0;
+  virtual void openImageFromSession(const QString &session, const QString &image) = 0;
 
 protected slots:
 
@@ -81,7 +82,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -93,6 +94,7 @@ public slots:
 
   void setSession(const QString &session) override;
   void setImageActive(const QString &image) override;
+  void openImageFromSession(const QString &session, const QString &image) override;
 
 protected slots:
 
@@ -103,7 +105,7 @@ private:
   IFeaturesViewerView *mView;
   IFeaturesViewerModel *mModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
 };
 
 } // namespace photomatch

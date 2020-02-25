@@ -110,7 +110,7 @@ void NewProjectPresenter::open()
   mView->exec();
 }
 
-void NewProjectPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void NewProjectPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

@@ -22,6 +22,7 @@ project(photomatch)
 
 set(PHOTOMATCH_SOURCES
     main.cpp
+    ComponentsManager.cpp
     MainWindowModel.cpp
     MainWindowPresenter.cpp
     MainWindowView.cpp
@@ -88,6 +89,7 @@ set(PHOTOMATCH_SOURCES
 
 set(PHOTOMATCH_HEADERS
     mvp.h
+    ComponentsManager.cpp
     MainWindowModel.h
     MainWindowPresenter.h
     MainWindowView.h

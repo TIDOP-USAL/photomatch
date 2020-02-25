@@ -39,7 +39,7 @@ namespace photomatch
 {
 
 class IFeatureExtractorView;
-class IFeatureExtractorModel;
+//class IFeatureExtractorModel;
 class IProjectModel;
 class ISettingsModel;
 class HelpDialog;
@@ -109,7 +109,7 @@ class FeatureExtractorPresenter
 public:
 
   FeatureExtractorPresenter(IFeatureExtractorView *view,
-                            IFeatureExtractorModel *model,
+                            //IFeatureExtractorModel *model,
                             IProjectModel *projectModel,
                             ISettingsModel *settingsModel);
   ~FeatureExtractorPresenter() override;
@@ -120,7 +120,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -147,10 +147,10 @@ private slots:
 protected:
 
   IFeatureExtractorView *mView;
-  IFeatureExtractorModel *mModel;  /// Por ahora es una clase vacia.
+  //IFeatureExtractorModel *mModel;  /// Por ahora es una clase vacia.
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
 
   AgastWidget *mAgastDetector;
   AkazeWidget *mAkazeDetector;

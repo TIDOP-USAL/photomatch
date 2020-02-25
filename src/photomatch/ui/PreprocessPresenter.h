@@ -37,7 +37,7 @@ namespace photomatch
 {
 
 class IPreprocessView;
-class IPreprocessModel;
+//class IPreprocessModel;
 class IProjectModel;
 class ISettingsModel;
 class HelpDialog;
@@ -95,7 +95,7 @@ class PreprocessPresenter
 public:
 
   PreprocessPresenter(IPreprocessView *view,
-                      IPreprocessModel *model,
+                      //IPreprocessModel *model,
                       IProjectModel *projectModel,
                       ISettingsModel *settingsModel);
   ~PreprocessPresenter() override;
@@ -106,7 +106,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -131,10 +131,10 @@ private slots:
 protected:
 
   IPreprocessView *mView;
-  IPreprocessModel *mModel;  /// Por ahora es una clase vacia
+  //IPreprocessModel *mModel;  /// Por ahora es una clase vacia
   IProjectModel *mProjectModel;
   ISettingsModel *mSettingsModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
 
   AcebsfWidget *mACEBSF;
   ClaheWidget *mCLAHE;

@@ -70,7 +70,7 @@ void ExportFeaturesPresenter::open()
   mView->exec();
 }
 
-void ExportFeaturesPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void ExportFeaturesPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

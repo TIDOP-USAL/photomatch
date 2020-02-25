@@ -25,7 +25,7 @@
 #include "DescriptorMatcherPresenter.h"
 
 #include "photomatch/core/features/matcher.h"
-#include "photomatch/ui/DescriptorMatcherModel.h"
+//#include "photomatch/ui/DescriptorMatcherModel.h"
 #include "photomatch/ui/DescriptorMatcherView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
@@ -46,12 +46,12 @@ namespace photomatch
 {
 
 DescriptorMatcherPresenter::DescriptorMatcherPresenter(IDescriptorMatcherView *view,
-                                                       IDescriptorMatcherModel *model,
+                                                       //IDescriptorMatcherModel *model,
                                                        IProjectModel *projectModel,
                                                        ISettingsModel *settingsModel)
   : IDescriptorMatcherPresenter(),
     mView(view),
-    mModel(model),
+    //mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
@@ -229,7 +229,7 @@ void DescriptorMatcherPresenter::open()
   mView->exec();
 }
 
-void DescriptorMatcherPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void DescriptorMatcherPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

@@ -50,7 +50,7 @@
 #include "photomatch/core/features/vgg.h"
 #include "photomatch/core/preprocess/decolor.h"
 
-#include "photomatch/ui/FeatureExtractorModel.h"
+//#include "photomatch/ui/FeatureExtractorModel.h"
 #include "photomatch/ui/FeatureExtractorView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
@@ -103,12 +103,12 @@ namespace photomatch
 {
 
 FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view,
-                                                     IFeatureExtractorModel *model,
+                                                     //IFeatureExtractorModel *model,
                                                      IProjectModel *projectModel,
                                                      ISettingsModel *settingsModel)
   : IFeatureExtractorPresenter(),
     mView(view),
-    mModel(model),
+    //mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
@@ -838,7 +838,7 @@ void FeatureExtractorPresenter::open()
   mView->exec();
 }
 
-void FeatureExtractorPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
+void FeatureExtractorPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }

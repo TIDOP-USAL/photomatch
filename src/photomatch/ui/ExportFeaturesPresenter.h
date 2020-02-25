@@ -73,7 +73,7 @@ public slots:
 
   void help() override;
   void open() override;
-  void setHelp(std::shared_ptr<HelpDialog> &help) override;
+  void setHelp(HelpDialog *help) override;
 
 private:
 
@@ -90,7 +90,7 @@ protected:
 
   IExportFeaturesView *mView;
   IExportFeaturesModel *mModel;
-  std::shared_ptr<HelpDialog> mHelp;
+  HelpDialog *mHelp;
 };
 
 

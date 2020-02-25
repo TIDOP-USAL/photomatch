@@ -1214,7 +1214,7 @@ void MainWindowView::update()
   mActionSetSession->setDisabled(bProcessing);
   mActionDeleteSession->setDisabled(bProcessing);
 
-  mActionLoadImages->setDisabled(bLoadingImages);
+  mActionLoadImages->setDisabled(bLoadingImages || bProcessing);
 }
 
 void MainWindowView::openFromHistory()

@@ -145,8 +145,8 @@ void PassPointsGroupingProcess::run()
       ofs << i;
 
       for (size_t j = 0; j < idx_pass_points[i].size(); j++){
-        ofs << " " << idx_pass_points[i][j].first.toStdString()
-            << " " << idx_pass_points[i][j].second;
+        ofs << " \"" << idx_pass_points[i][j].first.toStdString()
+            << "\" " << idx_pass_points[i][j].second;
       }
 
       ofs << std::endl;

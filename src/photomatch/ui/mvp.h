@@ -189,7 +189,7 @@ public slots:
    * \brief Set Help
    * \param[in] help
    */
-  virtual void setHelp(std::shared_ptr<HelpDialog> &help) = 0;
+  virtual void setHelp(HelpDialog *help) = 0;
 
 private:
 

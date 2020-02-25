@@ -25,6 +25,7 @@
 #include "MainWindowView.h"
 #include "MainWindowModel.h"
 #include "MainWindowPresenter.h"
+#include "ComponentsManager.h"
 
 #include <QApplication>
 
@@ -40,10 +41,12 @@ int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
 
-  MainWindowView view;
-  MainWindowModel model;
-  MainWindowPresenter presenter(&view, &model);
-  presenter.open();
+  ComponentsManager componentsManager;
+  componentsManager.mainWindowPresenter()->open();
+//  MainWindowView view;
+//  MainWindowModel model;
+//  MainWindowPresenter presenter(&view, &model);
+//  presenter.open();
 
   bool r = a.exec();
 
