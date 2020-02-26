@@ -870,8 +870,8 @@ void passPointsWrite(const QString &fname,
       ofs << i;
 
       for (size_t j = 0; j < pass_points[i].size(); j++){
-        ofs << " " << pass_points[i][j].first.toStdString()
-            << " " << pass_points[i][j].second;
+        ofs << ";" << pass_points[i][j].first.toStdString()
+          << ";" << pass_points[i][j].second;
       }
 
       ofs << std::endl;
@@ -890,7 +890,9 @@ void passPointsRead(const QString &fname, std::vector<std::vector<std::pair<QStr
 
     int r = 0;
     while (std::getline(ifs, line)) {
-      QStringList list = QString(line.c_str()).split(" ");
+
+
+      QStringList list = QString(line.c_str()).split(";");
       int size = list.size();
       if (size >= 1){
         if (size == 1 || size % 2 == 0){

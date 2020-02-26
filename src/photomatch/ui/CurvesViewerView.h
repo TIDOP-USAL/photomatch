@@ -63,19 +63,9 @@ public:
   virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) = 0;
 
   virtual QString leftImage() const = 0;
-
-  /*!
-   * \brief Set the left image
-   * \param[in] leftImage Image izquierda
-   */
   virtual void setLeftImage(const QString &leftImage) = 0;
 
   virtual QString rightImage() const = 0;
-
-  /*!
-   * \brief Set the right image
-   * \param[in] rightImage Right image
-   */
   virtual void setRightImage(const QString &rightImage) = 0;
 
   /*!

@@ -129,117 +129,122 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
   double auc = 0.0;
   msgInfo("Compute Curve for session %s", session.toStdString().c_str());
 
-  QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
-  QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
+  try {
+    QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
+    QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
 
-  if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
-    return auc;
+    if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
+      return auc;
 
-  QString groundTruth = mProjectModel->groundTruth();
-  std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
+    QString groundTruth = mProjectModel->groundTruth();
+    std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
 
-  std::vector<cv::Point2f> pts_query;
-  std::vector<cv::Point2f> pts_train;
-  std::string line;
+    std::vector<cv::Point2f> pts_query;
+    std::vector<cv::Point2f> pts_train;
+    std::string line;
 
-  if (ifs.is_open()){
+    if (ifs.is_open()){
 
-    while (std::getline(ifs, line)) {
+      while (std::getline(ifs, line)) {
 
-      QStringList list = QString(line.c_str()).split(";");
-      if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
-        cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
-        cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
-        pts_query.push_back(pt_query);
-        pts_train.push_back(pt_train);
-      } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
-        cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
-        cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
-        pts_query.push_back(pt_query);
-        pts_train.push_back(pt_train);
+        QStringList list = QString(line.c_str()).split(";");
+        if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
+          cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
+          cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
+          pts_query.push_back(pt_query);
+          pts_train.push_back(pt_train);
+        } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
+          cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
+          cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
+          pts_query.push_back(pt_query);
+          pts_train.push_back(pt_train);
+        }
+
       }
+
+      ifs.close();
 
     }
 
-    ifs.close();
+    if (pts_query.size() == 0) {
+      msgWarning("Ground Truth not available for these images");
+      return 0.0;
+    }
 
-  }
+    cv::Mat H = cv::findHomography(pts_query, pts_train);
 
-  if (pts_query.size() == 0) {
-    msgWarning("Ground Truth not available for these images");
-    return 0.0;
-  }
+    cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
+    cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
 
-  cv::Mat H = cv::findHomography(pts_query, pts_train);
+    if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
+      std::vector<std::pair<QString, QString>> matches = _session->matches(imgLeft);
+      if (!matches.empty()){
+        for (auto &m : matches){
+          if (m.first.compare(imgRight) == 0){
 
-  cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
-  cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
+            ///TODO: Codigo repetido
+            std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+            matchesReader->read();
+            std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
+            std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
+            matchesReader.reset();
 
-  if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
-    std::vector<std::pair<QString, QString>> matches = _session->matches(imgLeft);
-    if (!matches.empty()){
-      for (auto &m : matches){
-        if (m.first.compare(imgRight) == 0){
+            std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
+            featuresRead->read();
+            std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+            featuresRead = FeaturesReaderFactory::createReader(_session->features(imgRight));
+            featuresRead->read();
+            std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
 
-          ///TODO: Codigo repetido
-          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
-          matchesReader->read();
-          std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
-          std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
-          matchesReader.reset();
-
-          std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
-          featuresRead->read();
-          std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
-          featuresRead = FeaturesReaderFactory::createReader(_session->features(imgRight));
-          featuresRead->read();
-          std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
-
-          std::vector<std::pair<double, int>> matchClassification;
+            std::vector<std::pair<double, int>> matchClassification;
 
 
-          for (size_t i = 0; i < goodMatches.size(); i++){
-            std::vector<cv::KeyPoint> key1;
-            std::vector<cv::KeyPoint> key2;
-            key1.push_back(keyPoints1[static_cast<size_t>(goodMatches[i].queryIdx)]);
-            key2.push_back(keyPoints2[static_cast<size_t>(goodMatches[i].trainIdx)]);
+            for (size_t i = 0; i < goodMatches.size(); i++){
+              std::vector<cv::KeyPoint> key1;
+              std::vector<cv::KeyPoint> key2;
+              key1.push_back(keyPoints1[static_cast<size_t>(goodMatches[i].queryIdx)]);
+              key2.push_back(keyPoints2[static_cast<size_t>(goodMatches[i].trainIdx)]);
 
-            float repeteability = 0;
-            int corres = 0;
-            cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
+              float repeteability = 0;
+              int corres = 0;
+              cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
 
-            int classification = corres == -1 ? 0 : 1;
-            std::pair<double, int> pair = std::make_pair(goodMatches[i].distance, classification);
-            matchClassification.push_back(pair);
+              int classification = corres == -1 ? 0 : 1;
+              std::pair<double, int> pair = std::make_pair(goodMatches[i].distance, classification);
+              matchClassification.push_back(pair);
+            }
+
+
+            for (size_t i = 0; i < wrongMatches.size(); i++){
+
+              std::vector<cv::KeyPoint> key1;
+              std::vector<cv::KeyPoint> key2;
+              key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
+              key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
+
+              float repeteability = 0;
+              int corres = 0;
+              cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
+
+              int classification = corres == -1 ? 0 : 1;
+              std::pair<double, int> pair = std::make_pair(wrongMatches[i].distance, classification);
+              matchClassification.push_back(pair);
+            }
+
+
+            ROCCurve<double> rocCurve(matchClassification);
+            curve = rocCurve.curve();
+            auc = rocCurve.auc();
+
+            break;
           }
-
-
-          for (size_t i = 0; i < wrongMatches.size(); i++){
-
-            std::vector<cv::KeyPoint> key1;
-            std::vector<cv::KeyPoint> key2;
-            key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
-            key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
-
-            float repeteability = 0;
-            int corres = 0;
-            cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
-
-            int classification = corres == -1 ? 0 : 1;
-            std::pair<double, int> pair = std::make_pair(wrongMatches[i].distance, classification);
-            matchClassification.push_back(pair);
-          }
-
-
-          ROCCurve<double> rocCurve(matchClassification);
-          curve = rocCurve.curve();
-          auc = rocCurve.auc();
-
-          break;
         }
       }
     }
+  }  catch (std::exception &e) {
+    msgError(e.what());
   }
+
   return auc;
 }
 
@@ -267,6 +272,7 @@ double PRCurvesViewerModel::computeCurve(const QString &session, const QString &
   double auc = 0.0;
 
   msgInfo("Compute Curve for session %s", session.toStdString().c_str());
+
 
   QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
   QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
@@ -399,108 +405,114 @@ double DETCurvesViewerModel::computeCurve(const QString &session, const QString 
 
   msgInfo("Compute Curve for session %s", session.toStdString().c_str());
 
-  QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
-  QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
+  try {
+    QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
+    QString imgPath2 = mProjectModel->findImageByName(imgRight)->path();
 
-  if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
-    return auc;
+    if (QFileInfo(imgPath1).exists() == false || QFileInfo(imgPath2).exists() == false)
+      return auc;
 
-  QString groundTruth = mProjectModel->groundTruth();
-  std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
+    QString groundTruth = mProjectModel->groundTruth();
+    std::ifstream ifs(groundTruth.toStdString(), std::ifstream::in);
 
 
-  std::vector<cv::Point2f> pts_query;
-  std::vector<cv::Point2f> pts_train;
-  std::string line;
+    std::vector<cv::Point2f> pts_query;
+    std::vector<cv::Point2f> pts_train;
+    std::string line;
 
-  if (ifs.is_open()){
+    if (ifs.is_open()){
 
-    while (std::getline(ifs, line)) {
+      while (std::getline(ifs, line)) {
 
-      QStringList list = QString(line.c_str()).split(";");
-      if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
-        cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
-        cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
-        pts_query.push_back(pt_query);
-        pts_train.push_back(pt_train);
-      } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
-        cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
-        cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
-        pts_query.push_back(pt_query);
-        pts_train.push_back(pt_train);
+        QStringList list = QString(line.c_str()).split(";");
+        if (list[0].compare(imgLeft) == 0 && list[1].compare(imgRight) == 0){
+          cv::Point2f pt_query(list[2].toFloat(), list[3].toFloat());
+          cv::Point2f pt_train(list[4].toFloat(), list[5].toFloat());
+          pts_query.push_back(pt_query);
+          pts_train.push_back(pt_train);
+        } else if (list[0].compare(imgRight) == 0 && list[1].compare(imgLeft) == 0){
+          cv::Point2f pt_query(list[4].toFloat(), list[5].toFloat());
+          cv::Point2f pt_train(list[2].toFloat(), list[3].toFloat());
+          pts_query.push_back(pt_query);
+          pts_train.push_back(pt_train);
+        }
+
       }
+
+      ifs.close();
 
     }
 
-    ifs.close();
+    cv::Mat H = cv::findHomography(pts_query, pts_train);
 
-  }
+    cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
+    cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
 
-  cv::Mat H = cv::findHomography(pts_query, pts_train);
+    if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
+      std::vector<std::pair<QString, QString>> matches = _session->matches(imgLeft);
+      if (!matches.empty()){
+        for (auto &m : matches){
+          if (m.first.compare(imgRight) == 0) {
 
-  cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
-  cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
+            std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
+            matchesReader->read();
+            std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
+            std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
+            matchesReader.reset();
 
-  if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
-    std::vector<std::pair<QString, QString>> matches = _session->matches(imgLeft);
-    if (!matches.empty()){
-      for (auto &m : matches){
-        if (m.first.compare(imgRight) == 0) {
+            std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
+            featuresRead->read();
+            std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+            featuresRead = FeaturesReaderFactory::createReader(_session->features(imgRight));
+            featuresRead->read();
+            std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
 
-          std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
-          matchesReader->read();
-          std::vector<cv::DMatch> goodMatches = matchesReader->goodMatches();
-          std::vector<cv::DMatch> wrongMatches = matchesReader->wrongMatches();
-          matchesReader.reset();
+            std::vector<std::pair<double, int>> matchClassification;
 
-          std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(_session->features(imgLeft));
-          featuresRead->read();
-          std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
-          featuresRead = FeaturesReaderFactory::createReader(_session->features(imgRight));
-          featuresRead->read();
-          std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
+            for (size_t i = 0; i < goodMatches.size(); i++){
+              std::vector<cv::KeyPoint> key1;
+              std::vector<cv::KeyPoint> key2;
+              key1.push_back(keyPoints1[static_cast<size_t>(goodMatches[i].queryIdx)]);
+              key2.push_back(keyPoints2[static_cast<size_t>(goodMatches[i].trainIdx)]);
 
-          std::vector<std::pair<double, int>> matchClassification;
+              float repeteability = 0;
+              int corres = 0;
+              cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
 
-          for (size_t i = 0; i < goodMatches.size(); i++){
-            std::vector<cv::KeyPoint> key1;
-            std::vector<cv::KeyPoint> key2;
-            key1.push_back(keyPoints1[static_cast<size_t>(goodMatches[i].queryIdx)]);
-            key2.push_back(keyPoints2[static_cast<size_t>(goodMatches[i].trainIdx)]);
+              int classification = corres == -1 ? 0 : 1;
+              std::pair<double, int> pair = std::make_pair(goodMatches[i].distance, classification);
+              matchClassification.push_back(pair);
+            }
 
-            float repeteability = 0;
-            int corres = 0;
-            cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
+            for (size_t i = 0; i < wrongMatches.size(); i++){
 
-            int classification = corres == -1 ? 0 : 1;
-            std::pair<double, int> pair = std::make_pair(goodMatches[i].distance, classification);
-            matchClassification.push_back(pair);
+              std::vector<cv::KeyPoint> key1;
+              std::vector<cv::KeyPoint> key2;
+              key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
+              key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
+
+              float repeteability = 0;
+              int corres = 0;
+              cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
+
+              int classification = corres == -1 ? 0 : 1;
+              std::pair<double, int> pair = std::make_pair(wrongMatches[i].distance, classification);
+              matchClassification.push_back(pair);
+            }
+
+            DETCurve<double> detCurve(matchClassification);
+            curve = detCurve.curve();
+            auc = detCurve.auc();
+
+            break;
           }
-
-          for (size_t i = 0; i < wrongMatches.size(); i++){
-
-            std::vector<cv::KeyPoint> key1;
-            std::vector<cv::KeyPoint> key2;
-            key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
-            key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
-
-            float repeteability = 0;
-            int corres = 0;
-            cv::evaluateFeatureDetector(img1, img2, H, &key1, &key2, repeteability, corres);
-
-            int classification = corres == -1 ? 0 : 1;
-            std::pair<double, int> pair = std::make_pair(wrongMatches[i].distance, classification);
-            matchClassification.push_back(pair);
-          }
-
-          DETCurve<double> detCurve(matchClassification);
-          curve = detCurve.curve();
-          auc = detCurve.auc();
-
-          break;
         }
       }
     }
+  } catch (cv::Exception &e) {
+    msgError(e.what());
+  } catch (std::exception &e) {
+    msgError(e.what());
   }
 
   return auc;

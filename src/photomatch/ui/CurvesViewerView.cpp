@@ -82,7 +82,7 @@ void CurvesViewerView::onComboBoxLeftImageIndexChanged(int idx)
 {
   QString image_left(mComboBoxLeftImage->itemText(idx));
   emit leftImageChange(image_left);
-  QString image_right(mComboBoxRightImage->itemText(idx));
+  QString image_right(mComboBoxRightImage->itemText(0));
   for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
     if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
       if (item->checkState(0)){
