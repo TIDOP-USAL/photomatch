@@ -80,45 +80,22 @@ CurvesViewerView::~CurvesViewerView()
 
 void CurvesViewerView::onComboBoxLeftImageIndexChanged(int idx)
 {
-  QString image_left(mComboBoxLeftImage->itemText(idx));
-  emit leftImageChange(image_left);
-  QString image_right(mComboBoxRightImage->itemText(idx));
-  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
-    if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
-      if (item->checkState(0)){
-        QString session = item->text(0);
-        emit deleteCurve(item->text(0));
-        emit drawCurve(session, image_left, image_right);
-      }
-    }
-  }
+  emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
 void CurvesViewerView::onComboBoxRightImageIndexChanged(int idx)
 {
-  QString image_right(mComboBoxRightImage->itemText(idx));
-  QString image_left(mComboBoxLeftImage->currentText());
-  emit rightImageChange(image_right);
-  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
-    if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
-      if (item->checkState(0)){
-        QString session = item->text(0);
-        emit deleteCurve(item->text(0));
-        emit drawCurve(session, image_left, image_right);
-      }
-    }
-  }
+  emit rightImageChange(mComboBoxRightImage->itemText(idx));
 }
 
 void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
 {
-  if (item && item->checkState(column)) {
-    QString session = item->text(0);
-    QString image_left = mComboBoxLeftImage->currentText();
-    QString image_right = mComboBoxRightImage->currentText();
-    emit drawCurve(session, image_left, image_right);
+  if (item == nullptr) return;
+
+  if (item->checkState(column)) {
+    emit activeSession(item->text(0));
   } else {
-    emit deleteCurve(item->text(0));
+    emit disableSession(item->text(0));
   }
 }
 
@@ -131,6 +108,18 @@ void CurvesViewerView::addSession(const QString &session, const QString &detecto
     item->setCheckState(0, Qt::Unchecked);
     mTreeWidgetSessions->addTopLevelItem(item);
   }
+}
+
+bool CurvesViewerView::isSessionActive(const QString &session) const
+{
+  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
+    if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
+      if (item->text(0).compare(session) == 0){
+        return item->checkState(0);
+      }
+    }
+  }
+  return false;
 }
 
 QString CurvesViewerView::leftImage() const
