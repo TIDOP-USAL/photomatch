@@ -100,6 +100,8 @@ public:
    */
   cv::Mat homography() const;
 
+  //std::vector<std::pair<QPointF, QPointF>> invert() const;
+
 private:
 
   QString mIdImg1;

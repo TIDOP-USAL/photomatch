@@ -165,6 +165,13 @@ cv::Mat HomologusPoints::homography() const
   return H;
 }
 
+//std::vector<std::pair<QPointF, QPointF> > HomologusPoints::invert() const
+//{
+//  for (size_t i = 0; i < mHomologusPoints.size(); i++){
+
+//  }
+//}
+
 
 
 

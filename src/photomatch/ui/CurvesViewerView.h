@@ -56,11 +56,8 @@ public:
 
   virtual ~ICurvesViewerView() override = default;
 
-  /*!
-   * \brief Add a session
-   * \param[in] session Session
-   */
   virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) = 0;
+  virtual bool isSessionActive(const QString &session) const = 0;
 
   virtual QString leftImage() const = 0;
   virtual void setLeftImage(const QString &leftImage) = 0;
@@ -87,8 +84,9 @@ signals:
 
   void leftImageChange(QString);
   void rightImageChange(QString);
-  void drawCurve(QString, QString, QString);
-  void deleteCurve(QString);
+  void activeSession(QString);
+  void disableSession(QString);
+
 };
 
 class CurvesViewerView
@@ -113,6 +111,7 @@ protected slots :
 // ICurvesViewerView interface
 
   virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) override;
+  virtual bool isSessionActive(const QString &session) const override;
   virtual QString leftImage() const override;
   virtual void setLeftImage(const QString &leftImage) override;
   virtual QString rightImage() const override;

@@ -110,6 +110,7 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
     if (!matches.empty()){
       for (auto &m : matches){
         if (m.first.compare(imgName2) == 0){
+
           std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(m.second);
           matchesReader->read();
           std::vector<cv::DMatch> match = matchesReader->goodMatches();

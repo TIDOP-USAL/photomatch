@@ -30,6 +30,7 @@
 #include "photomatch/core/features/matchio.h"
 #include "photomatch/core/utils.h"
 #include "photomatch/core/features/evaluation.h"
+#include "photomatch/core/features/groundtruth.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <opencv2/features2d.hpp>
@@ -83,6 +84,19 @@ std::vector<QString> CurvesViewerModel::imagePairs(const QString &imageName) con
   return pairs;
 }
 
+std::vector<QString> CurvesViewerModel::sessionNames() const
+{
+  std::vector<QString> session_names;
+
+  for (auto it = mProjectModel->sessionBegin(); it != mProjectModel->sessionEnd(); it++){
+    if ((*it)->detector() && (*it)->descriptor()){
+      session_names.push_back((*it)->name());
+    }
+  }
+
+  return session_names;
+}
+
 std::vector<std::tuple<QString, QString, QString> > CurvesViewerModel::sessions() const
 {
   std::vector<std::tuple<QString, QString, QString>> sessions;
@@ -127,7 +141,7 @@ std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session, 
 double ROCCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const
 {
   double auc = 0.0;
-  msgInfo("Compute Curve for session %s", session.toStdString().c_str());
+  msgInfo("Compute ROC Curve for session %s", session.toStdString().c_str());
 
   try {
     QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
@@ -173,6 +187,14 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
 
     cv::Mat H = cv::findHomography(pts_query, pts_train);
 
+    ///TODO: revisar findPair. ¿Devolver puntos homologos independientemente del orden de image1 y image2?
+//    GroundTruth groundTruth(mProjectModel->groundTruth());
+//    std::shared_ptr<HomologusPoints> homologusPoints = groundTruth.findPair(imgLeft, imgRight);
+//    if (homologusPoints == nullptr)
+//      return 0.0;
+
+//    cv::Mat H = homologusPoints->homography();
+
     cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
     cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
 
@@ -198,12 +220,19 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
 
             std::vector<std::pair<double, int>> matchClassification;
 
+            ///TODO: repetido en HomographyViewerModel
+            QString nameMatchesFile = QFileInfo(m.second).baseName();
+            int idx = nameMatchesFile.indexOf(imgLeft);
+            std::vector<cv::Point2f> pts_query;
+            std::vector<cv::Point2f> pts_train;
 
             for (size_t i = 0; i < goodMatches.size(); i++){
+              size_t query_id = (idx == 0) ? static_cast<size_t>(goodMatches[i].queryIdx) : static_cast<size_t>(goodMatches[i].trainIdx);
+              size_t train_id = (idx == 0) ? static_cast<size_t>(goodMatches[i].trainIdx) : static_cast<size_t>(goodMatches[i].queryIdx);
               std::vector<cv::KeyPoint> key1;
               std::vector<cv::KeyPoint> key2;
-              key1.push_back(keyPoints1[static_cast<size_t>(goodMatches[i].queryIdx)]);
-              key2.push_back(keyPoints2[static_cast<size_t>(goodMatches[i].trainIdx)]);
+              key1.push_back(keyPoints1[query_id]);
+              key2.push_back(keyPoints2[train_id]);
 
               float repeteability = 0;
               int corres = 0;
@@ -216,11 +245,12 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
 
 
             for (size_t i = 0; i < wrongMatches.size(); i++){
-
               std::vector<cv::KeyPoint> key1;
               std::vector<cv::KeyPoint> key2;
-              key1.push_back(keyPoints1[static_cast<size_t>(wrongMatches[i].queryIdx)]);
-              key2.push_back(keyPoints2[static_cast<size_t>(wrongMatches[i].trainIdx)]);
+              size_t query_id = (idx == 0) ? static_cast<size_t>(wrongMatches[i].queryIdx) : static_cast<size_t>(wrongMatches[i].trainIdx);
+              size_t train_id = (idx == 0) ? static_cast<size_t>(wrongMatches[i].trainIdx) : static_cast<size_t>(wrongMatches[i].queryIdx);
+              key1.push_back(keyPoints1[query_id]);
+              key2.push_back(keyPoints2[train_id]);
 
               float repeteability = 0;
               int corres = 0;
@@ -271,7 +301,7 @@ double PRCurvesViewerModel::computeCurve(const QString &session, const QString &
 {
   double auc = 0.0;
 
-  msgInfo("Compute Curve for session %s", session.toStdString().c_str());
+  msgInfo("Compute PR Curve for session %s", session.toStdString().c_str());
 
 
   QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();
@@ -403,7 +433,7 @@ double DETCurvesViewerModel::computeCurve(const QString &session, const QString 
 {
   double auc = 0.0;
 
-  msgInfo("Compute Curve for session %s", session.toStdString().c_str());
+  msgInfo("Compute DET Curve for session %s", session.toStdString().c_str());
 
   try {
     QString imgPath1 = mProjectModel->findImageByName(imgLeft)->path();

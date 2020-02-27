@@ -114,6 +114,35 @@ public:
                             ISettingsModel *settingsModel);
   ~FeatureExtractorPresenter() override;
 
+private:
+
+  void setDetectorAndDescriptorProperties();
+  void setAgastDetectorProperties();
+  void setAkazeDetectorPropierties();
+  void setAkazeDescriptorProperties();
+  void setBoostDescriptorProperties();
+  void setBriefDescriptorProperties();
+  void setBriskDetectorProperties();
+  void setBriskDescriptorProperties();
+  void setDaisyDescriptorProperties();
+  void setFastDetectorProperties();
+  void setFreakDescriptorProperties();
+  void setGfttDetectorProperties();
+  void setHogDescriptorProperties();
+  void setKazeDetectorProperties();
+  void setKazeDescriptorProperties();
+  void setLatchDescriptorProperties();
+  void setMsdDetectorProperties();
+  void setMserDetectorProperties();
+  void setOrbDetectorProperties();
+  void setOrbDescriptorProperties();
+  void setSiftDetectorProperties();
+  void setSiftDescriptorProperties();
+  void setStarDetectorProperties();
+  void setSurfDetectorProperties();
+  void setSurfDescriptorProperties();
+  void setVggDescriptorProperties();
+
 // IPresenter interface
 
 public slots:
