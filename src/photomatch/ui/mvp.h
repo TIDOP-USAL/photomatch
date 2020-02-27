@@ -106,9 +106,14 @@ public:
 private:
 
   /*!
-   * \brief Dialog initialization
+   * \brief Dialog initialization UI
    */
-  virtual void init() = 0;
+  virtual void initUI() = 0;
+
+  /*!
+   * \brief Signal and slots initialization
+   */
+  virtual void initSignalAndSlots() = 0;
 
 signals:
 

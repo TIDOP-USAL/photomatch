@@ -38,11 +38,8 @@ BriefWidgetImp::BriefWidgetImp(QWidget *parent)
     mBytes(new QComboBox(this)),
     mUseOrientation(new QCheckBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mBytes,             SIGNAL(currentTextChanged(QString)),   this, SIGNAL(bytesChange(QString)));
-  connect(mUseOrientation,    SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 BriefWidgetImp::~BriefWidgetImp()
@@ -88,7 +85,7 @@ void BriefWidgetImp::reset()
   mUseOrientation->setChecked(false);
 }
 
-void BriefWidgetImp::init()
+void BriefWidgetImp::initUI()
 {
   this->setWindowTitle("BRIEF");
 
@@ -114,6 +111,12 @@ void BriefWidgetImp::init()
   reset();
 
   update();
+}
+
+void BriefWidgetImp::initSignalAndSlots()
+{
+  connect(mBytes,          SIGNAL(currentTextChanged(QString)),   this, SIGNAL(bytesChange(QString)));
+  connect(mUseOrientation, SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
 }
 
 } // namespace photomatch

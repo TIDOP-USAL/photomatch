@@ -38,15 +38,9 @@ ClaheWidgetImp::ClaheWidgetImp(QWidget *parent)
     mTilesGridX(new QSpinBox(this)),
     mTilesGridY(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mClipLimit,     SIGNAL(valueChanged(double)),     this, SIGNAL(clipLimitChange(double)));
-  connect(mTilesGridX,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridXChange(int)));
-  connect(mTilesGridY,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridYChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 ClaheWidgetImp::~ClaheWidgetImp()
@@ -113,7 +107,7 @@ void ClaheWidgetImp::reset()
   mTilesGridY->setValue(8);
 }
 
-void ClaheWidgetImp::init()
+void ClaheWidgetImp::initUI()
 {
   this->setWindowTitle("CLAHE");
 
@@ -158,6 +152,13 @@ void ClaheWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void ClaheWidgetImp::initSignalAndSlots()
+{
+  connect(mClipLimit,     SIGNAL(valueChanged(double)),     this, SIGNAL(clipLimitChange(double)));
+  connect(mTilesGridX,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridXChange(int)));
+  connect(mTilesGridY,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridYChange(int)));
 }
 
 } // namespace photomatch

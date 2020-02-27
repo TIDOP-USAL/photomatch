@@ -40,15 +40,9 @@ AgastWidgetImp::AgastWidgetImp(QWidget *parent)
     mNonmaxSuppression(new QCheckBox(this)),
     mDetectorType(new QComboBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-
-  connect(mThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(thresholdChange(int)));
-  connect(mNonmaxSuppression,  SIGNAL(clicked(bool)),                this, SIGNAL(nonmaxSuppressionChange(bool)));
-  connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 AgastWidgetImp::~AgastWidgetImp()
@@ -118,7 +112,7 @@ void AgastWidgetImp::reset()
   mDetectorType->setCurrentText("OAST_9_16");
 }
 
-void AgastWidgetImp::init()
+void AgastWidgetImp::initUI()
 {
   this->setWindowTitle("AGAST");
 
@@ -149,6 +143,13 @@ void AgastWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void AgastWidgetImp::initSignalAndSlots()
+{
+  connect(mThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(thresholdChange(int)));
+  connect(mNonmaxSuppression,  SIGNAL(clicked(bool)),                this, SIGNAL(nonmaxSuppressionChange(bool)));
+  connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
 }
 
 } // namespace photomatch

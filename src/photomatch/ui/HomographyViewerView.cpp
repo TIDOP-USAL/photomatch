@@ -39,13 +39,8 @@ namespace photomatch
 HomographyViewerView::HomographyViewerView(QWidget *parent, Qt::WindowFlags f)
   : IHomographyViewerView(parent, f)
 {
-  init();
-
-  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
-  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close),     SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 HomographyViewerView::~HomographyViewerView()
@@ -112,7 +107,7 @@ void HomographyViewerView::setHomography(const QImage &homography)
   mGraphicsView->zoomExtend();
 }
 
-void HomographyViewerView::init()
+void HomographyViewerView::initUI()
 {
   this->setWindowTitle(tr("Homography Viewer"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -154,6 +149,15 @@ void HomographyViewerView::init()
   mGraphicsView->setContextMenu(contextMenuLeft);
 
   update();
+}
+
+void HomographyViewerView::initSignalAndSlots()
+{
+  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
+  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
+
+  connect(mButtonBox->button(QDialogButtonBox::Close),     SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 void HomographyViewerView::clear()

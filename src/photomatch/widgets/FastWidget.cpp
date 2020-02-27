@@ -40,13 +40,8 @@ FastWidgetImp::FastWidgetImp(QWidget *parent)
     mNonmaxSuppression(new QCheckBox(this)),
     mDetectorType(new QComboBox(this))
 {
-  init();
-
-  /// Signals and slots
-
-  connect(mThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(thresholdChange(int)));
-  connect(mNonmaxSuppression,  SIGNAL(clicked(bool)),                this, SIGNAL(nonmaxSuppressionChange(bool)));
-  connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 FastWidgetImp::~FastWidgetImp()
@@ -99,12 +94,12 @@ void FastWidgetImp::reset()
   const QSignalBlocker blockerFastThreshold(mThreshold);
   const QSignalBlocker blockerDetectorType(mDetectorType);
 
-  mThreshold->setValue(10);      // OpenCV default value  = 10
+  mThreshold->setValue(10);
   mNonmaxSuppression->setChecked(true);
   mDetectorType->setCurrentText("TYPE_9_16");
 }
 
-void FastWidgetImp::init()
+void FastWidgetImp::initUI()
 {
   this->setWindowTitle("FAST");
 
@@ -131,9 +126,16 @@ void FastWidgetImp::init()
   mDetectorType->addItem("TYPE_9_16");
   propertiesLayout->addWidget(mDetectorType, 2, 1);
 
-  reset(); /// set default values
+  reset();
 
   update();
+}
+
+void FastWidgetImp::initSignalAndSlots()
+{
+  connect(mThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(thresholdChange(int)));
+  connect(mNonmaxSuppression,  SIGNAL(clicked(bool)),                this, SIGNAL(nonmaxSuppressionChange(bool)));
+  connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
 }
 
 } // namespace photomatch

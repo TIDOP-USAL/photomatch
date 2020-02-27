@@ -40,17 +40,9 @@ AcebsfWidgetImp::AcebsfWidgetImp(QWidget *parent)
     mK1(new QDoubleSpinBox(this)),
     mK2(new QDoubleSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-  connect(mL,             SIGNAL(valueChanged(double)),     this, SIGNAL(lChange(double)));
-  connect(mK1,            SIGNAL(valueChanged(double)),     this, SIGNAL(k1Change(double)));
-  connect(mK2,            SIGNAL(valueChanged(double)),     this, SIGNAL(k2Change(double)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 AcebsfWidgetImp::~AcebsfWidgetImp()
@@ -144,7 +136,7 @@ void AcebsfWidgetImp::reset()
   mK2->setValue(0.5);
 }
 
-void AcebsfWidgetImp::init()
+void AcebsfWidgetImp::initUI()
 {
   this->setWindowTitle("ACEBSF");
 
@@ -195,6 +187,15 @@ void AcebsfWidgetImp::init()
 
   reset();
   update();
+}
+
+void AcebsfWidgetImp::initSignalAndSlots()
+{
+  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mL,             SIGNAL(valueChanged(double)),     this, SIGNAL(lChange(double)));
+  connect(mK1,            SIGNAL(valueChanged(double)),     this, SIGNAL(k1Change(double)));
+  connect(mK2,            SIGNAL(valueChanged(double)),     this, SIGNAL(k2Change(double)));
 }
 
 } // namespace photomatch

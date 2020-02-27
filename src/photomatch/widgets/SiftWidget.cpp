@@ -41,18 +41,9 @@ SiftWidgetImp::SiftWidgetImp(QWidget *parent)
     mEdgeThreshold(new QDoubleSpinBox(this)),
     mSigma(new QDoubleSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-
-  connect(mFeaturesNumber,    SIGNAL(valueChanged(int)),    this, SIGNAL(featuresNumberChange(int)));
-  connect(mOctaveLayers,      SIGNAL(valueChanged(int)),    this, SIGNAL(octaveLayersChange(int)));
-  connect(mContrastThreshold, SIGNAL(valueChanged(double)), this, SIGNAL(contrastThresholdChange(double)));
-  connect(mEdgeThreshold,     SIGNAL(valueChanged(double)), this, SIGNAL(edgeThresholdChange(double)));
-  connect(mSigma,             SIGNAL(valueChanged(double)), this, SIGNAL(sigmaChange(double)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 SiftWidgetImp::~SiftWidgetImp()
@@ -146,7 +137,7 @@ void SiftWidgetImp::reset()
   mSigma->setValue(1.6);
 }
 
-void SiftWidgetImp::init()
+void SiftWidgetImp::initUI()
 {
   this->setWindowTitle("SIFT");
 
@@ -186,6 +177,15 @@ void SiftWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void SiftWidgetImp::initSignalAndSlots()
+{
+  connect(mFeaturesNumber,    SIGNAL(valueChanged(int)),    this, SIGNAL(featuresNumberChange(int)));
+  connect(mOctaveLayers,      SIGNAL(valueChanged(int)),    this, SIGNAL(octaveLayersChange(int)));
+  connect(mContrastThreshold, SIGNAL(valueChanged(double)), this, SIGNAL(contrastThresholdChange(double)));
+  connect(mEdgeThreshold,     SIGNAL(valueChanged(double)), this, SIGNAL(edgeThresholdChange(double)));
+  connect(mSigma,             SIGNAL(valueChanged(double)), this, SIGNAL(sigmaChange(double)));
 }
 
 

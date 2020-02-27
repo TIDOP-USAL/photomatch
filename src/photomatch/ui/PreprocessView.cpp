@@ -40,16 +40,9 @@ PreprocessView::PreprocessView(QWidget *parent)
   : IPreprocessView(parent),
     mButtonBox(new QDialogButtonBox(this))
 {
-  init();
-
-  retranslate();
-
-  connect(mComboBoxPreprocess,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(preprocessChange(QString)));
-  connect(mCheckBoxFullImage,   SIGNAL(clicked(bool)),               this, SLOT(onCheckBoxFullImageChange()));
-
-  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 PreprocessView::~PreprocessView()
@@ -116,7 +109,7 @@ void PreprocessView::onCheckBoxFullImageChange()
   mSpinBoxMaxImageSize->setEnabled(!mCheckBoxFullImage->isChecked());
 }
 
-void PreprocessView::init()
+void PreprocessView::initUI()
 {
   this->setWindowTitle(tr("Preprocess"));
   this->setObjectName(QStringLiteral("PreprocessView"));
@@ -155,6 +148,16 @@ void PreprocessView::init()
   gridLayout->addWidget(mButtonBox, 4, 0, 1, 2);
 
   update();
+}
+
+void PreprocessView::initSignalAndSlots()
+{
+  connect(mComboBoxPreprocess,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(preprocessChange(QString)));
+  connect(mCheckBoxFullImage,   SIGNAL(clicked(bool)),               this, SLOT(onCheckBoxFullImageChange()));
+
+  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
 void PreprocessView::clear()

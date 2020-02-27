@@ -36,13 +36,8 @@ namespace photomatch
 RepeatabilityView::RepeatabilityView(QWidget *parent, Qt::WindowFlags f)
   : IRepeatabilityView(parent, f)
 {
-  init();
-
-  connect(mTreeWidgetSessions, SIGNAL(itemSelectionChanged()), this, SLOT(onTreeWidgetSessionsItemSelectionChanged()));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 RepeatabilityView::~RepeatabilityView()
@@ -90,7 +85,7 @@ void RepeatabilityView::setRepeatability(const std::vector<std::tuple<QString, Q
   }
 }
 
-void RepeatabilityView::init()
+void RepeatabilityView::initUI()
 {
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(994, 688);
@@ -131,6 +126,14 @@ void RepeatabilityView::init()
   mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
 
   update();
+}
+
+void RepeatabilityView::initSignalAndSlots()
+{
+  connect(mTreeWidgetSessions, SIGNAL(itemSelectionChanged()), this, SLOT(onTreeWidgetSessionsItemSelectionChanged()));
+
+  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 void RepeatabilityView::clear()

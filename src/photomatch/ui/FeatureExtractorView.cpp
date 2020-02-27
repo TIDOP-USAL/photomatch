@@ -40,14 +40,8 @@ FeatureExtractorView::FeatureExtractorView(QWidget *parent)
   : IFeatureExtractorView(parent),
     mButtonBox(new QDialogButtonBox(this))
 {
-  init();
-
-  connect(mComboBoxKeypointDetector,     SIGNAL(currentTextChanged(QString)), this, SIGNAL(keypointDetectorChange(QString)));
-  connect(mComboBoxDescriptorExtractor,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(descriptorExtractorChange(QString)));
-
-  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 FeatureExtractorView::~FeatureExtractorView()
@@ -148,7 +142,7 @@ void FeatureExtractorView::enableDescriptorExtractor(const QString &descriptorEx
   }
 }
 
-void FeatureExtractorView::init()
+void FeatureExtractorView::initUI()
 {
   this->setWindowTitle(tr("Feature Extractor"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -191,6 +185,16 @@ void FeatureExtractorView::init()
 
 
   update();
+}
+
+void FeatureExtractorView::initSignalAndSlots()
+{
+  connect(mComboBoxKeypointDetector,     SIGNAL(currentTextChanged(QString)), this, SIGNAL(keypointDetectorChange(QString)));
+  connect(mComboBoxDescriptorExtractor,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(descriptorExtractorChange(QString)));
+
+  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
 void FeatureExtractorView::clear()

@@ -190,15 +190,39 @@ void PreprocessPresenter::help()
 
 void PreprocessPresenter::open()
 {
-  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
-  if (current_session == nullptr) {
+
+  if (Session *current_session = mProjectModel->currentSession().get()) {
+    if (Preprocess *preprocess = current_session->preprocess().get()) {
+      this->setCurrentPreprocess(preprocess->name());
+      this->setPreprocessProperties(preprocess);
+    }
+
+    mView->setSessionName(current_session->name());
+    mView->exec();
+  } else {
     msgError("No active session found");
     return;
   }
+}
 
-  Preprocess *preprocess = current_session->preprocess().get();
-  if (preprocess) setCurrentPreprocess(preprocess->name());
+void PreprocessPresenter::setPreprocessProperties(Preprocess *preprocess)
+{
+  this->setAcebsfProperties(preprocess);
+  this->setClaheProperties(preprocess);
+  this->setCmbfheProperties(preprocess);
+  this->setDheProperties(preprocess);
+  this->setFaheProperties(preprocess);
+  this->setHmClaheProperties(preprocess);
+  this->setLcebsescsProperties(preprocess);
+  this->setMsrcpProperties(preprocess);
+  this->setNoshpProperties(preprocess);
+  this->setPoheProperties(preprocess);
+  this->setRswheProperties(preprocess);
+  this->setWallisProperties(preprocess);
+}
 
+void PreprocessPresenter::setAcebsfProperties(Preprocess *preprocess)
+{
   mACEBSF->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
                           dynamic_cast<Acebsf *>(preprocess)->blockSize() :
                           mSettingsModel->acebsfBlockSize());
@@ -211,26 +235,41 @@ void PreprocessPresenter::open()
   mACEBSF->setK2(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
                    dynamic_cast<Acebsf *>(preprocess)->k2() :
                    mSettingsModel->acebsfK2());
+}
 
+void PreprocessPresenter::setClaheProperties(Preprocess *preprocess)
+{
   mCLAHE->setClipLimit(preprocess && preprocess->type() == Preprocess::Type::clahe ?
                          dynamic_cast<Clahe *>(preprocess)->clipLimit() :
                          mSettingsModel->claheClipLimit());
   mCLAHE->setTilesGridSize(preprocess && preprocess->type() == Preprocess::Type::clahe ?
                              dynamic_cast<Clahe *>(preprocess)->tilesGridSize() :
                              mSettingsModel->claheTilesGridSize());
+}
 
+void PreprocessPresenter::setCmbfheProperties(Preprocess *preprocess)
+{
   mCMBFHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::cmbfhe ?
                           dynamic_cast<Cmbfhe *>(preprocess)->blockSize() :
                           mSettingsModel->faheBlockSize());
+}
 
+void PreprocessPresenter::setDheProperties(Preprocess *preprocess)
+{
   mDHE->setX(preprocess && preprocess->type() == Preprocess::Type::dhe ?
                dynamic_cast<Dhe *>(preprocess)->x() :
                mSettingsModel->dheX());
+}
 
+void PreprocessPresenter::setFaheProperties(Preprocess *preprocess)
+{
   mFAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::fahe ?
                         dynamic_cast<Fahe *>(preprocess)->blockSize() :
                         mSettingsModel->faheBlockSize());
+}
 
+void PreprocessPresenter::setHmClaheProperties(Preprocess *preprocess)
+{
   mHMCLAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
                            dynamic_cast<Hmclahe *>(preprocess)->blockSize() :
                            mSettingsModel->hmclaheBlockSize());
@@ -240,11 +279,17 @@ void PreprocessPresenter::open()
   mHMCLAHE->setPhi(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
                      dynamic_cast<Hmclahe *>(preprocess)->phi() :
                      mSettingsModel->hmclahePhi());
+}
 
+void PreprocessPresenter::setLcebsescsProperties(Preprocess *preprocess)
+{
   mLCEBSESCS->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::lce_bsescs ?
                              dynamic_cast<LceBsescs *>(preprocess)->blockSize() :
                              mSettingsModel->lceBsescsBlockSize());
+}
 
+void PreprocessPresenter::setMsrcpProperties(Preprocess *preprocess)
+{
   mMSRCP->setMidScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
                         dynamic_cast<Msrcp *>(preprocess)->midScale() :
                         mSettingsModel->msrcpMidScale());
@@ -254,22 +299,34 @@ void PreprocessPresenter::open()
   mMSRCP->setSmallScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
                           dynamic_cast<Msrcp *>(preprocess)->smallScale() :
                           mSettingsModel->msrcpSmallScale());
+}
 
+void PreprocessPresenter::setNoshpProperties(Preprocess *preprocess)
+{
   mNOSHP->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::noshp ?
                          dynamic_cast<Noshp *>(preprocess)->blockSize() :
                          mSettingsModel->noshpBlockSize());
+}
 
+void PreprocessPresenter::setPoheProperties(Preprocess *preprocess)
+{
   mPOHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::pohe ?
                         dynamic_cast<Pohe *>(preprocess)->blockSize() :
                         mSettingsModel->poheBlockSize());
+}
 
+void PreprocessPresenter::setRswheProperties(Preprocess *preprocess)
+{
   mRSWHE->setHistogramCut(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
                             static_cast<RswheWidget::HistogramCut>(dynamic_cast<Rswhe *>(preprocess)->histogramCut()) :
                             static_cast<RswheWidget::HistogramCut>(mSettingsModel->rswheHistogramCut()));
   mRSWHE->setHistogramDivisions(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
                                   dynamic_cast<Rswhe *>(preprocess)->histogramDivisions() :
                                   mSettingsModel->rswheHistogramDivisions());
+}
 
+void PreprocessPresenter::setWallisProperties(Preprocess *preprocess)
+{
   mWallis->setContrast(preprocess && preprocess->type() == Preprocess::Type::wallis ?
                          dynamic_cast<Wallis *>(preprocess)->contrast() :
                          mSettingsModel->wallisContrast());
@@ -285,9 +342,6 @@ void PreprocessPresenter::open()
   mWallis->setImposedLocalStdDev(preprocess && preprocess->type() == Preprocess::Type::wallis ?
                                    dynamic_cast<Wallis *>(preprocess)->imposedLocalStdDev() :
                                    mSettingsModel->wallisImposedLocalStdDev());
-
-  mView->setSessionName(current_session->name());
-  mView->exec();
 }
 
 void PreprocessPresenter::setHelp(std::shared_ptr<HelpDialog> &help)
@@ -344,84 +398,131 @@ void PreprocessPresenter::cancel()
 
 void PreprocessPresenter::run()
 {
-  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
-  if (current_session == nullptr) {
+  if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    if(std::shared_ptr<Preprocess> preprocess = current_session->preprocess()){
+      int i_ret = QMessageBox(QMessageBox::Warning,
+                              tr("Previous results"),
+                              tr("The previous results will be overwritten. Do you wish to continue?"),
+                              QMessageBox::Yes|QMessageBox::No).exec();
+      if (i_ret == QMessageBox::No) {
+        return;
+      }
+    }
+
+    mMultiProcess->clearProcessList();
+
+    QString currentPreprocess = mView->currentPreprocess();
+    std::shared_ptr<ImageProcess> image_process = this->preprocess(currentPreprocess);
+
+    mProjectModel->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
+    mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(image_process));
+
+    for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+      QString file_in = (*it)->path();
+      QString file_out = fileOut(file_in);
+
+      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess(file_in,
+                                                                      file_out,
+                                                                      image_process,
+                                                                      mView->fullImageSize() ? -1 : mView->maxImageSize()));
+
+      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+      mMultiProcess->appendProcess(preprocess);
+    }
+
+    connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
+    connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
+
+    if (mProgressHandler) {
+      connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
+      connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
+      connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
+
+      mProgressHandler->setRange(0, mMultiProcess->count());
+      mProgressHandler->setValue(0);
+      mProgressHandler->setTitle("Image Preprocessing");
+      mProgressHandler->setDescription("Preprocessing images...");
+      mProgressHandler->onInit();
+    }
+
+    mView->hide();
+
+    msgInfo("Preprocessing images");
+    QByteArray ba = currentPreprocess.toLocal8Bit();
+    const char *data = ba.constData();
+    msgInfo("  Preprocessing method     :  %s", data);
+
+    emit running();
+
+    mMultiProcess->start();
+  } else {
     msgError("No active session found");
     return;
   }
+}
 
-  if(std::shared_ptr<Preprocess> preprocess = current_session->preprocess()){
-    int i_ret = QMessageBox(QMessageBox::Warning,
-                            tr("Previous results"),
-                            tr("The previous results will be overwritten. Do you wish to continue?"),
-                            QMessageBox::Yes|QMessageBox::No).exec();
-    if (i_ret == QMessageBox::No) {
-      return;
-    }
-  }
-
-  mMultiProcess->clearProcessList();
-
-  QString currentPreprocess = mView->currentPreprocess();
-  std::shared_ptr<ImageProcess> imageProcess;
-
+std::shared_ptr<ImageProcess> PreprocessPresenter::preprocess(const QString &currentPreprocess)
+{
+  std::shared_ptr<ImageProcess> image_process;
   if (currentPreprocess.compare("ACEBSF") == 0) {
-    imageProcess = std::make_shared<AcebsfPreprocess>(mACEBSF->blockSize(),
-                                                      mACEBSF->l(),
-                                                      mACEBSF->k1(),
-                                                      mACEBSF->k2());
+    image_process = std::make_shared<AcebsfPreprocess>(mACEBSF->blockSize(),
+                                                       mACEBSF->l(),
+                                                       mACEBSF->k1(),
+                                                       mACEBSF->k2());
   } else if (currentPreprocess.compare("CLAHE") == 0) {
 #ifdef HAVE_CUDA
     if (mSettingsModel->useCuda()){
-       imageProcess = std::make_shared<ClahePreprocessCuda>(mCLAHE->clipLimit(),
-                                                            mCLAHE->tileGridSize());
+       image_process = std::make_shared<ClahePreprocessCuda>(mCLAHE->clipLimit(),
+                                                             mCLAHE->tileGridSize());
     } else {
 #endif // HAVE_CUDA
-      imageProcess = std::make_shared<ClahePreprocess>(mCLAHE->clipLimit(),
-                                                       mCLAHE->tileGridSize());
+      image_process = std::make_shared<ClahePreprocess>(mCLAHE->clipLimit(),
+                                                        mCLAHE->tileGridSize());
 #ifdef HAVE_CUDA
     }
 #endif // HAVE_CUDA
   } else if (currentPreprocess.compare("CMBFHE") == 0) {
-    imageProcess = std::make_shared<CmbfhePreprocess>(mCMBFHE->blockSize());
+    image_process = std::make_shared<CmbfhePreprocess>(mCMBFHE->blockSize());
   } else if (currentPreprocess.compare("Decolorization") == 0) {
-    imageProcess = std::make_shared<DecolorPreprocess>();
+    image_process = std::make_shared<DecolorPreprocess>();
   } else if (currentPreprocess.compare("DHE") == 0) {
-    imageProcess = std::make_shared<DhePreprocess>(mDHE->x());
+    image_process = std::make_shared<DhePreprocess>(mDHE->x());
   } else if (currentPreprocess.compare("FAHE") == 0) {
-    imageProcess = std::make_shared<FahePreprocess>(mFAHE->blockSize());
+    image_process = std::make_shared<FahePreprocess>(mFAHE->blockSize());
   } else if (currentPreprocess.compare("HMCLAHE") == 0) {
-    imageProcess = std::make_shared<HmclahePreprocess>(mHMCLAHE->blockSize(),
-                                                       mHMCLAHE->l(),
-                                                       mHMCLAHE->phi());
+    image_process = std::make_shared<HmclahePreprocess>(mHMCLAHE->blockSize(),
+                                                        mHMCLAHE->l(),
+                                                        mHMCLAHE->phi());
   } else if (currentPreprocess.compare("LCE-BSESCS") == 0) {
-    imageProcess = std::make_shared<LceBsescsPreprocess>(mLCEBSESCS->blockSize());
+    image_process = std::make_shared<LceBsescsPreprocess>(mLCEBSESCS->blockSize());
   } else if (currentPreprocess.compare("MSRCP") == 0) {
-    imageProcess = std::make_shared<MsrcpPreprocess>(mMSRCP->smallScale(),
-                                                     mMSRCP->midScale(),
-                                                     mMSRCP->largeScale());
+    image_process = std::make_shared<MsrcpPreprocess>(mMSRCP->smallScale(),
+                                                      mMSRCP->midScale(),
+                                                      mMSRCP->largeScale());
   } else if (currentPreprocess.compare("NOSHP") == 0) {
-    imageProcess = std::make_shared<NoshpPreprocess>(mNOSHP->blockSize());
+    image_process = std::make_shared<NoshpPreprocess>(mNOSHP->blockSize());
   } else if (currentPreprocess.compare("POHE") == 0) {
-    imageProcess = std::make_shared<PohePreprocess>(mPOHE->blockSize());
+    image_process = std::make_shared<PohePreprocess>(mPOHE->blockSize());
   } else if (currentPreprocess.compare("RSWHE") == 0) {
-    imageProcess = std::make_shared<RswhePreprocess>(mRSWHE->histogramDivisions(),
-                                                     static_cast<RswhePreprocess::HistogramCut>(mRSWHE->histogramCut()));
+    image_process = std::make_shared<RswhePreprocess>(mRSWHE->histogramDivisions(),
+                                                      static_cast<RswhePreprocess::HistogramCut>(mRSWHE->histogramCut()));
   } else if (currentPreprocess.compare("Wallis Filter") == 0) {
-    imageProcess = std::make_shared<WallisPreprocess>(mWallis->contrast(),
-                                                      mWallis->brightness(),
-                                                      mWallis->imposedAverage(),
-                                                      mWallis->imposedLocalStdDev(),
-                                                      mWallis->kernelSize());
+    image_process = std::make_shared<WallisPreprocess>(mWallis->contrast(),
+                                                       mWallis->brightness(),
+                                                       mWallis->imposedAverage(),
+                                                       mWallis->imposedLocalStdDev(),
+                                                       mWallis->kernelSize());
   }
+  return image_process;
+}
 
-  mProjectModel->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
-  mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
-
-  for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-    QString file_in = (*it)->path();
-    QFileInfo fileInfo(file_in);
-    QString file_out = mProjectModel->projectFolder();
+QString PreprocessPresenter::fileOut(const QString &fileIn)
+{
+  QString file_out;
+  if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
+    QFileInfo fileInfo(fileIn);
+    file_out = mProjectModel->projectFolder();
     file_out.append("\\").append(current_session->name());
     file_out.append("\\preprocess\\");
     QDir dir_out(file_out);
@@ -429,41 +530,8 @@ void PreprocessPresenter::run()
       dir_out.mkpath(".");
     }
     file_out.append(fileInfo.fileName());
-
-    std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
-                                                                    file_out,
-                                                                    imageProcess,
-                                                                    mView->fullImageSize() ? -1 : mView->maxImageSize()));
-
-    connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
-    mMultiProcess->appendProcess(preprocess);
   }
-
-  connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler) {
-    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
-    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
-    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
-
-    mProgressHandler->setRange(0, mMultiProcess->count());
-    mProgressHandler->setValue(0);
-    mProgressHandler->setTitle("Image Preprocessing");
-    mProgressHandler->setDescription("Preprocessing images...");
-    mProgressHandler->onInit();
-  }
-
-  mView->hide();
-
-  msgInfo("Preprocessing images");
-  QByteArray ba = currentPreprocess.toLocal8Bit();
-  const char *data = ba.constData();
-  msgInfo("  Preprocessing method     :  %s", data);
-
-  emit running();
-
-  mMultiProcess->start();
+  return file_out;
 }
 
 void PreprocessPresenter::setCurrentPreprocess(const QString &preprocess)

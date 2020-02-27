@@ -42,18 +42,8 @@ KeypointsFilterWidgetImp::KeypointsFilterWidgetImp(QWidget *parent)
     mMaxSize(new QDoubleSpinBox(this)),
     mCheckBoxRemoveDuplicated(new QCheckBox(this))
 {
-  init();
-
-  connect(mCheckBoxPointsNumber,     SIGNAL(clicked(bool)),            this, SLOT(update()));
-  connect(mCheckBoxSize,             SIGNAL(clicked(bool)),            this, SLOT(update()));
-  connect(mCheckBoxRemoveDuplicated, SIGNAL(clicked(bool)),            this, SLOT(update()));
-  connect(mMinSize,                  SIGNAL(valueChanged(double)),     this, SLOT(update()));
-  connect(mMaxSize,                  SIGNAL(valueChanged(double)),     this, SLOT(update()));
-
-  connect(mPointsNumber,  SIGNAL(valueChanged(int)),        this, SIGNAL(nPointsChange(int)));
-  connect(mMinSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(minSizeChange(double)));
-  connect(mMaxSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(maxSizeChange(double)));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 KeypointsFilterWidgetImp::~KeypointsFilterWidgetImp()
@@ -162,7 +152,7 @@ void KeypointsFilterWidgetImp::reset()
   update();
 }
 
-void KeypointsFilterWidgetImp::init()
+void KeypointsFilterWidgetImp::initUI()
 {
   this->setWindowTitle("Keypoints Filter");
 
@@ -203,6 +193,19 @@ void KeypointsFilterWidgetImp::init()
   propertiesLayout->addWidget(mCheckBoxRemoveDuplicated, 2, 0, 1, 4);
 
   reset();
+}
+
+void KeypointsFilterWidgetImp::initSignalAndSlots()
+{
+  connect(mCheckBoxPointsNumber,     SIGNAL(clicked(bool)),            this, SLOT(update()));
+  connect(mCheckBoxSize,             SIGNAL(clicked(bool)),            this, SLOT(update()));
+  connect(mCheckBoxRemoveDuplicated, SIGNAL(clicked(bool)),            this, SLOT(update()));
+  connect(mMinSize,                  SIGNAL(valueChanged(double)),     this, SLOT(update()));
+  connect(mMaxSize,                  SIGNAL(valueChanged(double)),     this, SLOT(update()));
+
+  connect(mPointsNumber,  SIGNAL(valueChanged(int)),        this, SIGNAL(nPointsChange(int)));
+  connect(mMinSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(minSizeChange(double)));
+  connect(mMaxSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(maxSizeChange(double)));
 }
 
 } // namespace photomatch

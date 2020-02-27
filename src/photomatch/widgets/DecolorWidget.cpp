@@ -34,7 +34,8 @@ namespace photomatch
 DecolorWidgetImp::DecolorWidgetImp(QWidget *parent)
   : DecolorWidget(parent)
 {
-  init();
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 DecolorWidgetImp::~DecolorWidgetImp()
@@ -55,7 +56,7 @@ void DecolorWidgetImp::reset()
 {
 }
 
-void DecolorWidgetImp::init()
+void DecolorWidgetImp::initUI()
 {
   this->setWindowTitle("Decolorization");
 
@@ -78,6 +79,11 @@ void DecolorWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void DecolorWidgetImp::initSignalAndSlots()
+{
+
 }
 
 } // namespace photomatch

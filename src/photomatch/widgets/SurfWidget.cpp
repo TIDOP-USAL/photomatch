@@ -42,14 +42,9 @@ SurfWidgetImp::SurfWidgetImp(QWidget *parent)
     mExtendedDescriptor(new QCheckBox(this)),
     mUpright(new QCheckBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mHessianThreshold,    SIGNAL(valueChanged(double)),    this, SIGNAL(hessianThresholdChange(double)));
-  connect(mOctaves,             SIGNAL(valueChanged(int)),       this, SIGNAL(octavesChange(int)));
-  connect(mOctaveLayers,        SIGNAL(valueChanged(int)),       this, SIGNAL(octaveLayersChange(int)));
-  connect(mExtendedDescriptor,  SIGNAL(clicked(bool)),           this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(rotatedFeaturesChange(bool)));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 SurfWidgetImp::~SurfWidgetImp()
@@ -131,7 +126,7 @@ void SurfWidgetImp::reset()
   mUpright->setChecked(false);
 }
 
-void SurfWidgetImp::init()
+void SurfWidgetImp::initUI()
 {
   this->setWindowTitle("SURF");
 
@@ -163,9 +158,19 @@ void SurfWidgetImp::init()
   mUpright->setText(tr("Upright"));
   propertiesLayout->addWidget(mUpright, 4, 0);
 
-  reset(); /// set default values
+  reset();
 
   update();
+}
+
+void SurfWidgetImp::initSignalAndSlots()
+{
+  connect(mHessianThreshold,    SIGNAL(valueChanged(double)),    this, SIGNAL(hessianThresholdChange(double)));
+  connect(mOctaves,             SIGNAL(valueChanged(int)),       this, SIGNAL(octavesChange(int)));
+  connect(mOctaveLayers,        SIGNAL(valueChanged(int)),       this, SIGNAL(octaveLayersChange(int)));
+  connect(mExtendedDescriptor,  SIGNAL(clicked(bool)),           this, SIGNAL(extendedDescriptorChange(bool)));
+  connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(rotatedFeaturesChange(bool)));
+
 }
 
 } // namespace photomatch

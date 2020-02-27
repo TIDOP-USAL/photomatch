@@ -39,16 +39,9 @@ HmclaheWidgetImp::HmclaheWidgetImp(QWidget *parent)
     mL(new QDoubleSpinBox(this)),
     mPhi(new QDoubleSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-  connect(mL,             SIGNAL(valueChanged(double)),     this, SIGNAL(lChange(double)));
-  connect(mPhi,           SIGNAL(valueChanged(double)),     this, SIGNAL(phiChange(double)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 HmclaheWidgetImp::~HmclaheWidgetImp()
@@ -128,7 +121,7 @@ void HmclaheWidgetImp::reset()
   mPhi->setValue(0.5);
 }
 
-void HmclaheWidgetImp::init()
+void HmclaheWidgetImp::initUI()
 {
   this->setWindowTitle("HMCLAHE");
 
@@ -176,6 +169,14 @@ void HmclaheWidgetImp::init()
 
   reset();
   update();
+}
+
+void HmclaheWidgetImp::initSignalAndSlots()
+{
+  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mL,             SIGNAL(valueChanged(double)),     this, SIGNAL(lChange(double)));
+  connect(mPhi,           SIGNAL(valueChanged(double)),     this, SIGNAL(phiChange(double)));
 }
 
 } // namespace photomatch

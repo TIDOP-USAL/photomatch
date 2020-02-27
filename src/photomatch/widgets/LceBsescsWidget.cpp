@@ -37,14 +37,9 @@ LceBsescsWidgetImp::LceBsescsWidgetImp(QWidget *parent)
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 LceBsescsWidgetImp::~LceBsescsWidgetImp()
@@ -97,7 +92,7 @@ void LceBsescsWidgetImp::reset()
   mBlockSizeY->setValue(33);
 }
 
-void LceBsescsWidgetImp::init()
+void LceBsescsWidgetImp::initUI()
 {
   this->setWindowTitle("LCE-BSESCS");
 
@@ -136,6 +131,12 @@ void LceBsescsWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void LceBsescsWidgetImp::initSignalAndSlots()
+{
+  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
 }
 
 } // namespace photomatch

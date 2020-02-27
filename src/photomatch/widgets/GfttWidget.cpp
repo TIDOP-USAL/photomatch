@@ -43,15 +43,8 @@ GfttWidgetImp::GfttWidgetImp(QWidget *parent)
     mHarrisDetector(new QCheckBox(this)),
     mK(new QDoubleSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mMaxFeatures,       SIGNAL(valueChanged(int)),      this, SIGNAL(maxFeaturesChange(int)));
-  connect(mQualityLevel,      SIGNAL(valueChanged(double)),   this, SIGNAL(qualityLevelChange(double)));
-  connect(mMinDistance,       SIGNAL(valueChanged(double)),   this, SIGNAL(minDistanceChange(double)));
-  connect(mBlockSize,         SIGNAL(valueChanged(int)),      this, SIGNAL(blockSizeChange(int)));
-  connect(mHarrisDetector,    SIGNAL(clicked(bool)),          this, SIGNAL(harrisDetectorChange(bool)));
-  connect(mK,                 SIGNAL(valueChanged(double)),   this, SIGNAL(kChange(double)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 GfttWidgetImp::~GfttWidgetImp()
@@ -149,7 +142,7 @@ void GfttWidgetImp::reset()
   mK->setValue(0.04);
 }
 
-void GfttWidgetImp::init()
+void GfttWidgetImp::initUI()
 {
   this->setWindowTitle("GFTT");
 
@@ -191,6 +184,16 @@ void GfttWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void GfttWidgetImp::initSignalAndSlots()
+{
+  connect(mMaxFeatures,       SIGNAL(valueChanged(int)),      this, SIGNAL(maxFeaturesChange(int)));
+  connect(mQualityLevel,      SIGNAL(valueChanged(double)),   this, SIGNAL(qualityLevelChange(double)));
+  connect(mMinDistance,       SIGNAL(valueChanged(double)),   this, SIGNAL(minDistanceChange(double)));
+  connect(mBlockSize,         SIGNAL(valueChanged(int)),      this, SIGNAL(blockSizeChange(int)));
+  connect(mHarrisDetector,    SIGNAL(clicked(bool)),          this, SIGNAL(harrisDetectorChange(bool)));
+  connect(mK,                 SIGNAL(valueChanged(double)),   this, SIGNAL(kChange(double)));
 }
 
 

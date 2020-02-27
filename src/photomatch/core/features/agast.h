@@ -87,7 +87,7 @@ public:
 
   AgastDetector();
   AgastDetector(const AgastDetector &agastDetector);
-  AgastDetector(int threshold, bool nonmaxSuppression, QString detectorType);
+  AgastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType);
   ~AgastDetector() override;
 
 private:

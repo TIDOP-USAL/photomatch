@@ -42,15 +42,8 @@ NewSessionView::NewSessionView(QWidget *parent)
     mButtonBox(new QDialogButtonBox(this)),
     bNameExist(false)
 {
-  init();
-
-  connect(mLineEditSessionName,        SIGNAL(textChanged(QString)), this, SLOT(update()));
-  connect(mLineEditSessionName,        SIGNAL(textChanged(QString)), this, SIGNAL(sessionNameChange(QString)));
-
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 NewSessionView::~NewSessionView()
@@ -58,7 +51,7 @@ NewSessionView::~NewSessionView()
 
 }
 
-void NewSessionView::init()
+void NewSessionView::initUI()
 {
   this->setWindowTitle(tr("New Session"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -81,6 +74,16 @@ void NewSessionView::init()
   layout->addWidget(mButtonBox, 4, 0, 1, 3);
 
   update();
+}
+
+void NewSessionView::initSignalAndSlots()
+{
+  connect(mLineEditSessionName, SIGNAL(textChanged(QString)), this, SLOT(update()));
+  connect(mLineEditSessionName, SIGNAL(textChanged(QString)), this, SIGNAL(sessionNameChange(QString)));
+
+  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
+  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 void NewSessionView::clear()

@@ -43,18 +43,8 @@ namespace photomatch
 ExportFeaturesView::ExportFeaturesView(QWidget *parent)
   : IExportFeaturesView(parent)
 {
-  init();
-
-  connect(mComboBoxSession,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
-  connect(mComboBoxFormat,         SIGNAL(currentTextChanged(QString)), this, SIGNAL(formatChange(QString)));
-  connect(mLineEditExportPath,     SIGNAL(textChanged(QString)),        this, SLOT(update()));
-  connect(mCheckBoxExportAll,      SIGNAL(clicked(bool)),               this, SLOT(update()));
-  connect(mPushButtonExportFormat, SIGNAL(clicked(bool)),               this, SLOT(onPushButtonExportFormat()));
-  connect(mListWidgetfeatures,     SIGNAL(itemSelectionChanged()),      this, SLOT(update()));
-
-  connect(mButtonBox,                                   SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Ok),     SIGNAL(clicked(bool)),   this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 ExportFeaturesView::~ExportFeaturesView()
@@ -152,7 +142,7 @@ void ExportFeaturesView::setImageFiles(const QStringList &images)
   update();
 }
 
-void ExportFeaturesView::init()
+void ExportFeaturesView::initUI()
 {
   this->setObjectName(QStringLiteral("ExportFeaturesView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -202,6 +192,20 @@ void ExportFeaturesView::init()
   retranslate();
 
   update();
+}
+
+void ExportFeaturesView::initSignalAndSlots()
+{
+  connect(mComboBoxSession,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
+  connect(mComboBoxFormat,         SIGNAL(currentTextChanged(QString)), this, SIGNAL(formatChange(QString)));
+  connect(mLineEditExportPath,     SIGNAL(textChanged(QString)),        this, SLOT(update()));
+  connect(mCheckBoxExportAll,      SIGNAL(clicked(bool)),               this, SLOT(update()));
+  connect(mPushButtonExportFormat, SIGNAL(clicked(bool)),               this, SLOT(onPushButtonExportFormat()));
+  connect(mListWidgetfeatures,     SIGNAL(itemSelectionChanged()),      this, SLOT(update()));
+
+  connect(mButtonBox,                                   SIGNAL(rejected()),      this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Ok),     SIGNAL(clicked(bool)),   this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
 void ExportFeaturesView::clear()

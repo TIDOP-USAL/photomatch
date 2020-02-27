@@ -40,12 +40,8 @@ BoostWidgetImp::BoostWidgetImp(QWidget *parent)
     mUseOrientation(new QCheckBox(this)),
     mScaleFactor(new QDoubleSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mDescriptorType,    SIGNAL(currentTextChanged(QString)),   this, SIGNAL(descriptorTypeChange(QString)));
-  connect(mUseOrientation,    SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
-  connect(mScaleFactor,       SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 BoostWidgetImp::~BoostWidgetImp()
@@ -104,7 +100,7 @@ void BoostWidgetImp::reset()
   mScaleFactor->setValue(6.25);
 }
 
-void BoostWidgetImp::init()
+void BoostWidgetImp::initUI()
 {
   this->setWindowTitle("BOOST");
 
@@ -138,6 +134,13 @@ void BoostWidgetImp::init()
   reset();
 
   update();
+}
+
+void BoostWidgetImp::initSignalAndSlots()
+{
+  connect(mDescriptorType,    SIGNAL(currentTextChanged(QString)),   this, SIGNAL(descriptorTypeChange(QString)));
+  connect(mUseOrientation,    SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
+  connect(mScaleFactor,       SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
 }
 
 } // namespace photomatch

@@ -36,8 +36,9 @@ namespace photomatch
 LssWidgetImp::LssWidgetImp(QWidget *parent)
   : LssWidget (parent)
 {
-  init();
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 LssWidgetImp::~LssWidgetImp()
@@ -58,12 +59,17 @@ void LssWidgetImp::reset()
 {
 }
 
-void LssWidgetImp::init()
+void LssWidgetImp::initUI()
 {
   this->setWindowTitle("LSS");
 
   reset();
   update();
+}
+
+void LssWidgetImp::initSignalAndSlots()
+{
+
 }
 
 } // namespace photomatch

@@ -48,14 +48,8 @@ FeaturesViewerView::FeaturesViewerView(QWidget *parent, Qt::WindowFlags f)
     mMarkerWidth(1),
     mSelectedMarkerWidth(2)
 {
-  init();
-
-  connect(mComboBoxImages,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(imageChange(QString)));
-  connect(mTreeWidget,      SIGNAL(itemSelectionChanged()),       this, SLOT(onTreeWidgetItemSelectionChanged()));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 FeaturesViewerView::~FeaturesViewerView()
@@ -299,7 +293,7 @@ void FeaturesViewerView::setMarkerStyle(const QString &color, int width, int typ
 
 }
 
-void FeaturesViewerView::init()
+void FeaturesViewerView::initUI()
 {
   this->setWindowTitle(tr("Keypoints Viewer"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -347,6 +341,15 @@ void FeaturesViewerView::init()
 
   update();
 
+}
+
+void FeaturesViewerView::initSignalAndSlots()
+{
+  connect(mComboBoxImages,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(imageChange(QString)));
+  connect(mTreeWidget,      SIGNAL(itemSelectionChanged()),       this, SLOT(onTreeWidgetItemSelectionChanged()));
+
+  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 void FeaturesViewerView::clear()

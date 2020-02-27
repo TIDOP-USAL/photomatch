@@ -37,14 +37,9 @@ NoshpWidgetImp::NoshpWidgetImp(QWidget *parent)
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 NoshpWidgetImp::~NoshpWidgetImp()
@@ -94,7 +89,7 @@ void NoshpWidgetImp::reset()
   mBlockSizeY->setValue(127);
 }
 
-void NoshpWidgetImp::init()
+void NoshpWidgetImp::initUI()
 {
   this->setWindowTitle("NOSHP");
 
@@ -131,6 +126,12 @@ void NoshpWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void NoshpWidgetImp::initSignalAndSlots()
+{
+  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
 }
 
 } // namespace photomatch

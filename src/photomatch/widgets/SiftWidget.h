@@ -160,7 +160,8 @@ public slots:
 
 private:
 
-  void init() override;
+  void initUI() override;
+  void initSignalAndSlots() override;
 
 protected:
 

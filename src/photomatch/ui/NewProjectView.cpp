@@ -46,19 +46,8 @@ NewProjectView::NewProjectView(QWidget *parent)
     mPushButtonProjectPath(new QPushButton(this)),
     mButtonBox(new QDialogButtonBox(this))
 {
-
-  init();
-
-  connect(mLineEditProjectName,   SIGNAL(textChanged(QString)), this, SLOT(update()));
-  connect(mLineEditProjectPath,   SIGNAL(textChanged(QString)), this, SLOT(update()));
-  connect(mCheckBoxProjectFolder, SIGNAL(stateChanged(int)),    this, SLOT(update()));
-
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
-  connect(mPushButtonProjectPath, SIGNAL(clicked(bool)), this, SLOT(onClickButtonSelectPath()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 NewProjectView::~NewProjectView()
@@ -113,7 +102,7 @@ void NewProjectView::onClickButtonSelectPath()
 
 // private:
 
-void NewProjectView::init()
+void NewProjectView::initUI()
 {
   this->setWindowTitle(tr("New Project"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -151,6 +140,18 @@ void NewProjectView::init()
   layout->addWidget(mButtonBox, 7, 0, 1, 3);
 
   update();
+}
+
+void NewProjectView::initSignalAndSlots()
+{
+  connect(mLineEditProjectName,   SIGNAL(textChanged(QString)), this, SLOT(update()));
+  connect(mLineEditProjectPath,   SIGNAL(textChanged(QString)), this, SLOT(update()));
+  connect(mCheckBoxProjectFolder, SIGNAL(stateChanged(int)),    this, SLOT(update()));
+  connect(mPushButtonProjectPath, SIGNAL(clicked(bool)),        this, SLOT(onClickButtonSelectPath()));
+
+  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
+  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 // public slots:

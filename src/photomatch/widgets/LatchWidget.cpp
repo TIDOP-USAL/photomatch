@@ -40,13 +40,8 @@ LatchWidgetImp::LatchWidgetImp(QWidget *parent)
     mRotationInvariance(new QCheckBox(this)),
     mHalfSsdSize(new QSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mBytes,               SIGNAL(currentTextChanged(QString)),  this, SIGNAL(bytesChange(QString)));
-  connect(mRotationInvariance,  SIGNAL(clicked(bool)),                this, SIGNAL(rotationInvarianceChange(bool)));
-  connect(mHalfSsdSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(halfSsdSizeChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 LatchWidgetImp::~LatchWidgetImp()
@@ -105,7 +100,7 @@ void LatchWidgetImp::reset()
   mHalfSsdSize->setValue(3);
 }
 
-void LatchWidgetImp::init()
+void LatchWidgetImp::initUI()
 {
   this->setWindowTitle("LATCH");
 
@@ -139,6 +134,13 @@ void LatchWidgetImp::init()
   reset();
 
   update();
+}
+
+void LatchWidgetImp::initSignalAndSlots()
+{
+  connect(mBytes,               SIGNAL(currentTextChanged(QString)),  this, SIGNAL(bytesChange(QString)));
+  connect(mRotationInvariance,  SIGNAL(clicked(bool)),                this, SIGNAL(rotationInvarianceChange(bool)));
+  connect(mHalfSsdSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(halfSsdSizeChange(int)));
 }
 
 } // namespace photomatch

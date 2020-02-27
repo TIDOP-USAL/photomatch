@@ -120,7 +120,7 @@ AgastDetector::AgastDetector(const AgastDetector &agastDetector)
                                             convertDetectorType(AgastProperties::detectorType()));
 }
 
-AgastDetector::AgastDetector(int threshold, bool nonmaxSuppression, QString detectorType)
+AgastDetector::AgastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType)
   : AgastProperties(),
     KeypointDetector(),
     mAgast(cv::AgastFeatureDetector::create())

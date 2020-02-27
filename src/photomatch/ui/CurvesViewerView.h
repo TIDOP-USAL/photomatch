@@ -125,7 +125,8 @@ protected slots :
 
 private:
 
-  virtual void init() override;
+  virtual void initUI() override;
+  virtual void initSignalAndSlots() override;
 
 public slots:
 
@@ -166,7 +167,7 @@ public:
 
 private:
 
-  void init() override;
+  void initUI() override;
 
 };
 
@@ -189,7 +190,7 @@ public:
 
 private:
 
-  void init() override;
+  void initUI() override;
 
 };
 
@@ -213,7 +214,7 @@ public:
 
 private:
 
-  void init() override;
+  void initUI() override;
 
 };
 
