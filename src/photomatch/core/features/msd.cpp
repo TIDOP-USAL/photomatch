@@ -33,8 +33,7 @@ namespace photomatch
 
 
 MsdProperties::MsdProperties()
-  : Msd(),
-    mThresholdSaliency(250),
+  : mThresholdSaliency(250),
     mPatchRadius(3),
     mKNN(4),
     mAreaRadius(5),
@@ -48,7 +47,7 @@ MsdProperties::MsdProperties()
 {}
 
 MsdProperties::MsdProperties(const MsdProperties &msdProperties)
-  : Msd(),
+  : Msd(msdProperties),
     mThresholdSaliency(msdProperties.mThresholdSaliency),
     mPatchRadius(msdProperties.mPatchRadius),
     mKNN(msdProperties.mKNN),
@@ -61,11 +60,6 @@ MsdProperties::MsdProperties(const MsdProperties &msdProperties)
     mAffineMSD(msdProperties.mAffineMSD),
     mAffineTilts(msdProperties.mAffineTilts)
 {}
-
-MsdProperties::~MsdProperties()
-{
-
-}
 
 double MsdProperties::thresholdSaliency() const
 {
@@ -203,23 +197,21 @@ QString MsdProperties::name() const
 
 
 MsdDetector::MsdDetector()
-  : MsdProperties(),
-    KeypointDetector()
+  : mMSD(std::make_shared<::MsdDetector>())
 {
-  mMSD = std::make_shared<::MsdDetector>();
   this->updateMSD();
 }
 
 MsdDetector::MsdDetector(const MsdDetector &msdDetector)
   : MsdProperties(msdDetector),
-    KeypointDetector()
+    KeypointDetector(msdDetector),
+    mMSD(std::make_shared<::MsdDetector>())
 {
-  mMSD = std::make_shared<::MsdDetector>();
   this->updateMSD();
 }
 
 MsdDetector::MsdDetector(double thresholdSaliency,
-                         int pathRadius,
+                         int patchRadius,
                          int knn,
                          int areaRadius,
                          double scaleFactor,
@@ -229,12 +221,10 @@ MsdDetector::MsdDetector(double thresholdSaliency,
                          bool computeOrientations,
                          bool affineMSD,
                          int affineTilts)
-  : MsdProperties(),
-    KeypointDetector()
+  : mMSD(std::make_shared<::MsdDetector>())
 {
-  mMSD = std::make_shared<::MsdDetector>();
   setThresholdSaliency(thresholdSaliency);
-  setPatchRadius(pathRadius);
+  setPatchRadius(patchRadius);
   setKNN(knn);
   setSearchAreaRadius(areaRadius);
   setScaleFactor(scaleFactor);
@@ -246,16 +236,10 @@ MsdDetector::MsdDetector(double thresholdSaliency,
   setAffineTilts(affineTilts);
 }
 
-MsdDetector::~MsdDetector()
-{
-
-}
-
 bool MsdDetector::detect(const cv::Mat &img,
                          std::vector<cv::KeyPoint> &keyPoints,
                          cv::InputArray &mask)
 {
-
   try {
 
     if (MsdProperties::affineMSD()) {
@@ -271,10 +255,12 @@ bool MsdDetector::detect(const cv::Mat &img,
         for (double phi = 0.; phi < 180.; phi += 72.0 / t) {
 
           std::vector<cv::KeyPoint> kps;
-          cv::Mat timg, mask, Ai;
-
+          cv::Mat timg;
+          cv::Mat _mask;
+          cv::Mat Ai;
+          mask.copyTo(_mask);
           img.copyTo(timg);
-          affineSkew(t, phi, timg, mask, Ai);
+          affineSkew(t, phi, timg, _mask, Ai);
 
           kps = mMSD->detect(timg);
 
@@ -299,7 +285,7 @@ bool MsdDetector::detect(const cv::Mat &img,
 
 
           timg.release();
-          mask.release();
+          _mask.release();
           Ai.release();
         }
       }
@@ -475,10 +461,10 @@ void MsdDetector::setThresholdSaliency(double thresholdSaliency)
   mMSD->setThSaliency(static_cast<float>(thresholdSaliency));
 }
 
-void MsdDetector::setPatchRadius(int pathRadius)
+void MsdDetector::setPatchRadius(int patchRadius)
 {
-  MsdProperties::setPatchRadius(pathRadius);
-  mMSD->setPatchRadius(pathRadius);
+  MsdProperties::setPatchRadius(patchRadius);
+  mMSD->setPatchRadius(patchRadius);
 }
 
 void MsdDetector::setKNN(int knn)

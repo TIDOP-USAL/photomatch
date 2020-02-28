@@ -32,22 +32,16 @@ namespace photomatch
 
 
 BriefProperties::BriefProperties()
-  : Brief(),
-    mBytes("32"),
+  : mBytes("32"),
     mUseOrientation(false)
 {
 }
 
 BriefProperties::BriefProperties(const BriefProperties &briefProperties)
-  : Brief(),
+  : Brief(briefProperties),
     mBytes(briefProperties.mBytes),
     mUseOrientation(briefProperties.mUseOrientation)
 {
-}
-
-BriefProperties::~BriefProperties()
-{
-
 }
 
 QString BriefProperties::bytes() const
@@ -90,31 +84,22 @@ QString BriefProperties::name() const
 
 
 BriefDescriptor::BriefDescriptor()
-  : BriefProperties(),
-    DescriptorExtractor()
 {
   update();
 }
 
 BriefDescriptor::BriefDescriptor(const BriefDescriptor &briefDescriptor)
   : BriefProperties(briefDescriptor),
-    DescriptorExtractor()
+    DescriptorExtractor(briefDescriptor)
 {
   update();
 }
 
 BriefDescriptor::BriefDescriptor(QString bytes, bool useOrientation)
-  : BriefProperties(),
-    DescriptorExtractor()
 {
   BriefProperties::setBytes(bytes);
   BriefProperties::setUseOrientation(useOrientation);
   update();
-}
-
-BriefDescriptor::~BriefDescriptor()
-{
-
 }
 
 void BriefDescriptor::update()

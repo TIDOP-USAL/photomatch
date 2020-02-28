@@ -43,32 +43,32 @@ public:
 
   DaisyProperties();
   DaisyProperties(const DaisyProperties &daisyProperties);
-  ~DaisyProperties() override;
+  ~DaisyProperties() override = default;
 
 // IDaisy interface
 
 public:
 
-  virtual double radius() const override;
-  virtual int qRadius() const override;
-  virtual int qTheta() const override;
-  virtual int qHist() const override;
-  virtual QString norm() const override;
-  virtual bool interpolation() const override;
-  virtual bool useOrientation() const override;
-  virtual void setRadius(double radius) override;
-  virtual void setQRadius(int qRadius) override;
-  virtual void setQTheta(int qTheta) override;
-  virtual void setQHist(int qHist) override;
-  virtual void setNorm(const QString &norm) override;
-  virtual void setInterpolation(bool interpolation) override;
-  virtual void setUseOrientation(bool useOrientation) override;
+  double radius() const override;
+  int qRadius() const override;
+  int qTheta() const override;
+  int qHist() const override;
+  QString norm() const override;
+  bool interpolation() const override;
+  bool useOrientation() const override;
+  void setRadius(double radius) override;
+  void setQRadius(int qRadius) override;
+  void setQTheta(int qTheta) override;
+  void setQHist(int qHist) override;
+  void setNorm(const QString &norm) override;
+  void setInterpolation(bool interpolation) override;
+  void setUseOrientation(bool useOrientation) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -99,11 +99,11 @@ public:
                   int qRadius,
                   int qTheta,
                   int qHist,
-                  QString norm,
+                  const QString &norm,
                   bool interpolation,
                   bool useOrientation);
 
-  ~DaisyDescriptor() override;
+  ~DaisyDescriptor() override = default;
 
 private:
 

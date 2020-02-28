@@ -31,18 +31,19 @@ namespace photomatch
 {
 
 DaisyProperties::DaisyProperties()
-  : Daisy(),
-    mRadius(15.),
+  : mRadius(15.),
     mQRadius(3),
     mQTheta(8),
     mQHist(8),
     mNorm("NRM_NONE"),
     mInterpolation(true),
     mUseOrientation(false)
-{}
+{
+
+}
 
 DaisyProperties::DaisyProperties(const DaisyProperties &daisyProperties)
-  : Daisy(),
+  : Daisy(daisyProperties),
     mRadius(daisyProperties.mRadius),
     mQRadius(daisyProperties.mQRadius),
     mQTheta(daisyProperties.mQTheta),
@@ -50,9 +51,6 @@ DaisyProperties::DaisyProperties(const DaisyProperties &daisyProperties)
     mNorm(daisyProperties.mNorm),
     mInterpolation(daisyProperties.mInterpolation),
     mUseOrientation(daisyProperties.mUseOrientation)
-{}
-
-DaisyProperties::~DaisyProperties()
 {
 
 }
@@ -148,15 +146,13 @@ QString DaisyProperties::name() const
 
 
 DaisyDescriptor::DaisyDescriptor()
-  : DaisyProperties(),
-    DescriptorExtractor()
 {
   update();
 }
 
 DaisyDescriptor::DaisyDescriptor(const DaisyDescriptor &daisyDescriptor)
   : DaisyProperties(daisyDescriptor),
-    DescriptorExtractor()
+    DescriptorExtractor(daisyDescriptor)
 {
   update();
 }
@@ -165,11 +161,9 @@ DaisyDescriptor::DaisyDescriptor(double radius,
                                  int qRadius,
                                  int qTheta,
                                  int qHist,
-                                 QString norm,
+                                 const QString &norm,
                                  bool interpolation,
                                  bool useOrientation)
-  : DaisyProperties(),
-    DescriptorExtractor()
 {
   DaisyProperties::setRadius(radius);
   DaisyProperties::setQRadius(qRadius);
@@ -179,11 +173,6 @@ DaisyDescriptor::DaisyDescriptor(double radius,
   DaisyProperties::setInterpolation(interpolation);
   DaisyProperties::setUseOrientation(useOrientation);
   update();
-}
-
-DaisyDescriptor::~DaisyDescriptor()
-{
-
 }
 
 void DaisyDescriptor::update()

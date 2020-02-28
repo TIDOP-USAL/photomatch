@@ -45,26 +45,26 @@ public:
 
   FreakProperties();
   FreakProperties(const FreakProperties &freakProperties);
-  ~FreakProperties() override;
+  ~FreakProperties() override = default;
 
 // IFreak interface
 
 public:
 
-  virtual bool orientationNormalized() const override;
-  virtual bool scaleNormalized() const override;
-  virtual double patternScale() const override;
-  virtual int octaves() const override;
-  virtual void setOrientationNormalized(bool orientationNormalized) override;
-  virtual void setScaleNormalized(bool scaleNormalized) override;
-  virtual void setPatternScale(double patternScale) override;
-  virtual void setOctaves(int octaves) override;
+  bool orientationNormalized() const override;
+  bool scaleNormalized() const override;
+  double patternScale() const override;
+  int octaves() const override;
+  void setOrientationNormalized(bool orientationNormalized) override;
+  void setScaleNormalized(bool scaleNormalized) override;
+  void setPatternScale(double patternScale) override;
+  void setOctaves(int octaves) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -93,7 +93,7 @@ public:
                   double patternScale,
                   int octaves);
 
-  ~FreakDescriptor() override;
+  ~FreakDescriptor() override = default;
 
 private:
 

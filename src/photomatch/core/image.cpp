@@ -60,9 +60,9 @@ Image::Image(const Image &image)
 Image::Image(Image &&image) noexcept
   : mFilePath(std::move(image.mFilePath)),
     mName(std::move(image.mName)),
-    mLongitudeExif(std::move(image.mLongitudeExif)),
-    mLatitudeExif(std::move(image.mLatitudeExif)),
-    mAltitudeExif(std::move(image.mAltitudeExif))
+    mLongitudeExif(image.mLongitudeExif),
+    mLatitudeExif(image.mLatitudeExif),
+    mAltitudeExif(image.mAltitudeExif)
 {
   /// reset move object
   image.mFilePath = "";
@@ -135,9 +135,9 @@ Image &Image::operator =(Image &&image) noexcept
   if (this != &image){
     this->mFilePath = std::move(image.mFilePath);
     this->mName = std::move(image.mName);
-    this->mLongitudeExif = std::move(image.mLongitudeExif);
-    this->mLatitudeExif = std::move(image.mLatitudeExif);
-    this->mAltitudeExif = std::move(image.mAltitudeExif);
+    this->mLongitudeExif = image.mLongitudeExif;
+    this->mLatitudeExif = image.mLatitudeExif;
+    this->mAltitudeExif = image.mAltitudeExif;
   }
   return *this;
 }

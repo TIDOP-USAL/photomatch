@@ -39,7 +39,7 @@ HomologusPoints::HomologusPoints(const QString &idImg1, const QString &idImg2)
 
 void HomologusPoints::addPoints(const QPointF &pt1, const QPointF &pt2)
 {
-  mHomologusPoints.push_back(std::make_pair(pt1, pt2));
+  mHomologusPoints.emplace_back(pt1, pt2);
 }
 
 HomologusPoints::iterator HomologusPoints::begin()
@@ -142,15 +142,12 @@ cv::Mat HomologusPoints::homography() const
   std::vector<cv::Point2f> pts_query;
   std::vector<cv::Point2f> pts_train;
 
-
-  for (size_t i = 0; i < mHomologusPoints.size(); i++){
-    if (!mHomologusPoints[i].first.isNull() && !mHomologusPoints[i].second.isNull()){
-      pts_query.push_back(
-          cv::Point2f(static_cast<float>(mHomologusPoints[i].first.x()),
-                      static_cast<float>(mHomologusPoints[i].first.y())));
-      pts_train.push_back(
-          cv::Point2f(static_cast<float>(mHomologusPoints[i].second.x()),
-                      static_cast<float>(mHomologusPoints[i].second.y())));
+  for (const auto &homologusPoint : mHomologusPoints){
+    if (!homologusPoint.first.isNull() && !homologusPoint.second.isNull()){
+      pts_query.emplace_back(static_cast<float>(homologusPoint.first.x()),
+                             static_cast<float>(homologusPoint.first.y()));
+      pts_train.emplace_back(static_cast<float>(homologusPoint.second.x()),
+                             static_cast<float>(homologusPoint.second.y()));
     }
   }
 
@@ -177,15 +174,13 @@ cv::Mat HomologusPoints::homography() const
 
 
 GroundTruth::GroundTruth()
-  : mGroundTruthFile(),
-    mHomologusPoints()
+  : mGroundTruthFile()
 {
 
 }
 
 GroundTruth::GroundTruth(const QString &gtFile)
-  : mGroundTruthFile(gtFile),
-    mHomologusPoints()
+  : mGroundTruthFile(gtFile)
 {
   read(gtFile);
 }
@@ -242,8 +237,8 @@ void GroundTruth::write(const QString &gtFile)
       std::string idImg1 = homologusPoints->idImg1().toStdString();
       std::string idImg2 = homologusPoints->idImg2().toStdString();
       for (auto points : *homologusPoints){
-        if (points.first.isNull() == false &&
-            points.second.isNull() == false){
+        if (!points.first.isNull() &&
+            !points.second.isNull()){
           ofs << idImg1 << ";" << idImg2 << ";" <<
                  points.first.x() << ";" << points.first.y() << ";" <<
                  points.second.x() << ";" << points.second.y() << std::endl;

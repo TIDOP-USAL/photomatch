@@ -31,24 +31,18 @@ namespace photomatch
 {
 
 LatchProperties::LatchProperties()
-  : Latch(),
-    mBytes("32"),
+  : mBytes("32"),
     mRotationInvariance(true),
     mHalfSsdSize(3)
 {
 }
 
 LatchProperties::LatchProperties(const LatchProperties &latchProperties)
-  : Latch(),
+  : Latch(latchProperties),
     mBytes(latchProperties.mBytes),
     mRotationInvariance(latchProperties.mRotationInvariance),
     mHalfSsdSize(latchProperties.mHalfSsdSize)
 {
-}
-
-LatchProperties::~LatchProperties()
-{
-
 }
 
 QString LatchProperties::bytes() const
@@ -106,34 +100,25 @@ QString LatchProperties::name() const
 
 
 LatchDescriptor::LatchDescriptor()
-  : LatchProperties(),
-    DescriptorExtractor()
 {
   update();
 }
 
 LatchDescriptor::LatchDescriptor(const LatchDescriptor &latchDescriptor)
   : LatchProperties(latchDescriptor),
-    DescriptorExtractor()
+    DescriptorExtractor(latchDescriptor)
 {
   update();
 }
 
-LatchDescriptor::LatchDescriptor(QString bytes,
+LatchDescriptor::LatchDescriptor(const QString &bytes,
                                  bool rotationInvariance,
                                  int halfSsdSize)
-  : LatchProperties(),
-    DescriptorExtractor()
 {
   LatchProperties::setBytes(bytes);
   LatchProperties::setRotationInvariance(rotationInvariance);
   LatchProperties::setHalfSsdSize(halfSsdSize);
   update();
-}
-
-LatchDescriptor::~LatchDescriptor()
-{
-
 }
 
 void LatchDescriptor::update()

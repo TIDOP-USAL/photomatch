@@ -32,22 +32,17 @@ namespace photomatch
 
 
 FastProperties::FastProperties()
-  : Fast(),
-    mThreshold(10),
+  : mThreshold(10),
     mNonmaxSuppression(true),
     mDetectorType("TYPE_9_16")
 {
 }
 
 FastProperties::FastProperties(const FastProperties &fastProperties)
-  : Fast(),
+  : Fast(fastProperties),
     mThreshold(fastProperties.mThreshold),
     mNonmaxSuppression(fastProperties.mNonmaxSuppression),
     mDetectorType(fastProperties.mDetectorType)
-{
-}
-
-FastProperties::~FastProperties()
 {
 }
 
@@ -76,7 +71,7 @@ void FastProperties::setNonmaxSuppression(bool nonmaxSuppression)
   mNonmaxSuppression = nonmaxSuppression;
 }
 
-void FastProperties::setDetectorType(QString detectorType)
+void FastProperties::setDetectorType(const QString &detectorType)
 {
   mDetectorType = detectorType;
 }
@@ -98,8 +93,6 @@ QString FastProperties::name() const
 
 
 FastDetector::FastDetector()
-  : FastProperties(),
-    KeypointDetector()
 {
   mFast = cv::FastFeatureDetector::create(FastProperties::threshold(),
                                           FastProperties::nonmaxSuppression(),
@@ -108,7 +101,7 @@ FastDetector::FastDetector()
 
 FastDetector::FastDetector(const FastDetector &fastDetector)
   : FastProperties(fastDetector),
-    KeypointDetector()
+    KeypointDetector(fastDetector)
 {
   mFast = cv::FastFeatureDetector::create(FastProperties::threshold(),
                                           FastProperties::nonmaxSuppression(),
@@ -116,19 +109,13 @@ FastDetector::FastDetector(const FastDetector &fastDetector)
 }
 
 FastDetector::FastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType)
-  : FastProperties(),
-    KeypointDetector(),
-    mFast(cv::FastFeatureDetector::create())
+  : mFast(cv::FastFeatureDetector::create())
 {
   setThreshold(threshold);
   setNonmaxSuppression(nonmaxSuppression);
   setDetectorType(detectorType);
 }
 
-FastDetector::~FastDetector()
-{
-
-}
 
 #if CV_VERSION_MAJOR >= 4
 cv::FastFeatureDetector::DetectorType FastDetector::convertDetectorType(const QString &detectorType)
@@ -191,7 +178,7 @@ void FastDetector::setNonmaxSuppression(bool nonmaxSuppression)
   mFast->setNonmaxSuppression(nonmaxSuppression);
 }
 
-void FastDetector::setDetectorType(QString detectorType)
+void FastDetector::setDetectorType(const QString &detectorType)
 {
   FastProperties::setDetectorType(detectorType);
   mFast->setType(convertDetectorType(detectorType));

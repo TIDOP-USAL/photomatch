@@ -53,28 +53,28 @@ public:
 
   SurfProperties();
   SurfProperties(const SurfProperties &surfProperties);
-  ~SurfProperties() override;
+  ~SurfProperties() override = default;
 
   // ISurf interface
 
 public:
 
-  virtual double hessianThreshold() const override;
-  virtual int octaves() const override;
-  virtual int octaveLayers() const override;
-  virtual bool extendedDescriptor() const override;
-  virtual bool upright() const override;
-  virtual void setHessianThreshold(double hessianThreshold) override;
-  virtual void setOctaves(int octaves) override;
-  virtual void setOctaveLayers(int octaveLayers) override;
-  virtual void setExtendedDescriptor(bool extendedDescriptor) override;
-  virtual void setUpright(bool upright) override;
+  double hessianThreshold() const override;
+  int octaves() const override;
+  int octaveLayers() const override;
+  bool extendedDescriptor() const override;
+  bool upright() const override;
+  void setHessianThreshold(double hessianThreshold) override;
+  void setOctaves(int octaves) override;
+  void setOctaveLayers(int octaveLayers) override;
+  void setExtendedDescriptor(bool extendedDescriptor) override;
+  void setUpright(bool upright) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -106,8 +106,7 @@ public:
                          int octaveLayers,
                          bool extendedDescriptor,
                          bool upright);
-
-  ~SurfDetectorDescriptor() override;
+  ~SurfDetectorDescriptor() override = default;
 
 // KeypointDetector interface
 
@@ -167,7 +166,7 @@ public:
                              bool extendedDescriptor,
                              bool upright);
                              
-  ~SurfCudaDetectorDescriptor() override;
+  ~SurfCudaDetectorDescriptor() override = default;
 
 // KeypointDetector interface
 

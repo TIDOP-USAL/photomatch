@@ -47,13 +47,13 @@ class PHOTOMATCH_EXPORT LssProperties
 public:
 
   LssProperties();
-  ~LssProperties() override;
+  ~LssProperties() override = default;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 };
@@ -70,7 +70,7 @@ class PHOTOMATCH_EXPORT LssDescriptor
 public:
 
   LssDescriptor();
-  ~LssDescriptor() override;
+  ~LssDescriptor() override = default;
 
 private:
 

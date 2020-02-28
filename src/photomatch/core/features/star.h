@@ -44,28 +44,28 @@ public:
 
   StarProperties();
   StarProperties(const StarProperties &starProperties);
-  ~StarProperties() override;
+  ~StarProperties() override = default;
 
 // IStar interface
 
 public:
 
-  virtual int maxSize() const override;
-  virtual int responseThreshold() const override;
-  virtual int lineThresholdProjected() const override;
-  virtual int lineThresholdBinarized() const override;
-  virtual int suppressNonmaxSize() const override;
-  virtual void setMaxSize(int maxSize) override;
-  virtual void setResponseThreshold(int responseThreshold) override;
-  virtual void setLineThresholdProjected(int lineThresholdProjected) override;
-  virtual void setLineThresholdBinarized(int lineThresholdBinarized) override;
-  virtual void setSuppressNonmaxSize(int suppressNonmaxSize) override;
+  int maxSize() const override;
+  int responseThreshold() const override;
+  int lineThresholdProjected() const override;
+  int lineThresholdBinarized() const override;
+  int suppressNonmaxSize() const override;
+  void setMaxSize(int maxSize) override;
+  void setResponseThreshold(int responseThreshold) override;
+  void setLineThresholdProjected(int lineThresholdProjected) override;
+  void setLineThresholdBinarized(int lineThresholdBinarized) override;
+  void setSuppressNonmaxSize(int suppressNonmaxSize) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -96,7 +96,7 @@ public:
                int lineThresholdProjected,
                int lineThresholdBinarized,
                int suppressNonmaxSize);
-  ~StarDetector() override;
+  ~StarDetector() override = default;
 
 private:
 

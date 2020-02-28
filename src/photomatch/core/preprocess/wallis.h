@@ -50,22 +50,22 @@ public:
 
 public:
 
-  virtual double contrast() const override;
-  virtual void setContrast(double contrast) override;
-  virtual double brightness() const override;
-  virtual void setBrightness(double brightness) override;
-  virtual int imposedAverage() const override;
-  virtual void setImposedAverage(int imposedAverage) override;
-  virtual int imposedLocalStdDev() const override;
-  virtual void setImposedLocalStdDev(int imposedLocalStdDev) override;
-  virtual int kernelSize() const override;
-  virtual void setKernelSize(int kernelSize) override;
+  double contrast() const override;
+  void setContrast(double contrast) override;
+  double brightness() const override;
+  void setBrightness(double brightness) override;
+  int imposedAverage() const override;
+  void setImposedAverage(int imposedAverage) override;
+  int imposedLocalStdDev() const override;
+  void setImposedLocalStdDev(int imposedLocalStdDev) override;
+  int kernelSize() const override;
+  void setKernelSize(int kernelSize) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:

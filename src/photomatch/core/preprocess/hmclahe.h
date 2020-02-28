@@ -50,18 +50,18 @@ public:
 
 public:
 
-  virtual QSize blockSize() const override;
-  virtual void setBlockSize(const QSize &blockSize) override;
-  virtual double l() const override;
-  virtual void setL(double l) override;
-  virtual double phi() const override;
-  virtual void setPhi(double phi) override;
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
+  double l() const override;
+  void setL(double l) override;
+  double phi() const override;
+  void setPhi(double phi) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:

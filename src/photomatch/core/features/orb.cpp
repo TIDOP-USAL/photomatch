@@ -46,7 +46,7 @@ OrbProperties::OrbProperties()
 }
 
 OrbProperties::OrbProperties(const OrbProperties &orbProperties)
-  : Orb(),
+  : Orb(orbProperties),
     mFeaturesNumber(orbProperties.mFeaturesNumber),
     mScaleFactor(orbProperties.mScaleFactor),
     mLevelsNumber(orbProperties.mLevelsNumber),
@@ -56,10 +56,6 @@ OrbProperties::OrbProperties(const OrbProperties &orbProperties)
     mScoreType(orbProperties.mScoreType),
     mPatchSize(orbProperties.mPatchSize),
     mFastThreshold(orbProperties.mFastThreshold)
-{
-}
-
-OrbProperties::~OrbProperties()
 {
 }
 
@@ -176,9 +172,6 @@ QString OrbProperties::name() const
 
 
 OrbDetectorDescriptor::OrbDetectorDescriptor()
-  : OrbProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   mOrb = cv::ORB::create(OrbProperties::featuresNumber(),
                          static_cast<float>(OrbProperties::scaleFactor()),
@@ -193,8 +186,8 @@ OrbDetectorDescriptor::OrbDetectorDescriptor()
 
 OrbDetectorDescriptor::OrbDetectorDescriptor(const OrbDetectorDescriptor &orbDetectorDescriptor)
   : OrbProperties(orbDetectorDescriptor),
-    KeypointDetector(),
-    DescriptorExtractor()
+    KeypointDetector(orbDetectorDescriptor),
+    DescriptorExtractor(orbDetectorDescriptor)
 {
   mOrb = cv::ORB::create(OrbProperties::featuresNumber(),
                          static_cast<float>(OrbProperties::scaleFactor()),
@@ -207,19 +200,15 @@ OrbDetectorDescriptor::OrbDetectorDescriptor(const OrbDetectorDescriptor &orbDet
                          OrbProperties::fastThreshold());
 }
 
-
 OrbDetectorDescriptor::OrbDetectorDescriptor(int featuresNumber,
                                              double scaleFactor,
                                              int levelsNumber,
                                              int edgeThreshold,
                                              int wta_k,
-                                             QString scoreType,
+                                             const QString &scoreType,
                                              int patchSize,
                                              int fastThreshold)
-  : OrbProperties(),
-    KeypointDetector(),
-    DescriptorExtractor(),
-    mOrb(cv::ORB::create())
+  : mOrb(cv::ORB::create())
 {
   setFeaturesNumber(featuresNumber);
   setScaleFactor(scaleFactor);
@@ -229,11 +218,6 @@ OrbDetectorDescriptor::OrbDetectorDescriptor(int featuresNumber,
   setScoreType(scoreType);
   setPatchSize(patchSize);
   setFastThreshold(fastThreshold);
-}
-
-OrbDetectorDescriptor::~OrbDetectorDescriptor()
-{
-
 }
 
 #if CV_VERSION_MAJOR >= 4
@@ -372,17 +356,14 @@ void OrbDetectorDescriptor::reset()
 #ifdef HAVE_CUDA
 
 OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor()
-  : OrbProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   update();
 }
 
 OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor(const OrbCudaDetectorDescriptor &orbCudaDetectorDescriptor)
-  : OrbProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
+  : OrbProperties(orbCudaDetectorDescriptor),
+    KeypointDetector(orbCudaDetectorDescriptor),
+    DescriptorExtractor(orbCudaDetectorDescriptor)
 {
   update();
 }
@@ -392,12 +373,9 @@ OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor(int featuresNumber,
                                                      int levelsNumber,
                                                      int edgeThreshold,
                                                      int wta_k,
-                                                     QString scoreType,
+                                                     const QString &scoreType,
                                                      int patchSize,
                                                      int fastThreshold)
-  : OrbProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   setFeaturesNumber(featuresNumber);
   setScaleFactor(scaleFactor);
@@ -407,11 +385,6 @@ OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor(int featuresNumber,
   setScoreType(scoreType);
   setPatchSize(patchSize);
   setFastThreshold(fastThreshold);
-}
-
-OrbCudaDetectorDescriptor::~OrbCudaDetectorDescriptor()
-{
-
 }
 
 #if CV_VERSION_MAJOR >= 4

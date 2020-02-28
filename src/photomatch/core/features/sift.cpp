@@ -32,8 +32,7 @@ namespace photomatch
 
 
 SiftProperties::SiftProperties()
-  : Sift(),
-    mFeaturesNumber(5000),
+  : mFeaturesNumber(5000),
     mOctaveLayers(3),
     mContrastThreshold(0.04),
     mEdgeThreshold(10.),
@@ -42,16 +41,12 @@ SiftProperties::SiftProperties()
 }
 
 SiftProperties::SiftProperties(const SiftProperties &siftProperties)
-  : Sift(),
+  : Sift(siftProperties),
     mFeaturesNumber(siftProperties.mFeaturesNumber),
     mOctaveLayers(siftProperties.mOctaveLayers),
     mContrastThreshold(siftProperties.mContrastThreshold),
     mEdgeThreshold(siftProperties.mEdgeThreshold),
     mSigma(siftProperties.mSigma)
-{
-}
-
-SiftProperties::~SiftProperties()
 {
 }
 
@@ -125,17 +120,14 @@ QString SiftProperties::name() const
 #ifdef OPENCV_ENABLE_NONFREE
 
 SiftDetectorDescriptor::SiftDetectorDescriptor()
-  : SiftProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 { 
   update();
 }
 
 SiftDetectorDescriptor::SiftDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor)
   : SiftProperties(siftDetectorDescriptor),
-    KeypointDetector(),
-    DescriptorExtractor()
+    KeypointDetector(siftDetectorDescriptor),
+    DescriptorExtractor(siftDetectorDescriptor)
 {
   update();
 }
@@ -145,9 +137,6 @@ SiftDetectorDescriptor::SiftDetectorDescriptor(int featuresNumber,
                                                double contrastThreshold,
                                                double edgeThreshold,
                                                double sigma)
-  : SiftProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   SiftProperties::setFeaturesNumber(featuresNumber);
   SiftProperties::setOctaveLayers(octaveLayers);
@@ -155,11 +144,6 @@ SiftDetectorDescriptor::SiftDetectorDescriptor(int featuresNumber,
   SiftProperties::setEdgeThreshold(edgeThreshold);
   SiftProperties::setSigma(sigma);
   update();
-}
-
-SiftDetectorDescriptor::~SiftDetectorDescriptor()
-{
-
 }
 
 void SiftDetectorDescriptor::update()
@@ -175,7 +159,6 @@ bool SiftDetectorDescriptor::detect(const cv::Mat &img,
                                     std::vector<cv::KeyPoint> &keyPoints,
                                     cv::InputArray &mask)
 {
-
   try {
     mSift->detect(img, keyPoints, mask);
   } catch (cv::Exception &e) {
@@ -190,7 +173,6 @@ bool SiftDetectorDescriptor::extract(const cv::Mat &img,
                                      std::vector<cv::KeyPoint> &keyPoints,
                                      cv::Mat &descriptors)
 {
-
   try {
     mSift->compute(img, keyPoints, descriptors);
   } catch (cv::Exception &e) {

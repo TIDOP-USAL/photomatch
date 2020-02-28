@@ -151,7 +151,7 @@ void ProjectImp::deleteImage(const QString &img)
 
 void ProjectImp::deleteImage(size_t imgId)
 {
-  if (imgId != std::numeric_limits<size_t>().max()){
+  if (imgId != std::numeric_limits<size_t>::max()){
     mImages.erase(mImages.begin()+ static_cast<long long>(imgId));
   }
 }

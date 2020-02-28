@@ -44,24 +44,24 @@ public:
 
   BoostProperties();
   BoostProperties(const BoostProperties &boostProperties);
-  virtual ~BoostProperties() override;
+  ~BoostProperties() override = default;
 
 // IBoost interface
 
 public:
 
-  virtual QString descriptorType() const override;
-  virtual bool useOrientation() const override;
-  virtual double scaleFactor() const override;
-  virtual void setDescriptorType(const QString &descriptorType) override;
-  virtual void setUseOrientation(bool useOrientation) override;
-  virtual void setScaleFactor(double scaleFactor) override;
+  QString descriptorType() const override;
+  bool useOrientation() const override;
+  double scaleFactor() const override;
+  void setDescriptorType(const QString &descriptorType) override;
+  void setUseOrientation(bool useOrientation) override;
+  void setScaleFactor(double scaleFactor) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const override;
 
 private:
@@ -84,10 +84,10 @@ public:
 
   BoostDescriptor();
   BoostDescriptor(const BoostDescriptor &boostDescriptor);
-  BoostDescriptor(QString descriptorType,
+  BoostDescriptor(const QString &descriptorType,
                   bool useOrientation,
                   double scaleFactor);
-  ~BoostDescriptor() override;
+  ~BoostDescriptor() override = default;
 
 private:
 
@@ -111,7 +111,9 @@ public:
 
 public:
 
-  bool extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors) override;
+  bool extract(const cv::Mat &img,
+               std::vector<cv::KeyPoint> &keyPoints,
+               cv::Mat &descriptors) override;
 
 protected:
 

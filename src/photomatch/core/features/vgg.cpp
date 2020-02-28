@@ -31,8 +31,7 @@ namespace photomatch
 
 
 VggProperties::VggProperties()
-  : Vgg(),
-    mDescriptorType("VGG_120"),
+  : mDescriptorType("VGG_120"),
     mScaleFactor(6.25),
     mSigma(1.4),
     bUseNormalizeDescriptor(false),
@@ -42,7 +41,7 @@ VggProperties::VggProperties()
 }
 
 VggProperties::VggProperties(const VggProperties &vggProperties)
-  : Vgg(),
+  : Vgg(vggProperties),
     mDescriptorType(vggProperties.mDescriptorType),
     mScaleFactor(vggProperties.mScaleFactor),
     mSigma(vggProperties.mSigma),
@@ -50,11 +49,6 @@ VggProperties::VggProperties(const VggProperties &vggProperties)
     bUseNormalizeImage(vggProperties.bUseNormalizeImage),
     bUseScaleOrientation(vggProperties.bUseScaleOrientation)
 {
-}
-
-VggProperties::~VggProperties()
-{
-
 }
 
 QString VggProperties::descriptorType() const
@@ -144,15 +138,12 @@ QString photomatch::VggProperties::name() const
 
 
 VggDescriptor::VggDescriptor()
-  : VggProperties(),
-    DescriptorExtractor()
 {
   update();
 }
 
 VggDescriptor::VggDescriptor(const VggDescriptor &vggDescriptor)
-  : VggProperties(vggDescriptor),
-    DescriptorExtractor()
+  : VggProperties(vggDescriptor)
 {
   update();
 }
@@ -163,8 +154,6 @@ VggDescriptor::VggDescriptor(QString descriptorType,
                              bool useNormalizeDescriptor,
                              bool useNormalizeImage,
                              bool useScaleOrientation)
-  : VggProperties(),
-    DescriptorExtractor()
 {
   VggProperties::setDescriptorType(descriptorType);
   VggProperties::setScaleFactor(scaleFactor);
@@ -175,13 +164,9 @@ VggDescriptor::VggDescriptor(QString descriptorType,
   update();
 }
 
-VggDescriptor::~VggDescriptor()
-{
-
-}
-
 void VggDescriptor::update()
 {
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   int descriptor_type = cv::xfeatures2d::VGG::VGG_120;
   QString descriptorType = VggProperties::descriptorType();
   if (descriptorType.compare("VGG_120") == 0 ) {
@@ -194,7 +179,6 @@ void VggDescriptor::update()
     descriptor_type = cv::xfeatures2d::VGG::VGG_48;
   }
 
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mVGG = cv::xfeatures2d::VGG::create(descriptor_type,
                                       static_cast<float>(VggProperties::sigma()),
                                       VggProperties::useNormalizeImage(),

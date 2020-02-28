@@ -117,8 +117,8 @@ class GroundTruth
 public:
 
   GroundTruth();
-  GroundTruth(const QString &gtFile);
-  virtual ~GroundTruth(){}
+  explicit GroundTruth(const QString &gtFile);
+  virtual ~GroundTruth() = default;
 
   /*!
    * \brief Read ground truth file

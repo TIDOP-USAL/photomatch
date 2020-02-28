@@ -148,7 +148,7 @@ public:
 public:
 
   FlannMatcher() : MatchingMethod(MatchingMethod::Type::flann) {}
-  virtual ~FlannMatcher() override = default;
+  ~FlannMatcher() override = default;
 
   virtual Index index() const = 0;
   virtual void setIndex(Index index) = 0;
@@ -164,20 +164,20 @@ class PHOTOMATCH_EXPORT FlannMatcherProperties
 public:
 
   FlannMatcherProperties();
-  virtual ~FlannMatcherProperties() override;
+  ~FlannMatcherProperties() override;
 
 // Match interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 // IFlannMatcher interface
 
 public:
 
-  virtual Index index() const override;
+  Index index() const override;
   virtual void setIndex(Index index) override;
 
 private:
@@ -195,8 +195,8 @@ class PHOTOMATCH_EXPORT FlannMatcherImp
 public:
 
   FlannMatcherImp();
-  FlannMatcherImp(FlannMatcher::Index index);
-  ~FlannMatcherImp() override;
+  explicit FlannMatcherImp(FlannMatcher::Index index);
+  ~FlannMatcherImp() override = default;
 
 private:
 
@@ -253,7 +253,7 @@ public:
 public:
 
   BruteForceMatcher() : MatchingMethod(MatchingMethod::Type::brute_force) {}
-  virtual ~BruteForceMatcher() override = default;
+  ~BruteForceMatcher() override = default;
 
   virtual Norm normType() const = 0;
   virtual void setNormType(Norm normType) = 0;
@@ -269,21 +269,21 @@ class PHOTOMATCH_EXPORT BruteForceMatcherProperties
 public:
 
   BruteForceMatcherProperties();
-  ~BruteForceMatcherProperties() override;
+  ~BruteForceMatcherProperties() override = default;
 
 // Match interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 // IBruteForceMatcher interface
 
 public:
 
-  virtual Norm normType() const override;
-  virtual void setNormType(Norm normType) override;
+  Norm normType() const override;
+  void setNormType(Norm normType) override;
 
 private:
 
@@ -301,8 +301,8 @@ class PHOTOMATCH_EXPORT BruteForceMatcherImp
 public:
 
   BruteForceMatcherImp();
-  BruteForceMatcherImp(Norm normType);
-  ~BruteForceMatcherImp() override {}
+  explicit BruteForceMatcherImp(Norm normType);
+  ~BruteForceMatcherImp() override = default;
 
 private:
 
@@ -351,8 +351,8 @@ class PHOTOMATCH_EXPORT BruteForceMatcherCuda
 public:
 
   BruteForceMatcherCuda();
-  BruteForceMatcherCuda(Norm normType);
-  ~BruteForceMatcherCuda() override {}
+  explicit BruteForceMatcherCuda(Norm normType);
+  ~BruteForceMatcherCuda() override = default;
 
 private:
 
@@ -498,7 +498,7 @@ public:
 
   RobustMatcher()
     : MatchingStrategy(MatchingStrategy::Strategy::robust_matching) {}
-  virtual ~RobustMatcher() = default;
+  ~RobustMatcher() override = default;
 
   virtual double ratio() const = 0;
   virtual void setRatio(double ratio) = 0;
@@ -599,18 +599,18 @@ class PHOTOMATCH_EXPORT RobustMatchingImp
 
 public:
 
-  RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  explicit RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
   RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
-                         double ratio,
-                         bool crossCheck,
-                         GeometricTest geometricTest,
-                         HomographyComputeMethod homographyComputeMethod,
-                         FundamentalComputeMethod fundamentalComputeMethod,
-                         EssentialComputeMethod essentialComputeMethod,
-                         double distance,
-                         double confidence,
-                         int maxIter);
-  ~RobustMatchingImp() override;
+                    double ratio,
+                    bool crossCheck,
+                    GeometricTest geometricTest,
+                    HomographyComputeMethod homographyComputeMethod,
+                    FundamentalComputeMethod fundamentalComputeMethod,
+                    EssentialComputeMethod essentialComputeMethod,
+                    double distance,
+                    double confidence,
+                    int maxIter);
+  ~RobustMatchingImp() override = default;
 
   /*!
    * \brief Establece el metodo de matching
@@ -776,7 +776,7 @@ class PHOTOMATCH_EXPORT Gms
 public:
 
   Gms() : MatchingStrategy(MatchingStrategy::Strategy::gms) {}
-  virtual ~Gms() = default;
+  ~Gms() override = default;
 
   virtual bool rotation() const = 0;
   virtual void setRotation(bool rotation) = 0;
@@ -838,12 +838,12 @@ class PHOTOMATCH_EXPORT GsmImp
 
 public:
 
-  GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  explicit GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
   GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
-              bool rotation,
-              bool scale,
-              double threshold);
-  ~GsmImp() override;
+         bool rotation,
+         bool scale,
+         double threshold);
+  ~GsmImp() override = default;
 
 // MatchingAlgorithm interface
 

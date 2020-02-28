@@ -168,7 +168,7 @@ class PHOTOMATCH_EXPORT Agast
 public:
 
   Agast() : Feature(Feature::Type::agast) {}
-  virtual ~Agast() = default;
+  ~Agast() override = default;
 
   /*!
    * \brief threshold
@@ -243,7 +243,7 @@ class PHOTOMATCH_EXPORT Akaze
 public:
 
   Akaze() : Feature(Feature::Type::akaze) {}
-  virtual ~Akaze() = default;
+  ~Akaze() override = default;
 
   /*!
    * \brief Type of the extracted descriptor
@@ -349,7 +349,7 @@ class PHOTOMATCH_EXPORT Boost
 public:
 
   Boost() : Feature(Feature::Type::boost){}
-  virtual ~Boost() = default;
+  ~Boost() override = default;
 
   /*!
    * \brief Type of descriptor used
@@ -413,7 +413,7 @@ class PHOTOMATCH_EXPORT Brief
 public:
 
   Brief() : Feature(Feature::Type::brief) {}
-  virtual ~Brief() = default;
+  ~Brief() override = default;
 
   /*!
    * \brief Legth of the descriptor in bytes
@@ -463,7 +463,7 @@ class PHOTOMATCH_EXPORT Brisk
 public:
 
   Brisk() : Feature(Feature::Type::brisk) {}
-  virtual ~Brisk() = default;
+  ~Brisk() override = default;
 
   /*!
    * \brief AGAST detection threshold score (Default=30)
@@ -523,7 +523,7 @@ class PHOTOMATCH_EXPORT Daisy
 public:
 
   Daisy() : Feature(Feature::Type::daisy) {}
-  virtual ~Daisy() = default;
+  ~Daisy() override = default;
 
   /*!
    * \brief Radius of the descriptor at the initial scale (Default=15.)
@@ -642,7 +642,7 @@ class PHOTOMATCH_EXPORT Fast
 public:
 
   Fast() : Feature(Feature::Type::fast) {}
-  virtual ~Fast() = default;
+  ~Fast() override = default;
 
   /*!
    * \brief threshold (Default=10)
@@ -686,7 +686,7 @@ public:
    *
    * \param[in] detectorType Detector Type
    */
-  virtual void setDetectorType(QString detectorType) = 0;
+  virtual void setDetectorType(const QString &detectorType) = 0;
 
 };
 
@@ -709,7 +709,7 @@ class PHOTOMATCH_EXPORT Freak
 public:
 
   Freak() : Feature(Feature::Type::freak) {}
-  virtual ~Freak() = default;
+  ~Freak() override = default;
 
   /*!
    * \brief Orientation normalization (Default=true)
@@ -774,7 +774,7 @@ class PHOTOMATCH_EXPORT Gftt
 public:
 
   Gftt() : Feature(Feature::Type::gftt) {}
-  virtual ~Gftt() = default;
+  ~Gftt() override = default;
 
   virtual int maxFeatures() const = 0;
   virtual double qualityLevel() const = 0;
@@ -809,7 +809,7 @@ class PHOTOMATCH_EXPORT Hog
 public:
 
   Hog() : Feature(Feature::Type::hog) {}
-  virtual ~Hog() = default;
+  ~Hog() override = default;
 
   virtual QSize winSize() const = 0;
   virtual QSize blockSize() const = 0;
@@ -866,7 +866,7 @@ class PHOTOMATCH_EXPORT Kaze
 public:
 
   Kaze() : Feature(Feature::Type::kaze) {}
-  virtual ~Kaze() = default;
+  ~Kaze() override = default;
 
   /*!
    * \brief Extended descriptor
@@ -955,7 +955,7 @@ class PHOTOMATCH_EXPORT Latch
 public:
 
   Latch() : Feature(Feature::Type::latch) {}
-  virtual ~Latch() = default;
+  ~Latch() override = default;
 
   virtual QString bytes() const = 0;
   virtual bool rotationInvariance() const = 0;
@@ -984,7 +984,7 @@ class PHOTOMATCH_EXPORT Lucid
 public:
 
   Lucid() : Feature(Feature::Type::lucid) {}
-  virtual ~Lucid() = default;
+  ~Lucid() override = default;
 
   /*!
    * \brief kernel for descriptor construction
@@ -1027,7 +1027,7 @@ class PHOTOMATCH_EXPORT Lss
 public:
 
   Lss() : Feature(Feature::Type::lss) {}
-  virtual ~Lss() = default;
+  ~Lss() override = default;
 
 };
 
@@ -1044,7 +1044,7 @@ class PHOTOMATCH_EXPORT Msd
 public:
 
   Msd() : Feature(Feature::Type::msd) {}
-  virtual ~Msd() = default;
+  ~Msd() override = default;
 
   virtual double thresholdSaliency() const = 0;//
   virtual int patchRadius() const = 0;//
@@ -1085,7 +1085,7 @@ class PHOTOMATCH_EXPORT Mser
 public:
 
   Mser() : Feature(Feature::Type::mser) {}
-  virtual ~Mser() = default;
+  ~Mser() override = default;
 
   virtual int delta() const = 0;
   virtual int minArea() const = 0;
@@ -1125,7 +1125,7 @@ class PHOTOMATCH_EXPORT Orb
 public:
 
   Orb() : Feature(Feature::Type::orb)  {}
-  virtual ~Orb() = default;
+  ~Orb() override = default;
 
   /*!
    * \brief The maximum number of features to retain
@@ -1258,7 +1258,7 @@ class PHOTOMATCH_EXPORT Sift
 {
 public:
   Sift() : Feature(Feature::Type::sift)  {}
-  virtual ~Sift() = default;
+  ~Sift() override = default;
 
   /*!
    * \brief The number of best features to retain
@@ -1343,7 +1343,7 @@ class PHOTOMATCH_EXPORT Star
 public:
 
   Star() : Feature(Feature::Type::star) {}
-  virtual ~Star() = default;
+  ~Star() override = default;
 
   virtual int maxSize() const  = 0;
   virtual int responseThreshold() const  = 0;
@@ -1371,7 +1371,7 @@ class PHOTOMATCH_EXPORT Surf
 public:
 
   Surf() : Feature(Feature::Type::surf) {}
-  virtual ~Surf() = default;
+  ~Surf() override = default;
 
   /*!
    * \brief Threshold for hessian keypoint detector used in SURF
@@ -1455,7 +1455,7 @@ class PHOTOMATCH_EXPORT Vgg
 public:
 
   Vgg() : Feature(Feature::Type::vgg) {}
-  virtual ~Vgg() = default;
+  ~Vgg() override = default;
 
   /*!
    * \brief Type of descriptor to use
