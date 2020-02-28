@@ -115,7 +115,7 @@ class PHOTOMATCH_EXPORT IDownsample
 public:
 
   IDownsample() : Preprocess(Preprocess::Type::downsample) {}
-  virtual ~IDownsample() = default;
+  ~IDownsample() override = default;
 
   virtual int maxImageSize() const = 0;
   virtual void setMaxImageSize(int size) = 0;
@@ -138,7 +138,7 @@ class PHOTOMATCH_EXPORT Acebsf
 public:
 
   Acebsf() : Preprocess(Preprocess::Type::acebsf) {}
-  virtual ~Acebsf() = default;
+  ~Acebsf() override = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -167,7 +167,7 @@ class PHOTOMATCH_EXPORT Clahe
 public:
 
   Clahe() : Preprocess(Preprocess::Type::clahe) {}
-  virtual ~Clahe() = default;
+  ~Clahe() override = default;
 
   virtual double clipLimit() const = 0;
   virtual void setClipLimit(double clipLimit) = 0;
@@ -192,7 +192,7 @@ class PHOTOMATCH_EXPORT Cmbfhe
 public:
 
   Cmbfhe() : Preprocess(Preprocess::Type::cmbfhe) {}
-  virtual ~Cmbfhe() = default;
+  ~Cmbfhe() override = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -215,7 +215,7 @@ class PHOTOMATCH_EXPORT Dhe
 public:
 
   Dhe() : Preprocess(Preprocess::Type::dhe) {}
-  virtual ~Dhe() = default;
+  ~Dhe() override = default;
 
   virtual int x() const = 0;
   virtual void setX(int x) = 0;
@@ -238,7 +238,7 @@ class PHOTOMATCH_EXPORT Decolor
 public:
 
   Decolor() : Preprocess(Preprocess::Type::decolor) {}
-  virtual ~Decolor() = default;
+  ~Decolor() override = default;
 
 };
 
@@ -258,7 +258,7 @@ class PHOTOMATCH_EXPORT Fahe
 public:
 
   Fahe() : Preprocess(Preprocess::Type::fahe) {}
-  virtual ~Fahe() = default;
+  ~Fahe() override = default;
 
   ///TODO: las dimensiones tienen que ser iguales
   virtual QSize blockSize() const = 0;
@@ -282,7 +282,7 @@ class PHOTOMATCH_EXPORT Hmclahe
 public:
 
   Hmclahe() : Preprocess(Preprocess::Type::hmclahe) {}
-  virtual ~Hmclahe() = default;
+  ~Hmclahe() override = default;
 
   ///TODO: las dimensiones tienen que ser iguales
   virtual QSize blockSize() const = 0;
@@ -309,7 +309,7 @@ class PHOTOMATCH_EXPORT LceBsescs
 public:
 
   LceBsescs() : Preprocess(Preprocess::Type::lce_bsescs) {}
-  virtual ~LceBsescs() {}
+  ~LceBsescs() override = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -331,7 +331,7 @@ class PHOTOMATCH_EXPORT Msrcp
 public:
 
   Msrcp() : Preprocess(Preprocess::Type::msrcp) {}
-  virtual ~Msrcp() = default;
+  ~Msrcp() override = default;
 
   virtual double smallScale() const = 0;
   virtual void setSmallScale(double smallScale) = 0;
@@ -359,7 +359,7 @@ class PHOTOMATCH_EXPORT Noshp
 public:
 
   Noshp() : Preprocess(Preprocess::Type::noshp) {}
-  virtual ~Noshp() {}
+  ~Noshp() override = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -383,7 +383,7 @@ class PHOTOMATCH_EXPORT Pohe
 public:
 
   Pohe() : Preprocess(Preprocess::Type::pohe) {}
-  virtual ~Pohe() {}
+  ~Pohe() override = default;
 
   virtual QSize blockSize() const = 0;
   virtual void setBlockSize(const QSize &blockSize) = 0;
@@ -413,7 +413,7 @@ public:
 public:
 
   Rswhe() : Preprocess(Preprocess::Type::rswhe) {}
-  virtual ~Rswhe() = default;
+  ~Rswhe() override = default;
 
   virtual int histogramDivisions() const = 0;
   virtual void setHistogramDivisions(int histogramDivisions) = 0;
@@ -431,7 +431,7 @@ class PHOTOMATCH_EXPORT Wallis
 public:
 
   Wallis() : Preprocess(Preprocess::Type::wallis) {}
-  virtual ~Wallis() = default;
+  ~Wallis() override = default;
 
   virtual double contrast() const = 0;
   virtual void setContrast(double contrast) = 0;

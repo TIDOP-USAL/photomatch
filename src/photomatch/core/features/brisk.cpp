@@ -32,23 +32,17 @@ namespace photomatch
 
 
 BriskProperties::BriskProperties()
-  : Brisk(),
-    mThreshold(30),
+  : mThreshold(30),
     mOctaves(3),
     mPatternScale(1.0)
 {}
 
 BriskProperties::BriskProperties(const BriskProperties &briskProperties)
-  : Brisk(),
+  : Brisk(briskProperties),
     mThreshold(briskProperties.mThreshold),
     mOctaves(briskProperties.mOctaves),
     mPatternScale(briskProperties.mPatternScale)
 {}
-
-BriskProperties::~BriskProperties()
-{
-
-}
 
 int BriskProperties::threshold() const
 {
@@ -97,17 +91,14 @@ QString BriskProperties::name() const
 
 
 BriskDetectorDescriptor::BriskDetectorDescriptor()
-  : BriskProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   update();
 }
 
 BriskDetectorDescriptor::BriskDetectorDescriptor(const BriskDetectorDescriptor &briskDetectorDescriptor)
   : BriskProperties(briskDetectorDescriptor),
-    KeypointDetector(),
-    DescriptorExtractor()
+    KeypointDetector(briskDetectorDescriptor),
+    DescriptorExtractor(briskDetectorDescriptor)
 {
   update();
 }
@@ -116,19 +107,11 @@ BriskDetectorDescriptor::BriskDetectorDescriptor(const BriskDetectorDescriptor &
 BriskDetectorDescriptor::BriskDetectorDescriptor(int threshold,
                                                  int octaves,
                                                  double patternScale)
-  : BriskProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   BriskProperties::setThreshold(threshold);
   BriskProperties::setOctaves(octaves);
   BriskProperties::setPatternScale(patternScale);
   update();
-}
-
-BriskDetectorDescriptor::~BriskDetectorDescriptor()
-{
-
 }
 
 void BriskDetectorDescriptor::update()

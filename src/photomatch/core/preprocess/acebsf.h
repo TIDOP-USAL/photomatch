@@ -53,20 +53,20 @@ public:
 
 public:
 
-  virtual QSize blockSize() const override;
-  virtual void setBlockSize(const QSize &blockSize) override;
-  virtual double l() const override;
-  virtual void setL(double l) override;
-  virtual double k1() const override;
-  virtual void setK1(double k1) override;
-  virtual double k2() const override;
-  virtual void setK2(double k2) override;
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
+  double l() const override;
+  void setL(double l) override;
+  double k1() const override;
+  void setK1(double k1) override;
+  double k2() const override;
+  void setK2(double k2) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:

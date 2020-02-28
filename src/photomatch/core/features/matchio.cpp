@@ -82,8 +82,8 @@ class MatchesReaderBinary
 
 public:
 
-  MatchesReaderBinary(const QString &fileName);
-  ~MatchesReaderBinary() override {}
+  explicit MatchesReaderBinary(const QString &fileName);
+  ~MatchesReaderBinary() override = default;
 
 // MatchesReader interface
 
@@ -104,8 +104,8 @@ private:
 private:
 
   FILE *mFile;
-  uint64_t mSizeGoodMatches;
-  uint64_t mSizeWrongMatches;
+  uint64_t mSizeGoodMatches{0};
+  uint64_t mSizeWrongMatches{0};
 
 };
 
@@ -196,7 +196,7 @@ class MatchesReaderOpenCV
 
 public:
 
-  MatchesReaderOpenCV(const QString &fileName);
+  explicit MatchesReaderOpenCV(const QString &fileName);
   ~MatchesReaderOpenCV() override;
 
 // MatchesReader interface
@@ -293,8 +293,8 @@ class MatchesWriterBinary
 
 public:
 
-  MatchesWriterBinary(const QString &fileName);
-  ~MatchesWriterBinary() override;
+  explicit MatchesWriterBinary(const QString &fileName);
+  ~MatchesWriterBinary() override = default;
 
 // MatchesWriter interface
 
@@ -320,10 +320,6 @@ private:
 
 MatchesWriterBinary::MatchesWriterBinary(const QString &fileName)
   : MatchesWriter(fileName)
-{
-}
-
-MatchesWriterBinary::~MatchesWriterBinary()
 {
 }
 
@@ -403,7 +399,7 @@ class MatchesWriterOpenCV
 
 public:
 
-  MatchesWriterOpenCV(const QString &fileName);
+  explicit MatchesWriterOpenCV(const QString &fileName);
   ~MatchesWriterOpenCV() override;
 
 // MatchesWriter interface
@@ -503,14 +499,17 @@ void MatchesWriterOpenCV::close()
 std::unique_ptr<MatchesReader> MatchesReaderFactory::createReader(const QString &fileName)
 {
   QString ext = QFileInfo(fileName).suffix();
+  std::unique_ptr<MatchesReader> matches_reader;
   if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<MatchesReaderBinary>(fileName);
+    matches_reader = std::make_unique<MatchesReaderBinary>(fileName);
   } else if (ext.compare("xml", Qt::CaseInsensitive) == 0){
-    return std::make_unique<MatchesReaderOpenCV>(fileName);
+    matches_reader = std::make_unique<MatchesReaderOpenCV>(fileName);
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<MatchesReaderOpenCV>(fileName);
+    matches_reader = std::make_unique<MatchesReaderOpenCV>(fileName);
+  } else {
+    throw std::runtime_error("Invalid Matches Reader");
   }
-  throw std::runtime_error("Invalid Matches Reader");
+  return matches_reader;
 }
 
 
@@ -520,14 +519,17 @@ std::unique_ptr<MatchesReader> MatchesReaderFactory::createReader(const QString 
 std::unique_ptr<MatchesWriter> MatchesWriterFactory::createWriter(const QString &fileName)
 {
   QString ext = QFileInfo(fileName).suffix();
+  std::unique_ptr<MatchesWriter> matches_writer;
   if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<MatchesWriterBinary>(fileName);
+    matches_writer = std::make_unique<MatchesWriterBinary>(fileName);
   } else if (ext.compare("xml", Qt::CaseInsensitive) == 0){
-    return std::make_unique<MatchesWriterOpenCV>(fileName);
+    matches_writer = std::make_unique<MatchesWriterOpenCV>(fileName);
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<MatchesWriterOpenCV>(fileName);
+    matches_writer = std::make_unique<MatchesWriterOpenCV>(fileName);
+  } else {
+    throw std::runtime_error("Invalid Writer Reader");
   }
-  throw std::runtime_error("Invalid Writer Reader");
+  return matches_writer;
 }
 
 

@@ -43,22 +43,22 @@ class PHOTOMATCH_EXPORT LucidProperties
 public:
 
   LucidProperties();
-  ~LucidProperties() override;
+  ~LucidProperties() override = default;
 
 // ILucid interface
 
 public:
 
-  virtual int lucidKernel() const override;
-  virtual int blurKernel() const override;
-  virtual void setLucidKernel(int lucidKernel) override;
-  virtual void setBlurKernel(int blurKernel) override;
+  int lucidKernel() const override;
+  int blurKernel() const override;
+  void setLucidKernel(int lucidKernel) override;
+  void setBlurKernel(int blurKernel) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -80,8 +80,7 @@ public:
 
   LucidDescriptor();
   LucidDescriptor(int lucidKernel, int blurKernel);
-
-  ~LucidDescriptor() override;
+  ~LucidDescriptor() override = default;
 
 private:
 

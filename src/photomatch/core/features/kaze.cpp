@@ -32,26 +32,24 @@ namespace photomatch
 
 
 KazeProperties::KazeProperties()
-  : Kaze(),
-    mExtended(false),
+  : mExtended(false),
     mUpright(false),
     mThreshold(0.001),
     mOctaves(4),
     mOctaveLayers(4),
     mDiffusivity("DIFF_PM_G2")
-{}
+{
+
+}
 
 KazeProperties::KazeProperties(const KazeProperties &kazeProperties)
-  : Kaze(),
+  : Kaze(kazeProperties),
     mExtended(kazeProperties.mExtended),
     mUpright(kazeProperties.mUpright),
     mThreshold(kazeProperties.mThreshold),
     mOctaves(kazeProperties.mOctaves),
     mOctaveLayers(kazeProperties.mOctaveLayers),
     mDiffusivity(kazeProperties.mDiffusivity)
-{}
-
-KazeProperties::~KazeProperties()
 {
 
 }
@@ -141,18 +139,15 @@ QString KazeProperties::name() const
 
 
 KazeDetectorDescriptor::KazeDetectorDescriptor()
-  : KazeProperties(),
-    KeypointDetector(),
-    DescriptorExtractor(),
-    mKaze(cv::KAZE::create())
+  : mKaze(cv::KAZE::create())
 {
   this->updateCvKaze();
 }
 
 KazeDetectorDescriptor::KazeDetectorDescriptor(const KazeDetectorDescriptor &kazeDetectorDescriptor)
   : KazeProperties(kazeDetectorDescriptor),
-    KeypointDetector(),
-    DescriptorExtractor(),
+    KeypointDetector(kazeDetectorDescriptor),
+    DescriptorExtractor(kazeDetectorDescriptor),
     mKaze(cv::KAZE::create())
 {
   this->updateCvKaze();
@@ -163,11 +158,8 @@ KazeDetectorDescriptor::KazeDetectorDescriptor(bool extendedDescriptor,
                                                double threshold,
                                                int octaves,
                                                int octaveLayers,
-                                               QString diffusivity)
-  : KazeProperties(),
-    KeypointDetector(),
-    DescriptorExtractor(),
-    mKaze(cv::KAZE::create())
+                                               const QString &diffusivity)
+  : mKaze(cv::KAZE::create())
 {
   setExtendedDescriptor(extendedDescriptor);
   setUpright(upright);
@@ -175,11 +167,6 @@ KazeDetectorDescriptor::KazeDetectorDescriptor(bool extendedDescriptor,
   setOctaves(octaves);
   setOctaveLayers(octaveLayers);
   setDiffusivity(diffusivity);
-}
-
-KazeDetectorDescriptor::~KazeDetectorDescriptor()
-{
-
 }
 
 #if CV_VERSION_MAJOR >= 4

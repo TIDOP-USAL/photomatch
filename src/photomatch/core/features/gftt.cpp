@@ -31,8 +31,7 @@ namespace photomatch
 {
 
 GfttProperties::GfttProperties()
-  : Gftt(),
-    mMaxFeatures(1000),
+  : mMaxFeatures(1000),
     mQualityLevel(0.01),
     mMinDistance(1),
     mBlockSize(3),
@@ -42,7 +41,7 @@ GfttProperties::GfttProperties()
 }
 
 GfttProperties::GfttProperties(const GfttProperties &gfttProperties)
-  : Gftt(),
+  : Gftt(gfttProperties),
     mMaxFeatures(gfttProperties.mMaxFeatures),
     mQualityLevel(gfttProperties.mQualityLevel),
     mMinDistance(gfttProperties.mMinDistance),
@@ -50,11 +49,6 @@ GfttProperties::GfttProperties(const GfttProperties &gfttProperties)
     mHarrisDetector(gfttProperties.mHarrisDetector),
     mK(gfttProperties.mK)
 {
-}
-
-GfttProperties::~GfttProperties()
-{
-
 }
 
 int GfttProperties::maxFeatures() const
@@ -137,8 +131,6 @@ QString GfttProperties::name() const
 
 
 GfttDetector::GfttDetector()
-  : GfttProperties(),
-    KeypointDetector()
 {
   mGFTT = cv::GFTTDetector::create(GfttProperties::maxFeatures(),
                                    GfttProperties::qualityLevel(),
@@ -150,7 +142,7 @@ GfttDetector::GfttDetector()
 
 GfttDetector::GfttDetector(const GfttDetector &gfttDetector)
   : GfttProperties(gfttDetector),
-    KeypointDetector()
+    KeypointDetector(gfttDetector)
 {
   mGFTT = cv::GFTTDetector::create(GfttProperties::maxFeatures(),
                                    GfttProperties::qualityLevel(),
@@ -166,9 +158,7 @@ GfttDetector::GfttDetector(int maxFeatures,
                            int blockSize,
                            bool harrisDetector,
                            double k)
-  : GfttProperties(),
-    KeypointDetector(),
-    mGFTT(cv::GFTTDetector::create())
+  : mGFTT(cv::GFTTDetector::create())
 {
   setMaxFeatures(maxFeatures);
   setQualityLevel(qualityLevel);
@@ -176,11 +166,6 @@ GfttDetector::GfttDetector(int maxFeatures,
   setBlockSize(blockSize);
   setHarrisDetector(harrisDetector);
   setK(k);
-}
-
-GfttDetector::~GfttDetector()
-{
-
 }
 
 bool GfttDetector::detect(const cv::Mat &img,

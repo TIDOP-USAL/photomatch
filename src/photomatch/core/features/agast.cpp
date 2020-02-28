@@ -32,23 +32,44 @@ namespace photomatch
 
 
 AgastProperties::AgastProperties()
-  : Agast(),
-    mThreshold(10),
+  : mThreshold(10),
     mNonmaxSuppression(true),
     mDetectorType("OAST_9_16")
 {
 }
 
 AgastProperties::AgastProperties(const AgastProperties &agast)
-  : Agast(),
-    mThreshold(agast.mThreshold),
+  : mThreshold(agast.mThreshold),
     mNonmaxSuppression(agast.nonmaxSuppression()),
     mDetectorType(agast.mDetectorType)
 {
 }
 
-AgastProperties::~AgastProperties()
+AgastProperties::AgastProperties(AgastProperties &&agast) noexcept
+  : mThreshold(std::move(agast.mThreshold)),
+    mNonmaxSuppression(std::move(agast.nonmaxSuppression())),
+    mDetectorType(std::move(agast.mDetectorType))
 {
+}
+
+AgastProperties &AgastProperties::operator =(const AgastProperties &agast)
+{
+  if (this != &agast) {
+    this->mThreshold = agast.mThreshold;
+    this->mNonmaxSuppression = agast.mNonmaxSuppression;
+    this->mDetectorType = agast.mDetectorType;
+  }
+  return *this;
+}
+
+AgastProperties &AgastProperties::operator =(AgastProperties &&agast) noexcept
+{
+  if (this != &agast) {
+    this->mThreshold = std::move(agast.mThreshold);
+    this->mNonmaxSuppression = std::move(agast.mNonmaxSuppression);
+    this->mDetectorType = std::move(agast.mDetectorType);
+  }
+  return *this;
 }
 
 int AgastProperties::threshold() const
@@ -103,38 +124,46 @@ QString AgastProperties::name() const
 
 
 AgastDetector::AgastDetector()
-  : AgastProperties(),
-    KeypointDetector()
 {
-  mAgast = cv::AgastFeatureDetector::create(AgastProperties::threshold(),
-                                            AgastProperties::nonmaxSuppression(),
-                                            convertDetectorType(AgastProperties::detectorType()));
+  this->initAgastFromProperties();
 }
 
 AgastDetector::AgastDetector(const AgastDetector &agastDetector)
-  : AgastProperties(agastDetector),
-    KeypointDetector()
+  : AgastProperties(agastDetector)
 {
-  mAgast = cv::AgastFeatureDetector::create(AgastProperties::threshold(),
-                                            AgastProperties::nonmaxSuppression(),
-                                            convertDetectorType(AgastProperties::detectorType()));
+  this->initAgastFromProperties();
+}
+
+AgastDetector::AgastDetector(AgastDetector &&agastDetector) noexcept
+  : AgastProperties(std::forward<AgastProperties>(agastDetector))
+{
+  this->initAgastFromProperties();
 }
 
 AgastDetector::AgastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType)
-  : AgastProperties(),
-    KeypointDetector(),
-    mAgast(cv::AgastFeatureDetector::create())
+  : mAgast(cv::AgastFeatureDetector::create())
 {
   setThreshold(threshold);
   setNonmaxSuppression(nonmaxSuppression);
   setDetectorType(detectorType);
 }
 
-
-
-AgastDetector::~AgastDetector()
+AgastDetector &AgastDetector::operator =(const AgastDetector &agastDetector)
 {
+  if (this != &agastDetector){
+    AgastProperties::operator=(agastDetector);
+    this->initAgastFromProperties();
+  }
+  return *this;
+}
 
+AgastDetector &AgastDetector::operator =(AgastDetector &&agastDetector) noexcept
+{
+  if (this != &agastDetector){
+    AgastProperties::operator=(std::forward<AgastProperties>(agastDetector));
+    this->initAgastFromProperties();
+  }
+  return *this;
 }
 
 #if CV_VERSION_MAJOR >= 4
@@ -164,6 +193,13 @@ int AgastDetector::convertDetectorType(const QString &detectorType)
   return detector_type;
 }
 #endif
+
+void AgastDetector::initAgastFromProperties()
+{
+  mAgast = cv::AgastFeatureDetector::create(AgastProperties::threshold(),
+                                            AgastProperties::nonmaxSuppression(),
+                                            convertDetectorType(AgastProperties::detectorType()));
+}
 
 bool AgastDetector::detect(const cv::Mat &img,
                            std::vector<cv::KeyPoint> &keyPoints,
@@ -206,6 +242,5 @@ void AgastDetector::reset()
   mAgast->setNonmaxSuppression(AgastProperties::nonmaxSuppression());
   mAgast->setType(convertDetectorType(AgastProperties::detectorType()));
 }
-
 
 } // namespace photomatch

@@ -46,30 +46,30 @@ public:
 
   OrbProperties();
   OrbProperties(const OrbProperties &orbProperties);
-   ~OrbProperties() override;
+  ~OrbProperties() override = default;
 
 // IOrb interface
 
 public:
 
-  virtual int featuresNumber() const override;
-  virtual double scaleFactor() const override;
-  virtual int levelsNumber() const override;
-  virtual int edgeThreshold() const override;
-  virtual int firstLevel() const override;
-  virtual int wta_k() const override;
-  virtual QString scoreType() const override;
-  virtual int patchSize() const override;
-  virtual int fastThreshold() const override;
-  virtual void setFeaturesNumber(int featuresNumber) override;
-  virtual void setScaleFactor(double scaleFactor) override;
-  virtual void setLevelsNumber(int levelsNumber) override;
-  virtual void setEdgeThreshold(int edgeThreshold) override;
-  virtual void setFirstLevel(int firstLevel) override;
-  virtual void setWTA_K(int WTA_K) override;
-  virtual void setScoreType(const QString &scoreType) override;
-  virtual void setPatchSize(int patchSize) override;
-  virtual void setFastThreshold(int fastThreshold) override;
+  int featuresNumber() const override;
+  double scaleFactor() const override;
+  int levelsNumber() const override;
+  int edgeThreshold() const override;
+  int firstLevel() const override;
+  int wta_k() const override;
+  QString scoreType() const override;
+  int patchSize() const override;
+  int fastThreshold() const override;
+  void setFeaturesNumber(int featuresNumber) override;
+  void setScaleFactor(double scaleFactor) override;
+  void setLevelsNumber(int levelsNumber) override;
+  void setEdgeThreshold(int edgeThreshold) override;
+  void setFirstLevel(int firstLevel) override;
+  void setWTA_K(int WTA_K) override;
+  void setScoreType(const QString &scoreType) override;
+  void setPatchSize(int patchSize) override;
+  void setFastThreshold(int fastThreshold) override;
 
 // Feature interface
 
@@ -110,10 +110,10 @@ public:
                         int levelsNumber,
                         int edgeThreshold,
                         int wta_k,
-                        QString scoreType,
+                        const QString &scoreType,
                         int patchSize,
                         int fastThreshold);
-  ~OrbDetectorDescriptor() override;
+  ~OrbDetectorDescriptor() override = default;
 
 private:
 
@@ -185,11 +185,11 @@ public:
                             int levelsNumber,
                             int edgeThreshold,
                             int wta_k,
-                            QString scoreType,
+                            const QString &scoreType,
                             int patchSize,
                             int fastThreshold);
 
-  ~OrbCudaDetectorDescriptor() override;
+  ~OrbCudaDetectorDescriptor() override = default;
 
 private:
 

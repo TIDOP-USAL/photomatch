@@ -39,7 +39,7 @@ class PHOTOMATCH_EXPORT MultiProcess
 public:
 
     MultiProcess();
-    MultiProcess(bool isSequential);
+    explicit MultiProcess(bool isSequential);
     ~MultiProcess() override;
 
     virtual void start() override;

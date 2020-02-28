@@ -32,8 +32,7 @@ namespace photomatch
 
 
 MserProperties::MserProperties()
-  : Mser(),
-    mDelta(5),
+  : mDelta(5),
     mMinArea(60),
     mMaxArea(14400),
     mMaxVariation(0.25),
@@ -46,7 +45,7 @@ MserProperties::MserProperties()
 }
 
 MserProperties::MserProperties(const MserProperties &mserProperties)
-  : Mser(),
+  : Mser(mserProperties),
     mDelta(mserProperties.mDelta),
     mMinArea(mserProperties.minArea()),
     mMaxArea(mserProperties.mMaxArea),
@@ -56,10 +55,6 @@ MserProperties::MserProperties(const MserProperties &mserProperties)
     mAreaThreshold(mserProperties.mAreaThreshold),
     mMinMargin(mserProperties.mMinMargin),
     mEdgeBlurSize(mserProperties.mEdgeBlurSize)
-{
-}
-
-MserProperties::~MserProperties()
 {
 }
 
@@ -176,15 +171,13 @@ QString MserProperties::name() const
 
 
 MserDetector::MserDetector()
-  : MserProperties(),
-    KeypointDetector()
 {
   update();
 }
 
 MserDetector::MserDetector(const MserDetector &mserDetector)
   : MserProperties(mserDetector),
-    KeypointDetector()
+    KeypointDetector(mserDetector)
 {
   update();
 }
@@ -198,8 +191,6 @@ MserDetector::MserDetector(int delta,
                            double areaThreshold,
                            double minMargin,
                            int edgeBlurSize)
-  : MserProperties(),
-    KeypointDetector()
 {
   MserProperties::setDelta(delta);
   MserProperties::setMinArea(minArea);
@@ -211,11 +202,6 @@ MserDetector::MserDetector(int delta,
   MserProperties::setMinMargin(minMargin);
   MserProperties::setEdgeBlurSize(edgeBlurSize);
   update();
-}
-
-MserDetector::~MserDetector()
-{
-
 }
 
 void MserDetector::update()

@@ -44,22 +44,22 @@ public:
 
   BriefProperties();
   BriefProperties(const BriefProperties &briefProperties);
-  ~BriefProperties() override;
+  ~BriefProperties() override = default;
 
 // IBrief interface
 
 public:
 
-  virtual QString bytes() const override;
-  virtual bool useOrientation() const override;
-  virtual void setBytes(const QString &bytes) override;
-  virtual void setUseOrientation(bool useOrientation) override;
+  QString bytes() const override;
+  bool useOrientation() const override;
+  void setBytes(const QString &bytes) override;
+  void setUseOrientation(bool useOrientation) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -84,7 +84,7 @@ public:
   BriefDescriptor(QString bytes,
                   bool useOrientation);
 
-  ~BriefDescriptor() override;
+  ~BriefDescriptor() override = default;
 
 private:
 

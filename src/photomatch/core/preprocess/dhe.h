@@ -51,14 +51,14 @@ public:
 
 public:
 
-  virtual int x() const override;
-  virtual void setX(int x) override;
+  int x() const override;
+  void setX(int x) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -79,7 +79,7 @@ public:
 
   DhePreprocess();
   DhePreprocess(const DhePreprocess &dhePreprocess);
-  DhePreprocess(int x);
+  explicit DhePreprocess(int x);
   ~DhePreprocess() override;
 
 // ImageProcess interface

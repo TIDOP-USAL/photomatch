@@ -41,28 +41,29 @@ namespace photomatch
 class PHOTOMATCH_EXPORT LatchProperties
   : public Latch
 {
+
 public:
 
   LatchProperties();
   LatchProperties(const LatchProperties &latchProperties);
-  ~LatchProperties() override;
+  ~LatchProperties() override = default;
 
 // ILatch interface
 
 public:
 
-  virtual QString bytes() const override;
-  virtual bool rotationInvariance() const override;
-  virtual int halfSsdSize() const override;
-  virtual void setBytes(const QString &bytes) override;
-  virtual void setRotationInvariance(bool rotationInvariance) override;
-  virtual void setHalfSsdSize(int halfSsdSize) override;
+  QString bytes() const override;
+  bool rotationInvariance() const override;
+  int halfSsdSize() const override;
+  void setBytes(const QString &bytes) override;
+  void setRotationInvariance(bool rotationInvariance) override;
+  void setHalfSsdSize(int halfSsdSize) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -84,11 +85,11 @@ public:
 
   LatchDescriptor();
   LatchDescriptor(const LatchDescriptor &latchDescriptor);
-  LatchDescriptor(QString bytes,
+  LatchDescriptor(const QString& bytes,
                   bool rotationInvariance,
                   int halfSsdSize);
 
-  ~LatchDescriptor() override;
+  ~LatchDescriptor() override = default;
 
 private:
 

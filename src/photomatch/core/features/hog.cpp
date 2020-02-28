@@ -34,26 +34,24 @@ namespace photomatch
 
 
 HogProperties::HogProperties()
-  : Hog(),
-    mWinSize(16, 16),
+  : mWinSize(16, 16),
     mBlockSize(4, 4),
     mBlockStride(2, 2),
     mCellSize(2, 2),
     mNbins(9),
     mDerivAperture(1)
-{}
+{
+
+}
 
 HogProperties::HogProperties(const HogProperties &hogProperties)
-  : Hog(),
+  : Hog(hogProperties),
     mWinSize(hogProperties.mWinSize),
     mBlockSize(hogProperties.mBlockSize),
     mBlockStride(hogProperties.mBlockStride),
     mCellSize(hogProperties.mCellSize),
     mNbins(hogProperties.mNbins),
     mDerivAperture(hogProperties.mDerivAperture)
-{}
-
-HogProperties::~HogProperties()
 {
 
 }
@@ -138,15 +136,13 @@ QString HogProperties::name() const
 
 
 HogDescriptor::HogDescriptor()
-  : HogProperties(),
-    DescriptorExtractor()
 {
   update();
 }
 
 HogDescriptor::HogDescriptor(const HogDescriptor &hogDescriptor)
   : HogProperties(hogDescriptor),
-    DescriptorExtractor()
+    DescriptorExtractor(hogDescriptor)
 {
   update();
 }
@@ -157,8 +153,6 @@ HogDescriptor::HogDescriptor(QSize winSize,
                              QSize cellSize,
                              int nbins,
                              int derivAperture)
-  : HogProperties(),
-    DescriptorExtractor()
 {
   HogProperties::setWinSize(winSize);
   HogProperties::setBlockSize(blockSize);
@@ -167,11 +161,6 @@ HogDescriptor::HogDescriptor(QSize winSize,
   HogProperties::setNbins(nbins);
   HogProperties::setDerivAperture(derivAperture);
   update();
-}
-
-HogDescriptor::~HogDescriptor()
-{
-
 }
 
 void HogDescriptor::update()
@@ -243,7 +232,6 @@ bool HogDescriptor::extract(const cv::Mat &img,
   try {
     cv::Size win_size(HogProperties::winSize().width(), HogProperties::winSize().height());
 
-    std::vector<float> hogdescriptor;
     std::vector<cv::Point> p_c;
     cv::Point punto_central;
     punto_central.x = win_size.width / 2;

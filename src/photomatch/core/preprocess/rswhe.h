@@ -50,16 +50,16 @@ public:
 
 public:
 
-  virtual int histogramDivisions() const override;
-  virtual void setHistogramDivisions(int histogramDivisions) override;
-  virtual HistogramCut histogramCut() const override;
-  virtual void setHistogramCut(HistogramCut histogramCut) override;
+  int histogramDivisions() const override;
+  void setHistogramDivisions(int histogramDivisions) override;
+  HistogramCut histogramCut() const override;
+  void setHistogramCut(HistogramCut histogramCut) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:

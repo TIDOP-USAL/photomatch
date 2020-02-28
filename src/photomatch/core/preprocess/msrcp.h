@@ -50,18 +50,18 @@ public:
 
 public:
 
-  virtual double smallScale() const override;
-  virtual void setSmallScale(double smallScale) override;
-  virtual double midScale() const override;
-  virtual void setMidScale(double midScale) override;
-  virtual double largeScale() const override;
-  virtual void setLargeScale(double largeScale) override;
+  double smallScale() const override;
+  void setSmallScale(double smallScale) override;
+  double midScale() const override;
+  void setMidScale(double midScale) override;
+  double largeScale() const override;
+  void setLargeScale(double largeScale) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:

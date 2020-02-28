@@ -42,10 +42,10 @@ class AboutDialog : public QDialog
 
 public:
   explicit AboutDialog(QWidget *parent = nullptr);
-  ~AboutDialog();
+  ~AboutDialog() override;
 
 protected:
-  void changeEvent(QEvent *e);
+  void changeEvent(QEvent *e) override;
 
 private:
   Ui::AboutDialog *ui;

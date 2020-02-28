@@ -51,7 +51,7 @@ public:
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 };

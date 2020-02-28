@@ -85,8 +85,8 @@ class FeaturesReaderBinary
 
 public:
 
-  FeaturesReaderBinary(const QString &fileName);
-  ~FeaturesReaderBinary() override {}
+  explicit FeaturesReaderBinary(const QString &fileName);
+  ~FeaturesReaderBinary() override = default;
 
 // FeaturesReader interface
 
@@ -107,10 +107,10 @@ private:
 private:
 
   FILE *mFile;
-  int32_t mSize;
-  int32_t mRows;
-  int32_t mCols;
-  int32_t mType;
+  int32_t mSize{0};
+  int32_t mRows{0};
+  int32_t mCols{0};
+  int32_t mType{0};
 
 };
 
@@ -206,8 +206,8 @@ class FeaturesWriterBinary
 
 public:
 
-  FeaturesWriterBinary(const QString &fileName);
-  ~FeaturesWriterBinary() override {}
+  explicit FeaturesWriterBinary(const QString &fileName);
+  ~FeaturesWriterBinary() override = default;
 
   // FeaturesWriter interface
 
@@ -311,7 +311,7 @@ class FeaturesReaderOpenCV
 
 public:
 
-  FeaturesReaderOpenCV(const QString &fileName);
+  explicit FeaturesReaderOpenCV(const QString &fileName);
   ~FeaturesReaderOpenCV() override;
 
   // FeaturesReader interface
@@ -411,8 +411,8 @@ class FeaturesWriterOpenCV
 
 public:
 
-  FeaturesWriterOpenCV(const QString &fileName);
-  ~FeaturesWriterOpenCV() override {}
+  explicit FeaturesWriterOpenCV(const QString &fileName);
+  ~FeaturesWriterOpenCV() override = default;
 
 // FeaturesWriter interface
 
@@ -502,8 +502,8 @@ class FeaturesReaderTxt
 
 public:
 
-  FeaturesReaderTxt(const QString &fileName);
-  ~FeaturesReaderTxt() override {}
+  explicit FeaturesReaderTxt(const QString &fileName);
+  ~FeaturesReaderTxt() override = default;
 
 // FeaturesReader interface
 
@@ -522,9 +522,9 @@ private:
 private:
 
   std::ifstream ifs;
-  int mType;
-  int mSize;
-  int mCols;
+  int mType{0};
+  int mSize{0};
+  int mCols{0};
 };
 
 FeaturesReaderTxt::FeaturesReaderTxt(const QString &fileName)
@@ -631,8 +631,8 @@ class FeaturesWriterTxt
 
 public:
 
-  FeaturesWriterTxt(const QString &fileName);
-  ~FeaturesWriterTxt() override {}
+  explicit FeaturesWriterTxt(const QString &fileName);
+  ~FeaturesWriterTxt() override = default;
 
   // FeaturesWriter interface
 
@@ -746,16 +746,19 @@ void FeaturesWriterTxt::close()
 std::unique_ptr<FeaturesReader> FeaturesReaderFactory::createReader(const QString &fileName)
 {
   QString ext = QFileInfo(fileName).suffix();
+  std::unique_ptr<FeaturesReader> features_reader;
   if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
-      return std::make_unique<FeaturesReaderBinary>(fileName);
+    features_reader = std::make_unique<FeaturesReaderBinary>(fileName);
   } else if (ext.compare("xml", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesReaderOpenCV>(fileName);
+    features_reader = std::make_unique<FeaturesReaderOpenCV>(fileName);
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesReaderOpenCV>(fileName);
+    features_reader = std::make_unique<FeaturesReaderOpenCV>(fileName);
   } else if (ext.compare("txt", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesReaderTxt>(fileName);
+    features_reader = std::make_unique<FeaturesReaderTxt>(fileName);
+  } else {
+    throw std::runtime_error("Invalid Features Reader");
   }
-  throw std::runtime_error("Invalid Features Reader");
+  return features_reader;
 }
 
 
@@ -767,16 +770,19 @@ std::unique_ptr<FeaturesReader> FeaturesReaderFactory::createReader(const QStrin
 std::unique_ptr<FeaturesWriter> FeaturesWriterFactory::createWriter(const QString &fileName)
 {
   QString ext = QFileInfo(fileName).suffix();
+  std::unique_ptr<FeaturesWriter> features_writer;
   if (ext.compare("bin", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesWriterBinary>(fileName);
+    features_writer = std::make_unique<FeaturesWriterBinary>(fileName);
   } else if (ext.compare("txt", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesWriterTxt>(fileName);
+    features_writer = std::make_unique<FeaturesWriterTxt>(fileName);
   } else if (ext.compare("xml", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesWriterOpenCV>(fileName);
+    features_writer = std::make_unique<FeaturesWriterOpenCV>(fileName);
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
-    return std::make_unique<FeaturesWriterOpenCV>(fileName);
+    features_writer = std::make_unique<FeaturesWriterOpenCV>(fileName);
+  } else {
+    throw std::runtime_error("Invalid Features Writer");
   }
-  throw std::runtime_error("Invalid Features Writer");
+  return features_writer;
 }
 
 

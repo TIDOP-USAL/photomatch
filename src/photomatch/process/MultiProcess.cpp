@@ -148,7 +148,7 @@ void MultiProcess::run()
         }
     }
     else{
-        if(mProcessList.size() > 0){
+        if(!mProcessList.empty()){
             mCurrentProcess = 0;
             connect(mProcessList.at(0).get(), SIGNAL(error(int,QString)), this, SLOT(onError(int,QString)));
             connect(mProcessList.at(0).get(), SIGNAL(finished()),         this, SLOT(onAProcessFinished()));
