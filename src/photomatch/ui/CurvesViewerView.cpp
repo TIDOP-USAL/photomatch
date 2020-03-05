@@ -41,15 +41,8 @@ namespace photomatch
 CurvesViewerView::CurvesViewerView(QWidget *parent, Qt::WindowFlags f)
   : ICurvesViewerView(parent, f)
 {
-  init();
-
-  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
-  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
-  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 CurvesViewerView::~CurvesViewerView()
@@ -80,45 +73,22 @@ CurvesViewerView::~CurvesViewerView()
 
 void CurvesViewerView::onComboBoxLeftImageIndexChanged(int idx)
 {
-  QString image_left(mComboBoxLeftImage->itemText(idx));
-  emit leftImageChange(image_left);
-  QString image_right(mComboBoxRightImage->itemText(idx));
-  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
-    if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
-      if (item->checkState(0)){
-        QString session = item->text(0);
-        emit deleteCurve(item->text(0));
-        emit drawCurve(session, image_left, image_right);
-      }
-    }
-  }
+  emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
 void CurvesViewerView::onComboBoxRightImageIndexChanged(int idx)
 {
-  QString image_right(mComboBoxRightImage->itemText(idx));
-  QString image_left(mComboBoxLeftImage->currentText());
-  emit rightImageChange(image_right);
-  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
-    if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
-      if (item->checkState(0)){
-        QString session = item->text(0);
-        emit deleteCurve(item->text(0));
-        emit drawCurve(session, image_left, image_right);
-      }
-    }
-  }
+  emit rightImageChange(mComboBoxRightImage->itemText(idx));
 }
 
 void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
 {
-  if (item && item->checkState(column)) {
-    QString session = item->text(0);
-    QString image_left = mComboBoxLeftImage->currentText();
-    QString image_right = mComboBoxRightImage->currentText();
-    emit drawCurve(session, image_left, image_right);
+  if (item == nullptr) return;
+
+  if (item->checkState(column)) {
+    emit activeSession(item->text(0));
   } else {
-    emit deleteCurve(item->text(0));
+    emit disableSession(item->text(0));
   }
 }
 
@@ -131,6 +101,18 @@ void CurvesViewerView::addSession(const QString &session, const QString &detecto
     item->setCheckState(0, Qt::Unchecked);
     mTreeWidgetSessions->addTopLevelItem(item);
   }
+}
+
+bool CurvesViewerView::isSessionActive(const QString &session) const
+{
+  for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
+    if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
+      if (item->text(0).compare(session) == 0){
+        return item->checkState(0);
+      }
+    }
+  }
+  return false;
 }
 
 QString CurvesViewerView::leftImage() const
@@ -207,7 +189,7 @@ void CurvesViewerView::eraseCurve(const QString &session)
   }
 }
 
-void CurvesViewerView::init()
+void CurvesViewerView::initUI()
 {
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(994, 688);
@@ -264,6 +246,16 @@ void CurvesViewerView::init()
   update();
 }
 
+void CurvesViewerView::initSignalAndSlots()
+{
+  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
+  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
+  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
+
+  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
+}
+
 void CurvesViewerView::clear()
 {
   QSignalBlocker blocker1(mComboBoxLeftImage);
@@ -290,13 +282,13 @@ void CurvesViewerView::retranslate()
 ROCCurvesViewer::ROCCurvesViewer(QWidget *parent, Qt::WindowFlags f)
   : CurvesViewerView(parent, f)
 {
-  init();
+  this->initUI();
 }
 
 ROCCurvesViewer::~ROCCurvesViewer()
 {}
 
-void ROCCurvesViewer::init()
+void ROCCurvesViewer::initUI()
 {
   this->setWindowTitle(tr("ROC Curves Viewer"));
   this->mChart->setTitle("ROC Curves");
@@ -323,13 +315,13 @@ void ROCCurvesViewer::init()
 PRCurvesViewer::PRCurvesViewer(QWidget *parent, Qt::WindowFlags f)
   : CurvesViewerView(parent, f)
 {
-  init();
+  this->initUI();
 }
 
 PRCurvesViewer::~PRCurvesViewer()
 {}
 
-void PRCurvesViewer::init()
+void PRCurvesViewer::initUI()
 {
   this->setWindowTitle(tr("PR Curves Viewer"));
   this->mChart->setTitle("PR Curves");
@@ -355,13 +347,13 @@ void PRCurvesViewer::init()
 DETCurvesViewer::DETCurvesViewer(QWidget *parent, Qt::WindowFlags f)
   : CurvesViewerView(parent, f)
 {
-  init();
+  this->initUI();
 }
 
 DETCurvesViewer::~DETCurvesViewer()
 {}
 
-void DETCurvesViewer::init()
+void DETCurvesViewer::initUI()
 {
   this->setWindowTitle(tr("DET Curves Viewer"));
   this->mChart->setTitle("DET Curves");

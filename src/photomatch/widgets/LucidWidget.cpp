@@ -38,11 +38,9 @@ LucidWidgetImp::LucidWidgetImp(QWidget *parent)
     mLucidKernel(new QSpinBox(this)),
     mBlurKernel(new QSpinBox(this))
 {
-  init();
-
-  connect(mLucidKernel,         SIGNAL(valueChanged(int)),            this, SIGNAL(lucidKernelChange(int)));
-  connect(mBlurKernel,          SIGNAL(valueChanged(int)),            this, SIGNAL(blurKernelChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 LucidWidgetImp::~LucidWidgetImp()
@@ -90,7 +88,7 @@ void LucidWidgetImp::reset()
   mBlurKernel->setValue(2);
 }
 
-void LucidWidgetImp::init()
+void LucidWidgetImp::initUI()
 {
   this->setWindowTitle("LUCID");
 
@@ -114,6 +112,12 @@ void LucidWidgetImp::init()
 
   reset();
   update();
+}
+
+void LucidWidgetImp::initSignalAndSlots()
+{
+  connect(mLucidKernel,  SIGNAL(valueChanged(int)),  this, SIGNAL(lucidKernelChange(int)));
+  connect(mBlurKernel,   SIGNAL(valueChanged(int)),  this, SIGNAL(blurKernelChange(int)));
 }
 
 } // namespace photomatch

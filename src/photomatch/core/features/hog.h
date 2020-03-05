@@ -46,30 +46,30 @@ public:
 
   HogProperties();
   HogProperties(const HogProperties &hogProperties);
-  ~HogProperties() override;
+  ~HogProperties() override = default;
 
 // IHog interface
 
 public:
 
-  virtual QSize winSize() const override;
-  virtual QSize blockSize() const override;
-  virtual QSize blockStride() const override;
-  virtual QSize cellSize() const override;
-  virtual int nbins() const override;
-  virtual int derivAperture() const override;
-  virtual void setWinSize(const QSize &winSize) override;
-  virtual void setBlockSize(const QSize &blockSize) override;
-  virtual void setBlockStride(const QSize &blockStride) override;
-  virtual void setCellSize(const QSize &cellSize) override;
-  virtual void setNbins(int nbins) override;
-  virtual void setDerivAperture(int derivAperture) override;
+  QSize winSize() const override;
+  QSize blockSize() const override;
+  QSize blockStride() const override;
+  QSize cellSize() const override;
+  int nbins() const override;
+  int derivAperture() const override;
+  void setWinSize(const QSize &winSize) override;
+  void setBlockSize(const QSize &blockSize) override;
+  void setBlockStride(const QSize &blockStride) override;
+  void setCellSize(const QSize &cellSize) override;
+  void setNbins(int nbins) override;
+  void setDerivAperture(int derivAperture) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -102,7 +102,7 @@ public:
                 int nbins,
                 int derivAperture);
 
-  ~HogDescriptor() override;
+  ~HogDescriptor() override = default;
 
 private:
 

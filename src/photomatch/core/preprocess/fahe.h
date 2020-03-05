@@ -50,14 +50,14 @@ public:
   FaheProperties(const FaheProperties &faheProperties);
   ~FaheProperties() override = default;
 
-  virtual QSize blockSize() const override;
-  virtual void setBlockSize(const QSize &blockSize) override;
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -79,7 +79,7 @@ public:
 
   FahePreprocess();
   FahePreprocess(const FahePreprocess &fahePreprocess);
-  FahePreprocess(const QSize &blockSize);
+  explicit FahePreprocess(const QSize &blockSize);
   ~FahePreprocess() override;
 
 // ImageProcess interface

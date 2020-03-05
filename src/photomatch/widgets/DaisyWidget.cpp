@@ -44,17 +44,8 @@ DaisyWidgetImp::DaisyWidgetImp(QWidget *parent)
     mInterpolation(new QCheckBox(this)),
     mUseOrientation(new QCheckBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mRadius,         SIGNAL(valueChanged(double)),         this, SIGNAL(radiusChange(double)));
-  connect(mQRadius,        SIGNAL(valueChanged(int)),            this, SIGNAL(qRadiusChange(int)));
-  connect(mQTheta,         SIGNAL(valueChanged(int)),            this, SIGNAL(qThetaChange(int)));
-  connect(mQHist,          SIGNAL(valueChanged(int)),            this, SIGNAL(qHistChange(int)));
-  connect(mNorm,           SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normChange(QString)));
-  connect(mInterpolation,  SIGNAL(clicked(bool)),                this, SIGNAL(interpolationChange(bool)));
-  connect(mUseOrientation, SIGNAL(clicked(bool)),                this, SIGNAL(useOrientationChange(bool)));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 DaisyWidgetImp::~DaisyWidgetImp()
@@ -163,7 +154,7 @@ void DaisyWidgetImp::reset()
   mUseOrientation->setChecked(false);
 }
 
-void DaisyWidgetImp::init()
+void DaisyWidgetImp::initUI()
 {
   this->setWindowTitle("DAISY");
 
@@ -211,6 +202,17 @@ void DaisyWidgetImp::init()
   reset();
 
   update();
+}
+
+void DaisyWidgetImp::initSignalAndSlots()
+{
+  connect(mRadius,         SIGNAL(valueChanged(double)),         this, SIGNAL(radiusChange(double)));
+  connect(mQRadius,        SIGNAL(valueChanged(int)),            this, SIGNAL(qRadiusChange(int)));
+  connect(mQTheta,         SIGNAL(valueChanged(int)),            this, SIGNAL(qThetaChange(int)));
+  connect(mQHist,          SIGNAL(valueChanged(int)),            this, SIGNAL(qHistChange(int)));
+  connect(mNorm,           SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normChange(QString)));
+  connect(mInterpolation,  SIGNAL(clicked(bool)),                this, SIGNAL(interpolationChange(bool)));
+  connect(mUseOrientation, SIGNAL(clicked(bool)),                this, SIGNAL(useOrientationChange(bool)));
 }
 
 } // namespace photomatch

@@ -55,7 +55,8 @@ public slots:
 
 private:
 
-  virtual void init() = 0;
+  virtual void initUI() = 0;
+  virtual void initSignalAndSlots() = 0;
 };
 
 } // namespace photomatch

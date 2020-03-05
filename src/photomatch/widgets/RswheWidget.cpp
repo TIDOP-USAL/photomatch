@@ -40,15 +40,9 @@ RswheWidgetImp::RswheWidgetImp(QWidget *parent)
     mHistogramCutByMean(new QRadioButton(this)),
     mHistogramCutByMedian(new QRadioButton(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mHistogramDivisions,    SIGNAL(valueChanged(int)),        this, SIGNAL(histogramDivisionsChange(int)));
-  connect(mHistogramCutByMean,    SIGNAL(clicked()),                this, SLOT(onHistogramCutByMean()));
-  connect(mHistogramCutByMedian,  SIGNAL(clicked()),                this, SLOT(onHistogramCutByMedian()));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 RswheWidgetImp::~RswheWidgetImp()
@@ -112,7 +106,7 @@ void RswheWidgetImp::reset()
   mHistogramCut = HistogramCut::by_mean;
 }
 
-void RswheWidgetImp::init()
+void RswheWidgetImp::initUI()
 {
   this->setWindowTitle("RSWHE");
 
@@ -142,9 +136,16 @@ void RswheWidgetImp::init()
   mHistogramDivisions->setRange(1, 256);
   propertiesLayout->addWidget(mHistogramDivisions, 3, 1, 1, 1);
 
-  reset(); /// set default values
+  reset();
 
   update();
+}
+
+void RswheWidgetImp::initSignalAndSlots()
+{
+  connect(mHistogramDivisions,    SIGNAL(valueChanged(int)),        this, SIGNAL(histogramDivisionsChange(int)));
+  connect(mHistogramCutByMean,    SIGNAL(clicked()),                this, SLOT(onHistogramCutByMean()));
+  connect(mHistogramCutByMedian,  SIGNAL(clicked()),                this, SLOT(onHistogramCutByMedian()));
 }
 
 

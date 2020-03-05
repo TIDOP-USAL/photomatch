@@ -44,31 +44,52 @@ CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
 
   connect(mView, SIGNAL(leftImageChange(QString)),           this, SLOT(loadLeftImage(QString)));
   connect(mView, SIGNAL(rightImageChange(QString)),          this, SLOT(loadRightImage(QString)));
-  connect(mView, SIGNAL(drawCurve(QString,QString,QString)), this, SLOT(drawCurve(QString,QString,QString)));
-  connect(mView, SIGNAL(deleteCurve(QString)),               this, SLOT(deleteCurve(QString)));
-
+  connect(mView, SIGNAL(activeSession(QString)),             this, SLOT(activeSession(QString)));
+  connect(mView, SIGNAL(disableSession(QString)),            this, SLOT(disableSession(QString)));
   connect(mView, SIGNAL(help()),                             this, SLOT(help()));
 }
 
 void CurvesViewerPresenter::loadLeftImage(const QString &image)
 {
-  mView->setLeftImage(image);
   std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
   if (imagesRight.empty() == false){
     mView->setRightImageList(imagesRight);
     mView->setRightImage(imagesRight[0]);
+    std::vector<QString> session_names = mModel->sessionNames();
+    for (auto &session_name : session_names){
+      if (mView->isSessionActive(session_name)){
+        this->deleteCurve(session_name);
+        this->computeCurve(session_name, image, mView->rightImage());
+      }
+    }
   }
 }
 
 void CurvesViewerPresenter::loadRightImage(const QString &image)
 {
-  mView->setRightImage(image);
+  std::vector<QString> session_names = mModel->sessionNames();
+  for (auto &session_name : session_names){
+    if (mView->isSessionActive(session_name)){
+      this->deleteCurve(session_name);
+      this->computeCurve(session_name, mView->leftImage(), image);
+    }
+  }
 }
 
-void CurvesViewerPresenter::drawCurve(const QString &session, const QString &detector, const QString &descriptor)
+void CurvesViewerPresenter::activeSession(const QString &session)
+{
+  this->computeCurve(session, mView->leftImage(), mView->rightImage());
+}
+
+void CurvesViewerPresenter::disableSession(const QString &session)
+{
+  this->deleteCurve(session);
+}
+
+void CurvesViewerPresenter::computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight)
 {
   std::vector<QPointF> curve;
-  double auc = mModel->computeCurve(session, detector, descriptor, curve);
+  double auc = mModel->computeCurve(session, imageLeft, imageRight, curve);
   QString title = session;
   title.append(" [AUC=").append(QString::number(auc, 'g', 3)).append("]");
   mView->setCurve(title, curve);

@@ -46,24 +46,24 @@ public:
 
   VggProperties();
   VggProperties(const VggProperties &vggProperties);
-  virtual ~VggProperties() override;
+  ~VggProperties() override = default;
 
 // IVgg interface
 
 public:
 
-  virtual QString descriptorType() const override;
-  virtual void setDescriptorType(const QString &descriptorType) override;
-  virtual double scaleFactor() const override;
-  virtual void setScaleFactor(double scaleFactor) override;
-  virtual double sigma() const override;
-  virtual void setSigma(double sigma) override;
-  virtual bool useNormalizeDescriptor() const override;
-  virtual void setUseNormalizeDescriptor(bool useNormalizeDescriptor) override;
-  virtual bool useNormalizeImage() const override;
-  virtual void setUseNormalizeImage(bool useNormalizeImage) override;
-  virtual bool useScaleOrientation() const override;
-  virtual void setUseScaleOrientation(bool useScaleOrientation) override;
+  QString descriptorType() const override;
+  void setDescriptorType(const QString &descriptorType) override;
+  double scaleFactor() const override;
+  void setScaleFactor(double scaleFactor) override;
+  double sigma() const override;
+  void setSigma(double sigma) override;
+  bool useNormalizeDescriptor() const override;
+  void setUseNormalizeDescriptor(bool useNormalizeDescriptor) override;
+  bool useNormalizeImage() const override;
+  void setUseNormalizeImage(bool useNormalizeImage) override;
+  bool useScaleOrientation() const override;
+  void setUseScaleOrientation(bool useScaleOrientation) override;
 
 // Feature interface
 
@@ -103,7 +103,7 @@ public:
                 bool useNormalizeDescriptor,
                 bool useNormalizeImage,
                 bool useScaleOrientation);
-  ~VggDescriptor() override;
+  ~VggDescriptor() override = default;
 
 private:
 

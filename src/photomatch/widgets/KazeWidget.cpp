@@ -44,16 +44,8 @@ KazeWidgetImp::KazeWidgetImp(QWidget *parent)
     mOctaveLayers(new QSpinBox(this)),
     mDiffusivity(new QComboBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mExtended,     SIGNAL(clicked(bool)),               this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mUpright,      SIGNAL(clicked(bool)),               this, SIGNAL(uprightChange(bool)));
-  connect(mThreshold,    SIGNAL(valueChanged(double)),        this, SIGNAL(thresholdChange(double)));
-  connect(mOctaves,      SIGNAL(valueChanged(int)),           this, SIGNAL(octavesChange(int)));
-  connect(mOctaveLayers, SIGNAL(valueChanged(int)),           this, SIGNAL(octaveLayersChange(int)));
-  connect(mDiffusivity,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(diffusivityChange(QString)));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 KazeWidgetImp::~KazeWidgetImp()
@@ -148,7 +140,7 @@ void KazeWidgetImp::reset()
   mDiffusivity->setCurrentText("DIFF_PM_G2");
 }
 
-void KazeWidgetImp::init()
+void KazeWidgetImp::initUI()
 {
   this->setWindowTitle("KAZE");
 
@@ -192,6 +184,16 @@ void KazeWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void KazeWidgetImp::initSignalAndSlots()
+{
+  connect(mExtended,     SIGNAL(clicked(bool)),               this, SIGNAL(extendedDescriptorChange(bool)));
+  connect(mUpright,      SIGNAL(clicked(bool)),               this, SIGNAL(uprightChange(bool)));
+  connect(mThreshold,    SIGNAL(valueChanged(double)),        this, SIGNAL(thresholdChange(double)));
+  connect(mOctaves,      SIGNAL(valueChanged(int)),           this, SIGNAL(octavesChange(int)));
+  connect(mOctaveLayers, SIGNAL(valueChanged(int)),           this, SIGNAL(octaveLayersChange(int)));
+  connect(mDiffusivity,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(diffusivityChange(QString)));
 }
 
 } // namespace photomatch

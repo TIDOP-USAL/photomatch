@@ -58,14 +58,10 @@ void KeyPointsFilterNBestProperties::reset()
 
 
 KeyPointsFilterNBest::KeyPointsFilterNBest()
-  : KeyPointsFilterNBestProperties(),
-    KeyPointsFilterProcess()
 {
 }
 
 KeyPointsFilterNBest::KeyPointsFilterNBest(int nPoints)
-  : KeyPointsFilterNBestProperties(),
-    KeyPointsFilterProcess()
 {
   this->setNPoints(nPoints);
 }
@@ -144,13 +140,12 @@ void KeyPointsFilterBySizeProperties::reset()
 
 
 KeyPointsFilterBySize::KeyPointsFilterBySize()
-  : KeyPointsFilterBySizeProperties(),
-    KeyPointsFilterProcess()
-{}
+{
+
+}
 
 KeyPointsFilterBySize::KeyPointsFilterBySize(double minSize, double maxSize)
-  : KeyPointsFilterBySizeProperties(),
-    KeyPointsFilterProcess()
+  : KeyPointsFilterBySizeProperties()
 {
   this->setMinSize(minSize);
   this->setMaxSize(maxSize);
@@ -193,8 +188,9 @@ void KeyPointsFilterBySize::reset()
 
 
 KeyPointsFilterRemoveDuplicated::KeyPointsFilterRemoveDuplicated()
-  : KeyPointsFilterProcess()
+  : KeyPointsFilter(KeyPointsFilter::Type::remove_duplicated)
 {
+
 }
 
 bool KeyPointsFilterRemoveDuplicated::filter(const std::vector<cv::KeyPoint>& keypoints, std::vector<cv::KeyPoint>& filteredKeypoints)
@@ -210,6 +206,10 @@ bool KeyPointsFilterRemoveDuplicated::filter(const std::vector<cv::KeyPoint>& ke
     msgError("Filtered keypoints error: %s", e.what());
     return true;
   }
+}
+
+void KeyPointsFilterRemoveDuplicated::reset()
+{
 }
 
 } // namespace photomatch

@@ -55,7 +55,8 @@ public slots:
 
   virtual void setSession(const QString &session) = 0;
   virtual void setImageActive(const QString &image) = 0;
-  virtual void openImageFromSession(const QString &session, const QString &image) = 0;
+  virtual void openKeypointsFromSession(const QString &session) = 0;
+  virtual void openKeypointsFromSessionAndImage(const QString &session, const QString &image) = 0;
 
 protected slots:
 
@@ -94,7 +95,8 @@ public slots:
 
   void setSession(const QString &session) override;
   void setImageActive(const QString &image) override;
-  void openImageFromSession(const QString &session, const QString &image) override;
+  void openKeypointsFromSession(const QString &session) override;
+  void openKeypointsFromSessionAndImage(const QString &session, const QString &image) override;
 
 protected slots:
 

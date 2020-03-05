@@ -44,20 +44,9 @@ MserWidgetImp::MserWidgetImp(QWidget *parent)
     mMinMargin(new QDoubleSpinBox(this)),
     mEdgeBlurSize(new QSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  ///
-  connect(mDelta,           SIGNAL(valueChanged(int)),       this, SIGNAL(deltaChange(int)));
-  connect(mMinArea,         SIGNAL(valueChanged(int)),       this, SIGNAL(minAreaChange(int)));
-  connect(mMaxArea,         SIGNAL(valueChanged(int)),       this, SIGNAL(maxAreaChange(int)));
-  connect(mMaxVariation,    SIGNAL(valueChanged(double)),    this, SIGNAL(maxVariationChange(double)));
-  connect(mMinDiversity,    SIGNAL(valueChanged(double)),    this, SIGNAL(minDiversityChange(double)));
-  connect(mMaxEvolution,    SIGNAL(valueChanged(int)),       this, SIGNAL(maxEvolutionChange(int)));
-  connect(mAreaThreshold,   SIGNAL(valueChanged(double)),    this, SIGNAL(areaThresholdChange(double)));
-  connect(mMinMargin,       SIGNAL(valueChanged(double)),    this, SIGNAL(minMarginChange(double)));
-  connect(mEdgeBlurSize,    SIGNAL(valueChanged(int)),       this, SIGNAL(edgeBlurSizeChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 MserWidgetImp::~MserWidgetImp()
@@ -200,7 +189,7 @@ void MserWidgetImp::reset()
   mEdgeBlurSize->setValue(5);
 }
 
-void MserWidgetImp::init()
+void MserWidgetImp::initUI()
 {
   this->setWindowTitle("MSER");
 
@@ -255,6 +244,19 @@ void MserWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void MserWidgetImp::initSignalAndSlots()
+{
+  connect(mDelta,           SIGNAL(valueChanged(int)),       this, SIGNAL(deltaChange(int)));
+  connect(mMinArea,         SIGNAL(valueChanged(int)),       this, SIGNAL(minAreaChange(int)));
+  connect(mMaxArea,         SIGNAL(valueChanged(int)),       this, SIGNAL(maxAreaChange(int)));
+  connect(mMaxVariation,    SIGNAL(valueChanged(double)),    this, SIGNAL(maxVariationChange(double)));
+  connect(mMinDiversity,    SIGNAL(valueChanged(double)),    this, SIGNAL(minDiversityChange(double)));
+  connect(mMaxEvolution,    SIGNAL(valueChanged(int)),       this, SIGNAL(maxEvolutionChange(int)));
+  connect(mAreaThreshold,   SIGNAL(valueChanged(double)),    this, SIGNAL(areaThresholdChange(double)));
+  connect(mMinMargin,       SIGNAL(valueChanged(double)),    this, SIGNAL(minMarginChange(double)));
+  connect(mEdgeBlurSize,    SIGNAL(valueChanged(int)),       this, SIGNAL(edgeBlurSizeChange(int)));
 }
 
 } // namespace photomatch

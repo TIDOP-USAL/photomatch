@@ -41,13 +41,8 @@ namespace photomatch
 ExportMatchesView::ExportMatchesView(QWidget *parent)
   : IExportMatchesView(parent)
 {
-  init();
-
-  connect(mComboBoxSession,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
-
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 ExportMatchesView::~ExportMatchesView()
@@ -68,7 +63,7 @@ void ExportMatchesView::setActiveSession(const QString &session)
   mComboBoxSession->setCurrentText(session);
 }
 
-void ExportMatchesView::init()
+void ExportMatchesView::initUI()
 {
   this->setObjectName(QStringLiteral("ExportMatchesView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -92,6 +87,15 @@ void ExportMatchesView::init()
   retranslate();
 
   update();
+}
+
+void ExportMatchesView::initSignalAndSlots()
+{
+  connect(mComboBoxSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
+
+  connect(mButtonBox,                                   SIGNAL(accepted()),      this, SLOT(accept()));
+  connect(mButtonBox,                                   SIGNAL(rejected()),      this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
 void ExportMatchesView::clear()

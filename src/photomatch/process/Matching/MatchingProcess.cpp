@@ -41,8 +41,7 @@ MatchingProcess::MatchingProcess(const QString &queryDescriptors,
                                  const std::shared_ptr<MatchingAlgorithm> &descriptorMatcher,
                                  const QString &queryImage,
                                  const QString &trainImage)
-  : ProcessConcurrent(),
-    mQueryDescriptors(queryDescriptors),
+  : mQueryDescriptors(queryDescriptors),
     mTrainDescriptors(trainDescriptors),
     mMatches(matches),
     mDescriptorMatcher(descriptorMatcher),
@@ -101,7 +100,7 @@ void MatchingProcess::run()
 
     QSize query_size;
     QSize train_size;
-    if (mQueryImage.isEmpty() == false && mTrainImage.isEmpty() == false){
+    if (!mQueryImage.isEmpty() && !mTrainImage.isEmpty()){
       QImageReader imageReader(mQueryImage);
       query_size = imageReader.size();
       imageReader.setFileName(mTrainImage);

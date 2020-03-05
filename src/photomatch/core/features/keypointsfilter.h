@@ -123,7 +123,7 @@ public:
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
 
 private:
 
@@ -142,7 +142,7 @@ class PHOTOMATCH_EXPORT KeyPointsFilterNBest
 public:
 
   KeyPointsFilterNBest();
-  KeyPointsFilterNBest(int nPoints);
+  explicit KeyPointsFilterNBest(int nPoints);
   ~KeyPointsFilterNBest() override = default;
 
 // KeyPointsFilterNBestProperties interface
@@ -206,7 +206,7 @@ public:
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
 
 private:
 
@@ -257,7 +257,8 @@ public:
 
 
 class PHOTOMATCH_EXPORT KeyPointsFilterRemoveDuplicated
-  : public KeyPointsFilterProcess
+  : public KeyPointsFilter,
+    public KeyPointsFilterProcess
 {
 
 public:
@@ -271,6 +272,11 @@ public:
 
   bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
+// KeyPointsFilter interface
+
+public:
+
+  void reset() override;
 };
 
 

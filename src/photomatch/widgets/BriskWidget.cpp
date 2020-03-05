@@ -38,13 +38,8 @@ BriskWidgetImp::BriskWidgetImp(QWidget *parent)
     mOctaves(new QSpinBox(this)),
     mPatternScale(new QDoubleSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mThreshold,        SIGNAL(valueChanged(int)),        this, SIGNAL(thresholdChange(int)));
-  connect(mOctaves,          SIGNAL(valueChanged(int)),        this, SIGNAL(octavesChange(int)));
-  connect(mPatternScale,     SIGNAL(valueChanged(double)),     this, SIGNAL(patternScaleChange(double)));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 BriskWidgetImp::~BriskWidgetImp()
@@ -105,7 +100,7 @@ void BriskWidgetImp::reset()
   mPatternScale->setValue(1.0);
 }
 
-void BriskWidgetImp::init()
+void BriskWidgetImp::initUI()
 {
   this->setWindowTitle("BRISK");
 
@@ -134,6 +129,13 @@ void BriskWidgetImp::init()
   reset(); // set default values
 
   update();
+}
+
+void BriskWidgetImp::initSignalAndSlots()
+{
+  connect(mThreshold,        SIGNAL(valueChanged(int)),        this, SIGNAL(thresholdChange(int)));
+  connect(mOctaves,          SIGNAL(valueChanged(int)),        this, SIGNAL(octavesChange(int)));
+  connect(mPatternScale,     SIGNAL(valueChanged(double)),     this, SIGNAL(patternScaleChange(double)));
 }
 
 } // namespace photomatch

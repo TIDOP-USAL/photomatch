@@ -37,8 +37,7 @@ namespace photomatch
 
 PassPointsGroupingProcess::PassPointsGroupingProcess(const std::list<std::tuple<QString, QString, QString> > &pairs,
                                                      const QString &passPointsFile)
-  : ProcessConcurrent(),
-    mPairs(pairs),
+  : mPairs(pairs),
     mPassPointsFile(passPointsFile)
 {
 
@@ -75,7 +74,8 @@ void PassPointsGroupingProcess::run()
 
     /// ¿Buscar sólo los matches buenos?
 
-    int idx1, idx2;
+    int idx1;
+    int idx2;
     for (size_t i = 0; i < match.size(); i++) {
       idx1 = match[i].queryIdx;
       idx2 = match[i].trainIdx;
@@ -105,20 +105,20 @@ void PassPointsGroupingProcess::run()
             b_exist_image2 = true;
           }
 
-          if (b_exist_pt1 == true && b_exist_pt2 == true) {
+          if (b_exist_pt1 && b_exist_pt2) {
             break;
           }
         }
 
-        if (b_exist_pt1 == true && (b_exist_pt2 == false && b_exist_image2 == false)) {
+        if (b_exist_pt1 && (!b_exist_pt2 && !b_exist_image2)) {
           idx_pass_points[id_pp].push_back(std::make_pair(idImage2,idx2));
           b_new_point = false;
           break;
-        } else if ((b_exist_pt1 == false && b_exist_image1 == false) && b_exist_pt2 == true) {
+        } else if ((!b_exist_pt1 && !b_exist_image1) && b_exist_pt2) {
           idx_pass_points[id_pp].push_back(std::make_pair(idImage1,idx1));
           b_new_point = false;
           break;
-        } else if (b_exist_pt1 == true && b_exist_pt2 == true) {
+        } else if (b_exist_pt1 && b_exist_pt2) {
           b_new_point = false;
           break;
         }
@@ -127,8 +127,8 @@ void PassPointsGroupingProcess::run()
 
       if (b_new_point){
         std::vector<std::pair<QString,int>> pass_point;
-        pass_point.push_back(std::make_pair(idImage1,idx1));
-        pass_point.push_back(std::make_pair(idImage2,idx2));
+        pass_point.emplace_back(idImage1,idx1);
+        pass_point.emplace_back(idImage2,idx2);
         idx_pass_points.push_back(pass_point);
       }
 
@@ -145,8 +145,8 @@ void PassPointsGroupingProcess::run()
       ofs << i;
 
       for (size_t j = 0; j < idx_pass_points[i].size(); j++){
-        ofs << " \"" << idx_pass_points[i][j].first.toStdString()
-            << "\" " << idx_pass_points[i][j].second;
+        ofs << ";" << idx_pass_points[i][j].first.toStdString()
+          << ";" << idx_pass_points[i][j].second;
       }
 
       ofs << std::endl;

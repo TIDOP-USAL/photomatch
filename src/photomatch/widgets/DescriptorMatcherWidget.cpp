@@ -53,31 +53,8 @@ DescriptorMatcherWidgetImp::DescriptorMatcherWidgetImp(QWidget *parent)
     mScaleGMS(new QCheckBox(this)),
     mThresholdGMS(new QDoubleSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mMatchingMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingMethodChange(QString)));
-  connect(mMatchingStrategy,     SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingStrategyChange(QString)));
-  connect(mNormType,             SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normTypeChange(QString)));
-  connect(mRatio,                SIGNAL(valueChanged(double)),         this, SIGNAL(ratioChange(double)));
-  connect(mDistance,             SIGNAL(valueChanged(double)),         this, SIGNAL(distanceChange(double)));
-  connect(mConfidence,           SIGNAL(valueChanged(double)),         this, SIGNAL(confidenceChange(double)));
-  connect(mCrossMatching,        SIGNAL(clicked(bool)),                this, SIGNAL(crossMatchingChange(bool)));
-  connect(mMaxIters,             SIGNAL(valueChanged(int)),            this, SIGNAL(maxItersChange(int)));
-  connect(mGeometricTest,        SIGNAL(currentTextChanged(QString)),  this, SIGNAL(geometricTestChange(QString)));
-  connect(mHComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(homographyComputeMethodChange(QString)));
-  connect(mFComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(fundamentalComputeMethodChange(QString)));
-  connect(mEComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(essentialComputeMethodChange(QString)));
-  connect(mRotationGMS,          SIGNAL(clicked(bool)),                this, SIGNAL(gmsRotationChange(bool)));
-  connect(mScaleGMS,             SIGNAL(clicked(bool)),                this, SIGNAL(gmsScaleChange(bool)));
-  connect(mThresholdGMS,         SIGNAL(valueChanged(double)),         this, SIGNAL(gmsThresholdChange(double)));
-
-  connect(this, SIGNAL(matchingMethodChange(QString)),           this,  SLOT(update()));
-  connect(this, SIGNAL(matchingStrategyChange(QString)),         this,  SLOT(update()));
-  connect(this, SIGNAL(geometricTestChange(QString)),            this,  SLOT(update()));
-  connect(this, SIGNAL(homographyComputeMethodChange(QString)),  this,  SLOT(update()));
-  connect(this, SIGNAL(fundamentalComputeMethodChange(QString)), this,  SLOT(update()));
-  connect(this, SIGNAL(essentialComputeMethodChange(QString)),   this,  SLOT(update()));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 DescriptorMatcherWidgetImp::~DescriptorMatcherWidgetImp()
@@ -418,7 +395,7 @@ void DescriptorMatcherWidgetImp::reset()
   update();
 }
 
-void DescriptorMatcherWidgetImp::init()
+void DescriptorMatcherWidgetImp::initUI()
 {
   this->setWindowTitle("Descriptor Matcher");
 
@@ -535,6 +512,32 @@ void DescriptorMatcherWidgetImp::init()
 
   reset(); /// set default values
 
+}
+
+void DescriptorMatcherWidgetImp::initSignalAndSlots()
+{
+  connect(mMatchingMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingMethodChange(QString)));
+  connect(mMatchingStrategy,     SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingStrategyChange(QString)));
+  connect(mNormType,             SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normTypeChange(QString)));
+  connect(mRatio,                SIGNAL(valueChanged(double)),         this, SIGNAL(ratioChange(double)));
+  connect(mDistance,             SIGNAL(valueChanged(double)),         this, SIGNAL(distanceChange(double)));
+  connect(mConfidence,           SIGNAL(valueChanged(double)),         this, SIGNAL(confidenceChange(double)));
+  connect(mCrossMatching,        SIGNAL(clicked(bool)),                this, SIGNAL(crossMatchingChange(bool)));
+  connect(mMaxIters,             SIGNAL(valueChanged(int)),            this, SIGNAL(maxItersChange(int)));
+  connect(mGeometricTest,        SIGNAL(currentTextChanged(QString)),  this, SIGNAL(geometricTestChange(QString)));
+  connect(mHComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(homographyComputeMethodChange(QString)));
+  connect(mFComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(fundamentalComputeMethodChange(QString)));
+  connect(mEComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(essentialComputeMethodChange(QString)));
+  connect(mRotationGMS,          SIGNAL(clicked(bool)),                this, SIGNAL(gmsRotationChange(bool)));
+  connect(mScaleGMS,             SIGNAL(clicked(bool)),                this, SIGNAL(gmsScaleChange(bool)));
+  connect(mThresholdGMS,         SIGNAL(valueChanged(double)),         this, SIGNAL(gmsThresholdChange(double)));
+
+  connect(this, SIGNAL(matchingMethodChange(QString)),           this,  SLOT(update()));
+  connect(this, SIGNAL(matchingStrategyChange(QString)),         this,  SLOT(update()));
+  connect(this, SIGNAL(geometricTestChange(QString)),            this,  SLOT(update()));
+  connect(this, SIGNAL(homographyComputeMethodChange(QString)),  this,  SLOT(update()));
+  connect(this, SIGNAL(fundamentalComputeMethodChange(QString)), this,  SLOT(update()));
+  connect(this, SIGNAL(essentialComputeMethodChange(QString)),   this,  SLOT(update()));
 }
 
 

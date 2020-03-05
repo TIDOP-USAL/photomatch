@@ -37,80 +37,91 @@
 class PHOTOMATCH_EXPORT ExternalProcess
   : public Process
 {
-    Q_OBJECT
+
+  Q_OBJECT
 
 public:
-    ExternalProcess(QString commandPath);
-    ~ExternalProcess() override;
 
-    virtual void start() override;
-    virtual void setWaitForFinished(bool wait) override;
-    virtual bool isRunning() override;
+  explicit ExternalProcess(const QString &commandPath);
+  ~ExternalProcess() override;
 
-    void setWorkingDir(QString workingDir);
-    void setErroLogFile(QString filePath);
-    void setStdOutputFilePath(QString filePath);
-    void setStdErrorFilePath(QString filePath);
-    qint64 write(const char *data);
+  void start() override;
+  void setWaitForFinished(bool wait) override;
+  bool isRunning() override;
 
-    virtual QByteArray readStdout() override;
-    virtual QByteArray readStderr() override;
+  void setWorkingDir(const QString &workingDir);
+  void setErroLogFile(const QString &filePath);
+  void setStdOutputFilePath(const QString &filePath);
+  void setStdErrorFilePath(const QString &filePath);
+  qint64 write(const char *data);
 
-    //! Insert a evironment variable in the execution environment of de process overwriting it if existing
-    /*!
-        \param varName variable name
-        \param  value new value
-      */
-//    virtual void insertEnvironmentVar(QString varName, QString value);
-    void insertEnvironmentVar(QString varName, QString value);
+  QByteArray readStdout() override;
+  QByteArray readStderr() override;
 
-    //! Append a value to an environment variable in the execution environment of de process using ";" as separator
-    /*!
-        \param varName variable name
-        \param  value new value
-        \param position 0 insert de value before (default). 1 insert value after.
-      */
-//    virtual void appendEnvironmentValue(QString varName, QString value, int position=0);
-    void appendEnvironmentValue(QString varName, QString value, int position=0);
+  //! Insert a evironment variable in the execution environment of de process overwriting it if existing
+  /*!
+      \param varName variable name
+      \param  value new value
+    */
+  void insertEnvironmentVar(const QString &varName, const QString &value);
 
-    //! direct call to QProcess::error()
-    /*!
-        \return Error code
-      */
-    virtual int error();
+  //! Append a value to an environment variable in the execution environment of de process using ";" as separator
+  /*!
+      \param varName variable name
+      \param  value new value
+      \param position 0 insert de value before (default). 1 insert value after.
+    */
+  void appendEnvironmentValue(const QString &varName, const QString &value, int position=0);
+
+  //! direct call to QProcess::error()
+  /*!
+      \return Error code
+    */
+  virtual int error();
 
 public slots:
-    virtual void stop() override;
+
+  void stop() override;
 
 protected:
-    void run();
 
-    QString mCommandPath;
-    QString mWorkingDir;
+  void run();
 
 protected slots:
-    void onError(QProcess::ProcessError commandError);
-    void onError(QString path);
-    void onTimeout();
+
+  void onError(QProcess::ProcessError commandError);
+  void onError(const QString &path);
+  void onTimeout();
 
 private slots:
-    void on_newStdData();
-    void on_newErrorData();
-    void on_mProcessFinished(int code);
+
+  void on_newStdData();
+  void on_newErrorData();
+  void on_mProcessFinished(int code);
 
 private:
-    QProcess *mProcess;
-    int mErrorFileSize;
-    QString mErrorFilePath;
-    QString mStdOutputFilePath;
-    QString mStdErrorFilePath;
-    QFile *mStdOutFile;
-    QFile *mErrOutFile;
-    QFileSystemWatcher *mErrorWatcher;
-    QTimer mTimer;
-    bool mRunning;
 
-    void cascadeKill(Q_PID pid);
+  void cascadeKill(Q_PID pid);
+
+protected:
+
+  QString mCommandPath;
+  QString mWorkingDir;
+
+private:
+
+  QProcess *mProcess;
+  int mErrorFileSize;
+  QString mErrorFilePath;
+  QString mStdOutputFilePath;
+  QString mStdErrorFilePath;
+  QFile *mStdOutFile;
+  QFile *mErrOutFile;
+  QFileSystemWatcher *mErrorWatcher;
+  QTimer mTimer;
+  bool mRunning;
+
+
 };
 
 #endif // PHOTOMATCH_EXTERNALPROCESS_H

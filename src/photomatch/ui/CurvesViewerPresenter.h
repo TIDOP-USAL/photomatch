@@ -53,7 +53,9 @@ protected slots:
 
   virtual void loadLeftImage(const QString &image) = 0;
   virtual void loadRightImage(const QString &image) = 0;
-  virtual void drawCurve(const QString &session, const QString &detector, const QString &descriptor) = 0;
+  virtual void activeSession(const QString &session) = 0;
+  virtual void disableSession(const QString &session) = 0;
+  virtual void computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight) = 0;
   virtual void deleteCurve(const QString &session) = 0;
 };
 
@@ -75,7 +77,9 @@ protected slots:
 
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
-  void drawCurve(const QString &session, const QString &detector, const QString &descriptor) override;
+  void activeSession(const QString &session) override;
+  void disableSession(const QString &session) override;
+  void computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight) override;
   void deleteCurve(const QString &session) override;
 
 

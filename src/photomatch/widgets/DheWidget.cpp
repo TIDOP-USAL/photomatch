@@ -37,13 +37,9 @@ DheWidgetImp::DheWidgetImp(QWidget *parent)
   : DheWidget(parent),
     mX(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mX,    SIGNAL(valueChanged(int)),      this, SIGNAL(xChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 DheWidgetImp::~DheWidgetImp()
@@ -79,7 +75,7 @@ void DheWidgetImp::reset()
   mX->setValue(1);
 }
 
-void DheWidgetImp::init()
+void DheWidgetImp::initUI()
 {
   this->setWindowTitle("DHE");
 
@@ -106,6 +102,11 @@ void DheWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void DheWidgetImp::initSignalAndSlots()
+{
+  connect(mX,    SIGNAL(valueChanged(int)),      this, SIGNAL(xChange(int)));
 }
 
 

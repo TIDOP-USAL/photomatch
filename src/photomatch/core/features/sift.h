@@ -48,22 +48,22 @@ public:
 
   SiftProperties();
   SiftProperties(const SiftProperties &siftProperties);
-  ~SiftProperties() override;
+  ~SiftProperties() override = default;
 
 // ISift interface
 
 public:
 
-  virtual int featuresNumber() const override;
-  virtual int octaveLayers() const override;
-  virtual double contrastThreshold() const override;
-  virtual double edgeThreshold() const override;
-  virtual double sigma() const override;
-  virtual void setFeaturesNumber(int featuresNumber) override;
-  virtual void setOctaveLayers(int octaveLayers) override;
-  virtual void setContrastThreshold(double contrastThreshold) override;
-  virtual void setEdgeThreshold(double edgeThreshold) override;
-  virtual void setSigma(double sigma) override;
+  int featuresNumber() const override;
+  int octaveLayers() const override;
+  double contrastThreshold() const override;
+  double edgeThreshold() const override;
+  double sigma() const override;
+  void setFeaturesNumber(int featuresNumber) override;
+  void setOctaveLayers(int octaveLayers) override;
+  void setContrastThreshold(double contrastThreshold) override;
+  void setEdgeThreshold(double edgeThreshold) override;
+  void setSigma(double sigma) override;
 
 // Feature interface
 
@@ -101,8 +101,7 @@ public:
                          double contrastThreshold,
                          double edgeThreshold,
                          double sigma);
-
-  ~SiftDetectorDescriptor() override;
+  ~SiftDetectorDescriptor() override = default;
 
 private:
 

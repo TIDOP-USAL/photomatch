@@ -46,32 +46,32 @@ public:
 
   AkazeProperties();
   AkazeProperties(const AkazeProperties &akazeProperties);
-  ~AkazeProperties() override;
+  ~AkazeProperties() override = default;
 
 // IAkaze interface
 
 public:
 
-  virtual QString descriptorType() const override;
-  virtual int descriptorSize() const override;
-  virtual int descriptorChannels() const override;
-  virtual double threshold() const override;
-  virtual int octaves() const override;
-  virtual int octaveLayers() const override;
-  virtual QString diffusivity() const override;
-  virtual void setDescriptorType(const QString &descriptorType) override;
-  virtual void setDescriptorSize(int descriptorSize) override;
-  virtual void setDescriptorChannels(int channels) override;
-  virtual void setThreshold(double threshold) override;
-  virtual void setOctaves(int octaves) override;
-  virtual void setOctaveLayers(int octaveLayers) override;
-  virtual void setDiffusivity(const QString &diffusivity) override;
+  QString descriptorType() const override;
+  int descriptorSize() const override;
+  int descriptorChannels() const override;
+  double threshold() const override;
+  int octaves() const override;
+  int octaveLayers() const override;
+  QString diffusivity() const override;
+  void setDescriptorType(const QString &descriptorType) override;
+  void setDescriptorSize(int descriptorSize) override;
+  void setDescriptorChannels(int channels) override;
+  void setThreshold(double threshold) override;
+  void setOctaves(int octaves) override;
+  void setOctaveLayers(int octaveLayers) override;
+  void setDiffusivity(const QString &diffusivity) override;
 
 // Feature interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -106,9 +106,9 @@ public:
                           double threshold,
                           int octaves,
                           int octaveLayers,
-                          QString diffusivity);
+                          const QString &diffusivity);
 
-  ~AkazeDetectorDescriptor() override;
+  ~AkazeDetectorDescriptor() override = default;
 
 private:
 

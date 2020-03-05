@@ -54,19 +54,8 @@ HogWidgetImp::HogWidgetImp(QWidget *parent)
     mNlevels(new QSpinBox(this)),
     mSignedGradient(new QCheckBox(this))*/
 {
-  init();
-
-  /// Signals and slots
-  connect(mWinSizeHeight,  SIGNAL(valueChanged(int)),        this, SLOT(onWinSizeHeightChange(int)));
-  connect(mWinSizeWidth,   SIGNAL(valueChanged(int)),        this, SLOT(onWinSizeWidthChange(int)));
-  connect(mBlockSizeX,     SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,     SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-  connect(mBlockStrideX,   SIGNAL(valueChanged(int)),        this, SLOT(onBlockStrideXChange(int)));
-  connect(mBlockStrideY,   SIGNAL(valueChanged(int)),        this, SLOT(onBlockStrideYChange(int)));
-  connect(mCellSizeX,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeXChange(int)));
-  connect(mCellSizeY,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeYChange(int)));
-  connect(mNbins,          SIGNAL(valueChanged(int)),        this, SIGNAL(nbinsChange(int)));
-  connect(mDerivAperture,  SIGNAL(valueChanged(int)),        this, SIGNAL(derivApertureChange(int)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 HogWidgetImp::~HogWidgetImp()
@@ -310,7 +299,7 @@ void HogWidgetImp::reset()
 //  mSignedGradient->setChecked(false);
 }
 
-void HogWidgetImp::init()
+void HogWidgetImp::initUI()
 {
   this->setWindowTitle("HOG");
 
@@ -389,6 +378,20 @@ void HogWidgetImp::init()
   reset();
 
   update();
+}
+
+void HogWidgetImp::initSignalAndSlots()
+{
+  connect(mWinSizeHeight,  SIGNAL(valueChanged(int)),        this, SLOT(onWinSizeHeightChange(int)));
+  connect(mWinSizeWidth,   SIGNAL(valueChanged(int)),        this, SLOT(onWinSizeWidthChange(int)));
+  connect(mBlockSizeX,     SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,     SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mBlockStrideX,   SIGNAL(valueChanged(int)),        this, SLOT(onBlockStrideXChange(int)));
+  connect(mBlockStrideY,   SIGNAL(valueChanged(int)),        this, SLOT(onBlockStrideYChange(int)));
+  connect(mCellSizeX,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeXChange(int)));
+  connect(mCellSizeY,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeYChange(int)));
+  connect(mNbins,          SIGNAL(valueChanged(int)),        this, SIGNAL(nbinsChange(int)));
+  connect(mDerivAperture,  SIGNAL(valueChanged(int)),        this, SIGNAL(derivApertureChange(int)));
 }
 
 } // namespace photomatch

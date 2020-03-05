@@ -137,17 +137,27 @@ public:
 
 signals:
 
-public slots:
+protected slots:
 
   void initAndOpenNewProjectDialog();
   void initAndOpenNewSessionDialog();
   void initAndOpenPreprocessDialog();
   void initAndOpenFeatureExtractionDialog();
   void initAndOpenFeatureMatchingDialog();
-  void initAndOpenKeypointsViewerDialog();
-  void initAndOpenKeypointsViewerDialog(const QString &session, const QString &image);
-  void initAndOpenMatchesViewerDialog();
-  void initAndOpenMatchesViewerDialog(const QString &session, const QString &leftImage, const QString &rightImage);
+  void initAndOpenKeypointsViewerDialogFromSession(const QString &session);
+  void initAndOpenKeypointsViewerDialogFromSessionAndImage(const QString &session, const QString &image);
+  void initKeypointsViewer();
+  void initAndOpenMatchesViewerDialogFromSession(const QString &session);
+  void initAndOpenMatchesViewerDialogFromSessionAndImages(const QString &session, const QString &leftImage, const QString &rightImage);
+  void initMatchesViewer();
+  void initAndOpenExportFeaturesDialog();
+  void initAndOpenExportMatchesDialog();
+  void initAndOpenGroundTruthEditorDialog();
+  void initAndOpenHomographyViewerDialog();
+  void initAndOpenPRCurvesViewerDialog();
+  void initAndOpenROCCurvesViewerDialog();
+  void initAndOpenDETCurvesViewerDialog();
+  void initAndOpenAboutDialog();
 
 protected:
 

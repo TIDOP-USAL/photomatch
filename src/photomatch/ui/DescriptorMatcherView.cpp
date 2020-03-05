@@ -38,12 +38,8 @@ namespace photomatch
 DescriptorMatcherView::DescriptorMatcherView(QWidget *parent)
   : IDescriptorMatcherView(parent)
 {
-  init();
-
-  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 DescriptorMatcherView::~DescriptorMatcherView()
@@ -219,7 +215,7 @@ void DescriptorMatcherView::setGmsThreshold(double threshold)
   mDescriptorMatcherWidget->setGmsThreshold(threshold);
 }
 
-void DescriptorMatcherView::init()
+void DescriptorMatcherView::initUI()
 {
   this->setWindowTitle(tr("Descriptor Matcher"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -244,6 +240,14 @@ void DescriptorMatcherView::init()
 
 
   update();
+}
+
+void DescriptorMatcherView::initSignalAndSlots()
+{
+  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
+
 }
 
 void DescriptorMatcherView::clear()

@@ -56,6 +56,8 @@ class PoheWidget;
 class RswheWidget;
 class WallisWidget;
 class ProgressHandler;
+class Preprocess;
+class ImageProcess;
 
 class IPreprocessPresenter
   : public IPresenter
@@ -99,6 +101,24 @@ public:
                       IProjectModel *projectModel,
                       ISettingsModel *settingsModel);
   ~PreprocessPresenter() override;
+
+private:
+
+  void setPreprocessProperties(Preprocess *preprocess);
+  void setAcebsfProperties(Preprocess *preprocess);
+  void setClaheProperties(Preprocess *preprocess);
+  void setCmbfheProperties(Preprocess *preprocess);
+  void setDheProperties(Preprocess *preprocess);
+  void setFaheProperties(Preprocess *preprocess);
+  void setHmClaheProperties(Preprocess *preprocess);
+  void setLcebsescsProperties(Preprocess *preprocess);
+  void setMsrcpProperties(Preprocess *preprocess);
+  void setNoshpProperties(Preprocess *preprocess);
+  void setPoheProperties(Preprocess *preprocess);
+  void setRswheProperties(Preprocess *preprocess);
+  void setWallisProperties(Preprocess *preprocess);
+  std::shared_ptr<ImageProcess> preprocess(const QString &preprocess);
+  QString fileOut(const QString &fileIn);
 
 // IPresenter interface
 

@@ -38,12 +38,9 @@ MsrcpWidgetImp::MsrcpWidgetImp(QWidget *parent)
     mMidScale(new QDoubleSpinBox(this)),
     mLargeScale(new QDoubleSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mSmallScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(smallScaleChange(double)));
-  connect(mMidScale,        SIGNAL(valueChanged(double)),     this, SIGNAL(midScaleChange(double)));
-  connect(mLargeScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(largeScaleChange(double)));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 double MsrcpWidgetImp::smallScale() const
@@ -100,7 +97,7 @@ void MsrcpWidgetImp::reset()
 
 }
 
-void MsrcpWidgetImp::init()
+void MsrcpWidgetImp::initUI()
 {
   this->setWindowTitle("MSRCP");
 
@@ -139,6 +136,13 @@ void MsrcpWidgetImp::init()
 
   reset();
   update();
+}
+
+void MsrcpWidgetImp::initSignalAndSlots()
+{
+  connect(mSmallScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(smallScaleChange(double)));
+  connect(mMidScale,        SIGNAL(valueChanged(double)),     this, SIGNAL(midScaleChange(double)));
+  connect(mLargeScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(largeScaleChange(double)));
 }
 
 } // namespace photomatch

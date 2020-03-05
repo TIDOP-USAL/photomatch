@@ -49,6 +49,7 @@ public:
 
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
+  virtual std::vector<QString> sessionNames() const = 0;
   virtual std::vector<std::tuple<QString, QString, QString>> sessions() const = 0;
   virtual std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const = 0;
   virtual double computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const = 0;
@@ -64,7 +65,7 @@ class CurvesViewerModel
 
 public:
 
-  CurvesViewerModel(IProjectModel *projectModel);
+  explicit CurvesViewerModel(IProjectModel *projectModel);
   virtual ~CurvesViewerModel() override;
 
 // ICurvesViewerModel interface
@@ -73,6 +74,7 @@ public:
 
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
+  std::vector<QString> sessionNames() const override;
   std::vector<std::tuple<QString, QString, QString>> sessions() const override;
 
 // IModel interface
@@ -96,7 +98,7 @@ class ROCCurvesViewerModel
 
 public:
 
-  ROCCurvesViewerModel(IProjectModel *projectModel);
+  explicit ROCCurvesViewerModel(IProjectModel *projectModel);
   ~ROCCurvesViewerModel() override;
 
 // ICurvesViewerModel interface
@@ -105,6 +107,7 @@ public:
 
   std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const override;
   double computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const override;
+
 };
 
 
@@ -116,7 +119,7 @@ class PRCurvesViewerModel
 
 public:
 
-  PRCurvesViewerModel(IProjectModel *projectModel);
+  explicit PRCurvesViewerModel(IProjectModel *projectModel);
   ~PRCurvesViewerModel() override;
 
 // ICurvesViewerModel interface
@@ -136,7 +139,7 @@ class DETCurvesViewerModel
 
 public:
 
-  DETCurvesViewerModel(IProjectModel *projectModel);
+  explicit DETCurvesViewerModel(IProjectModel *projectModel);
   ~DETCurvesViewerModel() override;
 
 // ICurvesViewerModel interface

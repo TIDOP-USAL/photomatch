@@ -100,6 +100,8 @@ public:
    */
   cv::Mat homography() const;
 
+  //std::vector<std::pair<QPointF, QPointF>> invert() const;
+
 private:
 
   QString mIdImg1;
@@ -115,8 +117,8 @@ class GroundTruth
 public:
 
   GroundTruth();
-  GroundTruth(const QString &gtFile);
-  virtual ~GroundTruth(){}
+  explicit GroundTruth(const QString &gtFile);
+  virtual ~GroundTruth() = default;
 
   /*!
    * \brief Read ground truth file

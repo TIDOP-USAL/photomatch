@@ -145,8 +145,8 @@ signals:
   void clearHistory();
   void saveProject();
   void saveProjectAs();
-  void exportTiePoints();
-  void exportMatches();
+  void openExportFeatures();
+  void openExportMatches();
   void closeProject();
   void exit();
   void openSettings();
@@ -168,9 +168,9 @@ signals:
 
   /* Quality Control */
 
-  void featuresViewer();
-  void matchesViewer();
-  void passPointsViewer();
+  void openKeypointsViewer();
+  void openMatchesViewer();
+  void openMultiviewMatchingAssessment();
   void groundTruthEditor();
   void homography();
   void repeatability();
@@ -206,8 +206,8 @@ signals:
   void activeSessionChange(QString);
   void delete_session(QString);
 
-  void openFeatures(QString, QString);
-  void openMatches(QString, QString, QString);
+  void openKeypointsViewer(QString, QString);
+  void openMatchesViewer(QString, QString, QString);
   void openMultiView(QString);
 
 protected:

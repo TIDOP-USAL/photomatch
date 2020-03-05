@@ -43,15 +43,9 @@ VggWidgetImp::VggWidgetImp(QWidget *parent)
     mUseNormalizeImage(new QCheckBox(this)),
     mUseScaleOrientation(new QCheckBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mDescriptorType,          SIGNAL(currentTextChanged(QString)),   this, SIGNAL(descriptorTypeChange(QString)));
-  connect(mScaleFactor,             SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
-  connect(mSigma,                   SIGNAL(valueChanged(double)),          this, SIGNAL(sigmaChange(double)));
-  connect(mUseNormalizeDescriptor,  SIGNAL(clicked(bool)),                 this, SIGNAL(useNormalizeDescriptorChange(bool)));
-  connect(mUseNormalizeImage,       SIGNAL(clicked(bool)),                 this, SIGNAL(useNormalizeImageChange(bool)));
-  connect(mUseScaleOrientation,     SIGNAL(clicked(bool)),                 this, SIGNAL(useScaleOrientationChange(bool)));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 VggWidgetImp::~VggWidgetImp()
@@ -145,7 +139,7 @@ void VggWidgetImp::reset()
   mUseScaleOrientation->setChecked(true);
 }
 
-void VggWidgetImp::init()
+void VggWidgetImp::initUI()
 {
   this->setWindowTitle("VGG");
 
@@ -185,6 +179,16 @@ void VggWidgetImp::init()
   reset();
 
   update();
+}
+
+void VggWidgetImp::initSignalAndSlots()
+{
+  connect(mDescriptorType,          SIGNAL(currentTextChanged(QString)),   this, SIGNAL(descriptorTypeChange(QString)));
+  connect(mScaleFactor,             SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
+  connect(mSigma,                   SIGNAL(valueChanged(double)),          this, SIGNAL(sigmaChange(double)));
+  connect(mUseNormalizeDescriptor,  SIGNAL(clicked(bool)),                 this, SIGNAL(useNormalizeDescriptorChange(bool)));
+  connect(mUseNormalizeImage,       SIGNAL(clicked(bool)),                 this, SIGNAL(useNormalizeImageChange(bool)));
+  connect(mUseScaleOrientation,     SIGNAL(clicked(bool)),                 this, SIGNAL(useScaleOrientationChange(bool)));
 }
 
 } // namespace photomatch

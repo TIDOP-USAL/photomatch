@@ -436,8 +436,8 @@ public:
   const Star *star() const override;
   Surf *surf() override;
   const Surf *surf() const override;
-  virtual Vgg *vgg() override;
-  virtual const Vgg *vgg() const override;
+  Vgg *vgg() override;
+  const Vgg *vgg() const override;
 
   QString matchMethod() const override;
   void setMatchMethod(const QString &matchingMethod) override;

@@ -32,8 +32,7 @@ namespace photomatch
 
 
 AkazeProperties::AkazeProperties()
-  : Akaze(),
-    mDescriptorType("MLDB"),
+  : mDescriptorType("MLDB"),
     mDescriptorSize(0),
     mDescriptorChannels(3),
     mThreshold(0.001),
@@ -44,7 +43,7 @@ AkazeProperties::AkazeProperties()
 }
 
 AkazeProperties::AkazeProperties(const AkazeProperties &akazeProperties)
-  : Akaze(),
+  : Akaze(akazeProperties),
     mDescriptorType(akazeProperties.mDescriptorType),
     mDescriptorSize(akazeProperties.mDescriptorSize),
     mDescriptorChannels(akazeProperties.mDescriptorChannels),
@@ -52,10 +51,6 @@ AkazeProperties::AkazeProperties(const AkazeProperties &akazeProperties)
     mOctaves(akazeProperties.mOctaves),
     mOctaveLayers(akazeProperties.mOctaveLayers),
     mDiffusivity(akazeProperties.mDiffusivity)
-{
-}
-
-AkazeProperties::~AkazeProperties()
 {
 }
 
@@ -161,9 +156,6 @@ QString AkazeProperties::name() const
 
 
 AkazeDetectorDescriptor::AkazeDetectorDescriptor()
-  : AkazeProperties(),
-    KeypointDetector(),
-    DescriptorExtractor()
 {
   mAkaze = cv::AKAZE::create(convertDescriptorType(AkazeProperties::descriptorType()),
                              AkazeProperties::descriptorSize(),
@@ -176,8 +168,8 @@ AkazeDetectorDescriptor::AkazeDetectorDescriptor()
 
 AkazeDetectorDescriptor::AkazeDetectorDescriptor(const AkazeDetectorDescriptor &akazeDetectorDescriptor)
   : AkazeProperties(akazeDetectorDescriptor),
-    KeypointDetector(),
-    DescriptorExtractor()
+    KeypointDetector(akazeDetectorDescriptor),
+    DescriptorExtractor(akazeDetectorDescriptor)
 {
   mAkaze = cv::AKAZE::create(convertDescriptorType(AkazeProperties::descriptorType()),
                              AkazeProperties::descriptorSize(),
@@ -194,11 +186,8 @@ AkazeDetectorDescriptor::AkazeDetectorDescriptor(const QString &descriptorType,
                                                  double threshold,
                                                  int octaves,
                                                  int octaveLayers,
-                                                 QString diffusivity)
-  : AkazeProperties(),
-    KeypointDetector(),
-    DescriptorExtractor(),
-    mAkaze(cv::AKAZE::create())
+                                                 const QString &diffusivity)
+  : mAkaze(cv::AKAZE::create())
 {
   setDescriptorType(descriptorType);
   setDescriptorSize(descriptorSize);
@@ -207,11 +196,6 @@ AkazeDetectorDescriptor::AkazeDetectorDescriptor(const QString &descriptorType,
   setOctaves(octaves);
   setOctaveLayers(octaveLayers);
   setDiffusivity(diffusivity);
-}
-
-AkazeDetectorDescriptor::~AkazeDetectorDescriptor()
-{
-
 }
 
 #if CV_VERSION_MAJOR >= 4

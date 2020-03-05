@@ -32,8 +32,7 @@ namespace photomatch
 
 
 StarProperties::StarProperties()
-  : Star(),
-    mMaxSize(45),
+  : mMaxSize(45),
     mResponseThreshold(30),
     mLineThresholdProjected(10),
     mLineThresholdBinarized(8),
@@ -42,16 +41,12 @@ StarProperties::StarProperties()
 }
 
 StarProperties::StarProperties(const StarProperties &starProperties)
-  : Star(),
+  : Star(starProperties),
     mMaxSize(starProperties.mMaxSize),
     mResponseThreshold(starProperties.mResponseThreshold),
     mLineThresholdProjected(starProperties.mLineThresholdProjected),
     mLineThresholdBinarized(starProperties.mLineThresholdBinarized),
     mSuppressNonmaxSize(starProperties.mSuppressNonmaxSize)
-{
-}
-
-StarProperties::~StarProperties()
 {
 }
 
@@ -124,15 +119,12 @@ QString StarProperties::name() const
 
 
 StarDetector::StarDetector()
-  : StarProperties(),
-    KeypointDetector()
 {
   update();
 }
 
 StarDetector::StarDetector(const StarDetector &starDetector)
-  : StarProperties(starDetector),
-    KeypointDetector()
+  : StarProperties(starDetector)
 {
   update();
 }
@@ -142,8 +134,6 @@ StarDetector::StarDetector(int maxSize,
                            int lineThresholdProjected,
                            int lineThresholdBinarized,
                            int suppressNonmaxSize)
-  : StarProperties(),
-    KeypointDetector()
 {
   StarProperties::setMaxSize(maxSize);
   StarProperties::setResponseThreshold(responseThreshold);
@@ -151,11 +141,6 @@ StarDetector::StarDetector(int maxSize,
   StarProperties::setLineThresholdBinarized(lineThresholdBinarized);
   StarProperties::setSuppressNonmaxSize(suppressNonmaxSize);
   update();
-}
-
-StarDetector::~StarDetector()
-{
-
 }
 
 void StarDetector::update()

@@ -36,8 +36,7 @@ namespace photomatch
 
 
 FlannMatcherProperties::FlannMatcherProperties()
-  : FlannMatcher(),
-    mIndex(FlannMatcherProperties::Index::kdtree)
+  : mIndex(FlannMatcherProperties::Index::kdtree)
 {
 }
 
@@ -69,23 +68,14 @@ void FlannMatcherProperties::setIndex(FlannMatcher::Index index)
 
 
 FlannMatcherImp::FlannMatcherImp()
-  : FlannMatcherProperties(),
-    DescriptorMatcher()
 {
   update();
 }
 
 FlannMatcherImp::FlannMatcherImp(Index index)
-  : FlannMatcherProperties(),
-    DescriptorMatcher()
 {
   FlannMatcherProperties::setIndex(index);
   update();
-}
-
-FlannMatcherImp::~FlannMatcherImp()
-{
-
 }
 
 void FlannMatcherImp::update()
@@ -142,12 +132,7 @@ void FlannMatcherImp::setIndex(FlannMatcher::Index index)
 
 
 BruteForceMatcherProperties::BruteForceMatcherProperties()
-  : BruteForceMatcher(),
-    mNormType(BruteForceMatcherProperties::Norm::l2)
-{
-}
-
-BruteForceMatcherProperties::~BruteForceMatcherProperties()
+  : mNormType(BruteForceMatcherProperties::Norm::l2)
 {
 }
 
@@ -175,15 +160,11 @@ void BruteForceMatcherProperties::setNormType(BruteForceMatcher::Norm normType)
 
 
 BruteForceMatcherImp::BruteForceMatcherImp()
-  : BruteForceMatcherProperties(),
-    DescriptorMatcher()
 {
   update();
 }
 
 BruteForceMatcherImp::BruteForceMatcherImp(BruteForceMatcher::Norm normType)
-  : BruteForceMatcherProperties(),
-    DescriptorMatcher()
 {
   BruteForceMatcherProperties::setNormType(normType);
   update();
@@ -251,15 +232,11 @@ void BruteForceMatcherImp::setNormType(BruteForceMatcher::Norm normType)
 #ifdef HAVE_CUDA
 
 BruteForceMatcherCuda::BruteForceMatcherCuda()
-  : BruteForceMatcherProperties(),
-    DescriptorMatcher()
 {
   update();
 }
 
 BruteForceMatcherCuda::BruteForceMatcherCuda(BruteForceMatcher::Norm normType)
-  : BruteForceMatcherProperties(),
-    DescriptorMatcher()
 {
   BruteForceMatcherProperties::setNormType(normType);
   update();
@@ -333,8 +310,7 @@ void BruteForceMatcherCuda::setNormType(BruteForceMatcher::Norm normType)
 /*----------------------------------------------------------------*/
 
 RobustMatchingProperties::RobustMatchingProperties()
-  : RobustMatcher(),
-    mRatio(0.8),
+  : mRatio(0.8),
     mCrossCheck(true),
     mGeometricTest(GeometricTest::fundamental),
     mHomographyComputeMethod(HomographyComputeMethod::ransac),
@@ -459,9 +435,7 @@ QString photomatch::RobustMatchingProperties::name() const
 
 
 RobustMatchingImp::RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
-  : RobustMatchingProperties(),
-    MatchingAlgorithm(),
-    mDescriptorMatcher(descriptorMatcher)
+  : mDescriptorMatcher(descriptorMatcher)
 {
 
 }
@@ -476,9 +450,7 @@ RobustMatchingImp::RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &d
                                                double distance,
                                                double confidence,
                                                int maxIter)
-  : RobustMatchingProperties(),
-    MatchingAlgorithm(),
-    mDescriptorMatcher(descriptorMatcher)
+  : mDescriptorMatcher(descriptorMatcher)
 {
   this->setRatio(ratio);
   this->setCrossCheck(crossCheck);
@@ -489,11 +461,6 @@ RobustMatchingImp::RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &d
   this->setDistance(distance);
   this->setConfidence(confidence);
   this->setMaxIters(maxIter);
-}
-
-RobustMatchingImp::~RobustMatchingImp()
-{
-
 }
 
 void RobustMatchingImp::setDescriptorMatcher(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
@@ -661,20 +628,19 @@ std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescr
 
   std::vector<std::vector<cv::DMatch>> wrong_matches12;
   std::vector<std::vector<cv::DMatch>> wrong_matches21;
-  std::vector<std::vector<cv::DMatch>> good_matches12 = this->ratioTest(matches12, this->ratio(), &wrong_matches12);
-  std::vector<std::vector<cv::DMatch>> good_matches21 = this->ratioTest(matches21, this->ratio(), &wrong_matches21);
+  std::vector<std::vector<cv::DMatch>> good_matches12 = RobustMatchingImp::ratioTest(matches12, this->ratio(), &wrong_matches12);
+  std::vector<std::vector<cv::DMatch>> good_matches21 = RobustMatchingImp::ratioTest(matches21, this->ratio(), &wrong_matches21);
 
   matches12.clear();
   matches21.clear();
 
   if (wrongMatches){
-    for (size_t i = 0; i < wrong_matches12.size(); i++){
-      wrongMatches->push_back(wrong_matches12[i][0]);
+    for (auto &wrong_match : wrong_matches12){
+      wrongMatches->push_back(wrong_match[0]);
     }
   }
 
-
-  goodMatches = this->crossCheckTest(good_matches12, good_matches21, wrongMatches);
+  goodMatches = RobustMatchingImp::crossCheckTest(good_matches12, good_matches21, wrongMatches);
 
   return goodMatches;
 }
@@ -688,7 +654,7 @@ std::vector<cv::DMatch> RobustMatchingImp::fastRobustMatch(const cv::Mat &queryD
   if (err) return goodMatches;
 
   std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches = this->ratioTest(matches, this->ratio(), &ratio_test_wrong_matches);
+  std::vector<std::vector<cv::DMatch>> ratio_test_matches = RobustMatchingImp::ratioTest(matches, this->ratio(), &ratio_test_wrong_matches);
 
   for (auto &match : ratio_test_matches){
     goodMatches.push_back(match[0]);
@@ -727,8 +693,7 @@ bool RobustMatchingImp::compute(const cv::Mat &queryDescriptor,
 
 
 GmsProperties::GmsProperties()
-  : Gms(),
-    mRotation(true),
+  : mRotation(true),
     mScale(true),
     mThreshold(0.6)
 {
@@ -782,7 +747,6 @@ void GmsProperties::setThreshold(double threshold)
 
 GsmImp::GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
   : GmsProperties(),
-    MatchingAlgorithm(),
     mDescriptorMatcher(descriptorMatcher)
 {
 }
@@ -792,7 +756,6 @@ GsmImp::GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
                          bool scale,
                          double threshold)
   : GmsProperties(),
-    MatchingAlgorithm(),
     mDescriptorMatcher(descriptorMatcher)
 {
   this->setRotation(rotation);
@@ -800,19 +763,14 @@ GsmImp::GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
   this->setThreshold(threshold);
 }
 
-GsmImp::~GsmImp()
-{
-
-}
-
 bool GsmImp::compute(const cv::Mat &queryDescriptor,
-                          const cv::Mat &trainDescriptor,
-                          const std::vector<cv::KeyPoint> &keypoints1,
-                          const std::vector<cv::KeyPoint> &keypoints2,
-                          std::vector<cv::DMatch> *goodMatches,
-                          std::vector<cv::DMatch> *wrongMatches,
-                          const QSize &queryImageSize,
-                          const QSize &trainImageSize)
+                     const cv::Mat &trainDescriptor,
+                     const std::vector<cv::KeyPoint> &keypoints1,
+                     const std::vector<cv::KeyPoint> &keypoints2,
+                     std::vector<cv::DMatch> *goodMatches,
+                     std::vector<cv::DMatch> *wrongMatches,
+                     const QSize &queryImageSize,
+                     const QSize &trainImageSize)
 {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1 )
   try {
@@ -848,6 +806,14 @@ bool GsmImp::compute(const cv::Mat &queryDescriptor,
     return true;
   }
 #  else
+  Q_UNUSED(queryDescriptor)
+  Q_UNUSED(trainDescriptor)
+  Q_UNUSED(keypoints1)
+  Q_UNUSED(keypoints2)
+  Q_UNUSED(goodMatches)
+  Q_UNUSED(wrongMatches)
+  Q_UNUSED(queryImageSize)
+  Q_UNUSED(trainImageSize)
   TL_COMPILER_WARNING("'matchGMS' not supported in OpenCV versions < 3.3.1")
 #endif
   return false;
@@ -870,8 +836,8 @@ void passPointsWrite(const QString &fname,
       ofs << i;
 
       for (size_t j = 0; j < pass_points[i].size(); j++){
-        ofs << " \"" << pass_points[i][j].first.toStdString()
-            << "\" " << pass_points[i][j].second;
+        ofs << ";" << pass_points[i][j].first.toStdString()
+          << ";" << pass_points[i][j].second;
       }
 
       ofs << std::endl;
@@ -890,7 +856,9 @@ void passPointsRead(const QString &fname, std::vector<std::vector<std::pair<QStr
 
     int r = 0;
     while (std::getline(ifs, line)) {
-      QStringList list = QString(line.c_str()).split(" ");
+
+
+      QStringList list = QString(line.c_str()).split(";");
       int size = list.size();
       if (size >= 1){
         if (size == 1 || size % 2 == 0){
@@ -901,7 +869,7 @@ void passPointsRead(const QString &fname, std::vector<std::vector<std::pair<QStr
           for(int i = 1; i < size; i++){
             QString idImage = list[i];
             int idx = list[++i].toInt();
-            pass_point.push_back(std::make_pair(idImage, idx));
+            pass_point.emplace_back(idImage, idx);
           }
           pass_points.push_back(pass_point);
         }

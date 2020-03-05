@@ -77,6 +77,10 @@ public:
   explicit ProgressDialog(QWidget *parent = nullptr);
   ~ProgressDialog()  override;
 
+protected slots:
+
+  void onPushButtonCancelClicked();
+
 public slots:
 
   void setRange(int min, int max) override;
@@ -89,10 +93,6 @@ public slots:
 protected slots:
 
   void onMinimized() override;
-
-private slots:
-
-  void on_pushButton_clicked();
 
 private:
 

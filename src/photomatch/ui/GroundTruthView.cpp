@@ -59,23 +59,8 @@ GroundTruthView::GroundTruthView(QWidget *parent, Qt::WindowFlags f)
     mSelectedMarkerColor("#ff0000"),
     mSelectedMarkerWidth(2)
 {
-  init();
-
-  connect(mComboBoxLeftImage,   SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
-  connect(mComboBoxRightImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
-  connect(mTreeWidget,          SIGNAL(itemSelectionChanged()),   this, SLOT(onTreeWidgetItemSelectionChanged()));
-  connect(mPushButtonAddPoint,  SIGNAL(clicked(bool)),            this, SLOT(onPushButtonAddPointClicked()));
-  connect(mPushButtonLockViews, SIGNAL(toggled(bool)),            this, SLOT(onPushButtonLockViewsToggled(bool)));
-  connect(mPushButtonDelete,    SIGNAL(clicked(bool)),            this, SLOT(onPushButtonDeleteClicked()));
-  connect(mImportGroundTruth,   SIGNAL(triggered(bool)),          this, SIGNAL(importGroundTruth()));
-  connect(mAddPoints,           SIGNAL(toggled(bool)),            this, SLOT(onPushButtonAddPoints(bool)));
-  connect(mSaveGroundTruth,     SIGNAL(triggered(bool)),          this, SIGNAL(saveGroundTruth()));
-
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(onAccept()));
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 GroundTruthView::~GroundTruthView()
@@ -733,7 +718,7 @@ void GroundTruthView::setHomologousDistance(int pointId, double distance)
   }
 }
 
-void GroundTruthView::init()
+void GroundTruthView::initUI()
 {
   this->setWindowTitle(tr("Ground Truth Editor"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -897,6 +882,24 @@ void GroundTruthView::init()
   connect(mGraphicsViewRight, SIGNAL(selectionChanged()), this, SLOT(onGraphicsViewRightSelectionChanged()));
 
   update();
+}
+
+void GroundTruthView::initSignalAndSlots()
+{
+  connect(mComboBoxLeftImage,   SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
+  connect(mComboBoxRightImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
+  connect(mTreeWidget,          SIGNAL(itemSelectionChanged()),   this, SLOT(onTreeWidgetItemSelectionChanged()));
+  connect(mPushButtonAddPoint,  SIGNAL(clicked(bool)),            this, SLOT(onPushButtonAddPointClicked()));
+  connect(mPushButtonLockViews, SIGNAL(toggled(bool)),            this, SLOT(onPushButtonLockViewsToggled(bool)));
+  connect(mPushButtonDelete,    SIGNAL(clicked(bool)),            this, SLOT(onPushButtonDeleteClicked()));
+  connect(mImportGroundTruth,   SIGNAL(triggered(bool)),          this, SIGNAL(importGroundTruth()));
+  connect(mAddPoints,           SIGNAL(toggled(bool)),            this, SLOT(onPushButtonAddPoints(bool)));
+  connect(mSaveGroundTruth,     SIGNAL(triggered(bool)),          this, SIGNAL(saveGroundTruth()));
+
+  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(onAccept()));
+  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
+  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 void GroundTruthView::clear()

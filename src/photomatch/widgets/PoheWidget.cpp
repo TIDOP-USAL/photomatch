@@ -37,14 +37,9 @@ PoheWidgetImp::PoheWidgetImp(QWidget *parent)
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 PoheWidgetImp::~PoheWidgetImp()
@@ -97,7 +92,7 @@ void PoheWidgetImp::reset()
   mBlockSizeY->setValue(127);
 }
 
-void PoheWidgetImp::init()
+void PoheWidgetImp::initUI()
 {
   this->setWindowTitle("POHE");
 
@@ -134,6 +129,12 @@ void PoheWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void PoheWidgetImp::initSignalAndSlots()
+{
+  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
 }
 
 } // namespace photomatch

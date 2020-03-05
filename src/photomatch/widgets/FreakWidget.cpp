@@ -40,13 +40,8 @@ FreakWidgetImp::FreakWidgetImp(QWidget *parent)
     mPatternScale(new QDoubleSpinBox(this)),
     mOctaves(new QSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mOrientationNormalized,  SIGNAL(clicked(bool)),                this, SIGNAL(orientationNormalizedChange(bool)));
-  connect(mScaleNormalized,        SIGNAL(clicked(bool)),                this, SIGNAL(scaleNormalizedChange(bool)));
-  connect(mPatternScale,           SIGNAL(valueChanged(double)),         this, SIGNAL(patternScaleChange(double)));
-  connect(mOctaves,                SIGNAL(valueChanged(int)),            this, SIGNAL(octavesChange(int)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 FreakWidgetImp::~FreakWidgetImp()
@@ -116,7 +111,7 @@ void FreakWidgetImp::reset()
   mOctaves->setValue(4);
 }
 
-void FreakWidgetImp::init()
+void FreakWidgetImp::initUI()
 {
   this->setWindowTitle("FREAK");
 
@@ -147,6 +142,14 @@ void FreakWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void FreakWidgetImp::initSignalAndSlots()
+{
+  connect(mOrientationNormalized,  SIGNAL(clicked(bool)),                this, SIGNAL(orientationNormalizedChange(bool)));
+  connect(mScaleNormalized,        SIGNAL(clicked(bool)),                this, SIGNAL(scaleNormalizedChange(bool)));
+  connect(mPatternScale,           SIGNAL(valueChanged(double)),         this, SIGNAL(patternScaleChange(double)));
+  connect(mOctaves,                SIGNAL(valueChanged(int)),            this, SIGNAL(octavesChange(int)));
 }
 
 } // namespace photomatch

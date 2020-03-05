@@ -50,14 +50,14 @@ public:
 
 public:
 
-  virtual QSize blockSize() const override;
-  virtual void setBlockSize(const QSize &blockSize) override;
+  QSize blockSize() const override;
+  void setBlockSize(const QSize &blockSize) override;
 
 // Preprocess interface
 
 public:
 
-  virtual void reset() override;
+  void reset() override;
   QString name() const final;
 
 private:
@@ -79,7 +79,7 @@ class PHOTOMATCH_EXPORT PohePreprocess
 public:
 
   PohePreprocess();
-  PohePreprocess(const QSize &blockSize);
+  explicit PohePreprocess(const QSize &blockSize);
   ~PohePreprocess() override;
 
 // ImageProcess interface

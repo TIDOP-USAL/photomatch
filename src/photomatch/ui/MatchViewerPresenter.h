@@ -55,15 +55,14 @@ public:
 
 public slots:
 
-  virtual void setSession(const QString &session) = 0;
-  virtual void setLeftImage(const QString &image) = 0;
-  virtual void setRightImage(const QString &image) = 0;
-  //virtual void openImageFromSession(const QString &session, const QString &image) = 0;
+  virtual void openFromSession(const QString &session) = 0;
+  virtual void openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight) = 0;
 
 protected slots:
 
-  //virtual void loadLeftImage(const QString &image) = 0;
-  //virtual void loadRightImage(const QString &image) = 0;
+  virtual void setSession(const QString &session) = 0;
+  virtual void setLeftImage(const QString &image) = 0;
+  virtual void setRightImage(const QString &image) = 0;
   virtual void loadMatches(const QString &imageLeft, const QString &imageRight) = 0;
   virtual void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) = 0;
 };
@@ -86,10 +85,8 @@ public:
 
 public slots:
 
-  void setSession(const QString &session) override;
-  void setLeftImage(const QString &image) override;
-  void setRightImage(const QString &image) override;
-  //void openImageFromSession(const QString &session, const QString &image) override;
+  void openFromSession(const QString &session) override;
+  void openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight) override;
 
 protected slots:
 
@@ -97,6 +94,9 @@ protected slots:
 //  void loadRightImage(const QString &image) override;
   void loadMatches(const QString &imageLeft, const QString &imageRight) override;
   void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) override;
+  void setSession(const QString &session) override;
+  void setLeftImage(const QString &image) override;
+  void setRightImage(const QString &image) override;
 
   //void save();
   //void discart();

@@ -116,8 +116,8 @@ MainWindowView::MainWindowView(QWidget *parent)
   connect(mActionClearHistory,         SIGNAL(triggered(bool)), this,   SIGNAL(clearHistory()));
   connect(mActionSaveProject,          SIGNAL(triggered(bool)), this,   SIGNAL(saveProject()));
   connect(mActionSaveProjectAs,        SIGNAL(triggered(bool)), this,   SIGNAL(saveProjectAs()));
-  connect(mActionExportTiePoints,      SIGNAL(triggered(bool)), this,   SIGNAL(exportTiePoints()));
-  connect(mActionExportMatches,        SIGNAL(triggered(bool)), this,   SIGNAL(exportMatches()));
+  connect(mActionExportTiePoints,      SIGNAL(triggered(bool)), this,   SIGNAL(openExportFeatures()));
+  connect(mActionExportMatches,        SIGNAL(triggered(bool)), this,   SIGNAL(openExportMatches()));
   connect(mActionCloseProject,         SIGNAL(triggered(bool)), this,   SIGNAL(closeProject()));
   connect(mActionExit,                 SIGNAL(triggered(bool)), this,   SIGNAL(exit()));
 
@@ -138,9 +138,9 @@ MainWindowView::MainWindowView(QWidget *parent)
 
   /* Quality Control */
 
-  connect(mActionFeaturesViewer,     SIGNAL(triggered(bool)),   this,   SIGNAL(featuresViewer()));
-  connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(matchesViewer()));
-  connect(mActionPassPointsViewer,   SIGNAL(triggered(bool)),   this,   SIGNAL(passPointsViewer()));
+  connect(mActionFeaturesViewer,     SIGNAL(triggered(bool)),   this,   SIGNAL(openKeypointsViewer()));
+  connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(openMatchesViewer()));
+  connect(mActionPassPointsViewer,   SIGNAL(triggered(bool)),   this,   SIGNAL(openMultiviewMatchingAssessment()));
   connect(mActionGroundTruthEditor,  SIGNAL(triggered(bool)),   this,   SIGNAL(groundTruthEditor()));
   connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
   //connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
@@ -803,9 +803,6 @@ void MainWindowView::deleteHistory()
     mHistory.erase(mHistory.begin());
   }
 
-  /// TODO: sacar fuera
-  ///ui->listWidgetRecentProjects->clear();
-
   update();
 }
 
@@ -1335,7 +1332,7 @@ void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
      emit openImageMatches(session, item->parent()->text(0), item->text(column));
    } else if (item->data(0, Qt::UserRole) == photomatch::features_image){
      QString session = item->parent()->parent()->parent()->text(0);
-     emit openFeatures(session, QFileInfo(item->text(column)).baseName());
+     emit openKeypointsViewer(session, QFileInfo(item->text(column)).baseName());
    }
   }
 }
@@ -1405,7 +1402,7 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("View keypoints")) {
         QString session = item->parent()->parent()->parent()->text(0);
-        emit openFeatures(session, QFileInfo(item->text(0)).baseName());
+        emit openKeypointsViewer(session, QFileInfo(item->text(0)).baseName());
       }
     }
 
@@ -1419,7 +1416,7 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("View Matches")) {
         QString session = item->parent()->parent()->parent()->text(0);
-        emit openMatches(session, QFileInfo(item->text(0)).baseName(), QString());
+        emit openMatchesViewer(session, QFileInfo(item->text(0)).baseName(), QString());
       }
     }
   } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
@@ -1428,7 +1425,7 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("View Matches")) {
         QString session = item->parent()->parent()->parent()->parent()->text(0);
-        emit openMatches(session, QFileInfo(item->parent()->text(0)).baseName(), QFileInfo(item->text(0)).baseName());
+        emit openMatchesViewer(session, QFileInfo(item->parent()->text(0)).baseName(), QFileInfo(item->text(0)).baseName());
       }
     }
   }

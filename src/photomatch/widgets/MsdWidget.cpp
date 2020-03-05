@@ -47,20 +47,9 @@ MsdWidgetImp::MsdWidgetImp(QWidget *parent)
     mAffineMSD(new QCheckBox(this)),
     mTilts(new QSpinBox(this))
 {
-  init();
-
-  connect(mThresholdSaliency,   SIGNAL(valueChanged(double)),  this, SIGNAL(thresholdSaliencyChange(double)));
-  connect(mPathRadius,          SIGNAL(valueChanged(int)),     this, SIGNAL(pathRadiusChange(int)));
-  connect(mKNN,                 SIGNAL(valueChanged(int)),     this, SIGNAL(KNNChange(int)));
-  connect(mAreaRadius,          SIGNAL(valueChanged(int)),     this, SIGNAL(areaRadiusChange(int)));
-  connect(mScaleFactor,         SIGNAL(valueChanged(double)),  this, SIGNAL(scaleFactorChange(double)));
-  connect(mNMSRadius,           SIGNAL(valueChanged(int)),     this, SIGNAL(NMSRadiusChange(int)));
-  connect(mNScales,             SIGNAL(valueChanged(int)),     this, SIGNAL(nScalesChange(int)));
-  connect(mNMSScaleR,           SIGNAL(valueChanged(int)),     this, SIGNAL(NMSScaleRChange(int)));
-  connect(mComputeOrientations, SIGNAL(clicked(bool)),         this, SIGNAL(computeOrientationsChange(bool)));
-  connect(mAffineMSD,           SIGNAL(clicked(bool)),         this, SIGNAL(affineMSDChange(bool)));
-  connect(mTilts,               SIGNAL(valueChanged(int)),     this, SIGNAL(tiltsChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 MsdWidgetImp::~MsdWidgetImp()
@@ -220,7 +209,7 @@ void MsdWidgetImp::reset()
   mTilts->setValue(3);
 }
 
-void MsdWidgetImp::init()
+void MsdWidgetImp::initUI()
 {
   this->setWindowTitle("MSD");
 
@@ -288,6 +277,21 @@ void MsdWidgetImp::init()
   reset();
 
   update();
+}
+
+void MsdWidgetImp::initSignalAndSlots()
+{
+  connect(mThresholdSaliency,   SIGNAL(valueChanged(double)),  this, SIGNAL(thresholdSaliencyChange(double)));
+  connect(mPathRadius,          SIGNAL(valueChanged(int)),     this, SIGNAL(pathRadiusChange(int)));
+  connect(mKNN,                 SIGNAL(valueChanged(int)),     this, SIGNAL(KNNChange(int)));
+  connect(mAreaRadius,          SIGNAL(valueChanged(int)),     this, SIGNAL(areaRadiusChange(int)));
+  connect(mScaleFactor,         SIGNAL(valueChanged(double)),  this, SIGNAL(scaleFactorChange(double)));
+  connect(mNMSRadius,           SIGNAL(valueChanged(int)),     this, SIGNAL(NMSRadiusChange(int)));
+  connect(mNScales,             SIGNAL(valueChanged(int)),     this, SIGNAL(nScalesChange(int)));
+  connect(mNMSScaleR,           SIGNAL(valueChanged(int)),     this, SIGNAL(NMSScaleRChange(int)));
+  connect(mComputeOrientations, SIGNAL(clicked(bool)),         this, SIGNAL(computeOrientationsChange(bool)));
+  connect(mAffineMSD,           SIGNAL(clicked(bool)),         this, SIGNAL(affineMSDChange(bool)));
+  connect(mTilts,               SIGNAL(valueChanged(int)),     this, SIGNAL(tiltsChange(int)));
 }
 
 

@@ -133,10 +133,6 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
           QString image_id = QFileInfo(feat).baseName();
           ofs << image_id.toStdString() << std::endl;
 
-//          std::vector<cv::KeyPoint> keyPoints;
-//          cv::Mat descriptors;
-//          featuresRead(feat, keyPoints, descriptors);
-//          descriptors.release();
           std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(feat);
           featuresRead->read();
           std::vector<cv::KeyPoint> keyPoints = featuresRead->keyPoints();

@@ -47,14 +47,8 @@ MultiviewView::MultiviewView(QWidget *parent, Qt::WindowFlags f)
     mListWidgetImages(new QListWidget(this)),
     mButtonBox(new QDialogButtonBox(this))
 {
-  init();
-
-  //connect(mListWidgetIds, SIGNAL(currentRowChanged(int)), this, SIGNAL(idChange(int)));
-  connect(mListWidgetIds, SIGNAL(currentRowChanged(int)), this, SLOT(onListWidgetIdsCurrentRowChanged(int)));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 MultiviewView::~MultiviewView()
@@ -68,7 +62,7 @@ void MultiviewView::onListWidgetIdsCurrentRowChanged(int row)
   emit idChange(item->data(Qt::UserRole).toInt());
 }
 
-void MultiviewView::init()
+void MultiviewView::initUI()
 {
 
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -97,6 +91,14 @@ void MultiviewView::init()
   retranslate();
 
   update();
+}
+
+void MultiviewView::initSignalAndSlots()
+{
+  connect(mListWidgetIds, SIGNAL(currentRowChanged(int)), this, SLOT(onListWidgetIdsCurrentRowChanged(int)));
+
+  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
 void MultiviewView::clear()

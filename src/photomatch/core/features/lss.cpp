@@ -31,13 +31,7 @@ namespace photomatch
 
 
 LssProperties::LssProperties()
-  : Lss()
 {
-}
-
-LssProperties::~LssProperties()
-{
-
 }
 
 void LssProperties::reset()
@@ -53,16 +47,9 @@ QString LssProperties::name() const
 
 
 LssDescriptor::LssDescriptor()
-  : LssProperties(),
-    DescriptorExtractor(),
-    mLSS(new LSS)
+  : mLSS(new LSS)
 {
   update();
-}
-
-LssDescriptor::~LssDescriptor()
-{
-
 }
 
 void LssDescriptor::update()
@@ -82,12 +69,12 @@ bool LssDescriptor::extract(const cv::Mat &img,
 
     std::vector<cv::KeyPoint> lss_key;
 
-    for (size_t i = 0; i < keyPoints.size(); i++) {
+    for (auto &keyPoint : keyPoints) {
       cv::Mat_<float> enter;
-      int error = mLSS->compute(keyPoints[i].pt, cvImg, enter);
+      int error = mLSS->compute(keyPoint.pt, cvImg, enter);
       if (error == 1) {
         aux_des_left.push_back(enter);
-        lss_key.push_back(keyPoints[i]);
+        lss_key.push_back(keyPoint);
       }
     }
 

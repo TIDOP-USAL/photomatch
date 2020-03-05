@@ -13,17 +13,9 @@ namespace photomatch
 StartPageWidget::StartPageWidget(QWidget *parent)
   : PhotoMatchWidget(parent)
 {
-  init();
-
-  retranslate();
-
-  connect(mCommandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
-  connect(mCommandLinkButtonOpenProject,  SIGNAL(clicked()),  this, SIGNAL(openProject()));
-  connect(mCommandLinkButtonSettings,     SIGNAL(clicked()),  this, SIGNAL(openSettings()));
-  connect(mCommandLinkButtonGitHub,       SIGNAL(clicked()),  this, SIGNAL(openGitHub()));
-  connect(mCommandLinkButtonClearHistory, SIGNAL(clicked()),  this, SIGNAL(clearHistory()));
-
-  connect(mListWidgetRecentProjects,       SIGNAL(currentTextChanged(QString)), this, SIGNAL(openProjectFromHistory(QString)));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 void StartPageWidget::setHistory(const QStringList &history)
@@ -53,7 +45,7 @@ void StartPageWidget::reset()
 {
 }
 
-void StartPageWidget::init()
+void StartPageWidget::initUI()
 {
 
   QGridLayout *layout = new QGridLayout(this);
@@ -160,6 +152,17 @@ void StartPageWidget::init()
   mSplitter->addWidget(layoutWidget2);
 
   layout->addWidget(mSplitter, 1, 0, 1, 1);
+}
+
+void StartPageWidget::initSignalAndSlots()
+{
+  connect(mCommandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
+  connect(mCommandLinkButtonOpenProject,  SIGNAL(clicked()),  this, SIGNAL(openProject()));
+  connect(mCommandLinkButtonSettings,     SIGNAL(clicked()),  this, SIGNAL(openSettings()));
+  connect(mCommandLinkButtonGitHub,       SIGNAL(clicked()),  this, SIGNAL(openGitHub()));
+  connect(mCommandLinkButtonClearHistory, SIGNAL(clicked()),  this, SIGNAL(clearHistory()));
+
+  connect(mListWidgetRecentProjects,       SIGNAL(currentTextChanged(QString)), this, SIGNAL(openProjectFromHistory(QString)));
 }
 
 } // namespace photomatch

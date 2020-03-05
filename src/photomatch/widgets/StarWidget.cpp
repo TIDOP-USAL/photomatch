@@ -40,15 +40,9 @@ StarWidgetImp::StarWidgetImp(QWidget *parent)
     mLineThresholdBinarized(new QSpinBox(this)),
     mSuppressNonmaxSize(new QSpinBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mMaxSize,                    SIGNAL(valueChanged(int)),            this, SIGNAL(maxSizeChange(int)));
-  connect(mResponseThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(responseThresholdChange(int)));
-  connect(mLineThresholdProjected,     SIGNAL(valueChanged(int)),            this, SIGNAL(lineThresholdProjectedChange(int)));
-  connect(mLineThresholdBinarized,     SIGNAL(valueChanged(int)),            this, SIGNAL(lineThresholdBinarizedChange(int)));
-  connect(mSuppressNonmaxSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(suppressNonmaxSizeChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 StarWidgetImp::~StarWidgetImp()
@@ -135,7 +129,7 @@ void StarWidgetImp::reset()
   mSuppressNonmaxSize->setValue(5);
 }
 
-void StarWidgetImp::init()
+void StarWidgetImp::initUI()
 {
   this->setWindowTitle("STAR");
 
@@ -171,6 +165,15 @@ void StarWidgetImp::init()
 
   reset();
   update();
+}
+
+void StarWidgetImp::initSignalAndSlots()
+{
+  connect(mMaxSize,                    SIGNAL(valueChanged(int)),            this, SIGNAL(maxSizeChange(int)));
+  connect(mResponseThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(responseThresholdChange(int)));
+  connect(mLineThresholdProjected,     SIGNAL(valueChanged(int)),            this, SIGNAL(lineThresholdProjectedChange(int)));
+  connect(mLineThresholdBinarized,     SIGNAL(valueChanged(int)),            this, SIGNAL(lineThresholdBinarizedChange(int)));
+  connect(mSuppressNonmaxSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(suppressNonmaxSizeChange(int)));
 }
 
 } // namespace photomatch

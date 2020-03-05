@@ -85,7 +85,13 @@ void FeaturesViewerPresenter::open()
   }
 }
 
-void FeaturesViewerPresenter::openImageFromSession(const QString &session, const QString &image)
+void FeaturesViewerPresenter::openKeypointsFromSession(const QString &session)
+{
+  this->setSession(session);
+  this->open();
+}
+
+void FeaturesViewerPresenter::openKeypointsFromSessionAndImage(const QString &session, const QString &image)
 {
   this->setSession(session);
   this->open();

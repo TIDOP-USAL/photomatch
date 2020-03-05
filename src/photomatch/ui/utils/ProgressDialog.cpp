@@ -45,9 +45,11 @@ ProgressDialog::ProgressDialog(QWidget *parent)
   ui->setupUi(this);
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
 
-  ui->pushButtonBgProcessing->setEnabled(false);
+  ui->pushButtonMinimize->setEnabled(false);
 
-  connect(ui->pushButtonBgProcessing, SIGNAL(clicked(bool)), this, SLOT(onMinimized()));
+  connect(ui->pushButtonMinimize, SIGNAL(clicked(bool)), this, SLOT(onMinimized()));
+  connect(ui->pushButtonCancel, SIGNAL(clicked(bool)), this, SLOT(onPushButtonCancelClicked()));
+  connect(ui->pushButtonClose, SIGNAL(clicked(bool)), this, SLOT(close()));
 }
 
 ProgressDialog::~ProgressDialog()
@@ -72,18 +74,22 @@ void ProgressDialog::setValue(int value)
 
 void ProgressDialog::setInitialized()
 {
-  ui->pushButton->setText(tr("Cancel"));
-  ui->pushButtonBgProcessing->setEnabled(true);
+  //ui->pushButton->setText(tr("Cancel"));
+  ui->pushButtonCancel->setVisible(true);
+  ui->pushButtonClose->setVisible(false);
+  ui->pushButtonMinimize->setEnabled(true);
   this->show();
 }
 
 void ProgressDialog::setFinished()
 {
-  ui->pushButton->setText(tr("Close"));
+  ui->pushButtonCancel->setVisible(false);
+  ui->pushButtonClose->setVisible(true);
+  ui->pushButtonClose->setText(tr("Close"));
   if (!this->isVisible()){
     this->show();
   }
-  ui->pushButtonBgProcessing->setDisabled(true);
+  ui->pushButtonMinimize->setDisabled(true);
 }
 
 void ProgressDialog::setTitle(QString title)
@@ -96,7 +102,7 @@ void ProgressDialog::onMinimized()
   this->hide();
 }
 
-void ProgressDialog::on_pushButton_clicked()
+void ProgressDialog::onPushButtonCancelClicked()
 {
   emit cancel();
   close();

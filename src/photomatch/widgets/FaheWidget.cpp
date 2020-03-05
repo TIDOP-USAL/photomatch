@@ -37,14 +37,9 @@ FaheWidgetImp::FaheWidgetImp(QWidget *parent)
     mBlockSizeX(new QSpinBox(this)),
     mBlockSizeY(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 FaheWidgetImp::~FaheWidgetImp()
@@ -97,7 +92,7 @@ void FaheWidgetImp::reset()
   mBlockSizeY->setValue(11);
 }
 
-void FaheWidgetImp::init()
+void FaheWidgetImp::initUI()
 {
   this->setWindowTitle("FAHE");
 
@@ -134,6 +129,12 @@ void FaheWidgetImp::init()
   reset(); /// set default values
 
   update();
+}
+
+void FaheWidgetImp::initSignalAndSlots()
+{
+  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
+  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
 }
 
 } // namespace photomatch

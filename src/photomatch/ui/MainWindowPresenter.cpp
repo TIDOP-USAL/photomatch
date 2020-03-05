@@ -32,6 +32,7 @@
 #include "SettingsView.h"
 #include "photomatch/ui/utils/TabHandler.h"
 #include "photomatch/ui/utils/GraphicViewer.h"
+#include "photomatch/ui/HelpDialog.h"
 #include "photomatch/widgets/StartPageWidget.h"
 
 /* TidopLib */
@@ -66,52 +67,51 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
 
   /* Menú Archivo */
 
-  connect(mView, SIGNAL(openNew()),                       this, SLOT(openNew()));
-  connect(mView, SIGNAL(openProject()),                   this, SLOT(openProject()));
-  connect(mView, SIGNAL(openProjectFromHistory(QString)), this, SLOT(openFromHistory(QString)));  ///TODO: falta test señal
-  connect(mView, SIGNAL(clearHistory()),                  this, SLOT(deleteHistory()));
-  connect(mView, SIGNAL(exportTiePoints()),               this, SLOT(exportFeatures()));
-  connect(mView, SIGNAL(exportMatches()),                 this, SLOT(exportMatches()));
-  connect(mView, SIGNAL(saveProject()),                   this, SLOT(saveProject()));
-  connect(mView, SIGNAL(saveProjectAs()),                 this, SLOT(saveProjectAs()));
-  connect(mView, SIGNAL(closeProject()),                  this, SLOT(closeProject()));
-  connect(mView, SIGNAL(exit()),                          this, SLOT(exit()));
+  connect(mView, &MainWindowView::openNew,                this, &MainWindowPresenter::openNew);
+  connect(mView, &MainWindowView::openProject,            this, &MainWindowPresenter::openProject);
+  connect(mView, &MainWindowView::openProjectFromHistory, this, &MainWindowPresenter::openFromHistory);  ///TODO: falta test señal
+  connect(mView, &MainWindowView::clearHistory,           this, &MainWindowPresenter::deleteHistory);
+  connect(mView, &MainWindowView::openExportFeatures,     this, &MainWindowPresenter::openExportFeaturesDialog);
+  connect(mView, &MainWindowView::openExportMatches,      this, &MainWindowPresenter::openExportMatchesDialog);
+  connect(mView, &MainWindowView::saveProject,            this, &MainWindowPresenter::saveProject);
+  connect(mView, &MainWindowView::saveProjectAs,          this, &MainWindowPresenter::saveProjectAs);
+  connect(mView, &MainWindowView::closeProject,           this, &MainWindowPresenter::closeProject);
+  connect(mView, &MainWindowView::exit,                   this, &MainWindowPresenter::exit);
 
   /* Menú View */
 
-  connect(mView,   SIGNAL(openStartPage()),           this, SLOT(openStartPage()));
+  connect(mView,   &MainWindowView::openStartPage,        this, &MainWindowPresenter::openStartPage);
   connect(mView,   SIGNAL(openSettings()),            this, SLOT(openSettings()));
   connect(mView,   SIGNAL(openViewSettings()),        this, SLOT(openViewSettings()));
 
   /* Quality Control */
 
-  connect(mView,  SIGNAL(featuresViewer()),           this, SLOT(openKeypointsViewer()));
-  connect(mView,  SIGNAL(matchesViewer()),            this, SLOT(openMatchesViewer()));
-  connect(mView,  SIGNAL(passPointsViewer()),         this, SLOT(openMultiviewMatchingAssessment()));
-  connect(mView,  SIGNAL(groundTruthEditor()),        this, SLOT(groundTruthEditor()));
-  connect(mView,  SIGNAL(homography()),               this, SLOT(openHomographyViewer()));
-  connect(mView,  SIGNAL(repeatability()),            this, SLOT(openRepeatability()));
-  connect(mView,  SIGNAL(prCurves()),                 this, SLOT(openPRCurvesViewer()));
-  connect(mView,  SIGNAL(rocCurves()),                this, SLOT(openROCCurvesViewer()));
-  connect(mView,  SIGNAL(detCurves()),                this, SLOT(openDETCurvesViewer()));
+  connect(mView,  SIGNAL(openKeypointsViewer()),      this, SLOT(openKeypointsViewer()));
+  connect(mView,  SIGNAL(openMatchesViewer()),        this, SLOT(openMatchesViewer()));
+  connect(mView,  &MainWindowView::openMultiviewMatchingAssessment,  this, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog);
+  connect(mView,  &MainWindowView::groundTruthEditor,        this, &MainWindowPresenter::openGroundTruthEditorDialog);
+  connect(mView,  &MainWindowView::homography,               this, &MainWindowPresenter::openHomographyViewerDialog);
+  connect(mView,  &MainWindowView::prCurves,                 this, &MainWindowPresenter::openPRCurvesViewerDialog);
+  connect(mView,  &MainWindowView::rocCurves,                this, &MainWindowPresenter::openROCCurvesViewerDialog);
+  connect(mView,  &MainWindowView::detCurves,                this, &MainWindowPresenter::openDETCurvesViewerDialog);
   connect(mView,  SIGNAL(openQualityControlSettings()),
           this,   SLOT(openQualityControlSettings()));
 
   /* Menú herramientas */
 
-  connect(mView,   SIGNAL(loadImages()),              this, SLOT(loadImages()));
-  connect(mView,   SIGNAL(newSession()),              this, SLOT(newSession()));
-  connect(mView,   SIGNAL(openPreprocess()),          this, SLOT(openPreprocess()));
-  connect(mView,   SIGNAL(openFeatureExtraction()),   this, SLOT(openFeatureExtraction()));
-  connect(mView,   SIGNAL(openFeatureMatching()),     this, SLOT(openFeatureMatching()));
+  connect(mView,   &MainWindowView::loadImages,            this, &MainWindowPresenter::loadImages);
+  connect(mView,   &MainWindowView::newSession,            this, &MainWindowPresenter::openNewSessionDialog);
+  connect(mView,   &MainWindowView::openPreprocess,        this, &MainWindowPresenter::openPreprocessDialog);
+  connect(mView,   &MainWindowView::openFeatureExtraction, this, &MainWindowPresenter::openFeatureExtractionDialog);
+  connect(mView,   &MainWindowView::openFeatureMatching,   this, &MainWindowPresenter::openFeatureMatchingDialog);
   //connect(mView,   SIGNAL(openBatch()),               this, SLOT(openBatch()));
-  connect(mView,   SIGNAL(openToolSettings()),        this, SLOT(openToolSettings()));
+  connect(mView,   &MainWindowView::openToolSettings,      this, &MainWindowPresenter::openToolSettings);
 
   /* Menú Ayuda */
 
   connect(mView, SIGNAL(openHelpDialog()),            this, SLOT(help()));
   connect(mView, SIGNAL(openOnlineHelp()),            this, SLOT(openOnlineHelp()));
-  connect(mView, SIGNAL(openAboutDialog()),           this, SLOT(openAboutDialog()));
+  connect(mView, &MainWindowView::openAboutDialog,    this, &MainWindowPresenter::openAboutDialog);
 
   /* Panel de vistas en miniatura */
 
@@ -135,9 +135,9 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
   connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
   connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
 
-  connect(mView, SIGNAL(openFeatures(QString, QString)),          this, SLOT(openKeypointsViewer(QString, QString)));
-  connect(mView, SIGNAL(openMatches(QString, QString, QString)),  this, SLOT(openMatchesViewer(QString, QString, QString)));
-  connect(mView, SIGNAL(openMultiView(QString)),                  this, SLOT(openMultiviewMatchingAssessment(QString)));
+  connect(mView, SIGNAL(openKeypointsViewer(QString, QString)),         this, SIGNAL(openKeypointsViewerDialogFromSessionAndImage(QString, QString)));
+  connect(mView, SIGNAL(openMatchesViewer(QString, QString, QString)),  this, SIGNAL(openMatchesViewerDialogFromSessionAndImages(QString, QString, QString)));
+  //connect(mView, SIGNAL(openMultiView(QString)),                        this, SLOT(openMultiviewMatchingAssessment(QString)));
 
 }
 
@@ -162,9 +162,6 @@ void MainWindowPresenter::openNew()
   mView->clear();
 
   emit openNewProjectDialog();
-//  initNewProjectDialog();
-
-//  mNewProjectPresenter->open();
 }
 
 void MainWindowPresenter::openProject()
@@ -254,6 +251,7 @@ void MainWindowPresenter::openFromHistory(const QString &file)
 void MainWindowPresenter::deleteHistory()
 {
   mSettingsModel->clearHistory();
+  mStartPageWidget->setHistory(QStringList());
   mView->deleteHistory();
 }
 
@@ -273,20 +271,6 @@ void MainWindowPresenter::saveProjectAs()
     mProjectModel->saveAs(file);
     mView->setFlag(MainWindowView::Flag::project_modified, false);
   }
-}
-
-void MainWindowPresenter::exportFeatures()
-{
-//  initExportFeaturesDialog();
-
-//  mExportFeaturesPresenter->open();
-}
-
-void MainWindowPresenter::exportMatches()
-{
-//  initExportMatchesDialog();
-
-//  mExportMatchesPresenter->open();
 }
 
 void MainWindowPresenter::closeProject()
@@ -364,94 +348,63 @@ void MainWindowPresenter::openGitHub()
 void MainWindowPresenter::openViewSettings()
 {
 //  initSettingsDialog();
-//  mSettingsPresenter->openPage(1);
+  //  mSettingsPresenter->openPage(1);
 }
 
 void MainWindowPresenter::openKeypointsViewer()
 {
-//  initFeaturesViewer();
-//  mFeaturesViewerPresenter->setSession(mProjectModel->currentSession()->name());
-//  mFeaturesViewerPresenter->open();
-  emit openKeypointsViewerDialog();
-}
-
-void MainWindowPresenter::openKeypointsViewer(const QString &session, const QString &image)
-{
-//  initFeaturesViewer();
-//  mFeaturesViewerPresenter->setSession(session);
-//  mFeaturesViewerPresenter->open();
-//  mFeaturesViewerPresenter->setImageActive(image);
-  emit openKeypointsViewerDialog(session, image);
+  emit openKeypointsViewerDialogFromSession(mProjectModel->currentSession()->name());
 }
 
 void MainWindowPresenter::openMatchesViewer()
 {
-//  initMatchesViewer();
-//  mMatchesViewerPresenter->setSession(mProjectModel->currentSession()->name());
-//  mMatchesViewerPresenter->open();
-  emit openMatchesViewerDialog();
+  emit openMatchesViewerDialogFromSession(mProjectModel->currentSession()->name());
 }
 
-void MainWindowPresenter::openMatchesViewer(const QString &session, const QString &imageLeft, const QString &imageRight)
-{
-//  initMatchesViewer();
-//  mMatchesViewerPresenter->setSession(session);
-//  mMatchesViewerPresenter->open();
-//  mMatchesViewerPresenter->setLeftImage(imageLeft);
-//  if (imageRight.isEmpty() == false){
-//    mMatchesViewerPresenter->setRightImage(imageRight);
-//  }
-}
 
-void MainWindowPresenter::openMultiviewMatchingAssessment()
-{
+//void MainWindowPresenter::openMultiviewMatchingAssessment()
+//{
 //  initMultiviewMatchingAssessment();
 //  mMultiviewPresenter->setSession(mProjectModel->currentSession()->name());
 //  mMultiviewPresenter->open();
-}
+//}
 
-void MainWindowPresenter::openMultiviewMatchingAssessment(const QString &session)
-{
+//void MainWindowPresenter::openMultiviewMatchingAssessment(const QString &session)
+//{
 //  initMultiviewMatchingAssessment();
 //  mMultiviewPresenter->setSession(session);
 //  mMultiviewPresenter->open();
-}
+//}
 
-void MainWindowPresenter::groundTruthEditor()
-{
-//  initGroundTruthEditor();
-//  mGroundTruthPresenter->open();
-}
-
-void MainWindowPresenter::openHomographyViewer()
-{
+//void MainWindowPresenter::openHomographyViewer()
+//{
 //  initHomographyViewer();
 //  mHomographyViewerPresenter->open();
-}
+//}
 
-void MainWindowPresenter::openRepeatability()
-{
-//  initRepeatability();
-//  mRepeatabilityPresenter->open();
-}
+//void MainWindowPresenter::openRepeatability()
+//{
+////  initRepeatability();
+////  mRepeatabilityPresenter->open();
+//}
 
-void MainWindowPresenter::openPRCurvesViewer()
-{
-//  initPRCurvesViewer();
-//  mCurvesPRViewerPresenter->open();
-}
+//void MainWindowPresenter::openPRCurvesViewer()
+//{
+////  initPRCurvesViewer();
+////  mCurvesPRViewerPresenter->open();
+//}
 
-void MainWindowPresenter::openROCCurvesViewer()
-{
-//  initROCCurvesViewer();
-//  mCurvesROCViewerPresenter->open();
-}
+//void MainWindowPresenter::openROCCurvesViewer()
+//{
+////  initROCCurvesViewer();
+////  mCurvesROCViewerPresenter->open();
+//}
 
-void MainWindowPresenter::openDETCurvesViewer()
-{
-//  initDETCurvesViewer();
-//  mCurvesDETViewerPresenter->open();
-}
+//void MainWindowPresenter::openDETCurvesViewer()
+//{
+////  initDETCurvesViewer();
+////  mCurvesDETViewerPresenter->open();
+//}
 
 void MainWindowPresenter::openQualityControlSettings()
 {
@@ -481,34 +434,25 @@ void MainWindowPresenter::loadImages()
   }
 }
 
-void MainWindowPresenter::newSession()
-{
-//  initNewSessionDialog();
+//void MainWindowPresenter::newSession()
+//{
+//  emit openNewSessionDialog();
+//}
 
-//  mNewSessionPresenter->open();
-  emit openNewSessionDialog();
-}
+//void MainWindowPresenter::openPreprocess()
+//{
+//  emit openPreprocessDialog();
+//}
 
-void MainWindowPresenter::openPreprocess()
-{
-//  initPreprocessDialog();
-//  mPreprocessPresenter->open();
-  emit openPreprocessDialog();
-}
+//void MainWindowPresenter::openFeatureExtraction()
+//{
+//  emit openFeatureExtractionDialog();
+//}
 
-void MainWindowPresenter::openFeatureExtraction()
-{
-//  initFeatureExtractionDialog();
-//  mFeatureExtractorPresenter->open();
-  emit openFeatureExtractionDialog();
-}
-
-void MainWindowPresenter::openFeatureMatching()
-{
-//  initFeatureMatching();
-//  mDescriptorMatcherPresenter->open();
-  emit openFeatureMatchingDialog();
-}
+//void MainWindowPresenter::openFeatureMatching()
+//{
+//  emit openFeatureMatchingDialog();
+//}
 
 //void MainWindowPresenter::openBatch()
 //{
@@ -527,11 +471,11 @@ void MainWindowPresenter::openOnlineHelp()
   QDesktopServices::openUrl(QUrl("https://elliestath.github.io/HelpTest/site/"));
 }
 
-void MainWindowPresenter::openAboutDialog()
-{
+//void MainWindowPresenter::openAboutDialog()
+//{
 //  initAboutDialog();
 //  mAboutDialog->show();
-}
+//}
 
 void MainWindowPresenter::loadProject()
 {
@@ -1175,18 +1119,6 @@ void MainWindowPresenter::groundTruthAdded()
 
 void MainWindowPresenter::processFinish()
 {
-//  if (mPreprocessPresenter){
-//    disconnect(mProgressDialog, SIGNAL(cancel()),     mPreprocessPresenter, SLOT(cancel()));
-//  }
-
-//  if (mFeatureExtractorPresenter){
-//    disconnect(mProgressDialog, SIGNAL(cancel()),     mFeatureExtractorPresenter, SLOT(cancel()));
-//  }
-
-//  if (mDescriptorMatcherPresenter){
-//    disconnect(mProgressDialog, SIGNAL(cancel()),     mDescriptorMatcherPresenter, SLOT(cancel()));
-//  }
-
   mView->setFlag(MainWindowView::Flag::processing, false);
 }
 
@@ -1203,8 +1135,8 @@ void MainWindowPresenter::onLoadImages()
 
 void MainWindowPresenter::help()
 {
-//  mHelpDialog->navigateHome();
-//  mHelpDialog->show();
+  mHelpDialog->navigateHome();
+  mHelpDialog->show();
 }
 
 void MainWindowPresenter::open()
@@ -1214,7 +1146,7 @@ void MainWindowPresenter::open()
 
 void MainWindowPresenter::setHelp(HelpDialog *help)
 {
-
+  mHelpDialog = help;
 }
 
 void MainWindowPresenter::init()
@@ -1232,29 +1164,6 @@ void MainWindowPresenter::init()
   mView->updateHistory(mSettingsModel->history());
   mStartPageWidget->setHistory(mSettingsModel->history());
 }
-
-//void MainWindowPresenter::initNewProjectDialog()
-//{
-//  if (mNewProjectPresenter == nullptr){
-//    INewProjectView *newProjectView = new NewProjectView(mView);
-//    mNewProjectPresenter = new NewProjectPresenter(newProjectView, mProjectModel);
-//    mNewProjectPresenter->setHelp(mHelpDialog);
-
-//    connect(mNewProjectPresenter, SIGNAL(projectCreate()), this, SLOT(loadProject()));
-//  }
-//}
-
-//void MainWindowPresenter::initNewSessionDialog()
-//{
-//  if (mNewSessionPresenter == nullptr){
-//    INewSessionView *newSessionView = new NewSessionView(mView);
-//    mNewSessionPresenter = new NewSessionPresenter(newSessionView, mProjectModel);
-//    mNewSessionPresenter->setHelp(mHelpDialog);
-
-//    connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(loadSession(QString)));
-//    connect(mNewSessionPresenter, SIGNAL(sessionCreate(QString)), this, SLOT(activeSession(QString)));
-//  }
-//}
 
 //void MainWindowPresenter::initExportFeaturesDialog()
 //{
@@ -1300,69 +1209,6 @@ void MainWindowPresenter::initStartPage()
 //  }
 //}
 
-//void MainWindowPresenter::initPreprocessDialog()
-//{
-//  if (mPreprocessPresenter == nullptr){
-//    mPreprocessModel = new PreprocessModel;
-//    IPreprocessView *preprocessView = new PreprocessView(mView);
-//    mPreprocessPresenter = new PreprocessPresenter(preprocessView, mPreprocessModel, mProjectModel, mSettingsModel);
-
-//    connect(mPreprocessPresenter, SIGNAL(running()),   this, SLOT(processRunning()));
-//    connect(mPreprocessPresenter, SIGNAL(running()),   this, SLOT(deletePreprocess()));
-//    connect(mPreprocessPresenter, SIGNAL(finished()),  this, SLOT(processFinish()));
-//    connect(mPreprocessPresenter, SIGNAL(imagePreprocessed(QString)),  this, SLOT(updatePreprocess()));
-
-//    initProgress();
-
-//    connect(mProgressDialog, SIGNAL(cancel()),     mPreprocessPresenter, SLOT(cancel()));
-
-//    mPreprocessPresenter->setProgressHandler(mProgressHandler);
-//    mPreprocessPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initFeatureExtractionDialog()
-//{
-//  if (mFeatureExtractorPresenter == nullptr){
-//    mFeatureExtractorModel = new FeatureExtractorModel;
-//    IFeatureExtractorView *featureExtractorView = new FeatureExtractorView(mView);
-//    mFeatureExtractorPresenter = new FeatureExtractorPresenter(featureExtractorView, mFeatureExtractorModel, mProjectModel, mSettingsModel);
-
-//    connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
-//    connect(mFeatureExtractorPresenter, SIGNAL(running()),  this, SLOT(deleteFeatures()));
-//    connect(mFeatureExtractorPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
-//    connect(mFeatureExtractorPresenter, SIGNAL(imagePreprocessed(QString)), this, SLOT(updatePreprocess()));
-//    connect(mFeatureExtractorPresenter, SIGNAL(featuresExtracted(QString)), this, SLOT(updateFeatures()));
-
-//    initProgress();
-
-//    connect(mProgressDialog, SIGNAL(cancel()),     mFeatureExtractorPresenter, SLOT(cancel()));
-
-//    mFeatureExtractorPresenter->setProgressHandler(mProgressHandler);
-//    mFeatureExtractorPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initFeatureMatching()
-//{
-//  if (mDescriptorMatcherPresenter == nullptr){
-//    mDescriptorMatcherModel = new DescriptorMatcherModel;
-//    IDescriptorMatcherView *descriptorMatcherView = new DescriptorMatcherView(mView);
-//    mDescriptorMatcherPresenter = new DescriptorMatcherPresenter(descriptorMatcherView, mDescriptorMatcherModel, mProjectModel, mSettingsModel);
-
-//    connect(mDescriptorMatcherPresenter, SIGNAL(running()),  this, SLOT(processRunning()));
-//    connect(mDescriptorMatcherPresenter, SIGNAL(running()),  this, SLOT(deleteMatches()));
-//    connect(mDescriptorMatcherPresenter, SIGNAL(finished()), this, SLOT(processFinish()));
-//    connect(mDescriptorMatcherPresenter, SIGNAL(matchCompute(QString)), this, SLOT(updateMatches()));
-
-//    initProgress();
-
-//    connect(mProgressDialog, SIGNAL(cancel()),     mDescriptorMatcherPresenter, SLOT(cancel()));
-
-//    mDescriptorMatcherPresenter->setProgressHandler(mProgressHandler);
-//    mDescriptorMatcherPresenter->setHelp(mHelpDialog);
-//  }
-//}
 
 //void MainWindowPresenter::initBatch()
 //{
@@ -1397,28 +1243,6 @@ void MainWindowPresenter::initStartPage()
 //  }
 //}
 
-//void MainWindowPresenter::initFeaturesViewer()
-//{
-//  if (mFeaturesViewerPresenter == nullptr) {
-//    mFeaturesViewerModel = new FeaturesViewerModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    IFeaturesViewerView *featuresViewerView = new FeaturesViewerView(mView, f);
-//    mFeaturesViewerPresenter = new FeaturesViewerPresenter(featuresViewerView, mFeaturesViewerModel, mSettingsModel);
-//    mFeaturesViewerPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initMatchesViewer()
-//{
-//  if (mMatchesViewerPresenter == nullptr) {
-//    mMatchesViewerModel = new MatchViewerModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    IMatchViewerView *matchViewerView = new MatchViewerView(mView, f);
-//    mMatchesViewerPresenter = new MatchViewerPresenter(matchViewerView, mMatchesViewerModel, mSettingsModel);
-//    mMatchesViewerPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
 //void MainWindowPresenter::initMultiviewMatchingAssessment()
 //{
 //  if (mMultiviewPresenter == nullptr){
@@ -1427,81 +1251,6 @@ void MainWindowPresenter::initStartPage()
 //    IMultiviewView *multiviewView = new MultiviewView(mView, f);
 //    mMultiviewPresenter = new MultiViewPresenter(multiviewView, mMultiviewModel);
 //    mMultiviewPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initGroundTruthEditor()
-//{
-//  if (mGroundTruthPresenter == nullptr){
-//    mGroundTruthModel = new GroundTruthModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    IGroundTruthView *groundTruthView = new GroundTruthView(mView, f);
-//    mGroundTruthPresenter = new GroundTruthPresenter(groundTruthView, mGroundTruthModel, mSettingsModel);
-//    mGroundTruthPresenter->setHelp(mHelpDialog);
-
-//    connect(mGroundTruthPresenter, SIGNAL(groundTruthAdded()), this, SLOT(groundTruthAdded()));
-//  }
-//}
-
-//void MainWindowPresenter::initHomographyViewer()
-//{
-//  if (mHomographyViewerPresenter == nullptr) {
-//    mHomographyViewerModel = new HomographyViewerModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    IHomographyViewerView *homographyViewerView = new HomographyViewerView(mView, f);
-//    mHomographyViewerPresenter = new HomographyViewerPresenter(homographyViewerView, mHomographyViewerModel, mSettingsModel);
-//    mHomographyViewerPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initRepeatability()
-//{
-//  if (mRepeatabilityPresenter == nullptr){
-//    mRepeatabilityModel = new RepeatabilityModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    IRepeatabilityView *repeatabilityView = new RepeatabilityView(mView, f);
-//    mRepeatabilityPresenter = new RepeatabilityPresenter(repeatabilityView, mRepeatabilityModel);
-//    mRepeatabilityPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initPRCurvesViewer()
-//{
-//  if (mCurvesPRViewerPresenter == nullptr) {
-//    mCurvesPRViewerModel = new PRCurvesViewerModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    CurvesViewerView *curvesViewerView = new PRCurvesViewer(mView, f);
-//    mCurvesPRViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesPRViewerModel);
-//    mCurvesPRViewerPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initROCCurvesViewer()
-//{
-//  if (mCurvesROCViewerPresenter == nullptr) {
-//    mCurvesROCViewerModel = new ROCCurvesViewerModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    CurvesViewerView *curvesViewerView = new ROCCurvesViewer(mView, f);
-//    mCurvesROCViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesROCViewerModel);
-//    mCurvesROCViewerPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initDETCurvesViewer()
-//{
-//  if (mCurvesDETViewerPresenter == nullptr) {
-//    mCurvesDETViewerModel = new DETCurvesViewerModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    CurvesViewerView *curvesViewerView = new DETCurvesViewer(mView, f);
-//    mCurvesDETViewerPresenter = new CurvesViewerPresenter(curvesViewerView, mCurvesDETViewerModel);
-//    mCurvesDETViewerPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initAboutDialog()
-//{
-//  if (mAboutDialog == nullptr) {
-//    mAboutDialog = new AboutDialog(mView);
 //  }
 //}
 

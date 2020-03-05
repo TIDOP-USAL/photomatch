@@ -39,17 +39,9 @@ WallisWidgetImp::WallisWidgetImp(QWidget *parent)
     mImposedLocalStdDev(new QSpinBox(this)),
     mKernelSize(new QSpinBox(this))
 {
-  init();
-
-  retranslate();
-
-  /// Signals and slots
-
-  connect(mContrast,            SIGNAL(valueChanged(double)),     this, SIGNAL(contrastChange(double)));
-  connect(mBrightness,          SIGNAL(valueChanged(double)),     this, SIGNAL(brightnessChange(double)));
-  connect(mImposedAverage,      SIGNAL(valueChanged(int)),        this, SIGNAL(imposedAverageChange(int)));
-  connect(mImposedLocalStdDev,  SIGNAL(valueChanged(int)),        this, SIGNAL(imposedLocalStdDevChange(int)));
-  connect(mKernelSize,          SIGNAL(valueChanged(int)),        this, SIGNAL(kernelSizeChange(int)));
+  this->initUI();
+  this->initSignalAndSlots();
+  this->retranslate();
 }
 
 WallisWidgetImp::~WallisWidgetImp()
@@ -136,7 +128,7 @@ void WallisWidgetImp::reset()
   mKernelSize->setValue(50);
 }
 
-void WallisWidgetImp::init()
+void WallisWidgetImp::initUI()
 {
   this->setWindowTitle("Wallis Filter");
 
@@ -169,9 +161,18 @@ void WallisWidgetImp::init()
 
   this->setLayout(layout);
 
-  reset(); /// set default values
+  reset();
 
   update();
+}
+
+void WallisWidgetImp::initSignalAndSlots()
+{
+  connect(mContrast,            SIGNAL(valueChanged(double)),     this, SIGNAL(contrastChange(double)));
+  connect(mBrightness,          SIGNAL(valueChanged(double)),     this, SIGNAL(brightnessChange(double)));
+  connect(mImposedAverage,      SIGNAL(valueChanged(int)),        this, SIGNAL(imposedAverageChange(int)));
+  connect(mImposedLocalStdDev,  SIGNAL(valueChanged(int)),        this, SIGNAL(imposedLocalStdDevChange(int)));
+  connect(mKernelSize,          SIGNAL(valueChanged(int)),        this, SIGNAL(kernelSizeChange(int)));
 }
 
 } // namespace photomatch

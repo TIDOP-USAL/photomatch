@@ -93,7 +93,8 @@ private slots:
 
 private:
 
-  virtual void init() override;
+  virtual void initUI() override;
+  void initSignalAndSlots() override;
 
 public slots:
 

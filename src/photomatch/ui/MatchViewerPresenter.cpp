@@ -61,6 +61,20 @@ MatchViewerPresenter::~MatchViewerPresenter()
 
 }
 
+void MatchViewerPresenter::openFromSession(const QString &session)
+{
+  this->setSession(session);
+  this->open();
+}
+
+void MatchViewerPresenter::openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight)
+{
+  this->setSession(session);
+  this->open();
+  this->setLeftImage(imageLeft);
+  this->setRightImage(imageRight);
+}
+
 void MatchViewerPresenter::setSession(const QString &session)
 {
   mModel->setSessionName(session);
@@ -83,11 +97,6 @@ void MatchViewerPresenter::setRightImage(const QString &image)
 {
   mView->setRightImage(image);
 }
-
-//void MatchViewerPresenter::openImageFromSession(const QString &session, const QString &image)
-//{
-//  open();
-//}
 
 void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
 {

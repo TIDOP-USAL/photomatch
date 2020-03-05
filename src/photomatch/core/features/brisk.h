@@ -42,18 +42,18 @@ public:
 
   BriskProperties();
   BriskProperties(const BriskProperties &briskProperties);
-  ~BriskProperties() override;
+  ~BriskProperties() override = default;
 
 // IBrisk interface
 
 public:
 
-  virtual int threshold() const override;
-  virtual int octaves() const override;
-  virtual double patternScale() const override;
-  virtual void setThreshold(int threshold) override;
-  virtual void setOctaves(int octaves) override;
-  virtual void setPatternScale(double patternScale) override;
+  int threshold() const override;
+  int octaves() const override;
+  double patternScale() const override;
+  void setThreshold(int threshold) override;
+  void setOctaves(int octaves) override;
+  void setPatternScale(double patternScale) override;
 
 // Feature interface
 
@@ -87,7 +87,7 @@ public:
                           int octaves,
                           double patternScale);
 
-  ~BriskDetectorDescriptor() override;
+  ~BriskDetectorDescriptor() override = default;
 
 protected:
 

@@ -43,16 +43,8 @@ AkazeWidgetImp::AkazeWidgetImp(QWidget *parent)
     mOctaveLayers(new QSpinBox(this)),
     mDiffusivity(new QComboBox(this))
 {
-  init();
-
-  /// Signals and slots
-  connect(mDescriptorType,     SIGNAL(currentTextChanged(QString)), this, SIGNAL(descriptorTypeChange(QString)));
-  connect(mDescriptorSize,     SIGNAL(valueChanged(int)),           this, SIGNAL(descriptorSizeChange(int)));
-  connect(mDescriptorChannels, SIGNAL(valueChanged(int)),           this, SIGNAL(descriptorChannelsChange(int)));
-  connect(mThreshold,          SIGNAL(valueChanged(double)),        this, SIGNAL(thresholdChange(double)));
-  connect(mOctaves,            SIGNAL(valueChanged(int)),           this, SIGNAL(octavesChange(int)));
-  connect(mOctaveLayers,       SIGNAL(valueChanged(int)),           this, SIGNAL(octaveLayersChange(int)));
-  connect(mDiffusivity,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(diffusivityChange(QString)));
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 AkazeWidgetImp::~AkazeWidgetImp()
@@ -166,7 +158,7 @@ void AkazeWidgetImp::reset()
   mDiffusivity->setCurrentText("DIFF_PM_G2");
 }
 
-void AkazeWidgetImp::init()
+void AkazeWidgetImp::initUI()
 {
   this->setWindowTitle("AKAZE");
 
@@ -220,6 +212,17 @@ void AkazeWidgetImp::init()
   reset();  /// set default values
 
   update();
+}
+
+void AkazeWidgetImp::initSignalAndSlots()
+{
+  connect(mDescriptorType,     SIGNAL(currentTextChanged(QString)), this, SIGNAL(descriptorTypeChange(QString)));
+  connect(mDescriptorSize,     SIGNAL(valueChanged(int)),           this, SIGNAL(descriptorSizeChange(int)));
+  connect(mDescriptorChannels, SIGNAL(valueChanged(int)),           this, SIGNAL(descriptorChannelsChange(int)));
+  connect(mThreshold,          SIGNAL(valueChanged(double)),        this, SIGNAL(thresholdChange(double)));
+  connect(mOctaves,            SIGNAL(valueChanged(int)),           this, SIGNAL(octavesChange(int)));
+  connect(mOctaveLayers,       SIGNAL(valueChanged(int)),           this, SIGNAL(octaveLayersChange(int)));
+  connect(mDiffusivity,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(diffusivityChange(QString)));
 }
 
 } // namespace photomatch

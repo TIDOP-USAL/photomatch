@@ -43,18 +43,18 @@ public:
 
   FastProperties();
   FastProperties(const FastProperties &fastProperties);
-  ~FastProperties() override;
+  ~FastProperties() override = default;
 
 // IFast interface
 
 public:
 
-  virtual int threshold() const override;
-  virtual bool nonmaxSuppression() const override;
-  virtual QString detectorType() const override;
-  virtual void setThreshold(int threshold) override;
-  virtual void setNonmaxSuppression(bool nonmaxSuppression) override;
-  virtual void setDetectorType(QString detectorType) override;
+  int threshold() const override;
+  bool nonmaxSuppression() const override;
+  QString detectorType() const override;
+  void setThreshold(int threshold) override;
+  void setNonmaxSuppression(bool nonmaxSuppression) override;
+  void setDetectorType(const QString &detectorType) override;
 
 // Feature interface
 
@@ -84,7 +84,7 @@ public:
   FastDetector();
   FastDetector(const FastDetector &fastDetector);
   FastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType);
-  ~FastDetector() override;
+  ~FastDetector() override = default;
 
 private:
 
@@ -108,7 +108,7 @@ public:
 
   void setThreshold(int threshold) override;
   void setNonmaxSuppression(bool nonmaxSuppression) override;
-  void setDetectorType(QString detectorType) override;
+  void setDetectorType(const QString &detectorType) override;
 
 // Feature interface
 
