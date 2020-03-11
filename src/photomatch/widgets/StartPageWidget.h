@@ -49,6 +49,12 @@ signals:
   void clearHistory();
   void openProjectFromHistory(QString);
 
+// QWidget interface
+
+protected:
+
+  void changeEvent(QEvent *event) override;
+
 protected:
 
   QLabel *mLabelPhotoMatch;

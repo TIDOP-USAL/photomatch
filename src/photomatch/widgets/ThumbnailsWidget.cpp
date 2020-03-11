@@ -35,6 +35,7 @@
 #include <QImage>
 #include <mutex>
 #include <QImageReader>
+#include <QApplication>
 
 static std::mutex sMutexThumbnail;
 
@@ -73,7 +74,6 @@ ThumbnailsWidget::ThumbnailsWidget(QWidget *parent)
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 void ThumbnailsWidget::setActiveImage(const QString &image)
@@ -277,7 +277,14 @@ void ThumbnailsWidget::update()
 
 void ThumbnailsWidget::retranslate()
 {
-
+  mThumbnailAction->setText(QApplication::translate("ThumbnailsWidget", "Thumbnails"));
+  mThumbnailAction->setStatusTip(QApplication::translate("ThumbnailsWidget", "Thumbnail"));
+  mThumbnailSmallAction->setText(QApplication::translate("ThumbnailsWidget", "Small Thumbnails"));
+  mThumbnailSmallAction->setStatusTip(QApplication::translate("ThumbnailsWidget", "Thumbnail small"));
+  mDetailsAction->setText(QApplication::translate("ThumbnailsWidget", "Details"));
+  mDetailsAction->setStatusTip(QApplication::translate("ThumbnailsWidget", "Details"));
+  mDeleteImageAction->setText(QApplication::translate("ThumbnailsWidget", "Delete image"));
+  mDeleteImageAction->setStatusTip(QApplication::translate("ThumbnailsWidget", "Delete image"));
 }
 
 void ThumbnailsWidget::reset()
@@ -297,27 +304,28 @@ void ThumbnailsWidget::initUI()
 
   QToolBar *toolBar = new QToolBar(this);
 
-  mThumbnailAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_medium_icons_48px.png"), tr("Thumbnails"), this);
-  mThumbnailAction->setStatusTip(tr("Thumbnail"));
+  mThumbnailAction = new QAction(this);
+
+  mThumbnailAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_medium_icons_48px.png"));
   mThumbnailAction->setCheckable(true);
   toolBar->addAction(mThumbnailAction);
 
-  mThumbnailSmallAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_small_icons_48px.png"), tr("Small Thumbnails"), this);
-  mThumbnailSmallAction->setStatusTip(tr("Thumbnail small"));
+  mThumbnailSmallAction = new QAction(this);
+  mThumbnailSmallAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_small_icons_48px.png"));
   mThumbnailSmallAction->setCheckable(true);
   toolBar->addAction(mThumbnailSmallAction);
 
   toolBar->addSeparator();
 
-  mDetailsAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_details_48px.png"), tr("Details"), this);
-  mDetailsAction->setStatusTip(tr("Details"));
+  mDetailsAction = new QAction(this);
+  mDetailsAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_details_48px.png"));
   mDetailsAction->setCheckable(true);
   toolBar->addAction(mDetailsAction);
 
   toolBar->addSeparator();
 
-  mDeleteImageAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_delete_sign_48px.png"), tr("Delete image"), this);
-  mDeleteImageAction->setStatusTip(tr("Delete image"));
+  mDeleteImageAction = new QAction(this);
+  mDeleteImageAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_delete_sign_48px.png"));
   toolBar->addAction(mDeleteImageAction);
 
   onThumbnailToggled(true);
@@ -330,7 +338,9 @@ void ThumbnailsWidget::initUI()
 
   mFutureWatcherThumbnail = new QFutureWatcher<QImage>(this);
 
-  update();
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
 }
 
 void ThumbnailsWidget::initSignalAndSlots()
@@ -343,6 +353,18 @@ void ThumbnailsWidget::initSignalAndSlots()
   connect(mDeleteImageAction,      SIGNAL(triggered(bool)),                     this, SLOT(onDeleteImageClicked()));
   connect(mFutureWatcherThumbnail, SIGNAL(resultReadyAt(int)),                  this, SLOT(showThumbnail(int)));
   connect(mFutureWatcherThumbnail, SIGNAL(finished()),                          this, SLOT(finished()));
+}
+
+void ThumbnailsWidget::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

@@ -28,18 +28,23 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 LceBsescsWidgetImp::LceBsescsWidgetImp(QWidget *parent)
   : LceBsescsWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mGroupBoxBlocksize(new QGroupBox(this)),
+    mLabelBlockSizeX(new QLabel(this)),
     mBlockSizeX(new QSpinBox(this)),
+    mLabelBlockSizeY(new QLabel(this)),
     mBlockSizeY(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 LceBsescsWidgetImp::~LceBsescsWidgetImp()
@@ -77,10 +82,19 @@ void LceBsescsWidgetImp::update()
 
 void LceBsescsWidgetImp::retranslate()
 {
-#ifndef QT_NO_WHATSTHIS
-  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-#endif // QT_NO_WHATSTHIS
+  mGroupBox->setTitle(QApplication::translate("LceBsescsWidgetImp", "LCE-BSESCS Parameters"));
+  mLabelDescription->setText(QApplication::translate("LceBsescsWidgetImp", "Local Contrast Enhancement Utilizing "
+                                                                           "Bidirectional Switching Equalization of "
+                                                                           "Separated and Clipped Subhistograms"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("LceBsescsWidgetImp", "Block Size"));
+  mLabelBlockSizeX->setText(QApplication::translate("LceBsescsWidgetImp", "Width:"));
+  mLabelBlockSizeY->setText(QApplication::translate("LceBsescsWidgetImp", "Height:"));
+
+
+//#ifndef QT_NO_WHATSTHIS
+//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+//#endif // QT_NO_WHATSTHIS
 }
 
 void LceBsescsWidgetImp::reset()
@@ -100,43 +114,50 @@ void LceBsescsWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("LCE-BSESCS Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
 
-  QLabel *lbl = new QLabel(tr("Local Contrast Enhancement Utilizing "
-                           "Bidirectional Switching Equalization of "
-                           "Separated and Clipped Subhistograms"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
+  propertiesLayout->addWidget(mGroupBoxBlocksize, 1, 0);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
-  groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
+  mGroupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeX, 0, 0);
   mBlockSizeX->setRange(0, 100);
   propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")), 1, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeY, 1, 0);
   mBlockSizeY->setRange(0, 100);
   propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1);
 
-
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void LceBsescsWidgetImp::initSignalAndSlots()
 {
   connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+}
+
+void LceBsescsWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

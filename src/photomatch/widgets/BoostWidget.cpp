@@ -30,12 +30,15 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QDoubleSpinBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 BoostWidgetImp::BoostWidgetImp(QWidget *parent)
   : BoostWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescriptorType(new QLabel(this)),
     mDescriptorType(new QComboBox(this)),
     mUseOrientation(new QCheckBox(this)),
     mScaleFactor(new QDoubleSpinBox(this))
@@ -87,6 +90,9 @@ void BoostWidgetImp::update()
 
 void BoostWidgetImp::retranslate()
 {
+  mGroupBox->setTitle(QApplication::translate("BoostWidgetImp", "BOOST Parameters", nullptr));
+  mLabelDescriptorType->setText(QApplication::translate("BoostWidgetImp", "Descriptor Type:", nullptr));
+  mUseOrientation->setText(QApplication::translate("BoostWidgetImp", "Use Keypoints Orientation"));
 
 }
 
@@ -108,13 +114,12 @@ void BoostWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("BOOST Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Descriptor Type:")), 0, 0);
+  propertiesLayout->addWidget(mLabelDescriptorType, 0, 0);
   mDescriptorType->addItem("BGM");
   mDescriptorType->addItem("BGM_HARD");
   mDescriptorType->addItem("BGM_BILINEAR");
@@ -124,16 +129,15 @@ void BoostWidgetImp::initUI()
   mDescriptorType->addItem("BINBOOST_256");
   propertiesLayout->addWidget(mDescriptorType, 0, 1);
 
-  mUseOrientation->setText(tr("Use Keypoints Orientation"));
   propertiesLayout->addWidget(mUseOrientation, 1, 0);
 
   //propertiesLayout->addWidget(new QLabel(tr("Scale Factor:")), 2, 0);
   propertiesLayout->addWidget(mScaleFactor, 2, 1);
   mScaleFactor->setVisible(false); ///Se desactiva y se modifica internamente según el detector usado
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset();
+  this->update();
 }
 
 void BoostWidgetImp::initSignalAndSlots()
@@ -143,6 +147,19 @@ void BoostWidgetImp::initSignalAndSlots()
   connect(mScaleFactor,       SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
 }
 
+void BoostWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
+
 } // namespace photomatch
+
 
 

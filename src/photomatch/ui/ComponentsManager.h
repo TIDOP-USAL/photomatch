@@ -42,8 +42,8 @@ class IFeaturesViewerPresenter;
 class IMatchViewerPresenter;
 class IMatchViewerModel;
 
-class IMultiViewModel;
-class IMultiViewPresenter;
+class IMultiViewMatchingAssessmentModel;
+class IMultiViewMatchingAssessmentPresenter;
 
 class IGroundTruthModel;
 class IGroundTruthPresenter;
@@ -109,8 +109,8 @@ public:
   IMatchViewerPresenter *matchesViewerPresenter();
   IMatchViewerModel *matchesViewerModel();
 
-  IMultiViewModel *multiviewModel();
-  IMultiViewPresenter *multiviewPresenter();
+  IMultiViewMatchingAssessmentModel *multiviewMatchingAssessmentModel();
+  IMultiViewMatchingAssessmentPresenter *multiviewMatchingAssessmentPresenter();
 
   IGroundTruthPresenter *groundTruthPresenter();
   IGroundTruthModel *groundTruthModel();
@@ -158,6 +158,12 @@ protected slots:
   void initAndOpenROCCurvesViewerDialog();
   void initAndOpenDETCurvesViewerDialog();
   void initAndOpenAboutDialog();
+  void initAndOpenSettingsDialog();
+  void initAndOpenViewSettingsDialog();
+  void initAndOpenQualityControlDialog();
+  void initAndOpenToolSettingsDialog();
+  void initSettingsDialog();
+  void initAndOpenMultiviewMatchingAssessmentDialog();
 
 protected:
 
@@ -196,8 +202,8 @@ protected:
   IMatchViewerPresenter *mMatchesViewerPresenter;
   IMatchViewerModel *mMatchesViewerModel;
 
-  IMultiViewModel *mMultiviewModel;
-  IMultiViewPresenter *mMultiviewPresenter;
+  IMultiViewMatchingAssessmentModel *mMultiviewMatchingAssessmentModel;
+  IMultiViewMatchingAssessmentPresenter *mMultiviewMatchingAssessmentPresenter;
 
   IGroundTruthPresenter *mGroundTruthPresenter;
   IGroundTruthModel *mGroundTruthModel;

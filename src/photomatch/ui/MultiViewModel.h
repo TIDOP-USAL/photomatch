@@ -34,7 +34,7 @@ namespace photomatch
 
 class IProjectModel;
 
-class IMultiViewModel
+class IMultiViewMatchingAssessmentModel
   : public IModel
 {
 
@@ -42,8 +42,8 @@ class IMultiViewModel
 
 public:
 
-  IMultiViewModel(){}
-  virtual ~IMultiViewModel() override {}
+  IMultiViewMatchingAssessmentModel(){}
+  virtual ~IMultiViewMatchingAssessmentModel() override {}
 
   virtual QString sessionName() const = 0;
   virtual void setSessionName(const QString &session) = 0;
@@ -55,16 +55,16 @@ public:
 
 
 
-class MultiviewModel
-  : public IMultiViewModel
+class MultiviewMatchingAssessmentModel
+  : public IMultiViewMatchingAssessmentModel
 {
 
   Q_OBJECT
 
 public:
 
-  MultiviewModel(IProjectModel *mProjectModel);
-  ~MultiviewModel() override;
+  explicit MultiviewMatchingAssessmentModel(IProjectModel *mProjectModel);
+  ~MultiviewMatchingAssessmentModel() override;
 
 // IMatchViewerModel interface
 

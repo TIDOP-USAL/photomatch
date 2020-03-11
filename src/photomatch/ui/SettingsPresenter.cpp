@@ -558,9 +558,27 @@ SettingsPresenter::~SettingsPresenter()
   }
 }
 
-void SettingsPresenter::openPage(int page)
+//void SettingsPresenter::openPage(int page)
+//{
+//  mView->setPage(page);
+//  this->open();
+//}
+
+void SettingsPresenter::openViewSettings()
 {
-  mView->setPage(page);
+  mView->setPage(1);
+  this->open();
+}
+
+void SettingsPresenter::openQualityControlSettings()
+{
+  mView->setPage(3);
+  this->open();
+}
+
+void SettingsPresenter::openToolSettings()
+{
+  mView->setPage(2);
   this->open();
 }
 

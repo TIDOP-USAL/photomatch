@@ -27,6 +27,8 @@
 
 #include "photomatch/widgets/PhotoMatchWidget.h"
 
+class QGroupBox;
+class QLabel;
 class QSpinBox;
 class QDoubleSpinBox;
 class QComboBox;
@@ -162,6 +164,7 @@ public slots:
 
 };
 
+
 class PHOTOMATCH_EXPORT DaisyWidgetImp
   : public DaisyWidget
 {
@@ -210,16 +213,27 @@ private:
   void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
 protected:
 
+  void changeEvent(QEvent *event) override;
+
+protected:
+
+  QGroupBox *mGroupBox;
+  QLabel *mLabelRadius;
   QDoubleSpinBox *mRadius;
+  QLabel *mLabelQRadius;
   QSpinBox *mQRadius;
+  QLabel *mLabelQTheta;
   QSpinBox *mQTheta;
+  QLabel *mLabelQHist;
   QSpinBox *mQHist;
+  QLabel *mLabelNorm;
   QComboBox *mNorm;
   QCheckBox *mInterpolation;
   QCheckBox *mUseOrientation;
-
 };
 
 } // namespace photomatch

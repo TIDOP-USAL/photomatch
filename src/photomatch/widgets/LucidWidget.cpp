@@ -29,18 +29,21 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 LucidWidgetImp::LucidWidgetImp(QWidget *parent)
   : LucidWidget (parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelLucidKernel(new QLabel(this)),
     mLucidKernel(new QSpinBox(this)),
+    mLabelBlurKernel(new QLabel(this)),
     mBlurKernel(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 LucidWidgetImp::~LucidWidgetImp()
@@ -76,7 +79,9 @@ void LucidWidgetImp::update()
 
 void LucidWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("LucidWidgetImp", "LUCID Parameters"));
+  mLabelLucidKernel->setText(QApplication::translate("LucidWidgetImp", "Lucid Kernel:"));
+  mLabelBlurKernel->setText(QApplication::translate("LucidWidgetImp", "Blur Kernel:"));
 }
 
 void LucidWidgetImp::reset()
@@ -96,28 +101,40 @@ void LucidWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("LUCID Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Lucid Kernel:")), 0, 0);
+  propertiesLayout->addWidget(mLabelLucidKernel, 0, 0);
   mLucidKernel->setRange(0, 100);
   propertiesLayout->addWidget(mLucidKernel, 0, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Blur Kernel:")), 1, 0);
+  propertiesLayout->addWidget(mLabelBlurKernel, 1, 0);
   mBlurKernel->setRange(0, 100);
   propertiesLayout->addWidget(mBlurKernel, 1, 1);
 
-  reset();
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void LucidWidgetImp::initSignalAndSlots()
 {
   connect(mLucidKernel,  SIGNAL(valueChanged(int)),  this, SIGNAL(lucidKernelChange(int)));
   connect(mBlurKernel,   SIGNAL(valueChanged(int)),  this, SIGNAL(blurKernelChange(int)));
+}
+
+void LucidWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

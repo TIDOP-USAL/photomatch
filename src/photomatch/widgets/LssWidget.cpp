@@ -38,7 +38,6 @@ LssWidgetImp::LssWidgetImp(QWidget *parent)
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 LssWidgetImp::~LssWidgetImp()
@@ -62,9 +61,6 @@ void LssWidgetImp::reset()
 void LssWidgetImp::initUI()
 {
   this->setWindowTitle("LSS");
-
-  reset();
-  update();
 }
 
 void LssWidgetImp::initSignalAndSlots()

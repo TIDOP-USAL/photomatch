@@ -29,6 +29,8 @@
 
 #include <QWidget>
 
+class QGroupBox;
+class QLabel;
 class QSpinBox;
 class QDoubleSpinBox;
 class QComboBox;
@@ -172,17 +174,34 @@ private:
   void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
 protected:
 
+  void changeEvent(QEvent *event) override;
+
+protected:
+
+  QGroupBox *mGroupBox;
+  QLabel *mLabelWinSizeHeight;
   QSpinBox *mWinSizeHeight;
+  QLabel *mLabelWinSizeWidth;
   QSpinBox *mWinSizeWidth;
+  QLabel *mLabelBlockSizeX;
   QSpinBox *mBlockSizeX;
+  QLabel *mLabelBlockSizeY;
   QSpinBox *mBlockSizeY;
+  QLabel *mLabelBlockStrideX;
   QSpinBox *mBlockStrideX;
+  QLabel *mLabelBlockStrideY;
   QSpinBox *mBlockStrideY;
+  QLabel *mLabelCellSizeX;
   QSpinBox *mCellSizeX;
+  QLabel *mLabelCellSizeY;
   QSpinBox *mCellSizeY;
+  QLabel *mLabelNbins;
   QSpinBox *mNbins;
+  QLabel *mLabelDerivAperture;
   QSpinBox *mDerivAperture;
 //  QDoubleSpinBox *mWinSigma;
 //  QComboBox *mHistogramNormType;

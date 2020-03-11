@@ -30,17 +30,24 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 GfttWidgetImp::GfttWidgetImp(QWidget *parent)
   : GfttWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelMaxFeatures(new QLabel(this)),
     mMaxFeatures(new QSpinBox(this)),
+    mLabelQualityLevel(new QLabel(this)),
     mQualityLevel(new QDoubleSpinBox(this)),
+    mLabelMinDistance(new QLabel(this)),
     mMinDistance(new QDoubleSpinBox(this)),
+    mLabelBlockSize(new QLabel(this)),
     mBlockSize(new QSpinBox(this)),
     mHarrisDetector(new QCheckBox(this)),
+    mLabelK(new QLabel(this)),
     mK(new QDoubleSpinBox(this))
 {
   this->initUI();
@@ -123,7 +130,13 @@ void GfttWidgetImp::update()
 
 void GfttWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("GfttWidgetImp", "GFTT Parameters"));
+  mLabelMaxFeatures->setText(QApplication::translate("GfttWidgetImp", "Max Features:"));
+  mLabelQualityLevel->setText(QApplication::translate("GfttWidgetImp", "Quality Level:"));
+  mLabelMinDistance->setText(QApplication::translate("GfttWidgetImp", "Min Distance:"));
+  mLabelBlockSize->setText(QApplication::translate("GfttWidgetImp", "Block Size:"));
+  mHarrisDetector->setText(QApplication::translate("GfttWidgetImp", "Harris Detector"));
+  mLabelK->setText(QApplication::translate("GfttWidgetImp", "K:"));
 }
 
 void GfttWidgetImp::reset()
@@ -150,40 +163,39 @@ void GfttWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("GFTT Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Max Features:")), 0, 0);
+  propertiesLayout->addWidget(mLabelMaxFeatures, 0, 0);
   mMaxFeatures->setRange(0, 1000000);
   propertiesLayout->addWidget(mMaxFeatures, 0, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Quality Level:")), 1, 0);
+  propertiesLayout->addWidget(mLabelQualityLevel, 1, 0);
   mQualityLevel->setRange(0., 100.);
   mQualityLevel->setSingleStep(0.01);
   propertiesLayout->addWidget(mQualityLevel, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Min Distance:")), 2, 0);
+  propertiesLayout->addWidget(mLabelMinDistance, 2, 0);
   mMinDistance->setRange(0., 10000.);
   propertiesLayout->addWidget(mMinDistance, 2, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Block Size:")), 3, 0);
+  propertiesLayout->addWidget(mLabelBlockSize, 3, 0);
   mBlockSize->setRange(0, 100);
   propertiesLayout->addWidget(mBlockSize, 3, 1);
 
-  mHarrisDetector->setText(tr("Harris Detector"));
+
   propertiesLayout->addWidget(mHarrisDetector, 4, 0);
 
-  propertiesLayout->addWidget(new QLabel(tr("K:")), 5, 0);
+  propertiesLayout->addWidget(mLabelK, 5, 0);
   mK->setRange(0., 100.);
   mK->setSingleStep(0.01);
   propertiesLayout->addWidget(mK, 5, 1);
 
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void GfttWidgetImp::initSignalAndSlots()
@@ -194,6 +206,18 @@ void GfttWidgetImp::initSignalAndSlots()
   connect(mBlockSize,         SIGNAL(valueChanged(int)),      this, SIGNAL(blockSizeChange(int)));
   connect(mHarrisDetector,    SIGNAL(clicked(bool)),          this, SIGNAL(harrisDetectorChange(bool)));
   connect(mK,                 SIGNAL(valueChanged(double)),   this, SIGNAL(kChange(double)));
+}
+
+void GfttWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 

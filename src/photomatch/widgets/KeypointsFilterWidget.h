@@ -27,6 +27,8 @@
 
 #include "photomatch/widgets/PhotoMatchWidget.h"
 
+class QGroupBox;
+class QLabel;
 class QSpinBox;
 class QDoubleSpinBox;
 class QCheckBox;
@@ -116,12 +118,22 @@ private:
   void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
 protected:
 
+  void changeEvent(QEvent *event) override;
+
+protected:
+
+  QGroupBox *mGroupBox;
   QCheckBox *mCheckBoxPointsNumber;
+
   QSpinBox *mPointsNumber;
   QCheckBox *mCheckBoxSize;
+  QLabel *mLabelMinSize;
   QDoubleSpinBox *mMinSize;
+  QLabel *mLabelMaxSize;
   QDoubleSpinBox *mMaxSize;
   QCheckBox *mCheckBoxRemoveDuplicated;
   bool bActiveFilterBest;

@@ -28,19 +28,25 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 ClaheWidgetImp::ClaheWidgetImp(QWidget *parent)
   : ClaheWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mLabelClipLimit(new QLabel(this)),
     mClipLimit(new QDoubleSpinBox(this)),
+    mGroupBoxBlockSize(new QGroupBox(mGroupBox)),
+    mLabelTilesGridX(new QLabel(this)),
     mTilesGridX(new QSpinBox(this)),
+    mLabelTilesGridY(new QLabel(this)),
     mTilesGridY(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 ClaheWidgetImp::~ClaheWidgetImp()
@@ -89,11 +95,17 @@ void ClaheWidgetImp::update()
 
 void ClaheWidgetImp::retranslate()
 {
-#ifndef QT_NO_WHATSTHIS
-  mClipLimit->setWhatsThis(tr("<html><head/><body><p>Threshold value for contrast limiting.</p></body></html>"));
-  mTilesGridX->setWhatsThis(tr("<html><head/><body><p>Width of grid for histogram equalization.</p></p></body></html>"));
-  mTilesGridY->setWhatsThis(tr("<html><head/><body><p>Height of grid for histogram equalization.</p></p></body></html>"));
-#endif // QT_NO_WHATSTHIS
+  mGroupBox->setTitle(QApplication::translate("ClaheWidgetImp", "CLAHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("ClaheWidgetImp", "Contrast Limited Adaptive Histogram Equalization", nullptr));
+  mLabelClipLimit->setText(QApplication::translate("ClaheWidgetImp", "Clip Limit:"));
+  mGroupBoxBlockSize->setTitle(QApplication::translate("ClaheWidgetImp", "Block Size"));
+  mLabelTilesGridX->setText(QApplication::translate("ClaheWidgetImp", "Width:"));
+  mLabelTilesGridY->setText(QApplication::translate("ClaheWidgetImp", "Height:"));
+//#ifndef QT_NO_WHATSTHIS
+//  mClipLimit->setWhatsThis(tr("<html><head/><body><p>Threshold value for contrast limiting.</p></body></html>"));
+//  mTilesGridX->setWhatsThis(tr("<html><head/><body><p>Width of grid for histogram equalization.</p></p></body></html>"));
+//  mTilesGridY->setWhatsThis(tr("<html><head/><body><p>Height of grid for histogram equalization.</p></p></body></html>"));
+//#endif // QT_NO_WHATSTHIS
 }
 
 void ClaheWidgetImp::reset()
@@ -115,43 +127,40 @@ void ClaheWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("CLAHE Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  QLabel *lbl = new QLabel(tr("Contrast Limited Adaptive Histogram Equalization"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
   font.setWeight(75);
-  lbl->setFont(font);
-  lbl->setWordWrap(true);
-  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
+  mLabelDescription->setFont(font);
+  mLabelDescription->setWordWrap(true);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("Clip Limit:")), 1, 0, 1, 1);
+  propertiesLayout->addWidget(mLabelClipLimit, 1, 0, 1, 1);
   mClipLimit->setRange(0., 100.);
   propertiesLayout->addWidget(mClipLimit, 1, 1, 1, 1);
 
-  QGroupBox *groupBoxTiles = new QGroupBox(tr("Block Size"), mGroupBox);
-  QGridLayout *gridLayoutTiles = new QGridLayout(groupBoxTiles);
+  QGridLayout *gridLayoutTiles = new QGridLayout(mGroupBoxBlockSize);
   gridLayoutTiles->setSpacing(6);
   gridLayoutTiles->setContentsMargins(11, 11, 11, 11);
 
-  gridLayoutTiles->addWidget(new QLabel(tr("Width:")), 0, 0, 1, 1);
+  gridLayoutTiles->addWidget(mLabelTilesGridX, 0, 0, 1, 1);
   mTilesGridX->setRange(0, 100);
   gridLayoutTiles->addWidget(mTilesGridX, 0, 1, 1, 1);
 
-  gridLayoutTiles->addWidget(new QLabel(tr("Height:")), 1, 0, 1, 1);
+  gridLayoutTiles->addWidget(mLabelTilesGridY, 1, 0, 1, 1);
   mTilesGridY->setRange(0, 100);
   gridLayoutTiles->addWidget(mTilesGridY, 1, 1, 1, 1);
 
-  propertiesLayout->addWidget(groupBoxTiles, 2, 0, 1, 2);
+  propertiesLayout->addWidget(mGroupBoxBlockSize, 2, 0, 1, 2);
 
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset();  /// set default values
+  this->update();
 }
 
 void ClaheWidgetImp::initSignalAndSlots()
@@ -161,4 +170,18 @@ void ClaheWidgetImp::initSignalAndSlots()
   connect(mTilesGridY,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridYChange(int)));
 }
 
+void ClaheWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
+
 } // namespace photomatch
+
+

@@ -32,29 +32,29 @@
 namespace photomatch
 {
 
-MultiviewModel::MultiviewModel(IProjectModel *mProjectModel)
-  : IMultiViewModel(),
+MultiviewMatchingAssessmentModel::MultiviewMatchingAssessmentModel(IProjectModel *mProjectModel)
+  : IMultiViewMatchingAssessmentModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-MultiviewModel::~MultiviewModel()
+MultiviewMatchingAssessmentModel::~MultiviewMatchingAssessmentModel()
 {
 
 }
 
-QString MultiviewModel::sessionName() const
+QString MultiviewMatchingAssessmentModel::sessionName() const
 {
   return mSession;
 }
 
-void MultiviewModel::setSessionName(const QString &session)
+void MultiviewMatchingAssessmentModel::setSessionName(const QString &session)
 {
   mSession = session;
 }
 
-void MultiviewModel::loadPassPoints()
+void MultiviewMatchingAssessmentModel::loadPassPoints()
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
     passPointsRead(session->passPoints(), mPassPoints);
@@ -63,7 +63,7 @@ void MultiviewModel::loadPassPoints()
   }
 }
 
-std::vector<size_t> MultiviewModel::passPointIds() const
+std::vector<size_t> MultiviewMatchingAssessmentModel::passPointIds() const
 {
   std::vector<size_t> ids;
 
@@ -75,7 +75,7 @@ std::vector<size_t> MultiviewModel::passPointIds() const
   return ids;
 }
 
-std::vector<std::pair<size_t, size_t> > MultiviewModel::passPointIdsAndSize() const
+std::vector<std::pair<size_t, size_t> > MultiviewMatchingAssessmentModel::passPointIdsAndSize() const
 {
   std::vector<std::pair<size_t, size_t>> ids;
 
@@ -87,7 +87,7 @@ std::vector<std::pair<size_t, size_t> > MultiviewModel::passPointIdsAndSize() co
   return ids;
 }
 
-std::vector<std::pair<QString, QPointF>> MultiviewModel::images(size_t passPointId) const
+std::vector<std::pair<QString, QPointF>> MultiviewMatchingAssessmentModel::images(size_t passPointId) const
 {
   std::vector<std::pair<QString, QPointF>> images;
 
@@ -118,7 +118,7 @@ std::vector<std::pair<QString, QPointF>> MultiviewModel::images(size_t passPoint
   return images;
 }
 
-void MultiviewModel::init()
+void MultiviewMatchingAssessmentModel::init()
 {
   if (mProjectModel->currentSession())
     mSession = mProjectModel->currentSession()->name();

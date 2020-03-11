@@ -27,6 +27,8 @@
 
 #include "photomatch/widgets/PhotoMatchWidget.h"
 
+class QGroupBox;
+class QLabel;
 class QCheckBox;
 class QComboBox;
 
@@ -123,9 +125,17 @@ private:
   void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
 protected:
 
-  QComboBox *mBytes;
+  void changeEvent(QEvent *event) override;
+
+protected:
+
+  QGroupBox *mGroupBox;
+  QLabel *mLabelDescriptorBytes;
+  QComboBox *mDescriptorBytes;
   QCheckBox *mUseOrientation;
 
 };

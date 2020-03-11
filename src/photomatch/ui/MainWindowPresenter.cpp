@@ -41,12 +41,8 @@
 /* Qt */
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QImageReader>
-#include <QProgressBar>
-#include <QMenu>
 #include <QDesktopServices>
 #include <QUrl>
-#include <QPainter>
 
 namespace photomatch
 {
@@ -81,8 +77,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
   /* Menú View */
 
   connect(mView,   &MainWindowView::openStartPage,        this, &MainWindowPresenter::openStartPage);
-  connect(mView,   SIGNAL(openSettings()),            this, SLOT(openSettings()));
-  connect(mView,   SIGNAL(openViewSettings()),        this, SLOT(openViewSettings()));
+  connect(mView,   &MainWindowView::openSettings,         this, &MainWindowPresenter::openSettingsDialog);
+  connect(mView,   &MainWindowView::openViewSettings,     this, &MainWindowPresenter::openViewSettingsDialog);
 
   /* Quality Control */
 
@@ -94,8 +90,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
   connect(mView,  &MainWindowView::prCurves,                 this, &MainWindowPresenter::openPRCurvesViewerDialog);
   connect(mView,  &MainWindowView::rocCurves,                this, &MainWindowPresenter::openROCCurvesViewerDialog);
   connect(mView,  &MainWindowView::detCurves,                this, &MainWindowPresenter::openDETCurvesViewerDialog);
-  connect(mView,  SIGNAL(openQualityControlSettings()),
-          this,   SLOT(openQualityControlSettings()));
+  connect(mView,  &MainWindowView::openQualityControlSettings, this, &MainWindowPresenter::openQualityControlSettingsDialog);
 
   /* Menú herramientas */
 
@@ -104,13 +99,12 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
   connect(mView,   &MainWindowView::openPreprocess,        this, &MainWindowPresenter::openPreprocessDialog);
   connect(mView,   &MainWindowView::openFeatureExtraction, this, &MainWindowPresenter::openFeatureExtractionDialog);
   connect(mView,   &MainWindowView::openFeatureMatching,   this, &MainWindowPresenter::openFeatureMatchingDialog);
-  //connect(mView,   SIGNAL(openBatch()),               this, SLOT(openBatch()));
-  connect(mView,   &MainWindowView::openToolSettings,      this, &MainWindowPresenter::openToolSettings);
+  connect(mView,   &MainWindowView::openToolSettings,      this, &MainWindowPresenter::openToolSettingsDialog);
 
   /* Menú Ayuda */
 
-  connect(mView, SIGNAL(openHelpDialog()),            this, SLOT(help()));
-  connect(mView, SIGNAL(openOnlineHelp()),            this, SLOT(openOnlineHelp()));
+  connect(mView, &MainWindowView::openHelpDialog,     this, &MainWindowPresenter::help);
+  connect(mView, &MainWindowView::openOnlineHelp,     this, &MainWindowPresenter::openOnlineHelp);
   connect(mView, &MainWindowView::openAboutDialog,    this, &MainWindowPresenter::openAboutDialog);
 
   /* Panel de vistas en miniatura */
@@ -128,16 +122,14 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
   connect(mView, SIGNAL(selectImageFeatures(QString)),   this, SLOT(selectImageFeatures(QString)));
 
   /* Visor de imagenes */
-  connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
 
-  //connect(mProjectModel, SIGNAL(projectModified()), this, SLOT(updateProject()));
+  connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
 
   connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
   connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
 
   connect(mView, SIGNAL(openKeypointsViewer(QString, QString)),         this, SIGNAL(openKeypointsViewerDialogFromSessionAndImage(QString, QString)));
   connect(mView, SIGNAL(openMatchesViewer(QString, QString, QString)),  this, SIGNAL(openMatchesViewerDialogFromSessionAndImages(QString, QString, QString)));
-  //connect(mView, SIGNAL(openMultiView(QString)),                        this, SLOT(openMultiviewMatchingAssessment(QString)));
 
 }
 
@@ -334,21 +326,9 @@ void MainWindowPresenter::openStartPage()
   }
 }
 
-void MainWindowPresenter::openSettings()
-{
-//  initSettingsDialog();
-//  mSettingsPresenter->open();
-}
-
 void MainWindowPresenter::openGitHub()
 {
   QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
-}
-
-void MainWindowPresenter::openViewSettings()
-{
-//  initSettingsDialog();
-  //  mSettingsPresenter->openPage(1);
 }
 
 void MainWindowPresenter::openKeypointsViewer()
@@ -359,57 +339,6 @@ void MainWindowPresenter::openKeypointsViewer()
 void MainWindowPresenter::openMatchesViewer()
 {
   emit openMatchesViewerDialogFromSession(mProjectModel->currentSession()->name());
-}
-
-
-//void MainWindowPresenter::openMultiviewMatchingAssessment()
-//{
-//  initMultiviewMatchingAssessment();
-//  mMultiviewPresenter->setSession(mProjectModel->currentSession()->name());
-//  mMultiviewPresenter->open();
-//}
-
-//void MainWindowPresenter::openMultiviewMatchingAssessment(const QString &session)
-//{
-//  initMultiviewMatchingAssessment();
-//  mMultiviewPresenter->setSession(session);
-//  mMultiviewPresenter->open();
-//}
-
-//void MainWindowPresenter::openHomographyViewer()
-//{
-//  initHomographyViewer();
-//  mHomographyViewerPresenter->open();
-//}
-
-//void MainWindowPresenter::openRepeatability()
-//{
-////  initRepeatability();
-////  mRepeatabilityPresenter->open();
-//}
-
-//void MainWindowPresenter::openPRCurvesViewer()
-//{
-////  initPRCurvesViewer();
-////  mCurvesPRViewerPresenter->open();
-//}
-
-//void MainWindowPresenter::openROCCurvesViewer()
-//{
-////  initROCCurvesViewer();
-////  mCurvesROCViewerPresenter->open();
-//}
-
-//void MainWindowPresenter::openDETCurvesViewer()
-//{
-////  initDETCurvesViewer();
-////  mCurvesDETViewerPresenter->open();
-//}
-
-void MainWindowPresenter::openQualityControlSettings()
-{
-//  initSettingsDialog();
-//  mSettingsPresenter->openPage(3);
 }
 
 void MainWindowPresenter::loadImages()
@@ -434,48 +363,10 @@ void MainWindowPresenter::loadImages()
   }
 }
 
-//void MainWindowPresenter::newSession()
-//{
-//  emit openNewSessionDialog();
-//}
-
-//void MainWindowPresenter::openPreprocess()
-//{
-//  emit openPreprocessDialog();
-//}
-
-//void MainWindowPresenter::openFeatureExtraction()
-//{
-//  emit openFeatureExtractionDialog();
-//}
-
-//void MainWindowPresenter::openFeatureMatching()
-//{
-//  emit openFeatureMatchingDialog();
-//}
-
-//void MainWindowPresenter::openBatch()
-//{
-//  initBatch();
-//  mBatchPresenter->open();
-//}
-
-void MainWindowPresenter::openToolSettings()
-{
-//  initSettingsDialog();
-//  mSettingsPresenter->openPage(2);
-}
-
 void MainWindowPresenter::openOnlineHelp()
 {
   QDesktopServices::openUrl(QUrl("https://elliestath.github.io/HelpTest/site/"));
 }
-
-//void MainWindowPresenter::openAboutDialog()
-//{
-//  initAboutDialog();
-//  mAboutDialog->show();
-//}
 
 void MainWindowPresenter::loadProject()
 {
@@ -1165,106 +1056,19 @@ void MainWindowPresenter::init()
   mStartPageWidget->setHistory(mSettingsModel->history());
 }
 
-//void MainWindowPresenter::initExportFeaturesDialog()
-//{
-//  if (mExportFeaturesPresenter == nullptr){
-//    IExportFeaturesView *exportFeaturesView = new ExportFeaturesView(mView);
-//    mExportFeaturesModel = new ExportFeaturesModel(mProjectModel);
-//    mExportFeaturesPresenter = new ExportFeaturesPresenter(exportFeaturesView, mExportFeaturesModel);
-//    mExportFeaturesPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initExportMatchesDialog()
-//{
-//  if (mExportMatchesPresenter == nullptr){
-//    IExportMatchesView *exportMatchesView = new ExportMatchesView(mView);
-//    mExportMatchesModel = new ExportMatchesModel(mProjectModel);
-//    mExportMatchesPresenter = new ExportMatchesPresenter(exportMatchesView, mExportMatchesModel);
-//    mExportMatchesPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
 void MainWindowPresenter::initStartPage()
 {
   if (mStartPageWidget == nullptr){
     mStartPageWidget = new StartPageWidget(mView);
 
-    connect(mStartPageWidget,   SIGNAL(openNew()),                       this, SLOT(openNew()));
-    connect(mStartPageWidget,   SIGNAL(openProject()),                   this, SLOT(openProject()));
-    connect(mStartPageWidget,   SIGNAL(openSettings()),                  this, SLOT(openSettings()));
-    connect(mStartPageWidget,   SIGNAL(openGitHub()),                    this, SLOT(openGitHub()));
-    connect(mStartPageWidget,   SIGNAL(clearHistory()),                  this, SLOT(deleteHistory()));
-    connect(mStartPageWidget,   SIGNAL(openProjectFromHistory(QString)), this, SLOT(openFromHistory(QString)));
+    connect(mStartPageWidget,   &StartPageWidget::openNew,                this, &MainWindowPresenter::openNew);
+    connect(mStartPageWidget,   &StartPageWidget::openProject,            this, &MainWindowPresenter::openProject);
+    connect(mStartPageWidget,   &StartPageWidget::openSettings,           this, &MainWindowPresenter::openSettingsDialog);
+    connect(mStartPageWidget,   &StartPageWidget::openGitHub,             this, &MainWindowPresenter::openGitHub);
+    connect(mStartPageWidget,   &StartPageWidget::clearHistory,           this, &MainWindowPresenter::deleteHistory);
+    connect(mStartPageWidget,   &StartPageWidget::openProjectFromHistory, this, &MainWindowPresenter::openFromHistory);
   }
 }
-
-//void MainWindowPresenter::initSettingsDialog()
-//{
-//  if (mSettingsPresenter == nullptr){
-//    ISettingsView *view = new SettingsView(mView);
-//    mSettingsModel = new SettingsModel(mSettings, mSettingsRW);
-//    mSettingsPresenter = new SettingsPresenter(view, mSettingsModel);
-//    mSettingsPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-
-//void MainWindowPresenter::initBatch()
-//{
-//  if (mBatchPresenter == nullptr){
-//    mBatchmodel = new BatchModel;
-//    IBatchView *descriptorMatcherView = new BatchView(mView);
-//    mBatchPresenter = new BatchPresenter(descriptorMatcherView, mBatchmodel, mProjectModel, mSettingsModel);
-//  }
-//}
-
-//void MainWindowPresenter::initProgress()
-//{
-//  if (mProgressHandler == nullptr){
-//    mProgressDialog = new ProgressDialog;
-
-//    QProgressBar *statusBarProgress = mView->progressBar();
-
-//    mProgressHandler = new ProgressHandler;
-
-//    connect(mProgressHandler, SIGNAL(rangeChange(int, int)),      mProgressDialog, SLOT(setRange(int, int)));
-//    connect(mProgressHandler, SIGNAL(valueChange(int)),           mProgressDialog, SLOT(setValue(int)));
-//    connect(mProgressHandler, SIGNAL(initialized()),              mProgressDialog, SLOT(setInitialized()));
-//    connect(mProgressHandler, SIGNAL(finished()),                 mProgressDialog, SLOT(setFinished()));
-//    connect(mProgressHandler, SIGNAL(titleChange(QString)),       mProgressDialog, SLOT(setWindowTitle(QString)));
-//    connect(mProgressHandler, SIGNAL(descriptionChange(QString)), mProgressDialog, SLOT(setStatusText(QString)));
-
-//    connect(mProgressHandler, SIGNAL(rangeChange(int, int)),      statusBarProgress, SLOT(setRange(int, int)));
-//    connect(mProgressHandler, SIGNAL(valueChange(int)),           statusBarProgress, SLOT(setValue(int)));
-//    connect(mProgressHandler, SIGNAL(initialized()),              statusBarProgress, SLOT(show()));
-//    connect(mProgressHandler, SIGNAL(finished()),                 statusBarProgress, SLOT(hide()));
-
-//  }
-//}
-
-//void MainWindowPresenter::initMultiviewMatchingAssessment()
-//{
-//  if (mMultiviewPresenter == nullptr){
-//    mMultiviewModel = new MultiviewModel(mProjectModel);
-//    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    IMultiviewView *multiviewView = new MultiviewView(mView, f);
-//    mMultiviewPresenter = new MultiViewPresenter(multiviewView, mMultiviewModel);
-//    mMultiviewPresenter->setHelp(mHelpDialog);
-//  }
-//}
-
-//void MainWindowPresenter::initHelpDialog()
-//{
-//  if (mHelpDialog == nullptr) {
-//    //Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-//    mHelpDialog = std::make_shared<HelpDialog>(new HelpDialog(mView/*, f*/));
-//    //Qt::WindowFlags f = mHelpDialog->windowFlags();
-//    //f = mHelpDialog->windowFlags() | Qt::WindowMinMaxButtonsHint;
-//    //mHelpDialog->setWindowFlag(mHelpDialog->windowFlags() | Qt::WindowMinMaxButtonsHint);
-//    mHelpDialog->setModal(true);
-//  }
-//}
 
 bool MainWindowPresenter::loadPreprocess(const QString &session)
 {

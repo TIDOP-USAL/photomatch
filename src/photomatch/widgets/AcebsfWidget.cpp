@@ -28,21 +28,29 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 AcebsfWidgetImp::AcebsfWidgetImp(QWidget *parent)
   : AcebsfWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mGroupBoxBlocksize(new QGroupBox(this)),
+    mLabelBlockSizeX(new QLabel(this)),
     mBlockSizeX(new QSpinBox(this)),
+    mLabelBlockSizeY(new QLabel(this)),
     mBlockSizeY(new QSpinBox(this)),
+    mLabelL(new QLabel(this)),
     mL(new QDoubleSpinBox(this)),
+    mLabelK1(new QLabel(this)),
     mK1(new QDoubleSpinBox(this)),
+    mLabelK2(new QLabel(this)),
     mK2(new QDoubleSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 AcebsfWidgetImp::~AcebsfWidgetImp()
@@ -112,13 +120,22 @@ void AcebsfWidgetImp::update()
 
 void AcebsfWidgetImp::retranslate()
 {
-#ifndef QT_NO_WHATSTHIS
-  mK1->setWhatsThis(tr("<html><head/><body><p><strong>K1</strong> controls the&nbsp;actual contrast of input image. If the value of <strong>K1</strong> is&nbsp;selected <strong>5</strong> then its effect on the input image is little&nbsp;change in the contrast, if the value of <strong>K1</strong> is selected <strong>1&nbsp;</strong>then its reduces contrast to about 20% of original and if&nbsp;the value of <strong>K1</strong> is selected <strong>10</strong> then its increase contrast&nbsp;about to 2.5 times the input image. Therefore a&nbsp;reasonable range of values of K1 is to be selected in the&nbsp;experiments. For effective contrast enhancement of&nbsp;input images <strong>the value of K1 should be lies between 10&nbsp;to 25</strong>.</p></body></html>"));
-  mK2->setWhatsThis(tr("<html><head/><body><p><p><strong>K2</strong>&nbsp;represents the&nbsp;normalized gray value about which contrast is&nbsp;increased or decreased. The initial value of <strong>K2</strong> is&nbsp;selected 0.5 (i.e., the midpoint of the gray scale) but&nbsp;different images may require different points of the&nbsp;gray scale to be enhanced. Therefore a reasonable&nbsp;range of values of K2 is to be selected in the&nbsp;experiments. For effective contrast enhancement of&nbsp;input images the value of K2 should be lies between 0&nbsp;to 1. <strong>The typical value of K2 is 0.5</strong>.</p></p></body></html>"));
-  mL->setWhatsThis(tr("<html><head/><body><p><p>Use to district the range of histogram. Range between 0 and 1.</p></p></body></html>"));
-  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-#endif // QT_NO_WHATSTHIS
+  mGroupBox->setTitle(QApplication::translate("AcebsfWidgetImp", "ACEBSF Parameters", nullptr));
+  mLabelDescription->setText(QApplication::translate("AcebsfWidgetImp", "Adaptive Contrast Enhancement Based on modified Sigmoid Function", nullptr));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("AcebsfWidgetImp", "Block Size", nullptr));
+  mLabelBlockSizeX->setText(QApplication::translate("AcebsfWidgetImp", "Width:", nullptr));
+  mLabelBlockSizeY->setText(QApplication::translate("AcebsfWidgetImp", "Height:", nullptr));
+  mLabelL->setText(QApplication::translate("AcebsfWidgetImp", "L:", nullptr));
+  mLabelK1->setText(QApplication::translate("AcebsfWidgetImp", "K1:", nullptr));
+  mLabelK2->setText(QApplication::translate("AcebsfWidgetImp", "K2:", nullptr));
+
+//#ifndef QT_NO_WHATSTHIS
+//  mK1->setWhatsThis(tr("<html><head/><body><p><strong>K1</strong> controls the&nbsp;actual contrast of input image. If the value of <strong>K1</strong> is&nbsp;selected <strong>5</strong> then its effect on the input image is little&nbsp;change in the contrast, if the value of <strong>K1</strong> is selected <strong>1&nbsp;</strong>then its reduces contrast to about 20% of original and if&nbsp;the value of <strong>K1</strong> is selected <strong>10</strong> then its increase contrast&nbsp;about to 2.5 times the input image. Therefore a&nbsp;reasonable range of values of K1 is to be selected in the&nbsp;experiments. For effective contrast enhancement of&nbsp;input images <strong>the value of K1 should be lies between 10&nbsp;to 25</strong>.</p></body></html>"));
+//  mK2->setWhatsThis(tr("<html><head/><body><p><p><strong>K2</strong>&nbsp;represents the&nbsp;normalized gray value about which contrast is&nbsp;increased or decreased. The initial value of <strong>K2</strong> is&nbsp;selected 0.5 (i.e., the midpoint of the gray scale) but&nbsp;different images may require different points of the&nbsp;gray scale to be enhanced. Therefore a reasonable&nbsp;range of values of K2 is to be selected in the&nbsp;experiments. For effective contrast enhancement of&nbsp;input images the value of K2 should be lies between 0&nbsp;to 1. <strong>The typical value of K2 is 0.5</strong>.</p></p></body></html>"));
+//  mL->setWhatsThis(tr("<html><head/><body><p><p>Use to district the range of histogram. Range between 0 and 1.</p></p></body></html>"));
+//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+//#endif // QT_NO_WHATSTHIS
 }
 
 void AcebsfWidgetImp::reset()
@@ -144,49 +161,46 @@ void AcebsfWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("ACEBSF Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
-  groupBox->setLayout(propertiesLayout);
+  mGroupBox->setLayout(propertiesLayout);
 
-  QLabel *lbl = new QLabel(tr("Adaptive Contrast Enhancement Based on modified Sigmoid Function"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0, 1, 2);
+  propertiesLayout->addWidget(mGroupBoxBlocksize, 1, 0, 1, 2);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
-  groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
+  mGroupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeX, 0, 0);
   mBlockSizeX->setRange(0, 100);
   propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")), 1, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeY, 1, 0);
   mBlockSizeY->setRange(0, 100);
   propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1);
 
-
-  propertiesLayout->addWidget(new QLabel(tr("L:")), 2, 0);
+  propertiesLayout->addWidget(mLabelL, 2, 0);
   mL->setRange(0, 1);
   mL->setSingleStep(0.01);
   propertiesLayout->addWidget(mL, 2, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("K1:")), 3, 0);
+  propertiesLayout->addWidget(mLabelK1, 3, 0);
   mK1->setRange(1, 100);
   propertiesLayout->addWidget(mK1, 3, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("K2:")), 4, 0);
+  propertiesLayout->addWidget(mLabelK2, 4, 0);
   mK2->setRange(0, 1);
   mK2->setSingleStep(0.01);
   propertiesLayout->addWidget(mK2, 4, 1);
 
-  reset();
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void AcebsfWidgetImp::initSignalAndSlots()
@@ -198,5 +212,19 @@ void AcebsfWidgetImp::initSignalAndSlots()
   connect(mK2,            SIGNAL(valueChanged(double)),     this, SIGNAL(k2Change(double)));
 }
 
+void AcebsfWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
+
 } // namespace photomatch
+
+
 

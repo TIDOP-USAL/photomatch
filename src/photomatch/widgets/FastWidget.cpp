@@ -30,14 +30,18 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 FastWidgetImp::FastWidgetImp(QWidget *parent)
   : FastWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelThreshold(new QLabel(this)),
     mThreshold(new QSpinBox(this)),
     mNonmaxSuppression(new QCheckBox(this)),
+    mLabelDetectorType(new QLabel(this)),
     mDetectorType(new QComboBox(this))
 {
   this->initUI();
@@ -86,7 +90,10 @@ void FastWidgetImp::update()
 
 void FastWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("FastWidgetImp", "FAST Parameters"));
+  mLabelThreshold->setText(QApplication::translate("FastWidgetImp", "Threshold:"));
+  mNonmaxSuppression->setText(QApplication::translate("FastWidgetImp", "Nonmax Suppression"));
+  mLabelDetectorType->setText(QApplication::translate("FastWidgetImp", "Detector Type:"));
 }
 
 void FastWidgetImp::reset()
@@ -107,28 +114,26 @@ void FastWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("FAST Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 0, 0);
+  propertiesLayout->addWidget(mLabelThreshold, 0, 0);
   mThreshold->setRange(0, 100);
   propertiesLayout->addWidget(mThreshold, 0, 1);
 
-  mNonmaxSuppression->setText(tr("Nonmax Suppression"));
   propertiesLayout->addWidget(mNonmaxSuppression, 1, 0);
 
-  propertiesLayout->addWidget(new QLabel(tr("Detector Type:")), 2, 0);
+  propertiesLayout->addWidget(mLabelDetectorType, 2, 0);
   mDetectorType->addItem("TYPE_5_8");
   mDetectorType->addItem("TYPE_7_12");
   mDetectorType->addItem("TYPE_9_16");
   propertiesLayout->addWidget(mDetectorType, 2, 1);
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void FastWidgetImp::initSignalAndSlots()
@@ -136,6 +141,18 @@ void FastWidgetImp::initSignalAndSlots()
   connect(mThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(thresholdChange(int)));
   connect(mNonmaxSuppression,  SIGNAL(clicked(bool)),                this, SIGNAL(nonmaxSuppressionChange(bool)));
   connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
+}
+
+void FastWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

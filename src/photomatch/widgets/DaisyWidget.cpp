@@ -30,16 +30,23 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 DaisyWidgetImp::DaisyWidgetImp(QWidget *parent)
   : DaisyWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelRadius(new QLabel(this)),
     mRadius(new QDoubleSpinBox(this)),
+    mLabelQRadius(new QLabel(this)),
     mQRadius(new QSpinBox(this)),
+    mLabelQTheta(new QLabel(this)),
     mQTheta(new QSpinBox(this)),
+    mLabelQHist(new QLabel(this)),
     mQHist(new QSpinBox(this)),
+    mLabelNorm(new QLabel(this)),
     mNorm(new QComboBox(this)),
     mInterpolation(new QCheckBox(this)),
     mUseOrientation(new QCheckBox(this))
@@ -134,7 +141,14 @@ void DaisyWidgetImp::update()
 
 void DaisyWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("DaisyWidgetImp", "DAISY Parameters"));
+  mLabelRadius->setText(QApplication::translate("DaisyWidgetImp", "Radius:"));
+  mLabelQRadius->setText(QApplication::translate("DaisyWidgetImp", "Radial range division quantity:"));
+  mLabelQTheta->setText(QApplication::translate("DaisyWidgetImp", "Angular range division quantity:"));
+  mLabelQHist->setText(QApplication::translate("DaisyWidgetImp", "Gradient orientations range division quantity:"));
+  mLabelNorm->setText(QApplication::translate("DaisyWidgetImp", "Descriptor normalization type:"));
+  mInterpolation->setText(QApplication::translate("DaisyWidgetImp", "Interpolation"));
+  mUseOrientation->setText(QApplication::translate("DaisyWidgetImp", "Keypoints orientation"));
 }
 
 void DaisyWidgetImp::reset()
@@ -162,46 +176,41 @@ void DaisyWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("DAISY Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Radius:")), 0, 0);
+  propertiesLayout->addWidget(mLabelRadius, 0, 0);
   mRadius->setRange(0., 100.);
   propertiesLayout->addWidget(mRadius, 0, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Radial range division quantity:")), 1, 0);
+  propertiesLayout->addWidget(mLabelQRadius, 1, 0);
   mQRadius->setRange(1, 100);
   propertiesLayout->addWidget(mQRadius, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Angular range division quantity:")), 2, 0);
+  propertiesLayout->addWidget(mLabelQTheta, 2, 0);
   mQTheta->setRange(0, 100);
   propertiesLayout->addWidget(mQTheta, 2, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Gradient orientations range division quantity:")), 3, 0);
+  propertiesLayout->addWidget(mLabelQHist, 3, 0);
   mQHist->setRange(0, 100);
   propertiesLayout->addWidget(mQHist, 3, 1);
 
-  mInterpolation->setText(tr("Interpolation"));
   propertiesLayout->addWidget(mInterpolation, 4, 0);
 
-  mUseOrientation->setText(tr("Keypoints orientation"));
   propertiesLayout->addWidget(mUseOrientation, 5, 0);
 
-  propertiesLayout->addWidget(new QLabel(tr("Descriptor normalization type:")), 6, 0);
+  propertiesLayout->addWidget(mLabelNorm, 6, 0);
   mNorm->addItem("NRM_NONE");
   mNorm->addItem("NRM_PARTIAL");
   mNorm->addItem("NRM_FULL");
   mNorm->addItem("NRM_SIFT");
   propertiesLayout->addWidget(mNorm, 6, 1);
 
-
-
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
 }
 
 void DaisyWidgetImp::initSignalAndSlots()
@@ -215,5 +224,16 @@ void DaisyWidgetImp::initSignalAndSlots()
   connect(mUseOrientation, SIGNAL(clicked(bool)),                this, SIGNAL(useOrientationChange(bool)));
 }
 
-} // namespace photomatch
+void DaisyWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
 
+} // namespace photomatch

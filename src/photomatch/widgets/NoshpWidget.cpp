@@ -28,18 +28,23 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 NoshpWidgetImp::NoshpWidgetImp(QWidget *parent)
   : NoshpWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mGroupBoxBlocksize(new QGroupBox(this)),
+    mLabelBlockSizeX(new QLabel(this)),
     mBlockSizeX(new QSpinBox(this)),
+    mLabelBlockSizeY(new QLabel(this)),
     mBlockSizeY(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 NoshpWidgetImp::~NoshpWidgetImp()
@@ -77,6 +82,11 @@ void NoshpWidgetImp::update()
 
 void NoshpWidgetImp::retranslate()
 {
+  mGroupBox->setTitle(QApplication::translate("NoshpWidgetImp", "NOSHP Parameters"));
+  mLabelDescription->setText(QApplication::translate("NoshpWidgetImp", "Non-Overlapped Sub-blocks and local Histogram Projection"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("NoshpWidgetImp", "Block Size"));
+  mLabelBlockSizeX->setText(QApplication::translate("NoshpWidgetImp", "Width:"));
+  mLabelBlockSizeY->setText(QApplication::translate("NoshpWidgetImp", "Height:"));
 
 }
 
@@ -97,41 +107,49 @@ void NoshpWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("NOSHP Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout(mGroupBox);
 
-  QLabel *lbl = new QLabel(tr("Non-Overlapped Sub-blocks and local Histogram Projection"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
+  propertiesLayout->addWidget(mGroupBoxBlocksize, 1, 0);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
-  groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
+  mGroupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeX, 0, 0);
   mBlockSizeX->setRange(0, 1000);
   propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")), 1, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeY, 1, 0);
   mBlockSizeY->setRange(0, 1000);
   propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1);
 
-
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void NoshpWidgetImp::initSignalAndSlots()
 {
   connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+}
+
+void NoshpWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

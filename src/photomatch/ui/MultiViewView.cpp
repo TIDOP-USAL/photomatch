@@ -40,8 +40,8 @@
 namespace photomatch
 {
 
-MultiviewView::MultiviewView(QWidget *parent, Qt::WindowFlags f)
-  : IMultiviewView(parent, f),
+MultiviewMatchingAssessmentView::MultiviewMatchingAssessmentView(QWidget *parent, Qt::WindowFlags f)
+  : IMultiviewMatchingAssessmentView(parent, f),
     mLabelIds(new QLabel(this)),
     mListWidgetIds(new QListWidget(this)),
     mListWidgetImages(new QListWidget(this)),
@@ -51,18 +51,18 @@ MultiviewView::MultiviewView(QWidget *parent, Qt::WindowFlags f)
   this->initSignalAndSlots();
 }
 
-MultiviewView::~MultiviewView()
+MultiviewMatchingAssessmentView::~MultiviewMatchingAssessmentView()
 {
 
 }
 
-void MultiviewView::onListWidgetIdsCurrentRowChanged(int row)
+void MultiviewMatchingAssessmentView::onListWidgetIdsCurrentRowChanged(int row)
 {
   QListWidgetItem *item = mListWidgetIds->item(row);
   emit idChange(item->data(Qt::UserRole).toInt());
 }
 
-void MultiviewView::initUI()
+void MultiviewMatchingAssessmentView::initUI()
 {
 
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -93,7 +93,7 @@ void MultiviewView::initUI()
   update();
 }
 
-void MultiviewView::initSignalAndSlots()
+void MultiviewMatchingAssessmentView::initSignalAndSlots()
 {
   connect(mListWidgetIds, SIGNAL(currentRowChanged(int)), this, SLOT(onListWidgetIdsCurrentRowChanged(int)));
 
@@ -101,7 +101,7 @@ void MultiviewView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void MultiviewView::clear()
+void MultiviewMatchingAssessmentView::clear()
 {
 
   const QSignalBlocker blockerListWidgetIds(mListWidgetIds);
@@ -115,11 +115,11 @@ void MultiviewView::clear()
   update();
 }
 
-void MultiviewView::update()
+void MultiviewMatchingAssessmentView::update()
 {
 }
 
-void MultiviewView::retranslate()
+void MultiviewMatchingAssessmentView::retranslate()
 {
   this->setWindowTitle(QApplication::translate("MultiViewView", "Multiview Matching Assessment", nullptr));
   mLabelIds->setText(QApplication::translate("MultiViewView", "Pass Points ID", nullptr));
@@ -128,12 +128,12 @@ void MultiviewView::retranslate()
 
 }
 
-void MultiviewView::setSessionName(const QString &name)
+void MultiviewMatchingAssessmentView::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Multi-view Pass Points ").append(name));
 }
 
-void MultiviewView::setPassPointIds(const std::vector<size_t> &id)
+void MultiviewMatchingAssessmentView::setPassPointIds(const std::vector<size_t> &id)
 {
   const QSignalBlocker blockerListWidgetIds(mListWidgetIds);
 
@@ -143,14 +143,14 @@ void MultiviewView::setPassPointIds(const std::vector<size_t> &id)
   }
 }
 
-void MultiviewView::addPassPointIds(size_t id)
+void MultiviewMatchingAssessmentView::addPassPointIds(size_t id)
 {
   const QSignalBlocker blockerListWidgetIds(mListWidgetIds);
 
   mListWidgetIds->addItem(QString::number(id));
 }
 
-void MultiviewView::addPassPointIdsAndNImages(size_t id, size_t size)
+void MultiviewMatchingAssessmentView::addPassPointIdsAndNImages(size_t id, size_t size)
 {
   const QSignalBlocker blockerListWidgetIds(mListWidgetIds);
 
@@ -162,7 +162,7 @@ void MultiviewView::addPassPointIdsAndNImages(size_t id, size_t size)
   mListWidgetIds->addItem(item);
 }
 
-void MultiviewView::setImages(const std::vector<std::pair<QString, QPointF> > &images)
+void MultiviewMatchingAssessmentView::setImages(const std::vector<std::pair<QString, QPointF> > &images)
 {
   mListWidgetImages->clear();
 

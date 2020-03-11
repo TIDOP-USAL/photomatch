@@ -69,11 +69,14 @@ signals:
   void openGroundTruthEditorDialog();
   void openHomographyViewerDialog();
   void openMultiviewMatchingAssessmentDialog();
-  //void openMultiviewMatchingAssessmentDialog(QString);
   void openPRCurvesViewerDialog();
   void openROCCurvesViewerDialog();
   void openDETCurvesViewerDialog();
   void openAboutDialog();
+  void openSettingsDialog();
+  void openViewSettingsDialog();
+  void openQualityControlSettingsDialog();
+  void openToolSettingsDialog();
 
 public slots:
 
@@ -93,31 +96,25 @@ protected slots:
   /* Menú View */
 
   void openStartPage();
-  void openSettings();
   void openGitHub();
-  void openViewSettings();
 
   /* Quality Control */
 
   void openKeypointsViewer();
   void openMatchesViewer();
-  //void openMultiviewMatchingAssessment();
-  //void openMultiviewMatchingAssessment(const QString &session);
-  void openQualityControlSettings();
 
   /* Menú herramientas */
 
   void loadImages();
-  void openToolSettings();
 
   /* Menú Ayuda */
+
   void openOnlineHelp();
 
   /*!
    * \brief Carga del proyecto
    */
   void loadProject();
-
   void updateProject();
 
   void openImage(const QString &image);
@@ -161,21 +158,6 @@ private:
 
   void init() override;
   void initStartPage();
-
-  /*!
-   * \brief Inicializa la herramienta de configuración de la aplicación
-   */
-  //void initSettingsDialog();
-
-
-
-  //void initBatch();
-
-
-
-  //void initMultiviewMatchingAssessment();
-
-//  void initHelpDialog();
 
   bool loadPreprocess(const QString &session);
   bool loadFeatures(const QString &session);

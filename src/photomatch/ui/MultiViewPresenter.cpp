@@ -31,9 +31,9 @@
 namespace photomatch
 {
 
-MultiViewPresenter::MultiViewPresenter(IMultiviewView *view,
-                                       IMultiViewModel *model)
-  : IMultiViewPresenter(),
+MultiViewMatchingAssessmentPresenter::MultiViewMatchingAssessmentPresenter(IMultiviewMatchingAssessmentView *view,
+                                                                           IMultiViewMatchingAssessmentModel *model)
+  : IMultiViewMatchingAssessmentPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
@@ -43,19 +43,19 @@ MultiViewPresenter::MultiViewPresenter(IMultiviewView *view,
   connect(mView, SIGNAL(idChange(int)),  this, SLOT(onIdChange(int)));
 }
 
-void MultiViewPresenter::onIdChange(int id)
+void MultiViewMatchingAssessmentPresenter::onIdChange(int id)
 {
   mView->setImages(mModel->images(static_cast<size_t>(id)));
 }
 
-void MultiViewPresenter::setSession(const QString &session)
+void MultiViewMatchingAssessmentPresenter::setSession(const QString &session)
 {
   mModel->setSessionName(session);
   mView->clear();
   mView->setSessionName(mModel->sessionName());
 }
 
-void MultiViewPresenter::help()
+void MultiViewMatchingAssessmentPresenter::help()
 {
   if (mHelp){
     mHelp->setPage("index.html");
@@ -63,7 +63,7 @@ void MultiViewPresenter::help()
   }
 }
 
-void MultiViewPresenter::open()
+void MultiViewMatchingAssessmentPresenter::open()
 {
   mView->clear();
 
@@ -78,12 +78,12 @@ void MultiViewPresenter::open()
   mView->show();
 }
 
-void MultiViewPresenter::setHelp(HelpDialog *help)
+void MultiViewMatchingAssessmentPresenter::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void MultiViewPresenter::init()
+void MultiViewMatchingAssessmentPresenter::init()
 {
 }
 

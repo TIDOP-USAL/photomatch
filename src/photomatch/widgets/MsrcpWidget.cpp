@@ -28,19 +28,25 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 MsrcpWidgetImp::MsrcpWidgetImp(QWidget *parent)
   : MsrcpWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mGroupBoxBlocksize(new QGroupBox(this)),
+    mLabelSmallScale(new QLabel(this)),
     mSmallScale(new QDoubleSpinBox(this)),
+    mLabelMidScale(new QLabel(this)),
     mMidScale(new QDoubleSpinBox(this)),
+    mLabelLargeScale(new QLabel(this)),
     mLargeScale(new QDoubleSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 double MsrcpWidgetImp::smallScale() const
@@ -82,7 +88,12 @@ void MsrcpWidgetImp::update()
 
 void MsrcpWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("MsrcpWidgetImp", "MSRCP Parameters"));
+  mLabelDescription->setText(QApplication::translate("MsrcpWidgetImp", "MultiScale Retinex with Chromaticity Preservation"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("MsrcpWidgetImp", "Retinex Scales"));
+  mLabelSmallScale->setText(QApplication::translate("MsrcpWidgetImp", "Small Scale:"));
+  mLabelMidScale->setText(QApplication::translate("MsrcpWidgetImp", "Mid Scale:"));
+  mLabelLargeScale->setText(QApplication::translate("MsrcpWidgetImp", "Large Scale:"));
 }
 
 void MsrcpWidgetImp::reset()
@@ -105,37 +116,35 @@ void MsrcpWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("MSRCP Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout(mGroupBox);
 
-  QLabel *lbl = new QLabel(tr("MultiScale Retinex with Chromaticity Preservation"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Retinex Scales"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
+  propertiesLayout->addWidget(mGroupBoxBlocksize, 1, 0);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
-  groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
+  mGroupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Small Scale:")), 0, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelSmallScale, 0, 0);
   mSmallScale->setRange(0., 19.99);
   propertiesLayoutBlocksize->addWidget(mSmallScale, 0, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Mid Scale:")), 1, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelMidScale, 1, 0);
   mMidScale->setRange(20., 199.99);
   propertiesLayoutBlocksize->addWidget(mMidScale, 1, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Large Scale:")), 2, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelLargeScale, 2, 0);
   mLargeScale->setRange(200., 256.);
   propertiesLayoutBlocksize->addWidget(mLargeScale, 2, 1);
 
-  reset();
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void MsrcpWidgetImp::initSignalAndSlots()
@@ -143,6 +152,18 @@ void MsrcpWidgetImp::initSignalAndSlots()
   connect(mSmallScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(smallScaleChange(double)));
   connect(mMidScale,        SIGNAL(valueChanged(double)),     this, SIGNAL(midScaleChange(double)));
   connect(mLargeScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(largeScaleChange(double)));
+}
+
+void MsrcpWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

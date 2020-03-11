@@ -27,6 +27,8 @@
 
 #include "photomatch/widgets/PhotoMatchWidget.h"
 
+class QGroupBox;
+class QLabel;
 class QSpinBox;
 class QRadioButton;
 
@@ -108,9 +110,18 @@ private:
   void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
 protected:
 
+  void changeEvent(QEvent *event) override;
+
+protected:
+
+  QGroupBox *mGroupBox;
+  QLabel *mLabelDescription;
   HistogramCut mHistogramCut;
+  QLabel *mLabelHistogramDivisions;
   QSpinBox *mHistogramDivisions;
   QRadioButton *mHistogramCutByMean;
   QRadioButton *mHistogramCutByMedian;

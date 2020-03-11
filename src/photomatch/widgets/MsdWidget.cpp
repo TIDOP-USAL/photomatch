@@ -29,27 +29,37 @@
 #include <QLabel>
 #include <QCheckBox>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 MsdWidgetImp::MsdWidgetImp(QWidget *parent)
   : MsdWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelThresholdSaliency(new QLabel(this)),
     mThresholdSaliency(new QDoubleSpinBox(this)),
+    mLabelPathRadius(new QLabel(this)),
     mPathRadius(new QSpinBox(this)),
+    mLabelKNN(new QLabel(this)),
     mKNN(new QSpinBox(this)),
+    mLabelAreaRadius(new QLabel(this)),
     mAreaRadius(new QSpinBox(this)),
+    mLabelScaleFactor(new QLabel(this)),
     mScaleFactor(new QDoubleSpinBox(this)),
+    mLabelNMSRadius(new QLabel(this)),
     mNMSRadius(new QSpinBox(this)),
+    mLabelNScales(new QLabel(this)),
     mNScales(new QSpinBox(this)),
+    mLabelNMSScaleR(new QLabel(this)),
     mNMSScaleR(new QSpinBox(this)),
     mComputeOrientations(new QCheckBox(this)),
     mAffineMSD(new QCheckBox(this)),
+    mLabelTilts(new QLabel(this)),
     mTilts(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 MsdWidgetImp::~MsdWidgetImp()
@@ -181,7 +191,18 @@ void MsdWidgetImp::update()
 
 void MsdWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("MsdWidgetImp", "MSD Parameters"));
+  mLabelThresholdSaliency->setText(QApplication::translate("MsdWidgetImp", "Threshold Saliency:"));
+  mLabelPathRadius->setText(QApplication::translate("MsdWidgetImp", "Path radius:"));
+  mLabelKNN->setText(QApplication::translate("MsdWidgetImp", "KNN:"));
+  mLabelAreaRadius->setText(QApplication::translate("MsdWidgetImp", "Area radius:"));
+  mLabelScaleFactor->setText(QApplication::translate("MsdWidgetImp", "Scale factor:"));
+  mLabelNMSRadius->setText(QApplication::translate("MsdWidgetImp", "NMS radius:"));
+  mLabelNScales->setText(QApplication::translate("MsdWidgetImp", "N Scales:"));
+  mLabelNMSScaleR->setText(QApplication::translate("MsdWidgetImp", "NMS Scale R:"));
+  mComputeOrientations->setText(QApplication::translate("MsdWidgetImp", "Compute orientations"));
+  mAffineMSD->setText(QApplication::translate("MsdWidgetImp", "Affine MSD"));
+  mLabelTilts->setText(QApplication::translate("MsdWidgetImp", "Tilts:"));
 }
 
 void MsdWidgetImp::reset()
@@ -217,66 +238,63 @@ void MsdWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("MSD Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Threshold Saliency:")), 0, 0, 1, 2);
+  propertiesLayout->addWidget(mLabelThresholdSaliency, 0, 0, 1, 1);
   mThresholdSaliency->setRange(0, 2000);
   mThresholdSaliency->setSingleStep(1);
-  propertiesLayout->addWidget(mThresholdSaliency, 0, 2, 1, 2);
+  propertiesLayout->addWidget(mThresholdSaliency, 0, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Path radius:")), 1, 0);
+  propertiesLayout->addWidget(mLabelPathRadius, 1, 0, 1, 1);
   mPathRadius->setRange(1, 10);
   mPathRadius->setSingleStep(1);
-  propertiesLayout->addWidget(mPathRadius, 1, 1);
+  propertiesLayout->addWidget(mPathRadius, 1, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("KNN:")), 1, 2);
+  propertiesLayout->addWidget(mLabelKNN, 2, 0, 1, 1);
   mKNN->setRange(1,10);
   mKNN->setSingleStep(1);
-  propertiesLayout->addWidget(mKNN, 1, 3);
+  propertiesLayout->addWidget(mKNN, 2, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Area radius:")), 2, 0);
+  propertiesLayout->addWidget(mLabelAreaRadius, 3, 0, 1, 1);
   mAreaRadius->setRange(1, 10);
   mAreaRadius->setSingleStep(1);
-  propertiesLayout->addWidget(mAreaRadius, 2, 1);
+  propertiesLayout->addWidget(mAreaRadius, 3, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Scale factor:")), 2, 2);
+  propertiesLayout->addWidget(mLabelScaleFactor, 4, 0, 1, 1);
   mScaleFactor->setRange(1, 10);
   mScaleFactor->setSingleStep(0.05);
-  propertiesLayout->addWidget(mScaleFactor, 2, 3);
+  propertiesLayout->addWidget(mScaleFactor, 4, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("NMS radius:")), 3, 0);
+  propertiesLayout->addWidget(mLabelNMSRadius, 5, 0, 1, 1);
   mNMSRadius->setRange(1, 10);
   mNMSRadius->setSingleStep(1);
-  propertiesLayout->addWidget(mNMSRadius, 3, 1);
+  propertiesLayout->addWidget(mNMSRadius, 5, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("N Scales:")), 3, 2);
+  propertiesLayout->addWidget(mLabelNScales, 6, 0, 1, 1);
   mNScales->setRange(-1, 10);
   mNScales->setSingleStep(1);
-  propertiesLayout->addWidget(mNScales, 3, 3);
+  propertiesLayout->addWidget(mNScales, 6, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("NMS Scale R.:")), 4, 0);
+  propertiesLayout->addWidget(mLabelNMSScaleR, 7, 0, 1, 1);
   mNMSScaleR->setRange(0, 10);
   mNMSScaleR->setSingleStep(1);
-  propertiesLayout->addWidget(mNMSScaleR, 4, 1);
+  propertiesLayout->addWidget(mNMSScaleR, 7, 1, 1, 1);
 
-  mComputeOrientations->setText(tr("Compute orientations"));
-  propertiesLayout->addWidget(mComputeOrientations, 4, 2, 1, 2); //Check orientations
+  propertiesLayout->addWidget(mComputeOrientations, 8, 0, 1, 2); //Check orientations
 
-  mAffineMSD->setText(tr("Affine MSD"));
-  propertiesLayout->addWidget(mAffineMSD, 5, 0, 1, 2); //CheckAffine
+  propertiesLayout->addWidget(mAffineMSD, 9, 0, 1, 2); //CheckAffine
 
-  propertiesLayout->addWidget(new QLabel(tr("Tilts:")), 5, 2);
+  propertiesLayout->addWidget(mLabelTilts, 10, 0, 1, 1);
   mTilts->setRange(3,10);
   mTilts->setSingleStep(1);
-  propertiesLayout->addWidget(mTilts, 5, 3);
+  propertiesLayout->addWidget(mTilts, 10, 1, 1, 1);
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void MsdWidgetImp::initSignalAndSlots()
@@ -292,6 +310,18 @@ void MsdWidgetImp::initSignalAndSlots()
   connect(mComputeOrientations, SIGNAL(clicked(bool)),         this, SIGNAL(computeOrientationsChange(bool)));
   connect(mAffineMSD,           SIGNAL(clicked(bool)),         this, SIGNAL(affineMSDChange(bool)));
   connect(mTilts,               SIGNAL(valueChanged(int)),     this, SIGNAL(tiltsChange(int)));
+}
+
+void MsdWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 

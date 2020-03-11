@@ -31,26 +31,39 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QStandardItemModel>
+#include <QApplication>
 
 namespace photomatch
 {
 
 DescriptorMatcherWidgetImp::DescriptorMatcherWidgetImp(QWidget *parent)
   : DescriptorMatcherWidget(parent),
+    mLabelMatchingMethod(new QLabel(this)),
     mMatchingMethod(new QComboBox(this)),
+    mLabelMatchingStrategy(new QLabel(this)),
     mMatchingStrategy(new QComboBox(this)),
     mNormType(new QComboBox(this)),
+    mNormTypeLabel(new QLabel(this)),
+    mLabelRatio(new QLabel(this)),
     mRatio(new QDoubleSpinBox(this)),
+    mLabelGeometricTest(new QLabel(this)),
     mGeometricTest(new QComboBox(this)),
     mDistance(new QDoubleSpinBox(this)),
+    mDistanceLabel(new QLabel(this)),
     mConfidence(new QDoubleSpinBox(this)),
+    mConfidenceLabel(new QLabel(this)),
     mMaxIters(new QSpinBox(this)),
+    mMaxItersLabel(new QLabel(this)),
     mCrossMatching(new QCheckBox(this)),
     mHComputeMethod(new QComboBox(this)),
+    mHComputeMethodLabel(new QLabel(this)),
     mFComputeMethod(new QComboBox(this)),
+    mFComputeMethodLabel(new QLabel(this)),
     mEComputeMethod(new QComboBox(this)),
+    mEComputeMethodLabel(new QLabel(this)),
     mRotationGMS(new QCheckBox(this)),
     mScaleGMS(new QCheckBox(this)),
+    mLabelThresholdGMS(new QLabel(this)),
     mThresholdGMS(new QDoubleSpinBox(this))
 {
   this->initUI();
@@ -269,7 +282,7 @@ void DescriptorMatcherWidgetImp::update()
   }
 
   QString geomTest = mGeometricTest->currentText();
-  if (geomTest.compare("Homography Matrix") == 0){
+  if (geomTest.compare(tr("Homography Matrix")) == 0){
     mHComputeMethod->show();
     mHComputeMethodLabel->show();
     mFComputeMethod->hide();
@@ -279,7 +292,7 @@ void DescriptorMatcherWidgetImp::update()
     QString computeMethod = mHComputeMethod->currentText();
     mConfidence->show();
     mConfidenceLabel->show();
-    if (computeMethod.compare("All Points") == 0){
+    if (computeMethod.compare(tr("All Points")) == 0){
       mDistance->hide();
       mDistanceLabel->hide();
       mMaxIters->hide();
@@ -300,7 +313,7 @@ void DescriptorMatcherWidgetImp::update()
       mMaxIters->hide();
       mMaxItersLabel->hide();
     }
-  } else if (geomTest.compare("Fundamental Matrix") == 0){
+  } else if (geomTest.compare(tr("Fundamental Matrix")) == 0){
     mHComputeMethod->hide();
     mHComputeMethodLabel->hide();
     mFComputeMethod->show();
@@ -331,7 +344,7 @@ void DescriptorMatcherWidgetImp::update()
       mConfidence->show();
       mConfidenceLabel->show();
     }
-  } else if (geomTest.compare("Essential Matrix") == 0) {
+  } else if (geomTest.compare(tr("Essential Matrix")) == 0) {
     mHComputeMethod->hide();
     mHComputeMethodLabel->hide();
     mFComputeMethod->hide();
@@ -355,7 +368,24 @@ void DescriptorMatcherWidgetImp::update()
 
 void DescriptorMatcherWidgetImp::retranslate()
 {
-
+  this->setWindowTitle(QApplication::translate("DescriptorMatcherWidgetImp", "Descriptor Matcher"));
+  mLabelMatchingMethod->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Matching Method:"));
+  mLabelMatchingStrategy->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Matching Strategy:"));
+  mGroupBoxBFParameters->setTitle(QApplication::translate("DescriptorMatcherWidgetImp", "Brute Force Parameters"));
+  mNormTypeLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Norm Type:"));
+  mGroupBoxFilteringTest->setTitle(QApplication::translate("DescriptorMatcherWidgetImp", "Filtering Test"));
+  mLabelRatio->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Ratio:"));
+  mCrossMatching->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Cross Matching"));
+  mLabelGeometricTest->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Geometric Test:"));
+  mHComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Compute method:"));
+  mFComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Compute method:"));
+  mEComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Compute method:"));
+  mDistanceLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Distance:"));
+  mConfidenceLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Confidence:"));
+  mMaxItersLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Maximum RANSAC iterations:"));
+  mLabelThresholdGMS->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Threshold:"));
+  mRotationGMS->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Rotation:"));
+  mScaleGMS->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Scale:"));
 }
 
 void DescriptorMatcherWidgetImp::reset()
@@ -376,11 +406,11 @@ void DescriptorMatcherWidgetImp::reset()
   mMatchingMethod->setCurrentText("Brute-Force");
   mNormType->setCurrentText("NORM_L1");
   mGroupBoxBFParameters->show();
-  mMatchingStrategy->setCurrentText("Robust Matching");
+  mMatchingStrategy->setCurrentText(tr("Robust Matching"));
   mGroupBoxFilteringTest->show();
   mGroupBoxGMS->hide();
   mRatio->setValue(0.8);
-  mGeometricTest->setCurrentText("Fundamental Matrix");
+  mGeometricTest->setCurrentText(tr("Fundamental Matrix"));
   mHComputeMethod->setCurrentText("RANSAC");
   mFComputeMethod->setCurrentText("RANSAC");
   mEComputeMethod->setCurrentText("RANSAC");
@@ -397,29 +427,26 @@ void DescriptorMatcherWidgetImp::reset()
 
 void DescriptorMatcherWidgetImp::initUI()
 {
-  this->setWindowTitle("Descriptor Matcher");
-
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Matching Method:")), 0, 0);
+  layout->addWidget(mLabelMatchingMethod, 0, 0);
   mMatchingMethod->addItem("Brute-Force");
   mMatchingMethod->addItem("FLANN");
   layout->addWidget(mMatchingMethod, 0, 1);
 
-  layout->addWidget(new QLabel(tr("Matching Strategy:")), 1, 0);
+  layout->addWidget(mLabelMatchingStrategy, 1, 0);
   mMatchingStrategy->addItem("Robust Matching");
   mMatchingStrategy->addItem("GMS");
   layout->addWidget(mMatchingStrategy, 1, 1);
 
-  mGroupBoxBFParameters = new QGroupBox(tr("Brute Force Parameters"), this);
+  mGroupBoxBFParameters = new QGroupBox(this);
   layout->addWidget(mGroupBoxBFParameters, 2, 0, 1, 2);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBoxBFParameters->setLayout(propertiesLayout);
 
-  mNormTypeLabel = new QLabel(tr("Norm Type:"), this);
   propertiesLayout->addWidget(mNormTypeLabel, 0, 0);
   mNormType->addItem("NORM_L1");
   mNormType->addItem("NORM_L2");
@@ -429,28 +456,26 @@ void DescriptorMatcherWidgetImp::initUI()
 
   /// Robust Matching
 
-  mGroupBoxFilteringTest = new QGroupBox(tr("Filtering Test"), this);
+  mGroupBoxFilteringTest = new QGroupBox(this);
   layout->addWidget(mGroupBoxFilteringTest, 3, 0, 1, 2);
 
   QGridLayout *filteringTestLayout = new QGridLayout();
   mGroupBoxFilteringTest->setLayout(filteringTestLayout);
 
-  filteringTestLayout->addWidget(new QLabel(tr("Ratio:")), 0, 0);
+  filteringTestLayout->addWidget(mLabelRatio, 0, 0);
   mRatio->setDecimals(3);
   mRatio->setRange(0.001, 100.);
   mRatio->setSingleStep(0.1);
   filteringTestLayout->addWidget(mRatio, 0, 1);
 
-  mCrossMatching->setText(tr("Cross Matching"));
   filteringTestLayout->addWidget(mCrossMatching, 1, 0);
 
-  filteringTestLayout->addWidget(new QLabel(tr("Geometric Test:")), 2, 0);
+  filteringTestLayout->addWidget(mLabelGeometricTest, 2, 0);
   mGeometricTest->addItem("Homography Matrix");
   mGeometricTest->addItem("Fundamental Matrix");
   //mGeometricTest->addItem("Essential Matrix");  /// Desactivada matriz esencial porque se necesitaria calibración de la cámara y no es el objetivo de la herramienta
   filteringTestLayout->addWidget(mGeometricTest, 2, 1);
 
-  mHComputeMethodLabel = new QLabel(tr("Compute method:"));
   filteringTestLayout->addWidget(mHComputeMethodLabel, 3, 0);
   mHComputeMethod->addItem("All Points");
   mHComputeMethod->addItem("RANSAC");
@@ -458,7 +483,6 @@ void DescriptorMatcherWidgetImp::initUI()
   mHComputeMethod->addItem("RHO");
   filteringTestLayout->addWidget(mHComputeMethod, 3, 1);
 
-  mFComputeMethodLabel = new QLabel(tr("Compute method:"));
   filteringTestLayout->addWidget(mFComputeMethodLabel, 4, 0);
   mFComputeMethod->addItem("7-point algorithm");
   mFComputeMethod->addItem("8-point algorithm");
@@ -466,52 +490,47 @@ void DescriptorMatcherWidgetImp::initUI()
   mFComputeMethod->addItem("LMedS");
   filteringTestLayout->addWidget(mFComputeMethod, 4, 1);
 
-  mEComputeMethodLabel = new QLabel(tr("Compute method:"));
   filteringTestLayout->addWidget(mEComputeMethodLabel, 5, 0);
   mEComputeMethod->addItem("RANSAC");
   mEComputeMethod->addItem("LMedS");
   filteringTestLayout->addWidget(mEComputeMethod, 5, 1);
 
-  mDistanceLabel = new QLabel(tr("Distance:"));
   filteringTestLayout->addWidget(mDistanceLabel, 6, 0);
   mDistance->setRange(0.001, 100.);
   mDistance->setDecimals(3);
   mDistance->setSingleStep(0.1);
   filteringTestLayout->addWidget(mDistance, 6, 1);
 
-  mConfidenceLabel = new QLabel(tr("Confidence:"));
   filteringTestLayout->addWidget(mConfidenceLabel, 7, 0);
   mConfidence->setRange(0., 1.);
   mConfidence->setDecimals(3);
   mConfidence->setSingleStep(0.001);
   filteringTestLayout->addWidget(mConfidence, 7, 1);
 
-  mMaxItersLabel = new QLabel(tr("Maximum RANSAC iterations:"));
   filteringTestLayout->addWidget(mMaxItersLabel, 8, 0);
   mMaxIters->setRange(0, 10000);
   mMaxIters->setSingleStep(1);
   filteringTestLayout->addWidget(mMaxIters, 8, 1);
 
-  mGroupBoxGMS = new QGroupBox(tr("GMS"), this);
+  mGroupBoxGMS = new QGroupBox("GMS", this);
   layout->addWidget(mGroupBoxGMS, 3, 0, 1, 2);
 
   QGridLayout *gmsLayout = new QGridLayout();
   mGroupBoxGMS->setLayout(gmsLayout);
 
-  mRotationGMS->setText(tr("Rotation:"));
   gmsLayout->addWidget(mRotationGMS, 0, 0);
 
-  mScaleGMS->setText(tr("Scale:"));
   gmsLayout->addWidget(mScaleGMS, 1, 0);
 
-  gmsLayout->addWidget(new QLabel(tr("Threshold:")), 2, 0);
+  gmsLayout->addWidget(mLabelThresholdGMS, 2, 0);
   mThresholdGMS->setDecimals(1);
   mThresholdGMS->setRange(0.1, 100.);
   mThresholdGMS->setSingleStep(0.1);
   gmsLayout->addWidget(mThresholdGMS, 2, 1);
 
-  reset(); /// set default values
-
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void DescriptorMatcherWidgetImp::initSignalAndSlots()
@@ -540,5 +559,16 @@ void DescriptorMatcherWidgetImp::initSignalAndSlots()
   connect(this, SIGNAL(essentialComputeMethodChange(QString)),   this,  SLOT(update()));
 }
 
+void DescriptorMatcherWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
 
 } // namespace photomatch

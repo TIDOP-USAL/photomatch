@@ -28,18 +28,23 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 CmbfheWidgetImp::CmbfheWidgetImp(QWidget *parent)
   : CmbfheWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mGroupBoxBlocksize(new QGroupBox(this)),
+    mLabelBlockSizeX(new QLabel(this)),
     mBlockSizeX(new QSpinBox(this)),
+    mLabelBlockSizeY(new QLabel(this)),
     mBlockSizeY(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 CmbfheWidgetImp::~CmbfheWidgetImp()
@@ -68,7 +73,6 @@ void CmbfheWidgetImp::setBlockSize(const QSize &blockSize)
   const QSignalBlocker blockerTilesGridY(mBlockSizeY);
   mBlockSizeX->setValue(blockSize.width());
   mBlockSizeY->setValue(blockSize.height());
-
 }
 
 void CmbfheWidgetImp::update()
@@ -77,10 +81,16 @@ void CmbfheWidgetImp::update()
 
 void CmbfheWidgetImp::retranslate()
 {
-#ifndef QT_NO_WHATSTHIS
-  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-#endif // QT_NO_WHATSTHIS
+  mGroupBox->setTitle(QApplication::translate("CmbfheWidgetImp", "CMBFHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("CmbfheWidgetImp", "Cascaded Multistep Binomial Filtering Histogram Equalization", nullptr));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("CmbfheWidgetImp", "Block Size"));
+  mLabelBlockSizeX->setText(QApplication::translate("CmbfheWidgetImp", "Width:"));
+  mLabelBlockSizeY->setText(QApplication::translate("CmbfheWidgetImp", "Height:"));
+
+//#ifndef QT_NO_WHATSTHIS
+//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+//#endif // QT_NO_WHATSTHIS
 }
 
 void CmbfheWidgetImp::reset()
@@ -100,36 +110,32 @@ void CmbfheWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("CMBFHE Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
-  groupBox->setLayout(propertiesLayout);
+  mGroupBox->setLayout(propertiesLayout);
 
-  QLabel *lbl = new QLabel(tr("Cascaded Multistep Binomial Filtering Histogram Equalization"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), this);
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0);
+  propertiesLayout->addWidget(mGroupBoxBlocksize, 1, 0);
   QGridLayout *propertiesLayoutBlocksize = new QGridLayout();
-  groupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
+  mGroupBoxBlocksize->setLayout(propertiesLayoutBlocksize);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeX, 0, 0);
   mBlockSizeX->setRange(0, 1000);
   propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")), 1, 0);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeY, 1, 0);
   mBlockSizeY->setRange(0, 1000);
   propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1);
 
-
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset();  /// set default values
+  this->update();
 }
 
 void CmbfheWidgetImp::initSignalAndSlots()
@@ -138,4 +144,18 @@ void CmbfheWidgetImp::initSignalAndSlots()
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
 }
 
+void CmbfheWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
+
 } // namespace photomatch
+
+

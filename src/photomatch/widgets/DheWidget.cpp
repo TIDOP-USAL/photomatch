@@ -29,17 +29,20 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 DheWidgetImp::DheWidgetImp(QWidget *parent)
   : DheWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mLabelX(new QLabel(this)),
     mX(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 DheWidgetImp::~DheWidgetImp()
@@ -65,7 +68,9 @@ void DheWidgetImp::update()
 
 void DheWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("DheWidgetImp", "DHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("DheWidgetImp", "Dynamic Histogram Equalization"));
+  mLabelX->setText(QApplication::translate("DheWidgetImp", "x:"));
 }
 
 void DheWidgetImp::reset()
@@ -83,30 +88,40 @@ void DheWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("DHE Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout(mGroupBox);
 
-  QLabel *lbl = new QLabel(tr("Dynamic Histogram Equalization"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("x:")), 1, 0, 1, 1);
+  propertiesLayout->addWidget(mLabelX, 1, 0, 1, 1);
   mX->setRange(0, 5);
   propertiesLayout->addWidget(mX, 1, 1, 1, 1);
 
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
 }
 
 void DheWidgetImp::initSignalAndSlots()
 {
   connect(mX,    SIGNAL(valueChanged(int)),      this, SIGNAL(xChange(int)));
+}
+
+void DheWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 

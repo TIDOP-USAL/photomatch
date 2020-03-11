@@ -36,7 +36,7 @@ class QGridLayout;
 namespace photomatch
 {
 
-class IMultiviewView
+class IMultiviewMatchingAssessmentView
   : public IDialogView
 {
 
@@ -44,10 +44,10 @@ Q_OBJECT
 
 public:
 
-  IMultiviewView(QWidget *parent = nullptr,
+  IMultiviewMatchingAssessmentView(QWidget *parent = nullptr,
                  Qt::WindowFlags f = Qt::WindowFlags())
   : IDialogView(parent, f) {}
-  virtual ~IMultiviewView() = default;
+  virtual ~IMultiviewMatchingAssessmentView() = default;
 
   virtual void setSessionName(const QString &name) = 0;
   virtual void setPassPointIds(const std::vector<size_t> &id) = 0;
@@ -63,16 +63,16 @@ signals:
 };
 
 
-class MultiviewView
-  : public IMultiviewView
+class MultiviewMatchingAssessmentView
+  : public IMultiviewMatchingAssessmentView
 {
 
   Q_OBJECT
 
 public:
 
-  MultiviewView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-  ~MultiviewView() override;
+  MultiviewMatchingAssessmentView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ~MultiviewMatchingAssessmentView() override;
 
 private slots:
 

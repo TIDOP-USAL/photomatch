@@ -29,20 +29,23 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 RswheWidgetImp::RswheWidgetImp(QWidget *parent)
   : RswheWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
     mHistogramCut(HistogramCut::by_mean),
+    mLabelHistogramDivisions(new QLabel(this)),
     mHistogramDivisions(new QSpinBox(this)),
     mHistogramCutByMean(new QRadioButton(this)),
     mHistogramCutByMedian(new QRadioButton(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 RswheWidgetImp::~RswheWidgetImp()
@@ -95,7 +98,11 @@ void RswheWidgetImp::update()
 
 void RswheWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("RswheWidgetImp", "RSWHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("RswheWidgetImp", "Recursively Separated and Weighted Histogram Equalization"));
+  mHistogramCutByMean->setText(QApplication::translate("RswheWidgetImp", "Histogram cut by mean"));
+  mHistogramCutByMedian->setText(QApplication::translate("RswheWidgetImp", "Histogram cut by median"));
+  mLabelHistogramDivisions->setText(QApplication::translate("RswheWidgetImp", "Histogram Divisions:"));
 }
 
 void RswheWidgetImp::reset()
@@ -114,31 +121,27 @@ void RswheWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("RSWHE Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout(mGroupBox);
 
-  QLabel *lbl = new QLabel(tr("Recursively Separated and Weighted Histogram Equalization"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0, 1, 2);
 
-  mHistogramCutByMean->setText(tr("Histogram cut by mean"));
   propertiesLayout->addWidget(mHistogramCutByMean, 1, 0, 1, 2);
 
-  mHistogramCutByMedian->setText(tr("Histogram cut by median"));
   propertiesLayout->addWidget(mHistogramCutByMedian, 2, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("Histogram Divisions:")), 3, 0, 1, 1);
+  propertiesLayout->addWidget(mLabelHistogramDivisions, 3, 0, 1, 1);
   mHistogramDivisions->setRange(1, 256);
   propertiesLayout->addWidget(mHistogramDivisions, 3, 1, 1, 1);
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void RswheWidgetImp::initSignalAndSlots()
@@ -146,6 +149,18 @@ void RswheWidgetImp::initSignalAndSlots()
   connect(mHistogramDivisions,    SIGNAL(valueChanged(int)),        this, SIGNAL(histogramDivisionsChange(int)));
   connect(mHistogramCutByMean,    SIGNAL(clicked()),                this, SLOT(onHistogramCutByMean()));
   connect(mHistogramCutByMedian,  SIGNAL(clicked()),                this, SLOT(onHistogramCutByMedian()));
+}
+
+void RswheWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 

@@ -35,11 +35,11 @@
 namespace photomatch
 {
 
-class IMultiviewView;
-class IMultiViewModel;
+class IMultiviewMatchingAssessmentView;
+class IMultiViewMatchingAssessmentModel;
 class HelpDialog;
 
-class IMultiViewPresenter
+class IMultiViewMatchingAssessmentPresenter
   : public IPresenter
 {
 
@@ -47,8 +47,8 @@ class IMultiViewPresenter
 
 public:
 
-  IMultiViewPresenter(){}
-  virtual ~IMultiViewPresenter() {}
+  IMultiViewMatchingAssessmentPresenter(){}
+  virtual ~IMultiViewMatchingAssessmentPresenter() {}
 
 public slots:
 
@@ -60,15 +60,15 @@ protected slots:
 };
 
 
-class MultiViewPresenter
-  : public IMultiViewPresenter
+class MultiViewMatchingAssessmentPresenter
+  : public IMultiViewMatchingAssessmentPresenter
 {
   Q_OBJECT
 
 public:
 
-  MultiViewPresenter(IMultiviewView *view,
-                     IMultiViewModel *model);
+  MultiViewMatchingAssessmentPresenter(IMultiviewMatchingAssessmentView *view,
+                                       IMultiViewMatchingAssessmentModel *model);
 
 private slots:
 
@@ -94,8 +94,8 @@ private:
 
 private:
 
-  IMultiviewView *mView;
-  IMultiViewModel *mModel;
+  IMultiviewMatchingAssessmentView *mView;
+  IMultiViewMatchingAssessmentModel *mModel;
   HelpDialog *mHelp;
 
 };

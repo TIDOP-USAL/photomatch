@@ -30,14 +30,18 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 LatchWidgetImp::LatchWidgetImp(QWidget *parent)
   : LatchWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelBytes(new QLabel(this)),
     mBytes(new QComboBox(this)),
     mRotationInvariance(new QCheckBox(this)),
+    mLabelHalfSsdSize(new QLabel(this)),
     mHalfSsdSize(new QSpinBox(this))
 {
   this->initUI();
@@ -87,7 +91,10 @@ void LatchWidgetImp::update()
 
 void LatchWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("LatchWidgetImp", "LATCH Parameters"));
+  mLabelBytes->setText(QApplication::translate("LatchWidgetImp", "Descriptor Bytes:"));
+  mRotationInvariance->setText(QApplication::translate("LatchWidgetImp", "Rotation Invariance"));
+  mLabelHalfSsdSize->setText(QApplication::translate("LatchWidgetImp", "Half of the mini-patches size:"));
 }
 
 void LatchWidgetImp::reset()
@@ -108,13 +115,12 @@ void LatchWidgetImp::initUI()
   layout->setContentsMargins(0, 0, 0, 0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("LATCH Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Descriptor Bytes:")), 0, 0);
+  propertiesLayout->addWidget(mLabelBytes, 0, 0);
   mBytes->addItem("1");
   mBytes->addItem("2");
   mBytes->addItem("4");
@@ -124,16 +130,15 @@ void LatchWidgetImp::initUI()
   mBytes->addItem("64");
   propertiesLayout->addWidget(mBytes, 0, 1);
 
-  mRotationInvariance->setText(tr("Rotation Invariance"));
   propertiesLayout->addWidget(mRotationInvariance, 1, 0);
 
-  propertiesLayout->addWidget(new QLabel(tr("Half of the mini-patches size:")), 2, 0);
+  propertiesLayout->addWidget(mLabelHalfSsdSize, 2, 0);
   mHalfSsdSize->setRange(0, 100);
   propertiesLayout->addWidget(mHalfSsdSize, 2, 1);
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void LatchWidgetImp::initSignalAndSlots()
@@ -141,6 +146,18 @@ void LatchWidgetImp::initSignalAndSlots()
   connect(mBytes,               SIGNAL(currentTextChanged(QString)),  this, SIGNAL(bytesChange(QString)));
   connect(mRotationInvariance,  SIGNAL(clicked(bool)),                this, SIGNAL(rotationInvarianceChange(bool)));
   connect(mHalfSsdSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(halfSsdSizeChange(int)));
+}
+
+void LatchWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

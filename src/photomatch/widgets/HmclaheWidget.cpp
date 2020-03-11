@@ -28,20 +28,27 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 HmclaheWidgetImp::HmclaheWidgetImp(QWidget *parent)
   : HmclaheWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this)),
+    mGroupBoxBlocksize(new QGroupBox(this)),
+    mLabelBlockSizeX(new QLabel(this)),
     mBlockSizeX(new QSpinBox(this)),
+    mLabelBlockSizeY(new QLabel(this)),
     mBlockSizeY(new QSpinBox(this)),
+    mLabelL(new QLabel(this)),
     mL(new QDoubleSpinBox(this)),
+    mLabelPhi(new QLabel(this)),
     mPhi(new QDoubleSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 HmclaheWidgetImp::~HmclaheWidgetImp()
@@ -100,12 +107,20 @@ void HmclaheWidgetImp::update()
 
 void HmclaheWidgetImp::retranslate()
 {
-#ifndef QT_NO_WHATSTHIS
-  mL->setWhatsThis(tr("<html><head/><body><p>Use to district the range of histogram. Range between 0 and 1.</p></body></html>"));
-  mPhi->setWhatsThis(tr("<html><head/><body><p>Use to adjust the histogram. Range between 0 and 1.</p></body></html>"));
-  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-#endif // QT_NO_WHATSTHIS
+  mGroupBox->setTitle(QApplication::translate("HmclaheWidgetImp", "HMCLAHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("HmclaheWidgetImp", "Histogram Modified Contrast Limited Adaptive Histogram Equalization"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("HmclaheWidgetImp", "Block Size", nullptr));
+  mLabelBlockSizeX->setText(QApplication::translate("HmclaheWidgetImp", "Width:", nullptr));
+  mLabelBlockSizeY->setText(QApplication::translate("HmclaheWidgetImp", "Height:", nullptr));
+  mLabelL->setText(QApplication::translate("HmclaheWidgetImp", "L:", nullptr));
+  mLabelPhi->setText(QApplication::translate("HmclaheWidgetImp", "K1:", nullptr));
+
+//#ifndef QT_NO_WHATSTHIS
+//  mL->setWhatsThis(tr("<html><head/><body><p>Use to district the range of histogram. Range between 0 and 1.</p></body></html>"));
+//  mPhi->setWhatsThis(tr("<html><head/><body><p>Use to adjust the histogram. Range between 0 and 1.</p></body></html>"));
+//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
+//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
+//#endif // QT_NO_WHATSTHIS
 }
 
 void HmclaheWidgetImp::reset()
@@ -129,46 +144,43 @@ void HmclaheWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("HMCLAHE Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout(mGroupBox);
 
-  QLabel *lbl = new QLabel(tr("Histogram Modified Contrast Limited Adaptive Histogram Equalization"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0, 1, 2);
 
-  QGroupBox *groupBoxBlocksize = new QGroupBox(tr("Block Size"), groupBox);
+  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(mGroupBoxBlocksize);
 
-  QGridLayout *propertiesLayoutBlocksize = new QGridLayout(groupBoxBlocksize);
-
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Width:")), 0, 0, 1, 1);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeX, 0, 0, 1, 1);
   mBlockSizeX->setRange(0, 1000);
   propertiesLayoutBlocksize->addWidget(mBlockSizeX, 0, 1, 1, 1);
 
-  propertiesLayoutBlocksize->addWidget(new QLabel(tr("Height:")),  1, 0, 1, 1);
+  propertiesLayoutBlocksize->addWidget(mLabelBlockSizeY,  1, 0, 1, 1);
   mBlockSizeY->setRange(0, 1000);
   propertiesLayoutBlocksize->addWidget(mBlockSizeY, 1, 1, 1, 1);
 
-  propertiesLayout->addWidget(groupBoxBlocksize, 1, 0, 1, 2);
+  propertiesLayout->addWidget(mGroupBoxBlocksize, 1, 0, 1, 2);
 
-  propertiesLayout->addWidget(new QLabel(tr("L:")), 2, 0, 1, 1);
+  propertiesLayout->addWidget(mLabelL, 2, 0, 1, 1);
   mL->setRange(0., 1.);
   mL->setSingleStep(0.01);
   mL->setDecimals(2);
   propertiesLayout->addWidget(mL, 2, 1, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Phi:")), 3, 0, 1, 1);
+  propertiesLayout->addWidget(mLabelPhi, 3, 0, 1, 1);
   mPhi->setRange(0., 1.);
   mPhi->setSingleStep(0.1);
   mPhi->setDecimals(2);
   propertiesLayout->addWidget(mPhi, 3, 1, 1, 1);
 
-  reset();
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void HmclaheWidgetImp::initSignalAndSlots()
@@ -177,6 +189,18 @@ void HmclaheWidgetImp::initSignalAndSlots()
   connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
   connect(mL,             SIGNAL(valueChanged(double)),     this, SIGNAL(lChange(double)));
   connect(mPhi,           SIGNAL(valueChanged(double)),     this, SIGNAL(phiChange(double)));
+}
+
+void HmclaheWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

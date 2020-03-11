@@ -57,14 +57,14 @@ void TestBriefWidgetsSignals::test_bytesChange()
 {
   QSignalSpy spy_bytesChange(this, &BriefWidgetImp::bytesChange);
 
-  this->mBytes->setCurrentText("64");
+  this->mDescriptorBytes->setCurrentText("64");
 
   QCOMPARE(spy_bytesChange.count(), 1);
 
   QList<QVariant> args = spy_bytesChange.takeFirst();
   QCOMPARE(args.at(0).toString(), "64");
 
-  this->mBytes->setCurrentText("64");
+  this->mDescriptorBytes->setCurrentText("64");
   QCOMPARE(spy_bytesChange.count(), 0);
 
   this->setBytes("16");

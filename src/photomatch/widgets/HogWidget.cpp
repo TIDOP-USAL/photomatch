@@ -30,21 +30,33 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 HogWidgetImp::HogWidgetImp(QWidget *parent)
   : HogWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelWinSizeHeight(new QLabel(this)),
     mWinSizeHeight(new QSpinBox(this)),
+    mLabelWinSizeWidth(new QLabel(this)),
     mWinSizeWidth(new QSpinBox(this)),
+    mLabelBlockSizeX(new QLabel(this)),
     mBlockSizeX(new QSpinBox(this)),
+    mLabelBlockSizeY(new QLabel(this)),
     mBlockSizeY(new QSpinBox(this)),
+    mLabelBlockStrideX(new QLabel(this)),
     mBlockStrideX(new QSpinBox(this)),
+    mLabelBlockStrideY(new QLabel(this)),
     mBlockStrideY(new QSpinBox(this)),
+    mLabelCellSizeX(new QLabel(this)),
     mCellSizeX(new QSpinBox(this)),
+    mLabelCellSizeY(new QLabel(this)),
     mCellSizeY(new QSpinBox(this)),
+    mLabelNbins(new QLabel(this)),
     mNbins(new QSpinBox(this)),
+    mLabelDerivAperture(new QLabel(this)),
     mDerivAperture(new QSpinBox(this))/*,
     mWinSigma(new QDoubleSpinBox(this)),
     mHistogramNormType(new QComboBox(this)),
@@ -259,7 +271,17 @@ void HogWidgetImp::update()
 
 void HogWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("HogWidgetImp", "HOG Parameters"));
+  mLabelWinSizeHeight->setText(QApplication::translate("HogWidgetImp", "Window Height:"));
+  mLabelWinSizeWidth->setText(QApplication::translate("HogWidgetImp", "Window Width:"));
+  mLabelBlockSizeX->setText(QApplication::translate("HogWidgetImp", "Block Size X:"));
+  mLabelBlockSizeY->setText(QApplication::translate("HogWidgetImp", "Block Size Y:"));
+  mLabelBlockStrideX->setText(QApplication::translate("HogWidgetImp", "Block Stride X:"));
+  mLabelBlockStrideY->setText(QApplication::translate("HogWidgetImp", "Block Stride Y:"));
+  mLabelCellSizeX->setText(QApplication::translate("HogWidgetImp", "Cell Size X:"));
+  mLabelCellSizeY->setText(QApplication::translate("HogWidgetImp", "Cell Size Y:"));
+  mLabelNbins->setText(QApplication::translate("HogWidgetImp", "nbins:"));
+  mLabelDerivAperture->setText(QApplication::translate("HogWidgetImp", "DerivAperture:"));
 }
 
 void HogWidgetImp::reset()
@@ -307,45 +329,44 @@ void HogWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("HOG Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Window Width:")), 0, 0);
+  propertiesLayout->addWidget(mLabelWinSizeHeight, 0, 0);
   mWinSizeHeight->setRange(0, 10000);
   propertiesLayout->addWidget(mWinSizeHeight, 0, 1);
-  propertiesLayout->addWidget(new QLabel(tr("Window Height:")), 0, 2);
+  propertiesLayout->addWidget(mLabelWinSizeWidth, 0, 2);
   mWinSizeWidth->setRange(0, 10000);
   propertiesLayout->addWidget(mWinSizeWidth, 0, 3);
 
-  propertiesLayout->addWidget(new QLabel(tr("Block Size X:")), 1, 0);
+  propertiesLayout->addWidget(mLabelBlockSizeX, 1, 0);
   mBlockSizeX->setRange(0, 10000);
   propertiesLayout->addWidget(mBlockSizeX, 1, 1);
-  propertiesLayout->addWidget(new QLabel(tr("Block Size Y:")), 1, 2);
+  propertiesLayout->addWidget(mLabelBlockSizeY, 1, 2);
   mBlockSizeY->setRange(0, 10000);
   propertiesLayout->addWidget(mBlockSizeY, 1, 3);
 
-  propertiesLayout->addWidget(new QLabel(tr("Block Stride X:")), 2, 0);
+  propertiesLayout->addWidget(mLabelBlockStrideX, 2, 0);
   mBlockStrideX->setRange(0, 10000);
   propertiesLayout->addWidget(mBlockStrideX, 2, 1);
-  propertiesLayout->addWidget(new QLabel(tr("Block Stride Y:")), 2, 2);
+  propertiesLayout->addWidget(mLabelBlockStrideY, 2, 2);
   mBlockStrideY->setRange(0, 10000);
   propertiesLayout->addWidget(mBlockStrideY, 2, 3);
 
-  propertiesLayout->addWidget(new QLabel(tr("Cell Size X:")), 3, 0);
+  propertiesLayout->addWidget(mLabelCellSizeX, 3, 0);
   mCellSizeX->setRange(0, 10000);
   propertiesLayout->addWidget(mCellSizeX, 3, 1);
-  propertiesLayout->addWidget(new QLabel(tr("Cell Size Y:")), 3, 2);
+  propertiesLayout->addWidget(mLabelCellSizeY, 3, 2);
   mCellSizeY->setRange(0, 10000);
   propertiesLayout->addWidget(mCellSizeY, 3, 3);
 
-  propertiesLayout->addWidget(new QLabel(tr("nbins:")), 4, 0);
+  propertiesLayout->addWidget(mLabelNbins, 4, 0);
   mNbins->setRange(0, 10000);
   propertiesLayout->addWidget(mNbins, 4, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("derivAperture:")), 5, 0);
+  propertiesLayout->addWidget(mLabelDerivAperture, 5, 0);
   mDerivAperture->setRange(0, 10000);
   propertiesLayout->addWidget(mDerivAperture, 5, 1);
 
@@ -375,9 +396,9 @@ void HogWidgetImp::initUI()
 //  mSignedGradient->setText(tr("Signed Gradient:"));
 //  propertiesLayout->addWidget(mSignedGradient, 12, 1);
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void HogWidgetImp::initSignalAndSlots()
@@ -392,6 +413,18 @@ void HogWidgetImp::initSignalAndSlots()
   connect(mCellSizeY,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeYChange(int)));
   connect(mNbins,          SIGNAL(valueChanged(int)),        this, SIGNAL(nbinsChange(int)));
   connect(mDerivAperture,  SIGNAL(valueChanged(int)),        this, SIGNAL(derivApertureChange(int)));
+}
+
+void HogWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

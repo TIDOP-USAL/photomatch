@@ -29,15 +29,19 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 FreakWidgetImp::FreakWidgetImp(QWidget *parent)
   : FreakWidget(parent),
+    mGroupBox(new QGroupBox(this)),
     mOrientationNormalized(new QCheckBox(this)),
     mScaleNormalized(new QCheckBox(this)),
+    mLabelPatternScale(new QLabel(this)),
     mPatternScale(new QDoubleSpinBox(this)),
+    mLabelOctaves(new QLabel(this)),
     mOctaves(new QSpinBox(this))
 {
   this->initUI();
@@ -97,6 +101,11 @@ void FreakWidgetImp::update()
 
 void FreakWidgetImp::retranslate()
 {
+  mGroupBox->setTitle(QApplication::translate("FreakWidgetImp", "FREAK Parameters"));
+  mOrientationNormalized->setText(QApplication::translate("FreakWidgetImp", "Orientation Normalization"));
+  mScaleNormalized->setText(QApplication::translate("FreakWidgetImp", "Scale Normalization"));
+  mLabelPatternScale->setText(QApplication::translate("FreakWidgetImp", "Pattern Scale:"));
+  mLabelOctaves->setText(QApplication::translate("FreakWidgetImp", "Number of Octaves:"));
 
 }
 
@@ -119,29 +128,26 @@ void FreakWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("FREAK Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  mOrientationNormalized->setText(tr("Orientation Normalization"));
   propertiesLayout->addWidget(mOrientationNormalized, 1, 0);
 
-  mScaleNormalized->setText(tr("Scale Normalization"));
   propertiesLayout->addWidget(mScaleNormalized, 2, 0);
 
-  propertiesLayout->addWidget(new QLabel(tr("Pattern Scale:")), 3, 0);
+  propertiesLayout->addWidget(mLabelPatternScale, 3, 0);
   mPatternScale->setRange(0., 1000.);
   propertiesLayout->addWidget(mPatternScale, 3, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Number of Octaves:")), 4, 0);
+  propertiesLayout->addWidget(mLabelOctaves, 4, 0);
   mOctaves->setRange(0, 100);
   propertiesLayout->addWidget(mOctaves, 4, 1);
 
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void FreakWidgetImp::initSignalAndSlots()
@@ -150,6 +156,18 @@ void FreakWidgetImp::initSignalAndSlots()
   connect(mScaleNormalized,        SIGNAL(clicked(bool)),                this, SIGNAL(scaleNormalizedChange(bool)));
   connect(mPatternScale,           SIGNAL(valueChanged(double)),         this, SIGNAL(patternScaleChange(double)));
   connect(mOctaves,                SIGNAL(valueChanged(int)),            this, SIGNAL(octavesChange(int)));
+}
+
+void FreakWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

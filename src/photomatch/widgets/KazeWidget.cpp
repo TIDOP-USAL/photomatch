@@ -31,17 +31,23 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 KazeWidgetImp::KazeWidgetImp(QWidget *parent)
   : KazeWidget(parent),
+    mGroupBox(new QGroupBox(this)),
     mExtended(new QCheckBox(this)),
     mUpright(new QCheckBox(this)),
+    mLabelThreshold(new QLabel(this)),
     mThreshold(new QDoubleSpinBox(this)),
+    mLabelOctaves(new QLabel(this)),
     mOctaves(new QSpinBox(this)),
+    mLabelOctaveLayers(new QLabel(this)),
     mOctaveLayers(new QSpinBox(this)),
+    mLabelDiffusivity(new QLabel(this)),
     mDiffusivity(new QComboBox(this))
 {
   this->initUI();
@@ -122,7 +128,13 @@ void KazeWidgetImp::update()
 
 void KazeWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("KazeWidgetImp", "KAZE Parameters"));
+  mExtended->setText(QApplication::translate("KazeWidgetImp","Extended"));
+    mUpright->setText(QApplication::translate("KazeWidgetImp","Upright"));
+  mLabelThreshold->setText(QApplication::translate("KazeWidgetImp", "Threshold:"));
+  mLabelOctaves->setText(QApplication::translate("KazeWidgetImp", "Octaves:"));
+  mLabelOctaveLayers->setText(QApplication::translate("KazeWidgetImp", "Octave Layers:"));
+  mLabelDiffusivity->setText(QApplication::translate("KazeWidgetImp", "Diffusivity:"));
 }
 
 void KazeWidgetImp::reset()
@@ -148,42 +160,39 @@ void KazeWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("KAZE Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  mExtended->setText(tr("Extended"));
   propertiesLayout->addWidget(mExtended, 0, 0);
 
-  mUpright->setText(tr("Upright"));
   propertiesLayout->addWidget(mUpright, 1, 0);
 
-  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 2, 0);
+  propertiesLayout->addWidget(mLabelThreshold, 2, 0);
   mThreshold->setDecimals(3);
   mThreshold->setRange(0, 99.99);
   mThreshold->setSingleStep(0.001);
   propertiesLayout->addWidget(mThreshold, 2, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 3, 0);
+  propertiesLayout->addWidget(mLabelOctaves, 3, 0);
   mOctaves->setRange(0, 100);
   propertiesLayout->addWidget(mOctaves, 3, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Octave Layers:")), 4, 0);
+  propertiesLayout->addWidget(mLabelOctaveLayers, 4, 0);
   mOctaveLayers->setRange(0, 100);
   propertiesLayout->addWidget(mOctaveLayers, 4, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Diffusivity:")), 5, 0);
+  propertiesLayout->addWidget(mLabelDiffusivity, 5, 0);
   mDiffusivity->addItem("DIFF_PM_G1");
   mDiffusivity->addItem("DIFF_PM_G2");
   mDiffusivity->addItem("DIFF_WEICKERT");
   mDiffusivity->addItem("DIFF_CHARBONNIER");
   propertiesLayout->addWidget(mDiffusivity, 5, 1);
 
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void KazeWidgetImp::initSignalAndSlots()
@@ -194,6 +203,18 @@ void KazeWidgetImp::initSignalAndSlots()
   connect(mOctaves,      SIGNAL(valueChanged(int)),           this, SIGNAL(octavesChange(int)));
   connect(mOctaveLayers, SIGNAL(valueChanged(int)),           this, SIGNAL(octaveLayersChange(int)));
   connect(mDiffusivity,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(diffusivityChange(QString)));
+}
+
+void KazeWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

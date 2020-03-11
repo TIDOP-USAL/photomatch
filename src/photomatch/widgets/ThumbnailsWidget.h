@@ -94,6 +94,12 @@ private:
   virtual void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
+protected:
+
+  void changeEvent(QEvent *event) override;
+
 protected:
 
   QListWidget *mListWidget;

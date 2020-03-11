@@ -27,12 +27,15 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 DecolorWidgetImp::DecolorWidgetImp(QWidget *parent)
-  : DecolorWidget(parent)
+  : DecolorWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescription(new QLabel(this))
 {
   this->initUI();
   this->initSignalAndSlots();
@@ -49,7 +52,8 @@ void DecolorWidgetImp::update()
 
 void DecolorWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("DecolorWidgetImp", "Decolorization Parameters"));
+  mLabelDescription->setText(QApplication::translate("DecolorWidgetImp", "Contrast Preserving Decolorization"));
 }
 
 void DecolorWidgetImp::reset()
@@ -64,26 +68,36 @@ void DecolorWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("Decolorization Parameters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
-  QGridLayout *propertiesLayout = new QGridLayout(groupBox);
+  QGridLayout *propertiesLayout = new QGridLayout(mGroupBox);
 
-  QLabel *lbl = new QLabel(tr("Contrast Preserving Decolorization"), this);
-  lbl->setWordWrap(true);
+  mLabelDescription->setWordWrap(true);
   QFont font;
   font.setBold(true);
-  lbl->setFont(font);
-  propertiesLayout->addWidget(lbl, 0, 0, 1, 2);
+  mLabelDescription->setFont(font);
+  propertiesLayout->addWidget(mLabelDescription, 0, 0, 1, 2);
 
-  reset(); /// set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void DecolorWidgetImp::initSignalAndSlots()
 {
 
+}
+
+void DecolorWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

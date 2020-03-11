@@ -29,16 +29,20 @@
 #include <QLabel>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 KeypointsFilterWidgetImp::KeypointsFilterWidgetImp(QWidget *parent)
   : KeypointsFilterWidget(parent),
+    mGroupBox(new QGroupBox(this)),
     mCheckBoxPointsNumber(new QCheckBox(this)),
     mPointsNumber(new QSpinBox(this)),
     mCheckBoxSize(new QCheckBox(this)),
+    mLabelMinSize(new QLabel(this)),
     mMinSize(new QDoubleSpinBox(this)),
+    mLabelMaxSize(new QLabel(this)),
     mMaxSize(new QDoubleSpinBox(this)),
     mCheckBoxRemoveDuplicated(new QCheckBox(this))
 {
@@ -133,7 +137,12 @@ void KeypointsFilterWidgetImp::update()
 
 void KeypointsFilterWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("KeypointsFilterWidgetImp", "Keypoints Filters"));
+  mCheckBoxPointsNumber->setText(QApplication::translate("KeypointsFilterWidgetImp", "N Best"));
+  mCheckBoxSize->setText(QApplication::translate("KeypointsFilterWidgetImp", "Keypoints Size"));
+  mLabelMinSize->setText(QApplication::translate("KeypointsFilterWidgetImp", "Min:"));
+  mLabelMaxSize->setText(QApplication::translate("KeypointsFilterWidgetImp", "Max:"));
+  mCheckBoxRemoveDuplicated->setText(QApplication::translate("KeypointsFilterWidgetImp", "Remove duplicated keypoints"));
 }
 
 void KeypointsFilterWidgetImp::reset()
@@ -160,39 +169,37 @@ void KeypointsFilterWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *groupBox = new QGroupBox(tr("Keypoints Filters"), this);
-  layout->addWidget(groupBox);
+  layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
-  groupBox->setLayout(propertiesLayout);
+  mGroupBox->setLayout(propertiesLayout);
 
-  mCheckBoxPointsNumber->setText(tr("N Best"));
   mCheckBoxPointsNumber->setChecked(false);
   propertiesLayout->addWidget(mCheckBoxPointsNumber, 0, 0, 1, 1);
 
   mPointsNumber->setRange(0, 100000);
   propertiesLayout->addWidget(mPointsNumber, 0, 1, 1, 4);
 
-  mCheckBoxSize->setText(tr("Keypoints Size"));
   mCheckBoxSize->setChecked(false);
   propertiesLayout->addWidget(mCheckBoxSize, 1, 0, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Min:")), 1, 1, 1, 1);
+  propertiesLayout->addWidget(mLabelMinSize, 1, 1, 1, 1);
   mMinSize->setRange(0., 49.);
   mMinSize->setSingleStep(0.01);
   mMinSize->setDecimals(3);
   propertiesLayout->addWidget(mMinSize, 1, 2, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Max:")), 1, 3, 1, 1);
+  propertiesLayout->addWidget(mLabelMaxSize, 1, 3, 1, 1);
   mMaxSize->setRange(50., 10000.);
   mMaxSize->setSingleStep(0.01);
   mMaxSize->setDecimals(3);
   propertiesLayout->addWidget(mMaxSize, 1, 4, 1, 1);
 
-  mCheckBoxRemoveDuplicated->setText(tr("Remove duplicated keypoints"));
   propertiesLayout->addWidget(mCheckBoxRemoveDuplicated, 2, 0, 1, 4);
 
-  reset();
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
 }
 
 void KeypointsFilterWidgetImp::initSignalAndSlots()
@@ -206,6 +213,18 @@ void KeypointsFilterWidgetImp::initSignalAndSlots()
   connect(mPointsNumber,  SIGNAL(valueChanged(int)),        this, SIGNAL(nPointsChange(int)));
   connect(mMinSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(minSizeChange(double)));
   connect(mMaxSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(maxSizeChange(double)));
+}
+
+void KeypointsFilterWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

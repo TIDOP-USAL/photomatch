@@ -88,7 +88,13 @@ public:
   ISettingsPresenter() {}
   virtual ~ISettingsPresenter(){}
 
-  virtual void openPage(int page) = 0;
+  //virtual void openPage(int page) = 0;
+
+public slots:
+
+  virtual void openViewSettings() = 0;
+  virtual void openQualityControlSettings() = 0;
+  virtual void openToolSettings() = 0;
 
 signals:
 
@@ -121,7 +127,13 @@ public:
   SettingsPresenter(ISettingsView *view, ISettingsModel *model);
   ~SettingsPresenter() override;
 
-  void openPage(int page) override;
+  //void openPage(int page) override;
+
+public slots:
+
+  void openViewSettings() override;
+  void openQualityControlSettings() override;
+  void openToolSettings() override;
 
 // IPresenter interface
 

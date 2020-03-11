@@ -28,14 +28,19 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 BriskWidgetImp::BriskWidgetImp(QWidget *parent)
   : BriskWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelThreshold(new QLabel(this)),
     mThreshold(new QSpinBox(this)),
+    mLabelOctaves(new QLabel(this)),
     mOctaves(new QSpinBox(this)),
+    mLabelPatternScale(new QLabel(this)),
     mPatternScale(new QDoubleSpinBox(this))
 {
   this->initUI();
@@ -86,7 +91,10 @@ void BriskWidgetImp::update()
 
 void BriskWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("BriskWidgetImp", "BRISK Parameters"));
+  mLabelThreshold->setText(QApplication::translate("BriskWidgetImp", "Threshold:"));
+  mLabelOctaves->setText(QApplication::translate("BriskWidgetImp", "Octaves:"));
+  mLabelPatternScale->setText(QApplication::translate("BriskWidgetImp", "Pattern Scale:"));
 }
 
 void BriskWidgetImp::reset()
@@ -108,27 +116,26 @@ void BriskWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("BRISK Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Threshold:")), 0, 0);
+  propertiesLayout->addWidget(mLabelThreshold, 0, 0);
   mThreshold->setRange(0, 100);
   propertiesLayout->addWidget(mThreshold, 0, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Octaves:")), 1, 0);
+  propertiesLayout->addWidget(mLabelOctaves, 1, 0);
   mOctaves->setRange(0, 100);
   propertiesLayout->addWidget(mOctaves, 1, 1);
 
-  propertiesLayout->addWidget(new QLabel(tr("Pattern Scale:")), 2, 0);
+  propertiesLayout->addWidget(mLabelPatternScale, 2, 0);
   mPatternScale->setRange(0., 10000.);
   propertiesLayout->addWidget(mPatternScale, 2, 1);
 
-  reset(); // set default values
-
-  update();
+  this->retranslate();
+  this->reset(); // set default values
+  this->update();
 }
 
 void BriskWidgetImp::initSignalAndSlots()
@@ -138,4 +145,18 @@ void BriskWidgetImp::initSignalAndSlots()
   connect(mPatternScale,     SIGNAL(valueChanged(double)),     this, SIGNAL(patternScaleChange(double)));
 }
 
+void BriskWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
+}
+
 } // namespace photomatch
+
+

@@ -15,7 +15,6 @@ StartPageWidget::StartPageWidget(QWidget *parent)
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 void StartPageWidget::setHistory(const QStringList &history)
@@ -152,17 +151,31 @@ void StartPageWidget::initUI()
   mSplitter->addWidget(layoutWidget2);
 
   layout->addWidget(mSplitter, 1, 0, 1, 1);
+
+  this->retranslate();
 }
 
 void StartPageWidget::initSignalAndSlots()
 {
-  connect(mCommandLinkButtonNewProject,   SIGNAL(clicked()),  this, SIGNAL(openNew()));
-  connect(mCommandLinkButtonOpenProject,  SIGNAL(clicked()),  this, SIGNAL(openProject()));
-  connect(mCommandLinkButtonSettings,     SIGNAL(clicked()),  this, SIGNAL(openSettings()));
-  connect(mCommandLinkButtonGitHub,       SIGNAL(clicked()),  this, SIGNAL(openGitHub()));
-  connect(mCommandLinkButtonClearHistory, SIGNAL(clicked()),  this, SIGNAL(clearHistory()));
+  connect(mCommandLinkButtonNewProject,   &QAbstractButton::clicked,  this, &StartPageWidget::openNew);
+  connect(mCommandLinkButtonOpenProject,  &QAbstractButton::clicked,  this, &StartPageWidget::openProject);
+  connect(mCommandLinkButtonSettings,     &QAbstractButton::clicked,  this, &StartPageWidget::openSettings);
+  connect(mCommandLinkButtonGitHub,       &QAbstractButton::clicked,  this, &StartPageWidget::openGitHub);
+  connect(mCommandLinkButtonClearHistory, &QAbstractButton::clicked,  this, &StartPageWidget::clearHistory);
 
-  connect(mListWidgetRecentProjects,       SIGNAL(currentTextChanged(QString)), this, SIGNAL(openProjectFromHistory(QString)));
+  connect(mListWidgetRecentProjects,      &QListWidget::currentTextChanged, this, &StartPageWidget::openProjectFromHistory);
+}
+
+void StartPageWidget::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch

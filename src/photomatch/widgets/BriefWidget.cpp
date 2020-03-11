@@ -29,13 +29,16 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 BriefWidgetImp::BriefWidgetImp(QWidget *parent)
   : BriefWidget(parent),
-    mBytes(new QComboBox(this)),
+    mGroupBox(new QGroupBox(this)),
+    mLabelDescriptorBytes(new QLabel(this)),
+    mDescriptorBytes(new QComboBox(this)),
     mUseOrientation(new QCheckBox(this))
 {
   this->initUI();
@@ -49,7 +52,7 @@ BriefWidgetImp::~BriefWidgetImp()
 
 QString BriefWidgetImp::bytes() const
 {
-  return mBytes->currentText();
+  return mDescriptorBytes->currentText();
 }
 
 bool BriefWidgetImp::useOrientation() const
@@ -59,8 +62,8 @@ bool BriefWidgetImp::useOrientation() const
 
 void BriefWidgetImp::setBytes(const QString &bytes)
 {
-  const QSignalBlocker blockerBytes(mBytes);
-  mBytes->setCurrentText(bytes);
+  const QSignalBlocker blockerBytes(mDescriptorBytes);
+  mDescriptorBytes->setCurrentText(bytes);
 }
 
 void BriefWidgetImp::setUseOrientation(bool useOrientation)
@@ -74,14 +77,16 @@ void BriefWidgetImp::update()
 
 void BriefWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("BriefWidgetImp", "BRIEF Parameters"));
+  mLabelDescriptorBytes->setText(QApplication::translate("BriefWidgetImp", "Descriptor Bytes:"));
+  mUseOrientation->setText(QApplication::translate("BriefWidgetImp", "Use Keypoints Orientation"));
 }
 
 void BriefWidgetImp::reset()
 {
-  const QSignalBlocker blockerBytes(mBytes);
+  const QSignalBlocker blockerBytes(mDescriptorBytes);
 
-  mBytes->setCurrentText("32");
+  mDescriptorBytes->setCurrentText("32");
   mUseOrientation->setChecked(false);
 }
 
@@ -93,32 +98,44 @@ void BriefWidgetImp::initUI()
   layout->setContentsMargins(0,0,0,0);
   this->setLayout(layout);
 
-  QGroupBox *mGroupBox = new QGroupBox(tr("BRIEF Parameters"), this);
   layout->addWidget(mGroupBox);
 
   QGridLayout *propertiesLayout = new QGridLayout();
   mGroupBox->setLayout(propertiesLayout);
 
-  propertiesLayout->addWidget(new QLabel(tr("Descriptor Bytes:")), 0, 0);
-  mBytes->addItem("16");
-  mBytes->addItem("32");
-  mBytes->addItem("64");
-  propertiesLayout->addWidget(mBytes, 0, 1);
+  propertiesLayout->addWidget(mLabelDescriptorBytes, 0, 0);
+  mDescriptorBytes->addItem("16");
+  mDescriptorBytes->addItem("32");
+  mDescriptorBytes->addItem("64");
+  propertiesLayout->addWidget(mDescriptorBytes, 0, 1);
 
-  mUseOrientation->setText(tr("Use Keypoints Orientation"));
   propertiesLayout->addWidget(mUseOrientation, 1, 0);
 
-  reset();
-
-  update();
+  this->retranslate();
+  this->reset();  /// set default values
+  this->update();
 }
 
 void BriefWidgetImp::initSignalAndSlots()
 {
-  connect(mBytes,          SIGNAL(currentTextChanged(QString)),   this, SIGNAL(bytesChange(QString)));
-  connect(mUseOrientation, SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
+  connect(mDescriptorBytes, SIGNAL(currentTextChanged(QString)), this, SIGNAL(bytesChange(QString)));
+  connect(mUseOrientation,  SIGNAL(clicked(bool)),               this, SIGNAL(useOrientationChange(bool)));
+}
+
+void BriefWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch
+
+
 
 

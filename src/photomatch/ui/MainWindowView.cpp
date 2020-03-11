@@ -391,10 +391,10 @@ void MainWindowView::addPreprocess(const QString &sessionName,
         if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
           if (itemSession->text(0).compare(sessionName) == 0){
 
-            for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)) {
+            for (int j = 0; j < itemSession->childCount(); j++) {
+              if (QTreeWidgetItem *temp = itemSession->child(j)) {
                 if (temp->text(0).compare(tr("Preprocess")) == 0) {
-                  itemPreprocess = itemSession->child(i);
+                  itemPreprocess = itemSession->child(j);
                   break;
                 }
               }
@@ -488,10 +488,10 @@ void MainWindowView::addFeatures(const QString &sessionName, const QString &dete
         if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
           if (itemSession->text(0).compare(sessionName) == 0){
 
-            for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)){
+            for (int j = 0; j < itemSession->childCount(); j++) {
+              if (QTreeWidgetItem *temp = itemSession->child(j)){
                 if (temp->text(0).compare(tr("Features")) == 0) {
-                  itemFeatures = itemSession->child(i);
+                  itemFeatures = itemSession->child(j);
                   break;
                 }
               }
@@ -629,10 +629,10 @@ void MainWindowView::addMatches(const QString &sessionName, const QString &match
         if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
           if (itemSession->text(0).compare(sessionName) == 0){
 
-            for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)){
+            for (int j = 0; j < itemSession->childCount(); j++) {
+              if (QTreeWidgetItem *temp = itemSession->child(j)){
                 if (temp->text(0).compare(tr("Matches")) == 0) {
-                  itemMatches = itemSession->child(i);
+                  itemMatches = itemSession->child(j);
                   break;
                 }
               }
@@ -849,27 +849,24 @@ void MainWindowView::deleteSession(const QString &session)
   }
 
   if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
-    if (QTreeWidgetItem *itemProject = mTreeWidgetProject->topLevelItem(0)) {
 
-      QTreeWidgetItem *itemSessions = nullptr;
-      for (int i = 0; i < itemProject->childCount(); i++) {
-        if (QTreeWidgetItem *temp = itemProject->child(i)){
-          if (temp->text(0).compare(tr("Sessions")) == 0) {
-            itemSessions = itemProject->child(i);
-            break;
-          }
+    QTreeWidgetItem *itemSessions = nullptr;
+    for (int i = 0; i < itemProject->childCount(); i++) {
+      if (QTreeWidgetItem *temp = itemProject->child(i)){
+        if (temp->text(0).compare(tr("Sessions")) == 0) {
+          itemSessions = itemProject->child(i);
+          break;
         }
       }
+    }
 
-      if (itemSessions != nullptr) {
-        QTreeWidgetItem *itemPreprocess = nullptr;
-        for (int i = 0; i < itemSessions->childCount(); i++) {
-          if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
-            if (itemSession->text(0).compare(session) == 0){
-              delete itemSession;
-              itemSession = nullptr;
-              break;
-            }
+    if (itemSessions != nullptr) {
+      for (int i = 0; i < itemSessions->childCount(); i++) {
+        if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
+          if (itemSession->text(0).compare(session) == 0){
+            delete itemSession;
+            itemSession = nullptr;
+            break;
           }
         }
       }
@@ -899,10 +896,10 @@ void MainWindowView::deletePreprocess(const QString &session, const QString &pre
         if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
           if (itemSession->text(0).compare(session) == 0){
 
-            for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)) {
+            for (int j = 0; j < itemSession->childCount(); j++) {
+              if (QTreeWidgetItem *temp = itemSession->child(j)) {
                 if (temp->text(0).compare(tr("Preprocess")) == 0) {
-                  itemPreprocess = itemSession->child(i);
+                  itemPreprocess = itemSession->child(j);
                   break;
                 }
               }
@@ -977,10 +974,10 @@ void MainWindowView::deleteFeatures(const QString &session, const QString &feat)
         if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
           if (itemSession->text(0).compare(session) == 0){
 
-            for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)){
+            for (int j = 0; j < itemSession->childCount(); j++) {
+              if (QTreeWidgetItem *temp = itemSession->child(j)){
                 if (temp->text(0).compare(tr("Features")) == 0) {
-                  itemFeatures = itemSession->child(i);
+                  itemFeatures = itemSession->child(j);
                   break;
                 }
               }
@@ -1048,10 +1045,10 @@ void MainWindowView::deleteMatches(const QString &session, const QString &matche
         if (QTreeWidgetItem *itemSession = itemSessions->child(i)){
           if (itemSession->text(0).compare(session) == 0){
 
-            for (int i = 0; i < itemSession->childCount(); i++) {
-              if (QTreeWidgetItem *temp = itemSession->child(i)){
+            for (int j = 0; j < itemSession->childCount(); j++) {
+              if (QTreeWidgetItem *temp = itemSession->child(j)){
                 if (temp->text(0).compare(tr("Matches")) == 0) {
-                  itemMatches = itemSession->child(i);
+                  itemMatches = itemSession->child(j);
                   break;
                 }
               }
@@ -1084,10 +1081,10 @@ void MainWindowView::deleteMatches(const QString &session, const QString &matche
             if (itemLeftImage != nullptr) {
 
               QTreeWidgetItem *itemRightImage = nullptr;
-              for (int i = 0; i < itemLeftImage->childCount(); i++) {
-                QTreeWidgetItem *temp = itemLeftImage->child(i);
+              for (int j = 0; j < itemLeftImage->childCount(); j++) {
+                QTreeWidgetItem *temp = itemLeftImage->child(j);
                 if (temp && temp->toolTip(0).compare(matches) == 0) {
-                  itemRightImage = itemLeftImage->child(i);
+                  itemRightImage = itemLeftImage->child(j);
                   break;
                 }
               }

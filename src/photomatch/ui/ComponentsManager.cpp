@@ -96,8 +96,8 @@ ComponentsManager::ComponentsManager(QObject *parent)
     mFeaturesViewerModel(nullptr),
     mMatchesViewerPresenter(nullptr),
     mMatchesViewerModel(nullptr),
-    mMultiviewModel(nullptr),
-    mMultiviewPresenter(nullptr),
+    mMultiviewMatchingAssessmentModel(nullptr),
+    mMultiviewMatchingAssessmentPresenter(nullptr),
     mGroundTruthPresenter(nullptr),
     mGroundTruthModel(nullptr),
     mHomographyViewerPresenter(nullptr),
@@ -226,14 +226,14 @@ ComponentsManager::~ComponentsManager()
     mMatchesViewerModel = nullptr;
   }
 
-  if (mMultiviewModel){
-    delete mMultiviewModel;
-    mMultiviewModel = nullptr;
+  if (mMultiviewMatchingAssessmentModel){
+    delete mMultiviewMatchingAssessmentModel;
+    mMultiviewMatchingAssessmentModel = nullptr;
   }
 
-  if (mMultiviewPresenter){
-    delete mMultiviewPresenter;
-    mMultiviewPresenter = nullptr;
+  if (mMultiviewMatchingAssessmentPresenter){
+    delete mMultiviewMatchingAssessmentPresenter;
+    mMultiviewMatchingAssessmentPresenter = nullptr;
   }
 
   if (mGroundTruthPresenter){
@@ -360,6 +360,11 @@ MainWindowPresenter *ComponentsManager::mainWindowPresenter()
     connect(mMainWindowPresenter, SIGNAL(openROCCurvesViewerDialog()),  this, SLOT(initAndOpenROCCurvesViewerDialog()));
     connect(mMainWindowPresenter, SIGNAL(openDETCurvesViewerDialog()),  this, SLOT(initAndOpenDETCurvesViewerDialog()));
     connect(mMainWindowPresenter, SIGNAL(openAboutDialog()),            this, SLOT(initAndOpenAboutDialog()));
+    connect(mMainWindowPresenter, SIGNAL(openSettingsDialog()),         this, SLOT(initAndOpenSettingsDialog()));
+    connect(mMainWindowPresenter, SIGNAL(openViewSettingsDialog()),     this, SLOT(initAndOpenViewSettingsDialog()));
+    connect(mMainWindowPresenter, SIGNAL(openQualityControlSettingsDialog()),         this, SLOT(initAndOpenQualityControlDialog()));
+    connect(mMainWindowPresenter, SIGNAL(openToolSettingsDialog()),     this, SLOT(initAndOpenToolSettingsDialog()));
+    connect(mMainWindowPresenter, SIGNAL(openMultiviewMatchingAssessmentDialog()),     this, SLOT(initAndOpenMultiviewMatchingAssessmentDialog()));
   }
   return mMainWindowPresenter;
 }
@@ -394,8 +399,8 @@ ISettingsModel *ComponentsManager::settingsModel()
 ISettingsPresenter *ComponentsManager::settingsPresenter()
 {
   if (mSettingsPresenter == nullptr){
-    mSettingsPresenter = new SettingsPresenter(new SettingsView(this->mainWindowView()), this->settingsModel());
-    mSettingsPresenter->setHelp(this->helpDialog());
+    ISettingsView *view = new SettingsView(this->mainWindowView());
+    mSettingsPresenter = new SettingsPresenter(view, this->settingsModel());
   }
   return mSettingsPresenter;
 }
@@ -527,24 +532,24 @@ IMatchViewerModel *ComponentsManager::matchesViewerModel()
   return mMatchesViewerModel;
 }
 
-IMultiViewModel *ComponentsManager::multiviewModel()
+IMultiViewMatchingAssessmentModel *ComponentsManager::multiviewMatchingAssessmentModel()
 {
-  if (mMultiviewModel == nullptr) {
-    mMultiviewModel = new MultiviewModel(mProjectModel);
+  if (mMultiviewMatchingAssessmentModel == nullptr) {
+    mMultiviewMatchingAssessmentModel = new MultiviewMatchingAssessmentModel(mProjectModel);
   }
-  return mMultiviewModel;
+  return mMultiviewMatchingAssessmentModel;
 }
 
-IMultiViewPresenter *ComponentsManager::multiviewPresenter()
+IMultiViewMatchingAssessmentPresenter *ComponentsManager::multiviewMatchingAssessmentPresenter()
 {
-  if (mMultiviewPresenter == nullptr){
+  if (mMultiviewMatchingAssessmentPresenter == nullptr){
 
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
-    IMultiviewView *multiviewView = new MultiviewView(this->mainWindowView(), f);
-    mMultiviewPresenter = new MultiViewPresenter(multiviewView, this->multiviewModel());
-    mMultiviewPresenter->setHelp(this->helpDialog());
+    IMultiviewMatchingAssessmentView *multiviewView = new MultiviewMatchingAssessmentView(this->mainWindowView(), f);
+    mMultiviewMatchingAssessmentPresenter = new MultiViewMatchingAssessmentPresenter(multiviewView, this->multiviewMatchingAssessmentModel());
+    mMultiviewMatchingAssessmentPresenter->setHelp(this->helpDialog());
   }
-  return mMultiviewPresenter;
+  return mMultiviewMatchingAssessmentPresenter;
 }
 
 IGroundTruthPresenter *ComponentsManager::groundTruthPresenter()
@@ -918,6 +923,53 @@ void ComponentsManager::initAndOpenAboutDialog()
   connect(this->mainWindowPresenter(), &MainWindowPresenter::openAboutDialog,
           this->aboutDialog(), &AboutDialog::open);
   this->aboutDialog()->open();
+}
+
+void ComponentsManager::initAndOpenSettingsDialog()
+{
+  this->initSettingsDialog();
+  this->settingsPresenter()->open();
+}
+
+void ComponentsManager::initAndOpenViewSettingsDialog()
+{
+  this->initSettingsDialog();
+  this->settingsPresenter()->openViewSettings();
+}
+
+void ComponentsManager::initAndOpenQualityControlDialog()
+{
+  this->initSettingsDialog();
+  this->settingsPresenter()->openQualityControlSettings();
+}
+
+void ComponentsManager::initAndOpenToolSettingsDialog()
+{
+  this->initSettingsDialog();
+  this->settingsPresenter()->openToolSettings();
+}
+
+void ComponentsManager::initSettingsDialog()
+{
+  disconnect(this->mainWindowPresenter(), SIGNAL(openSettingsDialog()), this, SLOT(initAndOpenSettingsDialog()));
+  disconnect(this->mainWindowPresenter(), SIGNAL(openViewSettingsDialog()), this, SLOT(initAndOpenViewSettingsDialog()));
+  disconnect(this->mainWindowPresenter(), SIGNAL(openQualityControlSettingsDialog()), this, SLOT(initAndOpenQualityControlDialog()));
+  disconnect(this->mainWindowPresenter(), SIGNAL(openToolSettingsDialog()), this, SLOT(initAndOpenToolSettingsDialog()));
+
+  connect(this->mainWindowPresenter(), SIGNAL(openSettingsDialog()), this->settingsPresenter(), SLOT(open()));
+  connect(this->mainWindowPresenter(), SIGNAL(openViewSettingsDialog()), this->settingsPresenter(), SLOT(openViewSettings()));
+  connect(this->mainWindowPresenter(), SIGNAL(openQualityControlSettingsDialog()), this->settingsPresenter(), SLOT(openQualityControlSettings()));
+  connect(this->mainWindowPresenter(), SIGNAL(openToolSettingsDialog()), this->settingsPresenter(), SLOT(openToolSettings()));
+
+  this->settingsPresenter()->setHelp(this->helpDialog());
+}
+
+void ComponentsManager::initAndOpenMultiviewMatchingAssessmentDialog()
+{
+  disconnect(mMainWindowPresenter, SIGNAL(openMultiviewMatchingAssessmentDialog()), this, SLOT(initAndOpenMultiviewMatchingAssessmentDialog()));
+  connect(mMainWindowPresenter, SIGNAL(openMultiviewMatchingAssessmentDialog()), this->multiviewMatchingAssessmentPresenter(), SLOT(open()));
+
+  this->multiviewMatchingAssessmentPresenter()->open();
 }
 
 

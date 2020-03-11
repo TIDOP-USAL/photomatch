@@ -215,6 +215,7 @@ public slots:
   virtual void setGmsThreshold(double threshold) = 0;
 };
 
+
 class PHOTOMATCH_EXPORT DescriptorMatcherWidgetImp
   : public DescriptorMatcherWidget
 {
@@ -282,15 +283,25 @@ private:
   void initUI() override;
   void initSignalAndSlots() override;
 
+// QWidget interface
+
 protected:
 
+  void changeEvent(QEvent *event) override;
+
+protected:
+
+  QLabel *mLabelMatchingMethod;
   QComboBox *mMatchingMethod;
+  QLabel *mLabelMatchingStrategy;
   QComboBox *mMatchingStrategy;
   QGroupBox *mGroupBoxBFParameters;
   QComboBox *mNormType;
   QLabel *mNormTypeLabel;
   QGroupBox *mGroupBoxFilteringTest;
+  QLabel *mLabelRatio;
   QDoubleSpinBox *mRatio;
+  QLabel *mLabelGeometricTest;
   QComboBox *mGeometricTest;
   QDoubleSpinBox *mDistance;
   QLabel *mDistanceLabel;
@@ -308,7 +319,9 @@ protected:
   QGroupBox *mGroupBoxGMS;
   QCheckBox *mRotationGMS;
   QCheckBox *mScaleGMS;
+  QLabel *mLabelThresholdGMS;
   QDoubleSpinBox *mThresholdGMS;
+
 };
 
 

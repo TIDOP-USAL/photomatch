@@ -30,100 +30,39 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
 OrbWidgetImp::OrbWidgetImp(QWidget *parent)
   : OrbWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mLabelFeaturesNumber(new QLabel(this)),
     mFeaturesNumber(new QSpinBox(this)),
+    mLabelScaleFactor(new QLabel(this)),
     mScaleFactor(new QDoubleSpinBox(this)),
+    mLabelLevelsNumber(new QLabel(this)),
     mLevelsNumber(new QSpinBox(this)),
+    mLabelEdgeThreshold(new QLabel(this)),
     mEdgeThreshold(new QSpinBox(this)),
     //mFirstLevel(new QSpinBox(this)),
+    mLabelWTA_K(new QLabel(this)),
     mWTA_K(new QSpinBox(this)),
+    mLabelScoreType(new QLabel(this)),
     mScoreType(new QComboBox(this)),
+    mLabelPatchSize(new QLabel(this)),
     mPatchSize(new QSpinBox(this)),
+    mLabelFastThreshold(new QLabel(this)),
     mFastThreshold(new QSpinBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 OrbWidgetImp::~OrbWidgetImp()
 {
 
-}
-
-/// private:
-
-void OrbWidgetImp::initUI()
-{
-  this->setWindowTitle("ORB");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  QGroupBox *mGroupBox = new QGroupBox(tr("ORB Parameters"), this);
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(new QLabel(tr("Features Number:")), 0, 0);
-  mFeaturesNumber->setRange(0, 50000);
-  propertiesLayout->addWidget(mFeaturesNumber, 0, 1);
-
-  propertiesLayout->addWidget(new QLabel(tr("Scale Factor:")), 1, 0);
-  mScaleFactor->setRange(1., 100.);
-  mScaleFactor->setSingleStep(0.1);
-  propertiesLayout->addWidget(mScaleFactor, 1, 1);
-
-  propertiesLayout->addWidget(new QLabel(tr("Levels Number:")), 2, 0);
-  mLevelsNumber->setRange(0, 100);
-  propertiesLayout->addWidget(mLevelsNumber, 2, 1);
-
-  propertiesLayout->addWidget(new QLabel(tr("Edge Threshold:")), 3, 0);
-  mEdgeThreshold->setRange(0, 100);
-  propertiesLayout->addWidget(mEdgeThreshold, 3, 1);
-
-  /// OpenCV -> It should be 0 in the current implementation
-  //mFirstLevel->setValue(0);
-
-  propertiesLayout->addWidget(new QLabel(tr("WTA_K:")), 4, 0);
-  mWTA_K->setRange(2, 4);
-  propertiesLayout->addWidget(mWTA_K, 4, 1);
-
-  propertiesLayout->addWidget(new QLabel(tr("Score Type:")), 5, 0);
-  mScoreType->addItem("Harris");
-  mScoreType->addItem("FAST");
-  propertiesLayout->addWidget(mScoreType, 5, 1);
-
-  propertiesLayout->addWidget(new QLabel(tr("Patch Size:")), 6, 0);
-  mPatchSize->setRange(0, 100);
-  propertiesLayout->addWidget(mPatchSize, 6, 1);
-
-  propertiesLayout->addWidget(new QLabel(tr("Fast Threshold:")), 7, 0);
-  mFastThreshold->setRange(0, 100);
-  propertiesLayout->addWidget(mFastThreshold, 7, 1);
-
-  reset(); /// set default values
-
-  update();
-}
-
-void OrbWidgetImp::initSignalAndSlots()
-{
-  connect(mFeaturesNumber, SIGNAL(valueChanged(int)),           this, SIGNAL(featuresNumberChange(int)));
-  connect(mScaleFactor,    SIGNAL(valueChanged(double)),        this, SIGNAL(scaleFactorChange(double)));
-  connect(mLevelsNumber,   SIGNAL(valueChanged(int)),           this, SIGNAL(levelsNumberChange(int)));
-  connect(mEdgeThreshold,  SIGNAL(valueChanged(int)),           this, SIGNAL(edgeThresholdChange(int)));
-  connect(mWTA_K,          SIGNAL(valueChanged(int)),           this, SIGNAL(wta_kChange(int)));
-  connect(mScoreType,      SIGNAL(currentTextChanged(QString)), this, SIGNAL(scoreTypeChange(QString)));
-  connect(mPatchSize,      SIGNAL(valueChanged(int)),           this, SIGNAL(patchSizeChange(int)));
-  connect(mFastThreshold,  SIGNAL(valueChanged(int)),           this, SIGNAL(fastThresholdChange(int)));
 }
 
 int OrbWidgetImp::featuresNumber() const
@@ -220,7 +159,15 @@ void OrbWidgetImp::update()
 
 void OrbWidgetImp::retranslate()
 {
-
+  mGroupBox->setTitle(QApplication::translate("OrbWidgetImp", "ORB Parameters"));
+  mLabelFeaturesNumber->setText(QApplication::translate("OrbWidgetImp", "Features Number:"));
+  mLabelScaleFactor->setText(QApplication::translate("OrbWidgetImp", "Scale Factor:"));
+  mLabelLevelsNumber->setText(QApplication::translate("OrbWidgetImp", "Levels Number:"));
+  mLabelEdgeThreshold->setText(QApplication::translate("OrbWidgetImp", "Edge Threshold:"));
+  mLabelWTA_K->setText(QApplication::translate("OrbWidgetImp", "WTA_K:"));
+  mLabelScoreType->setText(QApplication::translate("OrbWidgetImp", "Score Type:"));
+  mLabelPatchSize->setText(QApplication::translate("OrbWidgetImp", "Patch Size:"));
+  mLabelFastThreshold->setText(QApplication::translate("OrbWidgetImp", "Fast Threshold:"));
 }
 
 void OrbWidgetImp::reset()
@@ -242,6 +189,85 @@ void OrbWidgetImp::reset()
   mScoreType->setCurrentText("Harris");
   mPatchSize->setValue(31);          // OpenCV default value  = 31
   mFastThreshold->setValue(20);
+}
+
+void OrbWidgetImp::initUI()
+{
+  this->setWindowTitle("ORB");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelFeaturesNumber, 0, 0);
+  mFeaturesNumber->setRange(0, 50000);
+  propertiesLayout->addWidget(mFeaturesNumber, 0, 1);
+
+  propertiesLayout->addWidget(mLabelScaleFactor, 1, 0);
+  mScaleFactor->setRange(1., 100.);
+  mScaleFactor->setSingleStep(0.1);
+  propertiesLayout->addWidget(mScaleFactor, 1, 1);
+
+  propertiesLayout->addWidget(mLabelLevelsNumber, 2, 0);
+  mLevelsNumber->setRange(0, 100);
+  propertiesLayout->addWidget(mLevelsNumber, 2, 1);
+
+  propertiesLayout->addWidget(mLabelEdgeThreshold, 3, 0);
+  mEdgeThreshold->setRange(0, 100);
+  propertiesLayout->addWidget(mEdgeThreshold, 3, 1);
+
+  /// OpenCV -> It should be 0 in the current implementation
+  //mFirstLevel->setValue(0);
+
+  propertiesLayout->addWidget(mLabelWTA_K, 4, 0);
+  mWTA_K->setRange(2, 4);
+  propertiesLayout->addWidget(mWTA_K, 4, 1);
+
+  propertiesLayout->addWidget(mLabelScoreType, 5, 0);
+  mScoreType->addItem("Harris");
+  mScoreType->addItem("FAST");
+  propertiesLayout->addWidget(mScoreType, 5, 1);
+
+  propertiesLayout->addWidget(mLabelPatchSize, 6, 0);
+  mPatchSize->setRange(0, 100);
+  propertiesLayout->addWidget(mPatchSize, 6, 1);
+
+  propertiesLayout->addWidget(mLabelFastThreshold, 7, 0);
+  mFastThreshold->setRange(0, 100);
+  propertiesLayout->addWidget(mFastThreshold, 7, 1);
+
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
+}
+
+void OrbWidgetImp::initSignalAndSlots()
+{
+  connect(mFeaturesNumber, SIGNAL(valueChanged(int)),           this, SIGNAL(featuresNumberChange(int)));
+  connect(mScaleFactor,    SIGNAL(valueChanged(double)),        this, SIGNAL(scaleFactorChange(double)));
+  connect(mLevelsNumber,   SIGNAL(valueChanged(int)),           this, SIGNAL(levelsNumberChange(int)));
+  connect(mEdgeThreshold,  SIGNAL(valueChanged(int)),           this, SIGNAL(edgeThresholdChange(int)));
+  connect(mWTA_K,          SIGNAL(valueChanged(int)),           this, SIGNAL(wta_kChange(int)));
+  connect(mScoreType,      SIGNAL(currentTextChanged(QString)), this, SIGNAL(scoreTypeChange(QString)));
+  connect(mPatchSize,      SIGNAL(valueChanged(int)),           this, SIGNAL(patchSizeChange(int)));
+  connect(mFastThreshold,  SIGNAL(valueChanged(int)),           this, SIGNAL(fastThresholdChange(int)));
+}
+
+void OrbWidgetImp::changeEvent(QEvent *event)
+{
+  QWidget::changeEvent(event);
+  switch (event->type()) {
+    case QEvent::LanguageChange:
+      this->retranslate();
+      break;
+    default:
+      break;
+  }
 }
 
 } // namespace photomatch
