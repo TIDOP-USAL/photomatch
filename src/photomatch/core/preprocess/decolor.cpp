@@ -32,7 +32,6 @@ namespace photomatch
 {
 
 DecolorProperties::DecolorProperties()
-  : Decolor()
 {
 }
 

@@ -445,13 +445,13 @@ double Curve<T>::falseNegativeRate(size_t fn, size_t positives)
 template<typename T> inline
 double Curve<T>::positivePredictiveValue(size_t tp, size_t fp)
 {
-  return ( (tp + fp) > 0.) ? tp / (tp + fp) : -1;
+  return ( (tp + fp) > static_cast<size_t>(0)) ? tp / (tp + fp) : -1;
 }
 
 template<typename T> inline
 double Curve<T>::negativePredictiveValue(size_t fn, size_t tn)
 {
-  return (fn + tn > 0.) ? tn / (fn + tn) : -1;
+  return (fn + tn > static_cast<size_t>(0)) ? tn / (fn + tn) : -1;
 }
 
 template<typename T> inline
@@ -544,7 +544,7 @@ void ROCCurve<T>::compute(size_t steeps)
   T step = (max - min) / static_cast<double>(steeps);
 
   T threshold = min;
-  for (int i = 0; i < steeps; i++) {
+  for (size_t i = 0; i < steeps; i++) {
 
     std::map<typename PRCurve<T>::Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
     double fpr = falsePositiveRate(confussionMatrix[PRCurve<T>::Classification::false_positives], this->mNegatives);
@@ -593,7 +593,7 @@ void DETCurve<T>::compute(size_t steeps)
   T step = (max - min) / static_cast<double>(steeps);
 
   T threshold = min;
-  for (int i = 0; i < steeps; i++) {
+  for (size_t i = 0; i < steeps; i++) {
 
     std::map<typename DETCurve<T>::Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
     double fpr = falsePositiveRate(confussionMatrix[DETCurve<T>::Classification::false_positives], this->mNegatives);

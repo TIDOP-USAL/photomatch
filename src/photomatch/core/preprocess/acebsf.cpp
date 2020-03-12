@@ -81,9 +81,9 @@ AcebsfProperties &AcebsfProperties::operator=(AcebsfProperties &&acebsfPropertie
 {
   if (this != &acebsfProperties) {  
     mBlockSize = std::move(acebsfProperties.mBlockSize);
-    mL = std::move(acebsfProperties.mL);
-    mK1 = std::move(acebsfProperties.mK1);
-    mK2 = std::move(acebsfProperties.mK2);
+    mL = acebsfProperties.mL;
+    mK1 = acebsfProperties.mK1;
+    mK2 = acebsfProperties.mK2;
   }
   return *this;
 }

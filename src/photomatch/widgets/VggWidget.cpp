@@ -131,6 +131,7 @@ void VggWidgetImp::retranslate()
   //mLabelScaleFactor->setText(QApplication::translate("VggWidgetImp", "Scale Factor:"));
   mLabelSigma->setText(QApplication::translate("VggWidgetImp", "Sigma:"));
   mUseNormalizeDescriptor->setText(QApplication::translate("VggWidgetImp", "Use Normalize Descriptor"));
+  mUseNormalizeImage->setText(QApplication::translate("VggWidgetImp", "Use Normalize Image"));
   mUseScaleOrientation->setText(QApplication::translate("VggWidgetImp", "Use Scale Orientation"));
 }
 
