@@ -45,11 +45,11 @@
 namespace photomatch
 {
 
-DescriptorMatcherPresenter::DescriptorMatcherPresenter(IDescriptorMatcherView *view,
+DescriptorMatcherPresenterImp::DescriptorMatcherPresenterImp(DescriptorMatcherView *view,
                                                        //IDescriptorMatcherModel *model,
-                                                       IProjectModel *projectModel,
-                                                       ISettingsModel *settingsModel)
-  : IDescriptorMatcherPresenter(),
+                                                       ProjectModel *projectModel,
+                                                       SettingsModel *settingsModel)
+  : DescriptorMatcherPresenter(),
     mView(view),
     //mModel(model),
     mProjectModel(projectModel),
@@ -65,7 +65,7 @@ DescriptorMatcherPresenter::DescriptorMatcherPresenter(IDescriptorMatcherView *v
 
 }
 
-DescriptorMatcherPresenter::~DescriptorMatcherPresenter()
+DescriptorMatcherPresenterImp::~DescriptorMatcherPresenterImp()
 {
   if (mMultiProcess){
     delete mMultiProcess;
@@ -73,7 +73,7 @@ DescriptorMatcherPresenter::~DescriptorMatcherPresenter()
   }
 }
 
-void DescriptorMatcherPresenter::help()
+void DescriptorMatcherPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("feature_matching.html");
@@ -81,7 +81,7 @@ void DescriptorMatcherPresenter::help()
   }
 }
 
-void DescriptorMatcherPresenter::open()
+void DescriptorMatcherPresenterImp::open()
 {
   std::shared_ptr<Session> current_session = mProjectModel->currentSession();
   if (current_session == nullptr) {
@@ -229,21 +229,21 @@ void DescriptorMatcherPresenter::open()
   mView->exec();
 }
 
-void DescriptorMatcherPresenter::setHelp(HelpDialog *help)
+void DescriptorMatcherPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void DescriptorMatcherPresenter::init()
+void DescriptorMatcherPresenterImp::init()
 {
 }
 
-void DescriptorMatcherPresenter::setProgressHandler(ProgressHandler *progressHandler)
+void DescriptorMatcherPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
 {
   mProgressHandler = progressHandler;
 }
 
-void DescriptorMatcherPresenter::cancel()
+void DescriptorMatcherPresenterImp::cancel()
 {
   mMultiProcess->stop();
 
@@ -266,7 +266,7 @@ void DescriptorMatcherPresenter::cancel()
   msgWarning("Processing has been canceled by the user");
 }
 
-void DescriptorMatcherPresenter::run()
+void DescriptorMatcherPresenterImp::run()
 {
   std::shared_ptr<Session> current_session = mProjectModel->currentSession();
   if (current_session == nullptr) {
@@ -492,7 +492,7 @@ void DescriptorMatcherPresenter::run()
   mMultiProcess->start();
 }
 
-void DescriptorMatcherPresenter::onError(int code, const QString &msg)
+void DescriptorMatcherPresenterImp::onError(int code, const QString &msg)
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
@@ -511,7 +511,7 @@ void DescriptorMatcherPresenter::onError(int code, const QString &msg)
   emit finished();
 }
 
-void DescriptorMatcherPresenter::onFinished()
+void DescriptorMatcherPresenterImp::onFinished()
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
@@ -532,13 +532,13 @@ void DescriptorMatcherPresenter::onFinished()
   msgInfo("Feature matching finished.");
 }
 
-void DescriptorMatcherPresenter::onMatchCompute(const QString &left, const QString &right, const QString &match)
+void DescriptorMatcherPresenterImp::onMatchCompute(const QString &left, const QString &right, const QString &match)
 {
   mProjectModel->addMatches(left, right, match);
   emit matchCompute(match);
 }
 
-void DescriptorMatcherPresenter::onPassPointsFinished(const QString &file)
+void DescriptorMatcherPresenterImp::onPassPointsFinished(const QString &file)
 {
   mProjectModel->setPassPoints(file);
 }

@@ -33,19 +33,19 @@
 namespace photomatch
 {
 
-ExportFeaturesModel::ExportFeaturesModel(IProjectModel *mProjectModel)
-  : IExportFeaturesModel(),
+ExportFeaturesModelImp::ExportFeaturesModelImp(ProjectModel *mProjectModel)
+  : ExportFeaturesModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-ExportFeaturesModel::~ExportFeaturesModel()
+ExportFeaturesModelImp::~ExportFeaturesModelImp()
 {
 
 }
 
-QStringList ExportFeaturesModel::sessions() const
+QStringList ExportFeaturesModelImp::sessions() const
 {
   QStringList sessions;
 
@@ -56,12 +56,12 @@ QStringList ExportFeaturesModel::sessions() const
   return sessions;
 }
 
-QString ExportFeaturesModel::activeSessionName() const
+QString ExportFeaturesModelImp::activeSessionName() const
 {
   return mProjectModel->currentSession()->name();
 }
 
-QStringList ExportFeaturesModel::formats() const
+QStringList ExportFeaturesModelImp::formats() const
 {
   QStringList formats;
   formats.push_back("OpenCV XML");
@@ -70,7 +70,7 @@ QStringList ExportFeaturesModel::formats() const
   return formats;
 }
 
-QStringList ExportFeaturesModel::features(const QString &sessionName) const
+QStringList ExportFeaturesModelImp::features(const QString &sessionName) const
 {
   QStringList images;
 
@@ -85,7 +85,7 @@ QStringList ExportFeaturesModel::features(const QString &sessionName) const
   return images;
 }
 
-void ExportFeaturesModel::exportFeatures(const QString &sessionName,
+void ExportFeaturesModelImp::exportFeatures(const QString &sessionName,
                                          const QStringList &features,
                                          const QString &path,
                                          const QString &format) const
@@ -124,7 +124,7 @@ void ExportFeaturesModel::exportFeatures(const QString &sessionName,
   }
 }
 
-void ExportFeaturesModel::init()
+void ExportFeaturesModelImp::init()
 {
 }
 

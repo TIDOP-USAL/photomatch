@@ -29,8 +29,8 @@
 namespace photomatch
 {
 
-ProjectModel::ProjectModel(ProjectController *projectIO, Project *project, QObject *parent)
-  : IProjectModel(parent),
+ProjectModelImp::ProjectModelImp(ProjectController *projectIO, Project *project, QObject *parent)
+  : ProjectModel(parent),
     mProjectIO(projectIO),
     mProject(project),
     mPrjFile(""),
@@ -39,348 +39,348 @@ ProjectModel::ProjectModel(ProjectController *projectIO, Project *project, QObje
   init();
 }
 
-ProjectModel::~ProjectModel()
+ProjectModelImp::~ProjectModelImp()
 {
 
 }
 
-QString ProjectModel::name() const
+QString ProjectModelImp::name() const
 {
   return mProject->name();
 }
 
-void ProjectModel::setName(const QString &name)
+void ProjectModelImp::setName(const QString &name)
 {
   mProject->setName(name);
   bUnsavedChanges = true;
 }
 
-QString ProjectModel::description() const
+QString ProjectModelImp::description() const
 {
   return mProject->description();
 }
 
-void ProjectModel::setDescription(const QString &description)
+void ProjectModelImp::setDescription(const QString &description)
 {
   mProject->setDescription(description);
   bUnsavedChanges = true;
 }
 
-QString ProjectModel::projectFolder() const
+QString ProjectModelImp::projectFolder() const
 {
   return mProject->projectFolder();
 }
 
-void ProjectModel::setProjectFolder(const QString &dir)
+void ProjectModelImp::setProjectFolder(const QString &dir)
 {
   mProject->setProjectFolder(dir);
   bUnsavedChanges = true;
 }
 
-QString ProjectModel::version() const
+QString ProjectModelImp::version() const
 {
   return mProject->version();
 }
 
-QString ProjectModel::groundTruth() const
+QString ProjectModelImp::groundTruth() const
 {
   return mProject->groundTruth();
 }
 
-void ProjectModel::setGroundTruth(const QString &groundTruth)
+void ProjectModelImp::setGroundTruth(const QString &groundTruth)
 {
   mProject->setGroundTruth(groundTruth);
 }
 
-void ProjectModel::addImage(const std::shared_ptr<Image> &img)
+void ProjectModelImp::addImage(const std::shared_ptr<Image> &img)
 {
   mProject->addImage(img);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteImage(const QString &img)
+void ProjectModelImp::deleteImage(const QString &img)
 {
   mProject->deleteImage(img);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteImage(size_t imgId)
+void ProjectModelImp::deleteImage(size_t imgId)
 {
   mProject->deleteImage(imgId);
   bUnsavedChanges = true;
 }
 
-const std::shared_ptr<Image> ProjectModel::findImage(const QString &path) const
+const std::shared_ptr<Image> ProjectModelImp::findImage(const QString &path) const
 {
   return mProject->findImage(path);
 }
 
-const std::shared_ptr<Image> ProjectModel::findImageById(size_t id) const
+const std::shared_ptr<Image> ProjectModelImp::findImageById(size_t id) const
 {
   return mProject->findImageById(id);
 }
 
-const std::shared_ptr<Image> ProjectModel::findImageByName(const QString &imgName) const
+const std::shared_ptr<Image> ProjectModelImp::findImageByName(const QString &imgName) const
 {
   return mProject->findImageByName(imgName);
 }
 
-size_t ProjectModel::findImageId(const QString &path) const
+size_t ProjectModelImp::findImageId(const QString &path) const
 {
   return mProject->findImageId(path);
 }
 
-Project::image_const_iterator ProjectModel::imageBegin() const
+Project::image_const_iterator ProjectModelImp::imageBegin() const
 {
   return mProject->imageBegin();
 }
 
-Project::image_const_iterator ProjectModel::imageEnd() const
+Project::image_const_iterator ProjectModelImp::imageEnd() const
 {
   return mProject->imageEnd();
 }
 
-size_t ProjectModel::imagesCount() const
+size_t ProjectModelImp::imagesCount() const
 {
   return mProject->imagesCount();
 }
 
-void ProjectModel::addSession(const QString &name, const QString &description)
+void ProjectModelImp::addSession(const QString &name, const QString &description)
 {
   mProject->addSession(name, description);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::addSession(const std::shared_ptr<Session> &session)
+void ProjectModelImp::addSession(const std::shared_ptr<Session> &session)
 {
   mProject->addSession(session);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteSession(const QString &nameSession)
+void ProjectModelImp::deleteSession(const QString &nameSession)
 {
   mProject->deleteSession(nameSession);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteSession(size_t sessionId)
+void ProjectModelImp::deleteSession(size_t sessionId)
 {
   mProject->deleteSession(sessionId);
   bUnsavedChanges = true;
 }
 
-std::shared_ptr<Session> ProjectModel::findSession(const QString &sessionName)
+std::shared_ptr<Session> ProjectModelImp::findSession(const QString &sessionName)
 {
   return mProject->findSession(sessionName);
 }
 
-const std::shared_ptr<Session> ProjectModel::findSession(const QString &sessionName) const
+const std::shared_ptr<Session> ProjectModelImp::findSession(const QString &sessionName) const
 {
   return mProject->findSession(sessionName);
 }
 
-size_t ProjectModel::findSessionId(const QString &sessionName)
+size_t ProjectModelImp::findSessionId(const QString &sessionName)
 {
   return mProject->findSessionId(sessionName);
 }
 
-size_t ProjectModel::findSessionId(const QString &sessionName) const
+size_t ProjectModelImp::findSessionId(const QString &sessionName) const
 {
   return mProject->findSessionId(sessionName);
 }
 
-Project::session_const_iterator ProjectModel::sessionBegin() const
+Project::session_const_iterator ProjectModelImp::sessionBegin() const
 {
   return mProject->sessionBegin();
 }
 
-Project::session_const_iterator ProjectModel::sessionEnd() const
+Project::session_const_iterator ProjectModelImp::sessionEnd() const
 {
   return mProject->sessionEnd();
 }
 
-size_t ProjectModel::sessionCount() const
+size_t ProjectModelImp::sessionCount() const
 {
   return mProject->sessionCount();
 }
 
-const std::shared_ptr<Session> ProjectModel::currentSession() const
+const std::shared_ptr<Session> ProjectModelImp::currentSession() const
 {
   return mProject->currentSession();
 }
 
-void ProjectModel::setCurrentSession(const QString &sessionName)
+void ProjectModelImp::setCurrentSession(const QString &sessionName)
 {
   mProject->setCurrentSession(sessionName);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
+void ProjectModelImp::setPreprocess(const std::shared_ptr<Preprocess> &preprocess)
 {
   this->currentSession()->setPreprocess(preprocess);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deletePreprocess()
+void ProjectModelImp::deletePreprocess()
 {
   this->currentSession()->setPreprocess(nullptr);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setDetector(const std::shared_ptr<Feature> &detector)
+void ProjectModelImp::setDetector(const std::shared_ptr<Feature> &detector)
 {
   this->currentSession()->setDetector(detector);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteDetector()
+void ProjectModelImp::deleteDetector()
 {
   this->currentSession()->setDetector(nullptr);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setDescriptor(const std::shared_ptr<Feature> &descriptor)
+void ProjectModelImp::setDescriptor(const std::shared_ptr<Feature> &descriptor)
 {
   this->currentSession()->setDescriptor(descriptor);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteDescriptor()
+void ProjectModelImp::deleteDescriptor()
 {
   this->currentSession()->setDescriptor(nullptr);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setMatcher(const std::shared_ptr<MatchingMethod> &matcher)
+void ProjectModelImp::setMatcher(const std::shared_ptr<MatchingMethod> &matcher)
 {
   this->currentSession()->setMatchingMethod(matcher);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteMatcher()
+void ProjectModelImp::deleteMatcher()
 {
   this->currentSession()->setMatchingMethod(nullptr);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement)
+void ProjectModelImp::setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement)
 {
   this->currentSession()->setMatchingStrategy(robustMatcherRefinement);
   bUnsavedChanges = true;
 }
 
-int ProjectModel::maxImageSize() const
+int ProjectModelImp::maxImageSize() const
 {
   return this->currentSession()->maxImageSize();
 }
 
-void ProjectModel::setMaxImageSize(int size)
+void ProjectModelImp::setMaxImageSize(int size)
 {
   this->currentSession()->setMaxImageSize(size);
   bUnsavedChanges = true;
 }
 
-bool ProjectModel::fullImageSize() const
+bool ProjectModelImp::fullImageSize() const
 {
   return this->currentSession()->fullImageSize();
 }
 
-void ProjectModel::setFullImageSize(bool fullImageSize)
+void ProjectModelImp::setFullImageSize(bool fullImageSize)
 {
   this->currentSession()->setFullImageSize(fullImageSize);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::addPreprocessedImage(const QString &image)
+void ProjectModelImp::addPreprocessedImage(const QString &image)
 {
   this->currentSession()->addPreprocessImage(image);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deletePreprocessedImage(const QString &image)
+void ProjectModelImp::deletePreprocessedImage(const QString &image)
 {
   this->currentSession()->deletePreprocessImage(image);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::clearPreprocessedImages()
+void ProjectModelImp::clearPreprocessedImages()
 {
   this->currentSession()->deletePreprocessImages();
   bUnsavedChanges = true;
 }
 
-void ProjectModel::addFeatures(const QString &feat)
+void ProjectModelImp::addFeatures(const QString &feat)
 {
   this->currentSession()->addFeatures(feat);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteFeatures(const QString &feat)
+void ProjectModelImp::deleteFeatures(const QString &feat)
 {
   this->currentSession()->deleteFeatures(feat);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::clearFeatures()
+void ProjectModelImp::clearFeatures()
 {
   this->currentSession()->deleteFeatures();
   bUnsavedChanges = true;
 }
 
-void ProjectModel::addMatches(const QString &img1, const QString &img2, const QString &matchsFile)
+void ProjectModelImp::addMatches(const QString &img1, const QString &img2, const QString &matchsFile)
 {
   this->currentSession()->addMatches(img1, img2, matchsFile);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::deleteMatches(const QString &img1, const QString &img2, const QString &matchsFile)
+void ProjectModelImp::deleteMatches(const QString &img1, const QString &img2, const QString &matchsFile)
 {
   this->currentSession()->deleteMatches(img1, img2, matchsFile);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::clearMatches()
+void ProjectModelImp::clearMatches()
 {
   this->currentSession()->deleteMatches();
   bUnsavedChanges = true;
 }
 
-QString ProjectModel::passPoints() const
+QString ProjectModelImp::passPoints() const
 {
   return this->currentSession()->passPoints();
 }
 
-void ProjectModel::setPassPoints(const QString &passPoint)
+void ProjectModelImp::setPassPoints(const QString &passPoint)
 {
   this->currentSession()->setPassPoints(passPoint);
   bUnsavedChanges = true;
 }
 
-void ProjectModel::clear()
+void ProjectModelImp::clear()
 {
   mProject->clear();
   mPrjFile = "";
   bUnsavedChanges = false;
 }
 
-QString ProjectModel::path() const
+QString ProjectModelImp::path() const
 {
   return mPrjFile;
 }
 
-void ProjectModel::load(const QString &file)
+void ProjectModelImp::load(const QString &file)
 {
   mPrjFile = file;
   mProjectIO->read(file, *mProject);
   bUnsavedChanges = false;
 }
 
-void ProjectModel::save()
+void ProjectModelImp::save()
 {
   saveAs(mPrjFile);
 }
 
-void ProjectModel::saveAs(const QString &file)
+void ProjectModelImp::saveAs(const QString &file)
 {
   mPrjFile = file;
   mProjectIO->write(file, *mProject);
@@ -388,22 +388,22 @@ void ProjectModel::saveAs(const QString &file)
   bUnsavedChanges = false;
 }
 
-bool ProjectModel::checkUnsavedChanges() const
+bool ProjectModelImp::checkUnsavedChanges() const
 {
   return bUnsavedChanges;
 }
 
-bool ProjectModel::checkOldVersion(const QString &file) const
+bool ProjectModelImp::checkOldVersion(const QString &file) const
 {
   return mProjectIO->checkOldVersion(file);
 }
 
-void ProjectModel::oldVersionBak(const QString &file) const
+void ProjectModelImp::oldVersionBak(const QString &file) const
 {
   mProjectIO->oldVersionBak(file);
 }
 
-void ProjectModel::addImages(const QStringList &fileNames)
+void ProjectModelImp::addImages(const QStringList &fileNames)
 {
   for (const auto &file : fileNames){
     std::shared_ptr<Image> photo(new Image(file));
@@ -414,14 +414,14 @@ void ProjectModel::addImages(const QStringList &fileNames)
   }
 }
 
-void ProjectModel::deleteImages(const QStringList &images)
+void ProjectModelImp::deleteImages(const QStringList &images)
 {
   for (const auto &image : images){
     deleteImage(image);
   }
 }
 
-void photomatch::ProjectModel::init()
+void photomatch::ProjectModelImp::init()
 {
 }
 

@@ -35,10 +35,10 @@
 namespace photomatch
 {
 
-MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
-                                           IMatchViewerModel *model,
-                                           ISettingsModel *settings)
-  : IMatchViewerPresenter(),
+MatchViewerPresenterImp::MatchViewerPresenterImp(MatchViewerView *view,
+                                           MatchViewerModel *model,
+                                           SettingsModel *settings)
+  : MatchViewerPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settings),
@@ -56,18 +56,18 @@ MatchViewerPresenter::MatchViewerPresenter(IMatchViewerView *view,
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-MatchViewerPresenter::~MatchViewerPresenter()
+MatchViewerPresenterImp::~MatchViewerPresenterImp()
 {
 
 }
 
-void MatchViewerPresenter::openFromSession(const QString &session)
+void MatchViewerPresenterImp::openFromSession(const QString &session)
 {
   this->setSession(session);
   this->open();
 }
 
-void MatchViewerPresenter::openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight)
+void MatchViewerPresenterImp::openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight)
 {
   this->setSession(session);
   this->open();
@@ -75,14 +75,14 @@ void MatchViewerPresenter::openFromSessionAndImages(const QString &session, cons
   this->setRightImage(imageRight);
 }
 
-void MatchViewerPresenter::setSession(const QString &session)
+void MatchViewerPresenterImp::setSession(const QString &session)
 {
   mModel->setSessionName(session);
   mView->clear();
   mView->setSessionName(mModel->sessionName());
 }
 
-void MatchViewerPresenter::setLeftImage(const QString &image)
+void MatchViewerPresenterImp::setLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
   std::vector<QString> imagesRight = mModel->imagePairs(image);
@@ -93,23 +93,23 @@ void MatchViewerPresenter::setLeftImage(const QString &image)
   }
 }
 
-void MatchViewerPresenter::setRightImage(const QString &image)
+void MatchViewerPresenterImp::setRightImage(const QString &image)
 {
   mView->setRightImage(image);
 }
 
-void MatchViewerPresenter::loadMatches(const QString &imageLeft, const QString &imageRight)
+void MatchViewerPresenterImp::loadMatches(const QString &imageLeft, const QString &imageRight)
 {
   std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> matches = mModel->loadMatches(imageLeft, imageRight);
   mView->setMatches(matches);
 }
 
-void MatchViewerPresenter::deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id)
+void MatchViewerPresenterImp::deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id)
 {
   mModel->deleteMatch(imageLeft, imageRight, query_id, train_id);
 }
 
-void MatchViewerPresenter::help()
+void MatchViewerPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("matches_viewer.html");
@@ -117,7 +117,7 @@ void MatchViewerPresenter::help()
   }
 }
 
-void MatchViewerPresenter::open()
+void MatchViewerPresenterImp::open()
 {
   mView->clear();
 
@@ -147,12 +147,12 @@ void MatchViewerPresenter::open()
 
 }
 
-void MatchViewerPresenter::setHelp(HelpDialog *help)
+void MatchViewerPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void MatchViewerPresenter::init()
+void MatchViewerPresenterImp::init()
 {
 }
 

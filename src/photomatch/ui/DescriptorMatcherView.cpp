@@ -35,14 +35,14 @@
 namespace photomatch
 {
 
-DescriptorMatcherView::DescriptorMatcherView(QWidget *parent)
-  : IDescriptorMatcherView(parent)
+DescriptorMatcherViewImp::DescriptorMatcherViewImp(QWidget *parent)
+  : DescriptorMatcherView(parent)
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-DescriptorMatcherView::~DescriptorMatcherView()
+DescriptorMatcherViewImp::~DescriptorMatcherViewImp()
 {
   if (mDescriptorMatcherWidget){
     delete mDescriptorMatcherWidget;
@@ -50,172 +50,172 @@ DescriptorMatcherView::~DescriptorMatcherView()
   }
 }
 
-void DescriptorMatcherView::setSessionName(const QString &name)
+void DescriptorMatcherViewImp::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Descriptor Matcher ").append(name));
 }
 
-QString DescriptorMatcherView::matchingMethod() const
+QString DescriptorMatcherViewImp::matchingMethod() const
 {
   return mDescriptorMatcherWidget->matchingMethod();
 }
 
-QString DescriptorMatcherView::matchingStrategy() const
+QString DescriptorMatcherViewImp::matchingStrategy() const
 {
   return mDescriptorMatcherWidget->matchingStrategy();
 }
 
-QString DescriptorMatcherView::normType() const
+QString DescriptorMatcherViewImp::normType() const
 {
   return mDescriptorMatcherWidget->normType();
 }
 
-double DescriptorMatcherView::ratio() const
+double DescriptorMatcherViewImp::ratio() const
 {
   return mDescriptorMatcherWidget->ratio();
 }
 
-QString DescriptorMatcherView::geometricTest() const
+QString DescriptorMatcherViewImp::geometricTest() const
 {
   return mDescriptorMatcherWidget->geometricTest();
 }
 
-QString DescriptorMatcherView::homographyComputeMethod() const
+QString DescriptorMatcherViewImp::homographyComputeMethod() const
 {
   return mDescriptorMatcherWidget->homographyComputeMethod();
 }
 
-QString DescriptorMatcherView::fundamentalComputeMethod() const
+QString DescriptorMatcherViewImp::fundamentalComputeMethod() const
 {
   return mDescriptorMatcherWidget->fundamentalComputeMethod();
 }
 
-QString DescriptorMatcherView::essentialComputeMethod() const
+QString DescriptorMatcherViewImp::essentialComputeMethod() const
 {
   return mDescriptorMatcherWidget->essentialComputeMethod();
 }
 
-double DescriptorMatcherView::distance() const
+double DescriptorMatcherViewImp::distance() const
 {
   return mDescriptorMatcherWidget->distance();
 }
 
-double DescriptorMatcherView::confidence() const
+double DescriptorMatcherViewImp::confidence() const
 {
   return mDescriptorMatcherWidget->confidence();
 }
 
-int DescriptorMatcherView::maxIters() const
+int DescriptorMatcherViewImp::maxIters() const
 {
   return mDescriptorMatcherWidget->maxIters();
 }
 
-bool DescriptorMatcherView::crossMatching() const
+bool DescriptorMatcherViewImp::crossMatching() const
 {
   return mDescriptorMatcherWidget->crossMatching();
 }
 
-bool DescriptorMatcherView::gmsRotation() const
+bool DescriptorMatcherViewImp::gmsRotation() const
 {
   return mDescriptorMatcherWidget->gmsRotation();
 }
 
-bool DescriptorMatcherView::gmsScale() const
+bool DescriptorMatcherViewImp::gmsScale() const
 {
   return mDescriptorMatcherWidget->gmsScale();
 }
 
-double DescriptorMatcherView::gmsThreshold() const
+double DescriptorMatcherViewImp::gmsThreshold() const
 {
   return mDescriptorMatcherWidget->gmsThreshold();
 }
 
-void DescriptorMatcherView::setMatchingMethod(const QString &matchingMethod)
+void DescriptorMatcherViewImp::setMatchingMethod(const QString &matchingMethod)
 {
   mDescriptorMatcherWidget->setMatchingMethod(matchingMethod);
 }
 
-void DescriptorMatcherView::setMatchingStrategy(const QString &matchingStrategy)
+void DescriptorMatcherViewImp::setMatchingStrategy(const QString &matchingStrategy)
 {
   mDescriptorMatcherWidget->setMatchingStrategy(matchingStrategy);
 }
 
-void DescriptorMatcherView::setNormType(const QString &normType)
+void DescriptorMatcherViewImp::setNormType(const QString &normType)
 {
   mDescriptorMatcherWidget->setNormType(normType);
 }
 
-void DescriptorMatcherView::setRatio(double ratio)
+void DescriptorMatcherViewImp::setRatio(double ratio)
 {
   mDescriptorMatcherWidget->setRatio(ratio);
 }
 
-void DescriptorMatcherView::setGeometricTest(const QString &geometricTest)
+void DescriptorMatcherViewImp::setGeometricTest(const QString &geometricTest)
 {
   mDescriptorMatcherWidget->setGeometricTest(geometricTest);
 }
 
-void DescriptorMatcherView::setHomographyComputeMethod(const QString &computeMethod)
+void DescriptorMatcherViewImp::setHomographyComputeMethod(const QString &computeMethod)
 {
   mDescriptorMatcherWidget->setHomographyComputeMethod(computeMethod);
 }
 
-void DescriptorMatcherView::setFundamentalComputeMethod(const QString &computeMethod)
+void DescriptorMatcherViewImp::setFundamentalComputeMethod(const QString &computeMethod)
 {
   mDescriptorMatcherWidget->setFundamentalComputeMethod(computeMethod);
 }
 
-void DescriptorMatcherView::setEssentialComputeMethod(const QString &computeMethod)
+void DescriptorMatcherViewImp::setEssentialComputeMethod(const QString &computeMethod)
 {
   mDescriptorMatcherWidget->setEssentialComputeMethod(computeMethod);
 }
 
-void DescriptorMatcherView::setDistance(double distance)
+void DescriptorMatcherViewImp::setDistance(double distance)
 {
   mDescriptorMatcherWidget->setDistance(distance);
 }
 
-void DescriptorMatcherView::setConfidence(double confidence)
+void DescriptorMatcherViewImp::setConfidence(double confidence)
 {
   mDescriptorMatcherWidget->setConfidence(confidence);
 }
 
-void DescriptorMatcherView::setMaxIters(int maxIter)
+void DescriptorMatcherViewImp::setMaxIters(int maxIter)
 {
   mDescriptorMatcherWidget->setMaxIters(maxIter);
 }
 
-void DescriptorMatcherView::setCrossMatching(bool crossMatching)
+void DescriptorMatcherViewImp::setCrossMatching(bool crossMatching)
 {
   mDescriptorMatcherWidget->setCrossMatching(crossMatching);
 }
 
-void DescriptorMatcherView::disableBruteForceNorm(const QString &norm)
+void DescriptorMatcherViewImp::disableBruteForceNorm(const QString &norm)
 {
   mDescriptorMatcherWidget->disableBruteForceNorm(norm);
 }
 
-void DescriptorMatcherView::enableBruteForceNorm(const QString &norm)
+void DescriptorMatcherViewImp::enableBruteForceNorm(const QString &norm)
 {
   mDescriptorMatcherWidget->enableBruteForceNorm(norm);
 }
 
-void DescriptorMatcherView::setGmsRotation(bool active)
+void DescriptorMatcherViewImp::setGmsRotation(bool active)
 {
   mDescriptorMatcherWidget->setGmsRotation(active);
 }
 
-void DescriptorMatcherView::setGmsScale(bool active)
+void DescriptorMatcherViewImp::setGmsScale(bool active)
 {
   mDescriptorMatcherWidget->setGmsScale(active);
 }
 
-void DescriptorMatcherView::setGmsThreshold(double threshold)
+void DescriptorMatcherViewImp::setGmsThreshold(double threshold)
 {
   mDescriptorMatcherWidget->setGmsThreshold(threshold);
 }
 
-void DescriptorMatcherView::initUI()
+void DescriptorMatcherViewImp::initUI()
 {
   this->setWindowTitle(tr("Descriptor Matcher"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -242,7 +242,7 @@ void DescriptorMatcherView::initUI()
   update();
 }
 
-void DescriptorMatcherView::initSignalAndSlots()
+void DescriptorMatcherViewImp::initSignalAndSlots()
 {
   connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
   connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
@@ -250,17 +250,17 @@ void DescriptorMatcherView::initSignalAndSlots()
 
 }
 
-void DescriptorMatcherView::clear()
+void DescriptorMatcherViewImp::clear()
 {
   mDescriptorMatcherWidget->reset();
 }
 
-void DescriptorMatcherView::update()
+void DescriptorMatcherViewImp::update()
 {
 
 }
 
-void DescriptorMatcherView::retranslate()
+void DescriptorMatcherViewImp::retranslate()
 {
 
 }

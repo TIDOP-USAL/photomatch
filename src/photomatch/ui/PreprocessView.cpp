@@ -36,8 +36,8 @@
 namespace photomatch
 {
 
-PreprocessView::PreprocessView(QWidget *parent)
-  : IPreprocessView(parent),
+PreprocessViewImp::PreprocessViewImp(QWidget *parent)
+  : PreprocessView(parent),
     mButtonBox(new QDialogButtonBox(this))
 {
   this->initUI();
@@ -45,29 +45,29 @@ PreprocessView::PreprocessView(QWidget *parent)
   this->retranslate();
 }
 
-PreprocessView::~PreprocessView()
+PreprocessViewImp::~PreprocessViewImp()
 {
 
 }
 
-void PreprocessView::setSessionName(const QString &name)
+void PreprocessViewImp::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Preprocess ").append(name));
 }
 
-void PreprocessView::addPreprocess(QWidget *preprocess)
+void PreprocessViewImp::addPreprocess(QWidget *preprocess)
 {
   mComboBoxPreprocess->addItem(preprocess->windowTitle());
   mGridLayoutPreprocess->addWidget(preprocess, 1, 0, 1, 2);
   preprocess->setVisible(false);
 }
 
-QString PreprocessView::currentPreprocess() const
+QString PreprocessViewImp::currentPreprocess() const
 {
   return mCurrentPreprocess;
 }
 
-void PreprocessView::setCurrentPreprocess(const QString &preprocess)
+void PreprocessViewImp::setCurrentPreprocess(const QString &preprocess)
 {
   mCurrentPreprocess = preprocess;
 
@@ -84,32 +84,32 @@ void PreprocessView::setCurrentPreprocess(const QString &preprocess)
   }
 }
 
-int PreprocessView::maxImageSize()
+int PreprocessViewImp::maxImageSize()
 {
   return mSpinBoxMaxImageSize->value();
 }
 
-void PreprocessView::setMaxImageSize(int imageSize)
+void PreprocessViewImp::setMaxImageSize(int imageSize)
 {
   mSpinBoxMaxImageSize->setValue(imageSize);
 }
 
-void PreprocessView::setFullImageSize(bool fullImageSize)
+void PreprocessViewImp::setFullImageSize(bool fullImageSize)
 {
   mCheckBoxFullImage->setChecked(fullImageSize);
 }
 
-bool PreprocessView::fullImageSize()
+bool PreprocessViewImp::fullImageSize()
 {
   return mCheckBoxFullImage->isChecked();
 }
 
-void PreprocessView::onCheckBoxFullImageChange()
+void PreprocessViewImp::onCheckBoxFullImageChange()
 {
   mSpinBoxMaxImageSize->setEnabled(!mCheckBoxFullImage->isChecked());
 }
 
-void PreprocessView::initUI()
+void PreprocessViewImp::initUI()
 {
   this->setWindowTitle(tr("Preprocess"));
   this->setObjectName(QStringLiteral("PreprocessView"));
@@ -150,7 +150,7 @@ void PreprocessView::initUI()
   update();
 }
 
-void PreprocessView::initSignalAndSlots()
+void PreprocessViewImp::initSignalAndSlots()
 {
   connect(mComboBoxPreprocess,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(preprocessChange(QString)));
   connect(mCheckBoxFullImage,   SIGNAL(clicked(bool)),               this, SLOT(onCheckBoxFullImageChange()));
@@ -160,17 +160,17 @@ void PreprocessView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
-void PreprocessView::clear()
+void PreprocessViewImp::clear()
 {
   mCurrentPreprocess.clear();
 }
 
-void PreprocessView::update()
+void PreprocessViewImp::update()
 {
 
 }
 
-void PreprocessView::retranslate()
+void PreprocessViewImp::retranslate()
 {
   ///TODO: mover aqui todos los textos
 

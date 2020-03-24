@@ -25,24 +25,16 @@
 #ifndef PHOTOMATCH_PREPROCESS_MODEL_H
 #define PHOTOMATCH_PREPROCESS_MODEL_H
 
+#include "photomatch/ui/Preprocess.h"
+
 namespace photomatch
 {
 
-class IPreprocessModel
-{
-
-public:
-
-  IPreprocessModel(){}
-
-};
-
-
-class PreprocessModel
-  : public IPreprocessModel
+class PreprocessModelImp
+  : public PreprocessModel
 {
 public:
-  PreprocessModel();
+  PreprocessModelImp();
 };
 
 } // namespace photomatch

@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_REPEATABILITY_VIEW_H
 #define PHOTOMATCH_REPEATABILITY_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/Repeatability.h"
 
 class QDialogButtonBox;
 class QTreeWidget;
@@ -34,51 +34,18 @@ class QTreeWidgetItem;
 namespace photomatch
 {
 
-class IRepeatabilityView
-  : public IDialogView
+class RepeatabilityViewImp
+  : public RepeatabilityView
 {
 
   Q_OBJECT
 
 public:
 
-  IRepeatabilityView(QWidget *parent = nullptr,
-                    Qt::WindowFlags f = Qt::WindowFlags())
-    : IDialogView(parent, f)
-  {}
-
-  virtual ~IRepeatabilityView() override = default;
-
-  /*!
-   * \brief Add a session
-   * \param[in] session Session
-   */
-  virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) = 0;
-
-  /*!
-   * \brief setRepeteability
-   * \param repeteability
-   */
-  virtual void setRepeatability(const std::vector<std::tuple<QString, QString, QString, float, int>> &repeatability) = 0;
-
-signals:
-
-  void selectSession(QString);
-
-};
-
-class RepeatabilityView
-  : public IRepeatabilityView
-{
-
-  Q_OBJECT
-
-public:
-
-  RepeatabilityView(QWidget *parent = nullptr,
+  RepeatabilityViewImp(QWidget *parent = nullptr,
                    Qt::WindowFlags f = Qt::WindowFlags());
 
-  virtual ~RepeatabilityView() override;
+  virtual ~RepeatabilityViewImp() override;
 
 private slots:
 

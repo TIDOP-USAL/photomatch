@@ -36,24 +36,24 @@
 namespace photomatch
 {
 
-HomographyViewerView::HomographyViewerView(QWidget *parent, Qt::WindowFlags f)
-  : IHomographyViewerView(parent, f)
+HomographyViewerViewImp::HomographyViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+  : HomographyViewerView(parent, f)
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-HomographyViewerView::~HomographyViewerView()
+HomographyViewerViewImp::~HomographyViewerViewImp()
 {
 
 }
 
-void HomographyViewerView::onComboBoxLeftImageIndexChanged(int idx)
+void HomographyViewerViewImp::onComboBoxLeftImageIndexChanged(int idx)
 {
   emit leftImageChange(mComboBoxLeftImage->itemData(idx).toString());
 }
 
-void HomographyViewerView::onComboBoxRightImageIndexChanged(int idx)
+void HomographyViewerViewImp::onComboBoxRightImageIndexChanged(int idx)
 {
   QString image_right(mComboBoxRightImage->itemData(idx).toString());
   QString image_left(mComboBoxLeftImage->currentData().toString());
@@ -61,26 +61,26 @@ void HomographyViewerView::onComboBoxRightImageIndexChanged(int idx)
   emit homography(mComboBoxLeftImage->currentText(), mComboBoxRightImage->itemText(idx));
 }
 
-void HomographyViewerView::setSessionName(const QString &name)
+void HomographyViewerViewImp::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Homography Viewer ").append(name));
 }
 
-void HomographyViewerView::setLeftImage(const QString &leftImage)
+void HomographyViewerViewImp::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   QFileInfo file_info(leftImage);
   mComboBoxLeftImage->setCurrentText(file_info.baseName());
 }
 
-void HomographyViewerView::setRightImage(const QString &rightImage)
+void HomographyViewerViewImp::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   QFileInfo file_info(rightImage);
   mComboBoxRightImage->setCurrentText(file_info.baseName());
 }
 
-void HomographyViewerView::setLeftImageList(const std::vector<QString> &leftImageList)
+void HomographyViewerViewImp::setLeftImageList(const std::vector<QString> &leftImageList)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   mComboBoxLeftImage->clear();
@@ -90,7 +90,7 @@ void HomographyViewerView::setLeftImageList(const std::vector<QString> &leftImag
   }
 }
 
-void HomographyViewerView::setRightImageList(const std::vector<QString> &rightImageList)
+void HomographyViewerViewImp::setRightImageList(const std::vector<QString> &rightImageList)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   mComboBoxRightImage->clear();
@@ -100,14 +100,14 @@ void HomographyViewerView::setRightImageList(const std::vector<QString> &rightIm
   }
 }
 
-void HomographyViewerView::setHomography(const QImage &homography)
+void HomographyViewerViewImp::setHomography(const QImage &homography)
 {
   mGraphicsView->scene()->clearSelection();
   mGraphicsView->setImage(homography);
   mGraphicsView->zoomExtend();
 }
 
-void HomographyViewerView::initUI()
+void HomographyViewerViewImp::initUI()
 {
   this->setWindowTitle(tr("Homography Viewer"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -151,7 +151,7 @@ void HomographyViewerView::initUI()
   update();
 }
 
-void HomographyViewerView::initSignalAndSlots()
+void HomographyViewerViewImp::initSignalAndSlots()
 {
   connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
@@ -160,17 +160,17 @@ void HomographyViewerView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void HomographyViewerView::clear()
+void HomographyViewerViewImp::clear()
 {
   mComboBoxLeftImage->clear();
   mComboBoxLeftImage->clear();
 }
 
-void HomographyViewerView::update()
+void HomographyViewerViewImp::update()
 {
 }
 
-void HomographyViewerView::retranslate()
+void HomographyViewerViewImp::retranslate()
 {
 
 }

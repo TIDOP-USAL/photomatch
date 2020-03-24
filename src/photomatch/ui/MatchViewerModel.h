@@ -27,49 +27,23 @@
 
 #include <memory>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/MatchViewer.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-/*!
- * \brief The IMatchViewerModel class
- */
-class IMatchViewerModel
-  : public IModel
+
+class MatchViewerModelImp
+  : public MatchViewerModel
 {
 
   Q_OBJECT
 
 public:
 
-  IMatchViewerModel() {}
-  virtual ~IMatchViewerModel() {}
-
-  virtual QString sessionName() const = 0;
-  virtual void setSessionName(const QString &session) = 0;
-  virtual std::vector<QString> images() const = 0;
-  virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> loadMatches(const QString &imgName1, const QString &imgName2) const = 0;
-  virtual void deleteMatch(const QString &imgName1, const QString &imgName2, int query_id, int train_id) = 0;
-  virtual void loadPassPoints() = 0;
-
-public slots:
-
-};
-
-
-class MatchViewerModel
-  : public IMatchViewerModel
-{
-
-  Q_OBJECT
-
-public:
-
-  MatchViewerModel(IProjectModel *mProjectModel);
+  MatchViewerModelImp(ProjectModel *mProjectModel);
 
 
 // IModel interface
@@ -92,7 +66,7 @@ public:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
   std::vector<std::vector<std::pair<QString,int>>> mPassPoints;
   QString mSession;
 

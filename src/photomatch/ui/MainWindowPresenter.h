@@ -34,8 +34,8 @@ namespace photomatch
 
 class MainWindowView;
 class MainWindowModel;
-class IProjectModel;
-class ISettingsModel;
+class ProjectModel;
+class SettingsModel;
 class HelpDialog;
 class TabHandler;
 class StartPageWidget;
@@ -49,8 +49,8 @@ public:
 
   explicit MainWindowPresenter(MainWindowView *view,
                                MainWindowModel *model,
-                               IProjectModel *projectModel,
-                               ISettingsModel *settingsModel);
+                               ProjectModel *projectModel,
+                               SettingsModel *settingsModel);
   ~MainWindowPresenter() override;
 
 signals:
@@ -167,8 +167,8 @@ protected:
 
   MainWindowView *mView;
   MainWindowModel *mModel;
-  IProjectModel *mProjectModel;
-  ISettingsModel *mSettingsModel;
+  ProjectModel *mProjectModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelpDialog;
   TabHandler *mTabHandler;
   StartPageWidget *mStartPageWidget;

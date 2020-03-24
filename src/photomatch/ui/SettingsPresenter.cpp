@@ -80,8 +80,8 @@
 namespace photomatch
 {
 
-SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
-  : ISettingsPresenter(),
+SettingsPresenterImp::SettingsPresenterImp(SettingsView *view, SettingsModel *model)
+  : SettingsPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr),
@@ -388,7 +388,7 @@ SettingsPresenter::SettingsPresenter(ISettingsView *view, ISettingsModel *model)
 
 }
 
-SettingsPresenter::~SettingsPresenter()
+SettingsPresenterImp::~SettingsPresenterImp()
 {
   if (mACEBSF){
     delete mACEBSF;
@@ -564,25 +564,25 @@ SettingsPresenter::~SettingsPresenter()
 //  this->open();
 //}
 
-void SettingsPresenter::openViewSettings()
+void SettingsPresenterImp::openViewSettings()
 {
   mView->setPage(1);
   this->open();
 }
 
-void SettingsPresenter::openQualityControlSettings()
+void SettingsPresenterImp::openQualityControlSettings()
 {
   mView->setPage(3);
   this->open();
 }
 
-void SettingsPresenter::openToolSettings()
+void SettingsPresenterImp::openToolSettings()
 {
   mView->setPage(2);
   this->open();
 }
 
-void SettingsPresenter::help()
+void SettingsPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("settings.html");
@@ -590,7 +590,7 @@ void SettingsPresenter::help()
   }
 }
 
-void SettingsPresenter::open()
+void SettingsPresenterImp::open()
 {
   QStringList languages = mModel->languages();
   QStringList langs;
@@ -829,12 +829,12 @@ void SettingsPresenter::open()
   mView->exec();
 }
 
-void SettingsPresenter::setHelp(HelpDialog *help)
+void SettingsPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void SettingsPresenter::init()
+void SettingsPresenterImp::init()
 {
   mView->addPreprocess(mACEBSF);
   mView->addPreprocess(mCLAHE);
@@ -880,19 +880,19 @@ void SettingsPresenter::init()
   mView->addDescriptorMatcher(mMatcher);
 }
 
-void SettingsPresenter::setLanguage(const QString &language)
+void SettingsPresenterImp::setLanguage(const QString &language)
 {
   QString lang_code = mLang[language];
 
   mModel->setLanguage(lang_code);
 }
 
-void SettingsPresenter::save()
+void SettingsPresenterImp::save()
 {
   mModel->write();
 }
 
-void SettingsPresenter::discart()
+void SettingsPresenterImp::discart()
 {
   mModel->read();
 }

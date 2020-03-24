@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_EXPORT_MATCHES_VIEW_H
 #define PHOTOMATCH_EXPORT_MATCHES_VIEW_H
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/ExportMatches.h"
 
 class QLabel;
 class QComboBox;
@@ -35,38 +35,17 @@ class QLineEdit;
 namespace photomatch
 {
 
-class IExportMatchesView
-  : public IDialogView
+
+class ExportMatchesViewImp
+  : public ExportMatchesView
 {
 
   Q_OBJECT
 
 public:
 
-  IExportMatchesView(QWidget *parent) : IDialogView(parent) {}
-  virtual ~IExportMatchesView() override = default;
-
-public slots:
-
-  virtual void setSessions(const QStringList &sessions) = 0;
-  virtual void setActiveSession(const QString &session) = 0;
-
-signals:
-
-  void sessionChange(QString);
-};
-
-
-class ExportMatchesView
-  : public IExportMatchesView
-{
-
-  Q_OBJECT
-
-public:
-
-  ExportMatchesView(QWidget *parent = nullptr);
-  virtual ~ExportMatchesView() override;
+  ExportMatchesViewImp(QWidget *parent = nullptr);
+  virtual ~ExportMatchesViewImp() override;
 
 // IExportMatchesView interface
 

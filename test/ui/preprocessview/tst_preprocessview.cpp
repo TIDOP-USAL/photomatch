@@ -23,7 +23,7 @@
 
 using namespace photomatch;
 
-class TestPreprocessView : public PreprocessView
+class TestPreprocessView : public PreprocessViewImp
 {
   Q_OBJECT
 
@@ -62,7 +62,7 @@ private:
 };
 
 TestPreprocessView::TestPreprocessView()
-  : PreprocessView(),
+  : PreprocessViewImp(),
     mACEBS(new AcebsfWidgetImp),
     mCLAHE(new ClaheWidgetImp),
     mCMBFHE(new CmbfheWidgetImp),
@@ -155,22 +155,22 @@ void TestPreprocessView::cleanupTestCase()
 
 void TestPreprocessView::test_dialogButtonBox()
 {
-  QSignalSpy spy_rejected(this, &PreprocessView::rejected);
+  QSignalSpy spy_rejected(this, &PreprocessViewImp::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
-  QSignalSpy spy_applyChanges(this, &PreprocessView::run);
+  QSignalSpy spy_applyChanges(this, &PreprocessViewImp::run);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Apply), Qt::LeftButton);
   QCOMPARE(spy_applyChanges.count(), 1);
 
-  QSignalSpy spy_help(this, &PreprocessView::help);
+  QSignalSpy spy_help(this, &PreprocessViewImp::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);
   QCOMPARE(spy_help.count(), 1);
 }
 
 void TestPreprocessView::test_preprocessChange()
 {
-  QSignalSpy spy_preprocessChange(this, &PreprocessView::preprocessChange);
+  QSignalSpy spy_preprocessChange(this, &PreprocessViewImp::preprocessChange);
 
   this->mComboBoxPreprocess->setCurrentText("CLAHE");
 

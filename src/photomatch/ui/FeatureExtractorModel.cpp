@@ -27,7 +27,7 @@
 namespace photomatch
 {
 
-FeatureExtractorModel::FeatureExtractorModel()
+FeatureExtractorModelImp::FeatureExtractorModelImp()
 {
 
 }

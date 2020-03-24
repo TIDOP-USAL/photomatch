@@ -21,29 +21,22 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_FEATURE_EXTRACTOR_MODEL_H
 #define PHOTOMATCH_FEATURE_EXTRACTOR_MODEL_H
+
+#include "photomatch/ui/FeatureExtractor.h"
 
 namespace photomatch
 {
 
-class IFeatureExtractorModel
-{
 
-public:
-
-  IFeatureExtractorModel(){}
-
-};
-
-
-class FeatureExtractorModel
-  : public IFeatureExtractorModel
+class FeatureExtractorModelImp
+  : public FeatureExtractorModel
 {
 public:
-  FeatureExtractorModel();
+  FeatureExtractorModelImp();
 };
+
 
 } // namespace photomatch
 

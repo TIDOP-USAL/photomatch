@@ -35,8 +35,8 @@
 namespace photomatch
 {
 
-NewProjectPresenter::NewProjectPresenter(INewProjectView *view, IProjectModel *model)
-  : INewProjectPresenter(),
+NewProjectPresenterImp::NewProjectPresenterImp(NewProjectView *view, ProjectModel *model)
+  : NewProjectPresenter(),
     mView(view),
     mProjectModel(model),
     mHelp(nullptr)
@@ -48,13 +48,13 @@ NewProjectPresenter::NewProjectPresenter(INewProjectView *view, IProjectModel *m
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-NewProjectPresenter::~NewProjectPresenter()
+NewProjectPresenterImp::~NewProjectPresenterImp()
 {
 }
 
 /* public slots */
 
-void NewProjectPresenter::help()
+void NewProjectPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("menus.html#new_project");
@@ -66,7 +66,7 @@ void NewProjectPresenter::help()
 
 // protected slots
 
-void NewProjectPresenter::saveProject()
+void NewProjectPresenterImp::saveProject()
 {
   ///TODO: Hay que comprobar que el nombre y la ruta sean correctos.
   /// sin que incluyan caracteres no permitidos
@@ -92,7 +92,7 @@ void NewProjectPresenter::saveProject()
   mView->clear();
 }
 
-void NewProjectPresenter::discartProject()
+void NewProjectPresenterImp::discartProject()
 {
   mView->clear();
 }
@@ -101,7 +101,7 @@ void NewProjectPresenter::discartProject()
 
 // public slots:
 
-void NewProjectPresenter::open()
+void NewProjectPresenterImp::open()
 {
   mProjectModel->clear();
 
@@ -110,14 +110,14 @@ void NewProjectPresenter::open()
   mView->exec();
 }
 
-void NewProjectPresenter::setHelp(HelpDialog *help)
+void NewProjectPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
 // private
 
-void NewProjectPresenter::init()
+void NewProjectPresenterImp::init()
 {
   mProjectsDefaultPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
   mProjectsDefaultPath.append("/photomatch/Projects");

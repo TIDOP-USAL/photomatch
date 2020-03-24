@@ -35,10 +35,10 @@
 namespace photomatch
 {
 
-HomographyViewerPresenter::HomographyViewerPresenter(IHomographyViewerView *view,
-                                                     IHomographyViewerModel *model,
-                                                     ISettingsModel *settings)
-  : IHomographyViewerPresenter(),
+HomographyViewerPresenterImp::HomographyViewerPresenterImp(HomographyViewerView *view,
+                                                     HomographyViewerModel *model,
+                                                     SettingsModel *settings)
+  : HomographyViewerPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settings),
@@ -53,12 +53,12 @@ HomographyViewerPresenter::HomographyViewerPresenter(IHomographyViewerView *view
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-HomographyViewerPresenter::~HomographyViewerPresenter()
+HomographyViewerPresenterImp::~HomographyViewerPresenterImp()
 {
 
 }
 
-void HomographyViewerPresenter::help()
+void HomographyViewerPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("homography.html");
@@ -66,7 +66,7 @@ void HomographyViewerPresenter::help()
   }
 }
 
-void HomographyViewerPresenter::open()
+void HomographyViewerPresenterImp::open()
 {
   mView->clear();
   mView->setSessionName(mModel->currentSession());
@@ -79,17 +79,17 @@ void HomographyViewerPresenter::open()
   }
 }
 
-void HomographyViewerPresenter::setHelp(HelpDialog *help)
+void HomographyViewerPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void HomographyViewerPresenter::init()
+void HomographyViewerPresenterImp::init()
 {
   mModel->setUseCuda(mSettingsModel->useCuda());
 }
 
-void HomographyViewerPresenter::loadLeftImage(const QString &image)
+void HomographyViewerPresenterImp::loadLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
   std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
@@ -100,12 +100,12 @@ void HomographyViewerPresenter::loadLeftImage(const QString &image)
   }
 }
 
-void HomographyViewerPresenter::loadRightImage(const QString &image)
+void HomographyViewerPresenterImp::loadRightImage(const QString &image)
 {
   mView->setRightImage(image);
 }
 
-void HomographyViewerPresenter::homography(const QString &imageLeft, const QString &imageRight)
+void HomographyViewerPresenterImp::homography(const QString &imageLeft, const QString &imageRight)
 {
   QImage image = mModel->homography(imageLeft, imageRight);
   mView->setHomography(image);

@@ -11,6 +11,7 @@ add_executable(${the_target}
     ${test_filename}
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/ExportFeaturesView.cpp
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/ExportFeaturesView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/ExportFeatures.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 

@@ -29,48 +29,29 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/HomographyViewer.h"
 
 namespace photomatch
 {
 
-class IHomographyViewerView;
-class IHomographyViewerModel;
-class ISettingsModel;
+class HomographyViewerView;
+class HomographyViewerModel;
+class SettingsModel;
 class HelpDialog;
 
 
-class IHomographyViewerPresenter
-  : public IPresenter
+class HomographyViewerPresenterImp
+  : public HomographyViewerPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  IHomographyViewerPresenter() : IPresenter() {}
-  virtual ~IHomographyViewerPresenter() {}
-
-protected slots:
-
-  virtual void loadLeftImage(const QString &image) = 0;
-  virtual void loadRightImage(const QString &image) = 0;
-  virtual void homography(const QString &imageLeft, const QString &imageRight) = 0;
-
-};
-
-class HomographyViewerPresenter
-  : public IHomographyViewerPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  HomographyViewerPresenter(IHomographyViewerView *view,
-                            IHomographyViewerModel *model,
-                            ISettingsModel *settings);
-  ~HomographyViewerPresenter() override;
+  HomographyViewerPresenterImp(HomographyViewerView *view,
+                            HomographyViewerModel *model,
+                            SettingsModel *settings);
+  ~HomographyViewerPresenterImp() override;
 
 // IPresenter interface
 
@@ -94,9 +75,9 @@ protected slots:
 
 private:
 
-  IHomographyViewerView *mView;
-  IHomographyViewerModel *mModel;
-  ISettingsModel *mSettingsModel;
+  HomographyViewerView *mView;
+  HomographyViewerModel *mModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
 };
 

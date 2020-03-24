@@ -31,17 +31,17 @@
 
 #include <opencv2/core.hpp>
 
-#include "mvp.h"
+#include "photomatch/ui/FeatureExtractor.h"
 
 class MultiProcess;
 
 namespace photomatch
 {
 
-class IFeatureExtractorView;
+class FeatureExtractorView;
 //class IFeatureExtractorModel;
-class IProjectModel;
-class ISettingsModel;
+class ProjectModel;
+class SettingsModel;
 class HelpDialog;
 
 class AgastWidget;
@@ -69,50 +69,19 @@ class KeypointsFilterWidget;
 
 class ProgressHandler;
 
-class IFeatureExtractorPresenter
-  : public IPresenter
-{
 
-  Q_OBJECT
-
-public:
-
-  IFeatureExtractorPresenter() {}
-  virtual ~IFeatureExtractorPresenter(){}
-
-signals:
-
-  void running();
-  void imagePreprocessed(QString);
-  void featuresExtracted(QString);
-  void finished();
-
-public slots:
-
-  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
-  virtual void cancel() = 0;
-
-private slots:
-
-  virtual void run() = 0;
-  virtual void setCurrentkeypointDetector(const QString &keypointDetector) = 0;
-  virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
-
-};
-
-
-class FeatureExtractorPresenter
-  : public IFeatureExtractorPresenter
+class FeatureExtractorPresenterImp
+  : public FeatureExtractorPresenter
 {
   Q_OBJECT
 
 public:
 
-  FeatureExtractorPresenter(IFeatureExtractorView *view,
+  FeatureExtractorPresenterImp(FeatureExtractorView *view,
                             //IFeatureExtractorModel *model,
-                            IProjectModel *projectModel,
-                            ISettingsModel *settingsModel);
-  ~FeatureExtractorPresenter() override;
+                            ProjectModel *projectModel,
+                            SettingsModel *settingsModel);
+  ~FeatureExtractorPresenterImp() override;
 
 private:
 
@@ -175,10 +144,10 @@ private slots:
 
 protected:
 
-  IFeatureExtractorView *mView;
+  FeatureExtractorView *mView;
   //IFeatureExtractorModel *mModel;  /// Por ahora es una clase vacia.
-  IProjectModel *mProjectModel;
-  ISettingsModel *mSettingsModel;
+  ProjectModel *mProjectModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
 
   AgastWidget *mAgastDetector;

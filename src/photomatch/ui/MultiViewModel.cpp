@@ -32,29 +32,29 @@
 namespace photomatch
 {
 
-MultiviewMatchingAssessmentModel::MultiviewMatchingAssessmentModel(IProjectModel *mProjectModel)
-  : IMultiViewMatchingAssessmentModel(),
+MultiviewMatchingAssessmentModelImp::MultiviewMatchingAssessmentModelImp(ProjectModel *mProjectModel)
+  : MultiViewMatchingAssessmentModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-MultiviewMatchingAssessmentModel::~MultiviewMatchingAssessmentModel()
+MultiviewMatchingAssessmentModelImp::~MultiviewMatchingAssessmentModelImp()
 {
 
 }
 
-QString MultiviewMatchingAssessmentModel::sessionName() const
+QString MultiviewMatchingAssessmentModelImp::sessionName() const
 {
   return mSession;
 }
 
-void MultiviewMatchingAssessmentModel::setSessionName(const QString &session)
+void MultiviewMatchingAssessmentModelImp::setSessionName(const QString &session)
 {
   mSession = session;
 }
 
-void MultiviewMatchingAssessmentModel::loadPassPoints()
+void MultiviewMatchingAssessmentModelImp::loadPassPoints()
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
     passPointsRead(session->passPoints(), mPassPoints);
@@ -63,7 +63,7 @@ void MultiviewMatchingAssessmentModel::loadPassPoints()
   }
 }
 
-std::vector<size_t> MultiviewMatchingAssessmentModel::passPointIds() const
+std::vector<size_t> MultiviewMatchingAssessmentModelImp::passPointIds() const
 {
   std::vector<size_t> ids;
 
@@ -75,7 +75,7 @@ std::vector<size_t> MultiviewMatchingAssessmentModel::passPointIds() const
   return ids;
 }
 
-std::vector<std::pair<size_t, size_t> > MultiviewMatchingAssessmentModel::passPointIdsAndSize() const
+std::vector<std::pair<size_t, size_t> > MultiviewMatchingAssessmentModelImp::passPointIdsAndSize() const
 {
   std::vector<std::pair<size_t, size_t>> ids;
 
@@ -87,7 +87,7 @@ std::vector<std::pair<size_t, size_t> > MultiviewMatchingAssessmentModel::passPo
   return ids;
 }
 
-std::vector<std::pair<QString, QPointF>> MultiviewMatchingAssessmentModel::images(size_t passPointId) const
+std::vector<std::pair<QString, QPointF>> MultiviewMatchingAssessmentModelImp::images(size_t passPointId) const
 {
   std::vector<std::pair<QString, QPointF>> images;
 
@@ -118,7 +118,7 @@ std::vector<std::pair<QString, QPointF>> MultiviewMatchingAssessmentModel::image
   return images;
 }
 
-void MultiviewMatchingAssessmentModel::init()
+void MultiviewMatchingAssessmentModelImp::init()
 {
   if (mProjectModel->currentSession())
     mSession = mProjectModel->currentSession()->name();

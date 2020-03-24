@@ -42,19 +42,19 @@
 namespace photomatch
 {
 
-CurvesViewerModel::CurvesViewerModel(photomatch::IProjectModel *projectModel)
-  : ICurvesViewerModel(),
+CurvesViewerModelImp::CurvesViewerModelImp(photomatch::ProjectModel *projectModel)
+  : CurvesViewerModel(),
     mProjectModel(projectModel)
 {
   init();
 }
 
-CurvesViewerModel::~CurvesViewerModel()
+CurvesViewerModelImp::~CurvesViewerModelImp()
 {
 
 }
 
-std::vector<QString> CurvesViewerModel::images() const
+std::vector<QString> CurvesViewerModelImp::images() const
 {
   std::vector<QString> images;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -63,7 +63,7 @@ std::vector<QString> CurvesViewerModel::images() const
   return images;
 }
 
-std::vector<QString> CurvesViewerModel::imagePairs(const QString &imageName) const
+std::vector<QString> CurvesViewerModelImp::imagePairs(const QString &imageName) const
 {
   std::vector<QString> pairs;
   if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
@@ -84,7 +84,7 @@ std::vector<QString> CurvesViewerModel::imagePairs(const QString &imageName) con
   return pairs;
 }
 
-std::vector<QString> CurvesViewerModel::sessionNames() const
+std::vector<QString> CurvesViewerModelImp::sessionNames() const
 {
   std::vector<QString> session_names;
 
@@ -97,7 +97,7 @@ std::vector<QString> CurvesViewerModel::sessionNames() const
   return session_names;
 }
 
-std::vector<std::tuple<QString, QString, QString> > CurvesViewerModel::sessions() const
+std::vector<std::tuple<QString, QString, QString> > CurvesViewerModelImp::sessions() const
 {
   std::vector<std::tuple<QString, QString, QString>> sessions;
 
@@ -113,15 +113,15 @@ std::vector<std::tuple<QString, QString, QString> > CurvesViewerModel::sessions(
   return sessions;
 }
 
-void CurvesViewerModel::init()
+void CurvesViewerModelImp::init()
 {
 }
 
 
 
 
-ROCCurvesViewerModel::ROCCurvesViewerModel(IProjectModel *projectModel)
-  : CurvesViewerModel(projectModel)
+ROCCurvesViewerModel::ROCCurvesViewerModel(ProjectModel *projectModel)
+  : CurvesViewerModelImp(projectModel)
 {
 
 }
@@ -279,8 +279,8 @@ double ROCCurvesViewerModel::computeCurve(const QString &session, const QString 
 }
 
 
-PRCurvesViewerModel::PRCurvesViewerModel(IProjectModel *projectModel)
-  : CurvesViewerModel(projectModel)
+PRCurvesViewerModel::PRCurvesViewerModel(ProjectModel *projectModel)
+  : CurvesViewerModelImp(projectModel)
 {
 
 }
@@ -411,8 +411,8 @@ double PRCurvesViewerModel::computeCurve(const QString &session, const QString &
 }
 
 
-DETCurvesViewerModel::DETCurvesViewerModel(IProjectModel *projectModel)
-  : CurvesViewerModel(projectModel)
+DETCurvesViewerModel::DETCurvesViewerModel(ProjectModel *projectModel)
+  : CurvesViewerModelImp(projectModel)
 {
 
 }

@@ -33,7 +33,7 @@
 namespace photomatch
 {
 
-class IProjectModel
+class ProjectModel
   : public IModel/*,
     public IProject*/
 {
@@ -42,7 +42,7 @@ class IProjectModel
 
 public:
 
-  IProjectModel(QObject *parent = nullptr) : IModel(parent) {}
+  ProjectModel(QObject *parent = nullptr) : IModel(parent) {}
 
   /*!
    * \brief Project file path
@@ -436,16 +436,16 @@ public:
 
 
 
-class ProjectModel
-  : public IProjectModel
+class ProjectModelImp
+  : public ProjectModel
 {
 
   Q_OBJECT
 
 public:
 
-  explicit ProjectModel(ProjectController *projectIO, Project *project, QObject *parent = nullptr);
-  ~ProjectModel() override;
+  explicit ProjectModelImp(ProjectController *projectIO, Project *project, QObject *parent = nullptr);
+  ~ProjectModelImp() override;
 
 signals:
 

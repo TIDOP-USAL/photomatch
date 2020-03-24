@@ -32,35 +32,35 @@
 namespace photomatch
 {
 
-FeaturesViewerModel::FeaturesViewerModel(IProjectModel *mProjectModel)
-  : IFeaturesViewerModel(),
+FeaturesViewerModelImp::FeaturesViewerModelImp(ProjectModel *mProjectModel)
+  : FeaturesViewerModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-FeaturesViewerModel::~FeaturesViewerModel()
+FeaturesViewerModelImp::~FeaturesViewerModelImp()
 {
 
 }
 
-void FeaturesViewerModel::init()
+void FeaturesViewerModelImp::init()
 {
   if (mProjectModel->currentSession())
     mSession = mProjectModel->currentSession()->name();
 }
 
-QString FeaturesViewerModel::sessionName() const
+QString FeaturesViewerModelImp::sessionName() const
 {
   return mSession;
 }
 
-void FeaturesViewerModel::setSessionName(const QString &session)
+void FeaturesViewerModelImp::setSessionName(const QString &session)
 {
   mSession = session;
 }
 
-std::vector<QString> FeaturesViewerModel::images() const
+std::vector<QString> FeaturesViewerModelImp::images() const
 {
   std::vector<QString> images;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -69,7 +69,7 @@ std::vector<QString> FeaturesViewerModel::images() const
   return images;
 }
 
-std::vector<std::tuple<QPointF, double, double> > FeaturesViewerModel::loadKeypoints(const QString &image)
+std::vector<std::tuple<QPointF, double, double> > FeaturesViewerModelImp::loadKeypoints(const QString &image)
 {
   try {
     std::vector<std::tuple<QPointF, double, double>> keyPoints;

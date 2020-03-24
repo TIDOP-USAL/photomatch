@@ -27,7 +27,7 @@
 namespace photomatch
 {
 
-DescriptorMatcherModel::DescriptorMatcherModel()
+DescriptorMatcherModelImp::DescriptorMatcherModelImp()
 {
 
 }

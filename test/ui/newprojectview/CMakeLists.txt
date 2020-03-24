@@ -11,6 +11,7 @@ add_executable(${the_target}
     ${test_filename}
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/NewProjectView.cpp
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/NewProjectView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/NewProject.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 

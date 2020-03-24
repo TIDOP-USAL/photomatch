@@ -11,7 +11,7 @@
 
 using namespace photomatch;
 
-class TestNewProjectView : public NewProjectView
+class TestNewProjectView : public NewProjectViewImp
 {
   Q_OBJECT
 
@@ -36,7 +36,7 @@ private slots:
 };
 
 TestNewProjectView::TestNewProjectView()
-  : NewProjectView()
+  : NewProjectViewImp()
 {
   QApplication::setActiveWindow(this);
 }
@@ -47,7 +47,7 @@ TestNewProjectView::~TestNewProjectView()
 
 void TestNewProjectView::test_constructor()
 {
-  NewProjectView newProjectView;
+  NewProjectViewImp newProjectView;
   QCOMPARE("", newProjectView.projectName());
   QCOMPARE("", newProjectView.projectPath());
   QCOMPARE("", newProjectView.projectDescription());
@@ -160,16 +160,16 @@ void TestNewProjectView::test_pushButtonProjectPath()
 void TestNewProjectView::test_dialogButtonBox()
 {
 
-  QSignalSpy spy_rejected(this, &NewProjectView::rejected);
+  QSignalSpy spy_rejected(this, &NewProjectViewImp::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
   mButtonBox->button(QDialogButtonBox::Save)->setEnabled(true);
-  QSignalSpy spy_accepted(this, &NewProjectView::accepted);
+  QSignalSpy spy_accepted(this, &NewProjectViewImp::accepted);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Save), Qt::LeftButton);
   QCOMPARE(spy_accepted.count(), 1);
 
-  QSignalSpy spy_help(this, &NewProjectView::help);
+  QSignalSpy spy_help(this, &NewProjectViewImp::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);
   QCOMPARE(spy_help.count(), 1);
 }

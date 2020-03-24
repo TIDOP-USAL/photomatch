@@ -275,7 +275,7 @@ protected:
 
   Settings *mSettings;
   SettingsController *mSettingsRWFake;
-  ISettingsModel *mSettingsModel;
+  SettingsModel *mSettingsModel;
 
 };
 
@@ -283,7 +283,7 @@ TestSettingsModel::TestSettingsModel()
   : mSettings(new SettingsImp),
     mSettingsRWFake(new SettingsRWFake)
 {
-  mSettingsModel = new SettingsModel(mSettings, mSettingsRWFake);
+  mSettingsModel = new SettingsModelImp(mSettings, mSettingsRWFake);
 }
 
 TestSettingsModel::~TestSettingsModel()
@@ -318,7 +318,7 @@ void TestSettingsModel::test_defaultValues()
 {
   SettingsImp settings;
   SettingsRWFake rw;
-  SettingsModel settingsModel(&settings, &rw);
+  SettingsModelImp settingsModel(&settings, &rw);
 
   QCOMPARE("en", settingsModel.language());
 

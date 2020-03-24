@@ -49,8 +49,8 @@ namespace photomatch
 
 MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
                                          MainWindowModel *model,
-                                         IProjectModel *projectModel,
-                                         ISettingsModel *settingsModel)
+                                         ProjectModel *projectModel,
+                                         SettingsModel *settingsModel)
   : IPresenter(),
     mView(view),
     mModel(model),

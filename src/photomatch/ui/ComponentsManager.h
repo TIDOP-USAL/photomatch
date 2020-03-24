@@ -10,52 +10,52 @@ class MainWindowModel;
 class MainWindowView;
 class MainWindowPresenter;
 
-class IProjectModel;
+class ProjectModel;
 class ProjectController;
 class Project;
 
 class Settings;
 class SettingsController;
-class ISettingsModel;
-class ISettingsPresenter;
+class SettingsModel;
+class SettingsPresenter;
 
-class INewProjectPresenter;
-class INewSessionPresenter;
+class NewProjectPresenter;
+class NewSessionPresenter;
 
-class IExportFeaturesModel;
-class IExportFeaturesPresenter;
-class IExportMatchesModel;
-class IExportMatchesPresenter;
+class ExportFeaturesModel;
+class ExportFeaturesPresenter;
+class ExportMatchesModel;
+class ExportMatchesPresenter;
 
-class IPreprocessPresenter;
-class IPreprocessModel;
+class PreprocessPresenter;
+class PreprocessModel;
 
-class IFeatureExtractorModel;
-class IFeatureExtractorPresenter;
+class FeatureExtractorModel;
+class FeatureExtractorPresenter;
 
-class IDescriptorMatcherModel;
-class IDescriptorMatcherPresenter;
+class DescriptorMatcherModel;
+class DescriptorMatcherPresenter;
 
-class IFeaturesViewerModel;
-class IFeaturesViewerPresenter;
+class FeaturesViewerModel;
+class FeaturesViewerPresenter;
 
-class IMatchViewerPresenter;
-class IMatchViewerModel;
+class MatchViewerPresenter;
+class MatchViewerModel;
 
-class IMultiViewMatchingAssessmentModel;
-class IMultiViewMatchingAssessmentPresenter;
+class MultiViewMatchingAssessmentModel;
+class MultiViewMatchingAssessmentPresenter;
 
-class IGroundTruthModel;
-class IGroundTruthPresenter;
+class GroundTruthModel;
+class GroundTruthPresenter;
 
-class IHomographyViewerPresenter;
-class IHomographyViewerModel;
+class HomographyViewerPresenter;
+class HomographyViewerModel;
 
-class ICurvesViewerPresenter;
-class ICurvesViewerModel;
+class CurvesViewerPresenter;
+class CurvesViewerModel;
 
-class IRepeatabilityModel;
-class IRepeatabilityPresenter;
+class RepeatabilityModel;
+class RepeatabilityPresenter;
 
 class AboutDialog;
 class HelpDialog;
@@ -78,55 +78,55 @@ public:
   MainWindowModel *mainWindowModel();
   MainWindowPresenter *mainWindowPresenter();
 
-  IProjectModel *projectModel();
+  ProjectModel *projectModel();
 
 //  Settings *settings();
 //  SettingsController *settingsRW();
-  ISettingsModel *settingsModel();
-  ISettingsPresenter *settingsPresenter();
+  SettingsModel *settingsModel();
+  SettingsPresenter *settingsPresenter();
 
-  INewProjectPresenter *newProjectPresenter();
+  NewProjectPresenter *newProjectPresenter();
 
-  INewSessionPresenter *newSessionPresenter();
+  NewSessionPresenter *newSessionPresenter();
 
-  IExportFeaturesPresenter *exportFeaturesPresenter();
-  IExportFeaturesModel *exportFeaturesModel();
-  IExportMatchesPresenter *exportMatchesPresenter();
-  IExportMatchesModel *exportMatchesModel();
+  ExportFeaturesPresenter *exportFeaturesPresenter();
+  ExportFeaturesModel *exportFeaturesModel();
+  ExportMatchesPresenter *exportMatchesPresenter();
+  ExportMatchesModel *exportMatchesModel();
 
   //IPreprocessModel *preprocessModel();
-  IPreprocessPresenter *preprocessPresenter();
+  PreprocessPresenter *preprocessPresenter();
 
   //IFeatureExtractorModel *featureExtractorModel();
-  IFeatureExtractorPresenter *featureExtractorPresenter();
+  FeatureExtractorPresenter *featureExtractorPresenter();
 
   //IDescriptorMatcherModel *descriptorMatcherModel();
-  IDescriptorMatcherPresenter *descriptorMatcherPresenter();
+  DescriptorMatcherPresenter *descriptorMatcherPresenter();
 
-  IFeaturesViewerPresenter *featuresViewerPresenter();
-  IFeaturesViewerModel *featuresViewerModel();
+  FeaturesViewerPresenter *featuresViewerPresenter();
+  FeaturesViewerModel *featuresViewerModel();
 
-  IMatchViewerPresenter *matchesViewerPresenter();
-  IMatchViewerModel *matchesViewerModel();
+  MatchViewerPresenter *matchesViewerPresenter();
+  MatchViewerModel *matchesViewerModel();
 
-  IMultiViewMatchingAssessmentModel *multiviewMatchingAssessmentModel();
-  IMultiViewMatchingAssessmentPresenter *multiviewMatchingAssessmentPresenter();
+  MultiViewMatchingAssessmentModel *multiviewMatchingAssessmentModel();
+  MultiViewMatchingAssessmentPresenter *multiviewMatchingAssessmentPresenter();
 
-  IGroundTruthPresenter *groundTruthPresenter();
-  IGroundTruthModel *groundTruthModel();
+  GroundTruthPresenter *groundTruthPresenter();
+  GroundTruthModel *groundTruthModel();
 
-  IHomographyViewerPresenter *homographyViewerPresenter();
-  IHomographyViewerModel *homographyViewerModel();
+  HomographyViewerPresenter *homographyViewerPresenter();
+  HomographyViewerModel *homographyViewerModel();
 
-  ICurvesViewerPresenter *curvesPRViewerPresenter();
-  ICurvesViewerModel *curvesPRViewerModel();
-  ICurvesViewerPresenter *curvesROCViewerPresenter();
-  ICurvesViewerModel *curvesROCViewerModel();
-  ICurvesViewerPresenter *curvesDETViewerPresenter();
-  ICurvesViewerModel *curvesDETViewerModel();
+  CurvesViewerPresenter *curvesPRViewerPresenter();
+  CurvesViewerModel *curvesPRViewerModel();
+  CurvesViewerPresenter *curvesROCViewerPresenter();
+  CurvesViewerModel *curvesROCViewerModel();
+  CurvesViewerPresenter *curvesDETViewerPresenter();
+  CurvesViewerModel *curvesDETViewerModel();
 
-  IRepeatabilityPresenter *repeatabilityPresenter();
-  IRepeatabilityModel *repeatabilityModel();
+  RepeatabilityPresenter *repeatabilityPresenter();
+  RepeatabilityModel *repeatabilityModel();
 
   AboutDialog *aboutDialog();
 
@@ -173,53 +173,53 @@ protected:
 
   Project *mProject;
   ProjectController *mProjectIO;
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
 
-  INewProjectPresenter *mNewProjectPresenter;
+  NewProjectPresenter *mNewProjectPresenter;
 
-  INewSessionPresenter *mNewSessionPresenter;
+  NewSessionPresenter *mNewSessionPresenter;
 
-  IExportFeaturesPresenter *mExportFeaturesPresenter;
-  IExportFeaturesModel *mExportFeaturesModel;
+  ExportFeaturesPresenter *mExportFeaturesPresenter;
+  ExportFeaturesModel *mExportFeaturesModel;
 
-  IExportMatchesPresenter *mExportMatchesPresenter;
-  IExportMatchesModel *mExportMatchesModel;
+  ExportMatchesPresenter *mExportMatchesPresenter;
+  ExportMatchesModel *mExportMatchesModel;
 
   Settings *mSettings;
   SettingsController *mSettingsRW;
-  ISettingsModel *mSettingsModel;
-  ISettingsPresenter *mSettingsPresenter;
+  SettingsModel *mSettingsModel;
+  SettingsPresenter *mSettingsPresenter;
 
-  IPreprocessPresenter *mPreprocessPresenter;
+  PreprocessPresenter *mPreprocessPresenter;
 
-  IFeatureExtractorPresenter *mFeatureExtractorPresenter;
+  FeatureExtractorPresenter *mFeatureExtractorPresenter;
 
-  IDescriptorMatcherPresenter *mDescriptorMatcherPresenter;
+  DescriptorMatcherPresenter *mDescriptorMatcherPresenter;
 
-  IFeaturesViewerPresenter *mFeaturesViewerPresenter;
-  IFeaturesViewerModel *mFeaturesViewerModel;
+  FeaturesViewerPresenter *mFeaturesViewerPresenter;
+  FeaturesViewerModel *mFeaturesViewerModel;
 
-  IMatchViewerPresenter *mMatchesViewerPresenter;
-  IMatchViewerModel *mMatchesViewerModel;
+  MatchViewerPresenter *mMatchesViewerPresenter;
+  MatchViewerModel *mMatchesViewerModel;
 
-  IMultiViewMatchingAssessmentModel *mMultiviewMatchingAssessmentModel;
-  IMultiViewMatchingAssessmentPresenter *mMultiviewMatchingAssessmentPresenter;
+  MultiViewMatchingAssessmentModel *mMultiviewMatchingAssessmentModel;
+  MultiViewMatchingAssessmentPresenter *mMultiviewMatchingAssessmentPresenter;
 
-  IGroundTruthPresenter *mGroundTruthPresenter;
-  IGroundTruthModel *mGroundTruthModel;
+  GroundTruthPresenter *mGroundTruthPresenter;
+  GroundTruthModel *mGroundTruthModel;
 
-  IHomographyViewerPresenter *mHomographyViewerPresenter;
-  IHomographyViewerModel *mHomographyViewerModel;
+  HomographyViewerPresenter *mHomographyViewerPresenter;
+  HomographyViewerModel *mHomographyViewerModel;
 
-  ICurvesViewerPresenter *mCurvesPRViewerPresenter;
-  ICurvesViewerModel *mCurvesPRViewerModel;
-  ICurvesViewerPresenter *mCurvesROCViewerPresenter;
-  ICurvesViewerModel *mCurvesROCViewerModel;
-  ICurvesViewerPresenter *mCurvesDETViewerPresenter;
-  ICurvesViewerModel *mCurvesDETViewerModel;
+  CurvesViewerPresenter *mCurvesPRViewerPresenter;
+  CurvesViewerModel *mCurvesPRViewerModel;
+  CurvesViewerPresenter *mCurvesROCViewerPresenter;
+  CurvesViewerModel *mCurvesROCViewerModel;
+  CurvesViewerPresenter *mCurvesDETViewerPresenter;
+  CurvesViewerModel *mCurvesDETViewerModel;
 
-  IRepeatabilityPresenter *mRepeatabilityPresenter;
-  IRepeatabilityModel *mRepeatabilityModel;
+  RepeatabilityPresenter *mRepeatabilityPresenter;
+  RepeatabilityModel *mRepeatabilityModel;
 
   AboutDialog *mAboutDialog;
   HelpDialog *mHelpDialog;

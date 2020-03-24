@@ -39,8 +39,8 @@
 namespace photomatch
 {
 
-MatchViewerView::MatchViewerView(QWidget *parent, Qt::WindowFlags f)
-  : IMatchViewerView(parent, f),
+MatchViewerViewImp::MatchViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+  : MatchViewerView(parent, f),
     bUnsavedChanges(false),
     mMarkerColor("#e5097e"),
     mMarkerSize(20),
@@ -53,11 +53,11 @@ MatchViewerView::MatchViewerView(QWidget *parent, Qt::WindowFlags f)
   this->initSignalAndSlots();
 }
 
-MatchViewerView::~MatchViewerView()
+MatchViewerViewImp::~MatchViewerViewImp()
 {
 }
 
-void MatchViewerView::setLeftImage(const QString &leftImage)
+void MatchViewerViewImp::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   //QFileInfo file_info(leftImage);
@@ -68,7 +68,7 @@ void MatchViewerView::setLeftImage(const QString &leftImage)
   mGraphicsViewLeft->setImage(QImage(mComboBoxLeftImage->currentData().toString()));
 }
 
-void MatchViewerView::setRightImage(const QString &rightImage)
+void MatchViewerViewImp::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   //QFileInfo file_info(rightImage);
@@ -79,7 +79,7 @@ void MatchViewerView::setRightImage(const QString &rightImage)
   mGraphicsViewRight->setImage(QImage(mComboBoxRightImage->currentData().toString()));
 }
 
-void MatchViewerView::setLeftImageList(const std::vector<QString> &leftImageList)
+void MatchViewerViewImp::setLeftImageList(const std::vector<QString> &leftImageList)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   mComboBoxLeftImage->clear();
@@ -89,7 +89,7 @@ void MatchViewerView::setLeftImageList(const std::vector<QString> &leftImageList
   }
 }
 
-void MatchViewerView::setRightImageList(const std::vector<QString> &rightImageList)
+void MatchViewerViewImp::setRightImageList(const std::vector<QString> &rightImageList)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   mComboBoxRightImage->clear();
@@ -99,7 +99,7 @@ void MatchViewerView::setRightImageList(const std::vector<QString> &rightImageLi
   }
 }
 
-void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float> > &matches)
+void MatchViewerViewImp::setMatches(const std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float> > &matches)
 {
   QSignalBlocker blocker(mTreeWidgetMatches);
   mTreeWidgetMatches->clear();
@@ -225,19 +225,19 @@ void MatchViewerView::setMatches(const std::vector<std::tuple<size_t, size_t, QP
   }
 }
 
-void MatchViewerView::setBGColor(const QString &bgColor)
+void MatchViewerViewImp::setBGColor(const QString &bgColor)
 {
   mGraphicsViewLeft->setBackgroundBrush(QBrush(QColor(bgColor)));
   mGraphicsViewRight->setBackgroundBrush(QBrush(QColor(bgColor)));
 }
 
-void MatchViewerView::setSelectedMarkerStyle(const QString &color, int width)
+void MatchViewerViewImp::setSelectedMarkerStyle(const QString &color, int width)
 {
   mSelectedMarkerColor = color;
   mSelectedMarkerWidth = width;
 }
 
-void MatchViewerView::setMarkerStyle(const QString &color, int width, int type, int size)
+void MatchViewerViewImp::setMarkerStyle(const QString &color, int width, int type, int size)
 {
   int markerTypeOld = mMarkerType;
   mMarkerColor = color;
@@ -430,13 +430,13 @@ void MatchViewerView::setMarkerStyle(const QString &color, int width, int type, 
 
 }
 
-void MatchViewerView::setLineStyle(const QString &color, int width)
+void MatchViewerViewImp::setLineStyle(const QString &color, int width)
 {
   mLineColor = color;
   mLineWidth = width;
 }
 
-void MatchViewerView::initUI()
+void MatchViewerViewImp::initUI()
 {
   this->setWindowTitle(tr("Match Viewer"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -518,7 +518,7 @@ void MatchViewerView::initUI()
   update();
 }
 
-void MatchViewerView::initSignalAndSlots()
+void MatchViewerViewImp::initSignalAndSlots()
 {
   connect(mComboBoxLeftImage,     SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   connect(mComboBoxRightImage,    SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
@@ -531,7 +531,7 @@ void MatchViewerView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void MatchViewerView::clear()
+void MatchViewerViewImp::clear()
 {
   const QSignalBlocker blocker1(mComboBoxLeftImage);
   const QSignalBlocker blocker2(mComboBoxLeftImage);
@@ -540,22 +540,22 @@ void MatchViewerView::clear()
   mComboBoxLeftImage->clear();
 }
 
-void MatchViewerView::update()
+void MatchViewerViewImp::update()
 {
   mPushButtonDeleteMatch->setEnabled(mTreeWidgetMatches->selectedItems().size() > 0);
 }
 
-void MatchViewerView::retranslate()
+void MatchViewerViewImp::retranslate()
 {
 
 }
 
-void MatchViewerView::onComboBoxLeftImageIndexChanged(int idx)
+void MatchViewerViewImp::onComboBoxLeftImageIndexChanged(int idx)
 {
   emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
-void MatchViewerView::onComboBoxRightImageIndexChanged(int idx)
+void MatchViewerViewImp::onComboBoxRightImageIndexChanged(int idx)
 {
   QString image_right(mComboBoxRightImage->itemText(idx));
   QString image_left(mComboBoxLeftImage->currentText());
@@ -563,7 +563,7 @@ void MatchViewerView::onComboBoxRightImageIndexChanged(int idx)
   emit loadMatches(image_left, image_right);
 }
 
-void MatchViewerView::onTreeWidgetMatchesItemClicked(QTreeWidgetItem *item, int col)
+void MatchViewerViewImp::onTreeWidgetMatchesItemClicked(QTreeWidgetItem *item, int col)
 {
   QPointF query_point(item->text(1).toDouble(), item->text(2).toDouble());
   QPointF train_point(item->text(3).toDouble(), item->text(4).toDouble());
@@ -574,7 +574,7 @@ void MatchViewerView::onTreeWidgetMatchesItemClicked(QTreeWidgetItem *item, int 
   mGraphicsViewRight->centerOn(train_point);
 }
 
-void MatchViewerView::onTreeWidgetMatchesItemSelectionChanged()
+void MatchViewerViewImp::onTreeWidgetMatchesItemSelectionChanged()
 {
   const QSignalBlocker blocker1(mGraphicsViewLeft);
   const QSignalBlocker blocker2(mGraphicsViewRight);
@@ -608,7 +608,7 @@ void MatchViewerView::onTreeWidgetMatchesItemSelectionChanged()
   update();
 }
 
-void MatchViewerView::onGraphicsViewLeftSelectionChanged()
+void MatchViewerViewImp::onGraphicsViewLeftSelectionChanged()
 {
   const QSignalBlocker blocker1(mGraphicsViewRight);
   const QSignalBlocker blocker2(mTreeWidgetMatches);
@@ -652,7 +652,7 @@ void MatchViewerView::onGraphicsViewLeftSelectionChanged()
   update();
 }
 
-void MatchViewerView::onGraphicsViewRightSelectionChanged()
+void MatchViewerViewImp::onGraphicsViewRightSelectionChanged()
 {
   const QSignalBlocker blocker1(mGraphicsViewLeft);
   const QSignalBlocker blocker2(mTreeWidgetMatches);
@@ -696,7 +696,7 @@ void MatchViewerView::onGraphicsViewRightSelectionChanged()
   update();
 }
 
-void MatchViewerView::onPushButtonDeleteMatchClicked()
+void MatchViewerViewImp::onPushButtonDeleteMatchClicked()
 {
   const QSignalBlocker blocker1(mGraphicsViewLeft);
   const QSignalBlocker blocker2(mGraphicsViewRight);
@@ -744,13 +744,13 @@ void MatchViewerView::onPushButtonDeleteMatchClicked()
   update();
 }
 
-void MatchViewerView::setSessionName(const QString &name)
+void MatchViewerViewImp::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Match Viewer ").append(name));
 }
 
 
-void MatchViewerView::closeEvent(QCloseEvent *event)
+void MatchViewerViewImp::closeEvent(QCloseEvent *event)
 {
   for (auto &item : mGraphicsViewLeft->scene()->items()) {
     if (mMarkerType == 0){

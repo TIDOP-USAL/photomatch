@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_NEW_SESSION_VIEW_H
 #define PHOTOMATCH_NEW_SESSION_VIEW_H
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/NewSession.h"
 
 class QLineEdit;
 class QTextEdit;
@@ -34,45 +34,17 @@ class QDialogButtonBox;
 namespace photomatch
 {
 
-class INewSessionView
-  : public IDialogView
-{
 
-  Q_OBJECT
 
-public:
-
-  INewSessionView(QWidget *parent) : IDialogView(parent) {}
-  virtual ~INewSessionView() override {}
-
-  /*!
-   * \brief Devuelve el nombre de la sesión
-   * \return Nombre de la sesión
-   */
-  virtual QString sessionName() const = 0;
-
-  /*!
-   * \brief Devuelve la descripción de la sesión
-   * \return Descripción de la sesión
-   */
-  virtual QString sessionDescription() const = 0;
-
-  virtual void setExistingName(bool nameExist) = 0;
-
-signals:
-
-  void sessionNameChange(QString);
-};
-
-class NewSessionView
-  : public INewSessionView
+class NewSessionViewImp
+  : public NewSessionView
 {
   Q_OBJECT
 
 public:
 
-  NewSessionView(QWidget *parent = nullptr);
-  ~NewSessionView() override;
+  NewSessionViewImp(QWidget *parent = nullptr);
+  ~NewSessionViewImp() override;
 
 // IDialogView interface
 

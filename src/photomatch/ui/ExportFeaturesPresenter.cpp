@@ -31,9 +31,9 @@
 namespace photomatch
 {
 
-ExportFeaturesPresenter::ExportFeaturesPresenter(IExportFeaturesView *view,
-                                                 IExportFeaturesModel *model)
-  : IExportFeaturesPresenter(),
+ExportFeaturesPresenterImp::ExportFeaturesPresenterImp(ExportFeaturesView *view,
+                                                 ExportFeaturesModel *model)
+  : ExportFeaturesPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
@@ -45,12 +45,12 @@ ExportFeaturesPresenter::ExportFeaturesPresenter(IExportFeaturesView *view,
   connect(mView, SIGNAL(help()),                   this, SLOT(help()));
 }
 
-ExportFeaturesPresenter::~ExportFeaturesPresenter()
+ExportFeaturesPresenterImp::~ExportFeaturesPresenterImp()
 {
 
 }
 
-void ExportFeaturesPresenter::help()
+void ExportFeaturesPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("menus.html#export_keypoints");
@@ -58,7 +58,7 @@ void ExportFeaturesPresenter::help()
   }
 }
 
-void ExportFeaturesPresenter::open()
+void ExportFeaturesPresenterImp::open()
 {
   mView->clear();
 
@@ -70,16 +70,16 @@ void ExportFeaturesPresenter::open()
   mView->exec();
 }
 
-void ExportFeaturesPresenter::setHelp(HelpDialog *help)
+void ExportFeaturesPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void ExportFeaturesPresenter::init()
+void ExportFeaturesPresenterImp::init()
 {
 }
 
-void ExportFeaturesPresenter::save()
+void ExportFeaturesPresenterImp::save()
 {
   mModel->exportFeatures(mView->session(),
                          mView->exportFiles(),
@@ -87,7 +87,7 @@ void ExportFeaturesPresenter::save()
                          mView->format());
 }
 
-void ExportFeaturesPresenter::sessionChange(const QString &session)
+void ExportFeaturesPresenterImp::sessionChange(const QString &session)
 {
   mView->setSessionToExport(session);
   mView->setFormats(mModel->formats());

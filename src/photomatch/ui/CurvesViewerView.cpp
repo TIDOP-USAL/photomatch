@@ -38,14 +38,14 @@ namespace photomatch
 {
 
 
-CurvesViewerView::CurvesViewerView(QWidget *parent, Qt::WindowFlags f)
-  : ICurvesViewerView(parent, f)
+CurvesViewerViewImp::CurvesViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+  : CurvesViewerView(parent, f)
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-CurvesViewerView::~CurvesViewerView()
+CurvesViewerViewImp::~CurvesViewerViewImp()
 {
   QList<QAbstractSeries *> series = mChart->series();
   for (int i = 0; i < series.size(); i++) {
@@ -71,17 +71,17 @@ CurvesViewerView::~CurvesViewerView()
   }
 }
 
-void CurvesViewerView::onComboBoxLeftImageIndexChanged(int idx)
+void CurvesViewerViewImp::onComboBoxLeftImageIndexChanged(int idx)
 {
   emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
-void CurvesViewerView::onComboBoxRightImageIndexChanged(int idx)
+void CurvesViewerViewImp::onComboBoxRightImageIndexChanged(int idx)
 {
   emit rightImageChange(mComboBoxRightImage->itemText(idx));
 }
 
-void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
+void CurvesViewerViewImp::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
 {
   if (item == nullptr) return;
 
@@ -92,7 +92,7 @@ void CurvesViewerView::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, in
   }
 }
 
-void CurvesViewerView::addSession(const QString &session, const QString &detector, const QString &descriptor)
+void CurvesViewerViewImp::addSession(const QString &session, const QString &detector, const QString &descriptor)
 {
   if (QTreeWidgetItem *item = new QTreeWidgetItem(mTreeWidgetSessions)){
     item->setText(0, session);
@@ -103,7 +103,7 @@ void CurvesViewerView::addSession(const QString &session, const QString &detecto
   }
 }
 
-bool CurvesViewerView::isSessionActive(const QString &session) const
+bool CurvesViewerViewImp::isSessionActive(const QString &session) const
 {
   for (int i = 0; i < mTreeWidgetSessions->topLevelItemCount(); i++){
     if (QTreeWidgetItem *item = mTreeWidgetSessions->topLevelItem(i)){
@@ -115,31 +115,31 @@ bool CurvesViewerView::isSessionActive(const QString &session) const
   return false;
 }
 
-QString CurvesViewerView::leftImage() const
+QString CurvesViewerViewImp::leftImage() const
 {
   return mComboBoxLeftImage->currentText();
 }
 
-void CurvesViewerView::setLeftImage(const QString &leftImage)
+void CurvesViewerViewImp::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   QFileInfo file_info(leftImage);
   mComboBoxLeftImage->setCurrentText(file_info.baseName());
 }
 
-QString CurvesViewerView::rightImage() const
+QString CurvesViewerViewImp::rightImage() const
 {
   return mComboBoxRightImage->currentText();
 }
 
-void CurvesViewerView::setRightImage(const QString &rightImage)
+void CurvesViewerViewImp::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   QFileInfo file_info(rightImage);
   mComboBoxRightImage->setCurrentText(file_info.baseName());
 }
 
-void CurvesViewerView::setLeftImageList(const std::vector<QString> &leftImageList)
+void CurvesViewerViewImp::setLeftImageList(const std::vector<QString> &leftImageList)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   mComboBoxLeftImage->clear();
@@ -149,7 +149,7 @@ void CurvesViewerView::setLeftImageList(const std::vector<QString> &leftImageLis
   }
 }
 
-void CurvesViewerView::setRightImageList(const std::vector<QString> &rightImageList)
+void CurvesViewerViewImp::setRightImageList(const std::vector<QString> &rightImageList)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   mComboBoxRightImage->clear();
@@ -159,7 +159,7 @@ void CurvesViewerView::setRightImageList(const std::vector<QString> &rightImageL
   }
 }
 
-void CurvesViewerView::setCurve(const QString &title, const std::vector<QPointF> &curve)
+void CurvesViewerViewImp::setCurve(const QString &title, const std::vector<QPointF> &curve)
 {
   QLineSeries *series = new QLineSeries(this);
 
@@ -173,7 +173,7 @@ void CurvesViewerView::setCurve(const QString &title, const std::vector<QPointF>
   series->attachAxis(mAxisY);
 }
 
-void CurvesViewerView::eraseCurve(const QString &session)
+void CurvesViewerViewImp::eraseCurve(const QString &session)
 {
   QList<QAbstractSeries *> series = mChart->series();
   for (int i = 0; i < series.size(); i++) {
@@ -189,7 +189,7 @@ void CurvesViewerView::eraseCurve(const QString &session)
   }
 }
 
-void CurvesViewerView::initUI()
+void CurvesViewerViewImp::initUI()
 {
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(994, 688);
@@ -246,7 +246,7 @@ void CurvesViewerView::initUI()
   update();
 }
 
-void CurvesViewerView::initSignalAndSlots()
+void CurvesViewerViewImp::initSignalAndSlots()
 {
   connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
@@ -256,7 +256,7 @@ void CurvesViewerView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void CurvesViewerView::clear()
+void CurvesViewerViewImp::clear()
 {
   QSignalBlocker blocker1(mComboBoxLeftImage);
   QSignalBlocker blocker2(mComboBoxRightImage);
@@ -267,11 +267,11 @@ void CurvesViewerView::clear()
   mTreeWidgetSessions->clear();
 }
 
-void CurvesViewerView::update()
+void CurvesViewerViewImp::update()
 {
 }
 
-void CurvesViewerView::retranslate()
+void CurvesViewerViewImp::retranslate()
 {
 
 }
@@ -280,7 +280,7 @@ void CurvesViewerView::retranslate()
 
 
 ROCCurvesViewer::ROCCurvesViewer(QWidget *parent, Qt::WindowFlags f)
-  : CurvesViewerView(parent, f)
+  : CurvesViewerViewImp(parent, f)
 {
   this->initUI();
 }
@@ -313,7 +313,7 @@ void ROCCurvesViewer::initUI()
 
 
 PRCurvesViewer::PRCurvesViewer(QWidget *parent, Qt::WindowFlags f)
-  : CurvesViewerView(parent, f)
+  : CurvesViewerViewImp(parent, f)
 {
   this->initUI();
 }
@@ -345,7 +345,7 @@ void PRCurvesViewer::initUI()
 
 
 DETCurvesViewer::DETCurvesViewer(QWidget *parent, Qt::WindowFlags f)
-  : CurvesViewerView(parent, f)
+  : CurvesViewerViewImp(parent, f)
 {
   this->initUI();
 }

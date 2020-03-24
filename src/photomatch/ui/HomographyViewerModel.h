@@ -27,42 +27,24 @@
 
 #include <memory>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/HomographyViewer.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class IHomographyViewerModel
-  : public IModel
+
+class HomographyViewerModelImp
+  : public HomographyViewerModel
 {
 
   Q_OBJECT
 
 public:
 
-  IHomographyViewerModel(){}
-  virtual ~IHomographyViewerModel() {}
-
-  virtual QString currentSession() const = 0;
-  virtual std::vector<QString> images() const = 0;
-  virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual QImage homography(const QString &imgName1, const QString &imgName2) const = 0;
-  virtual void setUseCuda(bool active) = 0;
-
-};
-
-class HomographyViewerModel
-  : public IHomographyViewerModel
-{
-
-  Q_OBJECT
-
-public:
-
-  HomographyViewerModel(IProjectModel *mProjectModel);
-  ~HomographyViewerModel() override;
+  HomographyViewerModelImp(ProjectModel *mProjectModel);
+  ~HomographyViewerModelImp() override;
 
 // IHomographyViewerModel interface
 
@@ -82,7 +64,7 @@ private:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
   bool bUseCuda;
 };
 

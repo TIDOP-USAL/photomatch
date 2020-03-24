@@ -27,7 +27,7 @@
 namespace photomatch
 {
 
-PreprocessModel::PreprocessModel()
+PreprocessModelImp::PreprocessModelImp()
 {
 
 }

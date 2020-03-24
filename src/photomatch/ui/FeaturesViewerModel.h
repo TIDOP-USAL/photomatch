@@ -27,46 +27,27 @@
 
 #include <memory>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/FeaturesViewer.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class IFeaturesViewerModel
-  : public IModel
-{
-
-  Q_OBJECT
-
-public:
-
-  IFeaturesViewerModel() {}
-  virtual ~IFeaturesViewerModel() = default;
-
-  virtual QString sessionName() const = 0;
-  virtual void setSessionName(const QString &session) = 0;
-  virtual std::vector<QString> images() const = 0;
-  virtual std::vector<std::tuple<QPointF, double, double>> loadKeypoints(const QString &image) = 0;
-
-
-};
-
-class FeaturesViewerModel
-  : public IFeaturesViewerModel
+class FeaturesViewerModelImp
+  : public FeaturesViewerModel
 {
 
  Q_OBJECT
 
 public:
 
-  FeaturesViewerModel(IProjectModel *mProjectModel);
-  ~FeaturesViewerModel() override;
+  FeaturesViewerModelImp(ProjectModel *mProjectModel);
+  ~FeaturesViewerModelImp() override;
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
 
 // IModel interface
 

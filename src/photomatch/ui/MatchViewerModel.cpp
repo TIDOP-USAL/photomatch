@@ -34,30 +34,30 @@
 namespace photomatch
 {
 
-MatchViewerModel::MatchViewerModel(IProjectModel *mProjectModel)
-  : IMatchViewerModel(),
+MatchViewerModelImp::MatchViewerModelImp(ProjectModel *mProjectModel)
+  : MatchViewerModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-void MatchViewerModel::init()
+void MatchViewerModelImp::init()
 {
   if (mProjectModel->currentSession())
     mSession = mProjectModel->currentSession()->name();
 }
 
-QString MatchViewerModel::sessionName() const
+QString MatchViewerModelImp::sessionName() const
 {
   return mSession;
 }
 
-void MatchViewerModel::setSessionName(const QString &session)
+void MatchViewerModelImp::setSessionName(const QString &session)
 {
   mSession = session;
 }
 
-std::vector<QString> MatchViewerModel::images() const
+std::vector<QString> MatchViewerModelImp::images() const
 {
   std::vector<QString> images;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -66,7 +66,7 @@ std::vector<QString> MatchViewerModel::images() const
   return images;
 }
 
-std::vector<QString> MatchViewerModel::imagePairs(const QString &imageName) const
+std::vector<QString> MatchViewerModelImp::imagePairs(const QString &imageName) const
 {
   std::vector<QString> pairs;
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
@@ -88,7 +88,7 @@ std::vector<QString> MatchViewerModel::imagePairs(const QString &imageName) cons
 }
 
 std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>>
-MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) const
+MatchViewerModelImp::loadMatches(const QString &imgName1, const QString &imgName2) const
 {
   std::vector<std::tuple<size_t, size_t, QPointF, size_t, QPointF, float>> r_matches;
 
@@ -154,7 +154,7 @@ MatchViewerModel::loadMatches(const QString &imgName1, const QString &imgName2) 
   return r_matches;
 }
 
-void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgName2, int query_id, int train_id)
+void MatchViewerModelImp::deleteMatch(const QString &imgName1, const QString &imgName2, int query_id, int train_id)
 {
   QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();
   QString imgPath2 = mProjectModel->findImageByName(imgName2)->path();
@@ -196,7 +196,7 @@ void MatchViewerModel::deleteMatch(const QString &imgName1, const QString &imgNa
   }
 }
 
-void MatchViewerModel::loadPassPoints()
+void MatchViewerModelImp::loadPassPoints()
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
     passPointsRead(session->passPoints(), mPassPoints);

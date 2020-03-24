@@ -21,11 +21,10 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_CURVES_VIEWER_VIEW_H
 #define PHOTOMATCH_CURVES_VIEWER_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/CurvesViewer.h"
 
 class QDialogButtonBox;
 class QComboBox;
@@ -41,66 +40,18 @@ class QValueAxis;
 namespace photomatch
 {
 
-class ICurvesViewerView
-  : public IDialogView
+class CurvesViewerViewImp
+  : public CurvesViewerView
 {
 
   Q_OBJECT
 
 public:
 
-  ICurvesViewerView(QWidget *parent = nullptr,
-                    Qt::WindowFlags f = Qt::WindowFlags())
-    : IDialogView(parent, f)
-  {}
-
-  virtual ~ICurvesViewerView() override = default;
-
-  virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) = 0;
-  virtual bool isSessionActive(const QString &session) const = 0;
-
-  virtual QString leftImage() const = 0;
-  virtual void setLeftImage(const QString &leftImage) = 0;
-
-  virtual QString rightImage() const = 0;
-  virtual void setRightImage(const QString &rightImage) = 0;
-
-  /*!
-   * \brief Set the list of images for image selector left
-   * \param[in] leftImageList List of left images
-   */
-  virtual void setLeftImageList(const std::vector<QString> &leftImageList) = 0;
-
-  /*!
-   * \brief Set the list of images for image selector right
-   * \param[in] rightImageList List of right images
-   */
-  virtual void setRightImageList(const std::vector<QString> &rightImageList) = 0;
-
-  virtual void setCurve(const QString &title, const std::vector<QPointF> &curve) = 0;
-  virtual void eraseCurve(const QString &session) = 0;
-
-signals:
-
-  void leftImageChange(QString);
-  void rightImageChange(QString);
-  void activeSession(QString);
-  void disableSession(QString);
-
-};
-
-class CurvesViewerView
-  : public ICurvesViewerView
-{
-
-  Q_OBJECT
-
-public:
-
-  CurvesViewerView(QWidget *parent = nullptr,
+  CurvesViewerViewImp(QWidget *parent = nullptr,
                    Qt::WindowFlags f = Qt::WindowFlags());
 
-  virtual ~CurvesViewerView() override;
+  virtual ~CurvesViewerViewImp() override;
 
 protected slots :
 
@@ -153,7 +104,7 @@ protected:
  * \brief ROC curve (receiver operating characteristic)
  */
 class ROCCurvesViewer
-  : public CurvesViewerView
+  : public CurvesViewerViewImp
 {
 
   Q_OBJECT
@@ -176,7 +127,7 @@ private:
  * \brief Precision-Recall Curve
  */
 class PRCurvesViewer
-    : public CurvesViewerView
+    : public CurvesViewerViewImp
 {
 
   Q_OBJECT
@@ -200,7 +151,7 @@ private:
  * \brief DET (Detection Error Tradeoff) Curve
  */
 class DETCurvesViewer
-    : public CurvesViewerView
+    : public CurvesViewerViewImp
 {
 
   Q_OBJECT

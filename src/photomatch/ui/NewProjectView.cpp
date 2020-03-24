@@ -36,8 +36,8 @@
 namespace photomatch
 {
 
-NewProjectView::NewProjectView(QWidget *parent)
-  : INewProjectView(parent),
+NewProjectViewImp::NewProjectViewImp(QWidget *parent)
+  : NewProjectView(parent),
     mLineEditProjectName(new QLineEdit(this)),
     mLineEditProjectPath(new QLineEdit(this)),
     mLineEditProjectFile(new QLineEdit(this)),
@@ -50,7 +50,7 @@ NewProjectView::NewProjectView(QWidget *parent)
   this->initSignalAndSlots();
 }
 
-NewProjectView::~NewProjectView()
+NewProjectViewImp::~NewProjectViewImp()
 {
 }
 
@@ -59,34 +59,34 @@ NewProjectView::~NewProjectView()
 
 // public:
 
-QString NewProjectView::projectName() const
+QString NewProjectViewImp::projectName() const
 {
   return mLineEditProjectName->text();
 }
 
-QString NewProjectView::projectPath() const
+QString NewProjectViewImp::projectPath() const
 {
   return mLineEditProjectPath->text();
 }
 
-void NewProjectView::setProjectPath(const QString &path)
+void NewProjectViewImp::setProjectPath(const QString &path)
 {
   mLineEditProjectPath->setText(path);
 }
 
-QString NewProjectView::projectDescription() const
+QString NewProjectViewImp::projectDescription() const
 {
   return mTextEditDescription->toPlainText();
 }
 
-bool NewProjectView::createProjectFolder() const
+bool NewProjectViewImp::createProjectFolder() const
 {
   return mCheckBoxProjectFolder->isChecked();
 }
 
 // protected slots:
 
-void NewProjectView::onClickButtonSelectPath()
+void NewProjectViewImp::onClickButtonSelectPath()
 {
   QString pathName = QFileDialog::getExistingDirectory(this,
     tr("Project path"),
@@ -102,7 +102,7 @@ void NewProjectView::onClickButtonSelectPath()
 
 // private:
 
-void NewProjectView::initUI()
+void NewProjectViewImp::initUI()
 {
   this->setWindowTitle(tr("New Project"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -142,7 +142,7 @@ void NewProjectView::initUI()
   update();
 }
 
-void NewProjectView::initSignalAndSlots()
+void NewProjectViewImp::initSignalAndSlots()
 {
   connect(mLineEditProjectName,   SIGNAL(textChanged(QString)), this, SLOT(update()));
   connect(mLineEditProjectPath,   SIGNAL(textChanged(QString)), this, SLOT(update()));
@@ -156,7 +156,7 @@ void NewProjectView::initSignalAndSlots()
 
 // public slots:
 
-void NewProjectView::clear()
+void NewProjectViewImp::clear()
 {
   mLineEditProjectName->clear();
   mLineEditProjectPath->clear();
@@ -167,7 +167,7 @@ void NewProjectView::clear()
 
 // private slots:
 
-void NewProjectView::update()
+void NewProjectViewImp::update()
 {
   bool bSave = !mLineEditProjectName->text().isEmpty() &&
                !mLineEditProjectPath->text().isEmpty();
@@ -184,7 +184,7 @@ void NewProjectView::update()
     mLineEditProjectFile->setText("");
 }
 
-void NewProjectView::retranslate()
+void NewProjectViewImp::retranslate()
 {
 
 }

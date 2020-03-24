@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_MULTIVIEW_VIEW_H
 #define PHOTOMATCH_MULTIVIEW_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/Multiview.h"
 
 class QLabel;
 class QDialogButtonBox;
@@ -36,43 +36,17 @@ class QGridLayout;
 namespace photomatch
 {
 
-class IMultiviewMatchingAssessmentView
-  : public IDialogView
-{
 
-Q_OBJECT
-
-public:
-
-  IMultiviewMatchingAssessmentView(QWidget *parent = nullptr,
-                 Qt::WindowFlags f = Qt::WindowFlags())
-  : IDialogView(parent, f) {}
-  virtual ~IMultiviewMatchingAssessmentView() = default;
-
-  virtual void setSessionName(const QString &name) = 0;
-  virtual void setPassPointIds(const std::vector<size_t> &id) = 0;
-  virtual void addPassPointIds(size_t id) = 0;
-  virtual void addPassPointIdsAndNImages(size_t id, size_t size) = 0;
-  //virtual void setImages(const QStringList &images) = 0;
-  //virtual void setImages(const std::vector<QPixmap> &images) = 0;
-  virtual void setImages(const std::vector<std::pair<QString, QPointF>> &images) = 0;
-
-signals:
-
-  void idChange(int);
-};
-
-
-class MultiviewMatchingAssessmentView
-  : public IMultiviewMatchingAssessmentView
+class MultiviewMatchingAssessmentViewImp
+  : public MultiviewMatchingAssessmentView
 {
 
   Q_OBJECT
 
 public:
 
-  MultiviewMatchingAssessmentView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-  ~MultiviewMatchingAssessmentView() override;
+  MultiviewMatchingAssessmentViewImp(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ~MultiviewMatchingAssessmentViewImp() override;
 
 private slots:
 

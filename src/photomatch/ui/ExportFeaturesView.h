@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_EXPORT_FEATURES_VIEW_H
 #define PHOTOMATCH_EXPORT_FEATURES_VIEW_H
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/ExportFeatures.h"
 
 class QLabel;
 class QComboBox;
@@ -37,51 +37,17 @@ class QLineEdit;
 namespace photomatch
 {
 
-class IExportFeaturesView
-  : public IDialogView
+
+class ExportFeaturesViewImp
+  : public ExportFeaturesView
 {
 
   Q_OBJECT
 
 public:
 
-  IExportFeaturesView(QWidget *parent) : IDialogView(parent) {}
-  virtual ~IExportFeaturesView() override = default;
-
-  virtual QString session() const = 0;
-  virtual QString format() const = 0;
-  virtual QStringList exportFiles() const = 0;
-  virtual QString exportPath() const = 0;
-  virtual bool exportAll() const = 0;
-
-public slots:
-
-  virtual void setSessions(const QStringList &sessions) = 0;
-  virtual void setSessionToExport(const QString &session) = 0;
-  virtual void setFormats(const QStringList &formats) = 0;
-  virtual void setCurrentFormat(const QString &format) = 0;
-  virtual void setExportAll(bool active) = 0;
-  virtual void setExportPath(const QString &path) = 0;
-  virtual void setImageFiles(const QStringList &images) = 0;
-
-signals:
-
-  void sessionChange(QString);
-  void formatChange(QString);
-  //void exportKeypoints();
-};
-
-
-class ExportFeaturesView
-  : public IExportFeaturesView
-{
-
-  Q_OBJECT
-
-public:
-
-  ExportFeaturesView(QWidget *parent = nullptr);
-  virtual ~ExportFeaturesView() override;
+  ExportFeaturesViewImp(QWidget *parent = nullptr);
+  virtual ~ExportFeaturesViewImp() override;
 
 protected slots:
 

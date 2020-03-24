@@ -29,53 +29,30 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/FeaturesViewer.h"
 
 namespace photomatch
 {
 
-class IFeaturesViewerView;
-class IFeaturesViewerModel;
-class ISettingsModel;
+class FeaturesViewerView;
+class FeaturesViewerModel;
+class SettingsModel;
 class HelpDialog;
 
 
-class IFeaturesViewerPresenter
-  : public IPresenter
+
+class FeaturesViewerPresenterImp
+  : public FeaturesViewerPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  IFeaturesViewerPresenter() {}
-  virtual ~IFeaturesViewerPresenter() {}
-
-public slots:
-
-  virtual void setSession(const QString &session) = 0;
-  virtual void setImageActive(const QString &image) = 0;
-  virtual void openKeypointsFromSession(const QString &session) = 0;
-  virtual void openKeypointsFromSessionAndImage(const QString &session, const QString &image) = 0;
-
-protected slots:
-
-  virtual void loadKeypoints(const QString &image) = 0;
-
-};
-
-class FeaturesViewerPresenter
-  : public IFeaturesViewerPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  FeaturesViewerPresenter(IFeaturesViewerView *view,
-                          IFeaturesViewerModel *model,
-                          ISettingsModel *settingsModel);
-  ~FeaturesViewerPresenter() override;
+  FeaturesViewerPresenterImp(FeaturesViewerView *view,
+                          FeaturesViewerModel *model,
+                          SettingsModel *settingsModel);
+  ~FeaturesViewerPresenterImp() override;
 
 // IPresenter interface
 
@@ -104,9 +81,9 @@ protected slots:
 
 private:
 
-  IFeaturesViewerView *mView;
-  IFeaturesViewerModel *mModel;
-  ISettingsModel *mSettingsModel;
+  FeaturesViewerView *mView;
+  FeaturesViewerModel *mModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
 };
 

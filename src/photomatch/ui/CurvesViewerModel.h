@@ -29,44 +29,24 @@
 
 #include <QPointF>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/CurvesViewer.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class ICurvesViewerModel
-  : public IModel
+
+class CurvesViewerModelImp
+  : public CurvesViewerModel
 {
 
   Q_OBJECT
 
 public:
 
-  ICurvesViewerModel(){}
-  virtual ~ICurvesViewerModel() {}
-
-  virtual std::vector<QString> images() const = 0;
-  virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual std::vector<QString> sessionNames() const = 0;
-  virtual std::vector<std::tuple<QString, QString, QString>> sessions() const = 0;
-  virtual std::vector<QPointF> computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const = 0;
-  virtual double computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const = 0;
-
-};
-
-
-class CurvesViewerModel
-  : public ICurvesViewerModel
-{
-
-  Q_OBJECT
-
-public:
-
-  explicit CurvesViewerModel(IProjectModel *projectModel);
-  virtual ~CurvesViewerModel() override;
+  explicit CurvesViewerModelImp(ProjectModel *projectModel);
+  virtual ~CurvesViewerModelImp() override;
 
 // ICurvesViewerModel interface
 
@@ -85,20 +65,20 @@ private:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
 };
 
 
 
 
 class ROCCurvesViewerModel
-  : public CurvesViewerModel
+  : public CurvesViewerModelImp
 {
   Q_OBJECT
 
 public:
 
-  explicit ROCCurvesViewerModel(IProjectModel *projectModel);
+  explicit ROCCurvesViewerModel(ProjectModel *projectModel);
   ~ROCCurvesViewerModel() override;
 
 // ICurvesViewerModel interface
@@ -113,13 +93,13 @@ public:
 
 
 class PRCurvesViewerModel
-  : public CurvesViewerModel
+  : public CurvesViewerModelImp
 {
   Q_OBJECT
 
 public:
 
-  explicit PRCurvesViewerModel(IProjectModel *projectModel);
+  explicit PRCurvesViewerModel(ProjectModel *projectModel);
   ~PRCurvesViewerModel() override;
 
 // ICurvesViewerModel interface
@@ -133,13 +113,13 @@ public:
 
 
 class DETCurvesViewerModel
-  : public CurvesViewerModel
+  : public CurvesViewerModelImp
 {
   Q_OBJECT
 
 public:
 
-  explicit DETCurvesViewerModel(IProjectModel *projectModel);
+  explicit DETCurvesViewerModel(ProjectModel *projectModel);
   ~DETCurvesViewerModel() override;
 
 // ICurvesViewerModel interface

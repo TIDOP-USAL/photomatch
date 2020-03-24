@@ -13,7 +13,7 @@
 
 using namespace photomatch;
 
-class TestSettingsView : public SettingsView
+class TestSettingsView : public SettingsViewImp
 {
   Q_OBJECT
 
@@ -134,7 +134,7 @@ private:
 };
 
 TestSettingsView::TestSettingsView()
-  : SettingsView()
+  : SettingsViewImp()
 {
   QApplication::setActiveWindow(this);
 }
@@ -160,7 +160,7 @@ void TestSettingsView::cleanupTestCase()
 
 void TestSettingsView::test_setLanguages()
 {
-  QSignalSpy spy_languageChange(this, &SettingsView::languageChange);
+  QSignalSpy spy_languageChange(this, &SettingsViewImp::languageChange);
   this->setLanguages(list);
   QCOMPARE(spy_languageChange.count(), 0);
   QCOMPARE(2, mLanguages->count());
@@ -176,7 +176,7 @@ void TestSettingsView::test_setActiveLanguage()
 
 void TestSettingsView::test_languageChange()
 {
-  QSignalSpy spy_languageChange(this, &SettingsView::languageChange);
+  QSignalSpy spy_languageChange(this, &SettingsViewImp::languageChange);
 
   this->mLanguages->setCurrentText("Spanish");
   QCOMPARE(spy_languageChange.count(), 1);
@@ -213,7 +213,7 @@ void TestSettingsView::test_historyMaxSize()
 
 void TestSettingsView::test_historyMaxSizeChange()
 {
-  QSignalSpy spy_historyMaxSizeChange(this, &SettingsView::historyMaxSizeChange);
+  QSignalSpy spy_historyMaxSizeChange(this, &SettingsViewImp::historyMaxSizeChange);
 
   this->mHistoryMaxSize->setValue(5);
 
@@ -247,7 +247,7 @@ void TestSettingsView::test_imageViewerBGColor()
 
 void TestSettingsView::test_imageViewerBGColorChange()
 {
-  QSignalSpy spy_imageViewerBGColorChange(this, &SettingsView::imageViewerBGColorChange);
+  QSignalSpy spy_imageViewerBGColorChange(this, &SettingsViewImp::imageViewerBGColorChange);
 
   this->mLineEditImageViewerBGcolor->setText("#5625ff");
 
@@ -284,7 +284,7 @@ void TestSettingsView::test_keypointsFormatChange()
 {
   this->mKeypointsFormat->setCurrentText("XML");
 
-  QSignalSpy spy_keypointsFormatChange(this, &SettingsView::keypointsFormatChange);
+  QSignalSpy spy_keypointsFormatChange(this, &SettingsViewImp::keypointsFormatChange);
 
   this->mKeypointsFormat->setCurrentText("YML");
 
@@ -319,7 +319,7 @@ void TestSettingsView::test_matchesFormat()
 
 void TestSettingsView::test_matchesFormatChange()
 {
-  QSignalSpy spy_matchesFormatChange(this, &SettingsView::matchesFormatChange);
+  QSignalSpy spy_matchesFormatChange(this, &SettingsViewImp::matchesFormatChange);
 
   this->mMatchesFormat->setCurrentText("YML");
 
@@ -350,7 +350,7 @@ void TestSettingsView::test_useCuda()
 void TestSettingsView::test_useCudaChange()
 {
 
-  QSignalSpy spy_useCudaChange(this, &SettingsView::useCudaChange);
+  QSignalSpy spy_useCudaChange(this, &SettingsViewImp::useCudaChange);
 
   QTest::mouseClick(this->mCheckBoxUseCuda, Qt::MouseButton::LeftButton);
 
@@ -384,7 +384,7 @@ void TestSettingsView::test_keypointsViewerBGColor()
 
 void TestSettingsView::test_keypointsViewerBGColorChange()
 {
-  QSignalSpy spy_keypointsViewerBGColorChange(this, &SettingsView::keypointsViewerBGColorChange);
+  QSignalSpy spy_keypointsViewerBGColorChange(this, &SettingsViewImp::keypointsViewerBGColorChange);
 
   this->mLineEditKeypointViewerBGColor->setText("#5625ff");
 
@@ -418,7 +418,7 @@ void TestSettingsView::test_keypointsViewerMarkerType()
 
 void TestSettingsView::test_keypointsViewerMarkerTypeChange()
 {
-  QSignalSpy spy_keypointsViewerMarkerTypeChange(this, &SettingsView::keypointsViewerMarkerTypeChange);
+  QSignalSpy spy_keypointsViewerMarkerTypeChange(this, &SettingsViewImp::keypointsViewerMarkerTypeChange);
 
   this->mListWidgetKeypointsViewerMarkerType->setCurrentRow(1);
 
@@ -453,7 +453,7 @@ void TestSettingsView::test_keypointsViewerMarkerSize()
 
 void TestSettingsView::test_keypointsViewerMarkerSizeChange()
 {
-  QSignalSpy spy_keypointsViewerMarkerSizeChange(this, &SettingsView::keypointsViewerMarkerSizeChange);
+  QSignalSpy spy_keypointsViewerMarkerSizeChange(this, &SettingsViewImp::keypointsViewerMarkerSizeChange);
 
   this->mSpinBoxKeypointViewerMarkerSize->setValue(30);
 
@@ -488,7 +488,7 @@ void TestSettingsView::test_keypointsViewerMarkerWidth()
 
 void TestSettingsView::test_keypointsViewerMarkerWidthChange()
 {
-  QSignalSpy spy_keypointsViewerMarkerWidthChange(this, &SettingsView::keypointsViewerMarkerWidthChange);
+  QSignalSpy spy_keypointsViewerMarkerWidthChange(this, &SettingsViewImp::keypointsViewerMarkerWidthChange);
 
   this->mSpinBoxKeypointViewerMarkerWidth->setValue(30);
 
@@ -523,7 +523,7 @@ void TestSettingsView::test_keypointsViewerMarkerColor()
 
 void TestSettingsView::test_keypointsViewerMarkerColorChange()
 {
-  QSignalSpy spy_keypointsViewerMarkerColorChange(this, &SettingsView::keypointsViewerMarkerColorChange);
+  QSignalSpy spy_keypointsViewerMarkerColorChange(this, &SettingsViewImp::keypointsViewerMarkerColorChange);
 
   this->mLineEditKeypointViewerMarkerColor->setText("#253612");
 
@@ -558,7 +558,7 @@ void TestSettingsView::test_keypointsViewerSelectMarkerWidth()
 
 void TestSettingsView::test_keypointsViewerSelectMarkerWidthChange()
 {
-  QSignalSpy spy_selectKeypointsViewerMarkerWidthChange(this, &SettingsView::selectKeypointsViewerMarkerWidthChange);
+  QSignalSpy spy_selectKeypointsViewerMarkerWidthChange(this, &SettingsViewImp::selectKeypointsViewerMarkerWidthChange);
 
   this->mSpinBoxSelectKeypointViewerMarkerWidth->setValue(30);
 
@@ -593,7 +593,7 @@ void TestSettingsView::test_keypointsViewerSelectMarkerColor()
 
 void TestSettingsView::test_keypointsViewerSelectMarkerColorChange()
 {
-  QSignalSpy spy_selectKeypointsViewerMarkerColorChange(this, &SettingsView::selectKeypointsViewerMarkerColorChange);
+  QSignalSpy spy_selectKeypointsViewerMarkerColorChange(this, &SettingsViewImp::selectKeypointsViewerMarkerColorChange);
 
   this->mLineEditSelectKeypointViewerMarkerColor->setText("#253612");
 
@@ -627,7 +627,7 @@ void TestSettingsView::test_matchesViewerBGColor()
 
 void TestSettingsView::test_matchesViewerBGColorChange()
 {
-  QSignalSpy spy_matchesViewerBGColorChange(this, &SettingsView::matchesViewerBGColorChange);
+  QSignalSpy spy_matchesViewerBGColorChange(this, &SettingsViewImp::matchesViewerBGColorChange);
 
   this->mLineEditMatchesViewerBGColor->setText("#253612");
 
@@ -661,7 +661,7 @@ void TestSettingsView::test_matchesViewerMarkerType()
 
 void TestSettingsView::test_matchesViewerMarkerTypeChange()
 {
-  QSignalSpy spy_matchesViewerMarkerTypeChange(this, &SettingsView::matchesViewerMarkerTypeChange);
+  QSignalSpy spy_matchesViewerMarkerTypeChange(this, &SettingsViewImp::matchesViewerMarkerTypeChange);
 
   this->mListWidgetMatchesViewerMarkerType->setCurrentRow(1);
 
@@ -696,7 +696,7 @@ void TestSettingsView::test_matchesViewerMarkerSize()
 
 void TestSettingsView::test_matchesViewerMarkerSizeChange()
 {
-  QSignalSpy spy_matchesViewerMarkerSizeChange(this, &SettingsView::matchesViewerMarkerSizeChange);
+  QSignalSpy spy_matchesViewerMarkerSizeChange(this, &SettingsViewImp::matchesViewerMarkerSizeChange);
 
   this->mSpinBoxMatchesViewerMarkerSize->setValue(30);
 
@@ -731,7 +731,7 @@ void TestSettingsView::test_matchesViewerMarkerWidth()
 
 void TestSettingsView::test_matchesViewerMarkerWidthChange()
 {
-  QSignalSpy spy_matchesViewerMarkerWidthChange(this, &SettingsView::matchesViewerMarkerWidthChange);
+  QSignalSpy spy_matchesViewerMarkerWidthChange(this, &SettingsViewImp::matchesViewerMarkerWidthChange);
 
   this->mSpinBoxMatchesViewerMarkerWidth->setValue(5);
 
@@ -765,7 +765,7 @@ void TestSettingsView::test_matchesViewerMarkerColor()
 
 void TestSettingsView::test_matchesViewerMarkerColorChange()
 {
-  QSignalSpy spy_matchesViewerMarkerColorChange(this, &SettingsView::matchesViewerMarkerColorChange);
+  QSignalSpy spy_matchesViewerMarkerColorChange(this, &SettingsViewImp::matchesViewerMarkerColorChange);
 
   this->mLineEditMatchesViewerMarkerColor->setText("#253612");
 
@@ -800,7 +800,7 @@ void TestSettingsView::test_matchesViewerSelectMarkerWidth()
 
 void TestSettingsView::test_matchesViewerSelectMarkerWidthChange()
 {
-  QSignalSpy spy_selectMatchesViewerMarkerWidthChange(this, &SettingsView::selectMatchesViewerMarkerWidthChange);
+  QSignalSpy spy_selectMatchesViewerMarkerWidthChange(this, &SettingsViewImp::selectMatchesViewerMarkerWidthChange);
 
   this->mSpinBoxSelectMatchesViewerMarkerWidth->setValue(5);
 
@@ -834,7 +834,7 @@ void TestSettingsView::test_matchesViewerSelectMarkerColor()
 
 void TestSettingsView::test_matchesViewerSelectMarkerColorChange()
 {
-  QSignalSpy spy_selectMatchesViewerMarkerColorChange(this, &SettingsView::selectMatchesViewerMarkerColorChange);
+  QSignalSpy spy_selectMatchesViewerMarkerColorChange(this, &SettingsViewImp::selectMatchesViewerMarkerColorChange);
 
   this->mLineEditSelectMatchesViewerMarkerColor->setText("#253612");
 
@@ -868,7 +868,7 @@ void TestSettingsView::test_matchesViewerLineColor()
 
 void TestSettingsView::test_matchesViewerLineColorChange()
 {
-  QSignalSpy spy_matchesViewerLineColorChange(this, &SettingsView::matchesViewerLineColorChange);
+  QSignalSpy spy_matchesViewerLineColorChange(this, &SettingsViewImp::matchesViewerLineColorChange);
 
   this->mLineEditMatchesViewerLineColor->setText("#253612");
 
@@ -903,7 +903,7 @@ void TestSettingsView::test_matchesViewerLineWidth()
 
 void TestSettingsView::test_matchesViewerLineWidthChange()
 {
-  QSignalSpy spy_matchesViewerLineWidthChange(this, &SettingsView::matchesViewerLineWidthChange);
+  QSignalSpy spy_matchesViewerLineWidthChange(this, &SettingsViewImp::matchesViewerLineWidthChange);
 
   this->mSpinBoxMatchesViewerLineWidth->setValue(5);
 
@@ -937,7 +937,7 @@ void TestSettingsView::test_groundTruthEditorBGColor()
 
 void TestSettingsView::test_groundTruthEditorBGColorChange()
 {
-  QSignalSpy spy_groundTruthEditorBGColorChange(this, &SettingsView::groundTruthEditorBGColorChange);
+  QSignalSpy spy_groundTruthEditorBGColorChange(this, &SettingsViewImp::groundTruthEditorBGColorChange);
 
   this->mLineEditGroundTruthEditorBGColor->setText("#253612");
 
@@ -972,7 +972,7 @@ void TestSettingsView::test_groundTruthEditorMarkerSize()
 
 void TestSettingsView::test_groundTruthEditorMarkerSizeChange()
 {
-  QSignalSpy spy_groundTruthEditorMarkerSizeChange(this, &SettingsView::groundTruthEditorMarkerSizeChange);
+  QSignalSpy spy_groundTruthEditorMarkerSizeChange(this, &SettingsViewImp::groundTruthEditorMarkerSizeChange);
 
   this->mSpinBoxGroundTruthEditorMarkerSize->setValue(30);
 
@@ -1007,7 +1007,7 @@ void TestSettingsView::test_groundTruthEditorMarkerWidth()
 
 void TestSettingsView::test_groundTruthEditorMarkerWidthChange()
 {
-  QSignalSpy spy_groundTruthEditorMarkerWidthChange(this, &SettingsView::groundTruthEditorMarkerWidthChange);
+  QSignalSpy spy_groundTruthEditorMarkerWidthChange(this, &SettingsViewImp::groundTruthEditorMarkerWidthChange);
 
   this->mSpinBoxGroundTruthEditorMarkerWidth->setValue(5);
 
@@ -1041,7 +1041,7 @@ void TestSettingsView::test_groundTruthEditorMarkerColor()
 
 void TestSettingsView::test_groundTruthEditorMarkerColorChange()
 {
-  QSignalSpy spy_groundTruthEditorMarkerColorChange(this, &SettingsView::groundTruthEditorMarkerColorChange);
+  QSignalSpy spy_groundTruthEditorMarkerColorChange(this, &SettingsViewImp::groundTruthEditorMarkerColorChange);
 
   this->mLineEditGroundTruthEditorMarkerColor->setText("#253612");
 
@@ -1076,7 +1076,7 @@ void TestSettingsView::test_groundTruthEditorSelectMarkerWidth()
 
 void TestSettingsView::test_groundTruthEditorSelectMarkerWidthChange()
 {
-    QSignalSpy spy_selectGroundTruthEditorMarkerWidthChange(this, &SettingsView::selectGroundTruthEditorMarkerWidthChange);
+    QSignalSpy spy_selectGroundTruthEditorMarkerWidthChange(this, &SettingsViewImp::selectGroundTruthEditorMarkerWidthChange);
 
   this->mSpinBoxSelectGTEditorMarkerWidth->setValue(5);
 
@@ -1110,7 +1110,7 @@ void TestSettingsView::test_groundTruthEditorSelectMarkerColor()
 
 void TestSettingsView::test_groundTruthEditorSelectMarkerColorChange()
 {
-  QSignalSpy spy_selectGroundTruthEditorMarkerColorChange(this, &SettingsView::selectGroundTruthEditorMarkerColorChange);
+  QSignalSpy spy_selectGroundTruthEditorMarkerColorChange(this, &SettingsViewImp::selectGroundTruthEditorMarkerColorChange);
 
   this->mLineEditSelectGTEditorMarkerColor->setText("#253612");
 
@@ -1125,22 +1125,22 @@ void TestSettingsView::test_groundTruthEditorSelectMarkerColorChange()
 
 void TestSettingsView::test_dialogButtonBox()
 {
-  QSignalSpy spy_rejected(this, &SettingsView::rejected);
+  QSignalSpy spy_rejected(this, &SettingsViewImp::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
-  QSignalSpy spy_accepted(this, &SettingsView::accepted);
+  QSignalSpy spy_accepted(this, &SettingsViewImp::accepted);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Ok), Qt::LeftButton);
   QCOMPARE(spy_accepted.count(), 1);
 
-  QSignalSpy spy_applyChanges(this, &SettingsView::applyChanges);
+  QSignalSpy spy_applyChanges(this, &SettingsViewImp::applyChanges);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Apply), Qt::LeftButton);
   QCOMPARE(spy_applyChanges.count(), 0);
   this->setUnsavedChanges(true); //Para activarlo
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Apply), Qt::LeftButton);
   QCOMPARE(spy_applyChanges.count(), 1);
 
-  QSignalSpy spy_help(this, &SettingsView::help);
+  QSignalSpy spy_help(this, &SettingsViewImp::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);
   QCOMPARE(spy_help.count(), 1);
 }

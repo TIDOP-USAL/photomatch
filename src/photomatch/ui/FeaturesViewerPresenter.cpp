@@ -34,10 +34,10 @@
 namespace photomatch
 {
 
-FeaturesViewerPresenter::FeaturesViewerPresenter(photomatch::IFeaturesViewerView *view,
-                                                 photomatch::IFeaturesViewerModel *model,
-                                                 ISettingsModel *settingsModel)
-  : IFeaturesViewerPresenter(),
+FeaturesViewerPresenterImp::FeaturesViewerPresenterImp(photomatch::FeaturesViewerView *view,
+                                                 photomatch::FeaturesViewerModel *model,
+                                                 SettingsModel *settingsModel)
+  : FeaturesViewerPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settingsModel),
@@ -50,12 +50,12 @@ FeaturesViewerPresenter::FeaturesViewerPresenter(photomatch::IFeaturesViewerView
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-FeaturesViewerPresenter::~FeaturesViewerPresenter()
+FeaturesViewerPresenterImp::~FeaturesViewerPresenterImp()
 {
 
 }
 
-void FeaturesViewerPresenter::help()
+void FeaturesViewerPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("keypoints_viewer.html");
@@ -63,7 +63,7 @@ void FeaturesViewerPresenter::help()
   }
 }
 
-void FeaturesViewerPresenter::open()
+void FeaturesViewerPresenterImp::open()
 {
   mView->clear();
 
@@ -85,42 +85,42 @@ void FeaturesViewerPresenter::open()
   }
 }
 
-void FeaturesViewerPresenter::openKeypointsFromSession(const QString &session)
+void FeaturesViewerPresenterImp::openKeypointsFromSession(const QString &session)
 {
   this->setSession(session);
   this->open();
 }
 
-void FeaturesViewerPresenter::openKeypointsFromSessionAndImage(const QString &session, const QString &image)
+void FeaturesViewerPresenterImp::openKeypointsFromSessionAndImage(const QString &session, const QString &image)
 {
   this->setSession(session);
   this->open();
   this->setImageActive(image);
 }
 
-void FeaturesViewerPresenter::setHelp(HelpDialog *help)
+void FeaturesViewerPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void FeaturesViewerPresenter::init()
+void FeaturesViewerPresenterImp::init()
 {
 }
 
-void FeaturesViewerPresenter::setSession(const QString &session)
+void FeaturesViewerPresenterImp::setSession(const QString &session)
 {
   mModel->setSessionName(session);
   mView->clear();
   mView->setSessionName(mModel->sessionName());
 }
 
-void FeaturesViewerPresenter::setImageActive(const QString &image)
+void FeaturesViewerPresenterImp::setImageActive(const QString &image)
 {
   mView->setCurrentImage(image);
   loadKeypoints(image);
 }
 
-void FeaturesViewerPresenter::loadKeypoints(const QString &image)
+void FeaturesViewerPresenterImp::loadKeypoints(const QString &image)
 {
   std::vector<std::tuple<QPointF, double, double>> keypoints = mModel->loadKeypoints(image);
   mView->setKeyPoints(keypoints);

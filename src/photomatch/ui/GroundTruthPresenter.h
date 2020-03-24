@@ -29,62 +29,29 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/GroundTruth.h"
 
 namespace photomatch
 {
 
-class IGroundTruthView;
-class IGroundTruthModel;
-class ISettingsModel;
+class GroundTruthView;
+class GroundTruthModel;
+class SettingsModel;
 class HelpDialog;
 
-class IGroundTruthPresenter
-  : public IPresenter
+
+class GroundTruthPresenterImp
+  : public GroundTruthPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  IGroundTruthPresenter(){}
-  virtual ~IGroundTruthPresenter() override {}
-
-protected slots:
-
-  virtual void loadLeftImage(const QString &image) = 0;
-  virtual void loadRightImage(const QString &image) = 0;
-  virtual void loadGroundTruth(const QString &imageLeft, const QString &imageRight) = 0;
-  virtual void addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
-  virtual void deleteHomologous(const QString &image1, const QString &image2, int pointId) = 0;
-  virtual void importGroundTruth() = 0;
-  virtual void selectHomologous(const QString &image1, const QString &image2, int pointId) = 0;
-  virtual void leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-  virtual void rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-  virtual void findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-  virtual void findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-
-  virtual void save() = 0;
-  virtual void discart() = 0;
-
-signals:
-
-  void groundTruthAdded();
-
-};
-
-class GroundTruthPresenter
-  : public IGroundTruthPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  GroundTruthPresenter(IGroundTruthView *view,
-                       IGroundTruthModel *model,
-                       ISettingsModel *settings);
-  ~GroundTruthPresenter() override;
+  GroundTruthPresenterImp(GroundTruthView *view,
+                       GroundTruthModel *model,
+                       SettingsModel *settings);
+  ~GroundTruthPresenterImp() override;
 
 // IGroundTruthPresenter interface
 
@@ -119,9 +86,9 @@ private:
 
 private:
 
-  IGroundTruthView *mView;
-  IGroundTruthModel *mModel;
-  ISettingsModel *mSettingsModel;
+  GroundTruthView *mView;
+  GroundTruthModel *mModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
 
 };

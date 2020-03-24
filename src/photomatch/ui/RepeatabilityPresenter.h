@@ -29,42 +29,27 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/Repeatability.h"
 
 namespace photomatch
 {
 
-class IRepeatabilityView;
-class IRepeatabilityModel;
+class RepeatabilityView;
+class RepeatabilityModel;
 class HelpDialog;
 
-class IRepeatabilityPresenter
-  : public IPresenter
+
+class RepeatabilityPresenterImp
+  : public RepeatabilityPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  IRepeatabilityPresenter() : IPresenter() {}
-  virtual ~IRepeatabilityPresenter() override {}
-
-protected slots:
-
-  virtual void selectSession(const QString &session) = 0;
-};
-
-class RepeatabilityPresenter
-  : public IRepeatabilityPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  RepeatabilityPresenter(IRepeatabilityView *view,
-                         IRepeatabilityModel *model);
-  ~RepeatabilityPresenter() override {}
+  RepeatabilityPresenterImp(RepeatabilityView *view,
+                         RepeatabilityModel *model);
+  ~RepeatabilityPresenterImp() override {}
 
 //IRepeatabilityPresenter interface
 
@@ -86,8 +71,8 @@ private:
 
 private:
 
-  IRepeatabilityView *mView;
-  IRepeatabilityModel *mModel;
+  RepeatabilityView *mView;
+  RepeatabilityModel *mModel;
   HelpDialog *mHelp;
 };
 

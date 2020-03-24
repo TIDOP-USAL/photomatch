@@ -30,7 +30,7 @@
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
 class MainWindowModel
   : public IModel

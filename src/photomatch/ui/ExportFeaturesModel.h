@@ -26,48 +26,23 @@
 #define PHOTOMATCH_EXPORT_FEATURES_MODEL_H
 
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/ExportFeatures.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class IExportFeaturesModel
-  : public IModel
+class ExportFeaturesModelImp
+  : public ExportFeaturesModel
 {
 
   Q_OBJECT
 
 public:
 
-  IExportFeaturesModel() {}
-  virtual ~IExportFeaturesModel() override = default;
-
-  virtual QStringList sessions() const = 0;
-  virtual QString activeSessionName() const = 0;
-  virtual QStringList formats() const = 0;
-  virtual QStringList features(const QString &sessionName) const = 0;
-
-public slots:
-
-  virtual void exportFeatures(const QString &sessionName,
-                              const QStringList &features,
-                              const QString &path,
-                              const QString &format) const = 0;
-
-};
-
-class ExportFeaturesModel
-  : public IExportFeaturesModel
-{
-
-  Q_OBJECT
-
-public:
-
-  ExportFeaturesModel(IProjectModel *mProjectModel);
-  ~ExportFeaturesModel() override;
+  ExportFeaturesModelImp(ProjectModel *mProjectModel);
+  ~ExportFeaturesModelImp() override;
 
   QStringList sessions() const override;
   QString activeSessionName() const override;
@@ -89,7 +64,7 @@ private:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
 
 };
 

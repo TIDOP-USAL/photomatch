@@ -43,8 +43,8 @@
 namespace photomatch
 {
 
-SettingsView::SettingsView(QWidget *parent)
-  : ISettingsView(parent),
+SettingsViewImp::SettingsViewImp(QWidget *parent)
+  : SettingsView(parent),
     mListWidget(new QListWidget(this)),
     mStackedWidget(new QStackedWidget(this)),
     mLanguages(new QComboBox(this)),
@@ -62,12 +62,12 @@ SettingsView::SettingsView(QWidget *parent)
   this->initSignalAndSlots();
 }
 
-SettingsView::~SettingsView()
+SettingsViewImp::~SettingsViewImp()
 {
 
 }
 
-void SettingsView::onPreprocessChange(const QString &method)
+void SettingsViewImp::onPreprocessChange(const QString &method)
 {
   for (int idx = 1; idx < mGridLayoutPreprocess->count(); idx++){
     QLayoutItem * const item = mGridLayoutPreprocess->itemAt(idx);
@@ -82,7 +82,7 @@ void SettingsView::onPreprocessChange(const QString &method)
   mListWidgetPreprocess->setMaximumHeight(150);
 }
 
-void SettingsView::onFeatureDetectorDescriptorChange(const QString &method)
+void SettingsViewImp::onFeatureDetectorDescriptorChange(const QString &method)
 {
   for (int idx = 1; idx < mGridLayoutFeatures->count(); idx++){
     QLayoutItem * const item = mGridLayoutFeatures->itemAt(idx);
@@ -97,84 +97,84 @@ void SettingsView::onFeatureDetectorDescriptorChange(const QString &method)
   mListWidgetFeatures->setMaximumHeight(150);
 }
 
-void SettingsView::onPushButtonImageViewerBGColorClicked()
+void SettingsViewImp::onPushButtonImageViewerBGColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditImageViewerBGcolor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     emit imageViewerBGColorChange(color.name());
 }
 
-void SettingsView::onPushButtonKeypointViewerBGColorClicked()
+void SettingsViewImp::onPushButtonKeypointViewerBGColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditKeypointViewerBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditKeypointViewerBGColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonKeypointViewerMarkerColorClicked()
+void SettingsViewImp::onPushButtonKeypointViewerMarkerColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditKeypointViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditKeypointViewerMarkerColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonSelectKeypointViewerMarkerColorClicked()
+void SettingsViewImp::onPushButtonSelectKeypointViewerMarkerColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditSelectKeypointViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditSelectKeypointViewerMarkerColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonMatchViewerBGColorClicked()
+void SettingsViewImp::onPushButtonMatchViewerBGColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditMatchesViewerBGColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonMatchViewerMarkerColorClicked()
+void SettingsViewImp::onPushButtonMatchViewerMarkerColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditMatchesViewerMarkerColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonSelectMatchViewerMarkerColorClicked()
+void SettingsViewImp::onPushButtonSelectMatchViewerMarkerColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditSelectMatchesViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditSelectMatchesViewerMarkerColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonMatchViewerLineColorClicked()
+void SettingsViewImp::onPushButtonMatchViewerLineColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerLineColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditMatchesViewerLineColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonGroundTruthEditorBGColorClicked()
+void SettingsViewImp::onPushButtonGroundTruthEditorBGColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditGroundTruthEditorBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditGroundTruthEditorBGColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonGroundTruthEditorMarkerColorClicked()
+void SettingsViewImp::onPushButtonGroundTruthEditorMarkerColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditGroundTruthEditorMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditGroundTruthEditorMarkerColor->setText(color.name());
 }
 
-void SettingsView::onPushButtonSelectGroundTruthEditorMarkerColorClicked()
+void SettingsViewImp::onPushButtonSelectGroundTruthEditorMarkerColorClicked()
 {
   QColor color = QColorDialog::getColor(QColor(mLineEditSelectGTEditorMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
   if (color.isValid())
     mLineEditSelectGTEditorMarkerColor->setText(color.name());
 }
 
-void SettingsView::initUI()
+void SettingsViewImp::initUI()
 {
   this->setWindowTitle(tr("Settings"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -587,7 +587,7 @@ void SettingsView::initUI()
   update();
 }
 
-void SettingsView::initSignalAndSlots()
+void SettingsViewImp::initSignalAndSlots()
 {
   connect(mListWidget, SIGNAL(currentRowChanged(int)), mStackedWidget, SLOT(setCurrentIndex(int)));
 
@@ -648,7 +648,7 @@ void SettingsView::initSignalAndSlots()
 
 }
 
-void SettingsView::clear()
+void SettingsViewImp::clear()
 {
   const QSignalBlocker blocker1(mLanguages);
   const QSignalBlocker blockerKeypointsFormat(mKeypointsFormat);
@@ -713,164 +713,164 @@ void SettingsView::clear()
   mLineEditSelectGTEditorMarkerColor->setText("#e5097e");
 }
 
-void SettingsView::update()
+void SettingsViewImp::update()
 {
   mButtonBox->button(QDialogButtonBox::Apply)->setEnabled(bUnsaveChanges);
 
   mSpinBoxKeypointViewerMarkerSize->setDisabled(mListWidgetKeypointsViewerMarkerType->currentRow() == 0);
 }
 
-void SettingsView::retranslate()
+void SettingsViewImp::retranslate()
 {
 
 }
 
-QString SettingsView::activeLanguage() const
+QString SettingsViewImp::activeLanguage() const
 {
   return mLanguages->currentText();
 }
 
-int SettingsView::historyMaxSize() const
+int SettingsViewImp::historyMaxSize() const
 {
   return mHistoryMaxSize->value();
 }
 
-QString SettingsView::imageViewerBGColor() const
+QString SettingsViewImp::imageViewerBGColor() const
 {
   return mLineEditImageViewerBGcolor->text();
 }
 
-QString SettingsView::keypointsFormat() const
+QString SettingsViewImp::keypointsFormat() const
 {
   return mKeypointsFormat->currentText();
 }
 
-QString SettingsView::matchesFormat() const
+QString SettingsViewImp::matchesFormat() const
 {
   return mMatchesFormat->currentText();
 }
 
-bool SettingsView::useCuda() const
+bool SettingsViewImp::useCuda() const
 {
   return mCheckBoxUseCuda->isEnabled() && mCheckBoxUseCuda->isChecked();
 }
 
-QString SettingsView::keypointsViewerBGColor() const
+QString SettingsViewImp::keypointsViewerBGColor() const
 {
   return mLineEditKeypointViewerBGColor->text();
 }
 
-int SettingsView::keypointsViewerMarkerType() const
+int SettingsViewImp::keypointsViewerMarkerType() const
 {
   return mListWidgetKeypointsViewerMarkerType->currentRow();
 }
 
-int SettingsView::keypointsViewerMarkerSize() const
+int SettingsViewImp::keypointsViewerMarkerSize() const
 {
   return mSpinBoxKeypointViewerMarkerSize->value();
 }
 
-int SettingsView::keypointsViewerMarkerWidth() const
+int SettingsViewImp::keypointsViewerMarkerWidth() const
 {
   return mSpinBoxKeypointViewerMarkerWidth->value();
 }
 
-QString SettingsView::keypointsViewerMarkerColor() const
+QString SettingsViewImp::keypointsViewerMarkerColor() const
 {
   return mLineEditKeypointViewerMarkerColor->text();
 }
 
-int SettingsView::selectKeypointsViewerMarkerWidth() const
+int SettingsViewImp::selectKeypointsViewerMarkerWidth() const
 {
   return mSpinBoxSelectKeypointViewerMarkerWidth->value();
 }
 
-QString SettingsView::selectKeypointsViewerMarkerColor() const
+QString SettingsViewImp::selectKeypointsViewerMarkerColor() const
 {
   return mLineEditSelectKeypointViewerMarkerColor->text();
 }
 
-QString SettingsView::matchesViewerBGColor() const
+QString SettingsViewImp::matchesViewerBGColor() const
 {
   return mLineEditMatchesViewerBGColor->text();
 }
 
-int SettingsView::matchesViewerMarkerType() const
+int SettingsViewImp::matchesViewerMarkerType() const
 {
   return mListWidgetMatchesViewerMarkerType->currentRow();
 }
 
-int SettingsView::matchesViewerMarkerSize() const
+int SettingsViewImp::matchesViewerMarkerSize() const
 {
   return mSpinBoxMatchesViewerMarkerSize->value();
 }
 
-int SettingsView::matchesViewerMarkerWidth() const
+int SettingsViewImp::matchesViewerMarkerWidth() const
 {
   return mSpinBoxMatchesViewerMarkerWidth->value();
 }
 
-QString SettingsView::matchesViewerMarkerColor() const
+QString SettingsViewImp::matchesViewerMarkerColor() const
 {
   return mLineEditMatchesViewerMarkerColor->text();
 }
 
-int SettingsView::selectMatchesViewerMarkerWidth() const
+int SettingsViewImp::selectMatchesViewerMarkerWidth() const
 {
   return mSpinBoxSelectMatchesViewerMarkerWidth->value();
 }
 
-QString SettingsView::selectMatchesViewerMarkerColor() const
+QString SettingsViewImp::selectMatchesViewerMarkerColor() const
 {
   return mLineEditSelectMatchesViewerMarkerColor->text();
 }
 
-QString SettingsView::matchesViewerLineColor() const
+QString SettingsViewImp::matchesViewerLineColor() const
 {
   return mLineEditMatchesViewerLineColor->text();
 }
 
-int SettingsView::matchesViewerLineWidth() const
+int SettingsViewImp::matchesViewerLineWidth() const
 {
   return mSpinBoxMatchesViewerLineWidth->value();
 }
 
-QString SettingsView::groundTruthEditorBGColor() const
+QString SettingsViewImp::groundTruthEditorBGColor() const
 {
   return mLineEditGroundTruthEditorBGColor->text();
 }
 
-int SettingsView::groundTruthEditorMarkerSize() const
+int SettingsViewImp::groundTruthEditorMarkerSize() const
 {
   return mSpinBoxGroundTruthEditorMarkerSize->value();
 }
 
-int SettingsView::groundTruthEditorMarkerWidth() const
+int SettingsViewImp::groundTruthEditorMarkerWidth() const
 {
   return mSpinBoxGroundTruthEditorMarkerWidth->value();
 }
 
-QString SettingsView::groundTruthEditorMarkerColor() const
+QString SettingsViewImp::groundTruthEditorMarkerColor() const
 {
   return mLineEditGroundTruthEditorMarkerColor->text();
 }
 
-int SettingsView::selectGroundTruthEditorMarkerWidth() const
+int SettingsViewImp::selectGroundTruthEditorMarkerWidth() const
 {
   return mSpinBoxSelectGTEditorMarkerWidth->value();
 }
 
-QString SettingsView::selectGroundTruthEditorMarkerColor() const
+QString SettingsViewImp::selectGroundTruthEditorMarkerColor() const
 {
   return mLineEditSelectGTEditorMarkerColor->text();
 }
 
-void SettingsView::setPage(int page)
+void SettingsViewImp::setPage(int page)
 {
   mListWidget->setCurrentRow(page);
 }
 
-void SettingsView::setLanguages(const QStringList &languages)
+void SettingsViewImp::setLanguages(const QStringList &languages)
 {
   const QSignalBlocker blocker(mLanguages);
 
@@ -878,198 +878,198 @@ void SettingsView::setLanguages(const QStringList &languages)
   mLanguages->insertItems(0, languages);
 }
 
-void SettingsView::setActiveLanguage(const QString &language)
+void SettingsViewImp::setActiveLanguage(const QString &language)
 {
   const QSignalBlocker blocker(mLanguages);
   mLanguages->setCurrentText(language);
 }
 
-void SettingsView::setHistoryMaxSize(int size)
+void SettingsViewImp::setHistoryMaxSize(int size)
 {
   const QSignalBlocker blocker(mHistoryMaxSize);
   mHistoryMaxSize->setValue(size);
 }
 
-void SettingsView::setImageViewerBGcolor(const QString &color)
+void SettingsViewImp::setImageViewerBGcolor(const QString &color)
 {
   const QSignalBlocker blockerImageViewerBGcolor(mLineEditImageViewerBGcolor);
   mLineEditImageViewerBGcolor->setText(color);
 }
 
-void SettingsView::setKeypointsFormat(const QString &format)
+void SettingsViewImp::setKeypointsFormat(const QString &format)
 {
   const QSignalBlocker blocker(mKeypointsFormat);
   mKeypointsFormat->setCurrentText(format);
 }
 
-void SettingsView::setMatchesFormat(const QString &format)
+void SettingsViewImp::setMatchesFormat(const QString &format)
 {
   const QSignalBlocker blocker(mMatchesFormat);
   mMatchesFormat->setCurrentText(format);
 }
 
-void SettingsView::setUseCuda(bool active)
+void SettingsViewImp::setUseCuda(bool active)
 {
   mCheckBoxUseCuda->setChecked(active);
 }
 
-void SettingsView::setCudaEnabled(bool enabled)
+void SettingsViewImp::setCudaEnabled(bool enabled)
 {
   mCheckBoxUseCuda->setEnabled(enabled);
 }
 
-void SettingsView::addPreprocess(QWidget *preprocess)
+void SettingsViewImp::addPreprocess(QWidget *preprocess)
 {
   mListWidgetPreprocess->addItem(preprocess->windowTitle());
   mGridLayoutPreprocess->addWidget(preprocess, 1, 0, 1, 1);
   preprocess->setVisible(false);
 }
 
-void SettingsView::addFeatureDetectorMethod(QWidget *detector)
+void SettingsViewImp::addFeatureDetectorMethod(QWidget *detector)
 {
   mListWidgetFeatures->addItem(detector->windowTitle());
   mGridLayoutFeatures->addWidget(detector, 1, 0, 1, 1);
   detector->setVisible(false);
 }
 
-void SettingsView::addDescriptorMatcher(QWidget *detector)
+void SettingsViewImp::addDescriptorMatcher(QWidget *detector)
 {
   mGridLayoutMatcher->addWidget(detector, 0, 0, 1, 1);
 }
 
-void SettingsView::setKeypointsViewerBGColor(const QString &color)
+void SettingsViewImp::setKeypointsViewerBGColor(const QString &color)
 {
   const QSignalBlocker blockerKeypointViewerBGColor(mLineEditKeypointViewerBGColor);
   mLineEditKeypointViewerBGColor->setText(color);
 }
 
-void SettingsView::setKeypointsViewerMarkerType(int type)
+void SettingsViewImp::setKeypointsViewerMarkerType(int type)
 {
   const QSignalBlocker blockerKeypointsMarker(mListWidgetKeypointsViewerMarkerType);
   mListWidgetKeypointsViewerMarkerType->setCurrentRow(type);
 }
 
-void SettingsView::setKeypointsViewerMarkerSize(int size)
+void SettingsViewImp::setKeypointsViewerMarkerSize(int size)
 {
   const QSignalBlocker blocker(mSpinBoxKeypointViewerMarkerSize);
   mSpinBoxKeypointViewerMarkerSize->setValue(size);
 }
 
-void SettingsView::setKeypointsViewerMarkerWidth(int width)
+void SettingsViewImp::setKeypointsViewerMarkerWidth(int width)
 {
   const QSignalBlocker blockerKeypointViewerWidth(mSpinBoxKeypointViewerMarkerWidth);
   mSpinBoxKeypointViewerMarkerWidth->setValue(width);
 }
 
-void SettingsView::setKeypointsViewerMarkerColor(const QString &color)
+void SettingsViewImp::setKeypointsViewerMarkerColor(const QString &color)
 {
   const QSignalBlocker blockerKeypointMarkerColor(mLineEditKeypointViewerMarkerColor);
   mLineEditKeypointViewerMarkerColor->setText(color);
 }
 
-void SettingsView::setSelectKeypointsViewerMarkerWidth(int width)
+void SettingsViewImp::setSelectKeypointsViewerMarkerWidth(int width)
 {
   const QSignalBlocker blockerSelectKeypointViewerWidth(mSpinBoxSelectKeypointViewerMarkerWidth);
   mSpinBoxSelectKeypointViewerMarkerWidth->setValue(width);
 }
 
-void SettingsView::setSelectKeypointsViewerMarkerColor(const QString &color)
+void SettingsViewImp::setSelectKeypointsViewerMarkerColor(const QString &color)
 {
   const QSignalBlocker blockerSelectKeypointViewerColor(mLineEditSelectKeypointViewerMarkerColor);
   mLineEditSelectKeypointViewerMarkerColor->setText(color);
 }
 
-void SettingsView::setMatchesViewerBGColor(const QString &color)
+void SettingsViewImp::setMatchesViewerBGColor(const QString &color)
 {
   const QSignalBlocker blockerMatchesViewerBGColo(mLineEditMatchesViewerBGColor);
   mLineEditMatchesViewerBGColor->setText(color);
 }
 
-void SettingsView::setMatchesViewerMarkerType(int type)
+void SettingsViewImp::setMatchesViewerMarkerType(int type)
 {
   const QSignalBlocker blockerMatchesMarker(mListWidgetMatchesViewerMarkerType);
   mListWidgetMatchesViewerMarkerType->setCurrentRow(type);
 }
 
-void SettingsView::setMatchesViewerMarkerSize(int size)
+void SettingsViewImp::setMatchesViewerMarkerSize(int size)
 {
   const QSignalBlocker blocker(mSpinBoxMatchesViewerMarkerSize);
   mSpinBoxMatchesViewerMarkerSize->setValue(size);
 }
 
-void SettingsView::setMatchesViewerMarkerWidth(int width)
+void SettingsViewImp::setMatchesViewerMarkerWidth(int width)
 {
   const QSignalBlocker blockerMatchesViewerMarkerWidth(mSpinBoxMatchesViewerMarkerWidth);
   mSpinBoxMatchesViewerMarkerWidth->setValue(width);
 }
 
-void SettingsView::setMatchesViewerMarkerColor(const QString &color)
+void SettingsViewImp::setMatchesViewerMarkerColor(const QString &color)
 {
   const QSignalBlocker blockerMatchesMarkerColor(mLineEditMatchesViewerMarkerColor);
   mLineEditMatchesViewerMarkerColor->setText(color);
 }
 
-void SettingsView::setSelectMatchesViewerMarkerWidth(int width)
+void SettingsViewImp::setSelectMatchesViewerMarkerWidth(int width)
 {
   const QSignalBlocker blockerMatchesSelectMarkerColor(mSpinBoxSelectMatchesViewerMarkerWidth);
   mSpinBoxSelectMatchesViewerMarkerWidth->setValue(width);
 }
 
-void SettingsView::setSelectMatchesViewerMarkerColor(const QString &color)
+void SettingsViewImp::setSelectMatchesViewerMarkerColor(const QString &color)
 {
   const QSignalBlocker blockerSelectMatchesMarkerColor(mLineEditSelectMatchesViewerMarkerColor);
   mLineEditSelectMatchesViewerMarkerColor->setText(color);
 }
 
-void SettingsView::setMatchesViewerLineColor(const QString &color)
+void SettingsViewImp::setMatchesViewerLineColor(const QString &color)
 {
   const QSignalBlocker blockerMatchesViewerLineColor(mLineEditMatchesViewerLineColor);
   mLineEditMatchesViewerLineColor->setText(color);
 }
 
-void SettingsView::setMatchesViewerLineWidth(int width)
+void SettingsViewImp::setMatchesViewerLineWidth(int width)
 {
   const QSignalBlocker blocker(mSpinBoxMatchesViewerLineWidth);
   mSpinBoxMatchesViewerLineWidth->setValue(width);
 }
 
-void SettingsView::setGroundTruthEditorBGColor(const QString &bgColor)
+void SettingsViewImp::setGroundTruthEditorBGColor(const QString &bgColor)
 {
   const QSignalBlocker blockerGroundTruthEditorBGColor(mLineEditGroundTruthEditorBGColor);
   mLineEditGroundTruthEditorBGColor->setText(bgColor);
 }
 
-void SettingsView::setGroundTruthEditorMarkerSize(int size)
+void SettingsViewImp::setGroundTruthEditorMarkerSize(int size)
 {
   const QSignalBlocker blockerGroundTruthEditorMarkerSize(mSpinBoxGroundTruthEditorMarkerSize);
   mSpinBoxGroundTruthEditorMarkerSize->setValue(size);
 }
 
-void SettingsView::setGroundTruthEditorMarkerWidth(int width)
+void SettingsViewImp::setGroundTruthEditorMarkerWidth(int width)
 {
   const QSignalBlocker blockerGroundTruthEditorMarkerWidth(mSpinBoxGroundTruthEditorMarkerWidth);
   mSpinBoxGroundTruthEditorMarkerWidth->setValue(width);
 }
 
-void SettingsView::setGroundTruthEditorMarkerColor(const QString &color)
+void SettingsViewImp::setGroundTruthEditorMarkerColor(const QString &color)
 {
   const QSignalBlocker blockerGroundTruthEditorMarkerColor(mLineEditGroundTruthEditorMarkerColor);
   mLineEditGroundTruthEditorMarkerColor->setText(color);
 }
 
-void SettingsView::setSelectGroundTruthEditorMarkerWidth(int width)
+void SettingsViewImp::setSelectGroundTruthEditorMarkerWidth(int width)
 {
   const QSignalBlocker blockerSelectGroundTruthEditorMarkerWidth(mSpinBoxSelectGTEditorMarkerWidth);
   mSpinBoxSelectGTEditorMarkerWidth->setValue(width);
 }
 
-void SettingsView::setSelectGroundTruthEditorMarkerColor(const QString &color)
+void SettingsViewImp::setSelectGroundTruthEditorMarkerColor(const QString &color)
 {
   const QSignalBlocker blockerSelectGroundTruthEditorMarkerColor(mLineEditSelectGTEditorMarkerColor);
   mLineEditSelectGTEditorMarkerColor->setText(color);
 }
 
-void SettingsView::setUnsavedChanges(bool unsaveChanges)
+void SettingsViewImp::setUnsavedChanges(bool unsaveChanges)
 {
   bUnsaveChanges = unsaveChanges;
   update();

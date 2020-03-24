@@ -29,57 +29,29 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/MatchViewer.h"
 
 namespace photomatch
 {
 
-class IMatchViewerView;
-class IMatchViewerModel;
-class ISettingsModel;
+class MatchViewerView;
+class MatchViewerModel;
+class SettingsModel;
 class HelpDialog;
 
-/*!
- * \brief The IMatchViewerPresenter class
- */
-class IMatchViewerPresenter
-  : public IPresenter
-{
 
-  Q_OBJECT
-
-public:
-
-  IMatchViewerPresenter(){}
-  virtual ~IMatchViewerPresenter() {}
-
-public slots:
-
-  virtual void openFromSession(const QString &session) = 0;
-  virtual void openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight) = 0;
-
-protected slots:
-
-  virtual void setSession(const QString &session) = 0;
-  virtual void setLeftImage(const QString &image) = 0;
-  virtual void setRightImage(const QString &image) = 0;
-  virtual void loadMatches(const QString &imageLeft, const QString &imageRight) = 0;
-  virtual void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) = 0;
-};
-
-
-class MatchViewerPresenter
-  : public IMatchViewerPresenter
+class MatchViewerPresenterImp
+  : public MatchViewerPresenter
 {
   Q_OBJECT
 
 public:
 
-  MatchViewerPresenter(IMatchViewerView *view,
-                       IMatchViewerModel *model,
-                       ISettingsModel *settings);
+  MatchViewerPresenterImp(MatchViewerView *view,
+                       MatchViewerModel *model,
+                       SettingsModel *settings);
 
-  ~MatchViewerPresenter() override;
+  ~MatchViewerPresenterImp() override;
 
 // IMatchViewerPresenter interface
 
@@ -124,9 +96,9 @@ protected slots:
 
 private:
 
-  IMatchViewerView *mView;
-  IMatchViewerModel *mModel;
-  ISettingsModel *mSettingsModel;
+  MatchViewerView *mView;
+  MatchViewerModel *mModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
 
 };

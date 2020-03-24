@@ -31,13 +31,13 @@
 
 #include <opencv2/core.hpp>
 
-#include "mvp.h"
+#include "photomatch/ui/Settings.h"
 
 namespace photomatch
 {
 
-class ISettingsView;
-class ISettingsModel;
+class SettingsView;
+class SettingsModel;
 class HelpDialog;
 
 /* Image preprocess */
@@ -78,54 +78,17 @@ class VggWidget;
 
 class DescriptorMatcherWidget;
 
-class ISettingsPresenter
-  : public IPresenter
+
+
+class SettingsPresenterImp
+  : public SettingsPresenter
 {
   Q_OBJECT
 
 public:
 
-  ISettingsPresenter() {}
-  virtual ~ISettingsPresenter(){}
-
-  //virtual void openPage(int page) = 0;
-
-public slots:
-
-  virtual void openViewSettings() = 0;
-  virtual void openQualityControlSettings() = 0;
-  virtual void openToolSettings() = 0;
-
-signals:
-
-private slots:
-
-  /*!
-   * \brief Establece el idioma de la aplicación
-   * \param[in] language
-   */
-  virtual void setLanguage(const QString &language) = 0;
-
-  /*!
-   * \brief save
-   */
-  virtual void save() = 0;
-
-  /*!
-   * \brief discart
-   */
-  virtual void discart() = 0;
-};
-
-class SettingsPresenter
-  : public ISettingsPresenter
-{
-  Q_OBJECT
-
-public:
-
-  SettingsPresenter(ISettingsView *view, ISettingsModel *model);
-  ~SettingsPresenter() override;
+  SettingsPresenterImp(SettingsView *view, SettingsModel *model);
+  ~SettingsPresenterImp() override;
 
   //void openPage(int page) override;
 
@@ -157,8 +120,8 @@ private slots:
 
 protected:
 
-  ISettingsView *mView;
-  ISettingsModel *mModel;
+  SettingsView *mView;
+  SettingsModel *mModel;
   HelpDialog *mHelp;
 
   /* Image preprocess */

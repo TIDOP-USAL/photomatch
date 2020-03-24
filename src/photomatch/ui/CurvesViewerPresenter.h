@@ -29,47 +29,27 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/CurvesViewer.h"
 
 namespace photomatch
 {
 
-class ICurvesViewerView;
-class ICurvesViewerModel;
+class CurvesViewerView;
+class CurvesViewerModel;
 class HelpDialog;
 
-class ICurvesViewerPresenter
-  : public IPresenter
+
+class CurvesViewerPresenterImp
+  : public CurvesViewerPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  ICurvesViewerPresenter() : IPresenter() {}
-  virtual ~ICurvesViewerPresenter() override {}
-
-protected slots:
-
-  virtual void loadLeftImage(const QString &image) = 0;
-  virtual void loadRightImage(const QString &image) = 0;
-  virtual void activeSession(const QString &session) = 0;
-  virtual void disableSession(const QString &session) = 0;
-  virtual void computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight) = 0;
-  virtual void deleteCurve(const QString &session) = 0;
-};
-
-class CurvesViewerPresenter
-  : public ICurvesViewerPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  CurvesViewerPresenter(ICurvesViewerView *view,
-                        ICurvesViewerModel *model);
-  ~CurvesViewerPresenter() override {}
+  CurvesViewerPresenterImp(CurvesViewerView *view,
+                        CurvesViewerModel *model);
+  ~CurvesViewerPresenterImp() override {}
 
 //ICurvesViewerPresenter interface
 
@@ -97,8 +77,8 @@ private:
 
 private:
 
-  ICurvesViewerView *mView;
-  ICurvesViewerModel *mModel;
+  CurvesViewerView *mView;
+  CurvesViewerModel *mModel;
   HelpDialog *mHelp;
 };
 

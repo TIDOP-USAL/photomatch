@@ -26,45 +26,24 @@
 #define PHOTOMATCH_EXPORT_MATCHES_MODEL_H
 
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/ExportMatches.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class IExportMatchesModel
-  : public IModel
+
+class ExportMatchesModelImp
+  : public ExportMatchesModel
 {
 
   Q_OBJECT
 
 public:
 
-  IExportMatchesModel() {}
-  virtual ~IExportMatchesModel() override = default;
-
-  virtual QStringList sessions() const = 0;
-  virtual QString sessionName() const = 0;
-  virtual QStringList formats() const = 0;
-
-public slots:
-
-  virtual void exportMatches(const QString &file, const QString &format) const = 0;
-  virtual void setSessionName(const QString &session) = 0;
-
-};
-
-class ExportMatchesModel
-  : public IExportMatchesModel
-{
-
-  Q_OBJECT
-
-public:
-
-  ExportMatchesModel(IProjectModel *mProjectModel);
-  ~ExportMatchesModel() override;
+  ExportMatchesModelImp(ProjectModel *mProjectModel);
+  ~ExportMatchesModelImp() override;
 
   QStringList sessions() const override;
   QString sessionName() const override;
@@ -83,7 +62,7 @@ private:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
   QString mSession;
 
 };

@@ -11,6 +11,7 @@ add_executable(${the_target}
     ${test_filename}
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/PreprocessView.cpp
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/PreprocessView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/Preprocess.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 

@@ -33,15 +33,15 @@
 namespace photomatch
 {
 
-GroundTruthModel::GroundTruthModel(IProjectModel *mProjectModel)
-  : IGroundTruthModel(),
+GroundTruthModelImp::GroundTruthModelImp(ProjectModel *mProjectModel)
+  : GroundTruthModel(),
     mProjectModel(mProjectModel),
     mGroundTruth(nullptr)
 {
 
 }
 
-GroundTruthModel::~GroundTruthModel()
+GroundTruthModelImp::~GroundTruthModelImp()
 {
   if (mGroundTruth) {
     delete mGroundTruth;
@@ -49,7 +49,7 @@ GroundTruthModel::~GroundTruthModel()
   }
 }
 
-QPointF GroundTruthModel::findPoint(const QString &image1, const QString &image2, const QPointF &ptImage1)
+QPointF GroundTruthModelImp::findPoint(const QString &image1, const QString &image2, const QPointF &ptImage1)
 {
   QTransform trf = this->transform(image1, image2);
   if (trf.isIdentity() == false){
@@ -128,7 +128,7 @@ QPointF GroundTruthModel::findPoint(const QString &image1, const QString &image2
   return QPointF();
 }
 
-QPointF GroundTruthModel::findProjectedPoint(const QString & image1, const QString & image2, const QPointF & ptImage1)
+QPointF GroundTruthModelImp::findProjectedPoint(const QString & image1, const QString & image2, const QPointF & ptImage1)
 {
   QTransform trf = this->transform(image1, image2);
   if (trf.isIdentity() == false)
@@ -137,12 +137,12 @@ QPointF GroundTruthModel::findProjectedPoint(const QString & image1, const QStri
     return QPointF();
 }
 
-void GroundTruthModel::init()
+void GroundTruthModelImp::init()
 {
 
 }
 
-void GroundTruthModel::loadGroundTruth()
+void GroundTruthModelImp::loadGroundTruth()
 {
   if (mGroundTruth == nullptr){
     mGroundTruth = new GroundTruth;
@@ -154,7 +154,7 @@ void GroundTruthModel::loadGroundTruth()
     mGroundTruth->read(mProjectModel->groundTruth());
 }
 
-std::vector<QString> GroundTruthModel::images() const
+std::vector<QString> GroundTruthModelImp::images() const
 {
   std::vector<QString> images;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -163,7 +163,7 @@ std::vector<QString> GroundTruthModel::images() const
   return images;
 }
 
-std::vector<QString> GroundTruthModel::imagePairs(const QString &imageName) const
+std::vector<QString> GroundTruthModelImp::imagePairs(const QString &imageName) const
 {
   std::vector<QString> pairs;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -174,7 +174,7 @@ std::vector<QString> GroundTruthModel::imagePairs(const QString &imageName) cons
   return pairs;
 }
 
-std::vector<std::pair<QPointF, QPointF> > GroundTruthModel::groundTruth(const QString &imgName1, const QString &imgName2) const
+std::vector<std::pair<QPointF, QPointF> > GroundTruthModelImp::groundTruth(const QString &imgName1, const QString &imgName2) const
 {
   std::vector<std::pair<QPointF,QPointF>> r_ground_truth;
 
@@ -193,7 +193,7 @@ std::vector<std::pair<QPointF, QPointF> > GroundTruthModel::groundTruth(const QS
   return r_ground_truth;
 }
 
-std::pair<QPointF, QPointF> GroundTruthModel::homologus(const QString &imgName1, const QString &imgName2, int pointId) const
+std::pair<QPointF, QPointF> GroundTruthModelImp::homologus(const QString &imgName1, const QString &imgName2, int pointId) const
 {
   std::pair<QPointF, QPointF> homologus;
   if (std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(imgName1, imgName2)){
@@ -204,7 +204,7 @@ std::pair<QPointF, QPointF> GroundTruthModel::homologus(const QString &imgName1,
   return homologus;
 }
 
-QTransform GroundTruthModel::transform(const QString &imgName1, const QString &imgName2,
+QTransform GroundTruthModelImp::transform(const QString &imgName1, const QString &imgName2,
                                        std::vector<double> *distances, double *rootMeanSquareError) const
 {
   QTransform trf;
@@ -256,7 +256,7 @@ QTransform GroundTruthModel::transform(const QString &imgName1, const QString &i
   return trf;
 }
 
-void GroundTruthModel::saveGroundTruth()
+void GroundTruthModelImp::saveGroundTruth()
 {
   if (mProjectModel->groundTruth().isEmpty()){
     QString gt = mProjectModel->projectFolder();
@@ -266,47 +266,47 @@ void GroundTruthModel::saveGroundTruth()
   mGroundTruth->write(mProjectModel->groundTruth());
 }
 
-void GroundTruthModel::setGroundTruth(const QString &file)
+void GroundTruthModelImp::setGroundTruth(const QString &file)
 {
   mProjectModel->setGroundTruth(file);
   this->loadGroundTruth();
 }
 
-bool GroundTruthModel::existGroundTruth() const
+bool GroundTruthModelImp::existGroundTruth() const
 {
   return !mProjectModel->groundTruth().isEmpty();
 }
 
-QString GroundTruthModel::projectPath() const
+QString GroundTruthModelImp::projectPath() const
 {
   return mProjectModel->projectFolder();
 }
 
-QPointF GroundTruthModel::findLeftPoint(const QString &image1,
+QPointF GroundTruthModelImp::findLeftPoint(const QString &image1,
                                         const QString &image2,
                                         const QPointF &pt)
 {
   return findPoint(image2, image1, pt);
 }
 
-QPointF GroundTruthModel::findRightPoint(const QString &image1,
+QPointF GroundTruthModelImp::findRightPoint(const QString &image1,
                                          const QString &image2,
                                          const QPointF &pt)
 {
   return findPoint(image1, image2, pt);
 }
 
-QPointF GroundTruthModel::findProjectedLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
+QPointF GroundTruthModelImp::findProjectedLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
 {
   return findProjectedPoint(image2, image1, pt);
 }
 
-QPointF GroundTruthModel::findProjectedRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
+QPointF GroundTruthModelImp::findProjectedRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
 {
   return findProjectedPoint(image1, image2, pt);
 }
 
-void GroundTruthModel::addHomologus(const QString &image1, const QPointF &pt1,
+void GroundTruthModelImp::addHomologus(const QString &image1, const QPointF &pt1,
                                           const QString &image2, const QPointF &pt2)
 {
   if (std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(image1, image2)){
@@ -314,7 +314,7 @@ void GroundTruthModel::addHomologus(const QString &image1, const QPointF &pt1,
   }
 }
 
-void GroundTruthModel::deleteHomologus(const QString &image1, const QString &image2, int pointId)
+void GroundTruthModelImp::deleteHomologus(const QString &image1, const QString &image2, int pointId)
 {
   if (std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(image1, image2)){
     /// Se marca como nulo

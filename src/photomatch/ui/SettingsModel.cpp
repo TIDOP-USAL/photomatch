@@ -67,711 +67,711 @@
 namespace photomatch
 {
 
-SettingsModel::SettingsModel(Settings *settings,
+SettingsModelImp::SettingsModelImp(Settings *settings,
                              SettingsController *settingsRW,
                              QObject *parent)
-  : ISettingsModel(parent),
+  : SettingsModel(parent),
     mSettings(settings),
     mSettingsRW(settingsRW)
 {
   init();
 }
 
-SettingsModel::~SettingsModel()
+SettingsModelImp::~SettingsModelImp()
 {
 }
 
-QString SettingsModel::language() const
+QString SettingsModelImp::language() const
 {
   return mSettings->language();
 }
 
-QStringList SettingsModel::history() const
+QStringList SettingsModelImp::history() const
 {
   return mSettings->history();
 }
 
-int SettingsModel::historyMaxSize() const
+int SettingsModelImp::historyMaxSize() const
 {
   return mSettings->historyMaxSize();
 }
 
-QString SettingsModel::imageViewerBGcolor() const
+QString SettingsModelImp::imageViewerBGcolor() const
 {
   return mSettings->imageViewerBGcolor();
 }
 
-QString SettingsModel::keypointsFormat() const
+QString SettingsModelImp::keypointsFormat() const
 {
   return mSettings->keypointsFormat();
 }
 
-QString SettingsModel::matchesFormat() const
+QString SettingsModelImp::matchesFormat() const
 {
   return mSettings->matchesFormat();
 }
 
-bool SettingsModel::useCuda() const
+bool SettingsModelImp::useCuda() const
 {
   return mSettings->useCuda();
 }
 
-QSize SettingsModel::acebsfBlockSize() const
+QSize SettingsModelImp::acebsfBlockSize() const
 {
   return mSettings->acebsf()->blockSize();
 }
 
-double SettingsModel::acebsfL() const
+double SettingsModelImp::acebsfL() const
 {
   return mSettings->acebsf()->l();
 }
 
-double SettingsModel::acebsfK1() const
+double SettingsModelImp::acebsfK1() const
 {
   return mSettings->acebsf()->k1();
 }
 
-double SettingsModel::acebsfK2() const
+double SettingsModelImp::acebsfK2() const
 {
   return mSettings->acebsf()->k2();
 }
 
-double SettingsModel::claheClipLimit() const
+double SettingsModelImp::claheClipLimit() const
 {
   return mSettings->clahe()->clipLimit();
 }
 
-QSize SettingsModel::claheTilesGridSize() const
+QSize SettingsModelImp::claheTilesGridSize() const
 {
   return mSettings->clahe()->tilesGridSize();
 }
 
-QSize SettingsModel::cmbfheBlockSize() const
+QSize SettingsModelImp::cmbfheBlockSize() const
 {
   return mSettings->cmbfhe()->blockSize();
 }
 
-int SettingsModel::dheX() const
+int SettingsModelImp::dheX() const
 {
   return mSettings->dhe()->x();
 }
 
-QSize SettingsModel::faheBlockSize() const
+QSize SettingsModelImp::faheBlockSize() const
 {
   return mSettings->fahe()->blockSize();
 }
 
-QSize SettingsModel::hmclaheBlockSize() const
+QSize SettingsModelImp::hmclaheBlockSize() const
 {
   return mSettings->hmclahe()->blockSize();
 }
 
-double SettingsModel::hmclaheL() const
+double SettingsModelImp::hmclaheL() const
 {
   return mSettings->hmclahe()->l();
 }
 
-double SettingsModel::hmclahePhi() const
+double SettingsModelImp::hmclahePhi() const
 {
   return mSettings->hmclahe()->phi();
 }
 
-QSize SettingsModel::lceBsescsBlockSize() const
+QSize SettingsModelImp::lceBsescsBlockSize() const
 {
   return mSettings->lceBsescs()->blockSize();
 }
 
-double SettingsModel::msrcpSmallScale() const
+double SettingsModelImp::msrcpSmallScale() const
 {
   return mSettings->msrcp()->smallScale();
 }
 
-double SettingsModel::msrcpMidScale() const
+double SettingsModelImp::msrcpMidScale() const
 {
   return mSettings->msrcp()->midScale();
 }
 
-double SettingsModel::msrcpLargeScale() const
+double SettingsModelImp::msrcpLargeScale() const
 {
   return mSettings->msrcp()->largeScale();
 }
 
-QSize SettingsModel::noshpBlockSize() const
+QSize SettingsModelImp::noshpBlockSize() const
 {
   return mSettings->noshp()->blockSize();
 }
 
-QSize SettingsModel::poheBlockSize() const
+QSize SettingsModelImp::poheBlockSize() const
 {
   return mSettings->pohe()->blockSize();
 }
 
-int SettingsModel::rswheHistogramDivisions() const
+int SettingsModelImp::rswheHistogramDivisions() const
 {
   return mSettings->rswhe()->histogramDivisions();
 }
 
-int SettingsModel::rswheHistogramCut() const
+int SettingsModelImp::rswheHistogramCut() const
 {
   return static_cast<int>(mSettings->rswhe()->histogramCut());
 }
 
-double SettingsModel::wallisContrast() const
+double SettingsModelImp::wallisContrast() const
 {
   return mSettings->wallis()->contrast();
 }
 
-double SettingsModel::wallisBrightness() const
+double SettingsModelImp::wallisBrightness() const
 {
   return mSettings->wallis()->brightness();
 }
 
-int SettingsModel::wallisImposedAverage() const
+int SettingsModelImp::wallisImposedAverage() const
 {
   return mSettings->wallis()->imposedAverage();
 }
 
-int SettingsModel::wallisImposedLocalStdDev() const
+int SettingsModelImp::wallisImposedLocalStdDev() const
 {
   return mSettings->wallis()->imposedLocalStdDev();
 }
 
-int SettingsModel::wallisKernelSize() const
+int SettingsModelImp::wallisKernelSize() const
 {
   return mSettings->wallis()->kernelSize();
 }
 
-int SettingsModel::agastThreshold() const
+int SettingsModelImp::agastThreshold() const
 {
   return mSettings->agast()->threshold();
 }
 
-bool SettingsModel::agastNonmaxSuppression() const
+bool SettingsModelImp::agastNonmaxSuppression() const
 {
   return mSettings->agast()->nonmaxSuppression();
 }
 
-QString SettingsModel::agastDetectorType() const
+QString SettingsModelImp::agastDetectorType() const
 {
   return mSettings->agast()->detectorType();
 }
 
-QString SettingsModel::akazeDescriptorType() const
+QString SettingsModelImp::akazeDescriptorType() const
 {
   return mSettings->akaze()->descriptorType();
 }
 
-int SettingsModel::akazeDescriptorSize() const
+int SettingsModelImp::akazeDescriptorSize() const
 {
   return mSettings->akaze()->descriptorSize();
 }
 
-int SettingsModel::akazeDescriptorChannels() const
+int SettingsModelImp::akazeDescriptorChannels() const
 {
   return mSettings->akaze()->descriptorChannels();
 }
 
-double SettingsModel::akazeThreshold() const
+double SettingsModelImp::akazeThreshold() const
 {
   return mSettings->akaze()->threshold();
 }
 
-int SettingsModel::akazeOctaves() const
+int SettingsModelImp::akazeOctaves() const
 {
   return mSettings->akaze()->octaves();
 }
 
-int SettingsModel::akazeOctaveLayers() const
+int SettingsModelImp::akazeOctaveLayers() const
 {
   return mSettings->akaze()->octaveLayers();
 }
 
-QString SettingsModel::akazeDiffusivity() const
+QString SettingsModelImp::akazeDiffusivity() const
 {
   return mSettings->akaze()->diffusivity();
 }
 
-QString SettingsModel::boostDescriptorType() const
+QString SettingsModelImp::boostDescriptorType() const
 {
   return mSettings->boost()->descriptorType();
 }
 
-bool SettingsModel::boostUseOrientation() const
+bool SettingsModelImp::boostUseOrientation() const
 {
   return mSettings->boost()->useOrientation();
 }
 
-double SettingsModel::boostScaleFactor() const
+double SettingsModelImp::boostScaleFactor() const
 {
   return mSettings->boost()->scaleFactor();
 }
 
-QString SettingsModel::briefBytes() const
+QString SettingsModelImp::briefBytes() const
 {
   return mSettings->brief()->bytes();
 }
 
-bool SettingsModel::briefUseOrientation() const
+bool SettingsModelImp::briefUseOrientation() const
 {
   return mSettings->brief()->useOrientation();
 }
 
-int SettingsModel::briskThreshold() const
+int SettingsModelImp::briskThreshold() const
 {
   return mSettings->brisk()->threshold();
 }
 
-int SettingsModel::briskOctaves() const
+int SettingsModelImp::briskOctaves() const
 {
   return mSettings->brisk()->octaves();
 }
 
-double SettingsModel::briskPatternScale() const
+double SettingsModelImp::briskPatternScale() const
 {
   return mSettings->brisk()->patternScale();
 }
 
-double SettingsModel::daisyRadius() const
+double SettingsModelImp::daisyRadius() const
 {
   return mSettings->daisy()->radius();
 }
 
-int SettingsModel::daisyQRadius() const
+int SettingsModelImp::daisyQRadius() const
 {
   return mSettings->daisy()->qRadius();
 }
 
-int SettingsModel::daisyQTheta() const
+int SettingsModelImp::daisyQTheta() const
 {
   return mSettings->daisy()->qTheta();
 }
 
-int SettingsModel::daisyQHist() const
+int SettingsModelImp::daisyQHist() const
 {
   return mSettings->daisy()->qHist();
 }
 
-QString SettingsModel::daisyNorm() const
+QString SettingsModelImp::daisyNorm() const
 {
   return mSettings->daisy()->norm();
 }
 
-bool SettingsModel::daisyInterpolation() const
+bool SettingsModelImp::daisyInterpolation() const
 {
   return mSettings->daisy()->interpolation();
 }
 
-bool SettingsModel::daisyUseOrientation() const
+bool SettingsModelImp::daisyUseOrientation() const
 {
   return mSettings->daisy()->useOrientation();
 }
 
-int SettingsModel::fastThreshold() const
+int SettingsModelImp::fastThreshold() const
 {
   return mSettings->fast()->threshold();
 }
 
-bool SettingsModel::fastNonmaxSuppression() const
+bool SettingsModelImp::fastNonmaxSuppression() const
 {
   return mSettings->fast()->nonmaxSuppression();
 }
 
-QString SettingsModel::fastdetectorType() const
+QString SettingsModelImp::fastdetectorType() const
 {
   return mSettings->fast()->detectorType();
 }
 
-bool SettingsModel::freakOrientationNormalized() const
+bool SettingsModelImp::freakOrientationNormalized() const
 {
   return mSettings->freak()->orientationNormalized();
 }
 
-bool SettingsModel::freakScaleNormalized() const
+bool SettingsModelImp::freakScaleNormalized() const
 {
   return mSettings->freak()->scaleNormalized();
 }
 
-double SettingsModel::freakPatternScale() const
+double SettingsModelImp::freakPatternScale() const
 {
   return mSettings->freak()->patternScale();
 }
 
-int SettingsModel::freakOctaves() const
+int SettingsModelImp::freakOctaves() const
 {
   return mSettings->freak()->octaves();
 }
 
-int SettingsModel::gfttMaxFeatures() const
+int SettingsModelImp::gfttMaxFeatures() const
 {
   return mSettings->gftt()->maxFeatures();
 }
 
-double SettingsModel::gfttQualityLevel() const
+double SettingsModelImp::gfttQualityLevel() const
 {
   return mSettings->gftt()->qualityLevel();
 }
 
-double SettingsModel::gfttMinDistance() const
+double SettingsModelImp::gfttMinDistance() const
 {
   return mSettings->gftt()->minDistance();
 }
 
-int SettingsModel::gfttBlockSize() const
+int SettingsModelImp::gfttBlockSize() const
 {
   return mSettings->gftt()->blockSize();
 }
 
-bool SettingsModel::gfttHarrisDetector() const
+bool SettingsModelImp::gfttHarrisDetector() const
 {
   return mSettings->gftt()->harrisDetector();
 }
 
-double SettingsModel::gfttK() const
+double SettingsModelImp::gfttK() const
 {
   return mSettings->gftt()->k();
 }
 
-QSize SettingsModel::hogWinSize() const
+QSize SettingsModelImp::hogWinSize() const
 {
   return mSettings->hog()->winSize();
 }
 
-QSize SettingsModel::hogBlockSize() const
+QSize SettingsModelImp::hogBlockSize() const
 {
   return mSettings->hog()->blockSize();
 }
 
-QSize SettingsModel::hogBlockStride() const
+QSize SettingsModelImp::hogBlockStride() const
 {
   return mSettings->hog()->blockStride();
 }
 
-QSize SettingsModel::hogCellSize() const
+QSize SettingsModelImp::hogCellSize() const
 {
   return mSettings->hog()->cellSize();
 }
 
-int SettingsModel::hogNbins() const
+int SettingsModelImp::hogNbins() const
 {
   return mSettings->hog()->nbins();
 }
 
-int SettingsModel::hogDerivAperture() const
+int SettingsModelImp::hogDerivAperture() const
 {
   return mSettings->hog()->derivAperture();
 }
 
-bool SettingsModel::kazeExtendedDescriptor() const
+bool SettingsModelImp::kazeExtendedDescriptor() const
 {
   return mSettings->kaze()->extendedDescriptor();
 }
 
-bool SettingsModel::kazeUpright() const
+bool SettingsModelImp::kazeUpright() const
 {
   return mSettings->kaze()->upright();
 }
 
-double SettingsModel::kazeThreshold() const
+double SettingsModelImp::kazeThreshold() const
 {
   return mSettings->kaze()->threshold();
 }
 
-int SettingsModel::kazeOctaves() const
+int SettingsModelImp::kazeOctaves() const
 {
   return mSettings->kaze()->octaves();
 }
 
-int SettingsModel::kazeOctaveLayers() const
+int SettingsModelImp::kazeOctaveLayers() const
 {
   return mSettings->kaze()->octaveLayers();
 }
 
-QString SettingsModel::kazeDiffusivity() const
+QString SettingsModelImp::kazeDiffusivity() const
 {
   return mSettings->kaze()->diffusivity();
 }
 
-QString SettingsModel::latchBytes() const
+QString SettingsModelImp::latchBytes() const
 {
   return mSettings->latch()->bytes();
 }
 
-bool SettingsModel::latchRotationInvariance() const
+bool SettingsModelImp::latchRotationInvariance() const
 {
   return mSettings->latch()->rotationInvariance();
 }
 
-int SettingsModel::latchHalfSsdSize() const
+int SettingsModelImp::latchHalfSsdSize() const
 {
   return mSettings->latch()->halfSsdSize();
 }
 
-int SettingsModel::lucidKernel() const
+int SettingsModelImp::lucidKernel() const
 {
   return mSettings->lucid()->lucidKernel();
 }
 
-int SettingsModel::lucidBlurKernel() const
+int SettingsModelImp::lucidBlurKernel() const
 {
   return mSettings->lucid()->blurKernel();
 }
 
-double SettingsModel::msdThresholdSaliency() const
+double SettingsModelImp::msdThresholdSaliency() const
 {
   return mSettings->msd()->thresholdSaliency();
 }
 
-int SettingsModel::msdPathRadius() const
+int SettingsModelImp::msdPathRadius() const
 {
   return mSettings->msd()->patchRadius();
 }
 
-int SettingsModel::msdKnn() const
+int SettingsModelImp::msdKnn() const
 {
   return mSettings->msd()->knn();
 }
 
-int SettingsModel::msdAreaRadius() const
+int SettingsModelImp::msdAreaRadius() const
 {
   return mSettings->msd()->searchAreaRadius();
 }
 
-double SettingsModel::msdScaleFactor() const
+double SettingsModelImp::msdScaleFactor() const
 {
   return mSettings->msd()->scaleFactor();
 }
 
-int SettingsModel::msdNMSRadius() const
+int SettingsModelImp::msdNMSRadius() const
 {
   return mSettings->msd()->NMSRadius();
 }
 
-int SettingsModel::msdNScales() const
+int SettingsModelImp::msdNScales() const
 {
   return mSettings->msd()->nScales();
 }
 
-int SettingsModel::msdNMSScaleR() const
+int SettingsModelImp::msdNMSScaleR() const
 {
   return mSettings->msd()->NMSScaleRadius();
 }
 
-bool SettingsModel::msdComputeOrientations() const
+bool SettingsModelImp::msdComputeOrientations() const
 {
   return mSettings->msd()->computeOrientation();
 }
 
-bool SettingsModel::msdAffineMSD() const
+bool SettingsModelImp::msdAffineMSD() const
 {
   return mSettings->msd()->affineMSD();
 }
 
-int SettingsModel::msdTilts() const
+int SettingsModelImp::msdTilts() const
 {
   return mSettings->msd()->affineTilts();
 }
 
-int SettingsModel::mserDelta() const
+int SettingsModelImp::mserDelta() const
 {
   return mSettings->mser()->delta();
 }
 
-int SettingsModel::mserMinArea() const
+int SettingsModelImp::mserMinArea() const
 {
   return mSettings->mser()->minArea();
 }
 
-int SettingsModel::mserMaxArea() const
+int SettingsModelImp::mserMaxArea() const
 {
   return mSettings->mser()->maxArea();
 }
 
-double SettingsModel::mserMaxVariation() const
+double SettingsModelImp::mserMaxVariation() const
 {
   return mSettings->mser()->maxVariation();
 }
 
-double SettingsModel::mserMinDiversity() const
+double SettingsModelImp::mserMinDiversity() const
 {
   return mSettings->mser()->minDiversity();
 }
 
-int SettingsModel::mserMaxEvolution() const
+int SettingsModelImp::mserMaxEvolution() const
 {
   return mSettings->mser()->maxEvolution();
 }
 
-double SettingsModel::mserAreaThreshold() const
+double SettingsModelImp::mserAreaThreshold() const
 {
   return mSettings->mser()->areaThreshold();
 }
 
-double SettingsModel::mserMinMargin() const
+double SettingsModelImp::mserMinMargin() const
 {
   return mSettings->mser()->minMargin();
 }
 
-int SettingsModel::mserEdgeBlurSize() const
+int SettingsModelImp::mserEdgeBlurSize() const
 {
   return mSettings->mser()->edgeBlurSize();
 }
 
-int SettingsModel::orbFeaturesNumber() const
+int SettingsModelImp::orbFeaturesNumber() const
 {
   return mSettings->orb()->featuresNumber();
 }
 
-double SettingsModel::orbScaleFactor() const
+double SettingsModelImp::orbScaleFactor() const
 {
   return mSettings->orb()->scaleFactor();
 }
 
-int SettingsModel::orbLevelsNumber() const
+int SettingsModelImp::orbLevelsNumber() const
 {
   return mSettings->orb()->levelsNumber();
 }
 
-int SettingsModel::orbEdgeThreshold() const
+int SettingsModelImp::orbEdgeThreshold() const
 {
   return mSettings->orb()->edgeThreshold();
 }
 
-int SettingsModel::orbWta_k() const
+int SettingsModelImp::orbWta_k() const
 {
   return mSettings->orb()->wta_k();
 }
 
-QString SettingsModel::orbScoreType() const
+QString SettingsModelImp::orbScoreType() const
 {
   return mSettings->orb()->scoreType();
 }
 
-int SettingsModel::orbPatchSize() const
+int SettingsModelImp::orbPatchSize() const
 {
   return mSettings->orb()->patchSize();
 }
 
-int SettingsModel::orbFastThreshold() const
+int SettingsModelImp::orbFastThreshold() const
 {
   return mSettings->orb()->fastThreshold();
 }
 
-int SettingsModel::siftFeaturesNumber() const
+int SettingsModelImp::siftFeaturesNumber() const
 {
   return mSettings->sift()->featuresNumber();
 }
 
-int SettingsModel::siftOctaveLayers() const
+int SettingsModelImp::siftOctaveLayers() const
 {
   return mSettings->sift()->octaveLayers();
 }
 
-double SettingsModel::siftContrastThreshold()
+double SettingsModelImp::siftContrastThreshold()
 {
   return mSettings->sift()->contrastThreshold();
 }
 
-double SettingsModel::siftEdgeThreshold()
+double SettingsModelImp::siftEdgeThreshold()
 {
   return mSettings->sift()->edgeThreshold();
 }
 
-double SettingsModel::siftSigma()
+double SettingsModelImp::siftSigma()
 {
   return mSettings->sift()->sigma();
 }
 
-int SettingsModel::starMaxSize() const
+int SettingsModelImp::starMaxSize() const
 {
   return mSettings->star()->maxSize();
 }
 
-int SettingsModel::starResponseThreshold() const
+int SettingsModelImp::starResponseThreshold() const
 {
   return mSettings->star()->responseThreshold();
 }
 
-int SettingsModel::starLineThresholdProjected() const
+int SettingsModelImp::starLineThresholdProjected() const
 {
   return mSettings->star()->lineThresholdProjected();
 }
 
-int SettingsModel::starLineThresholdBinarized() const
+int SettingsModelImp::starLineThresholdBinarized() const
 {
   return mSettings->star()->lineThresholdBinarized();
 }
 
-int SettingsModel::starSuppressNonmaxSize() const
+int SettingsModelImp::starSuppressNonmaxSize() const
 {
   return mSettings->star()->suppressNonmaxSize();
 }
 
-double SettingsModel::surfHessianThreshold() const
+double SettingsModelImp::surfHessianThreshold() const
 {
   return mSettings->surf()->hessianThreshold();
 }
 
-int SettingsModel::surfOctaves() const
+int SettingsModelImp::surfOctaves() const
 {
   return mSettings->surf()->octaves();
 }
 
-int SettingsModel::surfOctaveLayers() const
+int SettingsModelImp::surfOctaveLayers() const
 {
   return mSettings->surf()->octaveLayers();
 }
 
-bool SettingsModel::surfExtendedDescriptor() const
+bool SettingsModelImp::surfExtendedDescriptor() const
 {
   return mSettings->surf()->extendedDescriptor();
 }
 
-bool SettingsModel::surfRotatedFeatures() const
+bool SettingsModelImp::surfRotatedFeatures() const
 {
   return mSettings->surf()->upright();
 }
 
-QString SettingsModel::vggDescriptorType() const
+QString SettingsModelImp::vggDescriptorType() const
 {
   return mSettings->vgg()->descriptorType();
 }
 
-double SettingsModel::vggScaleFactor() const
+double SettingsModelImp::vggScaleFactor() const
 {
   return mSettings->vgg()->scaleFactor();
 }
 
-double SettingsModel::vggSigma() const
+double SettingsModelImp::vggSigma() const
 {
   return mSettings->vgg()->sigma();
 }
 
-bool SettingsModel::vggUseNormalizeDescriptor() const
+bool SettingsModelImp::vggUseNormalizeDescriptor() const
 {
   return mSettings->vgg()->useNormalizeDescriptor();
 }
 
-bool SettingsModel::vggUseNormalizeImage() const
+bool SettingsModelImp::vggUseNormalizeImage() const
 {
   return mSettings->vgg()->useNormalizeImage();
 }
 
-bool SettingsModel::vggUseScaleOrientation() const
+bool SettingsModelImp::vggUseScaleOrientation() const
 {
   return mSettings->vgg()->useScaleOrientation();
 }
 
-QString SettingsModel::matchMethod() const
+QString SettingsModelImp::matchMethod() const
 {
   return mSettings->matchMethod();
 }
 
-QString SettingsModel::matchStrategy() const
+QString SettingsModelImp::matchStrategy() const
 {
   return mSettings->matchStrategy();
 }
 
-QString SettingsModel::matchNormType() const
+QString SettingsModelImp::matchNormType() const
 {
   BruteForceMatcherImp::Norm norm = mSettings->bruteForceMatcher()->normType();
   QString s_norm = "NORM_L2";
@@ -788,32 +788,32 @@ QString SettingsModel::matchNormType() const
   return s_norm;
 }
 
-double SettingsModel::matchRatio() const
+double SettingsModelImp::matchRatio() const
 {
   return mSettings->robustMatcher()->ratio();
 }
 
-double SettingsModel::matchDistance() const
+double SettingsModelImp::matchDistance() const
 {
   return mSettings->robustMatcher()->distance();
 }
 
-double SettingsModel::matchConfidence() const
+double SettingsModelImp::matchConfidence() const
 {
   return mSettings->robustMatcher()->confidence();
 }
 
-bool SettingsModel::matchCrossMatching() const
+bool SettingsModelImp::matchCrossMatching() const
 {
   return mSettings->robustMatcher()->crossCheck();
 }
 
-int SettingsModel::matchMaxIters() const
+int SettingsModelImp::matchMaxIters() const
 {
   return mSettings->robustMatcher()->maxIter();
 }
 
-QString SettingsModel::matchGeometricTest() const
+QString SettingsModelImp::matchGeometricTest() const
 {
   RobustMatcher::GeometricTest geometric_test = mSettings->robustMatcher()->geometricTest();
   QString geometricTest = "Homography Matrix";
@@ -827,7 +827,7 @@ QString SettingsModel::matchGeometricTest() const
   return geometricTest;
 }
 
-QString SettingsModel::matchHomographyComputeMethod() const
+QString SettingsModelImp::matchHomographyComputeMethod() const
 {
   RobustMatcher::HomographyComputeMethod computeMethod = mSettings->robustMatcher()->homographyComputeMethod();
   QString homographyComputeMethod = "RANSAC";
@@ -843,7 +843,7 @@ QString SettingsModel::matchHomographyComputeMethod() const
   return homographyComputeMethod;
 }
 
-QString SettingsModel::matchFundamentalComputeMethod() const
+QString SettingsModelImp::matchFundamentalComputeMethod() const
 {
   RobustMatcher::FundamentalComputeMethod computeMethod = mSettings->robustMatcher()->fundamentalComputeMethod();
   QString fundamentalComputeMethod = "RANSAC";
@@ -859,7 +859,7 @@ QString SettingsModel::matchFundamentalComputeMethod() const
   return fundamentalComputeMethod;
 }
 
-QString SettingsModel::matchEssentialComputeMethod() const
+QString SettingsModelImp::matchEssentialComputeMethod() const
 {
   RobustMatcher::EssentialComputeMethod computeMethod = mSettings->robustMatcher()->essentialComputeMethod();
   QString essentialComputeMethod = "RANSAC";
@@ -871,951 +871,951 @@ QString SettingsModel::matchEssentialComputeMethod() const
   return essentialComputeMethod;
 }
 
-QString SettingsModel::keypointsViewerBGColor() const
+QString SettingsModelImp::keypointsViewerBGColor() const
 {
   return mSettings->keypointsViewerBGColor();
 }
 
-int SettingsModel::keypointsViewerMarkerType() const
+int SettingsModelImp::keypointsViewerMarkerType() const
 {
   return mSettings->keypointsViewerMarkerType();
 }
 
-int SettingsModel::keypointsViewerMarkerSize() const
+int SettingsModelImp::keypointsViewerMarkerSize() const
 {
   return mSettings->keypointsViewerMarkerSize();
 }
 
-int SettingsModel::keypointsViewerMarkerWidth() const
+int SettingsModelImp::keypointsViewerMarkerWidth() const
 {
   return mSettings->keypointsViewerMarkerWidth();
 }
 
-QString SettingsModel::keypointsViewerMarkerColor() const
+QString SettingsModelImp::keypointsViewerMarkerColor() const
 {
   return mSettings->keypointsViewerMarkerColor();
 }
 
-int SettingsModel::keypointsViewerSelectMarkerWidth() const
+int SettingsModelImp::keypointsViewerSelectMarkerWidth() const
 {
   return mSettings->keypointsViewerSelectMarkerWidth();
 }
 
-QString SettingsModel::keypointsViewerSelectMarkerColor() const
+QString SettingsModelImp::keypointsViewerSelectMarkerColor() const
 {
   return mSettings->keypointsViewerSelectMarkerColor();
 }
 
-QString SettingsModel::matchesViewerBGColor() const
+QString SettingsModelImp::matchesViewerBGColor() const
 {
   return mSettings->matchesViewerBGColor();
 }
 
-int SettingsModel::matchesViewerMarkerType() const
+int SettingsModelImp::matchesViewerMarkerType() const
 {
   return mSettings->matchesViewerMarkerType();
 }
 
-int SettingsModel::matchesViewerMarkerSize() const
+int SettingsModelImp::matchesViewerMarkerSize() const
 {
   return mSettings->matchesViewerMarkerSize();
 }
 
-int SettingsModel::matchesViewerMarkerWidth() const
+int SettingsModelImp::matchesViewerMarkerWidth() const
 {
   return mSettings->matchesViewerMarkerWidth();
 }
 
-QString SettingsModel::matchesViewerMarkerColor() const
+QString SettingsModelImp::matchesViewerMarkerColor() const
 {
   return mSettings->matchesViewerMarkerColor();
 }
 
-int SettingsModel::matchesViewerSelectMarkerWidth() const
+int SettingsModelImp::matchesViewerSelectMarkerWidth() const
 {
   return mSettings->matchesViewerSelectMarkerWidth();
 }
 
-QString SettingsModel::matchesViewerSelectMarkerColor() const
+QString SettingsModelImp::matchesViewerSelectMarkerColor() const
 {
   return mSettings->matchesViewerSelectMarkerColor();
 }
 
-QString SettingsModel::matchesViewerLineColor() const
+QString SettingsModelImp::matchesViewerLineColor() const
 {
   return mSettings->matchesViewerLineColor();
 }
 
-int SettingsModel::matchesViewerLineWidth() const
+int SettingsModelImp::matchesViewerLineWidth() const
 {
   return mSettings->matchesViewerLineWidth();
 }
 
-QString SettingsModel::groundTruthEditorBGColor() const
+QString SettingsModelImp::groundTruthEditorBGColor() const
 {
   return mSettings->groundTruthEditorBGColor();
 }
 
-int SettingsModel::groundTruthEditorMarkerSize() const
+int SettingsModelImp::groundTruthEditorMarkerSize() const
 {
   return mSettings->groundTruthEditorMarkerSize();
 }
 
-int SettingsModel::groundTruthEditorMarkerWidth() const
+int SettingsModelImp::groundTruthEditorMarkerWidth() const
 {
   return mSettings->groundTruthEditorMarkerWidth();
 }
 
-QString SettingsModel::groundTruthEditorMarkerColor() const
+QString SettingsModelImp::groundTruthEditorMarkerColor() const
 {
   return mSettings->groundTruthEditorMarkerColor();
 }
 
-int SettingsModel::groundTruthEditorSelectMarkerWidth() const
+int SettingsModelImp::groundTruthEditorSelectMarkerWidth() const
 {
   return mSettings->groundTruthEditorSelectMarkerWidth();
 }
 
-QString SettingsModel::groundTruthEditorSelectMarkerColor() const
+QString SettingsModelImp::groundTruthEditorSelectMarkerColor() const
 {
   return mSettings->groundTruthEditorSelectMarkerColor();
 }
 
-void SettingsModel::setLanguage(const QString &language)
+void SettingsModelImp::setLanguage(const QString &language)
 {
   mSettings->setLanguage(language);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::addToHistory(const QString &project)
+void SettingsModelImp::addToHistory(const QString &project)
 {
   mSettings->addToHistory(project);
   mSettingsRW->writeHistory(*mSettings);
 }
 
-void SettingsModel::clearHistory()
+void SettingsModelImp::clearHistory()
 {
   mSettings->clearHistory();
   mSettingsRW->writeHistory(*mSettings);
 }
 
-void SettingsModel::setHistoryMaxSize(int maxSize)
+void SettingsModelImp::setHistoryMaxSize(int maxSize)
 {
   mSettings->setHistoryMaxSize(maxSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setImageViewerBGcolor(const QString &bgColor)
+void SettingsModelImp::setImageViewerBGcolor(const QString &bgColor)
 {
   mSettings->setImageViewerBGcolor(bgColor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsFormat(const QString &format)
+void SettingsModelImp::setKeypointsFormat(const QString &format)
 {
   mSettings->setKeypointsFormat(format);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesFormat(const QString &format)
+void SettingsModelImp::setMatchesFormat(const QString &format)
 {
   mSettings->setMatchesFormat(format);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setClaheClipLimit(double clipLimit)
+void SettingsModelImp::setClaheClipLimit(double clipLimit)
 {
   mSettings->clahe()->setClipLimit(clipLimit);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setClaheTilesGridSize(const QSize &tilesGridSize)
+void SettingsModelImp::setClaheTilesGridSize(const QSize &tilesGridSize)
 {
   mSettings->clahe()->setTilesGridSize(tilesGridSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setCmbfheBlockSize(const QSize &size)
+void SettingsModelImp::setCmbfheBlockSize(const QSize &size)
 {
   mSettings->cmbfhe()->setBlockSize(size);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDheX(int x)
+void SettingsModelImp::setDheX(int x)
 {
   mSettings->dhe()->setX(x);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFaheBlockSize(const QSize &size)
+void SettingsModelImp::setFaheBlockSize(const QSize &size)
 {
   mSettings->fahe()->setBlockSize(size);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setUseCuda(bool active)
+void SettingsModelImp::setUseCuda(bool active)
 {
   mSettings->setUseCuda(active);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAcebsfBlockSize(const QSize &blockSize)
+void SettingsModelImp::setAcebsfBlockSize(const QSize &blockSize)
 {
   mSettings->acebsf()->setBlockSize(blockSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAcebsfL(double l)
+void SettingsModelImp::setAcebsfL(double l)
 {
   mSettings->acebsf()->setL(l);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAcebsfK1(double k1)
+void SettingsModelImp::setAcebsfK1(double k1)
 {
   mSettings->acebsf()->setK1(k1);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAcebsfK2(double k2)
+void SettingsModelImp::setAcebsfK2(double k2)
 {
   mSettings->acebsf()->setK2(k2);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHmclaheBlockSize(const QSize &size)
+void SettingsModelImp::setHmclaheBlockSize(const QSize &size)
 {
   mSettings->hmclahe()->setBlockSize(size);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHmclaheL(double l)
+void SettingsModelImp::setHmclaheL(double l)
 {
   mSettings->hmclahe()->setL(l);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHmclahePhi(double phi)
+void SettingsModelImp::setHmclahePhi(double phi)
 {
   mSettings->hmclahe()->setPhi(phi);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setLceBsescsBlockSize(const QSize &blockSize)
+void SettingsModelImp::setLceBsescsBlockSize(const QSize &blockSize)
 {
   mSettings->lceBsescs()->setBlockSize(blockSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsrcpSmallScale(double smallScale)
+void SettingsModelImp::setMsrcpSmallScale(double smallScale)
 {
   mSettings->msrcp()->setSmallScale(smallScale);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsrcpMidScale(double midScale)
+void SettingsModelImp::setMsrcpMidScale(double midScale)
 {
   mSettings->msrcp()->setMidScale(midScale);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsrcpLargeScale(double largeScale)
+void SettingsModelImp::setMsrcpLargeScale(double largeScale)
 {
   mSettings->msrcp()->setLargeScale(largeScale);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setNoshpBlockSize(const QSize &blockSize)
+void SettingsModelImp::setNoshpBlockSize(const QSize &blockSize)
 {
   mSettings->noshp()->setBlockSize(blockSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setPoheBlockSize(const QSize &blockSize)
+void SettingsModelImp::setPoheBlockSize(const QSize &blockSize)
 {
   mSettings->pohe()->setBlockSize(blockSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setRswheHistogramDivisions(int histogramDivisions)
+void SettingsModelImp::setRswheHistogramDivisions(int histogramDivisions)
 {
   mSettings->rswhe()->setHistogramDivisions(histogramDivisions);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setRswheHistogramCut(int histogramCut)
+void SettingsModelImp::setRswheHistogramCut(int histogramCut)
 {
   mSettings->rswhe()->setHistogramCut(static_cast<Rswhe::HistogramCut>(histogramCut));
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setWallisContrast(double contrast)
+void SettingsModelImp::setWallisContrast(double contrast)
 {
   mSettings->wallis()->setContrast(contrast);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setWallisBrightness(double brightness)
+void SettingsModelImp::setWallisBrightness(double brightness)
 {
   mSettings->wallis()->setBrightness(brightness);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setWallisImposedAverage(int imposedAverage)
+void SettingsModelImp::setWallisImposedAverage(int imposedAverage)
 {
   mSettings->wallis()->setImposedAverage(imposedAverage);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setWallisImposedLocalStdDev(int imposedLocalStdDev)
+void SettingsModelImp::setWallisImposedLocalStdDev(int imposedLocalStdDev)
 {
   mSettings->wallis()->setImposedLocalStdDev(imposedLocalStdDev);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setWallisKernelSize(int kernelSize)
+void SettingsModelImp::setWallisKernelSize(int kernelSize)
 {
   mSettings->wallis()->setKernelSize(kernelSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAgastThreshold(int threshold)
+void SettingsModelImp::setAgastThreshold(int threshold)
 {
   mSettings->agast()->setThreshold(threshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAgastNonmaxSuppression(bool nonmaxSuppression)
+void SettingsModelImp::setAgastNonmaxSuppression(bool nonmaxSuppression)
 {
   mSettings->agast()->setNonmaxSuppression(nonmaxSuppression);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAgastDetectorType(const QString &detectorType)
+void SettingsModelImp::setAgastDetectorType(const QString &detectorType)
 {
   mSettings->agast()->setDetectorType(detectorType);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeDescriptorType(const QString &descriptorType)
+void SettingsModelImp::setAkazeDescriptorType(const QString &descriptorType)
 {
   mSettings->akaze()->setDescriptorType(descriptorType);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeDescriptorSize(int descriptorSize)
+void SettingsModelImp::setAkazeDescriptorSize(int descriptorSize)
 {
   mSettings->akaze()->setDescriptorSize(descriptorSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeDescriptorChannels(int channels)
+void SettingsModelImp::setAkazeDescriptorChannels(int channels)
 {
   mSettings->akaze()->setDescriptorChannels(channels);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeThreshold(double threshold)
+void SettingsModelImp::setAkazeThreshold(double threshold)
 {
   mSettings->akaze()->setThreshold(threshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeOctaves(int octaves)
+void SettingsModelImp::setAkazeOctaves(int octaves)
 {
   mSettings->akaze()->setOctaves(octaves);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeOctaveLayers(int octaveLayers)
+void SettingsModelImp::setAkazeOctaveLayers(int octaveLayers)
 {
   mSettings->akaze()->setOctaveLayers(octaveLayers);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setAkazeDiffusivity(const QString &diffusivity)
+void SettingsModelImp::setAkazeDiffusivity(const QString &diffusivity)
 {
   mSettings->akaze()->setDiffusivity(diffusivity);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBoostDescriptorType(const QString &descriptorType)
+void SettingsModelImp::setBoostDescriptorType(const QString &descriptorType)
 {
   mSettings->boost()->setDescriptorType(descriptorType);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBoostUseOrientation(bool useOrientation)
+void SettingsModelImp::setBoostUseOrientation(bool useOrientation)
 {
   mSettings->boost()->setUseOrientation(useOrientation);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBoostScaleFactor(double scaleFactor)
+void SettingsModelImp::setBoostScaleFactor(double scaleFactor)
 {
   mSettings->boost()->setScaleFactor(scaleFactor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBriefBytes(const QString &bytes)
+void SettingsModelImp::setBriefBytes(const QString &bytes)
 {
   mSettings->brief()->setBytes(bytes);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBriefUseOrientation(bool useOrientation)
+void SettingsModelImp::setBriefUseOrientation(bool useOrientation)
 {
   mSettings->brief()->setUseOrientation(useOrientation);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBriskThreshold(int threshold)
+void SettingsModelImp::setBriskThreshold(int threshold)
 {
   mSettings->brisk()->setThreshold(threshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBriskOctaves(int octaves)
+void SettingsModelImp::setBriskOctaves(int octaves)
 {
   mSettings->brisk()->setOctaves(octaves);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setBriskPatternScale(double patternScale)
+void SettingsModelImp::setBriskPatternScale(double patternScale)
 {
   mSettings->brisk()->setPatternScale(patternScale);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyRadius(double radius)
+void SettingsModelImp::setDaisyRadius(double radius)
 {
   mSettings->daisy()->setRadius(radius);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyQRadius(int qRadius)
+void SettingsModelImp::setDaisyQRadius(int qRadius)
 {
   mSettings->daisy()->setQRadius(qRadius);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyQTheta(int qTheta)
+void SettingsModelImp::setDaisyQTheta(int qTheta)
 {
   mSettings->daisy()->setQTheta(qTheta);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyQHist(int qHist)
+void SettingsModelImp::setDaisyQHist(int qHist)
 {
   mSettings->daisy()->setQHist(qHist);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyNorm(const QString &norm)
+void SettingsModelImp::setDaisyNorm(const QString &norm)
 {
   mSettings->daisy()->setNorm(norm);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyInterpolation(bool interpolation)
+void SettingsModelImp::setDaisyInterpolation(bool interpolation)
 {
   mSettings->daisy()->setInterpolation(interpolation);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setDaisyUseOrientation(bool useOrientation)
+void SettingsModelImp::setDaisyUseOrientation(bool useOrientation)
 {
   mSettings->daisy()->setUseOrientation(useOrientation);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFastThreshold(int threshold)
+void SettingsModelImp::setFastThreshold(int threshold)
 {
   mSettings->fast()->setThreshold(threshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFastNonmaxSuppression(bool nonmaxSuppression)
+void SettingsModelImp::setFastNonmaxSuppression(bool nonmaxSuppression)
 {
   mSettings->fast()->setNonmaxSuppression(nonmaxSuppression);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFastDetectorType(QString detectorType)
+void SettingsModelImp::setFastDetectorType(QString detectorType)
 {
   mSettings->fast()->setDetectorType(detectorType);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFreakOrientationNormalized(bool orientationNormalized)
+void SettingsModelImp::setFreakOrientationNormalized(bool orientationNormalized)
 {
   mSettings->freak()->setOrientationNormalized(orientationNormalized);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFreakScaleNormalized(bool scaleNormalized)
+void SettingsModelImp::setFreakScaleNormalized(bool scaleNormalized)
 {
   mSettings->freak()->setScaleNormalized(scaleNormalized);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFreakPatternScale(double patternScale)
+void SettingsModelImp::setFreakPatternScale(double patternScale)
 {
   mSettings->freak()->setPatternScale(patternScale);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setFreakOctaves(int octaves)
+void SettingsModelImp::setFreakOctaves(int octaves)
 {
   mSettings->freak()->setOctaves(octaves);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGfttMaxFeatures(int maxFeatures)
+void SettingsModelImp::setGfttMaxFeatures(int maxFeatures)
 {
   mSettings->gftt()->setMaxFeatures(maxFeatures);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGfttQualityLevel(double qlevel)
+void SettingsModelImp::setGfttQualityLevel(double qlevel)
 {
   mSettings->gftt()->setQualityLevel(qlevel);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGfttMinDistance(double minDistance)
+void SettingsModelImp::setGfttMinDistance(double minDistance)
 {
   mSettings->gftt()->setMinDistance(minDistance);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGfttBlockSize(int blockSize)
+void SettingsModelImp::setGfttBlockSize(int blockSize)
 {
   mSettings->gftt()->setBlockSize(blockSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGfttHarrisDetector(bool value)
+void SettingsModelImp::setGfttHarrisDetector(bool value)
 {
   mSettings->gftt()->setHarrisDetector(value);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGfttK(double k)
+void SettingsModelImp::setGfttK(double k)
 {
   mSettings->gftt()->setK(k);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHogWinSize(const QSize &winSize)
+void SettingsModelImp::setHogWinSize(const QSize &winSize)
 {
   mSettings->hog()->setWinSize(winSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHogBlockSize(const QSize &blockSize)
+void SettingsModelImp::setHogBlockSize(const QSize &blockSize)
 {
   mSettings->hog()->setBlockSize(blockSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHogBlockStride(const QSize &blockStride)
+void SettingsModelImp::setHogBlockStride(const QSize &blockStride)
 {
   mSettings->hog()->setBlockStride(blockStride);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHogCellSize(const QSize &cellSize)
+void SettingsModelImp::setHogCellSize(const QSize &cellSize)
 {
   mSettings->hog()->setCellSize(cellSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHogNbins(int nbins)
+void SettingsModelImp::setHogNbins(int nbins)
 {
   mSettings->hog()->setNbins(nbins);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setHogDerivAperture(int derivAperture)
+void SettingsModelImp::setHogDerivAperture(int derivAperture)
 {
   mSettings->hog()->setDerivAperture(derivAperture);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKazeExtendedDescriptor(bool extended)
+void SettingsModelImp::setKazeExtendedDescriptor(bool extended)
 {
   mSettings->kaze()->setExtendedDescriptor(extended);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKazeUpright(bool upright)
+void SettingsModelImp::setKazeUpright(bool upright)
 {
   mSettings->kaze()->setUpright(upright);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKazeThreshold(double threshold)
+void SettingsModelImp::setKazeThreshold(double threshold)
 {
   mSettings->kaze()->setThreshold(threshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKazeOctaves(int octaves)
+void SettingsModelImp::setKazeOctaves(int octaves)
 {
   mSettings->kaze()->setOctaves(octaves);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKazeOctaveLayers(int octaveLayers)
+void SettingsModelImp::setKazeOctaveLayers(int octaveLayers)
 {
   mSettings->kaze()->setOctaveLayers(octaveLayers);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKazeDiffusivity(const QString &diffusivity)
+void SettingsModelImp::setKazeDiffusivity(const QString &diffusivity)
 {
   mSettings->kaze()->setDiffusivity(diffusivity);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setLatchBytes(const QString &bytes)
+void SettingsModelImp::setLatchBytes(const QString &bytes)
 {
   mSettings->latch()->setBytes(bytes);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setLatchRotationInvariance(bool rotationInvariance)
+void SettingsModelImp::setLatchRotationInvariance(bool rotationInvariance)
 {
   mSettings->latch()->setRotationInvariance(rotationInvariance);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setLatchHalfSsdSize(int halfSsdSize)
+void SettingsModelImp::setLatchHalfSsdSize(int halfSsdSize)
 {
   mSettings->latch()->setHalfSsdSize(halfSsdSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setLucidKernel(int lucidKernel)
+void SettingsModelImp::setLucidKernel(int lucidKernel)
 {
   mSettings->lucid()->setLucidKernel(lucidKernel);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setLucidBlurKernel(int blurKernel)
+void SettingsModelImp::setLucidBlurKernel(int blurKernel)
 {
   mSettings->lucid()->setBlurKernel(blurKernel);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdThresholdSaliency(double thresholdSaliency)
+void SettingsModelImp::setMsdThresholdSaliency(double thresholdSaliency)
 {
   mSettings->msd()->setThresholdSaliency(thresholdSaliency);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdPathRadius(int pathRadius)
+void SettingsModelImp::setMsdPathRadius(int pathRadius)
 {
   mSettings->msd()->setPatchRadius(pathRadius);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdKNN(int knn)
+void SettingsModelImp::setMsdKNN(int knn)
 {
   mSettings->msd()->setKNN(knn);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdAreaRadius(int areaRadius)
+void SettingsModelImp::setMsdAreaRadius(int areaRadius)
 {
   mSettings->msd()->setSearchAreaRadius(areaRadius);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdScaleFactor(double scaleFactor)
+void SettingsModelImp::setMsdScaleFactor(double scaleFactor)
 {
   mSettings->msd()->setScaleFactor(scaleFactor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdNMSRadius(int NMSRadius)
+void SettingsModelImp::setMsdNMSRadius(int NMSRadius)
 {
   mSettings->msd()->setNMSRadius(NMSRadius);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdNScales(int nScales)
+void SettingsModelImp::setMsdNScales(int nScales)
 {
   mSettings->msd()->setNScales(nScales);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdNMSScaleR(int NMSScaleR)
+void SettingsModelImp::setMsdNMSScaleR(int NMSScaleR)
 {
   mSettings->msd()->setNMSScaleRadius(NMSScaleR);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdComputeOrientations(bool computeOrientations)
+void SettingsModelImp::setMsdComputeOrientations(bool computeOrientations)
 {
   mSettings->msd()->setComputeOrientation(computeOrientations);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdAffineMSD(bool affineMSD)
+void SettingsModelImp::setMsdAffineMSD(bool affineMSD)
 {
   mSettings->msd()->setAffineMSD(affineMSD);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMsdTilts(int tilts)
+void SettingsModelImp::setMsdTilts(int tilts)
 {
   mSettings->msd()->setAffineTilts(tilts);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserDelta(int delta)
+void SettingsModelImp::setMserDelta(int delta)
 {
   mSettings->mser()->setDelta(delta);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserMinArea(int minArea)
+void SettingsModelImp::setMserMinArea(int minArea)
 {
   mSettings->mser()->setMinArea(minArea);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserMaxArea(int maxArea)
+void SettingsModelImp::setMserMaxArea(int maxArea)
 {
   mSettings->mser()->setMaxArea(maxArea);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserMaxVariation(double maxVariation)
+void SettingsModelImp::setMserMaxVariation(double maxVariation)
 {
   mSettings->mser()->setMaxVariation(maxVariation);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserMinDiversity(double minDiversity)
+void SettingsModelImp::setMserMinDiversity(double minDiversity)
 {
   mSettings->mser()->setMinDiversity(minDiversity);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserMaxEvolution(int maxEvolution)
+void SettingsModelImp::setMserMaxEvolution(int maxEvolution)
 {
   mSettings->mser()->setMaxEvolution(maxEvolution);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserAreaThreshold(double areaThreshold)
+void SettingsModelImp::setMserAreaThreshold(double areaThreshold)
 {
   mSettings->mser()->setAreaThreshold(areaThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserMinMargin(double minMargin)
+void SettingsModelImp::setMserMinMargin(double minMargin)
 {
   mSettings->mser()->setMinMargin(minMargin);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMserEdgeBlurSize(int edgeBlurSize)
+void SettingsModelImp::setMserEdgeBlurSize(int edgeBlurSize)
 {
   mSettings->mser()->setEdgeBlurSize(edgeBlurSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbScaleFactor(double scaleFactor)
+void SettingsModelImp::setOrbScaleFactor(double scaleFactor)
 {
   mSettings->orb()->setScaleFactor(scaleFactor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbFeaturesNumber(int featuresNumber)
+void SettingsModelImp::setOrbFeaturesNumber(int featuresNumber)
 {
   mSettings->orb()->setFeaturesNumber(featuresNumber);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbLevelsNumber(int levelsNumber)
+void SettingsModelImp::setOrbLevelsNumber(int levelsNumber)
 {
   mSettings->orb()->setLevelsNumber(levelsNumber);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbEdgeThreshold(int edgeThreshold)
+void SettingsModelImp::setOrbEdgeThreshold(int edgeThreshold)
 {
   mSettings->orb()->setEdgeThreshold(edgeThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbWTA_K(int WTA_K)
+void SettingsModelImp::setOrbWTA_K(int WTA_K)
 {
   mSettings->orb()->setWTA_K(WTA_K);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbScoreType(const QString &scoreType)
+void SettingsModelImp::setOrbScoreType(const QString &scoreType)
 {
   mSettings->orb()->setScoreType(scoreType);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbPatchSize(int patchSize)
+void SettingsModelImp::setOrbPatchSize(int patchSize)
 {
   mSettings->orb()->setPatchSize(patchSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setOrbFastThreshold(int fastThreshold)
+void SettingsModelImp::setOrbFastThreshold(int fastThreshold)
 {
   mSettings->orb()->setFastThreshold(fastThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSiftFeaturesNumber(int featuresNumber)
+void SettingsModelImp::setSiftFeaturesNumber(int featuresNumber)
 {
   mSettings->sift()->setFeaturesNumber(featuresNumber);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSiftOctaveLayers(int octaveLayers)
+void SettingsModelImp::setSiftOctaveLayers(int octaveLayers)
 {
   mSettings->sift()->setOctaveLayers(octaveLayers);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSiftContrastThreshold(double contrastThreshold)
+void SettingsModelImp::setSiftContrastThreshold(double contrastThreshold)
 {
   mSettings->sift()->setContrastThreshold(contrastThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSiftEdgeThreshold(double edgeThreshold)
+void SettingsModelImp::setSiftEdgeThreshold(double edgeThreshold)
 {
   mSettings->sift()->setEdgeThreshold(edgeThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSiftSigma(double sigma)
+void SettingsModelImp::setSiftSigma(double sigma)
 {
   mSettings->sift()->setSigma(sigma);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setStarMaxSize(int maxSize)
+void SettingsModelImp::setStarMaxSize(int maxSize)
 {
   mSettings->star()->setMaxSize(maxSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setStarResponseThreshold(int responseThreshold)
+void SettingsModelImp::setStarResponseThreshold(int responseThreshold)
 {
   mSettings->star()->setResponseThreshold(responseThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setStarLineThresholdProjected(int lineThresholdProjected)
+void SettingsModelImp::setStarLineThresholdProjected(int lineThresholdProjected)
 {
   mSettings->star()->setLineThresholdProjected(lineThresholdProjected);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setStarLineThresholdBinarized(int lineThresholdBinarized)
+void SettingsModelImp::setStarLineThresholdBinarized(int lineThresholdBinarized)
 {
   mSettings->star()->setLineThresholdBinarized(lineThresholdBinarized);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setStarSuppressNonmaxSize(int suppressNonmaxSize)
+void SettingsModelImp::setStarSuppressNonmaxSize(int suppressNonmaxSize)
 {
   mSettings->star()->setSuppressNonmaxSize(suppressNonmaxSize);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSurfHessianThreshold(double hessianThreshold)
+void SettingsModelImp::setSurfHessianThreshold(double hessianThreshold)
 {
   mSettings->surf()->setHessianThreshold(hessianThreshold);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSurfOctaves(int octaves)
+void SettingsModelImp::setSurfOctaves(int octaves)
 {
   mSettings->surf()->setOctaves(octaves);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSurfOctaveLayers(int octaveLayers)
+void SettingsModelImp::setSurfOctaveLayers(int octaveLayers)
 {
   mSettings->surf()->setOctaveLayers(octaveLayers);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSurfExtendedDescriptor(bool extendedDescriptor)
+void SettingsModelImp::setSurfExtendedDescriptor(bool extendedDescriptor)
 {
   mSettings->surf()->setExtendedDescriptor(extendedDescriptor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setSurfRotatedFeatures(bool rotatedFeatures)
+void SettingsModelImp::setSurfRotatedFeatures(bool rotatedFeatures)
 {
   mSettings->surf()->setUpright(rotatedFeatures);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setVggDescriptorType(const QString &descriptorType)
+void SettingsModelImp::setVggDescriptorType(const QString &descriptorType)
 {
   mSettings->vgg()->setDescriptorType(descriptorType);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setVggScaleFactor(double scaleFactor)
+void SettingsModelImp::setVggScaleFactor(double scaleFactor)
 {
   mSettings->vgg()->setScaleFactor(scaleFactor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setVggSigma(double sigma)
+void SettingsModelImp::setVggSigma(double sigma)
 {
   mSettings->vgg()->setSigma(sigma);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setVggUseNormalizeDescriptor(bool useNormalizeDescriptor)
+void SettingsModelImp::setVggUseNormalizeDescriptor(bool useNormalizeDescriptor)
 {
   mSettings->vgg()->setUseNormalizeDescriptor(useNormalizeDescriptor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setVggUseNormalizeImage(bool useNormalizeImage)
+void SettingsModelImp::setVggUseNormalizeImage(bool useNormalizeImage)
 {
   mSettings->vgg()->setUseNormalizeImage(useNormalizeImage);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setVggUseScaleOrientation(bool useScaleOrientation)
+void SettingsModelImp::setVggUseScaleOrientation(bool useScaleOrientation)
 {
   mSettings->vgg()->setUseScaleOrientation(useScaleOrientation);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchMethod(const QString &matchingMethod)
+void SettingsModelImp::setMatchMethod(const QString &matchingMethod)
 {
   mSettings->setMatchMethod(matchingMethod);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchStrategy(const QString &matchingStrategy)
+void SettingsModelImp::setMatchStrategy(const QString &matchingStrategy)
 {
   mSettings->setMatchStrategy(matchingStrategy);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchNormType(const QString &normType)
+void SettingsModelImp::setMatchNormType(const QString &normType)
 {
   BruteForceMatcherImp::Norm norm = BruteForceMatcherProperties::Norm::l2;
   if (normType.compare("NORM_L1") == 0) {
@@ -1831,37 +1831,37 @@ void SettingsModel::setMatchNormType(const QString &normType)
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchRatio(double ratio)
+void SettingsModelImp::setMatchRatio(double ratio)
 {
   mSettings->robustMatcher()->setRatio(ratio);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchDistance(double distance)
+void SettingsModelImp::setMatchDistance(double distance)
 {
   mSettings->robustMatcher()->setDistance(distance);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchConfidence(double confidence)
+void SettingsModelImp::setMatchConfidence(double confidence)
 {
   mSettings->robustMatcher()->setConfidence(confidence);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchCrossMatching(bool crossMatching)
+void SettingsModelImp::setMatchCrossMatching(bool crossMatching)
 {
   mSettings->robustMatcher()->setCrossCheck(crossMatching);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchMaxIters(int maxIters)
+void SettingsModelImp::setMatchMaxIters(int maxIters)
 {
   mSettings->robustMatcher()->setMaxIters(maxIters);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchGeometricTest(const QString &geometricTest)
+void SettingsModelImp::setMatchGeometricTest(const QString &geometricTest)
 {
   RobustMatcher::GeometricTest geometric_test = RobustMatcher::GeometricTest::homography;
   if (geometricTest.compare("Homography Matrix") == 0) {
@@ -1875,7 +1875,7 @@ void SettingsModel::setMatchGeometricTest(const QString &geometricTest)
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchHomographyComputeMethod(const QString &computeMethod)
+void SettingsModelImp::setMatchHomographyComputeMethod(const QString &computeMethod)
 {
   RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
   if (computeMethod.compare("All Points") == 0) {
@@ -1891,7 +1891,7 @@ void SettingsModel::setMatchHomographyComputeMethod(const QString &computeMethod
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchFundamentalComputeMethod(const QString &computeMethod)
+void SettingsModelImp::setMatchFundamentalComputeMethod(const QString &computeMethod)
 {
   RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
   if (computeMethod.compare("7-point algorithm") == 0) {
@@ -1907,7 +1907,7 @@ void SettingsModel::setMatchFundamentalComputeMethod(const QString &computeMetho
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchEssentialComputeMethod(const QString &computeMethod)
+void SettingsModelImp::setMatchEssentialComputeMethod(const QString &computeMethod)
 {
   RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
   if (computeMethod.compare("RANSAC") == 0) {
@@ -1919,149 +1919,149 @@ void SettingsModel::setMatchEssentialComputeMethod(const QString &computeMethod)
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerBGColor(const QString &color)
+void SettingsModelImp::setKeypointsViewerBGColor(const QString &color)
 {
   mSettings->setKeypointsViewerBGColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerMarkerType(int type)
+void SettingsModelImp::setKeypointsViewerMarkerType(int type)
 {
   mSettings->setKeypointsViewerMarkerType(type);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerMarkerSize(int size)
+void SettingsModelImp::setKeypointsViewerMarkerSize(int size)
 {
   mSettings->setKeypointsViewerMarkerSize(size);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerMarkerWidth(int width)
+void SettingsModelImp::setKeypointsViewerMarkerWidth(int width)
 {
   mSettings->setKeypointsViewerMarkerWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerMarkerColor(const QString &color)
+void SettingsModelImp::setKeypointsViewerMarkerColor(const QString &color)
 {
   mSettings->setKeypointsViewerMarkerColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerSelectMarkerWidth(int width)
+void SettingsModelImp::setKeypointsViewerSelectMarkerWidth(int width)
 {
   mSettings->setKeypointsViewerSelectMarkerWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setKeypointsViewerSelectMarkerColor(const QString &color)
+void SettingsModelImp::setKeypointsViewerSelectMarkerColor(const QString &color)
 {
   mSettings->setKeypointsViewerSelectMarkerColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerBGColor(const QString &color)
+void SettingsModelImp::setMatchesViewerBGColor(const QString &color)
 {
   mSettings->setMatchesViewerBGColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerMarkerType(int type)
+void SettingsModelImp::setMatchesViewerMarkerType(int type)
 {
   mSettings->setMatchesViewerMarkerType(type);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerMarkerSize(int size)
+void SettingsModelImp::setMatchesViewerMarkerSize(int size)
 {
   mSettings->setMatchesViewerMarkerSize(size);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerMarkerWidth(int width)
+void SettingsModelImp::setMatchesViewerMarkerWidth(int width)
 {
   mSettings->setMatchesViewerMarkerWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerMarkerColor(const QString &color)
+void SettingsModelImp::setMatchesViewerMarkerColor(const QString &color)
 {
   mSettings->setMatchesViewerMarkerColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerSelectMarkerWidth(int width)
+void SettingsModelImp::setMatchesViewerSelectMarkerWidth(int width)
 {
   mSettings->setMatchesViewerSelectMarkerWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerSelectMarkerColor(const QString &color)
+void SettingsModelImp::setMatchesViewerSelectMarkerColor(const QString &color)
 {
   mSettings->setMatchesViewerSelectMarkerColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerLineColor(const QString &color)
+void SettingsModelImp::setMatchesViewerLineColor(const QString &color)
 {
   mSettings->setMatchesViewerLineColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setMatchesViewerLineWidth(int width)
+void SettingsModelImp::setMatchesViewerLineWidth(int width)
 {
   mSettings->setMatchesViewerLineWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGroundTruthEditorBGColor(const QString &bgColor)
+void SettingsModelImp::setGroundTruthEditorBGColor(const QString &bgColor)
 {
   mSettings->setGroundTruthEditorBGColor(bgColor);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGroundTruthEditorMarkerSize(int size)
+void SettingsModelImp::setGroundTruthEditorMarkerSize(int size)
 {
   mSettings->setGroundTruthEditorMarkerSize(size);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGroundTruthEditorMarkerWidth(int width)
+void SettingsModelImp::setGroundTruthEditorMarkerWidth(int width)
 {
   mSettings->setGroundTruthEditorMarkerWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGroundTruthEditorMarkerColor(const QString &color)
+void SettingsModelImp::setGroundTruthEditorMarkerColor(const QString &color)
 {
   mSettings->setGroundTruthEditorMarkerColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGroundTruthEditorSelectMarkerWidth(int width)
+void SettingsModelImp::setGroundTruthEditorSelectMarkerWidth(int width)
 {
   mSettings->setGroundTruthEditorSelectMarkerWidth(width);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::setGroundTruthEditorSelectMarkerColor(const QString &color)
+void SettingsModelImp::setGroundTruthEditorSelectMarkerColor(const QString &color)
 {
   mSettings->setGroundTruthEditorSelectMarkerColor(color);
   emit unsavedChanges(true);
 }
 
-void SettingsModel::reset()
+void SettingsModelImp::reset()
 {
   mSettings->reset();
   emit unsavedChanges(false);
 }
 
-void SettingsModel::init()
+void SettingsModelImp::init()
 {
 }
 
-QStringList SettingsModel::languages() const
+QStringList SettingsModelImp::languages() const
 {
   QString langPath = QApplication::applicationDirPath();
   langPath.append("/translations");
@@ -2072,12 +2072,12 @@ QStringList SettingsModel::languages() const
   return lang_list;
 }
 
-void SettingsModel::read()
+void SettingsModelImp::read()
 {
   mSettingsRW->read(*mSettings);
 }
 
-void SettingsModel::write()
+void SettingsModelImp::write()
 {
   mSettingsRW->write(*mSettings);
   emit unsavedChanges(false);

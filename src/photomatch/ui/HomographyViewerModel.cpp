@@ -44,20 +44,20 @@
 namespace photomatch
 {
 
-HomographyViewerModel::HomographyViewerModel(IProjectModel *mProjectModel)
-  : IHomographyViewerModel(),
+HomographyViewerModelImp::HomographyViewerModelImp(ProjectModel *mProjectModel)
+  : HomographyViewerModel(),
     mProjectModel(mProjectModel),
     bUseCuda(false)
 {
   init();
 }
 
-HomographyViewerModel::~HomographyViewerModel()
+HomographyViewerModelImp::~HomographyViewerModelImp()
 {
 
 }
 
-QString HomographyViewerModel::currentSession() const
+QString HomographyViewerModelImp::currentSession() const
 {
   if (mProjectModel->currentSession())
     return mProjectModel->currentSession()->name();
@@ -65,7 +65,7 @@ QString HomographyViewerModel::currentSession() const
     return QString();
 }
 
-std::vector<QString> HomographyViewerModel::images() const
+std::vector<QString> HomographyViewerModelImp::images() const
 {
   std::vector<QString> images;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -74,7 +74,7 @@ std::vector<QString> HomographyViewerModel::images() const
   return images;
 }
 
-std::vector<QString> HomographyViewerModel::imagePairs(const QString &imageName) const
+std::vector<QString> HomographyViewerModelImp::imagePairs(const QString &imageName) const
 {
   std::vector<QString> pairs;
   if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
@@ -95,7 +95,7 @@ std::vector<QString> HomographyViewerModel::imagePairs(const QString &imageName)
   return pairs;
 }
 
-QImage HomographyViewerModel::homography(const QString &imgName1, const QString &imgName2) const
+QImage HomographyViewerModelImp::homography(const QString &imgName1, const QString &imgName2) const
 {
   QImage image;
   QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();
@@ -183,12 +183,12 @@ QImage HomographyViewerModel::homography(const QString &imgName1, const QString 
   return image;
 }
 
-void HomographyViewerModel::setUseCuda(bool active)
+void HomographyViewerModelImp::setUseCuda(bool active)
 {
   bUseCuda = active;
 }
 
-void HomographyViewerModel::init()
+void HomographyViewerModelImp::init()
 {
 }
 

@@ -37,19 +37,19 @@
 namespace photomatch
 {
 
-ExportMatchesModel::ExportMatchesModel(IProjectModel *mProjectModel)
-  : IExportMatchesModel(),
+ExportMatchesModelImp::ExportMatchesModelImp(ProjectModel *mProjectModel)
+  : ExportMatchesModel(),
     mProjectModel(mProjectModel)
 {
   init();
 }
 
-ExportMatchesModel::~ExportMatchesModel()
+ExportMatchesModelImp::~ExportMatchesModelImp()
 {
 
 }
 
-QStringList ExportMatchesModel::sessions() const
+QStringList ExportMatchesModelImp::sessions() const
 {
   QStringList sessions;
 
@@ -61,12 +61,12 @@ QStringList ExportMatchesModel::sessions() const
   return sessions;
 }
 
-QString ExportMatchesModel::sessionName() const
+QString ExportMatchesModelImp::sessionName() const
 {
   return mSession;
 }
 
-QStringList ExportMatchesModel::formats() const
+QStringList ExportMatchesModelImp::formats() const
 {
   QStringList formats;
   formats.push_back("BINGO");
@@ -74,7 +74,7 @@ QStringList ExportMatchesModel::formats() const
   return formats;
 }
 
-void ExportMatchesModel::exportMatches(const QString &file, const QString &format) const
+void ExportMatchesModelImp::exportMatches(const QString &file, const QString &format) const
 {
   if (std::shared_ptr<Session> session = mProjectModel->findSession(mSession)){
 
@@ -164,12 +164,12 @@ void ExportMatchesModel::exportMatches(const QString &file, const QString &forma
   }
 }
 
-void ExportMatchesModel::setSessionName(const QString &session)
+void ExportMatchesModelImp::setSessionName(const QString &session)
 {
   mSession = session;
 }
 
-void ExportMatchesModel::init()
+void ExportMatchesModelImp::init()
 {
   mSession = mProjectModel->currentSession()->name();
 }

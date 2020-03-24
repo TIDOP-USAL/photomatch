@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_SETTINGS_VIEW_H
 #define PHOTOMATCH_SETTINGS_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/Settings.h"
 
 class QListWidget;
 class QStackedWidget;
@@ -40,167 +40,17 @@ class QCheckBox;
 namespace photomatch
 {
 
-class ISettingsView
-  : public IDialogView
-{
 
-  Q_OBJECT
 
-public:
-
-  ISettingsView(QWidget *parent = nullptr) : IDialogView(parent) {}
-  virtual ~ISettingsView(){}
-
-  /*!
-   * \brief Active language
-   */
-  virtual QString activeLanguage() const = 0;
-
-  /*!
-   * \brief History size
-   */
-  virtual int historyMaxSize() const = 0;
-
-  virtual QString imageViewerBGColor() const = 0;
-
-  virtual QString keypointsFormat() const = 0;
-  virtual QString matchesFormat() const = 0;
-  virtual bool useCuda() const = 0;
-
-  virtual QString keypointsViewerBGColor() const = 0;
-  virtual int keypointsViewerMarkerType() const = 0;
-  virtual int keypointsViewerMarkerSize() const = 0;
-  virtual int keypointsViewerMarkerWidth() const = 0;
-  virtual QString keypointsViewerMarkerColor() const = 0;
-  virtual int selectKeypointsViewerMarkerWidth() const = 0;
-  virtual QString selectKeypointsViewerMarkerColor() const = 0;
-
-  virtual QString matchesViewerBGColor() const = 0;
-  virtual int matchesViewerMarkerType() const = 0;
-  virtual int matchesViewerMarkerSize() const = 0;
-  virtual int matchesViewerMarkerWidth() const = 0;
-  virtual QString matchesViewerMarkerColor() const = 0;
-  virtual int selectMatchesViewerMarkerWidth() const = 0;
-  virtual QString selectMatchesViewerMarkerColor() const = 0;
-  virtual QString matchesViewerLineColor() const = 0;
-  virtual int matchesViewerLineWidth() const = 0;
-
-  virtual QString groundTruthEditorBGColor() const = 0;
-  virtual int groundTruthEditorMarkerSize() const = 0;
-  virtual int groundTruthEditorMarkerWidth() const = 0;
-  virtual QString groundTruthEditorMarkerColor() const = 0;
-  virtual int selectGroundTruthEditorMarkerWidth() const = 0;
-  virtual QString selectGroundTruthEditorMarkerColor() const = 0;
-
-public slots:
-
-  /*!
-   * \brief Set active page
-   * \param[in] page Active page
-   */
-  virtual void setPage(int page) = 0;
-
-  /*!
-   * \brief Set available languages
-   * \param[in] languages Available languages
-   */
-  virtual void setLanguages(const QStringList &languages) = 0;
-
-  /*!
-   * \brief Set active language
-   * \param[in] language Active language
-   */
-  virtual void setActiveLanguage(const QString &language) = 0;
-
-  /*!
-   * \brief Set history size
-   * \param[in] size History size
-   */
-  virtual void setHistoryMaxSize(int size) = 0;
-
-  virtual void setImageViewerBGcolor(const QString &color) = 0;
-
-  virtual void setKeypointsFormat(const QString &format) = 0;
-  virtual void setMatchesFormat(const QString &format) = 0;
-  virtual void setUseCuda(bool active) = 0;
-  virtual void setCudaEnabled(bool enabled) = 0;
-
-  virtual void addPreprocess(QWidget *preprocess) = 0;
-  virtual void addFeatureDetectorMethod(QWidget *detector) = 0;
-  virtual void addDescriptorMatcher(QWidget *detector) = 0;
-
-  virtual void setKeypointsViewerBGColor(const QString &color) = 0;
-  virtual void setKeypointsViewerMarkerType(int type) = 0;
-  virtual void setKeypointsViewerMarkerSize(int size) = 0;
-  virtual void setKeypointsViewerMarkerWidth(int width) = 0;
-  virtual void setKeypointsViewerMarkerColor(const QString &color) = 0;
-  virtual void setSelectKeypointsViewerMarkerWidth(int width) = 0;
-  virtual void setSelectKeypointsViewerMarkerColor(const QString &color) = 0;
-
-  virtual void setMatchesViewerBGColor(const QString &color) = 0;
-  virtual void setMatchesViewerMarkerType(int type) = 0;
-  virtual void setMatchesViewerMarkerSize(int size) = 0;
-  virtual void setMatchesViewerMarkerWidth(int width) = 0;
-  virtual void setMatchesViewerMarkerColor(const QString &color) = 0;
-  virtual void setSelectMatchesViewerMarkerWidth(int width) = 0;
-  virtual void setSelectMatchesViewerMarkerColor(const QString &color) = 0;
-  virtual void setMatchesViewerLineColor(const QString &color) = 0;
-  virtual void setMatchesViewerLineWidth(int width) = 0;
-
-  virtual void setGroundTruthEditorBGColor(const QString &bgColor) = 0;
-  virtual void setGroundTruthEditorMarkerSize(int size) = 0;
-  virtual void setGroundTruthEditorMarkerWidth(int width) = 0;
-  virtual void setGroundTruthEditorMarkerColor(const QString &color) = 0;
-  virtual void setSelectGroundTruthEditorMarkerWidth(int width) = 0;
-  virtual void setSelectGroundTruthEditorMarkerColor(const QString &color) = 0;
-
-  virtual void setUnsavedChanges(bool unsaveChanges) = 0;
-
-signals:
-
-  void languageChange(QString);
-  void historyMaxSizeChange(int);
-  void imageViewerBGColorChange(QString);
-  void keypointsFormatChange(QString);
-  void matchesFormatChange(QString);
-  void useCudaChange(bool);
-  void applyChanges();
-
-  void keypointsViewerBGColorChange(QString);
-  void keypointsViewerMarkerTypeChange(int);
-  void keypointsViewerMarkerSizeChange(int);
-  void keypointsViewerMarkerWidthChange(int);
-  void keypointsViewerMarkerColorChange(QString);
-  void selectKeypointsViewerMarkerWidthChange(int);
-  void selectKeypointsViewerMarkerColorChange(QString);
-
-  void matchesViewerBGColorChange(QString);
-  void matchesViewerMarkerTypeChange(int);
-  void matchesViewerMarkerSizeChange(int);
-  void matchesViewerMarkerWidthChange(int);
-  void matchesViewerMarkerColorChange(QString);
-  void matchesViewerLineWidthChange(int);
-  void matchesViewerLineColorChange(QString);
-  void selectMatchesViewerMarkerWidthChange(int);
-  void selectMatchesViewerMarkerColorChange(QString);
-
-  void groundTruthEditorBGColorChange(QString);
-  void groundTruthEditorMarkerSizeChange(int);
-  void groundTruthEditorMarkerWidthChange(int);
-  void groundTruthEditorMarkerColorChange(QString);
-  void selectGroundTruthEditorMarkerWidthChange(int);
-  void selectGroundTruthEditorMarkerColorChange(QString);
-};
-
-class SettingsView
-  : public ISettingsView
+class SettingsViewImp
+  : public SettingsView
 {
   Q_OBJECT
 
 public:
 
-  SettingsView(QWidget *parent = nullptr);
-  ~SettingsView() override;
+  SettingsViewImp(QWidget *parent = nullptr);
+  ~SettingsViewImp() override;
 
 protected slots:
 

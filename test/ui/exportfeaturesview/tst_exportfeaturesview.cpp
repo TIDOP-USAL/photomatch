@@ -13,7 +13,7 @@
 using namespace photomatch;
 
 class TestExportFeaturesView
-  : public ExportFeaturesView
+  : public ExportFeaturesViewImp
 {
   Q_OBJECT
 
@@ -52,7 +52,7 @@ private:
 };
 
 TestExportFeaturesView::TestExportFeaturesView()
-  : ExportFeaturesView()
+  : ExportFeaturesViewImp()
 {
   QApplication::setActiveWindow(this);
 }
@@ -93,7 +93,7 @@ void TestExportFeaturesView::test_windowTitle()
 
 void TestExportFeaturesView::test_constructor()
 {
-  ExportFeaturesView exportFeaturesView;
+  ExportFeaturesViewImp exportFeaturesView;
   QCOMPARE(QString(), exportFeaturesView.format());
   QCOMPARE(QStringList(), exportFeaturesView.exportFiles());
   QCOMPARE(QString(), exportFeaturesView.exportPath());
@@ -119,7 +119,7 @@ void TestExportFeaturesView::test_sessions()
 
 void TestExportFeaturesView::test_sessionChange()
 {
-QSignalSpy spy_sessionChange(this, &ExportFeaturesView::sessionChange);
+QSignalSpy spy_sessionChange(this, &ExportFeaturesViewImp::sessionChange);
 
   this->mComboBoxSession->setCurrentText("Session02");
 
@@ -159,7 +159,7 @@ void TestExportFeaturesView::test_currentFormat()
 
 void TestExportFeaturesView::test_formatChange()
 {
-  QSignalSpy spy_formatChange(this, &ExportFeaturesView::formatChange);
+  QSignalSpy spy_formatChange(this, &ExportFeaturesViewImp::formatChange);
 
   this->mComboBoxFormat->setCurrentText("OpenCV YML");
 
@@ -262,16 +262,16 @@ void TestExportFeaturesView::test_imageFiles()
 void TestExportFeaturesView::test_dialogButtonBox()
 {
 
-  QSignalSpy spy_rejected(this, &ExportFeaturesView::rejected);
+  QSignalSpy spy_rejected(this, &ExportFeaturesViewImp::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
   mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-  QSignalSpy spy_accepted(this, &ExportFeaturesView::accepted);
+  QSignalSpy spy_accepted(this, &ExportFeaturesViewImp::accepted);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Ok), Qt::LeftButton);
   QCOMPARE(spy_accepted.count(), 1);
 
-  QSignalSpy spy_help(this, &ExportFeaturesView::help);
+  QSignalSpy spy_help(this, &ExportFeaturesViewImp::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);
   QCOMPARE(spy_help.count(), 1);
 }

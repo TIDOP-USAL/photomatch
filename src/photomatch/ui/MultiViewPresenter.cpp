@@ -31,9 +31,9 @@
 namespace photomatch
 {
 
-MultiViewMatchingAssessmentPresenter::MultiViewMatchingAssessmentPresenter(IMultiviewMatchingAssessmentView *view,
-                                                                           IMultiViewMatchingAssessmentModel *model)
-  : IMultiViewMatchingAssessmentPresenter(),
+MultiViewMatchingAssessmentPresenterImp::MultiViewMatchingAssessmentPresenterImp(MultiviewMatchingAssessmentView *view,
+                                                                           MultiViewMatchingAssessmentModel *model)
+  : MultiViewMatchingAssessmentPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
@@ -43,19 +43,19 @@ MultiViewMatchingAssessmentPresenter::MultiViewMatchingAssessmentPresenter(IMult
   connect(mView, SIGNAL(idChange(int)),  this, SLOT(onIdChange(int)));
 }
 
-void MultiViewMatchingAssessmentPresenter::onIdChange(int id)
+void MultiViewMatchingAssessmentPresenterImp::onIdChange(int id)
 {
   mView->setImages(mModel->images(static_cast<size_t>(id)));
 }
 
-void MultiViewMatchingAssessmentPresenter::setSession(const QString &session)
+void MultiViewMatchingAssessmentPresenterImp::setSession(const QString &session)
 {
   mModel->setSessionName(session);
   mView->clear();
   mView->setSessionName(mModel->sessionName());
 }
 
-void MultiViewMatchingAssessmentPresenter::help()
+void MultiViewMatchingAssessmentPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("index.html");
@@ -63,7 +63,7 @@ void MultiViewMatchingAssessmentPresenter::help()
   }
 }
 
-void MultiViewMatchingAssessmentPresenter::open()
+void MultiViewMatchingAssessmentPresenterImp::open()
 {
   mView->clear();
 
@@ -78,12 +78,12 @@ void MultiViewMatchingAssessmentPresenter::open()
   mView->show();
 }
 
-void MultiViewMatchingAssessmentPresenter::setHelp(HelpDialog *help)
+void MultiViewMatchingAssessmentPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void MultiViewMatchingAssessmentPresenter::init()
+void MultiViewMatchingAssessmentPresenterImp::init()
 {
 }
 

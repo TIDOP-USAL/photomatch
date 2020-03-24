@@ -29,46 +29,27 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/Multiview.h"
+
 
 
 namespace photomatch
 {
 
-class IMultiviewMatchingAssessmentView;
-class IMultiViewMatchingAssessmentModel;
+class MultiviewMatchingAssessmentView;
+class MultiViewMatchingAssessmentModel;
 class HelpDialog;
 
-class IMultiViewMatchingAssessmentPresenter
-  : public IPresenter
-{
 
-  Q_OBJECT
-
-public:
-
-  IMultiViewMatchingAssessmentPresenter(){}
-  virtual ~IMultiViewMatchingAssessmentPresenter() {}
-
-public slots:
-
-  virtual void setSession(const QString &session) = 0;
-
-protected slots:
-
-
-};
-
-
-class MultiViewMatchingAssessmentPresenter
-  : public IMultiViewMatchingAssessmentPresenter
+class MultiViewMatchingAssessmentPresenterImp
+  : public MultiViewMatchingAssessmentPresenter
 {
   Q_OBJECT
 
 public:
 
-  MultiViewMatchingAssessmentPresenter(IMultiviewMatchingAssessmentView *view,
-                                       IMultiViewMatchingAssessmentModel *model);
+  MultiViewMatchingAssessmentPresenterImp(MultiviewMatchingAssessmentView *view,
+                                       MultiViewMatchingAssessmentModel *model);
 
 private slots:
 
@@ -94,8 +75,8 @@ private:
 
 private:
 
-  IMultiviewMatchingAssessmentView *mView;
-  IMultiViewMatchingAssessmentModel *mModel;
+  MultiviewMatchingAssessmentView *mView;
+  MultiViewMatchingAssessmentModel *mModel;
   HelpDialog *mHelp;
 
 };

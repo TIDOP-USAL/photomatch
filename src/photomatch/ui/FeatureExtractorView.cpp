@@ -36,54 +36,54 @@
 namespace photomatch
 {
 
-FeatureExtractorView::FeatureExtractorView(QWidget *parent)
-  : IFeatureExtractorView(parent),
+FeatureExtractorViewImp::FeatureExtractorViewImp(QWidget *parent)
+  : FeatureExtractorView(parent),
     mButtonBox(new QDialogButtonBox(this))
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-FeatureExtractorView::~FeatureExtractorView()
+FeatureExtractorViewImp::~FeatureExtractorViewImp()
 {
 
 }
 
-void FeatureExtractorView::setSessionName(const QString &name)
+void FeatureExtractorViewImp::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Feature Extractor ").append(name));
 }
 
-void FeatureExtractorView::addKeypointDetector(QWidget *keypointDetector)
+void FeatureExtractorViewImp::addKeypointDetector(QWidget *keypointDetector)
 {
   mComboBoxKeypointDetector->addItem(keypointDetector->windowTitle());
   mGridLayoutKeypointDetector->addWidget(keypointDetector, 0, 0, 1, 2);
   keypointDetector->setVisible(false);
 }
 
-void FeatureExtractorView::addDescriptorExtractor(QWidget *descriptorExtractor)
+void FeatureExtractorViewImp::addDescriptorExtractor(QWidget *descriptorExtractor)
 {
   mComboBoxDescriptorExtractor->addItem(descriptorExtractor->windowTitle());
   mGridLayoutDescriptorExtractor->addWidget(descriptorExtractor, 0, 0, 1, 2);
   descriptorExtractor->setVisible(false);
 }
 
-QString FeatureExtractorView::currentKeypointDetector() const
+QString FeatureExtractorViewImp::currentKeypointDetector() const
 {
   return mCurrentKeypointDetector;
 }
 
-QString FeatureExtractorView::currentDescriptorExtractor() const
+QString FeatureExtractorViewImp::currentDescriptorExtractor() const
 {
   return mCurrentDescriptorExtractor;
 }
 
-void FeatureExtractorView::addKeypointsFilter(QWidget *keypointsFilter)
+void FeatureExtractorViewImp::addKeypointsFilter(QWidget *keypointsFilter)
 {
   mGridLayoutKeypointsFilter->addWidget(keypointsFilter, 0, 0, 1, 2);
 }
 
-void FeatureExtractorView::setCurrentKeypointDetector(const QString &keypointDetector)
+void FeatureExtractorViewImp::setCurrentKeypointDetector(const QString &keypointDetector)
 {
   mCurrentKeypointDetector = keypointDetector;
 
@@ -100,7 +100,7 @@ void FeatureExtractorView::setCurrentKeypointDetector(const QString &keypointDet
   }
 }
 
-void FeatureExtractorView::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
+void FeatureExtractorViewImp::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
 {
   mCurrentDescriptorExtractor = descriptorExtractor;
 
@@ -120,7 +120,7 @@ void FeatureExtractorView::setCurrentDescriptorExtractor(const QString &descript
   }
 }
 
-void FeatureExtractorView::disableDescriptorExtractor(const QString &descriptorExtractor)
+void FeatureExtractorViewImp::disableDescriptorExtractor(const QString &descriptorExtractor)
 {
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>(mComboBoxDescriptorExtractor->model());
   if (model != nullptr) {
@@ -131,7 +131,7 @@ void FeatureExtractorView::disableDescriptorExtractor(const QString &descriptorE
   }
 }
 
-void FeatureExtractorView::enableDescriptorExtractor(const QString &descriptorExtractor)
+void FeatureExtractorViewImp::enableDescriptorExtractor(const QString &descriptorExtractor)
 {
   QStandardItemModel *model = qobject_cast<QStandardItemModel *>(mComboBoxDescriptorExtractor->model());
   if (model != nullptr) {
@@ -142,7 +142,7 @@ void FeatureExtractorView::enableDescriptorExtractor(const QString &descriptorEx
   }
 }
 
-void FeatureExtractorView::initUI()
+void FeatureExtractorViewImp::initUI()
 {
   this->setWindowTitle(tr("Feature Extractor"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -187,7 +187,7 @@ void FeatureExtractorView::initUI()
   update();
 }
 
-void FeatureExtractorView::initSignalAndSlots()
+void FeatureExtractorViewImp::initSignalAndSlots()
 {
   connect(mComboBoxKeypointDetector,     SIGNAL(currentTextChanged(QString)), this, SIGNAL(keypointDetectorChange(QString)));
   connect(mComboBoxDescriptorExtractor,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(descriptorExtractorChange(QString)));
@@ -197,18 +197,18 @@ void FeatureExtractorView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
-void FeatureExtractorView::clear()
+void FeatureExtractorViewImp::clear()
 {
   mCurrentKeypointDetector.clear();
   mCurrentDescriptorExtractor.clear();
 }
 
-void FeatureExtractorView::update()
+void FeatureExtractorViewImp::update()
 {
 
 }
 
-void FeatureExtractorView::retranslate()
+void FeatureExtractorViewImp::retranslate()
 {
 
 }

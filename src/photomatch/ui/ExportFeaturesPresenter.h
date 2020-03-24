@@ -27,45 +27,27 @@
 
 #include <QObject>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/ExportFeatures.h"
 
 namespace photomatch
 {
 
-class IExportFeaturesView;
-class IExportFeaturesModel;
+class ExportFeaturesView;
+class ExportFeaturesModel;
 class HelpDialog;
 
-class IExportFeaturesPresenter
-  : public IPresenter
+
+class ExportFeaturesPresenterImp
+  : public ExportFeaturesPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  IExportFeaturesPresenter(){}
-  virtual ~IExportFeaturesPresenter() override = default;
-
-public slots:
-
-  virtual void save() = 0;
-  virtual void sessionChange(const QString &session) = 0;
-
-};
-
-
-class ExportFeaturesPresenter
-  : public IExportFeaturesPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  ExportFeaturesPresenter(IExportFeaturesView *view,
-                          IExportFeaturesModel *model);
-  ~ExportFeaturesPresenter() override;
+  ExportFeaturesPresenterImp(ExportFeaturesView *view,
+                          ExportFeaturesModel *model);
+  ~ExportFeaturesPresenterImp() override;
 
 // IPresenter interface
 
@@ -88,8 +70,8 @@ public:
 
 protected:
 
-  IExportFeaturesView *mView;
-  IExportFeaturesModel *mModel;
+  ExportFeaturesView *mView;
+  ExportFeaturesModel *mModel;
   HelpDialog *mHelp;
 };
 

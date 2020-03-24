@@ -101,11 +101,11 @@
 namespace photomatch
 {
 
-FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view,
+FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView *view,
                                                      //IFeatureExtractorModel *model,
-                                                     IProjectModel *projectModel,
-                                                     ISettingsModel *settingsModel)
-  : IFeatureExtractorPresenter(),
+                                                     ProjectModel *projectModel,
+                                                     SettingsModel *settingsModel)
+  : FeatureExtractorPresenter(),
     mView(view),
     //mModel(model),
     mProjectModel(projectModel),
@@ -161,7 +161,7 @@ FeatureExtractorPresenter::FeatureExtractorPresenter(IFeatureExtractorView *view
 
 }
 
-FeatureExtractorPresenter::~FeatureExtractorPresenter()
+FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
 {
   if (mAgastDetector){
     delete mAgastDetector;
@@ -314,7 +314,7 @@ FeatureExtractorPresenter::~FeatureExtractorPresenter()
   }
 }
 
-void FeatureExtractorPresenter::help()
+void FeatureExtractorPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("feature_extraction.html");
@@ -322,7 +322,7 @@ void FeatureExtractorPresenter::help()
   }
 }
 
-void FeatureExtractorPresenter::open()
+void FeatureExtractorPresenterImp::open()
 {
   std::shared_ptr<Session> current_session = mProjectModel->currentSession();
   if (current_session == nullptr) {
@@ -343,7 +343,7 @@ void FeatureExtractorPresenter::open()
   mView->exec();
 }
 
-void FeatureExtractorPresenter::setDetectorAndDescriptorProperties()
+void FeatureExtractorPresenterImp::setDetectorAndDescriptorProperties()
 {
   this->setAgastDetectorProperties();
   this->setAkazeDetectorPropierties();
@@ -377,7 +377,7 @@ void FeatureExtractorPresenter::setDetectorAndDescriptorProperties()
   //mKeypointsFilterWidget->setMaxSize();
 }
 
-void FeatureExtractorPresenter::setAgastDetectorProperties()
+void FeatureExtractorPresenterImp::setAgastDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -398,7 +398,7 @@ void FeatureExtractorPresenter::setAgastDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setAkazeDetectorPropierties()
+void FeatureExtractorPresenterImp::setAkazeDetectorPropierties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -428,7 +428,7 @@ void FeatureExtractorPresenter::setAkazeDetectorPropierties()
   }
 }
 
-void FeatureExtractorPresenter::setAkazeDescriptorProperties()
+void FeatureExtractorPresenterImp::setAkazeDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -458,7 +458,7 @@ void FeatureExtractorPresenter::setAkazeDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setBoostDescriptorProperties()
+void FeatureExtractorPresenterImp::setBoostDescriptorProperties()
 {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -478,7 +478,7 @@ void FeatureExtractorPresenter::setBoostDescriptorProperties()
 #endif
 }
 
-void FeatureExtractorPresenter::setBriefDescriptorProperties()
+void FeatureExtractorPresenterImp::setBriefDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -493,7 +493,7 @@ void FeatureExtractorPresenter::setBriefDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setBriskDetectorProperties()
+void FeatureExtractorPresenterImp::setBriskDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -511,7 +511,7 @@ void FeatureExtractorPresenter::setBriskDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setBriskDescriptorProperties()
+void FeatureExtractorPresenterImp::setBriskDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -529,7 +529,7 @@ void FeatureExtractorPresenter::setBriskDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setDaisyDescriptorProperties()
+void FeatureExtractorPresenterImp::setDaisyDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -559,7 +559,7 @@ void FeatureExtractorPresenter::setDaisyDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setFastDetectorProperties()
+void FeatureExtractorPresenterImp::setFastDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -577,7 +577,7 @@ void FeatureExtractorPresenter::setFastDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setFreakDescriptorProperties()
+void FeatureExtractorPresenterImp::setFreakDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -598,7 +598,7 @@ void FeatureExtractorPresenter::setFreakDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setGfttDetectorProperties()
+void FeatureExtractorPresenterImp::setGfttDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -625,7 +625,7 @@ void FeatureExtractorPresenter::setGfttDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setHogDescriptorProperties()
+void FeatureExtractorPresenterImp::setHogDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -652,7 +652,7 @@ void FeatureExtractorPresenter::setHogDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setKazeDetectorProperties()
+void FeatureExtractorPresenterImp::setKazeDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -679,7 +679,7 @@ void FeatureExtractorPresenter::setKazeDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setKazeDescriptorProperties()
+void FeatureExtractorPresenterImp::setKazeDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -706,7 +706,7 @@ void FeatureExtractorPresenter::setKazeDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setLatchDescriptorProperties()
+void FeatureExtractorPresenterImp::setLatchDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -724,7 +724,7 @@ void FeatureExtractorPresenter::setLatchDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setMsdDetectorProperties()
+void FeatureExtractorPresenterImp::setMsdDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -766,7 +766,7 @@ void FeatureExtractorPresenter::setMsdDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setMserDetectorProperties()
+void FeatureExtractorPresenterImp::setMserDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -802,7 +802,7 @@ void FeatureExtractorPresenter::setMserDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setOrbDetectorProperties()
+void FeatureExtractorPresenterImp::setOrbDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -835,7 +835,7 @@ void FeatureExtractorPresenter::setOrbDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setOrbDescriptorProperties()
+void FeatureExtractorPresenterImp::setOrbDescriptorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -868,7 +868,7 @@ void FeatureExtractorPresenter::setOrbDescriptorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setSiftDetectorProperties()
+void FeatureExtractorPresenterImp::setSiftDetectorProperties()
 {
 #ifdef OPENCV_ENABLE_NONFREE
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -894,7 +894,7 @@ void FeatureExtractorPresenter::setSiftDetectorProperties()
 #endif
 }
 
-void FeatureExtractorPresenter::setSiftDescriptorProperties()
+void FeatureExtractorPresenterImp::setSiftDescriptorProperties()
 {
 #ifdef OPENCV_ENABLE_NONFREE
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -920,7 +920,7 @@ void FeatureExtractorPresenter::setSiftDescriptorProperties()
 #endif
 }
 
-void FeatureExtractorPresenter::setStarDetectorProperties()
+void FeatureExtractorPresenterImp::setStarDetectorProperties()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
@@ -944,7 +944,7 @@ void FeatureExtractorPresenter::setStarDetectorProperties()
   }
 }
 
-void FeatureExtractorPresenter::setSurfDetectorProperties()
+void FeatureExtractorPresenterImp::setSurfDetectorProperties()
 {
 #ifdef OPENCV_ENABLE_NONFREE
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -970,7 +970,7 @@ void FeatureExtractorPresenter::setSurfDetectorProperties()
 #endif
 }
 
-void FeatureExtractorPresenter::setSurfDescriptorProperties()
+void FeatureExtractorPresenterImp::setSurfDescriptorProperties()
 {
 #ifdef OPENCV_ENABLE_NONFREE
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -996,7 +996,7 @@ void FeatureExtractorPresenter::setSurfDescriptorProperties()
 #endif
 }
 
-void FeatureExtractorPresenter::setVggDescriptorProperties()
+void FeatureExtractorPresenterImp::setVggDescriptorProperties()
 {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -1025,12 +1025,12 @@ void FeatureExtractorPresenter::setVggDescriptorProperties()
 #endif
 }
 
-void FeatureExtractorPresenter::setHelp(HelpDialog *help)
+void FeatureExtractorPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void FeatureExtractorPresenter::init()
+void FeatureExtractorPresenterImp::init()
 {
   mView->addKeypointDetector(mAgastDetector);
   mView->addKeypointDetector(mAkazeDetector);
@@ -1078,12 +1078,12 @@ void FeatureExtractorPresenter::init()
   
 }
 
-void FeatureExtractorPresenter::setProgressHandler(ProgressHandler *progressHandler)
+void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
 {
   mProgressHandler = progressHandler;
 }
 
-void FeatureExtractorPresenter::cancel()
+void FeatureExtractorPresenterImp::cancel()
 {
   mMultiProcess->stop();
 
@@ -1106,7 +1106,7 @@ void FeatureExtractorPresenter::cancel()
   msgWarning("Processing has been canceled by the user");
 }
 
-void FeatureExtractorPresenter::run()
+void FeatureExtractorPresenterImp::run()
 {
   std::shared_ptr<Session> current_session = mProjectModel->currentSession();
   if (current_session == nullptr) {
@@ -1577,7 +1577,7 @@ void FeatureExtractorPresenter::run()
   mMultiProcess->start();
 }
 
-void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &keypointDetector)
+void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &keypointDetector)
 {
   mView->setCurrentKeypointDetector(keypointDetector);
 
@@ -1650,7 +1650,7 @@ void FeatureExtractorPresenter::setCurrentkeypointDetector(const QString &keypoi
 #endif
 }
 
-void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
+void FeatureExtractorPresenterImp::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
 {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   if (descriptorExtractor.compare("BOOST") == 0 ||
@@ -1675,7 +1675,7 @@ void FeatureExtractorPresenter::setCurrentDescriptorExtractor(const QString &des
   mView->setCurrentDescriptorExtractor(descriptorExtractor);
 }
 
-void FeatureExtractorPresenter::onError(int code, const QString &msg)
+void FeatureExtractorPresenterImp::onError(int code, const QString &msg)
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
@@ -1694,7 +1694,7 @@ void FeatureExtractorPresenter::onError(int code, const QString &msg)
   emit finished();
 }
 
-void FeatureExtractorPresenter::onFinished()
+void FeatureExtractorPresenterImp::onFinished()
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
@@ -1715,13 +1715,13 @@ void FeatureExtractorPresenter::onFinished()
   msgInfo("Feature detection and description finished.");
 }
 
-void FeatureExtractorPresenter::onImagePreprocessed(const QString &image)
+void FeatureExtractorPresenterImp::onImagePreprocessed(const QString &image)
 {
   mProjectModel->addPreprocessedImage(image);
   emit imagePreprocessed(image);
 }
 
-void FeatureExtractorPresenter::onFeaturesExtracted(const QString &features)
+void FeatureExtractorPresenterImp::onFeaturesExtracted(const QString &features)
 {
   mProjectModel->addFeatures(features);
   emit featuresExtracted(features);

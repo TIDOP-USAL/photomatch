@@ -27,44 +27,24 @@
 
 #include <memory>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/Multiview.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class IMultiViewMatchingAssessmentModel
-  : public IModel
+
+class MultiviewMatchingAssessmentModelImp
+  : public MultiViewMatchingAssessmentModel
 {
 
   Q_OBJECT
 
 public:
 
-  IMultiViewMatchingAssessmentModel(){}
-  virtual ~IMultiViewMatchingAssessmentModel() override {}
-
-  virtual QString sessionName() const = 0;
-  virtual void setSessionName(const QString &session) = 0;
-  virtual void loadPassPoints() = 0;
-  virtual std::vector<size_t> passPointIds() const = 0;
-  virtual std::vector<std::pair<size_t, size_t>> passPointIdsAndSize() const = 0;
-  virtual std::vector<std::pair<QString, QPointF>> images(size_t passPointId) const = 0;
-};
-
-
-
-class MultiviewMatchingAssessmentModel
-  : public IMultiViewMatchingAssessmentModel
-{
-
-  Q_OBJECT
-
-public:
-
-  explicit MultiviewMatchingAssessmentModel(IProjectModel *mProjectModel);
-  ~MultiviewMatchingAssessmentModel() override;
+  explicit MultiviewMatchingAssessmentModelImp(ProjectModel *mProjectModel);
+  ~MultiviewMatchingAssessmentModelImp() override;
 
 // IMatchViewerModel interface
 
@@ -85,7 +65,7 @@ private:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
   std::vector<std::vector<std::pair<QString,int>>> mPassPoints;
   QString mSession;
 

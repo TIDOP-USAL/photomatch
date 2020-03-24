@@ -33,9 +33,9 @@
 namespace photomatch
 {
 
-RepeatabilityPresenter::RepeatabilityPresenter(IRepeatabilityView *view,
-                                               IRepeatabilityModel *model)
-  : IRepeatabilityPresenter(),
+RepeatabilityPresenterImp::RepeatabilityPresenterImp(RepeatabilityView *view,
+                                               RepeatabilityModel *model)
+  : RepeatabilityPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
@@ -47,7 +47,7 @@ RepeatabilityPresenter::RepeatabilityPresenter(IRepeatabilityView *view,
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-void RepeatabilityPresenter::selectSession(const QString &session)
+void RepeatabilityPresenterImp::selectSession(const QString &session)
 {
   mView->setRepeatability(mModel->computeRepeatability(session));
 }
@@ -67,7 +67,7 @@ void RepeatabilityPresenter::selectSession(const QString &session)
 //  mView->setRightImage(image);
 //}
 
-void RepeatabilityPresenter::help()
+void RepeatabilityPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("index.html");
@@ -75,7 +75,7 @@ void RepeatabilityPresenter::help()
   }
 }
 
-void RepeatabilityPresenter::open()
+void RepeatabilityPresenterImp::open()
 {
   mView->clear();
 
@@ -93,12 +93,12 @@ void RepeatabilityPresenter::open()
   mView->show();
 }
 
-void RepeatabilityPresenter::setHelp(HelpDialog *help)
+void RepeatabilityPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void RepeatabilityPresenter::init()
+void RepeatabilityPresenterImp::init()
 {
 }
 

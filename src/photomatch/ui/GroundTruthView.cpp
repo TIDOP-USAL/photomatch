@@ -45,8 +45,8 @@ namespace photomatch
 {
 
 
-GroundTruthView::GroundTruthView(QWidget *parent, Qt::WindowFlags f)
-  : IGroundTruthView(parent, f),
+GroundTruthViewImp::GroundTruthViewImp(QWidget *parent, Qt::WindowFlags f)
+  : GroundTruthView(parent, f),
     mCrossGraphicItem1(nullptr),
     mCrossGraphicItem2(nullptr),
     bEnableLockViews(false),
@@ -63,7 +63,7 @@ GroundTruthView::GroundTruthView(QWidget *parent, Qt::WindowFlags f)
   this->initSignalAndSlots();
 }
 
-GroundTruthView::~GroundTruthView()
+GroundTruthViewImp::~GroundTruthViewImp()
 {
   if (mCrossGraphicItem1){
     delete mCrossGraphicItem1;
@@ -76,22 +76,22 @@ GroundTruthView::~GroundTruthView()
   }
 }
 
-QString GroundTruthView::leftImage() const
+QString GroundTruthViewImp::leftImage() const
 {
   return mComboBoxLeftImage->currentText();
 }
 
-QString GroundTruthView::rightImage() const
+QString GroundTruthViewImp::rightImage() const
 {
   return mComboBoxRightImage->currentText();
 }
 
-void GroundTruthView::onComboBoxLeftImageIndexChanged(int idx)
+void GroundTruthViewImp::onComboBoxLeftImageIndexChanged(int idx)
 {
   emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
-void GroundTruthView::onComboBoxRightImageIndexChanged(int idx)
+void GroundTruthViewImp::onComboBoxRightImageIndexChanged(int idx)
 {
   QString image_right(mComboBoxRightImage->itemText(idx));
   QString image_left(mComboBoxLeftImage->currentText());
@@ -99,7 +99,7 @@ void GroundTruthView::onComboBoxRightImageIndexChanged(int idx)
   emit loadHomologousPoints(image_left, image_right);
 }
 
-void GroundTruthView::onTreeWidgetItemSelectionChanged()
+void GroundTruthViewImp::onTreeWidgetItemSelectionChanged()
 {
   if (QTreeWidgetItem *item = mTreeWidget->currentItem()){
     emit selectHomologous(mComboBoxLeftImage->currentText(),
@@ -108,7 +108,7 @@ void GroundTruthView::onTreeWidgetItemSelectionChanged()
   }
 }
 
-void GroundTruthView::onGraphicsViewLeftSelectionChanged()
+void GroundTruthViewImp::onGraphicsViewLeftSelectionChanged()
 {
 
   QList<QGraphicsItem *> items = mGraphicsViewLeft->items();
@@ -131,7 +131,7 @@ void GroundTruthView::onGraphicsViewLeftSelectionChanged()
 
 }
 
-void GroundTruthView::onGraphicsViewRightSelectionChanged()
+void GroundTruthViewImp::onGraphicsViewRightSelectionChanged()
 {
 
   QList<QGraphicsItem *> items = mGraphicsViewRight->items();
@@ -155,7 +155,7 @@ void GroundTruthView::onGraphicsViewRightSelectionChanged()
 
 }
 
-void GroundTruthView::onPushButtonAddPoints(bool active)
+void GroundTruthViewImp::onPushButtonAddPoints(bool active)
 {
   const QSignalBlocker blocker1(mGraphicsViewLeft);
   const QSignalBlocker blocker2(mGraphicsViewRight);
@@ -197,7 +197,7 @@ void GroundTruthView::onPushButtonAddPoints(bool active)
   update();
 }
 
-void GroundTruthView::onPushButtonAddPointClicked()
+void GroundTruthViewImp::onPushButtonAddPointClicked()
 {
   emit addHomologousPoints(mComboBoxLeftImage->currentText(),
                            QPointF(mLineEditLeftX->text().toDouble(),
@@ -207,22 +207,22 @@ void GroundTruthView::onPushButtonAddPointClicked()
                            mLineEditRightY->text().toDouble()));
 }
 
-void GroundTruthView::onPushButtonLockViewsToggled(bool active)
+void GroundTruthViewImp::onPushButtonLockViewsToggled(bool active)
 {
   bLockViews = active;
   update();
 }
 
-void GroundTruthView::onPushButtonDeleteClicked()
+void GroundTruthViewImp::onPushButtonDeleteClicked()
 {
   if (QTreeWidgetItem *item = mTreeWidget->currentItem()){
-    emit IGroundTruthView::deleteHomologous(mComboBoxLeftImage->currentText(),
+    emit GroundTruthView::deleteHomologous(mComboBoxLeftImage->currentText(),
                                                  mComboBoxRightImage->currentText(),
                                                  item->text(0).toInt());
   }
 }
 
-void GroundTruthView::onAccept()
+void GroundTruthViewImp::onAccept()
 {
   if (bUnsavedChanges) {
     int i_ret = QMessageBox(QMessageBox::Information,
@@ -238,7 +238,7 @@ void GroundTruthView::onAccept()
   }
 }
 
-void GroundTruthView::removeHomologousPointInGraphicsViews(int id)
+void GroundTruthViewImp::removeHomologousPointInGraphicsViews(int id)
 {
 
   for (auto &item : mGraphicsViewLeft->scene()->items()) {
@@ -286,7 +286,7 @@ void GroundTruthView::removeHomologousPointInGraphicsViews(int id)
   }
 }
 
-void GroundTruthView::removeHomologousPointsInGraphicsViews()
+void GroundTruthViewImp::removeHomologousPointsInGraphicsViews()
 {
 
   for (auto &item : mGraphicsViewLeft->scene()->items()) {
@@ -329,7 +329,7 @@ void GroundTruthView::removeHomologousPointsInGraphicsViews()
 
 }
 
-void GroundTruthView::setLeftImage(const QString &leftImage)
+void GroundTruthViewImp::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   mComboBoxLeftImage->setCurrentText(leftImage);
@@ -340,7 +340,7 @@ void GroundTruthView::setLeftImage(const QString &leftImage)
   update();
 }
 
-void GroundTruthView::setRightImage(const QString &rightImage)
+void GroundTruthViewImp::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   mComboBoxRightImage->setCurrentText(rightImage);
@@ -351,7 +351,7 @@ void GroundTruthView::setRightImage(const QString &rightImage)
   update();
 }
 
-void GroundTruthView::setLeftImageList(const std::vector<QString> &leftImageList)
+void GroundTruthViewImp::setLeftImageList(const std::vector<QString> &leftImageList)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
   mComboBoxLeftImage->clear();
@@ -361,7 +361,7 @@ void GroundTruthView::setLeftImageList(const std::vector<QString> &leftImageList
   }
 }
 
-void GroundTruthView::setRightImageList(const std::vector<QString> &rightImageList)
+void GroundTruthViewImp::setRightImageList(const std::vector<QString> &rightImageList)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
   mComboBoxRightImage->clear();
@@ -371,7 +371,7 @@ void GroundTruthView::setRightImageList(const std::vector<QString> &rightImageLi
   }
 }
 
-void GroundTruthView::setSelectLeftPoint(const QPointF &pt, bool newPoint)
+void GroundTruthViewImp::setSelectLeftPoint(const QPointF &pt, bool newPoint)
 {
   const QSignalBlocker blocker1(mGraphicsViewLeft);
   mGraphicsViewLeft->scene()->clearSelection();
@@ -428,7 +428,7 @@ void GroundTruthView::setSelectLeftPoint(const QPointF &pt, bool newPoint)
   update();
 }
 
-void GroundTruthView::setSelectedRightPoint(const QPointF &pt, bool newPoint)
+void GroundTruthViewImp::setSelectedRightPoint(const QPointF &pt, bool newPoint)
 {
   const QSignalBlocker blocker2(mGraphicsViewRight);
   mGraphicsViewRight->scene()->clearSelection();
@@ -485,7 +485,7 @@ void GroundTruthView::setSelectedRightPoint(const QPointF &pt, bool newPoint)
   update();
 }
 
-void GroundTruthView::setSelectedHomologous(const QPointF &ptLeft, const QPointF &ptRight)
+void GroundTruthViewImp::setSelectedHomologous(const QPointF &ptLeft, const QPointF &ptRight)
 {
   this->setSelectLeftPoint(ptLeft);
   this->setSelectedRightPoint(ptRight);
@@ -510,7 +510,7 @@ void GroundTruthView::setSelectedHomologous(const QPointF &ptLeft, const QPointF
   update();
 }
 
-void GroundTruthView::unselectHomologous()
+void GroundTruthViewImp::unselectHomologous()
 {
   mLineEditLeftX->setText("");
   mLineEditLeftY->setText("");
@@ -531,7 +531,7 @@ void GroundTruthView::unselectHomologous()
   update();
 }
 
-void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QPointF>> &points)
+void GroundTruthViewImp::setHomologousPoints(const std::vector<std::pair<QPointF,QPointF>> &points)
 {
   QSignalBlocker blocker(mTreeWidget);
 
@@ -609,7 +609,7 @@ void GroundTruthView::setHomologousPoints(const std::vector<std::pair<QPointF,QP
   }
 }
 
-void GroundTruthView::addHomologous(const QPointF &pt1, const QPointF &pt2)
+void GroundTruthViewImp::addHomologous(const QPointF &pt1, const QPointF &pt2)
 {
   QSignalBlocker blocker(mTreeWidget);
 
@@ -684,7 +684,7 @@ void GroundTruthView::addHomologous(const QPointF &pt1, const QPointF &pt2)
   }
 }
 
-void GroundTruthView::deleteHomologous(int pointId)
+void GroundTruthViewImp::deleteHomologous(int pointId)
 {
   QSignalBlocker blocker(mTreeWidget);
 
@@ -707,7 +707,7 @@ void GroundTruthView::deleteHomologous(int pointId)
   update();
 }
 
-void GroundTruthView::setHomologousDistance(int pointId, double distance)
+void GroundTruthViewImp::setHomologousDistance(int pointId, double distance)
 {
   for (int j = 0; j < mTreeWidget->topLevelItemCount(); j++){
     QTreeWidgetItem *item = mTreeWidget->topLevelItem(j);
@@ -718,7 +718,7 @@ void GroundTruthView::setHomologousDistance(int pointId, double distance)
   }
 }
 
-void GroundTruthView::initUI()
+void GroundTruthViewImp::initUI()
 {
   this->setWindowTitle(tr("Ground Truth Editor"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -884,7 +884,7 @@ void GroundTruthView::initUI()
   update();
 }
 
-void GroundTruthView::initSignalAndSlots()
+void GroundTruthViewImp::initSignalAndSlots()
 {
   connect(mComboBoxLeftImage,   SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
   connect(mComboBoxRightImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
@@ -902,7 +902,7 @@ void GroundTruthView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void GroundTruthView::clear()
+void GroundTruthViewImp::clear()
 {
   const QSignalBlocker blocker1(mComboBoxLeftImage);
   const QSignalBlocker blocker2(mComboBoxRightImage);
@@ -927,7 +927,7 @@ void GroundTruthView::clear()
   mPointsCounter = 0;
 }
 
-void GroundTruthView::update()
+void GroundTruthViewImp::update()
 {
   mSaveGroundTruth->setEnabled(bUnsavedChanges);
   mPushButtonDelete->setEnabled(mTreeWidget->selectedItems().size() > 0);
@@ -941,24 +941,24 @@ void GroundTruthView::update()
   mPushButtonLockViews->setEnabled(bEnableLockViews);
 }
 
-void GroundTruthView::retranslate()
+void GroundTruthViewImp::retranslate()
 {
 
 }
 
-void GroundTruthView::setUnsavedChanges(bool value)
+void GroundTruthViewImp::setUnsavedChanges(bool value)
 {
   bUnsavedChanges = value;
   update();
 }
 
-void GroundTruthView::enableLockView(bool enable)
+void GroundTruthViewImp::enableLockView(bool enable)
 {
   bEnableLockViews = enable;
   update();
 }
 
-void GroundTruthView::clickedPointLeft(const QPointF &pt)
+void GroundTruthViewImp::clickedPointLeft(const QPointF &pt)
 {
   emit leftPointClicked(mComboBoxLeftImage->currentText(),
                         mComboBoxRightImage->currentText(),
@@ -972,7 +972,7 @@ void GroundTruthView::clickedPointLeft(const QPointF &pt)
 
 }
 
-void GroundTruthView::clickedPointRight(const QPointF &pt)
+void GroundTruthViewImp::clickedPointRight(const QPointF &pt)
 {
   emit rightPointClicked(mComboBoxLeftImage->currentText(),
                          mComboBoxRightImage->currentText(),
@@ -985,19 +985,19 @@ void GroundTruthView::clickedPointRight(const QPointF &pt)
   }
 }
 
-void GroundTruthView::setBGColor(const QString &bgColor)
+void GroundTruthViewImp::setBGColor(const QString &bgColor)
 {
   mGraphicsViewLeft->setBackgroundBrush(QBrush(QColor(bgColor)));
   mGraphicsViewRight->setBackgroundBrush(QBrush(QColor(bgColor)));
 }
 
-void GroundTruthView::setSelectedMarkerStyle(const QString &color, int width)
+void GroundTruthViewImp::setSelectedMarkerStyle(const QString &color, int width)
 {
   mSelectedMarkerColor = color;
   mSelectedMarkerWidth = width;
 }
 
-void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, int size)
+void GroundTruthViewImp::setMarkerStyle(const QString &color, int width, int type, int size)
 {
   if (mMarkerType != type){
     for (auto &item : mGraphicsViewLeft->scene()->items()) {
@@ -1112,7 +1112,7 @@ void GroundTruthView::setMarkerStyle(const QString &color, int width, int type, 
   }
 }
 
-void GroundTruthView::setCenterLeftViewer(const QPointF & pt, bool zoom11)
+void GroundTruthViewImp::setCenterLeftViewer(const QPointF & pt, bool zoom11)
 {
   if (pt.isNull() == false) {
     mGraphicsViewLeft->zoom11();
@@ -1120,7 +1120,7 @@ void GroundTruthView::setCenterLeftViewer(const QPointF & pt, bool zoom11)
   }
 }
 
-void GroundTruthView::setCenterRightViewer(const QPointF & pt, bool zoom11)
+void GroundTruthViewImp::setCenterRightViewer(const QPointF & pt, bool zoom11)
 {
   if (pt.isNull() == false) {
     mGraphicsViewRight->zoom11();
@@ -1128,7 +1128,7 @@ void GroundTruthView::setCenterRightViewer(const QPointF & pt, bool zoom11)
   }
 }
 
-void GroundTruthView::closeEvent(QCloseEvent *event)
+void GroundTruthViewImp::closeEvent(QCloseEvent *event)
 {
   onAccept();
 }

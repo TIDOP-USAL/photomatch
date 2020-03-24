@@ -29,42 +29,24 @@
 
 #include <QPointF>
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/Repeatability.h"
 
 namespace photomatch
 {
 
-class IProjectModel;
+class ProjectModel;
 
-class IRepeatabilityModel
-  : public IModel
+
+class RepeatabilityModelImp
+  : public RepeatabilityModel
 {
 
   Q_OBJECT
 
 public:
 
-  IRepeatabilityModel(){}
-  virtual ~IRepeatabilityModel() {}
-
-  virtual std::vector<QString> images() const = 0;
-  virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual std::vector<std::tuple<QString, QString, QString>> sessions() const = 0;
-  virtual std::vector<std::tuple<QString, QString, QString, float, int>> computeRepeatability(const QString &session/*, const QString &imgLeft, const QString &imgRight*/) const = 0;
-
-};
-
-
-class RepeatabilityModel
-  : public IRepeatabilityModel
-{
-
-  Q_OBJECT
-
-public:
-
-  RepeatabilityModel(IProjectModel *projectModel);
-  virtual ~RepeatabilityModel() override;
+  RepeatabilityModelImp(ProjectModel *projectModel);
+  virtual ~RepeatabilityModelImp() override;
 
 // IRepeteabilityModel interface
 
@@ -83,7 +65,7 @@ private:
 
 protected:
 
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
 };
 
 

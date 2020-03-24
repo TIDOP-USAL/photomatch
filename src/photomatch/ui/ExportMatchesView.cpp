@@ -38,32 +38,32 @@
 namespace photomatch
 {
 
-ExportMatchesView::ExportMatchesView(QWidget *parent)
-  : IExportMatchesView(parent)
+ExportMatchesViewImp::ExportMatchesViewImp(QWidget *parent)
+  : ExportMatchesView(parent)
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-ExportMatchesView::~ExportMatchesView()
+ExportMatchesViewImp::~ExportMatchesViewImp()
 {
 
 }
 
-void ExportMatchesView::setSessions(const QStringList &sessions)
+void ExportMatchesViewImp::setSessions(const QStringList &sessions)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
   mComboBoxSession->clear();
   mComboBoxSession->addItems(sessions);
 }
 
-void ExportMatchesView::setActiveSession(const QString &session)
+void ExportMatchesViewImp::setActiveSession(const QString &session)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
   mComboBoxSession->setCurrentText(session);
 }
 
-void ExportMatchesView::initUI()
+void ExportMatchesViewImp::initUI()
 {
   this->setObjectName(QStringLiteral("ExportMatchesView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -89,7 +89,7 @@ void ExportMatchesView::initUI()
   update();
 }
 
-void ExportMatchesView::initSignalAndSlots()
+void ExportMatchesViewImp::initSignalAndSlots()
 {
   connect(mComboBoxSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
 
@@ -98,7 +98,7 @@ void ExportMatchesView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
-void ExportMatchesView::clear()
+void ExportMatchesViewImp::clear()
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
 
@@ -107,12 +107,12 @@ void ExportMatchesView::clear()
   update();
 }
 
-void ExportMatchesView::update()
+void ExportMatchesViewImp::update()
 {
 
 }
 
-void ExportMatchesView::retranslate()
+void ExportMatchesViewImp::retranslate()
 {
   this->setWindowTitle(QApplication::translate("ExportMatchesView", "Export Matches", nullptr));
   mLabelSession->setText(QApplication::translate("ExportMatchesView", "Session:", nullptr));

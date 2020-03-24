@@ -21,27 +21,20 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_DESCRIPTOR_MATCHER_MODEL_H
 #define PHOTOMATCH_DESCRIPTOR_MATCHER_MODEL_H
+
+#include "photomatch/ui/DescriptorMatcher.h"
 
 namespace photomatch
 {
 
-class IDescriptorMatcherModel
-{
 
-public:
-
-  IDescriptorMatcherModel() {}
-};
-
-
-class DescriptorMatcherModel
-  : public IDescriptorMatcherModel
+class DescriptorMatcherModelImp
+  : public DescriptorMatcherModel
 {
 public:
-  DescriptorMatcherModel();
+  DescriptorMatcherModelImp();
 };
 
 } // namespace photomatch

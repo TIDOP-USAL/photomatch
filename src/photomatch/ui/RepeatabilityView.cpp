@@ -33,23 +33,23 @@ namespace photomatch
 {
 
 
-RepeatabilityView::RepeatabilityView(QWidget *parent, Qt::WindowFlags f)
-  : IRepeatabilityView(parent, f)
+RepeatabilityViewImp::RepeatabilityViewImp(QWidget *parent, Qt::WindowFlags f)
+  : RepeatabilityView(parent, f)
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-RepeatabilityView::~RepeatabilityView()
+RepeatabilityViewImp::~RepeatabilityViewImp()
 {
 }
 
-void RepeatabilityView::onTreeWidgetSessionsItemSelectionChanged()
+void RepeatabilityViewImp::onTreeWidgetSessionsItemSelectionChanged()
 {
   emit selectSession(mTreeWidgetSessions->currentItem()->text(0));
 }
 
-void RepeatabilityView::addSession(const QString &session, const QString &detector, const QString &descriptor)
+void RepeatabilityViewImp::addSession(const QString &session, const QString &detector, const QString &descriptor)
 {
   QSignalBlocker blocker1(mTreeWidgetSessions);
 
@@ -60,7 +60,7 @@ void RepeatabilityView::addSession(const QString &session, const QString &detect
   mTreeWidgetSessions->addTopLevelItem(item);
 }
 
-void RepeatabilityView::setRepeatability(const std::vector<std::tuple<QString, QString, QString, float, int> > &repeatability)
+void RepeatabilityViewImp::setRepeatability(const std::vector<std::tuple<QString, QString, QString, float, int> > &repeatability)
 {
   
   mTreeWidget->clear();
@@ -85,7 +85,7 @@ void RepeatabilityView::setRepeatability(const std::vector<std::tuple<QString, Q
   }
 }
 
-void RepeatabilityView::initUI()
+void RepeatabilityViewImp::initUI()
 {
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(994, 688);
@@ -128,7 +128,7 @@ void RepeatabilityView::initUI()
   update();
 }
 
-void RepeatabilityView::initSignalAndSlots()
+void RepeatabilityViewImp::initSignalAndSlots()
 {
   connect(mTreeWidgetSessions, SIGNAL(itemSelectionChanged()), this, SLOT(onTreeWidgetSessionsItemSelectionChanged()));
 
@@ -136,7 +136,7 @@ void RepeatabilityView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void RepeatabilityView::clear()
+void RepeatabilityViewImp::clear()
 {
   QSignalBlocker blocker1(mTreeWidgetSessions);
   QSignalBlocker blocker2(mTreeWidget);
@@ -144,11 +144,11 @@ void RepeatabilityView::clear()
   mTreeWidget->clear();
 }
 
-void RepeatabilityView::update()
+void RepeatabilityViewImp::update()
 {
 }
 
-void RepeatabilityView::retranslate()
+void RepeatabilityViewImp::retranslate()
 {
 
 }

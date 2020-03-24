@@ -72,11 +72,11 @@
 namespace photomatch
 {
 
-PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
+PreprocessPresenterImp::PreprocessPresenterImp(PreprocessView *view,
                                          //IPreprocessModel *model,
-                                         IProjectModel *projectModel,
-                                         ISettingsModel *settingsModel)
-  : IPreprocessPresenter(),
+                                         ProjectModel *projectModel,
+                                         SettingsModel *settingsModel)
+  : PreprocessPresenter(),
     mView(view),
     //mModel(model),
     mProjectModel(projectModel),
@@ -107,7 +107,7 @@ PreprocessPresenter::PreprocessPresenter(IPreprocessView *view,
 
 }
 
-PreprocessPresenter::~PreprocessPresenter()
+PreprocessPresenterImp::~PreprocessPresenterImp()
 {
   if (mACEBSF){
     delete mACEBSF;
@@ -180,7 +180,7 @@ PreprocessPresenter::~PreprocessPresenter()
   }
 }
 
-void PreprocessPresenter::help()
+void PreprocessPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("preprocess.html");
@@ -188,7 +188,7 @@ void PreprocessPresenter::help()
   }
 }
 
-void PreprocessPresenter::open()
+void PreprocessPresenterImp::open()
 {
 
   if (Session *current_session = mProjectModel->currentSession().get()) {
@@ -205,7 +205,7 @@ void PreprocessPresenter::open()
   }
 }
 
-void PreprocessPresenter::setPreprocessProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setPreprocessProperties(Preprocess *preprocess)
 {
   this->setAcebsfProperties(preprocess);
   this->setClaheProperties(preprocess);
@@ -221,7 +221,7 @@ void PreprocessPresenter::setPreprocessProperties(Preprocess *preprocess)
   this->setWallisProperties(preprocess);
 }
 
-void PreprocessPresenter::setAcebsfProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setAcebsfProperties(Preprocess *preprocess)
 {
   mACEBSF->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::acebsf ?
                           dynamic_cast<Acebsf *>(preprocess)->blockSize() :
@@ -237,7 +237,7 @@ void PreprocessPresenter::setAcebsfProperties(Preprocess *preprocess)
                    mSettingsModel->acebsfK2());
 }
 
-void PreprocessPresenter::setClaheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setClaheProperties(Preprocess *preprocess)
 {
   mCLAHE->setClipLimit(preprocess && preprocess->type() == Preprocess::Type::clahe ?
                          dynamic_cast<Clahe *>(preprocess)->clipLimit() :
@@ -247,28 +247,28 @@ void PreprocessPresenter::setClaheProperties(Preprocess *preprocess)
                              mSettingsModel->claheTilesGridSize());
 }
 
-void PreprocessPresenter::setCmbfheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setCmbfheProperties(Preprocess *preprocess)
 {
   mCMBFHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::cmbfhe ?
                           dynamic_cast<Cmbfhe *>(preprocess)->blockSize() :
                           mSettingsModel->faheBlockSize());
 }
 
-void PreprocessPresenter::setDheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setDheProperties(Preprocess *preprocess)
 {
   mDHE->setX(preprocess && preprocess->type() == Preprocess::Type::dhe ?
                dynamic_cast<Dhe *>(preprocess)->x() :
                mSettingsModel->dheX());
 }
 
-void PreprocessPresenter::setFaheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setFaheProperties(Preprocess *preprocess)
 {
   mFAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::fahe ?
                         dynamic_cast<Fahe *>(preprocess)->blockSize() :
                         mSettingsModel->faheBlockSize());
 }
 
-void PreprocessPresenter::setHmClaheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setHmClaheProperties(Preprocess *preprocess)
 {
   mHMCLAHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::hmclahe ?
                            dynamic_cast<Hmclahe *>(preprocess)->blockSize() :
@@ -281,14 +281,14 @@ void PreprocessPresenter::setHmClaheProperties(Preprocess *preprocess)
                      mSettingsModel->hmclahePhi());
 }
 
-void PreprocessPresenter::setLcebsescsProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setLcebsescsProperties(Preprocess *preprocess)
 {
   mLCEBSESCS->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::lce_bsescs ?
                              dynamic_cast<LceBsescs *>(preprocess)->blockSize() :
                              mSettingsModel->lceBsescsBlockSize());
 }
 
-void PreprocessPresenter::setMsrcpProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setMsrcpProperties(Preprocess *preprocess)
 {
   mMSRCP->setMidScale(preprocess && preprocess->type() == Preprocess::Type::msrcp ?
                         dynamic_cast<Msrcp *>(preprocess)->midScale() :
@@ -301,21 +301,21 @@ void PreprocessPresenter::setMsrcpProperties(Preprocess *preprocess)
                           mSettingsModel->msrcpSmallScale());
 }
 
-void PreprocessPresenter::setNoshpProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setNoshpProperties(Preprocess *preprocess)
 {
   mNOSHP->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::noshp ?
                          dynamic_cast<Noshp *>(preprocess)->blockSize() :
                          mSettingsModel->noshpBlockSize());
 }
 
-void PreprocessPresenter::setPoheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setPoheProperties(Preprocess *preprocess)
 {
   mPOHE->setBlockSize(preprocess && preprocess->type() == Preprocess::Type::pohe ?
                         dynamic_cast<Pohe *>(preprocess)->blockSize() :
                         mSettingsModel->poheBlockSize());
 }
 
-void PreprocessPresenter::setRswheProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setRswheProperties(Preprocess *preprocess)
 {
   mRSWHE->setHistogramCut(preprocess && preprocess->type() == Preprocess::Type::rswhe ?
                             static_cast<RswheWidget::HistogramCut>(dynamic_cast<Rswhe *>(preprocess)->histogramCut()) :
@@ -325,7 +325,7 @@ void PreprocessPresenter::setRswheProperties(Preprocess *preprocess)
                                   mSettingsModel->rswheHistogramDivisions());
 }
 
-void PreprocessPresenter::setWallisProperties(Preprocess *preprocess)
+void PreprocessPresenterImp::setWallisProperties(Preprocess *preprocess)
 {
   mWallis->setContrast(preprocess && preprocess->type() == Preprocess::Type::wallis ?
                          dynamic_cast<Wallis *>(preprocess)->contrast() :
@@ -344,12 +344,12 @@ void PreprocessPresenter::setWallisProperties(Preprocess *preprocess)
                                    mSettingsModel->wallisImposedLocalStdDev());
 }
 
-void PreprocessPresenter::setHelp(HelpDialog *help)
+void PreprocessPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void PreprocessPresenter::init()
+void PreprocessPresenterImp::init()
 {
   mView->addPreprocess(mDecolor);
   mView->addPreprocess(mACEBSF);
@@ -368,12 +368,12 @@ void PreprocessPresenter::init()
   mView->setCurrentPreprocess(mDecolor->windowTitle());
 }
 
-void PreprocessPresenter::setProgressHandler(ProgressHandler *progressHandler)
+void PreprocessPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
 {
   mProgressHandler = progressHandler;
 }
 
-void PreprocessPresenter::cancel()
+void PreprocessPresenterImp::cancel()
 {
   mMultiProcess->stop();
 
@@ -396,7 +396,7 @@ void PreprocessPresenter::cancel()
   msgWarning("Processing has been canceled by the user");
 }
 
-void PreprocessPresenter::run()
+void PreprocessPresenterImp::run()
 {
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
 
@@ -462,7 +462,7 @@ void PreprocessPresenter::run()
   }
 }
 
-std::shared_ptr<ImageProcess> PreprocessPresenter::preprocess(const QString &currentPreprocess)
+std::shared_ptr<ImageProcess> PreprocessPresenterImp::preprocess(const QString &currentPreprocess)
 {
   std::shared_ptr<ImageProcess> image_process;
   if (currentPreprocess.compare("ACEBSF") == 0) {
@@ -517,7 +517,7 @@ std::shared_ptr<ImageProcess> PreprocessPresenter::preprocess(const QString &cur
   return image_process;
 }
 
-QString PreprocessPresenter::fileOut(const QString &fileIn)
+QString PreprocessPresenterImp::fileOut(const QString &fileIn)
 {
   QString file_out;
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
@@ -534,12 +534,12 @@ QString PreprocessPresenter::fileOut(const QString &fileIn)
   return file_out;
 }
 
-void PreprocessPresenter::setCurrentPreprocess(const QString &preprocess)
+void PreprocessPresenterImp::setCurrentPreprocess(const QString &preprocess)
 {
   mView->setCurrentPreprocess(preprocess);
 }
 
-void PreprocessPresenter::onError(int code, const QString &msg)
+void PreprocessPresenterImp::onError(int code, const QString &msg)
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
@@ -558,7 +558,7 @@ void PreprocessPresenter::onError(int code, const QString &msg)
   emit finished();
 }
 
-void PreprocessPresenter::onFinished()
+void PreprocessPresenterImp::onFinished()
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
   disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
@@ -579,7 +579,7 @@ void PreprocessPresenter::onFinished()
   msgInfo("Image preprocessing finished");
 }
 
-void PreprocessPresenter::onImagePreprocessed(const QString &image)
+void PreprocessPresenterImp::onImagePreprocessed(const QString &image)
 {
   mProjectModel->addPreprocessedImage(image);
   emit imagePreprocessed(image);

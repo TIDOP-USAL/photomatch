@@ -12,7 +12,7 @@
 using namespace photomatch;
 
 class TestNewSessionView
-  : public NewSessionView
+  : public NewSessionViewImp
 {
   Q_OBJECT
 
@@ -31,7 +31,7 @@ private slots:
 };
 
 TestNewSessionView::TestNewSessionView()
-  : NewSessionView()
+  : NewSessionViewImp()
 {
   QApplication::setActiveWindow(this);
 }
@@ -42,7 +42,7 @@ TestNewSessionView::~TestNewSessionView()
 
 void TestNewSessionView::testDefaultConstructor()
 {
-  NewSessionView newSessionView;
+  NewSessionViewImp newSessionView;
   QCOMPARE("", newSessionView.sessionName());
   QCOMPARE("", newSessionView.sessionDescription());
 }
@@ -76,11 +76,11 @@ void TestNewSessionView::test_sessionDescription()
 void TestNewSessionView::test_dialogButtonBox()
 {
 
-  QSignalSpy spy_rejected(this, &NewSessionView::rejected);
+  QSignalSpy spy_rejected(this, &NewSessionViewImp::rejected);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Cancel), Qt::LeftButton);
   QCOMPARE(spy_rejected.count(), 1);
 
-  QSignalSpy spy_help(this, &NewSessionView::help);
+  QSignalSpy spy_help(this, &NewSessionViewImp::help);
   QTest::mouseClick(mButtonBox->button(QDialogButtonBox::Help), Qt::LeftButton);
   QCOMPARE(spy_help.count(), 1);
 }

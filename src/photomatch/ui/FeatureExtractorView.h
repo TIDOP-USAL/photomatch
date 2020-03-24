@@ -25,7 +25,7 @@
 #ifndef PHOTOMATCH_FEATURE_EXTRACTOR_VIEW_H
 #define PHOTOMATCH_FEATURE_EXTRACTOR_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/FeatureExtractor.h"
 
 class QGridLayout;
 class QComboBox;
@@ -36,50 +36,17 @@ class QCheckBox;
 namespace photomatch
 {
 
-class IFeatureExtractorView
-  : public IDialogView
+
+class FeatureExtractorViewImp
+  : public FeatureExtractorView
 {
 
   Q_OBJECT
 
 public:
 
-  IFeatureExtractorView(QWidget *parent = nullptr) : IDialogView(parent) {}
-  virtual ~IFeatureExtractorView(){}
-
-  virtual void setSessionName(const QString &name) = 0;
-  virtual void addKeypointDetector(QWidget *keypointDetector) = 0;
-  virtual void addDescriptorExtractor(QWidget *descriptorExtractor) = 0;
-  virtual QString currentKeypointDetector() const = 0;
-  virtual QString currentDescriptorExtractor() const = 0;
-  virtual void addKeypointsFilter(QWidget *keypointsFilter) = 0;
-
-signals:
-
-  void keypointDetectorChange(QString);
-  void descriptorExtractorChange(QString);
-  void run();
-
-public slots:
-
-  virtual void setCurrentKeypointDetector(const QString &keypointDetector) = 0;
-  virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
-  virtual void disableDescriptorExtractor(const QString &descriptorExtractor) = 0;
-  virtual void enableDescriptorExtractor(const QString &descriptorExtractor) = 0;
-
-};
-
-
-class FeatureExtractorView
-  : public IFeatureExtractorView
-{
-
-  Q_OBJECT
-
-public:
-
-  FeatureExtractorView(QWidget *parent = nullptr);
-  ~FeatureExtractorView() override;
+  FeatureExtractorViewImp(QWidget *parent = nullptr);
+  ~FeatureExtractorViewImp() override;
 
 protected slots:
 

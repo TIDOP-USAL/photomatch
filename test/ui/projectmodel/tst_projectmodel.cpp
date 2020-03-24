@@ -185,13 +185,13 @@ protected:
 
   ProjectController *mProjectIOFake;
   Project *mProject;
-  IProjectModel *mProjectModel;
+  ProjectModel *mProjectModel;
 };
 
 TestProjectModel::TestProjectModel()
   : mProjectIOFake(new ProjectRWFake),
     mProject(new ProjectImp),
-    mProjectModel(new ProjectModel(mProjectIOFake, mProject))
+    mProjectModel(new ProjectModelImp(mProjectIOFake, mProject))
 {
 
 }
@@ -230,7 +230,7 @@ void TestProjectModel::testConstructor()
   ProjectRWFake *projectIOFake = new ProjectRWFake;
   ProjectImp *project = new ProjectImp;
 
-  ProjectModel prj(projectIOFake, project);
+  ProjectModelImp prj(projectIOFake, project);
   QCOMPARE(QString(), prj.name());
   QCOMPARE(QString(), prj.description());
   QCOMPARE(QString(), prj.projectFolder());

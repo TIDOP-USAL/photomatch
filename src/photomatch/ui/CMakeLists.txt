@@ -93,47 +93,62 @@ set(PHOTOMATCH_HEADERS
     MainWindowModel.h
     MainWindowPresenter.h
     MainWindowView.h
+    NewProject.h
     NewProjectView.h
     NewProjectPresenter.h
+    NewSession.h
     NewSessionView.h
     NewSessionPresenter.h
     ProjectModel.h
+    Settings.h
     SettingsModel.h
     SettingsPresenter.h
     SettingsView.h
+    Preprocess.h
     PreprocessView.h
     PreprocessModel.h
     PreprocessPresenter.h
+    FeatureExtractor.h
     FeatureExtractorView.h
     FeatureExtractorModel.h
     FeatureExtractorPresenter.h
+    FeaturesViewer.h
     FeaturesViewerView.h
     FeaturesViewerModel.h
     FeaturesViewerPresenter.h
+    DescriptorMatcher.h
     DescriptorMatcherView.h
     DescriptorMatcherModel.h
     DescriptorMatcherPresenter.h
+    MatchViewer.h
     MatchViewerModel.h
     MatchViewerView.h
     MatchViewerPresenter.h
+    Multiview.h
     MultiViewModel.h
     MultiViewView.h
     MultiViewPresenter.h
+    HomographyViewer.h
     HomographyViewerModel.h
     HomographyViewerView.h
     HomographyViewerPresenter.h
+    CurvesViewer.h
     CurvesViewerModel.h
     CurvesViewerView.h
     CurvesViewerPresenter.h
+    GroundTruth.h
     GroundTruthModel.h
     GroundTruthView.h
     GroundTruthPresenter.h
+    Repeatability.h
     RepeatabilityModel.h
     RepeatabilityView.h
     RepeatabilityPresenter.h
+    ExportFeatures.h
     ExportFeaturesModel.h
     ExportFeaturesView.h
     ExportFeaturesPresenter.h
+    ExportMatches.h
     ExportMatchesModel.h
     ExportMatchesView.h
     ExportMatchesPresenter.h

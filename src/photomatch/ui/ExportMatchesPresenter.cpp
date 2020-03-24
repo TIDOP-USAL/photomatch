@@ -36,9 +36,9 @@
 namespace photomatch
 {
 
-ExportMatchesPresenter::ExportMatchesPresenter(IExportMatchesView *view,
-                                               IExportMatchesModel *model)
-  : IExportMatchesPresenter(),
+ExportMatchesPresenterImp::ExportMatchesPresenterImp(ExportMatchesView *view,
+                                               ExportMatchesModel *model)
+  : ExportMatchesPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
@@ -48,12 +48,12 @@ ExportMatchesPresenter::ExportMatchesPresenter(IExportMatchesView *view,
   connect(mView, SIGNAL(help()),                   this, SLOT(help()));
 }
 
-ExportMatchesPresenter::~ExportMatchesPresenter()
+ExportMatchesPresenterImp::~ExportMatchesPresenterImp()
 {
 
 }
 
-void ExportMatchesPresenter::help()
+void ExportMatchesPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("menus.html#export_matches");
@@ -61,7 +61,7 @@ void ExportMatchesPresenter::help()
   }
 }
 
-void ExportMatchesPresenter::open()
+void ExportMatchesPresenterImp::open()
 {
   mView->clear();
 
@@ -71,16 +71,16 @@ void ExportMatchesPresenter::open()
   mView->exec();
 }
 
-void ExportMatchesPresenter::setHelp(HelpDialog *help)
+void ExportMatchesPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void ExportMatchesPresenter::init()
+void ExportMatchesPresenterImp::init()
 {
 }
 
-void ExportMatchesPresenter::save()
+void ExportMatchesPresenterImp::save()
 {
 
   QString selectedFilter;
@@ -105,7 +105,7 @@ void ExportMatchesPresenter::save()
 
 }
 
-void ExportMatchesPresenter::sessionChange(const QString &session)
+void ExportMatchesPresenterImp::sessionChange(const QString &session)
 {
   mModel->setSessionName(session);
   mView->setActiveSession(session);

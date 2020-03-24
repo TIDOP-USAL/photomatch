@@ -39,8 +39,8 @@
 namespace photomatch
 {
 
-FeaturesViewerView::FeaturesViewerView(QWidget *parent, Qt::WindowFlags f)
-  : IFeaturesViewerView(parent, f),
+FeaturesViewerViewImp::FeaturesViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+  : FeaturesViewerView(parent, f),
     mMarkerColor("#e5097e"),
     mSelectedMarkerColor("#ff0000"),
     mMarkerType(0),
@@ -52,11 +52,11 @@ FeaturesViewerView::FeaturesViewerView(QWidget *parent, Qt::WindowFlags f)
   this->initSignalAndSlots();
 }
 
-FeaturesViewerView::~FeaturesViewerView()
+FeaturesViewerViewImp::~FeaturesViewerViewImp()
 {
 }
 
-void FeaturesViewerView::onGraphicsViewSelectionChanged()
+void FeaturesViewerViewImp::onGraphicsViewSelectionChanged()
 {
   const QSignalBlocker blocker1(mGraphicView);
   const QSignalBlocker blocker2(mTreeWidget);
@@ -89,7 +89,7 @@ void FeaturesViewerView::onGraphicsViewSelectionChanged()
   update();
 }
 
-void FeaturesViewerView::onTreeWidgetItemSelectionChanged()
+void FeaturesViewerViewImp::onTreeWidgetItemSelectionChanged()
 {
   const QSignalBlocker blocker1(mGraphicView);
 
@@ -112,12 +112,12 @@ void FeaturesViewerView::onTreeWidgetItemSelectionChanged()
   update();
 }
 
-void photomatch::FeaturesViewerView::setSessionName(const QString &name)
+void photomatch::FeaturesViewerViewImp::setSessionName(const QString &name)
 {
   this->setWindowTitle(tr("Keypoints Viewer ").append(name));
 }
 
-void FeaturesViewerView::setImageList(const std::vector<QString> &imageList)
+void FeaturesViewerViewImp::setImageList(const std::vector<QString> &imageList)
 {
   QSignalBlocker blocker(mComboBoxImages);
   mComboBoxImages->clear();
@@ -127,7 +127,7 @@ void FeaturesViewerView::setImageList(const std::vector<QString> &imageList)
   }
 }
 
-void FeaturesViewerView::setCurrentImage(const QString &leftImage)
+void FeaturesViewerViewImp::setCurrentImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxImages);
   mComboBoxImages->setCurrentText(leftImage);
@@ -136,7 +136,7 @@ void FeaturesViewerView::setCurrentImage(const QString &leftImage)
   mGraphicView->zoomExtend();
 }
 
-void FeaturesViewerView::setKeyPoints(const std::vector<std::tuple<QPointF, double, double> > &keyPoints)
+void FeaturesViewerViewImp::setKeyPoints(const std::vector<std::tuple<QPointF, double, double> > &keyPoints)
 {
   const QSignalBlocker blocker2(mTreeWidget);
   mTreeWidget->clear();
@@ -234,18 +234,18 @@ void FeaturesViewerView::setKeyPoints(const std::vector<std::tuple<QPointF, doub
 
 }
 
-void FeaturesViewerView::setBGColor(const QString &bgColor)
+void FeaturesViewerViewImp::setBGColor(const QString &bgColor)
 {
   mGraphicView->setBackgroundBrush(QBrush(QColor(bgColor)));
 }
 
-void FeaturesViewerView::setSelectedMarkerStyle(const QString &color, int width)
+void FeaturesViewerViewImp::setSelectedMarkerStyle(const QString &color, int width)
 {
   mSelectedMarkerColor = color;
   mSelectedMarkerWidth = width;
 }
 
-void FeaturesViewerView::setMarkerStyle(const QString &color, int width, int type, int size)
+void FeaturesViewerViewImp::setMarkerStyle(const QString &color, int width, int type, int size)
 {
   if (mMarkerType != type){  /// TODO: ¿Es necesario?
     for (auto &item : mGraphicView->scene()->items()) {
@@ -293,7 +293,7 @@ void FeaturesViewerView::setMarkerStyle(const QString &color, int width, int typ
 
 }
 
-void FeaturesViewerView::initUI()
+void FeaturesViewerViewImp::initUI()
 {
   this->setWindowTitle(tr("Keypoints Viewer"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -343,7 +343,7 @@ void FeaturesViewerView::initUI()
 
 }
 
-void FeaturesViewerView::initSignalAndSlots()
+void FeaturesViewerViewImp::initSignalAndSlots()
 {
   connect(mComboBoxImages,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(imageChange(QString)));
   connect(mTreeWidget,      SIGNAL(itemSelectionChanged()),       this, SLOT(onTreeWidgetItemSelectionChanged()));
@@ -352,7 +352,7 @@ void FeaturesViewerView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void FeaturesViewerView::clear()
+void FeaturesViewerViewImp::clear()
 {
   this->setWindowTitle(tr("Keypoints Viewer"));
   const QSignalBlocker blockerTreeWidget(mTreeWidget);
@@ -362,17 +362,17 @@ void FeaturesViewerView::clear()
   mComboBoxImages->clear();
 }
 
-void FeaturesViewerView::update()
+void FeaturesViewerViewImp::update()
 {
 
 }
 
-void FeaturesViewerView::retranslate()
+void FeaturesViewerViewImp::retranslate()
 {
 
 }
 
-void FeaturesViewerView::closeEvent(QCloseEvent *event)
+void FeaturesViewerViewImp::closeEvent(QCloseEvent *event)
 {
   for (auto &item : mGraphicView->scene()->items()) {
     if (mMarkerType == 0){

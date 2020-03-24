@@ -40,19 +40,19 @@
 namespace photomatch
 {
 
-ExportFeaturesView::ExportFeaturesView(QWidget *parent)
-  : IExportFeaturesView(parent)
+ExportFeaturesViewImp::ExportFeaturesViewImp(QWidget *parent)
+  : ExportFeaturesView(parent)
 {
   this->initUI();
   this->initSignalAndSlots();
 }
 
-ExportFeaturesView::~ExportFeaturesView()
+ExportFeaturesViewImp::~ExportFeaturesViewImp()
 {
 
 }
 
-void ExportFeaturesView::onPushButtonExportFormat()
+void ExportFeaturesViewImp::onPushButtonExportFormat()
 {
   QString pathName = QFileDialog::getExistingDirectory(this,
     tr("Export folder"),
@@ -66,17 +66,17 @@ void ExportFeaturesView::onPushButtonExportFormat()
   update();
 }
 
-QString ExportFeaturesView::session() const
+QString ExportFeaturesViewImp::session() const
 {
   return mComboBoxSession->currentText();
 }
 
-QString ExportFeaturesView::format() const
+QString ExportFeaturesViewImp::format() const
 {
   return mComboBoxFormat->currentText();
 }
 
-QStringList ExportFeaturesView::exportFiles() const
+QStringList ExportFeaturesViewImp::exportFiles() const
 {
   QStringList files_to_export;
 
@@ -87,62 +87,62 @@ QStringList ExportFeaturesView::exportFiles() const
   return files_to_export;
 }
 
-QString ExportFeaturesView::exportPath() const
+QString ExportFeaturesViewImp::exportPath() const
 {
   return mLineEditExportPath->text();
 }
 
-bool ExportFeaturesView::exportAll() const
+bool ExportFeaturesViewImp::exportAll() const
 {
   return mCheckBoxExportAll->isChecked();
 }
 
-void ExportFeaturesView::setSessions(const QStringList &sessions)
+void ExportFeaturesViewImp::setSessions(const QStringList &sessions)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
   mComboBoxSession->clear();
   mComboBoxSession->addItems(sessions);
 }
 
-void ExportFeaturesView::setSessionToExport(const QString &session)
+void ExportFeaturesViewImp::setSessionToExport(const QString &session)
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
   mComboBoxSession->setCurrentText(session);
 }
 
-void ExportFeaturesView::setFormats(const QStringList &formats)
+void ExportFeaturesViewImp::setFormats(const QStringList &formats)
 {
   const QSignalBlocker blockerComboBoxFormat(mComboBoxFormat);
   mComboBoxFormat->clear();
   mComboBoxFormat->addItems(formats);
 }
 
-void ExportFeaturesView::setCurrentFormat(const QString &format)
+void ExportFeaturesViewImp::setCurrentFormat(const QString &format)
 {
   const QSignalBlocker blockerComboBoxFormat(mComboBoxFormat);
   mComboBoxFormat->setCurrentText(format);
 }
 
-void ExportFeaturesView::setExportAll(bool active)
+void ExportFeaturesViewImp::setExportAll(bool active)
 {
   mCheckBoxExportAll->setChecked(active);
 
   update();
 }
 
-void ExportFeaturesView::setExportPath(const QString &path)
+void ExportFeaturesViewImp::setExportPath(const QString &path)
 {
   mLineEditExportPath->setText(path);
 }
 
-void ExportFeaturesView::setImageFiles(const QStringList &images)
+void ExportFeaturesViewImp::setImageFiles(const QStringList &images)
 {
   mListWidgetfeatures->clear();
   mListWidgetfeatures->addItems(images);
   update();
 }
 
-void ExportFeaturesView::initUI()
+void ExportFeaturesViewImp::initUI()
 {
   this->setObjectName(QStringLiteral("ExportFeaturesView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -194,7 +194,7 @@ void ExportFeaturesView::initUI()
   update();
 }
 
-void ExportFeaturesView::initSignalAndSlots()
+void ExportFeaturesViewImp::initSignalAndSlots()
 {
   connect(mComboBoxSession,        SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
   connect(mComboBoxFormat,         SIGNAL(currentTextChanged(QString)), this, SIGNAL(formatChange(QString)));
@@ -208,7 +208,7 @@ void ExportFeaturesView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
 }
 
-void ExportFeaturesView::clear()
+void ExportFeaturesViewImp::clear()
 {
   const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
   const QSignalBlocker blockerComboBoxFormat(mComboBoxFormat);
@@ -224,7 +224,7 @@ void ExportFeaturesView::clear()
   update();
 }
 
-void ExportFeaturesView::update()
+void ExportFeaturesViewImp::update()
 {
   if (mCheckBoxExportAll->isChecked()){
     mListWidgetfeatures->selectAll();
@@ -238,7 +238,7 @@ void ExportFeaturesView::update()
   mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(bSave);
 }
 
-void ExportFeaturesView::retranslate()
+void ExportFeaturesViewImp::retranslate()
 {
   this->setWindowTitle(QApplication::translate("ExportFeaturesView", "Export Keypoints", nullptr));
   mLabelSession->setText(QApplication::translate("ExportFeaturesView", "Session:", nullptr));

@@ -36,10 +36,10 @@
 namespace photomatch
 {
 
-GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
-                                           IGroundTruthModel *model,
-                                           ISettingsModel *settings)
-  : IGroundTruthPresenter(),
+GroundTruthPresenterImp::GroundTruthPresenterImp(GroundTruthView *view,
+                                           GroundTruthModel *model,
+                                           SettingsModel *settings)
+  : GroundTruthPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settings),
@@ -66,12 +66,12 @@ GroundTruthPresenter::GroundTruthPresenter(IGroundTruthView *view,
 
 }
 
-GroundTruthPresenter::~GroundTruthPresenter()
+GroundTruthPresenterImp::~GroundTruthPresenterImp()
 {
 
 }
 
-void GroundTruthPresenter::loadLeftImage(const QString &image)
+void GroundTruthPresenterImp::loadLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
   std::vector<QString> imagesRight = mModel->imagePairs(image);
@@ -82,12 +82,12 @@ void GroundTruthPresenter::loadLeftImage(const QString &image)
   }
 }
 
-void GroundTruthPresenter::loadRightImage(const QString &image)
+void GroundTruthPresenterImp::loadRightImage(const QString &image)
 {
   mView->setRightImage(image);
 }
 
-void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QString &imageRight)
+void GroundTruthPresenterImp::loadGroundTruth(const QString &imageLeft, const QString &imageRight)
 {
   std::vector<std::pair<QPointF, QPointF>> homologousPoints = mModel->groundTruth(imageLeft, imageRight);
 
@@ -107,7 +107,7 @@ void GroundTruthPresenter::loadGroundTruth(const QString &imageLeft, const QStri
   }
 }
 
-void GroundTruthPresenter::addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
+void GroundTruthPresenterImp::addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
 {
   // Se añade el punto al modelo
   mModel->addHomologus(image1, pt1, image2, pt2);
@@ -133,7 +133,7 @@ void GroundTruthPresenter::addHomologousPoints(const QString &image1, const QPoi
   mView->setUnsavedChanges(true);
 }
 
-void GroundTruthPresenter::deleteHomologous(const QString &image1, const QString &image2, int pointId)
+void GroundTruthPresenterImp::deleteHomologous(const QString &image1, const QString &image2, int pointId)
 {
   // Se borra el punto en el modelo
   mModel->deleteHomologus(image1, image2, pointId);
@@ -158,7 +158,7 @@ void GroundTruthPresenter::deleteHomologous(const QString &image1, const QString
   mView->setUnsavedChanges(true);
 }
 
-void GroundTruthPresenter::importGroundTruth()
+void GroundTruthPresenterImp::importGroundTruth()
 {
   QString file = QFileDialog::getOpenFileName(Q_NULLPTR,
                                               tr("Import Ground Truth"),
@@ -173,7 +173,7 @@ void GroundTruthPresenter::importGroundTruth()
   emit groundTruthAdded();
 }
 
-void GroundTruthPresenter::selectHomologous(const QString &image1,
+void GroundTruthPresenterImp::selectHomologous(const QString &image1,
                                                  const QString &image2,
                                                  int pointId)
 {
@@ -181,17 +181,17 @@ void GroundTruthPresenter::selectHomologous(const QString &image1,
   mView->setSelectedHomologous(homologus.first, homologus.second);
 }
 
-void GroundTruthPresenter::leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
 {
   mView->setSelectLeftPoint(pt, true);
 }
 
-void GroundTruthPresenter::rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
 {
   mView->setSelectedRightPoint(pt, true);
 }
 
-void GroundTruthPresenter::findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
 {
   QPointF point_left = mModel->findLeftPoint(image1, image2, pt);
   mView->setSelectLeftPoint(point_left, true);
@@ -202,7 +202,7 @@ void GroundTruthPresenter::findLeftPoint(const QString &image1, const QString &i
   }
 }
 
-void GroundTruthPresenter::findRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::findRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
 {
   QPointF point_right = mModel->findRightPoint(image1, image2, pt);
   mView->setSelectedRightPoint(point_right, true);
@@ -213,20 +213,20 @@ void GroundTruthPresenter::findRightPoint(const QString &image1, const QString &
   }
 }
 
-void GroundTruthPresenter::save()
+void GroundTruthPresenterImp::save()
 {
   mView->setUnsavedChanges(false);
   if (mModel->existGroundTruth()) emit groundTruthAdded();
   mModel->saveGroundTruth();
 }
 
-void GroundTruthPresenter::discart()
+void GroundTruthPresenterImp::discart()
 {
   mView->setUnsavedChanges(false);
   mModel->loadGroundTruth();
 }
 
-void GroundTruthPresenter::help()
+void GroundTruthPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("ground_truth_editor.html");
@@ -234,7 +234,7 @@ void GroundTruthPresenter::help()
   }
 }
 
-void GroundTruthPresenter::open()
+void GroundTruthPresenterImp::open()
 {
   mView->clear();
 
@@ -259,12 +259,12 @@ void GroundTruthPresenter::open()
   }
 }
 
-void GroundTruthPresenter::setHelp(HelpDialog *help)
+void GroundTruthPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void GroundTruthPresenter::init()
+void GroundTruthPresenterImp::init()
 {
 }
 

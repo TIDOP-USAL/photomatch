@@ -21,11 +21,10 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_FEATURES_VIEWER_VIEW_H
 #define PHOTOMATCH_FEATURES_VIEWER_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/FeaturesViewer.h"
 
 class QTreeWidget;
 class QComboBox;
@@ -36,62 +35,15 @@ namespace photomatch
 
 class GraphicViewer;
 
-class IFeaturesViewerView
-  : public IDialogView
+class FeaturesViewerViewImp
+  : public FeaturesViewerView
 {
   Q_OBJECT
 
 public:
 
-  explicit IFeaturesViewerView(QWidget *parent = nullptr,
-                               Qt::WindowFlags f = Qt::WindowFlags())
-       : IDialogView(parent, f) {}
-  virtual ~IFeaturesViewerView() = default;
-
-  /*!
-   * \brief setSessionName
-   * \param[in] name Nombre de sesión
-   */
-  virtual void setSessionName(const QString &name) = 0;
-
-  /*!
-   * \brief Set the list of images
-   * \param[in] imageList List of images
-   */
-  virtual void setImageList(const std::vector<QString> &imageList) = 0;
-
-  /*!
-   * \brief setCurrentImage
-   * \param leftImage
-   */
-  virtual void setCurrentImage(const QString &leftImage) = 0;
-
-  /*!
-   * \brief setKeyPoints
-   * \param[in] keyPoints Keypoints
-   */
-  virtual void setKeyPoints(const std::vector<std::tuple<QPointF, double, double>> &keyPoints) = 0;
-
-  virtual void setBGColor(const QString &bgColor) = 0;
-  virtual void setSelectedMarkerStyle(const QString &color, int width) = 0;
-  virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
-
-signals:
-
-  void imageChange(QString);
-
-};
-
-
-class FeaturesViewerView
-  : public IFeaturesViewerView
-{
-  Q_OBJECT
-
-public:
-
-  FeaturesViewerView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-  ~FeaturesViewerView() override;
+  FeaturesViewerViewImp(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ~FeaturesViewerViewImp() override;
 
 protected:
 

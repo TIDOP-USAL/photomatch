@@ -21,11 +21,10 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_DESCRIPTOR_MATCHER_VIEW_H
 #define PHOTOMATCH_DESCRIPTOR_MATCHER_VIEW_H
 
-#include "mvp.h"
+#include "photomatch/ui/DescriptorMatcher.h"
 
 class QDialogButtonBox;
 
@@ -34,183 +33,17 @@ namespace photomatch
 
 class DescriptorMatcherWidget;
 
-class IDescriptorMatcherView
-  : public IDialogView
+
+class DescriptorMatcherViewImp
+  : public DescriptorMatcherView
 {
 
   Q_OBJECT
 
 public:
 
-  IDescriptorMatcherView(QWidget *parent = nullptr) : IDialogView(parent) {}
-  virtual ~IDescriptorMatcherView(){}
-
-  virtual void setSessionName(const QString &name) = 0;
-
-  /*!
-   * \brief matchingMethod
-   * \return
-   */
-  virtual QString matchingMethod() const = 0;
-
-  virtual QString matchingStrategy() const = 0;
-
-  /*!
-   * \brief One of NORM_L1, NORM_L2, NORM_HAMMING, NORM_HAMMING2.
-   * \return
-   */
-  virtual QString normType() const = 0;
-
-  /*!
-   * \brief ratio
-   * \return
-   */
-  virtual double ratio() const = 0;
-
-  /*!
-   * \brief One of HOMOGRAPHY_MATRIX, FUNDAMENTAL_MATRIX, ESSENTIAL_MATRIX
-   * \return
-   */
-  virtual QString geometricTest() const = 0;
-
-  /*!
-   * \brief homographyComputeMethod
-   * \return
-   */
-  virtual QString homographyComputeMethod() const = 0;
-
-  /*!
-   * \brief fundamentalComputeMethod
-   * \return
-   */
-  virtual QString fundamentalComputeMethod() const = 0;
-
-  /*!
-   * \brief essentialComputeMethod
-   * \return
-   */
-  virtual QString essentialComputeMethod() const = 0;
-
-  /*!
-   * \brief distance
-   * \return
-   */
-  virtual double distance() const = 0;
-
-  /*!
-   * \brief confidence
-   * \return
-   */
-  virtual double confidence() const = 0;
-
-  /*!
-   * \brief maxIters
-   */
-  virtual int maxIters() const = 0;
-
-  /*!
-   * \brief crossMatching
-   * \return
-   */
-  virtual bool crossMatching() const = 0;
-
-  virtual bool gmsRotation() const = 0;
-  virtual bool gmsScale() const = 0;
-  virtual double gmsThreshold() const = 0;
-
-signals:
-
-  void MatchMethodChange(QString);
-  void run();
-
-public slots:
-
-  /*!
-   * \brief setMatchingMethod
-   * \param matchingMethod
-   */
-  virtual void setMatchingMethod(const QString &matchingMethod) = 0;
-
-  virtual void setMatchingStrategy(const QString &matchingStrategy) = 0;
-
-  /*!
-   * \brief setNormType
-   * \param[in] normType
-   */
-  virtual void setNormType(const QString &normType) = 0;
-
-  /*!
-   * \brief setGeometricTest
-   * \param geometricTest
-   */
-  virtual void setGeometricTest(const QString &geometricTest) = 0;
-
-  /*!
-   * \brief setRatio
-   * \param[in] ratio
-   */
-  virtual void setRatio(double ratio) = 0;
-
-  /*!
-   * \brief setHomographyComputeMethod
-   * \param computeMethod
-   */
-  virtual void setHomographyComputeMethod(const QString &computeMethod) = 0;
-
-  /*!
-   * \brief setHomographyComputeMethod
-   * \param computeMethod
-   */
-  virtual void setFundamentalComputeMethod(const QString &computeMethod) = 0;
-
-  /*!
-   * \brief setHomographyComputeMethod
-   * \param computeMethod
-   */
-  virtual void setEssentialComputeMethod(const QString &computeMethod) = 0;
-
-  /*!
-   * \brief setDistance
-   * \param[in] distance
-   */
-  virtual void setDistance(double distance) = 0;
-
-  /*!
-   * \brief setConfidence
-   * \param[in] confidence
-   */
-  virtual void setConfidence(double confidence) = 0;
-
-  /*!
-   * \brief setMaxIters
-   * \param maxIter
-   */
-  virtual void setMaxIters(int maxIter) = 0;
-
-  /*!
-   * \brief setCrossMatching
-   * \param[in] crossMatching
-   */
-  virtual void setCrossMatching(bool crossMatching) = 0;
-
-  virtual void disableBruteForceNorm(const QString &norm) = 0;
-  virtual void enableBruteForceNorm(const QString &norm) = 0;
-
-  virtual void setGmsRotation(bool active) = 0;
-  virtual void setGmsScale(bool active) = 0;
-  virtual void setGmsThreshold(double threshold) = 0;
-};
-
-class DescriptorMatcherView
-  : public IDescriptorMatcherView
-{
-
-  Q_OBJECT
-
-public:
-
-  DescriptorMatcherView(QWidget *parent = nullptr);
-  ~DescriptorMatcherView() override;
+  DescriptorMatcherViewImp(QWidget *parent = nullptr);
+  ~DescriptorMatcherViewImp() override;
 
 // IDescriptorMatcherView interface
 

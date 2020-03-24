@@ -33,9 +33,9 @@
 namespace photomatch
 {
 
-CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
-                                             ICurvesViewerModel *model)
-  : ICurvesViewerPresenter(),
+CurvesViewerPresenterImp::CurvesViewerPresenterImp(CurvesViewerView *view,
+                                             CurvesViewerModel *model)
+  : CurvesViewerPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
@@ -49,7 +49,7 @@ CurvesViewerPresenter::CurvesViewerPresenter(ICurvesViewerView *view,
   connect(mView, SIGNAL(help()),                             this, SLOT(help()));
 }
 
-void CurvesViewerPresenter::loadLeftImage(const QString &image)
+void CurvesViewerPresenterImp::loadLeftImage(const QString &image)
 {
   std::vector<QString> imagesRight = mModel->imagePairs(QFileInfo(image).baseName());
   if (imagesRight.empty() == false){
@@ -65,7 +65,7 @@ void CurvesViewerPresenter::loadLeftImage(const QString &image)
   }
 }
 
-void CurvesViewerPresenter::loadRightImage(const QString &image)
+void CurvesViewerPresenterImp::loadRightImage(const QString &image)
 {
   std::vector<QString> session_names = mModel->sessionNames();
   for (auto &session_name : session_names){
@@ -76,17 +76,17 @@ void CurvesViewerPresenter::loadRightImage(const QString &image)
   }
 }
 
-void CurvesViewerPresenter::activeSession(const QString &session)
+void CurvesViewerPresenterImp::activeSession(const QString &session)
 {
   this->computeCurve(session, mView->leftImage(), mView->rightImage());
 }
 
-void CurvesViewerPresenter::disableSession(const QString &session)
+void CurvesViewerPresenterImp::disableSession(const QString &session)
 {
   this->deleteCurve(session);
 }
 
-void CurvesViewerPresenter::computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight)
+void CurvesViewerPresenterImp::computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight)
 {
   std::vector<QPointF> curve;
   double auc = mModel->computeCurve(session, imageLeft, imageRight, curve);
@@ -95,12 +95,12 @@ void CurvesViewerPresenter::computeCurve(const QString &session, const QString &
   mView->setCurve(title, curve);
 }
 
-void CurvesViewerPresenter::deleteCurve(const QString &session)
+void CurvesViewerPresenterImp::deleteCurve(const QString &session)
 {
   mView->eraseCurve(session);
 }
 
-void CurvesViewerPresenter::help()
+void CurvesViewerPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("roc_curves.html");
@@ -108,7 +108,7 @@ void CurvesViewerPresenter::help()
   }
 }
 
-void CurvesViewerPresenter::open()
+void CurvesViewerPresenterImp::open()
 {
   mView->clear();
 
@@ -131,12 +131,12 @@ void CurvesViewerPresenter::open()
   mView->show();
 }
 
-void CurvesViewerPresenter::setHelp(HelpDialog *help)
+void CurvesViewerPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void CurvesViewerPresenter::init()
+void CurvesViewerPresenterImp::init()
 {
 }
 

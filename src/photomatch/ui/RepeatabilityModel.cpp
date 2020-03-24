@@ -41,19 +41,19 @@
 namespace photomatch
 {
 
-RepeatabilityModel::RepeatabilityModel(photomatch::IProjectModel *projectModel)
-  : IRepeatabilityModel(),
+RepeatabilityModelImp::RepeatabilityModelImp(photomatch::ProjectModel *projectModel)
+  : RepeatabilityModel(),
     mProjectModel(projectModel)
 {
   init();
 }
 
-RepeatabilityModel::~RepeatabilityModel()
+RepeatabilityModelImp::~RepeatabilityModelImp()
 {
 
 }
 
-std::vector<QString> RepeatabilityModel::images() const
+std::vector<QString> RepeatabilityModelImp::images() const
 {
   std::vector<QString> images;
   for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
@@ -62,7 +62,7 @@ std::vector<QString> RepeatabilityModel::images() const
   return images;
 }
 
-std::vector<QString> RepeatabilityModel::imagePairs(const QString &imageName) const
+std::vector<QString> RepeatabilityModelImp::imagePairs(const QString &imageName) const
 {
   std::vector<QString> pairs;
   if (std::shared_ptr<Session> session = mProjectModel->currentSession()){
@@ -83,7 +83,7 @@ std::vector<QString> RepeatabilityModel::imagePairs(const QString &imageName) co
   return pairs;
 }
 
-std::vector<std::tuple<QString, QString, QString> > RepeatabilityModel::sessions() const
+std::vector<std::tuple<QString, QString, QString> > RepeatabilityModelImp::sessions() const
 {
   std::vector<std::tuple<QString, QString, QString>> sessions;
 
@@ -99,12 +99,12 @@ std::vector<std::tuple<QString, QString, QString> > RepeatabilityModel::sessions
   return sessions;
 }
 
-void RepeatabilityModel::init()
+void RepeatabilityModelImp::init()
 {
 }
 
 std::vector<std::tuple<QString, QString, QString, float, int>>
-RepeatabilityModel::computeRepeatability(const QString &session) const
+RepeatabilityModelImp::computeRepeatability(const QString &session) const
 {
 
   std::vector<std::tuple<QString, QString, QString, float, int>> repeatability;

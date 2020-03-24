@@ -31,8 +31,8 @@
 namespace photomatch
 {
 
-NewSessionPresenter::NewSessionPresenter(INewSessionView *view, IProjectModel *model)
-  : INewSessionPresenter(),
+NewSessionPresenterImp::NewSessionPresenterImp(NewSessionView *view, ProjectModel *model)
+  : NewSessionPresenter(),
     mView(view),
     mProjectModel(model),
     mHelp(nullptr)
@@ -46,12 +46,12 @@ NewSessionPresenter::NewSessionPresenter(INewSessionView *view, IProjectModel *m
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-NewSessionPresenter::~NewSessionPresenter()
+NewSessionPresenterImp::~NewSessionPresenterImp()
 {
 
 }
 
-void NewSessionPresenter::help()
+void NewSessionPresenterImp::help()
 {
   if (mHelp){
     mHelp->setPage("menus.html#new_session");
@@ -59,21 +59,21 @@ void NewSessionPresenter::help()
   }
 }
 
-void NewSessionPresenter::open()
+void NewSessionPresenterImp::open()
 {
   mView->exec();
 }
 
-void NewSessionPresenter::setHelp(HelpDialog *help)
+void NewSessionPresenterImp::setHelp(HelpDialog *help)
 {
   mHelp = help;
 }
 
-void NewSessionPresenter::init()
+void NewSessionPresenterImp::init()
 {
 }
 
-void NewSessionPresenter::saveProject()
+void NewSessionPresenterImp::saveProject()
 {
   mProjectModel->addSession(mView->sessionName(), mView->sessionDescription());
 
@@ -82,12 +82,12 @@ void NewSessionPresenter::saveProject()
   mView->clear();
 }
 
-void NewSessionPresenter::discartProject()
+void NewSessionPresenterImp::discartProject()
 {
   mView->clear();
 }
 
-void NewSessionPresenter::checkSessionName(const QString &name)
+void NewSessionPresenterImp::checkSessionName(const QString &name)
 {
   std::shared_ptr<Session> session = mProjectModel->findSession(name);
   if (session)

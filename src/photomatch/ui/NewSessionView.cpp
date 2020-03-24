@@ -35,8 +35,8 @@
 namespace photomatch
 {
 
-NewSessionView::NewSessionView(QWidget *parent)
-  : INewSessionView(parent),
+NewSessionViewImp::NewSessionViewImp(QWidget *parent)
+  : NewSessionView(parent),
     mLineEditSessionName(new QLineEdit(this)),
     mTextEditSessionDescription(new QTextEdit(this)),
     mButtonBox(new QDialogButtonBox(this)),
@@ -46,12 +46,12 @@ NewSessionView::NewSessionView(QWidget *parent)
   this->initSignalAndSlots();
 }
 
-NewSessionView::~NewSessionView()
+NewSessionViewImp::~NewSessionViewImp()
 {
 
 }
 
-void NewSessionView::initUI()
+void NewSessionViewImp::initUI()
 {
   this->setWindowTitle(tr("New Session"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
@@ -76,7 +76,7 @@ void NewSessionView::initUI()
   update();
 }
 
-void NewSessionView::initSignalAndSlots()
+void NewSessionViewImp::initSignalAndSlots()
 {
   connect(mLineEditSessionName, SIGNAL(textChanged(QString)), this, SLOT(update()));
   connect(mLineEditSessionName, SIGNAL(textChanged(QString)), this, SIGNAL(sessionNameChange(QString)));
@@ -86,34 +86,34 @@ void NewSessionView::initSignalAndSlots()
   connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void NewSessionView::clear()
+void NewSessionViewImp::clear()
 {
   mLineEditSessionName->clear();
   mTextEditSessionDescription->clear();
 }
 
-void NewSessionView::update()
+void NewSessionViewImp::update()
 {
   bool bSave = !mLineEditSessionName->text().isEmpty();
   mButtonBox->button(QDialogButtonBox::Save)->setEnabled(bSave && !bNameExist);
 }
 
-void NewSessionView::retranslate()
+void NewSessionViewImp::retranslate()
 {
 
 }
 
-QString NewSessionView::sessionName() const
+QString NewSessionViewImp::sessionName() const
 {
   return mLineEditSessionName->text();
 }
 
-QString NewSessionView::sessionDescription() const
+QString NewSessionViewImp::sessionDescription() const
 {
   return mTextEditSessionDescription->toPlainText();
 }
 
-void NewSessionView::setExistingName(bool nameExist)
+void NewSessionViewImp::setExistingName(bool nameExist)
 {
   bNameExist = nameExist;
   QPalette palette;

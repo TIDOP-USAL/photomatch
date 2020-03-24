@@ -21,69 +21,39 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_DESCRIPTOR_MATCHER_PRESENTER_H
 #define PHOTOMATCH_DESCRIPTOR_MATCHER_PRESENTER_H
 
-#include "photomatch/photomatch_global.h"
-
 #include <QObject>
 
-#include "mvp.h"
+#include "photomatch/ui/DescriptorMatcher.h"
 
 class MultiProcess;
 
 namespace photomatch
 {
 
-class IDescriptorMatcherView;
+class DescriptorMatcherView;
 //class IDescriptorMatcherModel;
-class IProjectModel;
-class ISettingsModel;
+class ProjectModel;
+class SettingsModel;
 class HelpDialog;
 class ProgressHandler;
 
-class IDescriptorMatcherPresenter
-  : public IPresenter
+
+class DescriptorMatcherPresenterImp
+  : public DescriptorMatcherPresenter
 {
 
   Q_OBJECT
 
 public:
 
-  IDescriptorMatcherPresenter() {}
-  virtual ~IDescriptorMatcherPresenter(){}
-
-signals:
-
-  void running();
-  void matchCompute(QString);
-  void finished();
-
-public slots:
-
-  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
-  virtual void cancel() = 0;
-
-private slots:
-
-  virtual void run() = 0;
-
-};
-
-class DescriptorMatcherPresenter
-  : public IDescriptorMatcherPresenter
-{
-
-  Q_OBJECT
-
-public:
-
-  DescriptorMatcherPresenter(IDescriptorMatcherView *view,
+  DescriptorMatcherPresenterImp(DescriptorMatcherView *view,
                              //IDescriptorMatcherModel *model,
-                             IProjectModel *projectModel,
-                             ISettingsModel *settingsModel);
-  ~DescriptorMatcherPresenter() override;
+                             ProjectModel *projectModel,
+                             SettingsModel *settingsModel);
+  ~DescriptorMatcherPresenterImp() override;
 
 // IPresenter interface
 
@@ -113,10 +83,10 @@ private slots:
   void onPassPointsFinished(const QString &file);
 protected:
 
-  IDescriptorMatcherView *mView;
+  DescriptorMatcherView *mView;
   //IDescriptorMatcherModel *mModel;  /// Por ahora es una clase vacia
-  IProjectModel *mProjectModel;
-  ISettingsModel *mSettingsModel;
+  ProjectModel *mProjectModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
   MultiProcess *mMultiProcess;
   ProgressHandler *mProgressHandler;
