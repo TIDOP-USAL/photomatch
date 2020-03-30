@@ -31,6 +31,10 @@
 
 #include <opencv2/xfeatures2d.hpp>
 
+//#ifdef HAVE_CUDA
+//#include "SiftGPU/SiftGPU.h"
+//#endif // HAVE_CUDA
+
 #include <QString>
 
 namespace photomatch
@@ -145,6 +149,67 @@ protected:
 };
 
 #endif
+
+/*----------------------------------------------------------------*/
+
+#ifdef HAVE_CUDA
+
+
+class SiftCudaDetectorDescriptor
+  : public SiftProperties,
+    public KeypointDetector,
+    public DescriptorExtractor
+{
+
+public:
+
+  SiftCudaDetectorDescriptor();
+  SiftCudaDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor);
+  SiftCudaDetectorDescriptor(int featuresNumber,
+                             int octaveLayers,
+                             double contrastThreshold,
+                             double edgeThreshold,
+                             double sigma);
+  ~SiftCudaDetectorDescriptor() override = default;
+
+private:
+
+  void update();
+
+// KeypointDetector interface
+
+public:
+
+  bool detect(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::InputArray &mask) override;
+
+// DescriptorExtractor interface
+
+public:
+
+  bool extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors) override;
+
+// Sift interface
+
+public:
+
+  void setFeaturesNumber(int featuresNumber) override;
+  void setOctaveLayers(int octaveLayers) override;
+  void setContrastThreshold(double contrastThreshold) override;
+  void setEdgeThreshold(double edgeThreshold) override;
+  void setSigma(double sigma) override;
+
+// Feature interface
+
+public:
+
+  void reset() override;
+
+protected:
+
+
+};
+
+#endif // HAVE_CUDA
 
 } // namespace photomatch
 

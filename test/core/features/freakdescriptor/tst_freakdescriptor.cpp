@@ -19,7 +19,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -73,16 +72,6 @@ void TestFreakDescriptor::cleanupTestCase()
   QCOMPARE(true, mFreakDescriptor->scaleNormalized());
   QCOMPARE(22., mFreakDescriptor->patternScale());
   QCOMPARE(4, mFreakDescriptor->octaves());
-}
-
-void TestFreakDescriptor::test_defaultConstructor()
-{
-  /// Check default values
-  FreakDescriptor freakDescriptor;
-  QCOMPARE(true, freakDescriptor.orientationNormalized());
-  QCOMPARE(true, freakDescriptor.scaleNormalized());
-  QCOMPARE(22., freakDescriptor.patternScale());
-  QCOMPARE(4, freakDescriptor.octaves());
 }
 
 void TestFreakDescriptor::test_constructor()

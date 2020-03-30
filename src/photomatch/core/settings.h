@@ -21,7 +21,6 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_SETTINGS_H
 #define PHOTOMATCH_SETTINGS_H
 

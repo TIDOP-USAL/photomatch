@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructor();
+  void test_moveConstructor();
   void test_type();
   void test_name();
   void test_smallScale_data();
@@ -69,20 +70,17 @@ void TestMsrcp::cleanupTestCase()
   QCOMPARE(220., mMsrcpPreprocess->largeScale());
 }
 
-void TestMsrcp::test_constructors()
+void TestMsrcp::test_copyConstructor()
 {
-  MsrcpPreprocess msrcpPreprocess;
-  QCOMPARE(10., msrcpPreprocess.smallScale());
-  QCOMPARE(100., msrcpPreprocess.midScale());
-  QCOMPARE(220., msrcpPreprocess.largeScale());
-
-  /// Copy constructor
+  MsrcpPreprocess msrcpPreprocess(20., 120., 200.);
   MsrcpPreprocess copy(msrcpPreprocess);
-  QCOMPARE(10., copy.smallScale());
-  QCOMPARE(100., copy.midScale());
-  QCOMPARE(220., copy.largeScale());
+  QCOMPARE(20., copy.smallScale());
+  QCOMPARE(120., copy.midScale());
+  QCOMPARE(200., copy.largeScale());
+}
 
-  /// Move contructor
+void TestMsrcp::test_moveConstructor()
+{
   MsrcpPreprocess move(std::move(MsrcpPreprocess(20., 120., 200.)));
   QCOMPARE(20., move.smallScale());
   QCOMPARE(120., move.midScale());

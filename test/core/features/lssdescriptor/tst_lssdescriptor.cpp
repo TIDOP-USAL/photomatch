@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_type();
   void test_name();
 
@@ -47,11 +46,6 @@ void TestLssDescriptor::initTestCase()
 }
 
 void TestLssDescriptor::cleanupTestCase()
-{
-
-}
-
-void TestLssDescriptor::test_defaultConstructor()
 {
 
 }

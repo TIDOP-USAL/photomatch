@@ -20,10 +20,10 @@ public:
 
 private slots:
 
+#ifdef OPENCV_ENABLE_NONFREE
+
   void initTestCase();
   void cleanupTestCase();
-#ifdef OPENCV_ENABLE_NONFREE
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -51,6 +51,8 @@ TestSurfDetectorDescriptor::TestSurfDetectorDescriptor()
 TestSurfDetectorDescriptor::~TestSurfDetectorDescriptor()
 {
 }
+
+#ifdef OPENCV_ENABLE_NONFREE
 
 void TestSurfDetectorDescriptor::initTestCase()
 {
@@ -86,18 +88,6 @@ void TestSurfDetectorDescriptor::cleanupTestCase()
   QCOMPARE(false, this->mSurf->getExtended());
   QCOMPARE(false, this->upright());
   QCOMPARE(false, this->mSurf->getUpright());
-}
-
-#ifdef OPENCV_ENABLE_NONFREE
-void TestSurfDetectorDescriptor::test_defaultConstructor()
-{
-  /// Check default values
-  SurfDetectorDescriptor surfDetectorDescriptor;
-  QCOMPARE(100, surfDetectorDescriptor.hessianThreshold());
-  QCOMPARE(4, surfDetectorDescriptor.octaves());
-  QCOMPARE(3, surfDetectorDescriptor.octaveLayers());
-  QCOMPARE(false, surfDetectorDescriptor.extendedDescriptor());
-  QCOMPARE(false, surfDetectorDescriptor.upright());
 }
 
 void TestSurfDetectorDescriptor::test_constructor()

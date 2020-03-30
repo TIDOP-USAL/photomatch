@@ -1,3 +1,4 @@
 add_subdirectory(bruteforcematcher)
 add_subdirectory(flannmatcher)
 add_subdirectory(robustmatcher)
+add_subdirectory(gsm)

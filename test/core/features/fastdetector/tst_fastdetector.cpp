@@ -20,7 +20,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -67,15 +66,6 @@ void TestFastDetector::cleanupTestCase()
   QCOMPARE(2, this->mFast->getType());
   QCOMPARE(true, this->nonmaxSuppression());
   QCOMPARE(true, this->mFast->getNonmaxSuppression());
-}
-
-void TestFastDetector::test_defaultConstructor()
-{
-  /// Check default values
-  FastDetector fastDetector;
-  QCOMPARE(10, fastDetector.threshold());
-  QCOMPARE("TYPE_9_16", fastDetector.detectorType());
-  QCOMPARE(true, fastDetector.nonmaxSuppression());
 }
 
 void TestFastDetector::test_constructor()

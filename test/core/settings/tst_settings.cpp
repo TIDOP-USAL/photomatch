@@ -50,23 +50,51 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
   void test_language_data();
   void test_language();
-
   void test_historyMaxSize_data();
   void test_historyMaxSize();
-
   void test_imageViewerBGcolor_data();
   void test_imageViewerBGcolor();
-
   void test_keypointsFormat_data();
   void test_keypointsFormat();
-
   void test_matchesFormat_data();
   void test_matchesFormat();
-
   void test_useCuda();
+
+  void test_acebsf();
+  void test_clahe();
+  void test_cmbfhe();
+  void test_dhe();
+  void test_fahe();
+  void test_hmclahe();
+  void test_lceBsescs();
+  void test_msrcp();
+  void test_noshp();
+  void test_pohe();
+  void test_rswhe();
+  void test_wallis();
+
+  void test_agast();
+  void test_akaze();
+  void test_boost();
+  void test_brief();
+  void test_brisk();
+  void test_daisy();
+  void test_fast();
+  void test_freak();
+  void test_gftt();
+  void test_hog();
+  void test_kaze();
+  void test_latch();
+  void test_lucid();
+  void test_msd();
+  void test_mser();
+  void test_orb();
+  void test_sift();
+  void test_star();
+  void test_surf();
+  void test_vgg();
 
   void test_matchMethod();
 
@@ -141,6 +169,8 @@ void TestSettings::initTestCase()
   QCOMPARE(QString("XML"), mSettings->keypointsFormat());
   QCOMPARE(QString("XML"), mSettings->matchesFormat());
   QCOMPARE(false, mSettings->useCuda());
+  QCOMPARE(QString("Flann Based Matching"), mSettings->matchMethod());
+  QCOMPARE(QString("Robust Matcher"), mSettings->matchStrategy());
   QCOMPARE("#dcdcdc", mSettings->keypointsViewerBGColor());
   QCOMPARE(0, mSettings->keypointsViewerMarkerType());
   QCOMPARE(20, mSettings->keypointsViewerMarkerSize());
@@ -153,30 +183,16 @@ void TestSettings::initTestCase()
   QCOMPARE(20, mSettings->matchesViewerMarkerSize());
   QCOMPARE(2, mSettings->matchesViewerMarkerWidth());
   QCOMPARE("#00aa00", mSettings->matchesViewerMarkerColor());
-  QCOMPARE("#0000ff", mSettings->matchesViewerLineColor());
-  QCOMPARE(2, mSettings->matchesViewerLineWidth());
   QCOMPARE(2, mSettings->matchesViewerSelectMarkerWidth());
   QCOMPARE("#e5097e", mSettings->matchesViewerSelectMarkerColor());
+  QCOMPARE("#0000ff", mSettings->matchesViewerLineColor());
+  QCOMPARE(2, mSettings->matchesViewerLineWidth());
   QCOMPARE("#dcdcdc", mSettings->groundTruthEditorBGColor());
   QCOMPARE(20, mSettings->groundTruthEditorMarkerSize());
   QCOMPARE(2, mSettings->groundTruthEditorMarkerWidth());
   QCOMPARE("#00aa00", mSettings->groundTruthEditorMarkerColor());
   QCOMPARE(2, mSettings->groundTruthEditorSelectMarkerWidth());
   QCOMPARE("#e5097e", mSettings->groundTruthEditorSelectMarkerColor());
-
-  QCOMPARE(0.03, mSettings->acebsf()->l());
-  QCOMPARE(40., mSettings->clahe()->clipLimit());
-  QCOMPARE(QSize(11,11), mSettings->cmbfhe()->blockSize());
-  QCOMPARE(1, mSettings->dhe()->x());
-  QCOMPARE(QSize(11,11), mSettings->fahe()->blockSize());
-  QCOMPARE(0.03, mSettings->hmclahe()->l());
-  QCOMPARE(QSize(33, 33), mSettings->lceBsescs()->blockSize());
-  QCOMPARE(100., mSettings->msrcp()->midScale());
-  QCOMPARE(QSize(127, 127), mSettings->noshp()->blockSize());
-  QCOMPARE(QSize(127, 127), mSettings->pohe()->blockSize());
-  QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
-  QCOMPARE(1.0, mSettings->wallis()->contrast());
-
 }
 
 void TestSettings::cleanupTestCase()
@@ -269,44 +285,6 @@ void TestSettings::cleanupTestCase()
   QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
   QCOMPARE(1.0, mSettings->wallis()->contrast());
 
-}
-
-void TestSettings::test_constructors()
-{
-  SettingsImp settings;
-  QCOMPARE("en", settings.language());
-  QCOMPARE(10, settings.historyMaxSize());
-  QCOMPARE(QStringList(), settings.history());
-  QCOMPARE(QString("#dcdcdc"), settings.imageViewerBGcolor());
-  QCOMPARE(QString("XML"), settings.keypointsFormat());
-  QCOMPARE(QString("XML"), settings.matchesFormat());
-  QCOMPARE(false, settings.useCuda());
-  QCOMPARE(QString("Flann Based Matching"), settings.matchMethod());
-
-  QCOMPARE("#dcdcdc", settings.keypointsViewerBGColor());
-  QCOMPARE(0, settings.keypointsViewerMarkerType());
-  QCOMPARE(20, settings.keypointsViewerMarkerSize());
-  QCOMPARE(2, settings.keypointsViewerMarkerWidth());
-  QCOMPARE("#00aa00", settings.keypointsViewerMarkerColor());
-  QCOMPARE(2, settings.keypointsViewerSelectMarkerWidth());
-  QCOMPARE("#e5097e", settings.keypointsViewerSelectMarkerColor());
-
-  QCOMPARE("#dcdcdc", settings.matchesViewerBGColor());
-  QCOMPARE(0, settings.matchesViewerMarkerType());
-  QCOMPARE(20, settings.matchesViewerMarkerSize());
-  QCOMPARE(2, settings.matchesViewerMarkerWidth());
-  QCOMPARE("#00aa00", settings.matchesViewerMarkerColor());
-  QCOMPARE("#0000ff", settings.matchesViewerLineColor());
-  QCOMPARE(2, settings.matchesViewerLineWidth());
-  QCOMPARE(2, settings.matchesViewerSelectMarkerWidth());
-  QCOMPARE("#e5097e", settings.matchesViewerSelectMarkerColor());
-
-  QCOMPARE("#dcdcdc", settings.groundTruthEditorBGColor());
-  QCOMPARE(20, settings.groundTruthEditorMarkerSize());
-  QCOMPARE(2, settings.groundTruthEditorMarkerWidth());
-  QCOMPARE("#00aa00", settings.groundTruthEditorMarkerColor());
-  QCOMPARE(2, settings.groundTruthEditorSelectMarkerWidth());
-  QCOMPARE("#e5097e", settings.groundTruthEditorSelectMarkerColor());
 }
 
 void TestSettings::test_language_data()
@@ -410,6 +388,263 @@ void TestSettings::test_useCuda()
 
   mSettings->setUseCuda(false);
   QCOMPARE(false, mSettings->useCuda());
+}
+
+void TestSettings::test_acebsf()
+{
+  QCOMPARE(QSize(8, 8), mSettings->acebsf()->blockSize());
+  QCOMPARE(0.03, mSettings->acebsf()->l());
+  QCOMPARE(10., mSettings->acebsf()->k1());
+  QCOMPARE(0.5, mSettings->acebsf()->k2());
+}
+
+void TestSettings::test_clahe()
+{
+  QCOMPARE(40.0, mSettings->clahe()->clipLimit());
+  QCOMPARE(QSize(8, 8), mSettings->clahe()->tilesGridSize());
+}
+
+void TestSettings::test_cmbfhe()
+{
+  QCOMPARE(QSize(11, 11), mSettings->cmbfhe()->blockSize());
+}
+
+void TestSettings::test_dhe()
+{
+  QCOMPARE(1, mSettings->dhe()->x());
+}
+
+void TestSettings::test_fahe()
+{
+  QCOMPARE(QSize(11, 11), mSettings->fahe()->blockSize());
+}
+
+void TestSettings::test_hmclahe()
+{
+  QCOMPARE(QSize(17, 17), mSettings->hmclahe()->blockSize());
+  QCOMPARE(0.03, mSettings->hmclahe()->l());
+  QCOMPARE(0.5, mSettings->hmclahe()->phi());
+}
+
+void TestSettings::test_lceBsescs()
+{
+  QCOMPARE(QSize(33, 33), mSettings->lceBsescs()->blockSize());
+}
+
+void TestSettings::test_msrcp()
+{
+  QCOMPARE(10., mSettings->msrcp()->smallScale());
+  QCOMPARE(100., mSettings->msrcp()->midScale());
+  QCOMPARE(220., mSettings->msrcp()->largeScale());
+}
+
+void TestSettings::test_noshp()
+{
+  QCOMPARE(QSize(127, 127), mSettings->noshp()->blockSize());
+}
+
+void TestSettings::test_pohe()
+{
+  QCOMPARE(QSize(127, 127), mSettings->pohe()->blockSize());
+}
+
+void TestSettings::test_rswhe()
+{
+  QCOMPARE(2, mSettings->rswhe()->histogramDivisions());
+  QCOMPARE(Rswhe::HistogramCut::by_mean, mSettings->rswhe()->histogramCut());
+}
+
+void TestSettings::test_wallis()
+{
+  QCOMPARE(1.0, mSettings->wallis()->contrast());
+  QCOMPARE(0.2, mSettings->wallis()->brightness());
+  QCOMPARE(41, mSettings->wallis()->imposedAverage());
+  QCOMPARE(127, mSettings->wallis()->imposedLocalStdDev());
+  QCOMPARE(50, mSettings->wallis()->kernelSize());
+}
+
+void TestSettings::test_agast()
+{
+  QCOMPARE(10, mSettings->agast()->threshold());
+  QCOMPARE("OAST_9_16", mSettings->agast()->detectorType());
+  QCOMPARE(true, mSettings->agast()->nonmaxSuppression());
+}
+
+void TestSettings::test_akaze()
+{
+  QCOMPARE("MLDB", mSettings->akaze()->descriptorType());
+  QCOMPARE(0, mSettings->akaze()->descriptorSize());
+  QCOMPARE(3, mSettings->akaze()->descriptorChannels());
+  qFuzzyCompare(0.001, mSettings->akaze()->threshold());
+  QCOMPARE(4, mSettings->akaze()->octaves());
+  QCOMPARE(4, mSettings->akaze()->octaveLayers());
+  QCOMPARE("DIFF_PM_G2", mSettings->akaze()->diffusivity());
+}
+
+void TestSettings::test_boost()
+{
+  QCOMPARE("BINBOOST_256", mSettings->boost()->descriptorType());
+  QCOMPARE(true, mSettings->boost()->useOrientation());
+  QCOMPARE(6.25, mSettings->boost()->scaleFactor());
+}
+
+void TestSettings::test_brief()
+{
+  QCOMPARE("32", mSettings->brief()->bytes());
+  QCOMPARE(false, mSettings->brief()->useOrientation());
+}
+
+void TestSettings::test_brisk()
+{
+  QCOMPARE(30, mSettings->brisk()->threshold());
+  QCOMPARE(3, mSettings->brisk()->octaves());
+  QCOMPARE(1.0, mSettings->brisk()->patternScale());
+}
+
+void TestSettings::test_daisy()
+{
+  QCOMPARE(15., mSettings->daisy()->radius());
+  QCOMPARE(3, mSettings->daisy()->qRadius());
+  QCOMPARE(8, mSettings->daisy()->qTheta());
+  QCOMPARE(8, mSettings->daisy()->qHist());
+  QCOMPARE("NRM_NONE", mSettings->daisy()->norm());
+  QCOMPARE(true, mSettings->daisy()->interpolation());
+  QCOMPARE(false, mSettings->daisy()->useOrientation());
+}
+
+void TestSettings::test_fast()
+{
+  QCOMPARE(10, mSettings->fast()->threshold());
+  QCOMPARE("TYPE_9_16", mSettings->fast()->detectorType());
+  QCOMPARE(true, mSettings->fast()->nonmaxSuppression());
+}
+
+void TestSettings::test_freak()
+{
+  QCOMPARE(true, mSettings->freak()->orientationNormalized());
+  QCOMPARE(true, mSettings->freak()->scaleNormalized());
+  QCOMPARE(22., mSettings->freak()->patternScale());
+  QCOMPARE(4, mSettings->freak()->octaves());
+}
+
+void TestSettings::test_gftt()
+{
+  QCOMPARE(1000, mSettings->gftt()->maxFeatures());
+  QCOMPARE(0.01, mSettings->gftt()->qualityLevel());
+  QCOMPARE(1, mSettings->gftt()->minDistance());
+  QCOMPARE(3, mSettings->gftt()->blockSize());
+  QCOMPARE(false, mSettings->gftt()->harrisDetector());
+  QCOMPARE(0.04, mSettings->gftt()->k());
+}
+
+void TestSettings::test_hog()
+{
+  QCOMPARE(QSize(16, 16), mSettings->hog()->winSize());
+  QCOMPARE(QSize(4, 4), mSettings->hog()->blockSize());
+  QCOMPARE(QSize(2, 2), mSettings->hog()->blockStride());
+  QCOMPARE(QSize(2, 2), mSettings->hog()->cellSize());
+  QCOMPARE(9, mSettings->hog()->nbins());
+  QCOMPARE(1, mSettings->hog()->derivAperture());
+}
+
+void TestSettings::test_kaze()
+{
+  QCOMPARE(false, mSettings->kaze()->extendedDescriptor());
+  QCOMPARE(false, mSettings->kaze()->upright());
+  QCOMPARE(0.001, mSettings->kaze()->threshold());
+  QCOMPARE(4, mSettings->kaze()->octaves());
+  QCOMPARE(4, mSettings->kaze()->octaveLayers());
+  QCOMPARE("DIFF_PM_G2", mSettings->kaze()->diffusivity());
+}
+
+void TestSettings::test_latch()
+{
+  QCOMPARE("32", mSettings->latch()->bytes());
+  QCOMPARE(true, mSettings->latch()->rotationInvariance());
+  QCOMPARE(3, mSettings->latch()->halfSsdSize());
+}
+
+void TestSettings::test_lucid()
+{
+  QCOMPARE(1, mSettings->lucid()->lucidKernel());
+  QCOMPARE(2, mSettings->lucid()->blurKernel());
+}
+
+void TestSettings::test_msd()
+{
+  QCOMPARE(250, mSettings->msd()->thresholdSaliency());
+  QCOMPARE(3, mSettings->msd()->patchRadius());
+  QCOMPARE(4, mSettings->msd()->knn());
+  QCOMPARE(5, mSettings->msd()->searchAreaRadius());
+  QCOMPARE(1.25, mSettings->msd()->scaleFactor());
+  QCOMPARE(5, mSettings->msd()->NMSRadius());
+  QCOMPARE(-1, mSettings->msd()->nScales());
+  QCOMPARE(0, mSettings->msd()->NMSScaleRadius());
+  QCOMPARE(false, mSettings->msd()->computeOrientation());
+  QCOMPARE(false, mSettings->msd()->affineMSD());
+  QCOMPARE(3, mSettings->msd()->affineTilts());
+}
+
+void TestSettings::test_mser()
+{
+  QCOMPARE(5, mSettings->mser()->delta());
+  QCOMPARE(60, mSettings->mser()->minArea());
+  QCOMPARE(14400, mSettings->mser()->maxArea());
+  QCOMPARE(0.25, mSettings->mser()->maxVariation());
+  QCOMPARE(.2, mSettings->mser()->minDiversity());
+  QCOMPARE(200, mSettings->mser()->maxEvolution());
+  QCOMPARE(1.01, mSettings->mser()->areaThreshold());
+  QCOMPARE(0.003, mSettings->mser()->minMargin());
+  QCOMPARE(5, mSettings->mser()->edgeBlurSize());
+}
+
+void TestSettings::test_orb()
+{
+  QCOMPARE(5000, mSettings->orb()->featuresNumber());
+  QCOMPARE(1.2, mSettings->orb()->scaleFactor());
+  QCOMPARE(8, mSettings->orb()->levelsNumber());
+  QCOMPARE(31, mSettings->orb()->edgeThreshold());
+  QCOMPARE(2, mSettings->orb()->wta_k());
+  QCOMPARE("Harris", mSettings->orb()->scoreType());
+  QCOMPARE(31, mSettings->orb()->patchSize());
+  QCOMPARE(20, mSettings->orb()->fastThreshold());
+}
+
+void TestSettings::test_sift()
+{
+  QCOMPARE(5000, mSettings->sift()->featuresNumber());
+  QCOMPARE(3, mSettings->sift()->octaveLayers());
+  QCOMPARE(0.04, mSettings->sift()->contrastThreshold());
+  QCOMPARE(10., mSettings->sift()->edgeThreshold());
+  QCOMPARE(1.6, mSettings->sift()->sigma());
+}
+
+void TestSettings::test_star()
+{
+  QCOMPARE(45, mSettings->star()->maxSize());
+  QCOMPARE(30, mSettings->star()->responseThreshold());
+  QCOMPARE(10, mSettings->star()->lineThresholdProjected());
+  QCOMPARE(8, mSettings->star()->lineThresholdBinarized());
+  QCOMPARE(5, mSettings->star()->suppressNonmaxSize());
+}
+
+void TestSettings::test_surf()
+{
+  QCOMPARE(100, mSettings->surf()->hessianThreshold());
+  QCOMPARE(4, mSettings->surf()->octaves());
+  QCOMPARE(3, mSettings->surf()->octaveLayers());
+  QCOMPARE(false, mSettings->surf()->extendedDescriptor());
+  QCOMPARE(false, mSettings->surf()->upright());
+}
+
+void TestSettings::test_vgg()
+{
+  QCOMPARE("VGG_120", mSettings->vgg()->descriptorType());
+  QCOMPARE(6.25, mSettings->vgg()->scaleFactor());
+  QCOMPARE(1.4, mSettings->vgg()->sigma());
+  QCOMPARE(false, mSettings->vgg()->useNormalizeDescriptor());
+  QCOMPARE(true, mSettings->vgg()->useNormalizeImage());
+  QCOMPARE(true, mSettings->vgg()->useScaleOrientation());
 }
 
 void TestSettings::test_matchMethod()

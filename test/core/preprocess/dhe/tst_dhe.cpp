@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructors();
+  void test_moveConstructors();
   void test_type();
   void test_name();
   void test_x_data();
@@ -59,16 +60,15 @@ void TestDhe::cleanupTestCase()
   QCOMPARE(1, mDhePreprocess->x());
 }
 
-void TestDhe::test_constructors()
+void TestDhe::test_copyConstructors()
 {
-  DhePreprocess dhePreprocess;
-  QCOMPARE(1, dhePreprocess.x());
-
-  /// Copy constructor
+  DhePreprocess dhePreprocess(1);
   DhePreprocess copy(dhePreprocess);
   QCOMPARE(1, copy.x());
+}
 
-  /// Move contructor
+void TestDhe::test_moveConstructors()
+{
   DhePreprocess move(DhePreprocess(1));
   QCOMPARE(1, move.x());
 }

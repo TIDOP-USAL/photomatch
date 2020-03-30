@@ -20,19 +20,19 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructor();
   void test_type();
   void test_name();
-  void testContrast_data();
-  void testContrast();
-  void testBrightness_data();
-  void testBrightness();
-  void testImposedAverage_data();
-  void testImposedAverage();
-  void testImposedLocalStdDev_data();
-  void testImposedLocalStdDev();
-  void testKernelSize_data();
-  void testKernelSize();
+  void test_contrast_data();
+  void test_contrast();
+  void test_brightness_data();
+  void test_brightness();
+  void test_imposedAverage_data();
+  void test_imposedAverage();
+  void test_imposedLocalStdDev_data();
+  void test_imposedLocalStdDev();
+  void test_kernelSize_data();
+  void test_kernelSize();
 
 private:
 
@@ -79,14 +79,14 @@ void TestWallis::cleanupTestCase()
   QCOMPARE(50, mWallisPreprocess->kernelSize());
 }
 
-void TestWallis::test_constructors()
+void TestWallis::test_copyConstructor()
 {
-  WallisPreprocess wallisPreprocess;
-  QCOMPARE(1.0, wallisPreprocess.contrast());
-  QCOMPARE(0.2, wallisPreprocess.brightness());
+  WallisPreprocess wallisPreprocess(1.5, 0.3, 41, 64, 25);
+  QCOMPARE(1.5, wallisPreprocess.contrast());
+  QCOMPARE(0.3, wallisPreprocess.brightness());
   QCOMPARE(41, wallisPreprocess.imposedAverage());
-  QCOMPARE(127, wallisPreprocess.imposedLocalStdDev());
-  QCOMPARE(50, wallisPreprocess.kernelSize());
+  QCOMPARE(64, wallisPreprocess.imposedLocalStdDev());
+  QCOMPARE(25, wallisPreprocess.kernelSize());
 }
 
 void TestWallis::test_type()
@@ -99,7 +99,7 @@ void TestWallis::test_name()
   QCOMPARE(QString("WALLIS"), mWallisPreprocess->name());
 }
 
-void TestWallis::testContrast_data()
+void TestWallis::test_contrast_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -109,7 +109,7 @@ void TestWallis::testContrast_data()
   QTest::newRow("1.") << 1. << 1.;
 }
 
-void TestWallis::testContrast()
+void TestWallis::test_contrast()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -118,7 +118,7 @@ void TestWallis::testContrast()
   QCOMPARE(result, mWallisPreprocess->contrast());
 }
 
-void TestWallis::testBrightness_data()
+void TestWallis::test_brightness_data()
 {
   QTest::addColumn<double>("value");
   QTest::addColumn<double>("result");
@@ -128,7 +128,7 @@ void TestWallis::testBrightness_data()
   QTest::newRow("1.") << 1. << 1.;
 }
 
-void TestWallis::testBrightness()
+void TestWallis::test_brightness()
 {
   QFETCH(double, value);
   QFETCH(double, result);
@@ -137,7 +137,7 @@ void TestWallis::testBrightness()
   QCOMPARE(result, mWallisPreprocess->brightness());
 }
 
-void TestWallis::testImposedAverage_data()
+void TestWallis::test_imposedAverage_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -146,7 +146,7 @@ void TestWallis::testImposedAverage_data()
   QTest::newRow("500") << 500 << 500;
 }
 
-void TestWallis::testImposedAverage()
+void TestWallis::test_imposedAverage()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -155,7 +155,7 @@ void TestWallis::testImposedAverage()
   QCOMPARE(result, mWallisPreprocess->imposedAverage());
 }
 
-void TestWallis::testImposedLocalStdDev_data()
+void TestWallis::test_imposedLocalStdDev_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -164,7 +164,7 @@ void TestWallis::testImposedLocalStdDev_data()
   QTest::newRow("500") << 500 << 500;
 }
 
-void TestWallis::testImposedLocalStdDev()
+void TestWallis::test_imposedLocalStdDev()
 {
   QFETCH(int, value);
   QFETCH(int, result);
@@ -173,7 +173,7 @@ void TestWallis::testImposedLocalStdDev()
   QCOMPARE(result, mWallisPreprocess->imposedLocalStdDev());
 }
 
-void TestWallis::testKernelSize_data()
+void TestWallis::test_kernelSize_data()
 {
   QTest::addColumn<int>("value");
   QTest::addColumn<int>("result");
@@ -182,7 +182,7 @@ void TestWallis::testKernelSize_data()
   QTest::newRow("500") << 500 << 500;
 }
 
-void TestWallis::testKernelSize()
+void TestWallis::test_kernelSize()
 {
   QFETCH(int, value);
   QFETCH(int, result);

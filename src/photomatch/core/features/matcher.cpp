@@ -125,6 +125,7 @@ void FlannMatcherImp::reset()
 
 void FlannMatcherImp::setIndex(FlannMatcher::Index index)
 {
+  FlannMatcherProperties::setIndex(index);
 }
 
 /*----------------------------------------------------------------*/
@@ -695,7 +696,7 @@ bool RobustMatchingImp::compute(const cv::Mat &queryDescriptor,
 GmsProperties::GmsProperties()
   : mRotation(true),
     mScale(true),
-    mThreshold(0.6)
+    mThreshold(6.)
 {
 
 }
@@ -704,7 +705,7 @@ void GmsProperties::reset()
 {
   mRotation = true;
   mScale = true;
-  mThreshold = 6.0;
+  mThreshold = 6.;
 }
 
 QString GmsProperties::name() const

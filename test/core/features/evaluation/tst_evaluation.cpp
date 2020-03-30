@@ -22,7 +22,19 @@ private slots:
   void test_constructor();
   void test_roc();
   void test_det();
-  void test_reset();
+  void test_positives();
+  void test_negatives();
+  void test_truePositives();
+  void test_falsePositives();
+  void test_trueNegatives();
+  void test_falseNegatives();
+  void test_accuracy();
+  void test_positivePredictiveValue();
+  void test_negativePredictiveValue();
+  void test_truePositiveRate();
+  void test_falsePositiveRate();
+  void test_trueNegativeRate();
+  void test_falseNegativeRate();
 
 private:
 
@@ -213,9 +225,6 @@ void TestEvaluation::test_roc()
 
   //QCOMPARE(0.970221, mROCCurve->auc());
   qFuzzyCompare(0.970221, mROCCurve->auc());
-  //std::vector<QPointF> curve = mROCCurve->curve();
-
-
 }
 
 void TestEvaluation::test_det()
@@ -226,11 +235,90 @@ void TestEvaluation::test_det()
   qFuzzyCompare(0.970221, mDETCurve->auc());
 }
 
-
-void TestEvaluation::test_reset()
+void TestEvaluation::test_positives()
 {
+  QCOMPARE(80, mROCCurve->positives());
+}
+
+void TestEvaluation::test_negatives()
+{
+  QCOMPARE(68, mROCCurve->negatives());
+}
+
+void TestEvaluation::test_truePositives()
+{
+  double threshold = this->data.back().first;
+  QCOMPARE(6, mROCCurve->truePositives(threshold));
+}
+
+void TestEvaluation::test_falsePositives()
+{
+  double threshold = this->data.back().first;
+  QCOMPARE(25, mROCCurve->falsePositives(threshold));
+}
+
+void TestEvaluation::test_trueNegatives()
+{
+  double threshold = this->data.back().first;
+  QCOMPARE(43, mROCCurve->trueNegatives(threshold));
+}
+
+void TestEvaluation::test_falseNegatives()
+{
+  double threshold = this->data.back().first;
+  QCOMPARE(74, mROCCurve->falseNegatives(threshold));
+}
+
+void TestEvaluation::test_accuracy()
+{
+  double threshold = this->data.back().first;
+  qFuzzyCompare(0.3311, mROCCurve->accuracy(threshold));
+  qFuzzyCompare(0.3311, Curve<double>::accuracy(mROCCurve->truePositives(threshold),mROCCurve->trueNegatives(threshold), mROCCurve->positives(), mROCCurve->negatives()));
+}
+
+void TestEvaluation::test_positivePredictiveValue()
+{
+  double threshold = this->data.back().first;
+  qFuzzyCompare(0.1935, mROCCurve->positivePredictiveValue(threshold));
+  qFuzzyCompare(0.1935, Curve<double>::positivePredictiveValue(mROCCurve->truePositives(threshold), mROCCurve->positives()));
+}
+
+void TestEvaluation::test_negativePredictiveValue()
+{
+  double threshold = this->data.back().first;
+  qFuzzyCompare(0.3675, mROCCurve->negativePredictiveValue(threshold));
+  qFuzzyCompare(0.3675, Curve<double>::negativePredictiveValue(mROCCurve->falseNegatives(threshold), mROCCurve->negatives()));
 
 }
+
+void TestEvaluation::test_truePositiveRate()
+{
+  double threshold = this->data.back().first;
+  QCOMPARE(0.0750, mROCCurve->truePositiveRate(threshold));
+  QCOMPARE(0.0750, Curve<double>::truePositiveRate(mROCCurve->truePositives(threshold), mROCCurve->positives()));
+}
+
+void TestEvaluation::test_falsePositiveRate()
+{
+  double threshold = this->data.back().first;
+  qFuzzyCompare(0.3676, mROCCurve->falsePositiveRate(threshold));
+  qFuzzyCompare(0.3676, Curve<double>::falsePositiveRate(mROCCurve->falsePositives(threshold), mROCCurve->negatives()));
+}
+
+void TestEvaluation::test_trueNegativeRate()
+{
+  double threshold = this->data.back().first;
+  qFuzzyCompare(0.6324, mROCCurve->trueNegativeRate(threshold));
+  qFuzzyCompare(0.6324, Curve<double>::trueNegativeRate(mROCCurve->trueNegatives(threshold), mROCCurve->negatives()));
+}
+
+void TestEvaluation::test_falseNegativeRate()
+{
+  double threshold = this->data.back().first;
+  QCOMPARE(0.9250, mROCCurve->falseNegativeRate(threshold));
+  QCOMPARE(0.9250, Curve<double>::falseNegativeRate(mROCCurve->falseNegatives(threshold), mROCCurve->positives()));
+}
+
 
 QTEST_APPLESS_MAIN(TestEvaluation)
 

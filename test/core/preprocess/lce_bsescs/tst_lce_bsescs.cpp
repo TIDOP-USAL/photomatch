@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructor();
+  void test_moveConstructor();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -59,14 +60,15 @@ void TestLceBsescs::cleanupTestCase()
   QCOMPARE(QSize(33, 33), mLceBsescsPreprocess->blockSize());
 }
 
-void TestLceBsescs::test_constructors()
+void TestLceBsescs::test_copyConstructor()
 {
-  LceBsescsPreprocess lceBsescsPreprocess;
-  QCOMPARE(QSize(33, 33), lceBsescsPreprocess.blockSize());
-
+  LceBsescsPreprocess lceBsescsPreprocess(QSize(11, 11));
   LceBsescsPreprocess copy(lceBsescsPreprocess);
-  QCOMPARE(QSize(33, 33), copy.blockSize());
+  QCOMPARE(QSize(11, 11), copy.blockSize());
+}
 
+void TestLceBsescs::test_moveConstructor()
+{
   LceBsescsPreprocess move(std::move(LceBsescsPreprocess(QSize(11, 11))));
   QCOMPARE(QSize(11, 11), move.blockSize());
 }

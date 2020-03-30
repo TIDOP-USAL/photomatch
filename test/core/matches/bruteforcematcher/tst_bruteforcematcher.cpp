@@ -20,7 +20,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_type();
   void test_name();
   void test_normType_data();
@@ -57,13 +56,6 @@ void TestBruteForceMatcher::cleanupTestCase()
   mBruteForceMatcher->reset();
 
   QCOMPARE(BruteForceMatcher::Norm::l2, mBruteForceMatcher->normType());
-}
-
-void TestBruteForceMatcher::test_defaultConstructor()
-{
-  BruteForceMatcherImp bruteForceMatcher;
-  QCOMPARE(BruteForceMatcherProperties::Norm::l2, bruteForceMatcher.normType());
-
 }
 
 void TestBruteForceMatcher::test_type()

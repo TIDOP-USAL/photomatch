@@ -20,11 +20,12 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructors();
+  void test_moveConstructors();
   void test_type();
   void test_name();
-  void test_tilesGridSize_data();
-  void test_tilesGridSize();
+  void test_blockSize_data();
+  void test_blockSize();
 
 
 private:
@@ -60,16 +61,15 @@ void TestNoshp::cleanupTestCase()
   QCOMPARE(QSize(127, 127), mNoshpPreprocess->blockSize());
 }
 
-void TestNoshp::test_constructors()
+void TestNoshp::test_copyConstructors()
 {
-  NoshpPreprocess noshpPreprocess;
-  QCOMPARE(QSize(127, 127), noshpPreprocess.blockSize());
-
-  noshpPreprocess.setBlockSize(QSize(100, 100));
-  /// Copy constructor
+  NoshpPreprocess noshpPreprocess(QSize(100, 100));
   NoshpPreprocess copy(noshpPreprocess);
   QCOMPARE(QSize(100, 100), copy.blockSize());
+}
 
+void TestNoshp::test_moveConstructors()
+{
   NoshpPreprocess move(NoshpPreprocess(QSize(100, 100)));
   QCOMPARE(QSize(100, 100), move.blockSize());
 }
@@ -84,7 +84,7 @@ void TestNoshp::test_name()
   QCOMPARE(QString("NOSHP"), mNoshpPreprocess->name());
 }
 
-void TestNoshp::test_tilesGridSize_data()
+void TestNoshp::test_blockSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -93,7 +93,7 @@ void TestNoshp::test_tilesGridSize_data()
   QTest::newRow("QSize(50, 50)") << QSize(50, 50) << QSize(50, 50);
 }
 
-void TestNoshp::test_tilesGridSize()
+void TestNoshp::test_blockSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);

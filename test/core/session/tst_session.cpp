@@ -22,7 +22,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructor();
   void test_name_data();
   void test_name();
   void test_description_data();
@@ -117,23 +116,6 @@ void TestSession::cleanupTestCase()
   QCOMPARE(std::vector<QString>(), mSession->preprocessImages());
   QCOMPARE(std::vector<QString>(), mSession->features());
   QCOMPARE(QString(), mSession->passPoints());
-}
-
-void TestSession::test_constructor()
-{
-  SessionImp session;
-  QCOMPARE(QString(), session.name());
-  QCOMPARE(QString(), session.description());
-  QCOMPARE(2000, session.maxImageSize());
-  QCOMPARE(false, session.fullImageSize());
-  QCOMPARE(nullptr, session.preprocess());
-  QCOMPARE(nullptr, session.detector());
-  QCOMPARE(nullptr, session.descriptor());
-  QCOMPARE(nullptr, session.matchingMethod());
-  QCOMPARE(nullptr, session.matchingStrategy());
-  QCOMPARE(std::vector<QString>(), session.preprocessImages());
-  QCOMPARE(std::vector<QString>(), session.features());
-  QCOMPARE(QString(), session.passPoints());
 }
 
 void TestSession::test_name_data()

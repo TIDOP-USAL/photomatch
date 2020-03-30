@@ -19,7 +19,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -83,18 +82,6 @@ void TestVggDescriptor::cleanupTestCase()
   QCOMPARE(false, mVggDescriptor->useNormalizeDescriptor());
   QCOMPARE(true, mVggDescriptor->useNormalizeImage());
   QCOMPARE(true, mVggDescriptor->useScaleOrientation());
-}
-
-void TestVggDescriptor::test_defaultConstructor()
-{
-  /// Check default values
-  VggDescriptor vggDescriptor;
-  QCOMPARE("VGG_120", vggDescriptor.descriptorType());
-  QCOMPARE(6.25, vggDescriptor.scaleFactor());
-  QCOMPARE(1.4, vggDescriptor.sigma());
-  QCOMPARE(false, vggDescriptor.useNormalizeDescriptor());
-  QCOMPARE(true, vggDescriptor.useNormalizeImage());
-  QCOMPARE(true, vggDescriptor.useScaleOrientation());
 }
 
 void TestVggDescriptor::test_constructor()

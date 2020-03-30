@@ -22,7 +22,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructor();
+  void test_moveConstructor();
   void test_type();
   void test_name();
   void test_clipLimit_data();
@@ -65,21 +66,20 @@ void TestClahe::cleanupTestCase()
   QCOMPARE(cv::Size(8, 8), this->mCvClahe->getTilesGridSize());
 }
 
-void TestClahe::test_constructors()
+void TestClahe::test_copyConstructor()
 {
-  ClahePreprocess clahePreprocess;
-  QCOMPARE(40.0, clahePreprocess.clipLimit());
-  QCOMPARE(QSize(8, 8), clahePreprocess.tilesGridSize());
+  ClahePreprocess clahePreprocess(60.0, QSize(6, 6));
 
-  /// Copy constructor
   ClahePreprocess copy(clahePreprocess);
-  QCOMPARE(40.0, copy.clipLimit());
-  QCOMPARE(QSize(8, 8), copy.tilesGridSize());
+  QCOMPARE(60.0, copy.clipLimit());
+  QCOMPARE(QSize(6, 6), copy.tilesGridSize());
+}
 
-  /// Move contructor
-  ClahePreprocess move(ClahePreprocess(40.0, QSize(8, 8)));
-  QCOMPARE(40.0, move.clipLimit());
-  QCOMPARE(QSize(8, 8), move.tilesGridSize());
+void TestClahe::test_moveConstructor()
+{
+  ClahePreprocess move(ClahePreprocess(60.0, QSize(6, 6)));
+  QCOMPARE(60.0, move.clipLimit());
+  QCOMPARE(QSize(6, 6), move.tilesGridSize());
 }
 
 void TestClahe::test_type()

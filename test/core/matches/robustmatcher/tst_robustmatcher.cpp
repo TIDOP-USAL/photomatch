@@ -20,7 +20,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_ratio_data();
   void test_ratio();
@@ -98,21 +97,6 @@ void TestRobustMatcher::cleanupTestCase()
   QCOMPARE(0.7, mRobustMatcher->distance());
   QCOMPARE(0.999, mRobustMatcher->confidence());
   QCOMPARE(2000, mRobustMatcher->maxIter());
-}
-
-void TestRobustMatcher::test_defaultConstructor()
-{
-  std::shared_ptr<DescriptorMatcher> descriptorMatcher(new FlannMatcherImp());
-  RobustMatchingImp robustMatcher(descriptorMatcher);
-  QCOMPARE(0.8, robustMatcher.ratio());
-  QCOMPARE(true, robustMatcher.crossCheck());
-  QCOMPARE(RobustMatchingProperties::GeometricTest::fundamental, robustMatcher.geometricTest());
-  QCOMPARE(RobustMatchingProperties::HomographyComputeMethod::ransac, robustMatcher.homographyComputeMethod());
-  QCOMPARE(RobustMatchingProperties::FundamentalComputeMethod::ransac, robustMatcher.fundamentalComputeMethod());
-  QCOMPARE(RobustMatchingProperties::EssentialComputeMethod::ransac, robustMatcher.essentialComputeMethod());
-  QCOMPARE(0.7, robustMatcher.distance());
-  QCOMPARE(0.999, robustMatcher.confidence());
-  QCOMPARE(2000, robustMatcher.maxIter());
 }
 
 void TestRobustMatcher::test_constructor()

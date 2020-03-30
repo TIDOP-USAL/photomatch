@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructors();
+  void test_moveConstructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -59,16 +60,15 @@ void TestPohe::cleanupTestCase()
   QCOMPARE(QSize(127, 127), mPohePreprocess->blockSize());
 }
 
-void TestPohe::test_constructors()
+void TestPohe::test_copyConstructors()
 {
-  PohePreprocess pohePreprocess;
-  QCOMPARE(QSize(127, 127), pohePreprocess.blockSize());
-
-  pohePreprocess.setBlockSize(QSize(100, 100));
-  /// Copy constructor
+  PohePreprocess pohePreprocess(QSize(100, 100));
   PohePreprocess copy(pohePreprocess);
   QCOMPARE(QSize(100, 100), copy.blockSize());
+}
 
+void TestPohe::test_moveConstructors()
+{
   PohePreprocess move(PohePreprocess(QSize(100, 100)));
   QCOMPARE(QSize(100, 100), move.blockSize());
 }

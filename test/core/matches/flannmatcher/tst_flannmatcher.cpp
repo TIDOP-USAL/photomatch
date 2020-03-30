@@ -18,8 +18,11 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_type();
   void test_name();
+  void test_index();
 
 private:
 
@@ -37,7 +40,19 @@ TestFlannMatcher::~TestFlannMatcher()
   if (mFlannMatcher){
     delete mFlannMatcher;
     mFlannMatcher = nullptr;
-  }
+    }
+}
+
+void TestFlannMatcher::initTestCase()
+{
+  QCOMPARE(FlannMatcherProperties::Index::kdtree, mFlannMatcher->index());
+}
+
+void TestFlannMatcher::cleanupTestCase()
+{
+  mFlannMatcher->reset();
+
+  QCOMPARE(FlannMatcherProperties::Index::kdtree, mFlannMatcher->index());
 }
 
 void TestFlannMatcher::test_type()
@@ -48,6 +63,12 @@ void TestFlannMatcher::test_type()
 void TestFlannMatcher::test_name()
 {
   QCOMPARE(QString("Flann Based Matching"), mFlannMatcher->name());
+}
+
+void TestFlannMatcher::test_index()
+{
+  mFlannMatcher->setIndex(FlannMatcherProperties::Index::lsh);
+  QCOMPARE(FlannMatcherProperties::Index::lsh, mFlannMatcher->index());
 }
 
 

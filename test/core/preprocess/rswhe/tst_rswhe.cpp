@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructors();
+  void test_moveConstructors();
   void test_type();
   void test_name();
   void test_histogramDivisions_data();
@@ -64,11 +65,18 @@ void TestRswhe::cleanupTestCase()
   QCOMPARE(Rswhe::HistogramCut::by_mean, mRswhePreprocess->histogramCut());
 }
 
-void TestRswhe::test_constructors()
+void TestRswhe::test_copyConstructors()
 {
-  RswhePreprocess rswhePreprocess;
+  RswhePreprocess rswhePreprocess(2, Rswhe::HistogramCut::by_median);
   QCOMPARE(2, rswhePreprocess.histogramDivisions());
-  QCOMPARE(Rswhe::HistogramCut::by_mean, rswhePreprocess.histogramCut());
+  QCOMPARE(Rswhe::HistogramCut::by_median, rswhePreprocess.histogramCut());
+}
+
+void TestRswhe::test_moveConstructors()
+{
+  RswhePreprocess rswhePreprocess(std::move(RswhePreprocess(2, Rswhe::HistogramCut::by_median)));
+  QCOMPARE(2, rswhePreprocess.histogramDivisions());
+  QCOMPARE(Rswhe::HistogramCut::by_median, rswhePreprocess.histogramCut());
 }
 
 void TestRswhe::test_type()

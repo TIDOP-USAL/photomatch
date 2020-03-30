@@ -18,7 +18,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -33,7 +32,6 @@ private slots:
   void test_lineThresholdBinarized();
   void test_suppressNonmaxSize_data();
   void test_suppressNonmaxSize();
-  void test_reset();
 
 protected:
 
@@ -57,23 +55,29 @@ TestStarDetector::~TestStarDetector()
 
 void TestStarDetector::initTestCase()
 {
-
+  QCOMPARE(45, mStarDetector->maxSize());
+  QCOMPARE(30, mStarDetector->responseThreshold());
+  QCOMPARE(10, mStarDetector->lineThresholdProjected());
+  QCOMPARE(8, mStarDetector->lineThresholdBinarized());
+  QCOMPARE(5, mStarDetector->suppressNonmaxSize());
 }
 
 void TestStarDetector::cleanupTestCase()
 {
+  mStarDetector->setMaxSize(35);
+  mStarDetector->setResponseThreshold(20);
+  mStarDetector->setLineThresholdProjected(20);
+  mStarDetector->setLineThresholdBinarized(10);
+  mStarDetector->setSuppressNonmaxSize(20);
 
-}
+  mStarDetector->reset();
 
-void TestStarDetector::test_defaultConstructor()
-{
   /// Check default values
-  StarDetector starDetector;
-  QCOMPARE(45, starDetector.maxSize());
-  QCOMPARE(30, starDetector.responseThreshold());
-  QCOMPARE(10, starDetector.lineThresholdProjected());
-  QCOMPARE(8, starDetector.lineThresholdBinarized());
-  QCOMPARE(5, starDetector.suppressNonmaxSize());
+  QCOMPARE(45, mStarDetector->maxSize());
+  QCOMPARE(30, mStarDetector->responseThreshold());
+  QCOMPARE(10, mStarDetector->lineThresholdProjected());
+  QCOMPARE(8, mStarDetector->lineThresholdBinarized());
+  QCOMPARE(5, mStarDetector->suppressNonmaxSize());
 }
 
 void TestStarDetector::test_constructor()
@@ -205,24 +209,6 @@ void TestStarDetector::test_suppressNonmaxSize()
 
   mStarDetector->setSuppressNonmaxSize(value);
   QCOMPARE(result, mStarDetector->suppressNonmaxSize());
-}
-
-void TestStarDetector::test_reset()
-{
-  mStarDetector->setMaxSize(35);
-  mStarDetector->setResponseThreshold(20);
-  mStarDetector->setLineThresholdProjected(20);
-  mStarDetector->setLineThresholdBinarized(10);
-  mStarDetector->setSuppressNonmaxSize(20);
-
-  mStarDetector->reset();
-
-  /// Check default values
-  QCOMPARE(45, mStarDetector->maxSize());
-  QCOMPARE(30, mStarDetector->responseThreshold());
-  QCOMPARE(10, mStarDetector->lineThresholdProjected());
-  QCOMPARE(8, mStarDetector->lineThresholdBinarized());
-  QCOMPARE(5, mStarDetector->suppressNonmaxSize());
 }
 
 QTEST_APPLESS_MAIN(TestStarDetector)

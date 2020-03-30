@@ -221,6 +221,87 @@ void SiftDetectorDescriptor::reset()
 
 #endif
 
+
+
+#ifdef HAVE_CUDA
+
+SiftCudaDetectorDescriptor::SiftCudaDetectorDescriptor()
+{
+  update();
+}
+
+SiftCudaDetectorDescriptor::SiftCudaDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor)
+  : SiftProperties(siftDetectorDescriptor),
+    KeypointDetector(siftDetectorDescriptor),
+    DescriptorExtractor(siftDetectorDescriptor)
+{
+  update();
+}
+
+SiftCudaDetectorDescriptor::SiftCudaDetectorDescriptor(int featuresNumber,
+                                                       int octaveLayers,
+                                                       double contrastThreshold,
+                                                       double edgeThreshold,
+                                                       double sigma)
+{
+  SiftProperties::setFeaturesNumber(featuresNumber);
+  SiftProperties::setOctaveLayers(octaveLayers);
+  SiftProperties::setContrastThreshold(contrastThreshold);
+  SiftProperties::setEdgeThreshold(edgeThreshold);
+  SiftProperties::setSigma(sigma);
+  update();
+}
+
+void SiftCudaDetectorDescriptor::update()
+{
+
+}
+
+bool SiftCudaDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
+{
+}
+
+
+bool SiftCudaDetectorDescriptor::detect(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::InputArray &mask)
+{
+}
+
+void SiftCudaDetectorDescriptor::setFeaturesNumber(int featuresNumber)
+{
+  SiftProperties::setFeaturesNumber(featuresNumber);
+  update();
+}
+
+void SiftCudaDetectorDescriptor::setOctaveLayers(int octaveLayers)
+{
+  SiftProperties::setOctaveLayers(octaveLayers);
+  update();
+}
+
+void SiftCudaDetectorDescriptor::setContrastThreshold(double contrastThreshold)
+{
+  SiftProperties::setContrastThreshold(contrastThreshold);
+  update();
+}
+
+void SiftCudaDetectorDescriptor::setEdgeThreshold(double edgeThreshold)
+{
+  SiftProperties::setEdgeThreshold(edgeThreshold);
+  update();
+}
+
+void SiftCudaDetectorDescriptor::setSigma(double sigma)
+{
+  SiftProperties::setSigma(sigma);
+  update();
+}
+
+void SiftCudaDetectorDescriptor::reset()
+{
+}
+
+#endif // HAVE_CUDA
+
 } // namespace photomatch
 
 

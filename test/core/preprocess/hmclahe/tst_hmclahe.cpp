@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructor();
+  void test_moveConstructor();
   void test_type();
   void test_name();
   void test_blockSize_data();
@@ -70,20 +71,17 @@ void TestHmclahe::cleanupTestCase()
   QCOMPARE(0.5, mHmclahePreprocess->phi());
 }
 
-void TestHmclahe::test_constructors()
+void TestHmclahe::test_copyConstructor()
 {
-  HmclahePreprocess hmclahePreprocess;
-  QCOMPARE(QSize(17, 17), hmclahePreprocess.blockSize());
-  QCOMPARE(0.03, hmclahePreprocess.l());
-  QCOMPARE(0.5, hmclahePreprocess.phi());
-
-  /// Copy constructor
+  HmclahePreprocess hmclahePreprocess(QSize(8, 8), 0.03, 0.5);
   HmclahePreprocess copy(hmclahePreprocess);
-  QCOMPARE(QSize(17, 17), copy.blockSize());
+  QCOMPARE(QSize(8, 8), copy.blockSize());
   QCOMPARE(0.03, copy.l());
   QCOMPARE(0.5, copy.phi());
+}
 
-  /// Move contructor
+void TestHmclahe::test_moveConstructor()
+{
   HmclahePreprocess move(std::move(HmclahePreprocess(QSize(8, 8), 0.03, 0.5)));
   QCOMPARE(QSize(8, 8), move.blockSize());
   QCOMPARE(0.03, move.l());

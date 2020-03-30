@@ -15,10 +15,9 @@ public:
 
 private slots:
 
+#ifdef OPENCV_ENABLE_NONFREE
   void initTestCase();
   void cleanupTestCase();
-#ifdef OPENCV_ENABLE_NONFREE
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -59,6 +58,7 @@ TestSiftDetectorDescriptor::~TestSiftDetectorDescriptor()
 #endif
 }
 
+#ifdef OPENCV_ENABLE_NONFREE
 
 void TestSiftDetectorDescriptor::initTestCase()
 {
@@ -84,18 +84,6 @@ void TestSiftDetectorDescriptor::cleanupTestCase()
   QCOMPARE(0.04, mSiftDetectorDescriptor->contrastThreshold());
   QCOMPARE(10., mSiftDetectorDescriptor->edgeThreshold());
   QCOMPARE(1.6, mSiftDetectorDescriptor->sigma());
-}
-
-#ifdef OPENCV_ENABLE_NONFREE
-void TestSiftDetectorDescriptor::test_defaultConstructor()
-{
-  /// Check default values
-  SiftDetectorDescriptor siftDetectorDescriptor;
-  QCOMPARE(5000, siftDetectorDescriptor.featuresNumber());
-  QCOMPARE(3, siftDetectorDescriptor.octaveLayers());
-  QCOMPARE(0.04, siftDetectorDescriptor.contrastThreshold());
-  QCOMPARE(10., siftDetectorDescriptor.edgeThreshold());
-  QCOMPARE(1.6, siftDetectorDescriptor.sigma());
 }
 
 void TestSiftDetectorDescriptor::test_constructor()

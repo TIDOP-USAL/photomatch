@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructors();
+  void test_moveConstructors();
   void test_type();
   void test_name();
   void test_tilesGridSize_data();
@@ -60,18 +61,17 @@ void TestFahe::cleanupTestCase()
   QCOMPARE(QSize(11, 11), mFahePreprocess->blockSize());
 }
 
-void TestFahe::test_constructors()
+void TestFahe::test_copyConstructors()
 {
-  FahePreprocess fahePreprocess;
-  QCOMPARE(QSize(11, 11), fahePreprocess.blockSize());
-
-  /// Copy constructor
+  FahePreprocess fahePreprocess(QSize(13, 13));
   FahePreprocess copy(fahePreprocess);
-  QCOMPARE(QSize(11, 11), copy.blockSize());
+  QCOMPARE(QSize(13, 13), copy.blockSize());
+}
 
-  /// Move contructor
-  FahePreprocess move(FahePreprocess(QSize(11, 11)));
-  QCOMPARE(QSize(11, 11), move.blockSize());
+void TestFahe::test_moveConstructors()
+{
+  FahePreprocess move(FahePreprocess(QSize(13, 13)));
+  QCOMPARE(QSize(13, 13), move.blockSize());
 }
 
 void TestFahe::test_type()

@@ -20,11 +20,12 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_constructors();
+  void test_copyConstructor();
+  void test_moveConstructor();
   void test_type();
   void test_name();
-  void test_tilesGridSize_data();
-  void test_tilesGridSize();
+  void test_blockSize_data();
+  void test_blockSize();
 
 private:
 
@@ -59,16 +60,18 @@ void TestCmbfhe::cleanupTestCase()
   QCOMPARE(QSize(11, 11), mCmbfhePreprocess->blockSize());
 }
 
-void TestCmbfhe::test_constructors()
+void TestCmbfhe::test_copyConstructor()
 {
-  CmbfhePreprocess cmbfhePreprocess;
-  QCOMPARE(QSize(11, 11), cmbfhePreprocess.blockSize());
+  CmbfhePreprocess cmbfhePreprocess(QSize(6, 6));
 
-  CmbfhePreprocess cmbfhePreprocess2(QSize(6, 6));
+  CmbfhePreprocess cmbfhePreprocess2(cmbfhePreprocess);
   QCOMPARE(QSize(6, 6), cmbfhePreprocess2.blockSize());
+}
 
-  CmbfhePreprocess copy(cmbfhePreprocess2);
-  QCOMPARE(QSize(6, 6), copy.blockSize());
+void TestCmbfhe::test_moveConstructor()
+{
+  CmbfhePreprocess move(CmbfhePreprocess(QSize(6, 6)));
+  QCOMPARE(QSize(6, 6), move.blockSize());
 }
 
 void TestCmbfhe::test_type()
@@ -81,7 +84,7 @@ void TestCmbfhe::test_name()
   QCOMPARE(QString("CMBFHE"), mCmbfhePreprocess->name());
 }
 
-void TestCmbfhe::test_tilesGridSize_data()
+void TestCmbfhe::test_blockSize_data()
 {
   QTest::addColumn<QSize>("value");
   QTest::addColumn<QSize>("result");
@@ -90,7 +93,7 @@ void TestCmbfhe::test_tilesGridSize_data()
   QTest::newRow("QSize(50, 50)") << QSize(50, 50) << QSize(50, 50);
 }
 
-void TestCmbfhe::test_tilesGridSize()
+void TestCmbfhe::test_blockSize()
 {
   QFETCH(QSize, value);
   QFETCH(QSize, result);

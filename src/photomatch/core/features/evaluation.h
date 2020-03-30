@@ -22,7 +22,6 @@
  ************************************************************************/
 
 
-
 #ifndef PHOTOMATCH_EVALUATION_H
 #define PHOTOMATCH_EVALUATION_H
 
@@ -360,8 +359,8 @@ template<typename T> inline
 double Curve<T>::positivePredictiveValue(T threshold) const
 {
   std::map<Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
-  double tp = confussionMatrix[Classification::tp];
-  double fp = confussionMatrix[Classification::fp];
+  double tp = confussionMatrix[Classification::true_positives];
+  double fp = confussionMatrix[Classification::false_positives];
   return ( (tp + fp) > 0.) ? tp / (tp + fp) : -1;
 }
 
@@ -369,8 +368,8 @@ template<typename T> inline
 double Curve<T>::negativePredictiveValue(T threshold) const
 {
   std::map<Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
-  double fn = confussionMatrix[Classification::fn];
-  double tn = confussionMatrix[Classification::tn];
+  double fn = confussionMatrix[Classification::false_negatives];
+  double tn = confussionMatrix[Classification::true_negatives];
   return (fn + tn > 0.) ? tn / (fn + tn) : -1;
 }
 
@@ -378,7 +377,7 @@ template<typename T> inline
 double Curve<T>::truePositiveRate(T threshold) const
 {
   std::map<Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
-  double tp = confussionMatrix[Classification::tp];
+  double tp = confussionMatrix[Classification::true_positives];
   return mPositives ? tp / static_cast<double>(mPositives) : -1;
 }
 
@@ -386,7 +385,7 @@ template<typename T> inline
 double Curve<T>::falsePositiveRate(T threshold) const
 {
   std::map<Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
-  double fp = confussionMatrix[Classification::fp];
+  double fp = confussionMatrix[Classification::false_positives];
   return mNegatives ? static_cast<double>(fp) / static_cast<double>(mNegatives) : -1;
 }
 
@@ -394,7 +393,7 @@ template<typename T> inline
 double Curve<T>::trueNegativeRate(T threshold) const
 {
   std::map<Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
-  double tn = confussionMatrix[Classification::tn];
+  double tn = confussionMatrix[Classification::true_negatives];
   return mNegatives ? static_cast<double>(tn) / static_cast<double>(mNegatives) : -1;
 }
 
@@ -402,7 +401,7 @@ template<typename T> inline
 double Curve<T>::falseNegativeRate(T threshold) const
 {
   std::map<Classification,size_t> confussionMatrix = this->confusionMatrix(threshold);
-  double fn = confussionMatrix[Classification::fn];
+  double fn = confussionMatrix[Classification::false_negatives];
   return mPositives ? static_cast<double>(fn) / static_cast<double>(mPositives) : -1;
 }
 

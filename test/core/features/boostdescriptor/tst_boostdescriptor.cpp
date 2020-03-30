@@ -19,7 +19,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -69,15 +68,6 @@ void TestBoostDescriptor::cleanupTestCase()
   QCOMPARE("BINBOOST_256", mBoostDescriptor->descriptorType());
   QCOMPARE(true, mBoostDescriptor->useOrientation());
   QCOMPARE(6.25, mBoostDescriptor->scaleFactor());
-}
-
-void TestBoostDescriptor::test_defaultConstructor()
-{
-  /// Check default values
-  BoostDescriptor boostDescriptor;
-  QCOMPARE("BINBOOST_256", boostDescriptor.descriptorType());
-  QCOMPARE(true, boostDescriptor.useOrientation());
-  QCOMPARE(6.25, boostDescriptor.scaleFactor());
 }
 
 void TestBoostDescriptor::test_constructor()

@@ -20,7 +20,8 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void testConstructors();
+  void test_copyConstructor();
+  void test_moveConstructor();
   void test_type();
   void test_name();
   void test_blockSize_data();
@@ -74,22 +75,18 @@ void TestAcebsf::cleanupTestCase()
   QCOMPARE(0.5, mAcebsfPreprocess->k2());
 }
 
-void TestAcebsf::testConstructors()
+void TestAcebsf::test_copyConstructor()
 {
-  AcebsfPreprocess acebsfPreprocess;
-  QCOMPARE(QSize(8, 8), acebsfPreprocess.blockSize());
-  QCOMPARE(0.03, acebsfPreprocess.l());
-  QCOMPARE(10., acebsfPreprocess.k1());
-  QCOMPARE(0.5, acebsfPreprocess.k2());
-
-  /// Copy constructor
+  AcebsfPreprocess acebsfPreprocess(QSize(8, 8), 0.03, 10., 0.5);
   AcebsfPreprocess copy(acebsfPreprocess);
   QCOMPARE(QSize(8, 8), copy.blockSize());
   QCOMPARE(0.03, copy.l());
   QCOMPARE(10., copy.k1());
   QCOMPARE(0.5, copy.k2());
+}
 
-  /// Move contructor
+void TestAcebsf::test_moveConstructor()
+{
   AcebsfPreprocess move(AcebsfPreprocess(QSize(8, 8), 0.03, 10., 0.5));
   QCOMPARE(QSize(8, 8), move.blockSize());
   QCOMPARE(0.03, move.l());

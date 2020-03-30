@@ -20,7 +20,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -73,7 +72,17 @@ TestMsdDetector::~TestMsdDetector()
 
 void TestMsdDetector::initTestCase()
 {
-
+  QCOMPARE(250, this->thresholdSaliency());
+  QCOMPARE(3, this->patchRadius());
+  QCOMPARE(4, this->knn());
+  QCOMPARE(5, this->searchAreaRadius());
+  QCOMPARE(1.25, this->scaleFactor());
+  QCOMPARE(5, this->NMSRadius());
+  QCOMPARE(-1, this->nScales());
+  QCOMPARE(0, this->NMSScaleRadius());
+  QCOMPARE(false, this->computeOrientation());
+  QCOMPARE(false, this->affineMSD());
+  QCOMPARE(3, this->affineTilts());
 }
 
 void TestMsdDetector::cleanupTestCase()
@@ -111,23 +120,6 @@ void TestMsdDetector::cleanupTestCase()
   QCOMPARE(false, this->computeOrientation());
   QCOMPARE(false, this->affineMSD());
   QCOMPARE(3, this->affineTilts());
-}
-
-void TestMsdDetector::test_defaultConstructor()
-{
-  /// Check default values
-  MsdDetector msdDetector;
-  QCOMPARE(250, msdDetector.thresholdSaliency());
-  QCOMPARE(3, msdDetector.patchRadius());
-  QCOMPARE(4, msdDetector.knn());
-  QCOMPARE(5, msdDetector.searchAreaRadius());
-  QCOMPARE(1.25, msdDetector.scaleFactor());
-  QCOMPARE(5, msdDetector.NMSRadius());
-  QCOMPARE(-1, msdDetector.nScales());
-  QCOMPARE(0, msdDetector.NMSScaleRadius());
-  QCOMPARE(false, msdDetector.computeOrientation());
-  QCOMPARE(false, msdDetector.affineMSD());
-  QCOMPARE(3, msdDetector.affineTilts());
 }
 
 void TestMsdDetector::test_constructor()

@@ -19,7 +19,6 @@ private slots:
 
   void initTestCase();
   void cleanupTestCase();
-  void test_defaultConstructor();
   void test_constructor();
   void test_copy_constructor();
   void test_type();
@@ -91,19 +90,6 @@ void TestAkazeDetectorDescriptor::cleanupTestCase()
   QCOMPARE(4, this->mAkaze->getNOctaveLayers());
   QCOMPARE("DIFF_PM_G2", this->diffusivity());
   QCOMPARE(1, this->mAkaze->getDiffusivity());
-}
-
-void TestAkazeDetectorDescriptor::test_defaultConstructor()
-{
-  /// Check default values
-  AkazeDetectorDescriptor akazeDetectorDescriptor;
-  QCOMPARE("MLDB", akazeDetectorDescriptor.descriptorType());
-  QCOMPARE(0, akazeDetectorDescriptor.descriptorSize());
-  QCOMPARE(3, akazeDetectorDescriptor.descriptorChannels());
-  qFuzzyCompare(0.001, akazeDetectorDescriptor.threshold());
-  QCOMPARE(4, akazeDetectorDescriptor.octaves());
-  QCOMPARE(4, akazeDetectorDescriptor.octaveLayers());
-  QCOMPARE("DIFF_PM_G2", akazeDetectorDescriptor.diffusivity());
 }
 
 void TestAkazeDetectorDescriptor::test_constructor()
