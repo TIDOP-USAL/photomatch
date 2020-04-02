@@ -13,9 +13,7 @@ project(photomatch CXX)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_DEBUG_POSTFIX d)
-
 set(CMAKE_CONFIGURATION_TYPES Release;Debug)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
 if(MSVC)
@@ -27,6 +25,11 @@ if(MSVC)
     #/EHsc captura solo las excepciones de C++ e indica al compilador que suponga que las funciones declaradas como extern "C" jamás inician una excepción de C++.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
 
+    # Las llamadas a los métodos potencialmente no seguros en la biblioteca estandar de C++ dan lugar
+    # a una advertencia del compilador (nivel 3) C4996.
+    # Para deshabilitar esta advertencia se debe definir la macro _SCL_SECURE_NO_WARNINGS
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_DEPRECATE")
+	
 endif(MSVC)
 
 if (UNIX)

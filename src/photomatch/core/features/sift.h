@@ -152,64 +152,64 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+//#ifdef HAVE_CUDA
 
 
-class SiftCudaDetectorDescriptor
-  : public SiftProperties,
-    public KeypointDetector,
-    public DescriptorExtractor
-{
+//class SiftCudaDetectorDescriptor
+//  : public SiftProperties,
+//    public KeypointDetector,
+//    public DescriptorExtractor
+//{
 
-public:
+//public:
 
-  SiftCudaDetectorDescriptor();
-  SiftCudaDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor);
-  SiftCudaDetectorDescriptor(int featuresNumber,
-                             int octaveLayers,
-                             double contrastThreshold,
-                             double edgeThreshold,
-                             double sigma);
-  ~SiftCudaDetectorDescriptor() override = default;
+//  SiftCudaDetectorDescriptor();
+//  SiftCudaDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor);
+//  SiftCudaDetectorDescriptor(int featuresNumber,
+//                             int octaveLayers,
+//                             double contrastThreshold,
+//                             double edgeThreshold,
+//                             double sigma);
+//  ~SiftCudaDetectorDescriptor() override = default;
 
-private:
+//private:
 
-  void update();
+//  void update();
 
-// KeypointDetector interface
+//// KeypointDetector interface
 
-public:
+//public:
 
-  bool detect(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::InputArray &mask) override;
+//  bool detect(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::InputArray &mask) override;
 
-// DescriptorExtractor interface
+//// DescriptorExtractor interface
 
-public:
+//public:
 
-  bool extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors) override;
+//  bool extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors) override;
 
-// Sift interface
+//// Sift interface
 
-public:
+//public:
 
-  void setFeaturesNumber(int featuresNumber) override;
-  void setOctaveLayers(int octaveLayers) override;
-  void setContrastThreshold(double contrastThreshold) override;
-  void setEdgeThreshold(double edgeThreshold) override;
-  void setSigma(double sigma) override;
+//  void setFeaturesNumber(int featuresNumber) override;
+//  void setOctaveLayers(int octaveLayers) override;
+//  void setContrastThreshold(double contrastThreshold) override;
+//  void setEdgeThreshold(double edgeThreshold) override;
+//  void setSigma(double sigma) override;
 
-// Feature interface
+//// Feature interface
 
-public:
+//public:
 
-  void reset() override;
+//  void reset() override;
 
-protected:
+//protected:
 
 
-};
+//};
 
-#endif // HAVE_CUDA
+//#endif // HAVE_CUDA
 
 } // namespace photomatch
 

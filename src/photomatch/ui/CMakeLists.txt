@@ -85,10 +85,11 @@ set(PHOTOMATCH_SOURCES
     utils/GraphicItem.cpp
     utils/TabHandler.cpp
     ${CMAKE_SOURCE_DIR}/third_party/easyexif/exif.cpp
-)  
+)
 
 set(PHOTOMATCH_HEADERS
     mvp.h
+	ComponentsManager.h
     ComponentsManager.cpp
     MainWindowModel.h
     MainWindowPresenter.h
