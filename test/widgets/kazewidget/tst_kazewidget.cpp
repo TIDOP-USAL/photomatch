@@ -55,7 +55,7 @@ void TestKazeWidget::initTestCase()
 {
   /// Check default values
   QCOMPARE(false, mKazeWidget->extendedDescriptor());
-  QCOMPARE(false, mKazeWidget->upright());
+  QCOMPARE(false, mKazeWidget->uprightDescriptor());
   QCOMPARE(0.001, mKazeWidget->threshold());
   QCOMPARE(4, mKazeWidget->octaves());
   QCOMPARE(4, mKazeWidget->octaveLayers());
@@ -68,13 +68,13 @@ void TestKazeWidget::cleanupTestCase()
   mKazeWidget->setOctaves(2);
   mKazeWidget->setOctaveLayers(5);
   mKazeWidget->setExtendedDescriptor(true);
-  mKazeWidget->setUpright(true);
+  mKazeWidget->setUprightDescriptor(true);
   mKazeWidget->setDiffusivity("DIFF_PM_G1");
 
   mKazeWidget->reset();
 
   QCOMPARE(false, mKazeWidget->extendedDescriptor());
-  QCOMPARE(false, mKazeWidget->upright());
+  QCOMPARE(false, mKazeWidget->uprightDescriptor());
   QCOMPARE(0.001, mKazeWidget->threshold());
   QCOMPARE(4, mKazeWidget->octaves());
   QCOMPARE(4, mKazeWidget->octaveLayers());
@@ -118,8 +118,8 @@ void TestKazeWidget::test_upright()
   QFETCH(bool, value);
   QFETCH(bool, result);
 
-  mKazeWidget->setUpright(value);
-  QCOMPARE(result, mKazeWidget->upright());
+  mKazeWidget->setUprightDescriptor(value);
+  QCOMPARE(result, mKazeWidget->uprightDescriptor());
 }
 
 void TestKazeWidget::test_threshold_data()

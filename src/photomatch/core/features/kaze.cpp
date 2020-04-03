@@ -59,7 +59,7 @@ bool KazeProperties::extendedDescriptor() const
   return mExtended;
 }
 
-bool KazeProperties::upright() const
+bool KazeProperties::uprightDescriptor() const
 {
   return mUpright;
 }
@@ -89,7 +89,7 @@ void KazeProperties::setExtendedDescriptor(bool extended)
   mExtended = extended;
 }
 
-void KazeProperties::setUpright(bool upright)
+void KazeProperties::setUprightDescriptor(bool upright)
 {
   mUpright = upright;
 }
@@ -162,7 +162,7 @@ KazeDetectorDescriptor::KazeDetectorDescriptor(bool extendedDescriptor,
   : mKaze(cv::KAZE::create())
 {
   setExtendedDescriptor(extendedDescriptor);
-  setUpright(upright);
+  setUprightDescriptor(upright);
   setThreshold(threshold);
   setOctaves(octaves);
   setOctaveLayers(octaveLayers);
@@ -204,7 +204,7 @@ int KazeDetectorDescriptor::convertDiffusivity(const QString &diffusivity)
 void KazeDetectorDescriptor::updateCvKaze()
 {
   mKaze->setExtended(KazeProperties::extendedDescriptor());
-  mKaze->setUpright(KazeProperties::upright());
+  mKaze->setUpright(KazeProperties::uprightDescriptor());
   mKaze->setThreshold(KazeProperties::threshold());
   mKaze->setNOctaves(KazeProperties::octaves());
   mKaze->setNOctaveLayers(KazeProperties::octaveLayers());
@@ -247,9 +247,9 @@ void KazeDetectorDescriptor::setExtendedDescriptor(bool extended)
   mKaze->setExtended(extended);
 }
 
-void KazeDetectorDescriptor::setUpright(bool upright)
+void KazeDetectorDescriptor::setUprightDescriptor(bool upright)
 {
-  KazeProperties::setUpright(upright);
+  KazeProperties::setUprightDescriptor(upright);
   mKaze->setUpright(upright);
 }
 

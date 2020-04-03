@@ -651,7 +651,7 @@ void MainWindowPresenter::selectDetector(const QString &session)
     Kaze *kaze = dynamic_cast<Kaze *>(detector.get());
     properties.push_back(std::make_pair(QString("Name"), QString("KAZE")));
     properties.push_back(std::make_pair(QString("Extended Descriptor"), kaze->extendedDescriptor() ? "true" : "false"));
-    properties.push_back(std::make_pair(QString("Upright"), kaze->upright() ? "true" : "false"));
+    properties.push_back(std::make_pair(QString("Upright"), kaze->uprightDescriptor() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Threshold"), QString::number(kaze->threshold())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(kaze->octaves())));
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(kaze->octaveLayers())));
@@ -780,7 +780,7 @@ void MainWindowPresenter::selectDescriptor(const QString &session)
     Kaze *kaze = dynamic_cast<Kaze *>(descriptor.get());
     properties.push_back(std::make_pair(QString("Name"), QString("KAZE")));
     properties.push_back(std::make_pair(QString("Extended Descriptor"), kaze->extendedDescriptor() ? "true" : "false"));
-    properties.push_back(std::make_pair(QString("Upright"), kaze->upright() ? "true" : "false"));
+    properties.push_back(std::make_pair(QString("Upright"), kaze->uprightDescriptor() ? "true" : "false"));
     properties.push_back(std::make_pair(QString("Threshold"), QString::number(kaze->threshold())));
     properties.push_back(std::make_pair(QString("Octaves"), QString::number(kaze->octaves())));
     properties.push_back(std::make_pair(QString("Octave Layers"), QString::number(kaze->octaveLayers())));

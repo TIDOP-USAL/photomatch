@@ -69,7 +69,7 @@ public:
    * \brief Use of upright descriptors (non rotation-invariant)
    * \return true if use upright descriptors (Default=false)
    */
-  virtual bool upright() const = 0;
+  virtual bool uprightDescriptor() const = 0;
 
   /*!
    * \brief Detector response threshold to accept point
@@ -98,7 +98,7 @@ public:
 signals:
 
   void extendedDescriptorChange(bool);
-  void uprightChange(bool);
+  void uprightDescriptorChange(bool);
   void thresholdChange(double);
   void octavesChange(int);
   void octaveLayersChange(int);
@@ -116,7 +116,7 @@ public slots:
    * \brief Set to enable use of upright descriptors (non rotation-invariant)
    * \param[in] upright
    */
-  virtual void setUpright(bool upright) = 0;
+  virtual void setUprightDescriptor(bool uprightDescriptor) = 0;
 
   /*!
    * \brief Set the detector response threshold to accept point
@@ -157,7 +157,7 @@ public:
 // IKazeWidget interface
 
   bool extendedDescriptor() const override;
-  bool upright() const override;
+  bool uprightDescriptor() const override;
   double threshold() const override;
   int octaves() const override;
   int octaveLayers() const override;
@@ -166,7 +166,7 @@ public:
 public slots:
 
   void setExtendedDescriptor(bool extended) override;
-  void setUpright(bool upright) override;
+  void setUprightDescriptor(bool uprightDescriptor) override;
   void setThreshold(double threshold) override;
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;

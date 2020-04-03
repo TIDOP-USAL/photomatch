@@ -1438,7 +1438,7 @@ void ProjectControllerImp::readKAZE(QXmlStreamReader &stream, Kaze *kaze) const
     if (stream.name() == "ExtendedDescriptor") {
       kaze->setExtendedDescriptor(readBoolean(stream));
     } else if (stream.name() == "Upright") {
-      kaze->setUpright(readBoolean(stream));
+      kaze->setUprightDescriptor(readBoolean(stream));
     } else if (stream.name() == "Threshold") {
       kaze->setThreshold(readDouble(stream));
     } else if (stream.name() == "Octaves") {
@@ -2381,7 +2381,7 @@ void ProjectControllerImp::writeKAZE(QXmlStreamWriter &stream, Kaze *kaze) const
   stream.writeStartElement("KAZE");
   {
     stream.writeTextElement("ExtendedDescriptor", kaze->extendedDescriptor() ? "true" : "false");
-    stream.writeTextElement("Upright", kaze->upright() ? "true" : "false");
+    stream.writeTextElement("Upright", kaze->uprightDescriptor() ? "true" : "false");
     stream.writeTextElement("Threshold", QString::number(kaze->threshold()));
     stream.writeTextElement("Octaves", QString::number(kaze->octaves()));
     stream.writeTextElement("OctaveLayers", QString::number(kaze->octaveLayers()));

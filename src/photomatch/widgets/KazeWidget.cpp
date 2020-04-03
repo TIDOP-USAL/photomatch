@@ -63,7 +63,7 @@ bool KazeWidgetImp::extendedDescriptor() const
   return mExtended->isChecked();
 }
 
-bool KazeWidgetImp::upright() const
+bool KazeWidgetImp::uprightDescriptor() const
 {
   return mUpright->isChecked();
 }
@@ -93,7 +93,7 @@ void KazeWidgetImp::setExtendedDescriptor(bool extended)
   mExtended->setChecked(extended);
 }
 
-void KazeWidgetImp::setUpright(bool upright)
+void KazeWidgetImp::setUprightDescriptor(bool upright)
 {
   mUpright->setChecked(upright);
 }
@@ -129,8 +129,8 @@ void KazeWidgetImp::update()
 void KazeWidgetImp::retranslate()
 {
   mGroupBox->setTitle(QApplication::translate("KazeWidgetImp", "KAZE Parameters"));
-  mExtended->setText(QApplication::translate("KazeWidgetImp","Extended"));
-    mUpright->setText(QApplication::translate("KazeWidgetImp","Upright"));
+  mExtended->setText(QApplication::translate("KazeWidgetImp","Extended Descriptors"));
+  mUpright->setText(QApplication::translate("KazeWidgetImp","Upright Descriptors"));
   mLabelThreshold->setText(QApplication::translate("KazeWidgetImp", "Threshold:"));
   mLabelOctaves->setText(QApplication::translate("KazeWidgetImp", "Octaves:"));
   mLabelOctaveLayers->setText(QApplication::translate("KazeWidgetImp", "Octave Layers:"));
@@ -198,7 +198,7 @@ void KazeWidgetImp::initUI()
 void KazeWidgetImp::initSignalAndSlots()
 {
   connect(mExtended,     SIGNAL(clicked(bool)),               this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mUpright,      SIGNAL(clicked(bool)),               this, SIGNAL(uprightChange(bool)));
+  connect(mUpright,      SIGNAL(clicked(bool)),               this, SIGNAL(uprightDescriptorChange(bool)));
   connect(mThreshold,    SIGNAL(valueChanged(double)),        this, SIGNAL(thresholdChange(double)));
   connect(mOctaves,      SIGNAL(valueChanged(int)),           this, SIGNAL(octavesChange(int)));
   connect(mOctaveLayers, SIGNAL(valueChanged(int)),           this, SIGNAL(octaveLayersChange(int)));

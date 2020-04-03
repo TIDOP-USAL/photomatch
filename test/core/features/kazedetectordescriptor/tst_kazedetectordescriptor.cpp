@@ -52,7 +52,7 @@ TestKazeDetectorDescriptor::~TestKazeDetectorDescriptor()
 void TestKazeDetectorDescriptor::initTestCase()
 {
   QCOMPARE(false, this->extendedDescriptor());
-  QCOMPARE(false, this->upright());
+  QCOMPARE(false, this->uprightDescriptor());
   QCOMPARE(0.001, this->threshold());
   QCOMPARE(4, this->octaves());
   QCOMPARE(4, this->octaveLayers());
@@ -65,14 +65,14 @@ void TestKazeDetectorDescriptor::cleanupTestCase()
   this->setOctaves(2);
   this->setOctaveLayers(5);
   this->setExtendedDescriptor(true);
-  this->setUpright(true);
+  this->setUprightDescriptor(true);
   this->setDiffusivity("DIFF_PM_G1");
 
   this->reset();
 
   QCOMPARE(false, this->extendedDescriptor());
   QCOMPARE(false, this->mKaze->getExtended());
-  QCOMPARE(false, this->upright());
+  QCOMPARE(false, this->uprightDescriptor());
   QCOMPARE(false, this->mKaze->getUpright());
   QCOMPARE(0.001, this->threshold());
   //QCOMPARE(0.001, this->mKaze->getThreshold());
@@ -88,7 +88,7 @@ void TestKazeDetectorDescriptor::test_constructor()
 {
   KazeDetectorDescriptor kazeDetectorDescriptor(true, true, 0.05, 8, 3, "DIFF_PM_G1");
   QCOMPARE(true, kazeDetectorDescriptor.extendedDescriptor());
-  QCOMPARE(true, kazeDetectorDescriptor.upright());
+  QCOMPARE(true, kazeDetectorDescriptor.uprightDescriptor());
   QCOMPARE(0.05, kazeDetectorDescriptor.threshold());
   QCOMPARE(8, kazeDetectorDescriptor.octaves());
   QCOMPARE(3, kazeDetectorDescriptor.octaveLayers());
@@ -100,7 +100,7 @@ void TestKazeDetectorDescriptor::test_copy_constructor()
   KazeDetectorDescriptor kazeDetectorDescriptor(true, true, 0.05, 8, 3, "DIFF_PM_G1");
   KazeDetectorDescriptor c(kazeDetectorDescriptor);
   QCOMPARE(true, c.extendedDescriptor());
-  QCOMPARE(true, c.upright());
+  QCOMPARE(true, c.uprightDescriptor());
   QCOMPARE(0.05, c.threshold());
   QCOMPARE(8, c.octaves());
   QCOMPARE(3, c.octaveLayers());
@@ -150,8 +150,8 @@ void TestKazeDetectorDescriptor::test_upright()
   QFETCH(bool, value);
   QFETCH(bool, result);
 
-  this->setUpright(value);
-  QCOMPARE(result, this->upright());
+  this->setUprightDescriptor(value);
+  QCOMPARE(result, this->uprightDescriptor());
   QCOMPARE(result, this->mKaze->getUpright());
 }
 

@@ -714,7 +714,7 @@ void SettingsPresenterImp::open()
   mHog->setDerivAperture(mModel->hogDerivAperture());
 
   mKaze->setExtendedDescriptor(mModel->kazeExtendedDescriptor());
-  mKaze->setUpright(mModel->kazeUpright());
+  mKaze->setUprightDescriptor(mModel->kazeUpright());
   mKaze->setThreshold(mModel->kazeUpright());
   mKaze->setOctaves(mModel->kazeOctaves());
   mKaze->setOctaveLayers(mModel->kazeOctaveLayers());

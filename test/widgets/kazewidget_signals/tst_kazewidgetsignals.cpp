@@ -51,14 +51,14 @@ void TestKazeWidgetSignals::cleanupTestCase()
   QSignalSpy spyOctavesChange(this, &KazeWidgetImp::octavesChange);
   QSignalSpy spyOctaveLayersChange(this, &KazeWidgetImp::octaveLayersChange);
   QSignalSpy spyExtendedDescriptorChange(this, &KazeWidgetImp::extendedDescriptorChange);
-  QSignalSpy spyUprightChange(this, &KazeWidgetImp::uprightChange);
+  QSignalSpy spyUprightChange(this, &KazeWidgetImp::uprightDescriptorChange);
   QSignalSpy spyDiffusivityChange(this, &KazeWidgetImp::diffusivityChange);
 
   this->setThreshold(120);
   this->setOctaves(6);
   this->setOctaveLayers(6);
   this->setExtendedDescriptor(true);
-  this->setUpright(true);
+  this->setUprightDescriptor(true);
   this->setDiffusivity("DIFF_WEICKERT");
 
   this->reset();
@@ -133,7 +133,7 @@ void TestKazeWidgetSignals::test_extendedDescriptorChange()
 
 void TestKazeWidgetSignals::test_uprightChange()
 {
-  QSignalSpy spyUprightChange(this, &KazeWidgetImp::uprightChange);
+  QSignalSpy spyUprightChange(this, &KazeWidgetImp::uprightDescriptorChange);
 
   QTest::mouseClick(mUpright, Qt::MouseButton::LeftButton);
 
@@ -142,7 +142,7 @@ void TestKazeWidgetSignals::test_uprightChange()
   QList<QVariant> args = spyUprightChange.takeFirst();
   QCOMPARE(args.at(0).toBool(), true);
 
-  this->setUpright(true);
+  this->setUprightDescriptor(true);
   QCOMPARE(spyUprightChange.count(), 0);
 }
 

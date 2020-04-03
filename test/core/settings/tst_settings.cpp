@@ -550,7 +550,7 @@ void TestSettings::test_hog()
 void TestSettings::test_kaze()
 {
   QCOMPARE(false, mSettings->kaze()->extendedDescriptor());
-  QCOMPARE(false, mSettings->kaze()->upright());
+  QCOMPARE(false, mSettings->kaze()->uprightDescriptor());
   QCOMPARE(0.001, mSettings->kaze()->threshold());
   QCOMPARE(4, mSettings->kaze()->octaves());
   QCOMPARE(4, mSettings->kaze()->octaveLayers());

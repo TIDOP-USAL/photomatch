@@ -92,7 +92,7 @@ void LatchWidgetImp::update()
 void LatchWidgetImp::retranslate()
 {
   mGroupBox->setTitle(QApplication::translate("LatchWidgetImp", "LATCH Parameters"));
-  mLabelBytes->setText(QApplication::translate("LatchWidgetImp", "Descriptor Bytes:"));
+  mLabelBytes->setText(QApplication::translate("LatchWidgetImp", "Descriptor Size:"));
   mRotationInvariance->setText(QApplication::translate("LatchWidgetImp", "Rotation Invariance"));
   mLabelHalfSsdSize->setText(QApplication::translate("LatchWidgetImp", "Half of the mini-patches size:"));
 }

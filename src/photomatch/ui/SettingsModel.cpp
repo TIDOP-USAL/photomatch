@@ -468,7 +468,7 @@ bool SettingsModelImp::kazeExtendedDescriptor() const
 
 bool SettingsModelImp::kazeUpright() const
 {
-  return mSettings->kaze()->upright();
+  return mSettings->kaze()->uprightDescriptor();
 }
 
 double SettingsModelImp::kazeThreshold() const
@@ -1451,7 +1451,7 @@ void SettingsModelImp::setKazeExtendedDescriptor(bool extended)
 
 void SettingsModelImp::setKazeUpright(bool upright)
 {
-  mSettings->kaze()->setUpright(upright);
+  mSettings->kaze()->setUprightDescriptor(upright);
   emit unsavedChanges(true);
 }
 

@@ -88,8 +88,8 @@
     
     <ul>
       <li class="western"><strong>Descriptor Type</strong>: Type of the extracted descriptor (<em>KAZE</em>,&nbsp;<em>KAZE_UPRIGHT</em>, <em>MLDB</em> or <em>MLDB_UPRIGHT</em>).</li>
-      <li class="western"><strong>Descriptor Size</strong>:&nbsp;Size of the descriptor in bits.</li>
-      <li class="western"><strong>Detector Channels</strong>: Number of channels in the descriptor (1, 2 or 3 (default)).&nbsp;</li>
+      <li class="western"><strong>Descriptor Size</strong>:&nbsp;Size of the descriptor in bits. Set value to 0 for full size descriptor.</li>
+      <li class="western"><strong>Descriptor Channels</strong>: Number of channels in the descriptor (1, 2 or 3 (default)).&nbsp;</li>
       <li class="western"><strong>Threshold</strong>: Detector response threshold to accept point.</li>
       <li class="western"><strong>Octaves</strong>:&nbsp;Number of octaves.</li>
       <li class="western"><strong>Octave Layers</strong>:&nbsp;Default number of sublevels per scale level.</li>
@@ -133,7 +133,7 @@
     </div>
     
     <ul>
-      <li class="western"><strong>Descriptor Bytes</strong>: Legth of the descriptor in bytes.&nbsp;Valid values are: 16, 32 (default) or 64</li>
+      <li class="western"><strong>Descriptor Bytes</strong>: Length of the descriptor in bytes.&nbsp;Valid values are: 16, 32 (default) or 64</li>
       <li class="western"><strong>Use Keypoints Orientation</strong>: Sample patterns using keypoints orientation.</li>
     </ul>
     
@@ -184,8 +184,8 @@
       <li class="western"><strong>Radial range division quantity</strong>.</li>
       <li class="western"><strong>Angular range division quantity</strong>.</li>
       <li class="western"><strong>Interpolation</strong></li>
-      <li><strong>Keypoints orientation</strong></li>
-      <li><strong>Descriptor normalization type</strong>:&nbsp;Normalization types are:
+      <li class="western"><strong>Keypoints orientation</strong></li>
+      <li class="western"><strong>Descriptor normalization type</strong>:&nbsp;Normalization types are:
       <ul>
         <li>NRM_NONE: not make any normalization (Default).</li>
         <li>NRM_PARTIAL: mean that histograms are normalized independently for L2 norm equal to 1.0.</li>
@@ -213,7 +213,8 @@
     </div>
     
     <ul>
-      <li class="western"><strong>Threshold</strong></li>
+      <li class="western"><strong>Threshold</strong>: threshold on difference between intensity of the central pixel and pixels of a
+circle around this pixel.</li>
       <li class="western"><strong>Nonmax Suppression</strong>: Non Maximal Suppression for removing adjacent corners.</li>
       <li class="western"><strong>Detector type</strong>: Suported types are:
         <ul>
@@ -244,10 +245,10 @@
     </div>
     
     <ul>
-      <li class="western"><strong>Orientation Normalization</strong></li>
-      <li class="western"><strong>Scale Normalization:</strong></li>
-      <li class="western"><strong>Pattern Scale</strong>:&nbsp;</li>
-      <li class="western"><strong>Number Of Octaves</strong>:&nbsp;</li>
+      <li class="western"><strong>Orientation Normalization</strong>: Enable orientation normalization.</li>
+      <li class="western"><strong>Scale Normalization</strong>: Enable scale normalization.</li>
+      <li class="western"><strong>Pattern Scale</strong>: Scaling of the description pattern.</li>
+      <li class="western"><strong>Number Of Octaves</strong>: Number of octaves covered by the detected keypoints.</li>
     </ul>
        
     <p class="western" align="justify">[<a href="https://ieeexplore.ieee.org/abstract/document/6247715">FREAK</a>]: <em>Alahi, A., Ortiz, R. and Vandergheynst, P., 2012. Freak: Fast retina keypoint. In 2012 IEEE Conference on Computer Vision and Pattern Recognition, pp. 510-517. IEEE.</em></p>
@@ -309,15 +310,23 @@
             
     <h3 class="western"><a name="KAZE">KAZE (Detector/Descriptor)</a></h3>
     
+	<p class="western" align="justify">Operates in nonlinear scale space and not in Gaussian, keeping important image details . The nonlinear scale space is build efficiently by means of Additive Operator Splitting (AOS) scheme.</p> 
+	
     <h4 class="western">Parameters</h4>
     
-    <div class="image"><img src="img/kaze.png" width="354" height="188" /> 
+    <div class="image"><img src="img/kaze.png" width="372" height="203" /> 
       <br clear="all" />
     </div>
     
     <p class="western" align="justify">[<a href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.304.4980&rep=rep1&type=pdf">KAZE</a>]: <em>Alcantarilla, P.F., Bartoli, A. and Davison, A.J., 2012. KAZE features. In European Conference on Computer Vision, pp. 214-227. Springer, Berlin, Heidelberg.</em></p>
     
     
+    <ul>
+      <li class="western"><strong>Extended descriptor</strong>: Select for use extended 128-element descriptors or disable for use 64-element descriptors (Default).</li>
+      <li class="western"><strong>Upright Descriptors</strong>: Select for use upright descriptor (non rotation-invariant).</li>
+      <li class="western"><strong>Half of the mini-patches size</strong></li>
+    </ul>
+	
     <!-- LATCH -->
     
     <h3 class="western"><a name="LATCH">LATCH (Descriptor)</a></h3>
@@ -332,6 +341,15 @@
       <br clear="all" />
     </div>
     
+	<ul>
+      <li class="western"><strong>Descriptor Size</strong>: size of the descriptor in bites. Can be 64, 32, 16, 8, 4, 2 or 1</li>
+      <li class="western"><strong>Rotation Invariance</strong>: whether or not the descriptor should compensate for orientation changes.</li>
+      <li class="western"><strong>Threshold</strong>: Detector response threshold to accept point.</li>
+      <li class="western"><strong>Octaves</strong>: Maximum octave evolution of the image.</li>
+      <li class="western"><strong>Octave Layers</strong>: Number of sublevels per scale level.</li>
+      <li class="western"><strong>Diffusivity</strong>: DIFF_PM_G1, DIFF_PM_G2 (default), DIFF_WEICKERT or DIFF_CHARBONNIER.</li>
+    </ul>
+	
     <p class="western" align="justify">[<a href="https://arxiv.org/pdf/1501.03719.pdf">LATCH</a>]: <em>Levi, G. and Hassner, T., 2016. LATCH: learned arrangements of three patch codes. In 2016 IEEE winter conference on applications of computer vision (WACV), pp. 1-9. IEEE.</em></p>
     
     
@@ -358,10 +376,24 @@
     
     <h4 class="western">Parameters</h4>
     
-    <div class="image"><img src="img/msd.png" width="352" height="192" /> 
+    <div class="image"><img src="img/msd.png" width="377" height="352" /> 
       <br clear="all" />
     </div>
     
+    <ul>
+      <li class="western"><strong>Threshold Saliency</strong> </li>
+      <li class="western"><strong>Path radius</strong></li>
+      <li class="western"><strong>KNN</strong></li>
+      <li class="western"><strong>Area radius</strong></li>
+      <li class="western"><strong>Scale factor</strong> </li>
+      <li class="western"><strong>NMS radius</strong> </li>
+	  <li class="western"><strong>N Scales</strong> </li>
+	  <li class="western"><strong>NMS Scale R</strong> </li>
+	  <li class="western"><strong>Compute orientations</strong> </li>
+	  <li class="western"><strong>Affine MSD</strong> </li>
+	  <li class="western"><strong>Tilts</strong> </li>
+    </ul>
+	
     <p class="western" align="justify">[<a href="http://imagine.enpc.fr/~monasse/Stereo/Projects/TombariDiStefano14.pdf">MSD</a>]: <em>Tombari, F. and Di Stefano, L., 2014. Interest points via maximal self-dissimilarities. In Asian Conference on Computer Vision, pp. 586-600. Springer, Cham.</em></p>
     
     
@@ -393,6 +425,18 @@
       <br clear="all" />
     </div>
     
+	<ul>
+      <li class="western"><strong>Features Number</strong>: Maximum number of features to retain.</li>
+      <li class="western"><strong>Scale Factor</strong>: Pyramid decimation ratio. ScaleFactor==2 means the classical pyramid, where each next level has 4x less pixels than the previous, but such a big scale factor will degrade feature matching scores dramatically. On the other hand, too close to 1 scale factor will mean that to cover certain scale range you will need more pyramid levels and so the speed will suffer.</li>
+      <li class="western"><strong>Levels Number</strong>: Number of pyramid levels.</li>
+      <li class="western"><strong>Edge Threshold</strong>: Size of the border where the features are not detected.</li>
+      <li class="western"><strong>First Level</strong> </li>
+      <li class="western"><strong>wta_k</strong>: Number of points that produce each element of the oriented BRIEF descriptor.</li>
+	  <li class="western"><strong>Score Type</strong> </li>
+	  <li class="western"><strong>Patch Size</strong>: Size of the patch used by the oriented BRIEF descriptor.</li>
+	  <li class="western"><strong>Fast Threshold</strong> </li>
+    </ul>
+	
     <p class="western" align="justify">[<a href="https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.370.4395&rep=rep1&type=pdf">ORB</a>]: <em>Rublee, E., Rabaud, V., Konolige, K. and Bradski, G.R., 2011. ORB: An efficient alternative to SIFT or SURF. In ICCV, Vol. 11(1), pp. 2.</em></p>
     
     
@@ -425,6 +469,8 @@
     
     <h3 class="western"><a name="STAR">STAR (Detector)</a></h3>
     
+	<p class="western" align="justify">Star Feature Detector derived from CenSurE (Center Surrounded Extrema) detector. STAR is multiscale and works on full spatial resolution, using a bi-level approximation of the Laplacian of Gaussians (LoG) filter and integral images for computational efficiency.</p> 
+	
     <h4 class="western">Parameters</h4>
     
     <div class="image"><img src="img/star.png" width="353" height="165" /> 

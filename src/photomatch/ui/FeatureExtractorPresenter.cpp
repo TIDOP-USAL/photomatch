@@ -661,8 +661,8 @@ void FeatureExtractorPresenterImp::setKazeDetectorProperties()
     mKazeDetector->setExtendedDescriptor(detector && detector->type() == Feature::Type::kaze ?
                                            dynamic_cast<Kaze *>(detector)->extendedDescriptor() :
                                            mSettingsModel->kazeExtendedDescriptor());
-    mKazeDetector->setUpright(detector && detector->type() == Feature::Type::kaze ?
-                                dynamic_cast<Kaze *>(detector)->upright() :
+    mKazeDetector->setUprightDescriptor(detector && detector->type() == Feature::Type::kaze ?
+                                dynamic_cast<Kaze *>(detector)->uprightDescriptor() :
                                 mSettingsModel->kazeUpright());
     mKazeDetector->setThreshold(detector && detector->type() == Feature::Type::kaze ?
                                   dynamic_cast<Kaze *>(detector)->threshold() :
@@ -688,8 +688,8 @@ void FeatureExtractorPresenterImp::setKazeDescriptorProperties()
     mKazeDescriptor->setExtendedDescriptor(descriptor && descriptor->type() == Feature::Type::kaze ?
                                              dynamic_cast<Kaze *>(descriptor)->extendedDescriptor() :
                                              mSettingsModel->kazeExtendedDescriptor());
-    mKazeDescriptor->setUpright(descriptor && descriptor->type() == Feature::Type::kaze ?
-                                  dynamic_cast<Kaze *>(descriptor)->upright() :
+    mKazeDescriptor->setUprightDescriptor(descriptor && descriptor->type() == Feature::Type::kaze ?
+                                  dynamic_cast<Kaze *>(descriptor)->uprightDescriptor() :
                                   mSettingsModel->kazeUpright());
     mKazeDescriptor->setThreshold(descriptor && descriptor->type() == Feature::Type::kaze ?
                                     dynamic_cast<Kaze *>(descriptor)->threshold() :
@@ -1171,7 +1171,7 @@ void FeatureExtractorPresenterImp::run()
                                                       mGfttDetector->k());
   } else if (currentKeypointDetector.compare("KAZE") == 0){
     keypointDetector = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
-                                                                mKazeDetector->upright(),
+                                                                mKazeDetector->uprightDescriptor(),
                                                                 mKazeDetector->threshold(),
                                                                 mKazeDetector->octaves(),
                                                                 mKazeDetector->octaveLayers(),
@@ -1324,14 +1324,14 @@ void FeatureExtractorPresenterImp::run()
   } else if (currentDescriptorExtractor.compare("KAZE") == 0){
     if (currentKeypointDetector.compare("KAZE") == 0){
       descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
-                                                                     mKazeDetector->upright(),
+                                                                     mKazeDetector->uprightDescriptor(),
                                                                      mKazeDetector->threshold(),
                                                                      mKazeDetector->octaves(),
                                                                      mKazeDetector->octaveLayers(),
                                                                      mKazeDetector->diffusivity());
     } else {
       descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
-                                                                     mKazeDescriptor->upright(),
+                                                                     mKazeDescriptor->uprightDescriptor(),
                                                                      mKazeDescriptor->threshold(),
                                                                      mKazeDescriptor->octaves(),
                                                                      mKazeDescriptor->octaveLayers(),

@@ -878,7 +878,7 @@ public:
    * \brief Use of upright descriptors (non rotation-invariant)
    * \return true if use upright descriptors (Default=false)
    */
-  virtual bool upright() const = 0;
+  virtual bool uprightDescriptor() const = 0;
 
   /*!
    * \brief Detector response threshold to accept point
@@ -914,7 +914,7 @@ public:
    * \brief Set to enable use of upright descriptors (non rotation-invariant)
    * \param[in] upright
    */
-  virtual void setUpright(bool upright) = 0;
+  virtual void setUprightDescriptor(bool uprightDescriptor) = 0;
 
   /*!
    * \brief Set the detector response threshold to accept point

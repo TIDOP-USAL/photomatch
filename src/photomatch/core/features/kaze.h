@@ -49,13 +49,13 @@ public:
 public:
 
   bool extendedDescriptor() const override;
-  bool upright() const override;
+  bool uprightDescriptor() const override;
   double threshold() const override;
   int octaves() const override;
   int octaveLayers() const override;
   QString diffusivity() const override;
   void setExtendedDescriptor(bool extended) override;
-  void setUpright(bool upright) override;
+  void setUprightDescriptor(bool uprightDescriptor) override;
   void setThreshold(double threshold) override;
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;
@@ -94,7 +94,7 @@ public:
   KazeDetectorDescriptor();
   KazeDetectorDescriptor(const KazeDetectorDescriptor &kazeDetectorDescriptor);
   KazeDetectorDescriptor(bool extendedDescriptor,
-                         bool upright,
+                         bool uprightDescriptor,
                          double threshold,
                          int octaves,
                          int octaveLayers,
@@ -132,7 +132,7 @@ public:
 public:
 
   void setExtendedDescriptor(bool extended) override;
-  void setUpright(bool upright) override;
+  void setUprightDescriptor(bool uprightDescriptor) override;
   void setThreshold(double threshold) override;
   void setOctaves(int octaves) override;
   void setOctaveLayers(int octaveLayers) override;

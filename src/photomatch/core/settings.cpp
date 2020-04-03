@@ -1234,7 +1234,7 @@ void SettingsControllerImp::read(Settings &settings)
 
   /* KAZE */
   settings.kaze()->setOctaves(mSettingsController->value("KAZE/Octaves", settings.kaze()->octaves()).toInt());
-  settings.kaze()->setUpright(mSettingsController->value("KAZE/Upright", settings.kaze()->upright()).toBool());
+  settings.kaze()->setUprightDescriptor(mSettingsController->value("KAZE/Upright", settings.kaze()->uprightDescriptor()).toBool());
   settings.kaze()->setThreshold(mSettingsController->value("KAZE/Threshold", settings.kaze()->threshold()).toDouble());
   settings.kaze()->setDiffusivity(mSettingsController->value("KAZE/Diffusivity", settings.kaze()->diffusivity()).toString());
   settings.kaze()->setOctaveLayers(mSettingsController->value("KAZE/OctaveLayers", settings.kaze()->octaveLayers()).toInt());
@@ -1488,7 +1488,7 @@ void SettingsControllerImp::write(const Settings &settings)
 
   /* KAZE */
   mSettingsController->setValue("KAZE/Octaves", settings.kaze()->octaves());
-  mSettingsController->setValue("KAZE/Upright", settings.kaze()->upright());
+  mSettingsController->setValue("KAZE/Upright", settings.kaze()->uprightDescriptor());
   mSettingsController->setValue("KAZE/Threshold", settings.kaze()->threshold());
   mSettingsController->setValue("KAZE/Diffusivity", settings.kaze()->diffusivity());
   mSettingsController->setValue("KAZE/OctaveLayers", settings.kaze()->octaveLayers());
