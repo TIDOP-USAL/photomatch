@@ -41,9 +41,6 @@ class GraphicViewer;
 class CrossGraphicItem;
 
 
-
-
-
 class GroundTruthViewImp
   : public GroundTruthView
 {
@@ -52,7 +49,8 @@ class GroundTruthViewImp
 
 public:
 
-  GroundTruthViewImp(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  GroundTruthViewImp(QWidget *parent = nullptr,
+                     Qt::WindowFlags f = Qt::WindowFlags());
   ~GroundTruthViewImp() override;
 
   QString leftImage() const override;
@@ -91,7 +89,7 @@ public slots:
   void setHomologousPoints(const std::vector<std::pair<QPointF,QPointF>> &points) override;
   void addHomologous(const QPointF &pt1, const QPointF &pt2) override;
   void deleteHomologous(int pointId) override;
-  void setHomologousDistance(int pointId, double distance) override;
+  void setHomologousError(int pointId, double distance) override;
   void setUnsavedChanges(bool value) override;
   void enableLockView(bool enable) override;
   void clickedPointLeft(const QPointF &pt) override;
@@ -158,7 +156,6 @@ protected:
   int mPointsCounter;
   QString mSelectedMarkerColor;
   int mSelectedMarkerWidth;
-
 
 };
 

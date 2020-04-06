@@ -56,6 +56,9 @@ public:
   std::vector<QString> imagePairs(const QString &imageName) const override;
   std::vector<QString> sessionNames() const override;
   std::vector<std::tuple<QString, QString, QString>> sessions() const override;
+  std::vector<std::pair<double, int>> classifiedMatches(const QString &session,
+                                                        const QString &imgLeft,
+                                                        const QString &imgRight) const override;
 
 // IModel interface
 

@@ -28,6 +28,12 @@
 #include "photomatch/core/features/groundtruth.h"
 #include "photomatch/core/utils.h"
 
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/calib3d/calib3d.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+
 #include <QImageReader>
 
 namespace photomatch
@@ -51,21 +57,21 @@ GroundTruthModelImp::~GroundTruthModelImp()
 
 QPointF GroundTruthModelImp::findPoint(const QString &image1, const QString &image2, const QPointF &ptImage1)
 {
-  QTransform trf = this->transform(image1, image2);
+  QTransform trf = this->homography(image1, image2);
   if (trf.isIdentity() == false){
     QPointF trf_point = trf.map(ptImage1);
 
     /// Matriz de transformación en OpenCV
-    cv::Mat h(3,3, CV_64FC1);
-    h.at<double>(0, 0) = trf.m11();
-    h.at<double>(1, 0) = trf.m12();
-    h.at<double>(2, 0) = trf.m13();
-    h.at<double>(0, 1) = trf.m21();
-    h.at<double>(1, 1) = trf.m22();
-    h.at<double>(2, 1) = trf.m23();
-    h.at<double>(0, 2) = 0; // trf.m31();
-    h.at<double>(1, 2) = 0; // trf.m32();
-    h.at<double>(2, 2) = trf.m33();
+//    cv::Mat h(3,3, CV_64FC1);
+//    h.at<double>(0, 0) = trf.m11();
+//    h.at<double>(1, 0) = trf.m12();
+//    h.at<double>(2, 0) = trf.m13();
+//    h.at<double>(0, 1) = trf.m21();
+//    h.at<double>(1, 1) = trf.m22();
+//    h.at<double>(2, 1) = trf.m23();
+//    h.at<double>(0, 2) = 0; // trf.m31();
+//    h.at<double>(1, 2) = 0; // trf.m32();
+//    h.at<double>(2, 2) = trf.m33();
 
     /// - se calcula una ventana a partir de pt
     /// - se lee el trozo de imagen correspondiente a la ventana
@@ -130,7 +136,7 @@ QPointF GroundTruthModelImp::findPoint(const QString &image1, const QString &ima
 
 QPointF GroundTruthModelImp::findProjectedPoint(const QString & image1, const QString & image2, const QPointF & ptImage1)
 {
-  QTransform trf = this->transform(image1, image2);
+  QTransform trf = this->homography(image1, image2);
   if (trf.isIdentity() == false)
     return trf.map(ptImage1);
   else 
@@ -174,7 +180,8 @@ std::vector<QString> GroundTruthModelImp::imagePairs(const QString &imageName) c
   return pairs;
 }
 
-std::vector<std::pair<QPointF, QPointF> > GroundTruthModelImp::groundTruth(const QString &imgName1, const QString &imgName2) const
+std::vector<std::pair<QPointF, QPointF> > GroundTruthModelImp::groundTruth(const QString &imgName1,
+                                                                           const QString &imgName2) const
 {
   std::vector<std::pair<QPointF,QPointF>> r_ground_truth;
 
@@ -193,7 +200,9 @@ std::vector<std::pair<QPointF, QPointF> > GroundTruthModelImp::groundTruth(const
   return r_ground_truth;
 }
 
-std::pair<QPointF, QPointF> GroundTruthModelImp::homologus(const QString &imgName1, const QString &imgName2, int pointId) const
+std::pair<QPointF, QPointF> GroundTruthModelImp::homologus(const QString &imgName1,
+                                                           const QString &imgName2,
+                                                           int pointId) const
 {
   std::pair<QPointF, QPointF> homologus;
   if (std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(imgName1, imgName2)){
@@ -204,56 +213,99 @@ std::pair<QPointF, QPointF> GroundTruthModelImp::homologus(const QString &imgNam
   return homologus;
 }
 
-QTransform GroundTruthModelImp::transform(const QString &imgName1, const QString &imgName2,
-                                       std::vector<double> *distances, double *rootMeanSquareError) const
+HomologusPoints GroundTruthModelImp::homologusPoints(const QString &imgName1,
+                                                     const QString &imgName2) const
 {
-  QTransform trf;
-  HomologusPoints homologusPoints(imgName1, imgName2);
+  HomologusPoints homologus_points(imgName1, imgName2);
   if (std::shared_ptr<HomologusPoints> ground_truth_direct = mGroundTruth->findPair(imgName1, imgName2)){
     for (auto &homolPoint : ground_truth_direct->homologusPoints()){
-      homologusPoints.push_back(homolPoint);
+      homologus_points.push_back(homolPoint);
     }
   }
 
   if (std::shared_ptr<HomologusPoints> ground_truth_inverse = mGroundTruth->findPair(imgName2, imgName1)){
     for (auto &homolPoint : ground_truth_inverse->homologusPoints()){
-      homologusPoints.addPoints(homolPoint.second, homolPoint.first);
+      homologus_points.addPoints(homolPoint.second, homolPoint.first);
     }
   }
+  return homologus_points;
+}
 
+QTransform GroundTruthModelImp::homography(const QString &imgName1,
+                                           const QString &imgName2) const
+{
+  return homography(homologusPoints(imgName1, imgName2));
+}
+
+QTransform GroundTruthModelImp::homography(const HomologusPoints &homologusPoints) const
+{
+  QTransform trf;
   if (homologusPoints.empty() == false && homologusPoints.size() >= 4) {
-    cv::Mat h = homologusPoints.homography();
-    if (h.empty() == false){
-      trf.setMatrix(h.at<double>(0, 0), h.at<double>(1, 0), h.at<double>(2, 0),
-                    h.at<double>(0, 1), h.at<double>(1, 1), h.at<double>(2, 1),
-                    h.at<double>(0, 2), h.at<double>(1, 2), h.at<double>(2, 2));
+  cv::Mat h = homologusPoints.homography();
+  if (h.empty() == false){
+    trf.setMatrix(h.at<double>(0, 0), h.at<double>(1, 0), h.at<double>(2, 0),
+                  h.at<double>(0, 1), h.at<double>(1, 1), h.at<double>(2, 1),
+                  h.at<double>(0, 2), h.at<double>(1, 2), h.at<double>(2, 2));
+    }
+  }
+  return trf;
+}
 
-      std::vector<double> dist(homologusPoints.size(), -1.);
-      double sum_error = 0.;
-      int n = 0;
-      for (size_t i = 0; i < homologusPoints.size(); i++){
-        QPointF pt1 = homologusPoints[i].first;
-        QPointF pt2 = homologusPoints[i].second;
-        if (!pt1.isNull() && !pt2.isNull()){
-          QPointF pt1_trf = trf.map(pt1);
-          QPointF v = pt1_trf - pt2;
-          double aux = QPointF::dotProduct(v, v);
-          dist[i] = sqrt(aux);
-          sum_error += aux;
-          n++;
-        }
-      }
+cv::Mat GroundTruthModelImp::fundamental(const QString &imgName1, const QString &imgName2) const
+{
+  return fundamental(homologusPoints(imgName1, imgName2));
+}
 
-      if (distances != nullptr){
-        *distances = dist;
-      }
-      if (rootMeanSquareError != nullptr){
-        *rootMeanSquareError = sqrt(sum_error/(2*(n - 4)));
+cv::Mat GroundTruthModelImp::fundamental(const HomologusPoints &homologusPoints) const
+{
+  cv::Mat fundamental;
+  if (homologusPoints.empty() == false && homologusPoints.size() >= 4) {
+    fundamental = homologusPoints.fundamental();
+  }
+  return fundamental;
+}
+
+std::vector<double> GroundTruthModelImp::errorsHomography(const QString &imgName1,
+                                                          const QString &imgName2) const
+{
+  HomologusPoints homologus_points = homologusPoints(imgName1, imgName2);
+  std::vector<double> errors(homologus_points.size(), -1.);
+  QTransform trf = homography(homologus_points);
+  if (!trf.isIdentity()){
+    for (size_t i = 0; i < homologus_points.size(); i++){
+      QPointF pt1 = homologus_points[i].first;
+      QPointF pt2 = homologus_points[i].second;
+      if (!pt1.isNull() && !pt2.isNull()){
+        QPointF pt1_trf = trf.map(pt1);
+        QPointF v = pt1_trf - pt2;
+        double aux = QPointF::dotProduct(v, v);
+        errors[i] = sqrt(aux);
       }
     }
   }
+  return errors;
+}
 
-  return trf;
+std::vector<double> GroundTruthModelImp::errorsFundamental(const QString &imgName1, const QString &imgName2) const
+{
+  HomologusPoints homologus_points = homologusPoints(imgName1, imgName2);
+  std::vector<double> errors(homologus_points.size(), -1.);
+  cv::Mat fundamental_matrix = fundamental(homologus_points);
+  if (!fundamental_matrix.empty()) {
+    std::vector<cv::Vec3f> lines;
+    std::vector<cv::Point2f> query_points = homologus_points.queryPoints();
+    std::vector<cv::Point2f> train_points = homologus_points.trainPoints();
+    cv::computeCorrespondEpilines(query_points, 1, fundamental_matrix, lines);
+
+//    std::vector<cv::Vec3f> lines2;
+//    cv::computeCorrespondEpilines(train_points, 2, fundamental_matrix, lines2);
+
+    for (size_t i = 0; i < train_points.size(); i++){
+      errors[i] = static_cast<double>(distancePointLine(train_points[i], lines[i]));
+      //errors2[i] = static_cast<double>(distancePointLine(query_points[i], lines2[i]));
+    }
+  }
+  return errors;
 }
 
 void GroundTruthModelImp::saveGroundTruth()

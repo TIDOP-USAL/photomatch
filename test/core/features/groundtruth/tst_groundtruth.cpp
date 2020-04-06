@@ -131,6 +131,8 @@ private slots:
   void cleanupTestCase();
   void test_findPair();
   void test_pair();
+  void test_queryPoints();
+  void test_trainPoints();
 
 private:
 
@@ -195,6 +197,30 @@ void TestGroundTruth::test_pair()
   QCOMPARE(742.118, h_new->at(0).first.y());
   QCOMPARE(2298.68, h_new->at(0).second.x());
   QCOMPARE(1842.18, h_new->at(0).second.y());
+}
+
+void TestGroundTruth::test_queryPoints()
+{
+  std::shared_ptr<HomologusPoints> h = mGroundTruth->findPair("005_005_147000214","005_006_147000213");
+
+  QCOMPARE(2276.94f, h->queryPoints().at(0).x);
+  QCOMPARE(3586.31f, h->queryPoints().at(0).y);
+  QCOMPARE(1494.52f, h->queryPoints().at(1).x);
+  QCOMPARE(4057.71f, h->queryPoints().at(1).y);
+  QCOMPARE(4664.62f, h->queryPoints().at(2).x);
+  QCOMPARE(3725.57f, h->queryPoints().at(2).y);
+}
+
+void TestGroundTruth::test_trainPoints()
+{
+  std::shared_ptr<HomologusPoints> h = mGroundTruth->findPair("005_005_147000214","005_006_147000213");
+
+  QCOMPARE(2096.43f, h->trainPoints().at(0).x);
+  QCOMPARE(5294.68f, h->trainPoints().at(0).y);
+  QCOMPARE(1210.06f, h->trainPoints().at(1).x);
+  QCOMPARE(5884.34f, h->trainPoints().at(1).y);
+  QCOMPARE(4767.65f, h->trainPoints().at(2).x);
+  QCOMPARE(5489.22f, h->trainPoints().at(2).y);
 }
 
 

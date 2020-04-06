@@ -707,7 +707,7 @@ void GroundTruthViewImp::deleteHomologous(int pointId)
   update();
 }
 
-void GroundTruthViewImp::setHomologousDistance(int pointId, double distance)
+void GroundTruthViewImp::setHomologousError(int pointId, double distance)
 {
   for (int j = 0; j < mTreeWidget->topLevelItemCount(); j++){
     QTreeWidgetItem *item = mTreeWidget->topLevelItem(j);

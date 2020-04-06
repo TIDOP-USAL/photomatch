@@ -49,25 +49,43 @@ class GroundTruthPresenterImp
 public:
 
   GroundTruthPresenterImp(GroundTruthView *view,
-                       GroundTruthModel *model,
-                       SettingsModel *settings);
+                          GroundTruthModel *model,
+                          SettingsModel *settings);
   ~GroundTruthPresenterImp() override;
 
+
 // IGroundTruthPresenter interface
+
 
 protected slots:
 
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
-  void loadGroundTruth(const QString &imageLeft, const QString &imageRight) override;
-  void addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
-  void deleteHomologous(const QString &image1, const QString &image2, int pointId) override;
+  void loadGroundTruth(const QString &imageLeft,
+                       const QString &imageRight) override;
+  void addHomologousPoints(const QString &image1,
+                           const QPointF &pt1,
+                           const QString &image2,
+                           const QPointF &pt2) override;
+  void deleteHomologous(const QString &image1,
+                        const QString &image2,
+                        int pointId) override;
   void importGroundTruth() override;
-  void selectHomologous(const QString &image1, const QString &image2, int pointId) override;
-  void leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt) override;
-  void rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt) override;
-  void findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
-  void findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
+  void selectHomologous(const QString &image1,
+                        const QString &image2,
+                        int pointId) override;
+  void leftPointClicked(const QString &image1,
+                        const QString &image2,
+                        const QPointF &pt) override;
+  void rightPointClicked(const QString &image1,
+                         const QString &image2,
+                         const QPointF &pt) override;
+  void findLeftPoint(const QString &image1,
+                     const QString &image2,
+                     const QPointF &pt) override;
+  void findRightPoint(const QString &image1,
+                      const QString &image2,
+                      const QPointF &pt) override;
 
   void save() override;
   void discart() override;
@@ -83,6 +101,14 @@ public slots:
 private:
 
   void init() override;
+
+//
+
+private:
+
+  void errors(const QString &imageLeft, const QString &imageRight);
+  void homographyErrors(const QString &imageLeft, const QString &imageRight);
+  void fundamentalErrors(const QString &imageLeft, const QString &imageRight);
 
 private:
 

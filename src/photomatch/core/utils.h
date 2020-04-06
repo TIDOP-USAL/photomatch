@@ -58,6 +58,13 @@ PHOTOMATCH_EXPORT cv::Size qSizeToCvSize(const QSize &size);
 
 /*----------------------------------------------------------------*/
 
+template <typename T>
+static float distancePointLine(const cv::Point_<T> point, const cv::Vec3f &line)
+{
+  return std::fabsf(line(0)*point.x + line(1)*point.y + line(2))
+      / std::sqrt(line(0)*line(0)+line(1)*line(1));
+}
+
 } // namespace photomatch
 
 #endif // PHOTOMATCH_UTILS_H

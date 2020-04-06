@@ -67,8 +67,14 @@ public:
   std::vector<QString> imagePairs(const QString &imageName) const override;
   std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const override;
   std::pair<QPointF, QPointF> homologus(const QString &imgName1, const QString &imgName2, int pointId) const override;
-
-  QTransform transform(const QString &imgName1, const QString &imgName2, std::vector<double> *distances = nullptr, double *emc = nullptr) const override;
+  photomatch::HomologusPoints homologusPoints(const QString &imgName1, const QString &imgName2) const override;
+  QTransform homography(const QString &imgName1, const QString &imgName2) const override;
+  QTransform homography(const photomatch::HomologusPoints &homologusPoints) const override;
+  cv::Mat fundamental(const QString &imgName1,
+                      const QString &imgName2) const override;
+  cv::Mat fundamental(const photomatch::HomologusPoints &homologusPoints) const override;
+  std::vector<double> errorsHomography(const QString &imgName1, const QString &imgName2) const override;
+  std::vector<double> errorsFundamental(const QString &imgName1, const QString &imgName2) const override;
   void saveGroundTruth() override;
   void setGroundTruth(const QString &file) override;
   bool existGroundTruth() const override;
@@ -77,7 +83,7 @@ public:
   QPointF findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
   QPointF findProjectedLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
   QPointF findProjectedRightPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
-
+  
 public slots:
 
   void addHomologus(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;

@@ -185,13 +185,17 @@ void BruteForceMatcherImp::update()
     norm = cv::NORM_HAMMING2;
   }
 
-  mBFMatcher = cv::BFMatcher::create(norm);
+  try {
+    mBFMatcher = cv::BFMatcher::create(norm);
+  } catch (cv::Exception &e) {
+    msgError("Brute-force Matcher error: %s", e.what());
+  }
 }
 
 bool BruteForceMatcherImp::match(cv::InputArray &queryDescriptors,
-                              cv::InputArray &trainDescriptors,
-                              std::vector<cv::DMatch> &matches,
-                              cv::InputArray mask)
+                                 cv::InputArray &trainDescriptors,
+                                 std::vector<cv::DMatch> &matches,
+                                 cv::InputArray mask)
 {
   try {
     mBFMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
@@ -203,9 +207,9 @@ bool BruteForceMatcherImp::match(cv::InputArray &queryDescriptors,
 }
 
 bool BruteForceMatcherImp::match(cv::InputArray &queryDescriptors,
-                              cv::InputArray &trainDescriptors,
-                              std::vector<std::vector<cv::DMatch>> &matches,
-                              cv::InputArray mask)
+                                 cv::InputArray &trainDescriptors,
+                                 std::vector<std::vector<cv::DMatch>> &matches,
+                                 cv::InputArray mask)
 {
   try {
     mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
@@ -253,11 +257,17 @@ void BruteForceMatcherCuda::update()
     norm = cv::NORM_L2;
   } else if (norm_type == BruteForceMatcherProperties::Norm::hamming) {
     norm = cv::NORM_HAMMING;
-  } else if (norm_type == BruteForceMatcherProperties::Norm::hamming2) {
-    norm = cv::NORM_HAMMING2;
   }
+  ///La implementación de BFMatcher con Cuda no incluye NORM_HAMMING2
+  /*else if (norm_type == BruteForceMatcherProperties::Norm::hamming2) {
+    norm = cv::NORM_HAMMING2;
+  }*/
 
-  mBFMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(norm);
+  try {
+    mBFMatcher = cv::cuda::DescriptorMatcher::createBFMatcher(norm);
+  } catch (cv::Exception &e) {
+    msgError("Brute-force Matcher error: %s", e.what());
+  }
 }
 
 bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,

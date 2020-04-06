@@ -303,7 +303,7 @@ void DescriptorMatcherPresenterImp::run()
   std::shared_ptr<DescriptorMatcher> descriptorMatcher;
   if (matchingMethod.compare("Brute-Force") == 0){
 #ifdef HAVE_CUDA
-    if (mSettingsModel->useCuda()){
+    if (mSettingsModel->useCuda() && norm != BruteForceMatcherProperties::Norm::hamming2){
       descriptorMatcher = std::make_shared<BruteForceMatcherCuda>(norm);
     } else {
 #endif // HAVE_CUDA

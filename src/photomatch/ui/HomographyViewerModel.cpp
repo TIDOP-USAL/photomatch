@@ -128,6 +128,7 @@ QImage HomographyViewerModelImp::homography(const QString &imgName1, const QStri
           int idx = nameMatchesFile.indexOf(imgName1);
           std::vector<cv::Point2f> pts_query;
           std::vector<cv::Point2f> pts_train;
+
           for (size_t i = 0; i < match.size(); i++){
             size_t query_id = (idx == 0) ? static_cast<size_t>(match[i].queryIdx) : static_cast<size_t>(match[i].trainIdx);
             size_t train_id = (idx == 0) ? static_cast<size_t>(match[i].trainIdx) : static_cast<size_t>(match[i].queryIdx);

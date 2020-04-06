@@ -87,73 +87,70 @@ void GroundTruthPresenterImp::loadRightImage(const QString &image)
   mView->setRightImage(image);
 }
 
-void GroundTruthPresenterImp::loadGroundTruth(const QString &imageLeft, const QString &imageRight)
+void GroundTruthPresenterImp::errors(const QString &imageLeft,
+                                     const QString &imageRight)
+{
+  if (0 /* bHomography */){
+    homographyErrors(imageLeft, imageRight);
+  } else {
+    fundamentalErrors(imageLeft, imageRight);
+  }
+}
+
+void GroundTruthPresenterImp::homographyErrors(const QString &imageLeft,
+                                               const QString &imageRight)
+{
+  std::vector<double> errors = mModel->errorsHomography(imageLeft, imageRight);
+  for(size_t i = 0; i < errors.size(); i++){
+    if (errors[i] >= 0)
+      mView->setHomologousError(static_cast<int>(i+1), errors[i]);
+  }
+  mView->enableLockView(!errors.empty());
+}
+
+void GroundTruthPresenterImp::fundamentalErrors(const QString &imageLeft,
+                                                const QString &imageRight)
+{
+  std::vector<double> errors = mModel->errorsFundamental(imageLeft, imageRight);
+  for(size_t i = 0; i < errors.size(); i++){
+    if (errors[i] >= 0)
+      mView->setHomologousError(static_cast<int>(i+1), errors[i]);
+  }
+  mView->enableLockView(!errors.empty());
+}
+
+void GroundTruthPresenterImp::loadGroundTruth(const QString &imageLeft,
+                                              const QString &imageRight)
 {
   std::vector<std::pair<QPointF, QPointF>> homologousPoints = mModel->groundTruth(imageLeft, imageRight);
 
   mView->setHomologousPoints(homologousPoints);
 
-  std::vector<double> distances;
-  double rmse;
-  QTransform trf = mModel->transform(imageLeft, imageRight, &distances, &rmse);
-  if (!trf.isIdentity()){
-    for(size_t i = 0; i < distances.size(); i++){
-      if (distances[i] >= 0)
-        mView->setHomologousDistance(static_cast<int>(i+1), distances[i]);
-    }
-    mView->enableLockView(true);
-  } else {
-    mView->enableLockView(false);
-  }
+  errors(imageLeft, imageRight);
 }
 
-void GroundTruthPresenterImp::addHomologousPoints(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2)
+void GroundTruthPresenterImp::addHomologousPoints(const QString &image1,
+                                                  const QPointF &pt1,
+                                                  const QString &image2,
+                                                  const QPointF &pt2)
 {
-  // Se añade el punto al modelo
   mModel->addHomologus(image1, pt1, image2, pt2);
-
-  // Se añade el punto a la vista
   mView->addHomologous(pt1, pt2);
   mView->unselectHomologous();
 
-  // Se actualiza la transformación y los errores
-  std::vector<double> distances;
-  double rmse;
-  QTransform trf = mModel->transform(image1, image2, &distances, &rmse);
-  if (!trf.isIdentity()){
-    for(size_t i = 0; i < distances.size(); i++){
-      if (distances[i] >= 0)
-        mView->setHomologousDistance(static_cast<int>(i+1), distances[i]);
-    }
-    mView->enableLockView(true);
-  } else {
-    mView->enableLockView(false);
-  }
+  errors(image1, image2);
 
   mView->setUnsavedChanges(true);
 }
 
-void GroundTruthPresenterImp::deleteHomologous(const QString &image1, const QString &image2, int pointId)
+void GroundTruthPresenterImp::deleteHomologous(const QString &image1,
+                                               const QString &image2,
+                                               int pointId)
 {
-  // Se borra el punto en el modelo
   mModel->deleteHomologus(image1, image2, pointId);
-
-  // Se borra el punto en la vista
   mView->deleteHomologous(pointId);
 
-  // Se actualiza la transformación y los errores
-  std::vector<double> distances;
-  double rmse;
-  QTransform trf = mModel->transform(image1, image2, &distances, &rmse);
-  if (!trf.isIdentity()){
-    for(size_t i = 0; i < distances.size(); i++){
-      if (distances[i] >= 0)
-        mView->setHomologousDistance(static_cast<int>(i+1), distances[i]);
-    }
-    mView->enableLockView(true);
-  } else {
-    mView->enableLockView(false);
-  }
+  errors(image1, image2);
 
   mView->setUnsavedChanges(true);
 }

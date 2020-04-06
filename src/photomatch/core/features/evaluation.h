@@ -199,7 +199,7 @@ class PRCurve
 
 public:
 
-  explicit PRCurve(const std::vector<std::pair<T, int>> &data, size_t steeps = 100);
+  explicit PRCurve(const std::vector<std::pair<T, int>> &data);
   ~PRCurve() override = default;
 
   void compute(size_t steeps = 100) override;
@@ -218,7 +218,7 @@ class ROCCurve
 
 public:
 
-  explicit ROCCurve(const std::vector<std::pair<T, int>> &data, size_t steeps = 100);
+  explicit ROCCurve(const std::vector<std::pair<T, int>> &data);
   ~ROCCurve() override = default;
 
   void compute(size_t steeps = 100) override;
@@ -238,7 +238,7 @@ class DETCurve
 
 public:
 
-  explicit DETCurve(const std::vector<std::pair<T, int>> &data, size_t steeps = 100);
+  explicit DETCurve(const std::vector<std::pair<T, int>> &data);
   ~DETCurve() override = default;
   void compute(size_t steeps = 100) override;
 
@@ -470,10 +470,9 @@ double Curve<T>::accuracy(size_t tp, size_t tn, size_t positives, size_t negativ
 /* PR Curve class implementation */
 
 template<typename T>
-PRCurve<T>::PRCurve(const std::vector<std::pair<T, int>> &data, size_t steeps)
+PRCurve<T>::PRCurve(const std::vector<std::pair<T, int>> &data)
   : Curve<T>(data)
 {
-  this->compute(steeps);
 }
 
 
@@ -481,6 +480,7 @@ PRCurve<T>::PRCurve(const std::vector<std::pair<T, int>> &data, size_t steeps)
 template<typename T> inline
 void PRCurve<T>::compute(size_t steeps)
 {
+  if (this->mData.empty()) return;
 
   T min = this->mData.front().first;
   T max = this->mData.back().first;
@@ -526,16 +526,17 @@ void PRCurve<T>::compute(size_t steeps)
 
 
 template<typename T>
-ROCCurve<T>::ROCCurve(const std::vector<std::pair<T, int>> &data, size_t steeps)
+ROCCurve<T>::ROCCurve(const std::vector<std::pair<T, int>> &data)
   : Curve<T>(data)
 {
-  this->compute(steeps);
 }
 
 ///TODO: para enteros habria que especializar la plantilla
 template<typename T> inline
 void ROCCurve<T>::compute(size_t steeps)
 {
+
+  if (this->mData.empty()) return;
 
   T min = this->mData.front().first;
   T max = this->mData.back().first;
@@ -575,16 +576,17 @@ void ROCCurve<T>::compute(size_t steeps)
 /* DET Curve class implementation */
 
 template<typename T>
-DETCurve<T>::DETCurve(const std::vector<std::pair<T, int>> &data, size_t steeps)
+DETCurve<T>::DETCurve(const std::vector<std::pair<T, int>> &data)
   : Curve<T>(data)
 {
-  this->compute(steeps);
 }
 
 ///TODO: para enteros habria que especializar la plantilla
 template<typename T> inline
 void DETCurve<T>::compute(size_t steeps)
 {
+
+  if (this->mData.empty()) return;
 
   T min = this->mData.front().first;
   T max = this->mData.back().first;

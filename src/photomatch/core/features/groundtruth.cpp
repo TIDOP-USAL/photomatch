@@ -21,19 +21,21 @@
  *                                                                      *
  ************************************************************************/
 
-
 #include "groundtruth.h"
 
 #include <fstream>
 
 #include <QStringList>
 
+#include <tidop/core/messages.h>
+
 namespace photomatch
 {
 
-HomologusPoints::HomologusPoints(const QString &idImg1, const QString &idImg2)
-  : mIdImg1(idImg1),
-    mIdImg2(idImg2),
+HomologusPoints::HomologusPoints(const QString &idImg1,
+                                 const QString &idImg2)
+  : mIdImage1(idImg1),
+    mIdImage2(idImg2),
     mHomologusPoints(0)
 {}
 
@@ -124,12 +126,12 @@ HomologusPoints::iterator HomologusPoints::erase(HomologusPoints::const_iterator
 
 QString HomologusPoints::idImg1() const
 {
-  return mIdImg1;
+  return mIdImage1;
 }
 
 QString HomologusPoints::idImg2() const
 {
-  return mIdImg2;
+  return mIdImage2;
 }
 
 std::vector<std::pair<QPointF, QPointF>> HomologusPoints::homologusPoints() const
@@ -139,27 +141,52 @@ std::vector<std::pair<QPointF, QPointF>> HomologusPoints::homologusPoints() cons
 
 cv::Mat HomologusPoints::homography() const
 {
+  cv::Mat homography_matrix;
+  try {
+    homography_matrix = cv::findHomography(queryPoints(), trainPoints());
+  } catch (cv::Exception &e){
+    msgError(e.what());
+  }
+  return homography_matrix;
+}
+
+cv::Mat HomologusPoints::fundamental() const
+{
+  cv::Mat fundamental_matrix;
+  try {
+    fundamental_matrix = cv::findFundamentalMat(queryPoints(), trainPoints());
+  } catch (cv::Exception &e){
+    msgError(e.what());
+  }
+  return fundamental_matrix;
+}
+
+std::vector<cv::Point2f> HomologusPoints::queryPoints() const
+{
   std::vector<cv::Point2f> pts_query;
-  std::vector<cv::Point2f> pts_train;
 
   for (const auto &homologusPoint : mHomologusPoints){
     if (!homologusPoint.first.isNull() && !homologusPoint.second.isNull()){
       pts_query.emplace_back(static_cast<float>(homologusPoint.first.x()),
                              static_cast<float>(homologusPoint.first.y()));
+    }
+  }
+
+  return pts_query;
+}
+
+std::vector<cv::Point2f> HomologusPoints::trainPoints() const
+{
+  std::vector<cv::Point2f> pts_train;
+
+  for (const auto &homologusPoint : mHomologusPoints){
+    if (!homologusPoint.first.isNull() && !homologusPoint.second.isNull()){
       pts_train.emplace_back(static_cast<float>(homologusPoint.second.x()),
                              static_cast<float>(homologusPoint.second.y()));
     }
   }
 
-  cv::Mat H;
-  try {
-    H = cv::findHomography(pts_query, pts_train);
-  } catch (...){
-    /// ...
-  }
-  /// TODO: Ver si interesa... cv::correctMatches
-
-  return H;
+  return pts_train;
 }
 
 //std::vector<std::pair<QPointF, QPointF> > HomologusPoints::invert() const

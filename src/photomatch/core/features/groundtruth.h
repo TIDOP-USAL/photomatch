@@ -21,7 +21,6 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_GROUND_TRUTH_H
 #define PHOTOMATCH_GROUND_TRUTH_H
 
@@ -95,17 +94,26 @@ public:
   std::vector<std::pair<QPointF, QPointF>> homologusPoints() const;
 
   /*!
-   * \brief homography
+   * \brief Homography matrix from ground truth
    * \return
    */
   cv::Mat homography() const;
+
+  /*!
+   * \brief Fundamental matrix from ground truth
+   * \return
+   */
+  cv::Mat fundamental() const;
+
+  std::vector<cv::Point2f> queryPoints() const;
+  std::vector<cv::Point2f> trainPoints() const;
 
   //std::vector<std::pair<QPointF, QPointF>> invert() const;
 
 private:
 
-  QString mIdImg1;
-  QString mIdImg2;
+  QString mIdImage1;
+  QString mIdImage2;
   std::vector<std::pair<QPointF, QPointF>> mHomologusPoints;
 
 };

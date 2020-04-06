@@ -26,6 +26,7 @@
 
 
 #include "photomatch/ui/mvp.h"
+#include "photomatch/core/features/groundtruth.h"
 
 namespace photomatch
 {
@@ -45,23 +46,49 @@ public:
   virtual void loadGroundTruth() = 0;
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const = 0;
-  virtual std::pair<QPointF, QPointF> homologus(const QString &imgName1, const QString &imgName2, int pointId) const = 0;
-
-  virtual QTransform transform(const QString &imgName1, const QString &imgName2, std::vector<double> *distances = nullptr, double *emc = nullptr) const = 0;
+  virtual std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1,
+                                                               const QString &imgName2) const = 0;
+  virtual std::pair<QPointF, QPointF> homologus(const QString &imgName1,
+                                                const QString &imgName2,
+                                                int pointId) const = 0;
+  virtual photomatch::HomologusPoints homologusPoints(const QString &imgName1,
+                                                      const QString &imgName2) const = 0;
+  virtual QTransform homography(const QString &imgName1,
+                                const QString &imgName2) const = 0;
+  virtual QTransform homography(const photomatch::HomologusPoints &homologusPoints) const = 0;
+  virtual cv::Mat fundamental(const QString &imgName1,
+                              const QString &imgName2) const = 0;
+  virtual cv::Mat fundamental(const photomatch::HomologusPoints &homologusPoints) const = 0;
+  virtual std::vector<double> errorsHomography(const QString &imgName1,
+                                               const QString &imgName2) const = 0;
+  virtual std::vector<double> errorsFundamental(const QString &imgName1,
+                                                const QString &imgName2) const = 0;
   virtual void saveGroundTruth() = 0;
   virtual void setGroundTruth(const QString &file) = 0;
   virtual bool existGroundTruth() const = 0;
   virtual QString projectPath() const = 0;
-  virtual QPointF findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-  virtual QPointF findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-  virtual QPointF findProjectedLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
-  virtual QPointF findProjectedRightPoint(const QString &image1, const QString &image2, const QPointF &pt) = 0;
+  virtual QPointF findLeftPoint(const QString &image1,
+                                const QString &image2,
+                                const QPointF &pt) = 0;
+  virtual QPointF findRightPoint(const QString &image1,
+                                 const QString &image2,
+                                 const QPointF &pt) = 0;
+  virtual QPointF findProjectedLeftPoint(const QString &image1,
+                                         const QString &image2,
+                                         const QPointF &pt) = 0;
+  virtual QPointF findProjectedRightPoint(const QString &image1,
+                                          const QString &image2,
+                                          const QPointF &pt) = 0;
 
 public slots:
 
-  virtual void addHomologus(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) = 0;
-  virtual void deleteHomologus(const QString &image1, const QString &image2, int pointId) = 0;
+  virtual void addHomologus(const QString &image1,
+                            const QPointF &pt1,
+                            const QString &image2,
+                            const QPointF &pt2) = 0;
+  virtual void deleteHomologus(const QString &image1,
+                               const QString &image2,
+                               int pointId) = 0;
 
 };
 
@@ -166,7 +193,7 @@ public slots:
    */
   virtual void deleteHomologous(int pointId) = 0;
 
-  virtual void setHomologousDistance(int pointId, double distance) = 0;
+  virtual void setHomologousError(int pointId, double distance) = 0;
 
   virtual void setUnsavedChanges(bool value) = 0;
   virtual void enableLockView(bool enable) = 0;

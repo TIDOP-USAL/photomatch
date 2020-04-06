@@ -143,4 +143,5 @@ cv::Size qSizeToCvSize(const QSize &size)
   return cv::Size(size.width(), size.height());
 }
 
+
 } // namespace photomatch

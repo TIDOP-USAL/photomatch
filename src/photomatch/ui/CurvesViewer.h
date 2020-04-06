@@ -54,7 +54,9 @@ public:
                               const QString &imgLeft,
                               const QString &imgRight,
                               std::vector<QPointF> &curve) const = 0;
-
+  virtual std::vector<std::pair<double, int>> classifiedMatches(const QString &session,
+                                                                const QString &imgLeft,
+                                                                const QString &imgRight) const = 0;
 };
 
 
