@@ -59,6 +59,8 @@ public:
   std::vector<std::pair<double, int>> classifiedMatches(const QString &session,
                                                         const QString &imgLeft,
                                                         const QString &imgRight) const override;
+  QString adjustMatrix() const override;
+  void setAdjustMatrix(const QString &adjustMatrix) override;
 
 // IModel interface
 
@@ -69,6 +71,7 @@ private:
 protected:
 
   ProjectModel *mProjectModel;
+  QString mMatrix;
 };
 
 

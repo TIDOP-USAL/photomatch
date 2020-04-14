@@ -259,6 +259,7 @@ public:
   QString groundTruthEditorMarkerColor() const override;
   int groundTruthEditorSelectMarkerWidth() const override;
   QString groundTruthEditorSelectMarkerColor() const override;
+  QString groundTruthEditorMatrixAdjust() const override;
 
   QStringList languages() const override;
   void read() override;
@@ -477,6 +478,7 @@ public slots:
   void setGroundTruthEditorMarkerColor(const QString &color) override;
   void setGroundTruthEditorSelectMarkerWidth(int width) override;
   void setGroundTruthEditorSelectMarkerColor(const QString &color) override;
+  void setGroundTruthEditorMatrixAdjust(const QString &adjust) override;
 
   void reset() override;
 

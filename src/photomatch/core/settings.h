@@ -293,6 +293,8 @@ public:
   virtual void setGroundTruthEditorSelectMarkerWidth(int width) = 0;
   virtual QString groundTruthEditorSelectMarkerColor() const = 0;
   virtual void setGroundTruthEditorSelectMarkerColor(const QString &color) = 0;
+  virtual QString groundTruthEditorMatrixAdjust() const = 0;
+  virtual void setGroundTruthEditorMatrixAdjust(const QString &matrix) = 0;
 
   /*!
    * \brief Recupera la configuración por defecto
@@ -497,7 +499,8 @@ public:
   void setGroundTruthEditorSelectMarkerWidth(int width) override;
   QString groundTruthEditorSelectMarkerColor() const override;
   void setGroundTruthEditorSelectMarkerColor(const QString &color) override;
-
+  QString groundTruthEditorMatrixAdjust() const override;
+  void setGroundTruthEditorMatrixAdjust(const QString &matrix) override;
 
   void reset() override;
 
@@ -578,6 +581,7 @@ protected:
   int mGroundTruthEditorMarkerWidth;
   int mGroundTruthEditorSelectMarkerWidth;
   QString mGroundTruthEditorSelectMarkerColor;
+  QString mGroundTruthEditorMatrixAdjust;
 
 };
 

@@ -73,6 +73,7 @@ void PreprocessViewImp::setCurrentPreprocess(const QString &preprocess)
 
   const QSignalBlocker blocker(mComboBoxPreprocess);
   mComboBoxPreprocess->setCurrentText(preprocess);
+
   for (int idx = 0; idx < mGridLayoutPreprocess->count(); idx++){
     QLayoutItem * const item = mGridLayoutPreprocess->itemAt(idx);
     if(dynamic_cast<QWidgetItem *>(item)){

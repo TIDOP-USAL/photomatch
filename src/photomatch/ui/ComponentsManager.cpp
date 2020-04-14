@@ -599,7 +599,9 @@ CurvesViewerPresenter *ComponentsManager::curvesPRViewerPresenter()
 
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     CurvesViewerViewImp *curvesViewerView = new PRCurvesViewer(this->mainWindowView(), f);
-    mCurvesPRViewerPresenter = new CurvesViewerPresenterImp(curvesViewerView, this->curvesPRViewerModel());
+    mCurvesPRViewerPresenter = new CurvesViewerPresenterImp(curvesViewerView,
+                                                            this->curvesPRViewerModel(),
+                                                            this->settingsModel());
   }
   return mCurvesPRViewerPresenter;
 }
@@ -617,7 +619,9 @@ CurvesViewerPresenter *ComponentsManager::curvesROCViewerPresenter()
   if (mCurvesROCViewerPresenter == nullptr) {
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     CurvesViewerViewImp *curvesViewerView = new ROCCurvesViewer(this->mainWindowView(), f);
-    mCurvesROCViewerPresenter = new CurvesViewerPresenterImp(curvesViewerView, this->curvesROCViewerModel());
+    mCurvesROCViewerPresenter = new CurvesViewerPresenterImp(curvesViewerView,
+                                                             this->curvesROCViewerModel(),
+                                                             this->settingsModel());
   }
   return mCurvesROCViewerPresenter;
 }
@@ -635,7 +639,9 @@ CurvesViewerPresenter *ComponentsManager::curvesDETViewerPresenter()
   if (mCurvesDETViewerPresenter == nullptr) {
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     CurvesViewerViewImp *curvesViewerView = new DETCurvesViewer(this->mainWindowView(), f);
-    mCurvesDETViewerPresenter = new CurvesViewerPresenterImp(curvesViewerView, this->curvesDETViewerModel());
+    mCurvesDETViewerPresenter = new CurvesViewerPresenterImp(curvesViewerView,
+                                                             this->curvesDETViewerModel(),
+                                                             this->settingsModel());
   }
   return mCurvesDETViewerPresenter;
 }

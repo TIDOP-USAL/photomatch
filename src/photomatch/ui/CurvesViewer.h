@@ -57,6 +57,9 @@ public:
   virtual std::vector<std::pair<double, int>> classifiedMatches(const QString &session,
                                                                 const QString &imgLeft,
                                                                 const QString &imgRight) const = 0;
+  virtual QString adjustMatrix() const = 0;
+  virtual void setAdjustMatrix(const QString &adjustMatrix) = 0;
+
 };
 
 

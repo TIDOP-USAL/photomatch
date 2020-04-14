@@ -385,6 +385,7 @@ SettingsPresenterImp::SettingsPresenterImp(SettingsView *view, SettingsModel *mo
   connect(mView, SIGNAL(groundTruthEditorMarkerColorChange(QString)),       mModel, SLOT(setGroundTruthEditorMarkerColor(QString)));
   connect(mView, SIGNAL(selectGroundTruthEditorMarkerWidthChange(int)),     mModel, SLOT(setGroundTruthEditorSelectMarkerWidth(int)));
   connect(mView, SIGNAL(selectGroundTruthEditorMarkerColorChange(QString)), mModel, SLOT(setGroundTruthEditorSelectMarkerColor(QString)));
+  connect(mView, SIGNAL(groundTruthEditorMatrixAdjustChange(QString)),      mModel, SLOT(setGroundTruthEditorMatrixAdjust(QString)));
 
 }
 
