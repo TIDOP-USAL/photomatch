@@ -261,7 +261,7 @@ SettingsPresenterImp::SettingsPresenterImp(SettingsView *view, SettingsModel *mo
 
   /* KAZE */
   connect(mKaze, SIGNAL(extendedDescriptorChange(bool)),     mModel, SLOT(setKazeExtendedDescriptor(bool)));
-  connect(mKaze, SIGNAL(uprightChange(bool)),                mModel, SLOT(setKazeUpright(bool)));
+  connect(mKaze, SIGNAL(uprightDescriptorChange(bool)),      mModel, SLOT(setKazeUpright(bool)));
   connect(mKaze, SIGNAL(thresholdChange(double)),            mModel, SLOT(setKazeThreshold(double)));
   connect(mKaze, SIGNAL(octavesChange(int)),                 mModel, SLOT(setKazeOctaves(int)));
   connect(mKaze, SIGNAL(octaveLayersChange(int)),            mModel, SLOT(setKazeOctaveLayers(int)));
@@ -385,6 +385,7 @@ SettingsPresenterImp::SettingsPresenterImp(SettingsView *view, SettingsModel *mo
   connect(mView, SIGNAL(groundTruthEditorMarkerColorChange(QString)),       mModel, SLOT(setGroundTruthEditorMarkerColor(QString)));
   connect(mView, SIGNAL(selectGroundTruthEditorMarkerWidthChange(int)),     mModel, SLOT(setGroundTruthEditorSelectMarkerWidth(int)));
   connect(mView, SIGNAL(selectGroundTruthEditorMarkerColorChange(QString)), mModel, SLOT(setGroundTruthEditorSelectMarkerColor(QString)));
+  connect(mView, SIGNAL(groundTruthEditorMatrixAdjustChange(QString)),      mModel, SLOT(setGroundTruthEditorMatrixAdjust(QString)));
 
 }
 
@@ -825,6 +826,7 @@ void SettingsPresenterImp::open()
   mView->setGroundTruthEditorMarkerWidth(mModel->groundTruthEditorMarkerWidth());
   mView->setSelectGroundTruthEditorMarkerWidth(mModel->groundTruthEditorSelectMarkerWidth());
   mView->setSelectGroundTruthEditorMarkerColor(mModel->groundTruthEditorSelectMarkerColor());
+  mView->setGroundTruthEditorMatrixAdjust(mModel->groundTruthEditorMatrixAdjust());
 
   mView->exec();
 }

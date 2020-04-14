@@ -121,6 +121,7 @@ public:
   QString groundTruthEditorMarkerColor() const override;
   int selectGroundTruthEditorMarkerWidth() const override;
   QString selectGroundTruthEditorMarkerColor() const override;
+  QString groundTruthEditorMatrixAdjust() const override;
 
 public slots:
 
@@ -166,6 +167,7 @@ public slots:
   void setGroundTruthEditorMarkerColor(const QString &color) override;
   void setSelectGroundTruthEditorMarkerWidth(int width) override;
   void setSelectGroundTruthEditorMarkerColor(const QString &color) override;
+  void setGroundTruthEditorMatrixAdjust(const QString &matrix) override;
 
   void setUnsavedChanges(bool unsaveChanges) override;
 
@@ -222,6 +224,7 @@ protected:
   QSpinBox *mSpinBoxSelectGTEditorMarkerWidth;
   QLineEdit *mLineEditSelectGTEditorMarkerColor;
   QPushButton *mPushButtonSelectGTEditorMarkerColor;
+  QComboBox *mGroundTruthEditorMatrixAdjust;
 
   QListWidget *mListWidgetPreprocess;
   QListWidget *mListWidgetFeatures;

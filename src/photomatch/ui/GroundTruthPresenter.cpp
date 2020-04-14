@@ -90,7 +90,8 @@ void GroundTruthPresenterImp::loadRightImage(const QString &image)
 void GroundTruthPresenterImp::errors(const QString &imageLeft,
                                      const QString &imageRight)
 {
-  if (0 /* bHomography */){
+  QString matrixAdjust = mSettingsModel->groundTruthEditorMatrixAdjust();
+  if (matrixAdjust.compare("Homography") == 0){
     homographyErrors(imageLeft, imageRight);
   } else {
     fundamentalErrors(imageLeft, imageRight);

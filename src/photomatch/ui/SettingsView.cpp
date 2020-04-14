@@ -525,6 +525,13 @@ void SettingsViewImp::initUI()
   mPushButtonGroundTruthEditorBGColor->setMaximumSize(QSize(23, 23));
   layoutGTEGeneral->addWidget(mPushButtonGroundTruthEditorBGColor, 0, 2, 1, 1);
 
+  layoutGTEGeneral->addWidget(new QLabel(tr("Adjust ground truth to:")), 1, 0, 1, 1);
+  mGroundTruthEditorMatrixAdjust = new QComboBox(this);
+  mGroundTruthEditorMatrixAdjust->addItem("Fundamental Matrix");
+  mGroundTruthEditorMatrixAdjust->addItem("Homography");
+  mGroundTruthEditorMatrixAdjust->setCurrentText("Fundamental Matrix");
+  layoutGTEGeneral->addWidget(mGroundTruthEditorMatrixAdjust, 1, 1, 1, 1);
+
   QGroupBox *groupBoxGTEMarker = new QGroupBox(tr("Marker"), this);
   gridLayoutContentsGroundTruthEditor->addWidget(groupBoxGTEMarker);
   QGridLayout *layoutGTEMarker = new QGridLayout();
@@ -636,6 +643,7 @@ void SettingsViewImp::initSignalAndSlots()
   connect(mSpinBoxSelectGTEditorMarkerWidth,          SIGNAL(valueChanged(int)),            this,  SIGNAL(selectGroundTruthEditorMarkerWidthChange(int)));
   connect(mLineEditSelectGTEditorMarkerColor,         SIGNAL(textChanged(QString)),         this,  SIGNAL(selectGroundTruthEditorMarkerColorChange(QString)));
   connect(mPushButtonSelectGTEditorMarkerColor,       SIGNAL(clicked(bool)),                this,  SLOT(onPushButtonSelectGroundTruthEditorMarkerColorClicked()));
+  connect(mGroundTruthEditorMatrixAdjust,             SIGNAL(currentTextChanged(QString)),  this,  SIGNAL(groundTruthEditorMatrixAdjustChange(QString)));
 
   connect(mListWidgetPreprocess, SIGNAL(currentTextChanged(QString)), this, SLOT(onPreprocessChange(QString)));
   connect(mListWidgetFeatures,   SIGNAL(currentTextChanged(QString)), this, SLOT(onFeatureDetectorDescriptorChange(QString)));
@@ -676,6 +684,7 @@ void SettingsViewImp::clear()
   const QSignalBlocker blockerSelectGroundTruthEditorMarkerColor(mLineEditSelectGTEditorMarkerColor);
   const QSignalBlocker blockerMatchesSelectMarkerColor(mLineEditMatchesViewerMarkerColor);
   const QSignalBlocker blockerSelectMatchesMarkerColor(mLineEditSelectMatchesViewerMarkerColor);
+  const QSignalBlocker blockerGroundTruthEditorMatrixAdjust(mGroundTruthEditorMatrixAdjust);
 
   mLanguages->clear();
 
@@ -711,6 +720,7 @@ void SettingsViewImp::clear()
   mLineEditGroundTruthEditorMarkerColor->setText("#00aa00");
   mSpinBoxSelectGTEditorMarkerWidth->setValue(2);
   mLineEditSelectGTEditorMarkerColor->setText("#e5097e");
+  mGroundTruthEditorMatrixAdjust->setCurrentText("Fundamental Matrix");
 }
 
 void SettingsViewImp::update()
@@ -863,6 +873,11 @@ int SettingsViewImp::selectGroundTruthEditorMarkerWidth() const
 QString SettingsViewImp::selectGroundTruthEditorMarkerColor() const
 {
   return mLineEditSelectGTEditorMarkerColor->text();
+}
+
+QString SettingsViewImp::groundTruthEditorMatrixAdjust() const
+{
+  return mGroundTruthEditorMatrixAdjust->currentText();
 }
 
 void SettingsViewImp::setPage(int page)
@@ -1067,6 +1082,12 @@ void SettingsViewImp::setSelectGroundTruthEditorMarkerColor(const QString &color
 {
   const QSignalBlocker blockerSelectGroundTruthEditorMarkerColor(mLineEditSelectGTEditorMarkerColor);
   mLineEditSelectGTEditorMarkerColor->setText(color);
+}
+
+void SettingsViewImp::setGroundTruthEditorMatrixAdjust(const QString &matrix)
+{
+  const QSignalBlocker blockerGroundTruthEditorMatrixAdjust(mGroundTruthEditorMatrixAdjust);
+  mGroundTruthEditorMatrixAdjust->setCurrentText(matrix);
 }
 
 void SettingsViewImp::setUnsavedChanges(bool unsaveChanges)

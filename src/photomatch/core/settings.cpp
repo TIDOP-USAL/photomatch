@@ -136,7 +136,8 @@ SettingsImp::SettingsImp()
     mGroundTruthEditorMarkerSize(20),
     mGroundTruthEditorMarkerWidth(2),
     mGroundTruthEditorSelectMarkerWidth(2),
-    mGroundTruthEditorSelectMarkerColor("#e5097e")
+    mGroundTruthEditorSelectMarkerColor("#e5097e"),
+    mGroundTruthEditorMatrixAdjust("Fundamental Matrix")
 {
 
   reset();
@@ -1004,6 +1005,16 @@ void SettingsImp::setGroundTruthEditorSelectMarkerColor(const QString &color)
   mGroundTruthEditorSelectMarkerColor = color;
 }
 
+QString SettingsImp::groundTruthEditorMatrixAdjust() const
+{
+  return mGroundTruthEditorMatrixAdjust;
+}
+
+void SettingsImp::setGroundTruthEditorMatrixAdjust(const QString &matrix)
+{
+  mGroundTruthEditorMatrixAdjust = matrix;
+}
+
 void SettingsImp::reset()
 {
   mLanguage = "en";
@@ -1080,6 +1091,7 @@ void SettingsImp::reset()
   mGroundTruthEditorMarkerWidth = 2;
   mGroundTruthEditorSelectMarkerWidth = 2;
   mGroundTruthEditorSelectMarkerColor = "#e5097e";
+  mGroundTruthEditorMatrixAdjust = "Fundamental Matrix";
 }
 
 
@@ -1361,7 +1373,7 @@ void SettingsControllerImp::read(Settings &settings)
   settings.setGroundTruthEditorMarkerColor(mSettingsController->value("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor()).toString());
   settings.setGroundTruthEditorSelectMarkerWidth(mSettingsController->value("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth()).toInt());
   settings.setGroundTruthEditorSelectMarkerColor(mSettingsController->value("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor()).toString());
-
+  settings.setGroundTruthEditorMatrixAdjust(mSettingsController->value("GroundTruthEditor/MatrixAdjust", settings.groundTruthEditorMatrixAdjust()).toString());
 }
 
 void SettingsControllerImp::write(const Settings &settings)
@@ -1610,6 +1622,7 @@ void SettingsControllerImp::write(const Settings &settings)
   mSettingsController->setValue("GroundTruthEditor/MarkerColor", settings.groundTruthEditorMarkerColor());
   mSettingsController->setValue("GroundTruthEditor/SelectMarkerWidth", settings.groundTruthEditorSelectMarkerWidth());
   mSettingsController->setValue("GroundTruthEditor/SelectMarkerColor", settings.groundTruthEditorSelectMarkerColor());
+  mSettingsController->setValue("GroundTruthEditor/MatrixAdjust", settings.groundTruthEditorMatrixAdjust());
 }
 
 void SettingsControllerImp::writeHistory(const Settings &settings)

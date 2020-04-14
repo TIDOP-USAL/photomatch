@@ -26,6 +26,7 @@
 
 #include "photomatch/ui/CurvesViewerModel.h"
 #include "photomatch/ui/CurvesViewerView.h"
+#include "photomatch/ui/SettingsModel.h"
 #include "photomatch/ui/HelpDialog.h"
 
 #include <QFileInfo>
@@ -34,10 +35,12 @@ namespace photomatch
 {
 
 CurvesViewerPresenterImp::CurvesViewerPresenterImp(CurvesViewerView *view,
-                                             CurvesViewerModel *model)
+                                                   CurvesViewerModel *model,
+                                                   SettingsModel *settings)
   : CurvesViewerPresenter(),
     mView(view),
     mModel(model),
+    mSettingsModel(settings),
     mHelp(nullptr)
 {
   init();
@@ -89,6 +92,10 @@ void CurvesViewerPresenterImp::disableSession(const QString &session)
 void CurvesViewerPresenterImp::computeCurve(const QString &session, const QString &imageLeft, const QString &imageRight)
 {
   std::vector<QPointF> curve;
+
+  QString matrixAdjust = mSettingsModel->groundTruthEditorMatrixAdjust();
+  mModel->setAdjustMatrix(matrixAdjust);
+
   double auc = mModel->computeCurve(session, imageLeft, imageRight, curve);
   QString title = session;
   title.append(" [AUC=").append(QString::number(auc, 'g', 3)).append("]");

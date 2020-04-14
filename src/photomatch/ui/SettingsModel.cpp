@@ -981,6 +981,11 @@ QString SettingsModelImp::groundTruthEditorSelectMarkerColor() const
   return mSettings->groundTruthEditorSelectMarkerColor();
 }
 
+QString SettingsModelImp::groundTruthEditorMatrixAdjust() const
+{
+  return mSettings->groundTruthEditorMatrixAdjust();
+}
+
 void SettingsModelImp::setLanguage(const QString &language)
 {
   mSettings->setLanguage(language);
@@ -2048,6 +2053,12 @@ void SettingsModelImp::setGroundTruthEditorSelectMarkerWidth(int width)
 void SettingsModelImp::setGroundTruthEditorSelectMarkerColor(const QString &color)
 {
   mSettings->setGroundTruthEditorSelectMarkerColor(color);
+  emit unsavedChanges(true);
+}
+
+void SettingsModelImp::setGroundTruthEditorMatrixAdjust(const QString &adjust)
+{
+  mSettings->setGroundTruthEditorMatrixAdjust(adjust);
   emit unsavedChanges(true);
 }
 

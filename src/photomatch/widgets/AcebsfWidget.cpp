@@ -212,6 +212,7 @@ void AcebsfWidgetImp::initSignalAndSlots()
   connect(mK2,            SIGNAL(valueChanged(double)),     this, SIGNAL(k2Change(double)));
 }
 
+///TODO: subir a la interfaz comun
 void AcebsfWidgetImp::changeEvent(QEvent *event)
 {
   QWidget::changeEvent(event);

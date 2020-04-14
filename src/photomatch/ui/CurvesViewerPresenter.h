@@ -36,6 +36,7 @@ namespace photomatch
 
 class CurvesViewerView;
 class CurvesViewerModel;
+class SettingsModel;
 class HelpDialog;
 
 
@@ -48,7 +49,8 @@ class CurvesViewerPresenterImp
 public:
 
   CurvesViewerPresenterImp(CurvesViewerView *view,
-                        CurvesViewerModel *model);
+                           CurvesViewerModel *model,
+                           SettingsModel *settings);
   ~CurvesViewerPresenterImp() override {}
 
 //ICurvesViewerPresenter interface
@@ -79,6 +81,7 @@ private:
 
   CurvesViewerView *mView;
   CurvesViewerModel *mModel;
+  SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
 };
 

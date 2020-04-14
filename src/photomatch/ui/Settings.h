@@ -282,6 +282,7 @@ public:
   virtual QString groundTruthEditorMarkerColor() const = 0;
   virtual int groundTruthEditorSelectMarkerWidth() const = 0;
   virtual QString groundTruthEditorSelectMarkerColor() const = 0;
+  virtual QString groundTruthEditorMatrixAdjust() const = 0;
 
   /*!
    * \brief read
@@ -544,6 +545,7 @@ public slots:
   virtual void setGroundTruthEditorMarkerColor(const QString &color) = 0;
   virtual void setGroundTruthEditorSelectMarkerWidth(int width) = 0;
   virtual void setGroundTruthEditorSelectMarkerColor(const QString &color) = 0;
+  virtual void setGroundTruthEditorMatrixAdjust(const QString &adjust) = 0;
 
   virtual void reset() = 0;
 
@@ -604,6 +606,7 @@ public:
   virtual QString groundTruthEditorMarkerColor() const = 0;
   virtual int selectGroundTruthEditorMarkerWidth() const = 0;
   virtual QString selectGroundTruthEditorMarkerColor() const = 0;
+  virtual QString groundTruthEditorMatrixAdjust() const = 0;
 
 public slots:
 
@@ -666,6 +669,7 @@ public slots:
   virtual void setGroundTruthEditorMarkerColor(const QString &color) = 0;
   virtual void setSelectGroundTruthEditorMarkerWidth(int width) = 0;
   virtual void setSelectGroundTruthEditorMarkerColor(const QString &color) = 0;
+  virtual void setGroundTruthEditorMatrixAdjust(const QString &matrix) = 0;
 
   virtual void setUnsavedChanges(bool unsaveChanges) = 0;
 
@@ -703,6 +707,7 @@ signals:
   void groundTruthEditorMarkerColorChange(QString);
   void selectGroundTruthEditorMarkerWidthChange(int);
   void selectGroundTruthEditorMarkerColorChange(QString);
+  void groundTruthEditorMatrixAdjustChange(QString);
 };
 
 

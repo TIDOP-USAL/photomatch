@@ -44,7 +44,8 @@ namespace photomatch
 
 CurvesViewerModelImp::CurvesViewerModelImp(photomatch::ProjectModel *projectModel)
   : CurvesViewerModel(),
-    mProjectModel(projectModel)
+    mProjectModel(projectModel),
+    mMatrix("Fundamental Matrix")
 {
   init();
 }
@@ -163,7 +164,7 @@ std::vector<std::pair<double, int> > CurvesViewerModelImp::classifiedMatches(con
 
     cv::Mat homography;
     cv::Mat fundamental_matrix;
-    if (0 /*bHomography*/){
+    if (mMatrix.compare("Homography") == 0){
       homography = cv::findHomography(pts_query, pts_train);
     } else {
       fundamental_matrix = cv::findFundamentalMat(pts_query, pts_train);
@@ -206,7 +207,7 @@ std::vector<std::pair<double, int> > CurvesViewerModelImp::classifiedMatches(con
             std::vector<cv::Point2f> pts_query;
             std::vector<cv::Point2f> pts_train;
 
-            if (0 /*bHomography*/){
+            if (mMatrix.compare("Homography") == 0){
               for (size_t i = 0; i < goodMatches.size(); i++){
                 size_t query_id = (idx == 0) ? static_cast<size_t>(goodMatches[i].queryIdx) : static_cast<size_t>(goodMatches[i].trainIdx);
                 size_t train_id = (idx == 0) ? static_cast<size_t>(goodMatches[i].trainIdx) : static_cast<size_t>(goodMatches[i].queryIdx);
@@ -304,6 +305,16 @@ std::vector<std::pair<double, int> > CurvesViewerModelImp::classifiedMatches(con
   }
 
   return classified_matches;
+}
+
+QString CurvesViewerModelImp::adjustMatrix() const
+{
+  return mMatrix;
+}
+
+void CurvesViewerModelImp::setAdjustMatrix(const QString &adjustMatrix)
+{
+  mMatrix = adjustMatrix;
 }
 
 void CurvesViewerModelImp::init()
