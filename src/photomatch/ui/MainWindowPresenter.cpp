@@ -328,7 +328,7 @@ void MainWindowPresenter::openStartPage()
 
 void MainWindowPresenter::openGitHub()
 {
-  QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
+  QDesktopServices::openUrl(QUrl("https://github.com/TIDOP-USAL/photomatch"));
 }
 
 void MainWindowPresenter::openKeypointsViewer()
