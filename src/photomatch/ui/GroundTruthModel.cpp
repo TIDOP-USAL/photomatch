@@ -55,23 +55,13 @@ GroundTruthModelImp::~GroundTruthModelImp()
   }
 }
 
-QPointF GroundTruthModelImp::findPoint(const QString &image1, const QString &image2, const QPointF &ptImage1)
+QPointF GroundTruthModelImp::findPoint(const QString &image1,
+                                       const QString &image2,
+                                       const QPointF &ptImage1)
 {
   QTransform trf = this->homography(image1, image2);
   if (trf.isIdentity() == false){
     QPointF trf_point = trf.map(ptImage1);
-
-    /// Matriz de transformación en OpenCV
-//    cv::Mat h(3,3, CV_64FC1);
-//    h.at<double>(0, 0) = trf.m11();
-//    h.at<double>(1, 0) = trf.m12();
-//    h.at<double>(2, 0) = trf.m13();
-//    h.at<double>(0, 1) = trf.m21();
-//    h.at<double>(1, 1) = trf.m22();
-//    h.at<double>(2, 1) = trf.m23();
-//    h.at<double>(0, 2) = 0; // trf.m31();
-//    h.at<double>(1, 2) = 0; // trf.m32();
-//    h.at<double>(2, 2) = trf.m33();
 
     /// - se calcula una ventana a partir de pt
     /// - se lee el trozo de imagen correspondiente a la ventana
@@ -82,32 +72,15 @@ QPointF GroundTruthModelImp::findPoint(const QString &image1, const QString &ima
 
     reader1.setClipRect(rect1);
     QImage qImage1 = reader1.read();
-    
-    //cv::Rect2f rect;
-    //QPointF trf_pt_tl = trf_inv.map(rectRight.topLeft());
-    //QPointF trf_pt_tr = trf_inv.map(rectRight.topRight());
-    //QPointF trf_pt_br = trf_inv.map(rectRight.bottomRight());
-    //QPointF trf_pt_bl = trf_inv.map(rectRight.bottomLeft());
-    //rect.x = trf_pt_tl.x() < trf_pt_bl.x() ? trf_pt_tl.x() : trf_pt_bl.x();
-    //rect.y = trf_pt_tl.y() < trf_pt_tr.y() ? trf_pt_tl.y() : trf_pt_tr.y();
-    //rect.width = trf_pt_tr.x() > trf_pt_br.x() ? trf_pt_tr.x() - rect.x : trf_pt_br.x() - rect.x;
-    //rect.height = trf_pt_br.y() > trf_pt_bl.y() ? trf_pt_br.y() - rect.y : trf_pt_bl.y() - rect.y;
-    //cv::Size size = rect.size();
 
     /// - se aplica la transformación proyectiva a la imagen y se utiliza como template
     cv::Mat templ1 = qImageToCvMat(qImage1);
-    //cv::cvtColor(templ1, templ1, cv::COLOR_BGR2GRAY);
-    //cv::Mat warp_templ1;
-    //cv::Size size(trf_pt_br.x() - trf_pt_tl.x(), trf_pt_br.y() - trf_pt_tl.y());
-    //cv::warpPerspective(templ1, warp_templ1, h, templ1.size());
-
 
     QImageReader reader2(mProjectModel->findImageByName(image2)->path());
     QRect rect2(static_cast<int>(trf_point.x()) - 150, static_cast<int>(trf_point.y()) - 150, 300, 300);
     reader2.setClipRect(rect2);
     QImage qImage2 = reader2.read();
     cv::Mat search_mat = qImageToCvMat(qImage2);
-    //cv::cvtColor(search_mat, search_mat, cv::COLOR_BGR2GRAY);
 
     cv::Mat result(search_mat.rows - templ1.rows + 1, search_mat.cols - templ1.cols + 1, CV_32FC1);
 
@@ -134,7 +107,9 @@ QPointF GroundTruthModelImp::findPoint(const QString &image1, const QString &ima
   return QPointF();
 }
 
-QPointF GroundTruthModelImp::findProjectedPoint(const QString & image1, const QString & image2, const QPointF & ptImage1)
+QPointF GroundTruthModelImp::findProjectedPoint(const QString &image1,
+                                                const QString & image2,
+                                                const QPointF & ptImage1)
 {
   QTransform trf = this->homography(image1, image2);
   if (trf.isIdentity() == false)
@@ -251,7 +226,8 @@ QTransform GroundTruthModelImp::homography(const HomologusPoints &homologusPoint
   return trf;
 }
 
-cv::Mat GroundTruthModelImp::fundamental(const QString &imgName1, const QString &imgName2) const
+cv::Mat GroundTruthModelImp::fundamental(const QString &imgName1,
+                                         const QString &imgName2) const
 {
   return fundamental(homologusPoints(imgName1, imgName2));
 }
@@ -286,7 +262,8 @@ std::vector<double> GroundTruthModelImp::errorsHomography(const QString &imgName
   return errors;
 }
 
-std::vector<double> GroundTruthModelImp::errorsFundamental(const QString &imgName1, const QString &imgName2) const
+std::vector<double> GroundTruthModelImp::errorsFundamental(const QString &imgName1,
+                                                           const QString &imgName2) const
 {
   HomologusPoints homologus_points = homologusPoints(imgName1, imgName2);
   std::vector<double> errors(homologus_points.size(), -1.);
@@ -297,12 +274,8 @@ std::vector<double> GroundTruthModelImp::errorsFundamental(const QString &imgNam
     std::vector<cv::Point2f> train_points = homologus_points.trainPoints();
     cv::computeCorrespondEpilines(query_points, 1, fundamental_matrix, lines);
 
-//    std::vector<cv::Vec3f> lines2;
-//    cv::computeCorrespondEpilines(train_points, 2, fundamental_matrix, lines2);
-
     for (size_t i = 0; i < train_points.size(); i++){
       errors[i] = static_cast<double>(distancePointLine(train_points[i], lines[i]));
-      //errors2[i] = static_cast<double>(distancePointLine(query_points[i], lines2[i]));
     }
   }
   return errors;
@@ -335,38 +308,46 @@ QString GroundTruthModelImp::projectPath() const
 }
 
 QPointF GroundTruthModelImp::findLeftPoint(const QString &image1,
-                                        const QString &image2,
-                                        const QPointF &pt)
+                                           const QString &image2,
+                                           const QPointF &pt)
 {
   return findPoint(image2, image1, pt);
 }
 
 QPointF GroundTruthModelImp::findRightPoint(const QString &image1,
-                                         const QString &image2,
-                                         const QPointF &pt)
+                                            const QString &image2,
+                                            const QPointF &pt)
 {
   return findPoint(image1, image2, pt);
 }
 
-QPointF GroundTruthModelImp::findProjectedLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
+QPointF GroundTruthModelImp::findProjectedLeftPoint(const QString &image1,
+                                                    const QString &image2,
+                                                    const QPointF &pt)
 {
   return findProjectedPoint(image2, image1, pt);
 }
 
-QPointF GroundTruthModelImp::findProjectedRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
+QPointF GroundTruthModelImp::findProjectedRightPoint(const QString &image1,
+                                                     const QString &image2,
+                                                     const QPointF &pt)
 {
   return findProjectedPoint(image1, image2, pt);
 }
 
-void GroundTruthModelImp::addHomologus(const QString &image1, const QPointF &pt1,
-                                          const QString &image2, const QPointF &pt2)
+void GroundTruthModelImp::addHomologus(const QString &image1,
+                                       const QPointF &pt1,
+                                       const QString &image2,
+                                       const QPointF &pt2)
 {
   if (std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(image1, image2)){
     homologus->addPoints(pt1, pt2);
   }
 }
 
-void GroundTruthModelImp::deleteHomologus(const QString &image1, const QString &image2, int pointId)
+void GroundTruthModelImp::deleteHomologus(const QString &image1,
+                                          const QString &image2,
+                                          int pointId)
 {
   if (std::shared_ptr<HomologusPoints> homologus = mGroundTruth->pair(image1, image2)){
     /// Se marca como nulo

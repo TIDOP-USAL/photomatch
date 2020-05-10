@@ -34,20 +34,17 @@
 namespace photomatch
 {
 
-FeaturesViewerPresenterImp::FeaturesViewerPresenterImp(photomatch::FeaturesViewerView *view,
-                                                 photomatch::FeaturesViewerModel *model,
-                                                 SettingsModel *settingsModel)
+FeaturesViewerPresenterImp::FeaturesViewerPresenterImp(FeaturesViewerView *view,
+                                                       FeaturesViewerModel *model,
+                                                       SettingsModel *settingsModel)
   : FeaturesViewerPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settingsModel),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(imageChange(QString)),     this, SLOT(setImageActive(QString)));
-
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 FeaturesViewerPresenterImp::~FeaturesViewerPresenterImp()
@@ -91,7 +88,8 @@ void FeaturesViewerPresenterImp::openKeypointsFromSession(const QString &session
   this->open();
 }
 
-void FeaturesViewerPresenterImp::openKeypointsFromSessionAndImage(const QString &session, const QString &image)
+void FeaturesViewerPresenterImp::openKeypointsFromSessionAndImage(const QString &session,
+                                                                  const QString &image)
 {
   this->setSession(session);
   this->open();
@@ -105,6 +103,13 @@ void FeaturesViewerPresenterImp::setHelp(HelpDialog *help)
 
 void FeaturesViewerPresenterImp::init()
 {
+}
+
+void FeaturesViewerPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(imageChange(QString)),     this, SLOT(setImageActive(QString)));
+
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 void FeaturesViewerPresenterImp::setSession(const QString &session)

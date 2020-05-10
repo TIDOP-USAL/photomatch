@@ -37,33 +37,16 @@ namespace photomatch
 {
 
 GroundTruthPresenterImp::GroundTruthPresenterImp(GroundTruthView *view,
-                                           GroundTruthModel *model,
-                                           SettingsModel *settings)
+                                                 GroundTruthModel *model,
+                                                 SettingsModel *settings)
   : GroundTruthPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settings),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
-  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
-  connect(mView, SIGNAL(addHomologousPoints(QString,QPointF,QString,QPointF)),
-          this, SLOT(addHomologousPoints(QString,QPointF,QString,QPointF)));
-  connect(mView, SIGNAL(loadHomologousPoints(QString, QString)),    this, SLOT(loadGroundTruth(QString, QString)));
-  connect(mView, SIGNAL(deleteHomologous(QString, QString, int)), this,  SLOT(deleteHomologous(QString, QString, int)));
-  connect(mView, SIGNAL(importGroundTruth()), this, SLOT(importGroundTruth()));
-  connect(mView, SIGNAL(saveGroundTruth()),   this, SLOT(save()));
-  connect(mView, SIGNAL(selectHomologous(QString, QString, int)), this, SLOT(selectHomologous(QString, QString, int)));
-  connect(mView, SIGNAL(leftPointClicked(QString, QString, QPointF)), this, SLOT(leftPointClicked(QString, QString, QPointF)));
-  connect(mView, SIGNAL(rightPointClicked(QString, QString, QPointF)), this, SLOT(rightPointClicked(QString, QString, QPointF)));
-  connect(mView, SIGNAL(findLeftPoint(QString, QString, QPointF)), this, SLOT(findLeftPoint(QString, QString, QPointF)));
-  connect(mView, SIGNAL(findRightPoint(QString, QString, QPointF)), this, SLOT(findRightPoint(QString, QString, QPointF)));
-
-  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
-
+  this->init();
+  this->initSignalAndSlots();
 }
 
 GroundTruthPresenterImp::~GroundTruthPresenterImp()
@@ -172,24 +155,30 @@ void GroundTruthPresenterImp::importGroundTruth()
 }
 
 void GroundTruthPresenterImp::selectHomologous(const QString &image1,
-                                                 const QString &image2,
-                                                 int pointId)
+                                               const QString &image2,
+                                               int pointId)
 {
   std::pair<QPointF, QPointF> homologus = mModel->homologus(image1, image2, pointId);
   mView->setSelectedHomologous(homologus.first, homologus.second);
 }
 
-void GroundTruthPresenterImp::leftPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::leftPointClicked(const QString &image1,
+                                               const QString &image2,
+                                               const QPointF &pt)
 {
   mView->setSelectLeftPoint(pt, true);
 }
 
-void GroundTruthPresenterImp::rightPointClicked(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::rightPointClicked(const QString &image1,
+                                                const QString &image2,
+                                                const QPointF &pt)
 {
   mView->setSelectedRightPoint(pt, true);
 }
 
-void GroundTruthPresenterImp::findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::findLeftPoint(const QString &image1,
+                                            const QString &image2,
+                                            const QPointF &pt)
 {
   QPointF point_left = mModel->findLeftPoint(image1, image2, pt);
   mView->setSelectLeftPoint(point_left, true);
@@ -200,7 +189,9 @@ void GroundTruthPresenterImp::findLeftPoint(const QString &image1, const QString
   }
 }
 
-void GroundTruthPresenterImp::findRightPoint(const QString &image1, const QString &image2, const QPointF &pt)
+void GroundTruthPresenterImp::findRightPoint(const QString &image1,
+                                             const QString &image2,
+                                             const QPointF &pt)
 {
   QPointF point_right = mModel->findRightPoint(image1, image2, pt);
   mView->setSelectedRightPoint(point_right, true);
@@ -266,7 +257,24 @@ void GroundTruthPresenterImp::init()
 {
 }
 
+void GroundTruthPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
+  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
+  connect(mView, SIGNAL(addHomologousPoints(QString,QPointF,QString,QPointF)),
+          this, SLOT(addHomologousPoints(QString,QPointF,QString,QPointF)));
+  connect(mView, SIGNAL(loadHomologousPoints(QString, QString)),    this, SLOT(loadGroundTruth(QString, QString)));
+  connect(mView, SIGNAL(deleteHomologous(QString, QString, int)), this,  SLOT(deleteHomologous(QString, QString, int)));
+  connect(mView, SIGNAL(importGroundTruth()), this, SLOT(importGroundTruth()));
+  connect(mView, SIGNAL(saveGroundTruth()),   this, SLOT(save()));
+  connect(mView, SIGNAL(selectHomologous(QString, QString, int)), this, SLOT(selectHomologous(QString, QString, int)));
+  connect(mView, SIGNAL(leftPointClicked(QString, QString, QPointF)), this, SLOT(leftPointClicked(QString, QString, QPointF)));
+  connect(mView, SIGNAL(rightPointClicked(QString, QString, QPointF)), this, SLOT(rightPointClicked(QString, QString, QPointF)));
+  connect(mView, SIGNAL(findLeftPoint(QString, QString, QPointF)), this, SLOT(findLeftPoint(QString, QString, QPointF)));
+  connect(mView, SIGNAL(findRightPoint(QString, QString, QPointF)), this, SLOT(findRightPoint(QString, QString, QPointF)));
+
+  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+}
+
 } // namespace photomatch
-
-
-

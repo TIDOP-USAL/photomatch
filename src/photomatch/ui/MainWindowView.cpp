@@ -107,69 +107,8 @@ MainWindowView::MainWindowView(QWidget *parent)
 {
   ui->setupUi(this);
 
-  init();
-
-  /* Menú Archivo */
-
-  connect(mActionNewProject,           SIGNAL(triggered(bool)), this,   SIGNAL(openNew()));
-  connect(mActionOpenProject,          SIGNAL(triggered(bool)), this,   SIGNAL(openProject()));
-  connect(mActionClearHistory,         SIGNAL(triggered(bool)), this,   SIGNAL(clearHistory()));
-  connect(mActionSaveProject,          SIGNAL(triggered(bool)), this,   SIGNAL(saveProject()));
-  connect(mActionSaveProjectAs,        SIGNAL(triggered(bool)), this,   SIGNAL(saveProjectAs()));
-  connect(mActionExportTiePoints,      SIGNAL(triggered(bool)), this,   SIGNAL(openExportFeatures()));
-  connect(mActionExportMatches,        SIGNAL(triggered(bool)), this,   SIGNAL(openExportMatches()));
-  connect(mActionCloseProject,         SIGNAL(triggered(bool)), this,   SIGNAL(closeProject()));
-  connect(mActionExit,                 SIGNAL(triggered(bool)), this,   SIGNAL(exit()));
-
-  /* Menú View */
-
-  connect(mActionStartPage,          SIGNAL(triggered(bool)),   this,   SIGNAL(openStartPage()));
-  connect(mActionViewSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openViewSettings()));
-
-  /* Menú herramientas */
-
-  connect(mActionLoadImages,         SIGNAL(triggered(bool)),   this,   SIGNAL(loadImages()));
-  connect(mActionNewSession,         SIGNAL(triggered(bool)),   this,   SIGNAL(newSession()));
-  connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
-  connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
-  connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
-  //connect(mActionBatch,              SIGNAL(triggered(bool)),   this,   SIGNAL(openBatch()));
-  connect(mActionToolSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openToolSettings()));
-
-  /* Quality Control */
-
-  connect(mActionFeaturesViewer,     SIGNAL(triggered(bool)),   this,   SIGNAL(openKeypointsViewer()));
-  connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(openMatchesViewer()));
-  connect(mActionPassPointsViewer,   SIGNAL(triggered(bool)),   this,   SIGNAL(openMultiviewMatchingAssessment()));
-  connect(mActionGroundTruthEditor,  SIGNAL(triggered(bool)),   this,   SIGNAL(groundTruthEditor()));
-  connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
-  //connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
-  connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
-  connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
-  connect(mActionDETCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(detCurves()));
-  connect(mActionQualityControlSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openQualityControlSettings()));
-
-
-  /* Menú Ayuda */
-
-  connect(mActionHelp,               SIGNAL(triggered(bool)),   this,   SIGNAL(openHelpDialog()));
-  connect(mActionOnlineHelp,         SIGNAL(triggered(bool)),   this,   SIGNAL(openOnlineHelp()));
-  connect(mActionAbout,              SIGNAL(triggered(bool)),   this,   SIGNAL(openAboutDialog()));
-
-  /* Panel de vistas en miniatura */
-
-  connect(mThumbnailsWidget,  SIGNAL(openImage(QString)),        this, SIGNAL(openImage(QString)));
-  connect(mThumbnailsWidget,  SIGNAL(selectImage(QString)),      this, SIGNAL(selectImage(QString)));
-  connect(mThumbnailsWidget,  SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
-  connect(mThumbnailsWidget,  SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
-  connect(mThumbnailsWidget,  SIGNAL(imagesLoaded()),            this, SIGNAL(imagesLoaded()));
-
-  connect(mTreeWidgetProject, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTreeContextMenu(const QPoint &)));
-  connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
-  connect(mTreeWidgetProject, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem *, int)));
-
-  connect(mComboBoxActiveSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(activeSessionChange(QString)));
-
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
 MainWindowView::~MainWindowView()
@@ -1211,6 +1150,61 @@ void MainWindowView::update()
   mActionLoadImages->setDisabled(bLoadingImages || bProcessing);
 }
 
+void MainWindowView::retranslate()
+{
+  mActionNewProject->setText(QApplication::translate("MainWindowView", "New Project", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionNewProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+N", nullptr));
+#endif // QT_NO_SHORTCUT
+  mActionOpenProject->setText(QApplication::translate("MainWindowView", "Open Project", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionOpenProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+O", nullptr));
+#endif // QT_NO_SHORTCUT
+  mActionSaveProject->setText(QApplication::translate("MainWindowView", "Save Project", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionSaveProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+S", nullptr));
+#endif // QT_NO_SHORTCUT
+  mActionSaveProjectAs->setText(QApplication::translate("MainWindowView", "Save Project As...", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionSaveProjectAs->setShortcut(QApplication::translate("MainWindowView", "Ctrl+Shift+S", nullptr));
+#endif // QT_NO_SHORTCUT
+  mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export tie points", nullptr));
+  mActionExportMatches->setText(QApplication::translate("MainWindowView", "Export Matches", nullptr));
+  mActionCloseProject->setText(QApplication::translate("MainWindowView", "Close Project", nullptr));
+  mActionExit->setText(QApplication::translate("MainWindowView", "Exit", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionExit->setShortcut(QApplication::translate("MainWindowView", "Ctrl+F4", nullptr));
+#endif // QT_NO_SHORTCUT
+  mActionStartPage->setText(QApplication::translate("MainWindowView", "Start Page", nullptr));
+  mActionViewSettings->setText(QApplication::translate("MainWindowView", "View Settings", nullptr));
+  mActionLoadImages->setText(QApplication::translate("MainWindowView", "Load Images", nullptr));
+  mActionNewSession->setText(QApplication::translate("MainWindowView", "New Session", nullptr));
+  mActionPreprocess->setText(QApplication::translate("MainWindowView", "Preprocess", nullptr));
+  mActionFeatureExtraction->setText(QApplication::translate("MainWindowView", "Feature Extraction", nullptr));
+  mActionFeatureMatching->setText(QApplication::translate("MainWindowView", "Feature Matching", nullptr));
+  mActionToolSettings->setText(QApplication::translate("MainWindowView", "Tools Settings", nullptr));
+  mActionHelp->setText(QApplication::translate("MainWindowView", "Help", nullptr));
+#ifndef QT_NO_SHORTCUT
+  mActionHelp->setShortcut(QApplication::translate("MainWindowView", "F1", nullptr));
+#endif // QT_NO_SHORTCUT
+  mActionOnlineHelp->setText(QApplication::translate("MainWindowView", "Online Help", nullptr));
+  mActionAbout->setText(QApplication::translate("MainWindowView", "About", nullptr));
+  mActionFeaturesViewer->setText(QApplication::translate("MainWindowView", "Keypoints Viewer", nullptr));
+  mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
+  mActionPassPointsViewer->setText(QApplication::translate("MainWindowView", "Multiview Matching Assessment", nullptr));
+  mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
+  mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
+  mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
+  mActionROCCurves->setText(QApplication::translate("MainWindowView", "ROC Curves", nullptr));
+  mActionDETCurves->setText(QApplication::translate("MainWindowView", "DET Curves", nullptr));
+  mActionQualityControlSettings->setText(QApplication::translate("MainWindowView", "Quality Control Settings", nullptr));
+  mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
+  mActionClearHistory->setText(QApplication::translate("MainWindowView", "Clear History", nullptr));
+  mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
+  mActionDeleteSession->setText(QApplication::translate("MainWindowView", "Delete session", nullptr));
+
+}
+
 void MainWindowView::openFromHistory()
 {
   QAction *action = qobject_cast<QAction *>(sender());
@@ -1429,165 +1423,105 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
 
 }
 
-void MainWindowView::init()
+void MainWindowView::initUI()
 {
   setWindowTitle(QString("PhotoMatch"));
 
-  mActionNewProject->setText(QApplication::translate("MainWindowView", "New Project", nullptr));
-#ifndef QT_NO_SHORTCUT
-  mActionNewProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+N", nullptr));
-#endif // QT_NO_SHORTCUT
   QIcon iconNewProject;
   iconNewProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionNewProject->setIcon(iconNewProject);
 
-  mActionOpenProject->setText(QApplication::translate("MainWindowView", "Open Project", nullptr));
-#ifndef QT_NO_SHORTCUT
-  mActionOpenProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+O", nullptr));
-#endif // QT_NO_SHORTCUT
   QIcon iconOpenProject;
   iconOpenProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_opened_folder_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionOpenProject->setIcon(iconOpenProject);
 
-  mActionSaveProject->setText(QApplication::translate("MainWindowView", "Save Project", nullptr));
-  #ifndef QT_NO_SHORTCUT
-    mActionSaveProject->setShortcut(QApplication::translate("MainWindowView", "Ctrl+S", nullptr));
-  #endif // QT_NO_SHORTCUT
   QIcon iconSaveProject;
   iconSaveProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_save_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionSaveProject->setIcon(iconSaveProject);
 
-  mActionSaveProjectAs->setText(QApplication::translate("MainWindowView", "Save Project As...", nullptr));
-  #ifndef QT_NO_SHORTCUT
-    mActionSaveProjectAs->setShortcut(QApplication::translate("MainWindowView", "Ctrl+Shift+S", nullptr));
-  #endif // QT_NO_SHORTCUT
   QIcon iconSaveProjectAs;
   iconSaveProjectAs.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_save_as_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionSaveProjectAs->setIcon(iconSaveProjectAs);
 
-  mActionExportTiePoints->setText(QApplication::translate("MainWindowView", "Export tie points", nullptr));
-
-  mActionExportMatches->setText(QApplication::translate("MainWindowView", "Export Matches", nullptr));
-
-  mActionCloseProject->setText(QApplication::translate("MainWindowView", "Close Project", nullptr));
   QIcon icon4;
   icon4.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_delete_sign_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionCloseProject->setIcon(icon4);
 
-  mActionExit->setText(QApplication::translate("MainWindowView", "Exit", nullptr));
-  #ifndef QT_NO_SHORTCUT
-    mActionExit->setShortcut(QApplication::translate("MainWindowView", "Ctrl+F4", nullptr));
-  #endif // QT_NO_SHORTCUT
   mActionExit->setObjectName(QStringLiteral("actionExit"));
   QIcon iconExit;
   iconExit.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_shutdown_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionExit->setIcon(iconExit);
 
-  mActionStartPage->setText(QApplication::translate("MainWindowView", "Start Page", nullptr));
   QIcon iconStartPage;
   iconStartPage.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_home_page_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionStartPage->setIcon(iconStartPage);
 
-  mActionViewSettings->setText(QApplication::translate("MainWindowView", "View Settings", nullptr));
   QIcon iconSettingsView;
   iconSettingsView.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionViewSettings->setIcon(iconSettingsView);
 
-  mActionLoadImages->setText(QApplication::translate("MainWindowView", "Load Images", nullptr));
   QIcon iconLoadImages;
   iconLoadImages.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_images_folder_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionLoadImages->setIcon(iconLoadImages);
 
-  mActionNewSession->setText(QApplication::translate("MainWindowView", "New Session", nullptr));
   QIcon iconNewSession;
   iconNewSession.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_add_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionNewSession->setIcon(iconNewSession);
 
-  mActionPreprocess->setText(QApplication::translate("MainWindowView", "Preprocess", nullptr));
   QIcon iconPreprocess;
   iconPreprocess.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_services_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionPreprocess->setIcon(iconPreprocess);
 
-  mActionFeatureExtraction->setText(QApplication::translate("MainWindowView", "Feature Extraction", nullptr));
   QIcon iconFeatureExtraction;
   iconFeatureExtraction.addFile(QStringLiteral(":/ico/24/img/material/24/features.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionFeatureExtraction->setIcon(iconFeatureExtraction);
 
-  mActionFeatureMatching->setText(QApplication::translate("MainWindowView", "Feature Matching", nullptr));
   QIcon iconFeatureMatching;
   iconFeatureMatching.addFile(QStringLiteral(":/ico/24/img/material/24/match_view.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionFeatureMatching->setIcon(iconFeatureMatching);
 
   //mActionBatch->setText(QApplication::translate("MainWindowView", "Batch", nullptr));
 
-  mActionToolSettings->setText(QApplication::translate("MainWindowView", "Tools Settings", nullptr));
   QIcon iconSettings;
   iconSettings.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionToolSettings->setIcon(iconSettings);
 
-  mActionHelp->setText(QApplication::translate("MainWindowView", "Help", nullptr));
-#ifndef QT_NO_SHORTCUT
-  mActionHelp->setShortcut(QApplication::translate("MainWindowView", "F1", nullptr));
-#endif // QT_NO_SHORTCUT
   QIcon iconHelp;
   iconHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionHelp->setIcon(iconHelp);
 
-  mActionOnlineHelp->setText(QApplication::translate("MainWindowView", "Online Help", nullptr));
-#ifndef QT_NO_SHORTCUT
-#endif // QT_NO_SHORTCUT
   QIcon iconOnlineHelp;
   iconOnlineHelp.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_help_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionOnlineHelp->setIcon(iconOnlineHelp);
 
-  mActionAbout->setText(QApplication::translate("MainWindowView", "About", nullptr));
   QIcon iconAbout;
   iconAbout.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_about_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionAbout->setIcon(iconAbout);
 
-  mActionFeaturesViewer->setText(QApplication::translate("MainWindowView", "Keypoints Viewer", nullptr));
-
-  mActionMatchesViewer->setText(QApplication::translate("MainWindowView", "Matches Viewer", nullptr));
-
-  mActionPassPointsViewer->setText(QApplication::translate("MainWindowView", "Multiview Matching Assessment", nullptr));
-
-  mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
-
-  mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
-
   //mActionRepeatability->setText(QApplication::translate("MainWindowView", "Repeatability", nullptr));
 
-  mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
   QIcon iconPRCurves;
   iconPRCurves.addFile(QStringLiteral(":/ico/24/img/material/24/pr_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionPRCurves->setIcon(iconPRCurves);
 
-  mActionROCCurves->setText(QApplication::translate("MainWindowView", "ROC Curves", nullptr));
   QIcon iconROCCurves;
   iconROCCurves.addFile(QStringLiteral(":/ico/24/img/material/24/roc_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionROCCurves->setIcon(iconROCCurves);
 
-  mActionDETCurves->setText(QApplication::translate("MainWindowView", "DET Curves", nullptr));
   QIcon iconDETCurves;
   iconDETCurves.addFile(QStringLiteral(":/ico/24/img/material/24/det_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionDETCurves->setIcon(iconDETCurves);
 
-  mActionQualityControlSettings->setText(QApplication::translate("MainWindowView", "Quality Control Settings", nullptr));
   QIcon iconQualityControlSettings;
   iconQualityControlSettings.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_automatic_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionQualityControlSettings->setIcon(iconQualityControlSettings);
 
-  mActionNotRecentProjects->setText(QApplication::translate("MainWindowView", "Not recent projects", nullptr));
   mActionNotRecentProjects->setEnabled(false);
 
-  mActionClearHistory->setText(QApplication::translate("MainWindowView", "Clear History", nullptr));
   QIcon icon_delete_trash;
   icon_delete_trash.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_delete_trash_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionClearHistory->setIcon(icon_delete_trash);
 
-  mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
-
-  mActionDeleteSession->setText(QApplication::translate("MainWindowView", "Delete session", nullptr));
   QIcon iconDeleteSession;
   iconDeleteSession.addFile(QStringLiteral(":/ico/24/img/material/24/delete_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionDeleteSession->setIcon(iconDeleteSession);
@@ -1763,7 +1697,73 @@ void MainWindowView::init()
   tl::MessageManager &msg_h = tl::MessageManager::instance();
   msg_h.addListener(mLogWidget);
 
-  update();
+  this->retranslate();
+  this->update();
+}
+
+void MainWindowView::initSignalAndSlots()
+{
+  /* Menú Archivo */
+
+  connect(mActionNewProject,           SIGNAL(triggered(bool)), this,   SIGNAL(openNew()));
+  connect(mActionOpenProject,          SIGNAL(triggered(bool)), this,   SIGNAL(openProject()));
+  connect(mActionClearHistory,         SIGNAL(triggered(bool)), this,   SIGNAL(clearHistory()));
+  connect(mActionSaveProject,          SIGNAL(triggered(bool)), this,   SIGNAL(saveProject()));
+  connect(mActionSaveProjectAs,        SIGNAL(triggered(bool)), this,   SIGNAL(saveProjectAs()));
+  connect(mActionExportTiePoints,      SIGNAL(triggered(bool)), this,   SIGNAL(openExportFeatures()));
+  connect(mActionExportMatches,        SIGNAL(triggered(bool)), this,   SIGNAL(openExportMatches()));
+  connect(mActionCloseProject,         SIGNAL(triggered(bool)), this,   SIGNAL(closeProject()));
+  connect(mActionExit,                 SIGNAL(triggered(bool)), this,   SIGNAL(exit()));
+
+  /* Menú View */
+
+  connect(mActionStartPage,          SIGNAL(triggered(bool)),   this,   SIGNAL(openStartPage()));
+  connect(mActionViewSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openViewSettings()));
+
+  /* Menú herramientas */
+
+  connect(mActionLoadImages,         SIGNAL(triggered(bool)),   this,   SIGNAL(loadImages()));
+  connect(mActionNewSession,         SIGNAL(triggered(bool)),   this,   SIGNAL(newSession()));
+  connect(mActionPreprocess,         SIGNAL(triggered(bool)),   this,   SIGNAL(openPreprocess()));
+  connect(mActionFeatureExtraction,  SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureExtraction()));
+  connect(mActionFeatureMatching,    SIGNAL(triggered(bool)),   this,   SIGNAL(openFeatureMatching()));
+  //connect(mActionBatch,              SIGNAL(triggered(bool)),   this,   SIGNAL(openBatch()));
+  connect(mActionToolSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openToolSettings()));
+
+  /* Quality Control */
+
+  connect(mActionFeaturesViewer,     SIGNAL(triggered(bool)),   this,   SIGNAL(openKeypointsViewer()));
+  connect(mActionMatchesViewer,      SIGNAL(triggered(bool)),   this,   SIGNAL(openMatchesViewer()));
+  connect(mActionPassPointsViewer,   SIGNAL(triggered(bool)),   this,   SIGNAL(openMultiviewMatchingAssessment()));
+  connect(mActionGroundTruthEditor,  SIGNAL(triggered(bool)),   this,   SIGNAL(groundTruthEditor()));
+  connect(mActionHomography,         SIGNAL(triggered(bool)),   this,   SIGNAL(homography()));
+  //connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
+  connect(mActionPRCurves,           SIGNAL(triggered(bool)),   this,   SIGNAL(prCurves()));
+  connect(mActionROCCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(rocCurves()));
+  connect(mActionDETCurves,          SIGNAL(triggered(bool)),   this,   SIGNAL(detCurves()));
+  connect(mActionQualityControlSettings,       SIGNAL(triggered(bool)),   this,   SIGNAL(openQualityControlSettings()));
+
+
+  /* Menú Ayuda */
+
+  connect(mActionHelp,               SIGNAL(triggered(bool)),   this,   SIGNAL(openHelpDialog()));
+  connect(mActionOnlineHelp,         SIGNAL(triggered(bool)),   this,   SIGNAL(openOnlineHelp()));
+  connect(mActionAbout,              SIGNAL(triggered(bool)),   this,   SIGNAL(openAboutDialog()));
+
+  /* Panel de vistas en miniatura */
+
+  connect(mThumbnailsWidget,  SIGNAL(openImage(QString)),        this, SIGNAL(openImage(QString)));
+  connect(mThumbnailsWidget,  SIGNAL(selectImage(QString)),      this, SIGNAL(selectImage(QString)));
+  connect(mThumbnailsWidget,  SIGNAL(selectImages(QStringList)), this, SIGNAL(selectImages(QStringList)));
+  connect(mThumbnailsWidget,  SIGNAL(deleteImages(QStringList)), this, SIGNAL(deleteImages(QStringList)));
+  connect(mThumbnailsWidget,  SIGNAL(imagesLoaded()),            this, SIGNAL(imagesLoaded()));
+
+  connect(mTreeWidgetProject, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTreeContextMenu(const QPoint &)));
+  connect(mTreeWidgetProject, SIGNAL(itemSelectionChanged()),   this, SLOT(onSelectionChanged()));
+  connect(mTreeWidgetProject, SIGNAL(itemDoubleClicked(QTreeWidgetItem *, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem *, int)));
+
+  connect(mComboBoxActiveSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(activeSessionChange(QString)));
+
 }
 
 void MainWindowView::closeEvent(QCloseEvent *event)

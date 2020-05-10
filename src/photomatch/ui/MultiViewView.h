@@ -45,7 +45,8 @@ class MultiviewMatchingAssessmentViewImp
 
 public:
 
-  MultiviewMatchingAssessmentViewImp(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  MultiviewMatchingAssessmentViewImp(QWidget *parent = nullptr,
+                                     Qt::WindowFlags f = Qt::WindowFlags());
   ~MultiviewMatchingAssessmentViewImp() override;
 
 private slots:

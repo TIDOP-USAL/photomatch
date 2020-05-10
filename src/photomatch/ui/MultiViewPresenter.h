@@ -49,13 +49,13 @@ class MultiViewMatchingAssessmentPresenterImp
 public:
 
   MultiViewMatchingAssessmentPresenterImp(MultiviewMatchingAssessmentView *view,
-                                       MultiViewMatchingAssessmentModel *model);
+                                          MultiViewMatchingAssessmentModel *model);
 
 private slots:
 
   void onIdChange(int id);
 
-// IPresenter interface
+// MultiViewMatchingAssessmentPresenter interface
 
 public slots:
 
@@ -72,6 +72,7 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
 private:
 

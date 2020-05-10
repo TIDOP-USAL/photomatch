@@ -45,7 +45,8 @@ class NewSessionPresenterImp
 
 public:
 
-  NewSessionPresenterImp(NewSessionView *view, ProjectModel *model);
+  NewSessionPresenterImp(NewSessionView *view,
+                         ProjectModel *model);
   ~NewSessionPresenterImp() override;
 
 // IPresenter interface
@@ -59,8 +60,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// INewSessionPresenter interface
+// NewSessionPresenter interface
 
 protected slots:
 
@@ -73,6 +75,7 @@ private:
   NewSessionView *mView;
   ProjectModel *mProjectModel;
   HelpDialog *mHelp;
+
 };
 
 } // namespace photomatch

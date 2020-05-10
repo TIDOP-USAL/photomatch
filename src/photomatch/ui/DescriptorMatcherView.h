@@ -45,7 +45,7 @@ public:
   DescriptorMatcherViewImp(QWidget *parent = nullptr);
   ~DescriptorMatcherViewImp() override;
 
-// IDescriptorMatcherView interface
+// DescriptorMatcherView interface
 
 public:
 

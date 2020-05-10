@@ -49,7 +49,7 @@ class CurvesViewerViewImp
 public:
 
   CurvesViewerViewImp(QWidget *parent = nullptr,
-                   Qt::WindowFlags f = Qt::WindowFlags());
+                      Qt::WindowFlags f = Qt::WindowFlags());
 
   virtual ~CurvesViewerViewImp() override;
 
@@ -59,7 +59,7 @@ protected slots :
   void onComboBoxRightImageIndexChanged(int idx);
   void onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item,int column);
 
-// ICurvesViewerView interface
+// CurvesViewerView interface
 
   virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) override;
   virtual bool isSessionActive(const QString &session) const override;
@@ -111,7 +111,8 @@ class ROCCurvesViewer
 
 public:
 
-  ROCCurvesViewer(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ROCCurvesViewer(QWidget *parent = nullptr,
+                  Qt::WindowFlags f = Qt::WindowFlags());
   ~ROCCurvesViewer() override;
 
 // IDialogView interface
@@ -134,7 +135,8 @@ class PRCurvesViewer
 
 public:
 
-  PRCurvesViewer(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  PRCurvesViewer(QWidget *parent = nullptr,
+                 Qt::WindowFlags f = Qt::WindowFlags());
   ~PRCurvesViewer() override;
 
 // IDialogView interface
@@ -158,7 +160,8 @@ class DETCurvesViewer
 
 public:
 
-  DETCurvesViewer(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  DETCurvesViewer(QWidget *parent = nullptr,
+                  Qt::WindowFlags f = Qt::WindowFlags());
   ~DETCurvesViewer() override;
 
 // IDialogView interface

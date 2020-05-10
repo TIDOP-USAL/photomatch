@@ -77,7 +77,7 @@ ComponentsManager::ComponentsManager(QObject *parent)
     mMainWindowModel(nullptr),
     mMainWindowPresenter(nullptr),
     mProject(new ProjectImp),
-    mProjectIO(new ProjectControllerImp),
+    mProjectController(new ProjectControllerImp),
     mProjectModel(nullptr),
     mNewProjectPresenter(nullptr),
     mNewSessionPresenter(nullptr),
@@ -131,9 +131,9 @@ ComponentsManager::~ComponentsManager()
     mProject = nullptr;
   }
 
-  if (mProjectIO) {
-    delete mProjectIO;
-    mProjectIO =nullptr;
+  if (mProjectController) {
+    delete mProjectController;
+    mProjectController =nullptr;
   }
 
   if (mProjectModel){
@@ -372,20 +372,10 @@ MainWindowPresenter *ComponentsManager::mainWindowPresenter()
 ProjectModel *ComponentsManager::projectModel()
 {
   if (mProjectModel == nullptr){
-    mProjectModel = new ProjectModelImp(mProjectIO, mProject);
+    mProjectModel = new ProjectModelImp(mProjectController, mProject);
   }
   return mProjectModel;
 }
-
-//Settings *ComponentsManager::settings()
-//{
-//  return mSettings;
-//}
-
-//SettingsController *ComponentsManager::settingsRW()
-//{
-//  return mSettingsRW;
-//}
 
 SettingsModel *ComponentsManager::settingsModel()
 {
@@ -444,7 +434,8 @@ ExportMatchesPresenter *ComponentsManager::exportMatchesPresenter()
 {
   if (mExportMatchesPresenter == nullptr){
     ExportMatchesView *exportMatchesView = new ExportMatchesViewImp(this->mainWindowView());
-    mExportMatchesPresenter = new ExportMatchesPresenterImp(exportMatchesView, this->exportMatchesModel());
+    mExportMatchesPresenter = new ExportMatchesPresenterImp(exportMatchesView,
+                                                            this->exportMatchesModel());
   }
   return mExportMatchesPresenter;
 }
@@ -462,8 +453,8 @@ PreprocessPresenter *ComponentsManager::preprocessPresenter()
   if (mPreprocessPresenter == nullptr){
     PreprocessView *preprocessView = new PreprocessViewImp(this->mainWindowView());
     mPreprocessPresenter = new PreprocessPresenterImp(preprocessView,
-                                                   this->projectModel(),
-                                                   this->settingsModel());
+                                                      this->projectModel(),
+                                                      this->settingsModel());
   }
   return mPreprocessPresenter;
 }
@@ -473,8 +464,8 @@ FeatureExtractorPresenter *ComponentsManager::featureExtractorPresenter()
   if (mFeatureExtractorPresenter == nullptr){
     FeatureExtractorView *featureExtractorView = new FeatureExtractorViewImp(this->mainWindowView());
     mFeatureExtractorPresenter = new FeatureExtractorPresenterImp(featureExtractorView,
-                                                               this->projectModel(),
-                                                               this->settingsModel());
+                                                                  this->projectModel(),
+                                                                  this->settingsModel());
   }
   return mFeatureExtractorPresenter;
 }
@@ -484,8 +475,8 @@ DescriptorMatcherPresenter *ComponentsManager::descriptorMatcherPresenter()
   if (mDescriptorMatcherPresenter == nullptr){
     DescriptorMatcherView *descriptorMatcherView = new DescriptorMatcherViewImp(this->mainWindowView());
     mDescriptorMatcherPresenter = new DescriptorMatcherPresenterImp(descriptorMatcherView,
-                                                                 this->projectModel(),
-                                                                 this->settingsModel());
+                                                                    this->projectModel(),
+                                                                    this->settingsModel());
   }
   return mDescriptorMatcherPresenter;
 }
@@ -497,8 +488,8 @@ FeaturesViewerPresenter *ComponentsManager::featuresViewerPresenter()
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     FeaturesViewerView *featuresViewerView = new FeaturesViewerViewImp(this->mainWindowView(), f);
     mFeaturesViewerPresenter = new FeaturesViewerPresenterImp(featuresViewerView,
-                                                           this->featuresViewerModel(),
-                                                           this->settingsModel());
+                                                              this->featuresViewerModel(),
+                                                              this->settingsModel());
   }
   return mFeaturesViewerPresenter;
 }
@@ -546,7 +537,8 @@ MultiViewMatchingAssessmentPresenter *ComponentsManager::multiviewMatchingAssess
 
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     MultiviewMatchingAssessmentView *multiviewView = new MultiviewMatchingAssessmentViewImp(this->mainWindowView(), f);
-    mMultiviewMatchingAssessmentPresenter = new MultiViewMatchingAssessmentPresenterImp(multiviewView, this->multiviewMatchingAssessmentModel());
+    mMultiviewMatchingAssessmentPresenter = new MultiViewMatchingAssessmentPresenterImp(multiviewView,
+                                                                                        this->multiviewMatchingAssessmentModel());
     mMultiviewMatchingAssessmentPresenter->setHelp(this->helpDialog());
   }
   return mMultiviewMatchingAssessmentPresenter;
@@ -559,8 +551,8 @@ GroundTruthPresenter *ComponentsManager::groundTruthPresenter()
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     GroundTruthView *groundTruthView = new GroundTruthViewImp(this->mainWindowView(), f);
     mGroundTruthPresenter = new GroundTruthPresenterImp(groundTruthView,
-                                                     this->groundTruthModel(),
-                                                     this->settingsModel());
+                                                        this->groundTruthModel(),
+                                                        this->settingsModel());
   }
   return mGroundTruthPresenter;
 }
@@ -579,8 +571,8 @@ HomographyViewerPresenter *ComponentsManager::homographyViewerPresenter()
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     HomographyViewerView *homographyViewerView = new HomographyViewerViewImp(this->mainWindowView(), f);
     mHomographyViewerPresenter = new HomographyViewerPresenterImp(homographyViewerView,
-                                                               this->homographyViewerModel(),
-                                                               this->settingsModel());
+                                                                  this->homographyViewerModel(),
+                                                                  this->settingsModel());
   }
   return mHomographyViewerPresenter;
 }
@@ -659,7 +651,8 @@ RepeatabilityPresenter *ComponentsManager::repeatabilityPresenter()
   if (mRepeatabilityPresenter == nullptr){
     Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
     RepeatabilityView *repeatabilityView = new RepeatabilityViewImp(this->mainWindowView(), f);
-    mRepeatabilityPresenter = new RepeatabilityPresenterImp(repeatabilityView, this->repeatabilityModel());
+    mRepeatabilityPresenter = new RepeatabilityPresenterImp(repeatabilityView,
+                                                            this->repeatabilityModel());
     mRepeatabilityPresenter->setHelp(this->helpDialog());
   }
   return mRepeatabilityPresenter;

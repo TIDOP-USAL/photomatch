@@ -50,7 +50,7 @@ public:
 
 protected slots:
 
-// IFeatureExtractorView interface
+// FeatureExtractorView interface
 
 public:
 

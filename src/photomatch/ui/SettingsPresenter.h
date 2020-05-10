@@ -67,7 +67,6 @@ class GfttWidget;
 class HogWidget;
 class KazeWidget;
 class LatchWidget;
-//class ILucidWidget;
 class MsdWidget;
 class MserWidget;
 class OrbWidget;
@@ -87,10 +86,9 @@ class SettingsPresenterImp
 
 public:
 
-  SettingsPresenterImp(SettingsView *view, SettingsModel *model);
+  SettingsPresenterImp(SettingsView *view,
+                       SettingsModel *model);
   ~SettingsPresenterImp() override;
-
-  //void openPage(int page) override;
 
 public slots:
 
@@ -109,8 +107,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// ISettingsPresenter interface
+// SettingsPresenter interface
 
 private slots:
 
@@ -155,7 +154,6 @@ protected:
   HogWidget *mHog;
   KazeWidget *mKaze;
   LatchWidget *mLatch;
-  //ILucidWidget *mLucid;
   MsdWidget *mMsd;
   MserWidget *mMser;
   OrbWidget *mOrb;

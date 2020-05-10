@@ -130,7 +130,9 @@ protected slots:
   void selectDetector(const QString &session);
   void selectDescriptor(const QString &session);
   void selectImageFeatures(const QString &imageFeatures);
-  void openImageMatches(const QString &sessionName, const QString &imgName1, const QString &imgName2);
+  void openImageMatches(const QString &sessionName,
+                        const QString &imgName1,
+                        const QString &imgName2);
 
   void updatePreprocess();
   void updateFeatures();
@@ -157,6 +159,10 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
+
+private:
+
   void initStartPage();
 
   bool loadPreprocess(const QString &session);

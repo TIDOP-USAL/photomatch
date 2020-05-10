@@ -39,9 +39,9 @@ namespace photomatch
 {
 
 /*!
- * \brief The IGraphicViewer class
+ * \brief The GraphicViewer class
  */
-class IGraphicViewer
+class GraphicViewer
 {
 
 public:
@@ -49,8 +49,8 @@ public:
   /*!
    * \brief IGraphicViewer
    */
-  IGraphicViewer() {}
-  virtual ~IGraphicViewer() = default;
+  GraphicViewer() {}
+  virtual ~GraphicViewer() = default;
 
   /*!
    * \brief Establece la imagen
@@ -114,17 +114,17 @@ protected:
 };
 
 
-class GraphicViewer
+class GraphicViewerImp
   : public QGraphicsView,
-    public IGraphicViewer
+    public GraphicViewer
 {
   Q_OBJECT
 
 public:
     
-  GraphicViewer(QWidget *parent = nullptr);
+  GraphicViewerImp(QWidget *parent = nullptr);
     
-  ~GraphicViewer() override;
+  ~GraphicViewerImp() override;
 
   /*!
    * \brief Establece la imagen

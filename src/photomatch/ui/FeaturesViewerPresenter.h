@@ -50,8 +50,8 @@ class FeaturesViewerPresenterImp
 public:
 
   FeaturesViewerPresenterImp(FeaturesViewerView *view,
-                          FeaturesViewerModel *model,
-                          SettingsModel *settingsModel);
+                             FeaturesViewerModel *model,
+                             SettingsModel *settingsModel);
   ~FeaturesViewerPresenterImp() override;
 
 // IPresenter interface
@@ -65,15 +65,17 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IFeaturesViewerPresenter interface
+// FeaturesViewerPresenter interface
 
 public slots:
 
   void setSession(const QString &session) override;
   void setImageActive(const QString &image) override;
   void openKeypointsFromSession(const QString &session) override;
-  void openKeypointsFromSessionAndImage(const QString &session, const QString &image) override;
+  void openKeypointsFromSessionAndImage(const QString &session,
+                                        const QString &image) override;
 
 protected slots:
 
@@ -85,6 +87,7 @@ private:
   FeaturesViewerModel *mModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
+
 };
 
 } // namespace photomatch

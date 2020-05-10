@@ -48,7 +48,7 @@ public:
   explicit CurvesViewerModelImp(ProjectModel *projectModel);
   virtual ~CurvesViewerModelImp() override;
 
-// ICurvesViewerModel interface
+// CurvesViewerModel interface
 
 public:
 
@@ -87,7 +87,7 @@ public:
   explicit ROCCurvesViewerModel(ProjectModel *projectModel);
   ~ROCCurvesViewerModel() override;
 
-// ICurvesViewerModel interface
+// CurvesViewerModel interface
 
 public:
 
@@ -108,7 +108,7 @@ public:
   explicit PRCurvesViewerModel(ProjectModel *projectModel);
   ~PRCurvesViewerModel() override;
 
-// ICurvesViewerModel interface
+// CurvesViewerModel interface
 
 public:
 
@@ -128,7 +128,7 @@ public:
   explicit DETCurvesViewerModel(ProjectModel *projectModel);
   ~DETCurvesViewerModel() override;
 
-// ICurvesViewerModel interface
+// CurvesViewerModel interface
 
 public:
 

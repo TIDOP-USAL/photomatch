@@ -40,11 +40,8 @@ RepeatabilityPresenterImp::RepeatabilityPresenterImp(RepeatabilityView *view,
     mModel(model),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(selectSession(QString)), this, SLOT(selectSession(QString)));
-
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 void RepeatabilityPresenterImp::selectSession(const QString &session)
@@ -100,6 +97,13 @@ void RepeatabilityPresenterImp::setHelp(HelpDialog *help)
 
 void RepeatabilityPresenterImp::init()
 {
+}
+
+void RepeatabilityPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(selectSession(QString)), this, SLOT(selectSession(QString)));
+
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 } // namespace photomatch

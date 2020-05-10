@@ -34,7 +34,6 @@ namespace photomatch
 {
 
 class DescriptorMatcherView;
-//class IDescriptorMatcherModel;
 class ProjectModel;
 class SettingsModel;
 class HelpDialog;
@@ -50,9 +49,8 @@ class DescriptorMatcherPresenterImp
 public:
 
   DescriptorMatcherPresenterImp(DescriptorMatcherView *view,
-                             //IDescriptorMatcherModel *model,
-                             ProjectModel *projectModel,
-                             SettingsModel *settingsModel);
+                                ProjectModel *projectModel,
+                                SettingsModel *settingsModel);
   ~DescriptorMatcherPresenterImp() override;
 
 // IPresenter interface
@@ -66,8 +64,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IDescriptorMatcherPresenter interface
+// DescriptorMatcherPresenter interface
 
 public slots:
 
@@ -79,18 +78,22 @@ private slots:
   void run() override;
   void onError(int code, const QString &msg);
   void onFinished();
-  void onMatchCompute(const QString &left, const QString &right, const QString &match);
+  void onMatchCompute(const QString &left,
+                      const QString &right,
+                      const QString &match);
   void onPassPointsFinished(const QString &file);
+
 protected:
 
   DescriptorMatcherView *mView;
-  //IDescriptorMatcherModel *mModel;  /// Por ahora es una clase vacia
   ProjectModel *mProjectModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
   MultiProcess *mMultiProcess;
   ProgressHandler *mProgressHandler;
+
 };
+
 
 } // namespace photomatch
 

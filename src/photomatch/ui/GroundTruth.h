@@ -160,14 +160,16 @@ public slots:
    * \param[in] pt Selected point right
    * \param[in] newPoint Point for added
    */
-  virtual void setSelectedRightPoint(const QPointF &pt, bool newPoint = false) = 0;
+  virtual void setSelectedRightPoint(const QPointF &pt,
+                                     bool newPoint = false) = 0;
 
   /*!
    * \brief Select homologous points
    * \param[in] ptLeft Left point
    * \param[in] ptRight Right point
    */
-  virtual void setSelectedHomologous(const QPointF &ptLeft, const QPointF &ptRight) = 0;
+  virtual void setSelectedHomologous(const QPointF &ptLeft,
+                                     const QPointF &ptRight) = 0;
 
   /*!
    * \brief Unselect homologous point
@@ -185,7 +187,8 @@ public slots:
    * \param[in] pt1 Left point
    * \param[in] pt2 Right point
    */
-  virtual void addHomologous(const QPointF &pt1, const QPointF &pt2) = 0;
+  virtual void addHomologous(const QPointF &pt1,
+                             const QPointF &pt2) = 0;
 
   /*!
    * \brief Delete Homologous points
@@ -193,7 +196,8 @@ public slots:
    */
   virtual void deleteHomologous(int pointId) = 0;
 
-  virtual void setHomologousError(int pointId, double distance) = 0;
+  virtual void setHomologousError(int pointId,
+                                  double distance) = 0;
 
   virtual void setUnsavedChanges(bool value) = 0;
   virtual void enableLockView(bool enable) = 0;
@@ -204,10 +208,16 @@ public slots:
   //virtual void setTransform(const QTransform &trf) = 0;
 
   virtual void setBGColor(const QString &bgColor) = 0;
-  virtual void setMarkerStyle(const QString &color, int width, int type = 0, int size = 20) = 0;
-  virtual void setSelectedMarkerStyle(const QString &color, int width) = 0;
-  virtual void setCenterLeftViewer(const QPointF &pt, bool zoom11 = true) = 0;
-  virtual void setCenterRightViewer(const QPointF &pt, bool zoom11 = true) = 0;
+  virtual void setMarkerStyle(const QString &color,
+                              int width,
+                              int type = 0,
+                              int size = 20) = 0;
+  virtual void setSelectedMarkerStyle(const QString &color,
+                                      int width) = 0;
+  virtual void setCenterLeftViewer(const QPointF &pt,
+                                   bool zoom11 = true) = 0;
+  virtual void setCenterRightViewer(const QPointF &pt,
+                                    bool zoom11 = true) = 0;
 
 signals:
 

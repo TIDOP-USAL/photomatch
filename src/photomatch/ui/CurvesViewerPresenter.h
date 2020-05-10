@@ -76,6 +76,7 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
 private:
 
@@ -83,6 +84,7 @@ private:
   CurvesViewerModel *mModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
+
 };
 
 } // namespace photomatch

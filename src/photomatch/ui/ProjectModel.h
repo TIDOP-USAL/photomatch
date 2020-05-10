@@ -444,14 +444,16 @@ class ProjectModelImp
 
 public:
 
-  explicit ProjectModelImp(ProjectController *projectIO, Project *project, QObject *parent = nullptr);
+  explicit ProjectModelImp(ProjectController *projectIO,
+                           Project *project,
+                           QObject *parent = nullptr);
   ~ProjectModelImp() override;
 
 signals:
 
 public slots:
 
-// IProject interface
+// ProjectModel interface
 
 public:
 
@@ -513,8 +515,6 @@ public:
   void setPassPoints(const QString &passPoint) override;
 
   void clear() override;
-
-// IProjectModel interface
 
 public:
 

@@ -721,8 +721,6 @@ public:
   SettingsPresenter() {}
   virtual ~SettingsPresenter(){}
 
-  //virtual void openPage(int page) = 0;
-
 public slots:
 
   virtual void openViewSettings() = 0;

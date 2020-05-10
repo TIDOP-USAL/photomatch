@@ -33,7 +33,8 @@ namespace photomatch
 {
 
 
-RepeatabilityViewImp::RepeatabilityViewImp(QWidget *parent, Qt::WindowFlags f)
+RepeatabilityViewImp::RepeatabilityViewImp(QWidget *parent,
+                                           Qt::WindowFlags f)
   : RepeatabilityView(parent, f)
 {
   this->initUI();
@@ -49,7 +50,9 @@ void RepeatabilityViewImp::onTreeWidgetSessionsItemSelectionChanged()
   emit selectSession(mTreeWidgetSessions->currentItem()->text(0));
 }
 
-void RepeatabilityViewImp::addSession(const QString &session, const QString &detector, const QString &descriptor)
+void RepeatabilityViewImp::addSession(const QString &session,
+                                      const QString &detector,
+                                      const QString &descriptor)
 {
   QSignalBlocker blocker1(mTreeWidgetSessions);
 

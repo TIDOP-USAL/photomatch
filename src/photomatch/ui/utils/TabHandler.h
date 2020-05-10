@@ -6,7 +6,7 @@
 namespace photomatch
 {
 
-class GraphicViewer;
+class GraphicViewerImp;
 
 class TabHandler
   : public QTabWidget
@@ -30,9 +30,9 @@ public slots:
   void setCurrentTab(int tabId);
   void clear();
   void setImage(const QString &image);
-  GraphicViewer *graphicViewer(int tabId);
+  GraphicViewerImp *graphicViewer(int tabId);
   int graphicViewerId(const QString &name);
-  GraphicViewer *addGraphicViewer(const QString &name);
+  GraphicViewerImp *addGraphicViewer(const QString &name);
 
 protected slots:
 
@@ -46,7 +46,7 @@ protected:
 
 protected:
 
-  GraphicViewer *mGraphicViewer;
+  GraphicViewerImp *mGraphicViewer;
   QAction *mActionZoomIn;
   QAction *mActionZoomOut;
   QAction *mActionZoomExtend;

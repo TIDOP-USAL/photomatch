@@ -45,7 +45,8 @@ namespace photomatch
 {
 
 
-GroundTruthViewImp::GroundTruthViewImp(QWidget *parent, Qt::WindowFlags f)
+GroundTruthViewImp::GroundTruthViewImp(QWidget *parent,
+                                       Qt::WindowFlags f)
   : GroundTruthView(parent, f),
     mCrossGraphicItem1(nullptr),
     mCrossGraphicItem2(nullptr),
@@ -768,7 +769,7 @@ void GroundTruthViewImp::initUI()
 
   QGridLayout *gridLayoutGraphicsView = new QGridLayout(this);
 
-  mGraphicsViewLeft = new GraphicViewer(this);
+  mGraphicsViewLeft = new GraphicViewerImp(this);
   mGraphicsViewLeft->setMinimumSize(QSize(200, 200));
   gridLayoutGraphicsView->addWidget(mGraphicsViewLeft, 0, 0, 1, 1);
 
@@ -780,7 +781,7 @@ void GroundTruthViewImp::initUI()
   gridLayoutGraphicsView->addWidget(mPushButtonLockViews, 0, 1, 1, 1);
   mPushButtonLockViews->setVisible(false);
 
-  mGraphicsViewRight = new GraphicViewer(this);
+  mGraphicsViewRight = new GraphicViewerImp(this);
   mGraphicsViewRight->setMinimumSize(QSize(200, 200));
   gridLayoutGraphicsView->addWidget(mGraphicsViewRight, 0, 2, 1, 1);
   gridLayout->addLayout(gridLayoutGraphicsView, 3, 0, 1, 2);

@@ -39,7 +39,8 @@
 namespace photomatch
 {
 
-MatchViewerViewImp::MatchViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+MatchViewerViewImp::MatchViewerViewImp(QWidget *parent,
+                                       Qt::WindowFlags f)
   : MatchViewerView(parent, f),
     bUnsavedChanges(false),
     mMarkerColor("#e5097e"),
@@ -60,22 +61,16 @@ MatchViewerViewImp::~MatchViewerViewImp()
 void MatchViewerViewImp::setLeftImage(const QString &leftImage)
 {
   QSignalBlocker blocker(mComboBoxLeftImage);
-  //QFileInfo file_info(leftImage);
-  //mComboBoxLeftImage->setCurrentText(file_info.baseName());
   mComboBoxLeftImage->setCurrentText(leftImage);
   mGraphicsViewLeft->scene()->clearSelection();
-  //mGraphicsViewLeft->setImage(QImage(leftImage));
   mGraphicsViewLeft->setImage(QImage(mComboBoxLeftImage->currentData().toString()));
 }
 
 void MatchViewerViewImp::setRightImage(const QString &rightImage)
 {
   QSignalBlocker blocker(mComboBoxRightImage);
-  //QFileInfo file_info(rightImage);
-  //mComboBoxRightImage->setCurrentText(file_info.baseName());
   mComboBoxRightImage->setCurrentText(rightImage);
   mGraphicsViewRight->scene()->clearSelection();
-  //mGraphicsViewRight->setImage(QImage(rightImage));
   mGraphicsViewRight->setImage(QImage(mComboBoxRightImage->currentData().toString()));
 }
 
@@ -457,10 +452,10 @@ void MatchViewerViewImp::initUI()
   mComboBoxRightImage = new QComboBox(this);
   gridLayout->addWidget(mComboBoxRightImage, 1, 1, 1, 1);
 
-  mGraphicsViewLeft = new GraphicViewer(this);
+  mGraphicsViewLeft = new GraphicViewerImp(this);
   gridLayout->addWidget(mGraphicsViewLeft, 2, 0, 1, 1);
 
-  mGraphicsViewRight = new GraphicViewer(this);
+  mGraphicsViewRight = new GraphicViewerImp(this);
   gridLayout->addWidget(mGraphicsViewRight, 2, 1, 1, 1);
 
   QLabel *labelMatches = new QLabel(tr("Matches:"), this);

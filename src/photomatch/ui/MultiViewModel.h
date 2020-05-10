@@ -46,7 +46,7 @@ public:
   explicit MultiviewMatchingAssessmentModelImp(ProjectModel *mProjectModel);
   ~MultiviewMatchingAssessmentModelImp() override;
 
-// IMatchViewerModel interface
+// MultiviewMatchingAssessmentModelImp interface
 
 public:
 

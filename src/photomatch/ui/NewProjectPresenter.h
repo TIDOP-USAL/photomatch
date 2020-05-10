@@ -46,10 +46,11 @@ class NewProjectPresenterImp
 
 public:
 
-  NewProjectPresenterImp(NewProjectView *view, ProjectModel *model);
+  NewProjectPresenterImp(NewProjectView *view,
+                         ProjectModel *model);
   ~NewProjectPresenterImp() override;
 
-// INewProjectPresenter interface
+// NewProjectPresenter interface
 
 protected slots:
 
@@ -67,6 +68,7 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
 private:
 

@@ -38,7 +38,8 @@ namespace photomatch
 {
 
 
-CurvesViewerViewImp::CurvesViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+CurvesViewerViewImp::CurvesViewerViewImp(QWidget *parent,
+                                         Qt::WindowFlags f)
   : CurvesViewerView(parent, f)
 {
   this->initUI();
@@ -92,7 +93,9 @@ void CurvesViewerViewImp::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item,
   }
 }
 
-void CurvesViewerViewImp::addSession(const QString &session, const QString &detector, const QString &descriptor)
+void CurvesViewerViewImp::addSession(const QString &session,
+                                     const QString &detector,
+                                     const QString &descriptor)
 {
   if (QTreeWidgetItem *item = new QTreeWidgetItem(mTreeWidgetSessions)){
     item->setText(0, session);
@@ -279,7 +282,8 @@ void CurvesViewerViewImp::retranslate()
 /*----------------------------------------------------------------*/
 
 
-ROCCurvesViewer::ROCCurvesViewer(QWidget *parent, Qt::WindowFlags f)
+ROCCurvesViewer::ROCCurvesViewer(QWidget *parent,
+                                 Qt::WindowFlags f)
   : CurvesViewerViewImp(parent, f)
 {
   this->initUI();
@@ -312,7 +316,8 @@ void ROCCurvesViewer::initUI()
 /*----------------------------------------------------------------*/
 
 
-PRCurvesViewer::PRCurvesViewer(QWidget *parent, Qt::WindowFlags f)
+PRCurvesViewer::PRCurvesViewer(QWidget *parent,
+                               Qt::WindowFlags f)
   : CurvesViewerViewImp(parent, f)
 {
   this->initUI();
@@ -344,7 +349,8 @@ void PRCurvesViewer::initUI()
 /*----------------------------------------------------------------*/
 
 
-DETCurvesViewer::DETCurvesViewer(QWidget *parent, Qt::WindowFlags f)
+DETCurvesViewer::DETCurvesViewer(QWidget *parent,
+                                 Qt::WindowFlags f)
   : CurvesViewerViewImp(parent, f)
 {
   this->initUI();

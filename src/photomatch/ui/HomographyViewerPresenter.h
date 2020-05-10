@@ -49,8 +49,8 @@ class HomographyViewerPresenterImp
 public:
 
   HomographyViewerPresenterImp(HomographyViewerView *view,
-                            HomographyViewerModel *model,
-                            SettingsModel *settings);
+                               HomographyViewerModel *model,
+                               SettingsModel *settings);
   ~HomographyViewerPresenterImp() override;
 
 // IPresenter interface
@@ -64,14 +64,16 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IHomographyViewerPresenter interface
+// HomographyViewerPresenter interface
 
 protected slots:
 
   void loadLeftImage(const QString &image) override;
   void loadRightImage(const QString &image) override;
-  void homography(const QString &imageLeft, const QString &imageRight) override;
+  void homography(const QString &imageLeft,
+                  const QString &imageRight) override;
 
 private:
 
@@ -79,6 +81,7 @@ private:
   HomographyViewerModel *mModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
+
 };
 
 } // namespace photomatch

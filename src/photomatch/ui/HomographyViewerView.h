@@ -33,7 +33,7 @@ class QComboBox;
 namespace photomatch
 {
 
-class GraphicViewer;
+class GraphicViewerImp;
 
 
 
@@ -45,7 +45,8 @@ class HomographyViewerViewImp
 
 public:
 
-  HomographyViewerViewImp(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  HomographyViewerViewImp(QWidget *parent = nullptr,
+                          Qt::WindowFlags f = Qt::WindowFlags());
   ~HomographyViewerViewImp() override;
 
 protected slots :
@@ -53,7 +54,7 @@ protected slots :
   void onComboBoxLeftImageIndexChanged(int idx);
   void onComboBoxRightImageIndexChanged(int idx);
 
-// IHomographyViewerView interface
+// HomographyViewerView interface
 
 public:
 
@@ -85,7 +86,7 @@ protected:
   QDialogButtonBox *mButtonBox;
   QComboBox  *mComboBoxLeftImage;
   QComboBox  *mComboBoxRightImage;
-  GraphicViewer *mGraphicsView;
+  GraphicViewerImp *mGraphicsView;
 
 };
 

@@ -45,6 +45,10 @@ public:
   ExportMatchesModelImp(ProjectModel *mProjectModel);
   ~ExportMatchesModelImp() override;
 
+// ExportMatchesModel interface
+
+public:
+
   QStringList sessions() const override;
   QString sessionName() const override;
   QStringList formats() const override;

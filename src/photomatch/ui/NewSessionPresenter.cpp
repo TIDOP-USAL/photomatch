@@ -31,19 +31,15 @@
 namespace photomatch
 {
 
-NewSessionPresenterImp::NewSessionPresenterImp(NewSessionView *view, ProjectModel *model)
+NewSessionPresenterImp::NewSessionPresenterImp(NewSessionView *view,
+                                               ProjectModel *model)
   : NewSessionPresenter(),
     mView(view),
     mProjectModel(model),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(sessionNameChange(QString)), this, SLOT(checkSessionName(QString)));
-
-  connect(mView, SIGNAL(accepted()), this, SLOT(saveProject()));
-  connect(mView, SIGNAL(rejected()), this, SLOT(discartProject()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 NewSessionPresenterImp::~NewSessionPresenterImp()
@@ -71,6 +67,15 @@ void NewSessionPresenterImp::setHelp(HelpDialog *help)
 
 void NewSessionPresenterImp::init()
 {
+}
+
+void NewSessionPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(sessionNameChange(QString)), this, SLOT(checkSessionName(QString)));
+
+  connect(mView, SIGNAL(accepted()), this, SLOT(saveProject()));
+  connect(mView, SIGNAL(rejected()), this, SLOT(discartProject()));
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 void NewSessionPresenterImp::saveProject()

@@ -55,7 +55,7 @@ private:
 
   void init() override;
 
-// IFeaturesViewerModel interface
+// FeaturesViewerModel interface
 
 public:
 

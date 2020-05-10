@@ -43,13 +43,8 @@ CurvesViewerPresenterImp::CurvesViewerPresenterImp(CurvesViewerView *view,
     mSettingsModel(settings),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(leftImageChange(QString)),           this, SLOT(loadLeftImage(QString)));
-  connect(mView, SIGNAL(rightImageChange(QString)),          this, SLOT(loadRightImage(QString)));
-  connect(mView, SIGNAL(activeSession(QString)),             this, SLOT(activeSession(QString)));
-  connect(mView, SIGNAL(disableSession(QString)),            this, SLOT(disableSession(QString)));
-  connect(mView, SIGNAL(help()),                             this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 void CurvesViewerPresenterImp::loadLeftImage(const QString &image)
@@ -145,6 +140,15 @@ void CurvesViewerPresenterImp::setHelp(HelpDialog *help)
 
 void CurvesViewerPresenterImp::init()
 {
+}
+
+void CurvesViewerPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(leftImageChange(QString)),    this, SLOT(loadLeftImage(QString)));
+  connect(mView, SIGNAL(rightImageChange(QString)),   this, SLOT(loadRightImage(QString)));
+  connect(mView, SIGNAL(activeSession(QString)),      this, SLOT(activeSession(QString)));
+  connect(mView, SIGNAL(disableSession(QString)),     this, SLOT(disableSession(QString)));
+  connect(mView, SIGNAL(help()),                      this, SLOT(help()));
 }
 
 } // namespace photomatch

@@ -34,9 +34,9 @@
 namespace photomatch
 {
 
-GraphicViewer::GraphicViewer(QWidget *parent)
+GraphicViewerImp::GraphicViewerImp(QWidget *parent)
   : QGraphicsView(parent),
-    IGraphicViewer(),
+    GraphicViewer(),
     mScene(new QGraphicsScene()),
     mPixmapItem(nullptr),
     mContextMenu(nullptr),
@@ -49,7 +49,7 @@ GraphicViewer::GraphicViewer(QWidget *parent)
 
 }
 
-GraphicViewer::~GraphicViewer()
+GraphicViewerImp::~GraphicViewerImp()
 {
   if (mPixmapItem) {
     delete mPixmapItem;
@@ -61,7 +61,7 @@ GraphicViewer::~GraphicViewer()
   }
 }
 
-void GraphicViewer::init()
+void GraphicViewerImp::init()
 {
   // Permitir el seguimiento del mouse incluso si no se presiona ningún botón
   this->setMouseTracking(true);
@@ -84,7 +84,7 @@ void GraphicViewer::init()
 
 }
 
-void GraphicViewer::setImage(const QImage &image)
+void GraphicViewerImp::setImage(const QImage &image)
 {
   // Update the pixmap in the scene
   if (image.isGrayscale()){
@@ -100,40 +100,40 @@ void GraphicViewer::setImage(const QImage &image)
   mImageSize = image.size();
 }
 
-void GraphicViewer::setImageFromRawData(const uchar *data, int width, int height)
+void GraphicViewerImp::setImageFromRawData(const uchar *data, int width, int height)
 {
   QImage image(data, width, height, width*3, QImage::Format_RGB888);
   setImage(image);
 }
 
-void GraphicViewer::setZoomFactor(const double factor)
+void GraphicViewerImp::setZoomFactor(const double factor)
 {
   mZoomFactor = factor;
 }
 
-void GraphicViewer::setZoomCtrlFactor(const double factor)
+void GraphicViewerImp::setZoomCtrlFactor(const double factor)
 {
   mZoomCtrlFactor = factor;
 }
 
-void GraphicViewer::setContextMenu(QMenu *contextMenu)
+void GraphicViewerImp::setContextMenu(QMenu *contextMenu)
 {
   mContextMenu = contextMenu;
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(showContextMenu(const QPoint&)));
 }
 
-void GraphicViewer::drawOnImage(QPainter *painter, QSize imageSize)
+void GraphicViewerImp::drawOnImage(QPainter *painter, QSize imageSize)
 {
 
 }
 
-void GraphicViewer::drawInViewPort(QPainter *painter, QSize portSize)
+void GraphicViewerImp::drawInViewPort(QPainter *painter, QSize portSize)
 {
 
 }
 
-void GraphicViewer::drawForeground(QPainter *painter, const QRectF &rect)
+void GraphicViewerImp::drawForeground(QPainter *painter, const QRectF &rect)
 {
 //  // Call the function to draw over the image
 //  drawOnImage(painter, mImageSize);
@@ -145,7 +145,7 @@ void GraphicViewer::drawForeground(QPainter *painter, const QRectF &rect)
 //  drawInViewPort(painter, viewport()->size());
 }
 
-void GraphicViewer::mousePressEvent(QMouseEvent *event)
+void GraphicViewerImp::mousePressEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton)
     setDragMode(QGraphicsView::ScrollHandDrag);
@@ -155,7 +155,7 @@ void GraphicViewer::mousePressEvent(QMouseEvent *event)
   QGraphicsView::mousePressEvent(event);
 }
 
-void GraphicViewer::mouseReleaseEvent(QMouseEvent *event)
+void GraphicViewerImp::mouseReleaseEvent(QMouseEvent *event)
 {
   if (event->button() == Qt::LeftButton){
 
@@ -173,7 +173,7 @@ void GraphicViewer::mouseReleaseEvent(QMouseEvent *event)
   QGraphicsView::mouseReleaseEvent(event);
 }
 
-void GraphicViewer::mouseDoubleClickEvent(QMouseEvent *event)
+void GraphicViewerImp::mouseDoubleClickEvent(QMouseEvent *event)
 {
   //QPoint pt(event->x(), event->y());
   //QGraphicsItem *item = this->itemAt(pt);
@@ -190,7 +190,7 @@ void GraphicViewer::mouseDoubleClickEvent(QMouseEvent *event)
 
 #ifndef QT_NO_WHEELEVENT
 
-void GraphicViewer::wheelEvent(QWheelEvent *event)
+void GraphicViewerImp::wheelEvent(QWheelEvent *event)
 {
   setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
@@ -209,7 +209,7 @@ void GraphicViewer::wheelEvent(QWheelEvent *event)
 
 #endif
 
-void GraphicViewer::mouseMoveEvent(QMouseEvent *event)
+void GraphicViewerImp::mouseMoveEvent(QMouseEvent *event)
 {
   // es QPoint(event->x(), event->y()) == event->pos() ???
   //QPointF imagePoint = mapToScene(QPoint(event->x(), event->y()));
@@ -226,7 +226,7 @@ void GraphicViewer::mouseMoveEvent(QMouseEvent *event)
   QGraphicsView::mouseMoveEvent(event);
 }
 
-void GraphicViewer::resizeEvent(QResizeEvent *event)
+void GraphicViewerImp::resizeEvent(QResizeEvent *event)
 {
   if(event->oldSize().width() == -1 || event->oldSize().height() == -1) return;
 
@@ -244,7 +244,7 @@ void GraphicViewer::resizeEvent(QResizeEvent *event)
   this->fitInView(QRect(P1.toPoint(), P2.toPoint()), Qt::KeepAspectRatio);
 }
 
-void GraphicViewer::zoomExtend()
+void GraphicViewerImp::zoomExtend()
 {
   Qt::ScrollBarPolicy	currentHorizontalPolicy = horizontalScrollBarPolicy();
   Qt::ScrollBarPolicy	currentverticalPolicy = verticalScrollBarPolicy();
@@ -260,24 +260,24 @@ void GraphicViewer::zoomExtend()
   setVerticalScrollBarPolicy(currentverticalPolicy);
 }
 
-void GraphicViewer::zoom11()
+void GraphicViewerImp::zoom11()
 {
   double scale11 = 1. / transform().m11();
   scale(scale11, scale11);
 }
 
-void GraphicViewer::zoomIn(QPoint point)
+void GraphicViewerImp::zoomIn(QPoint point)
 {
   scale(mZoomFactor, mZoomFactor);
 }
 
-void GraphicViewer::zoomOut(QPoint point)
+void GraphicViewerImp::zoomOut(QPoint point)
 {
   double factor = 1.0 / mZoomFactor;
   scale(factor, factor);
 }
 
-void GraphicViewer::showContextMenu(const QPoint &position)
+void GraphicViewerImp::showContextMenu(const QPoint &position)
 {
   // Get the mouse position in the scene
   QPoint globalPos = mapToGlobal(position);

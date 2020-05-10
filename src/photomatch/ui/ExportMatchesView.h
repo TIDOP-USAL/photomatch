@@ -47,7 +47,7 @@ public:
   ExportMatchesViewImp(QWidget *parent = nullptr);
   virtual ~ExportMatchesViewImp() override;
 
-// IExportMatchesView interface
+// ExportMatchesView interface
 
 public slots:
 

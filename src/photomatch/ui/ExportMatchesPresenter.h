@@ -46,7 +46,7 @@ class ExportMatchesPresenterImp
 public:
 
   ExportMatchesPresenterImp(ExportMatchesView *view,
-                         ExportMatchesModel *model);
+                            ExportMatchesModel *model);
   ~ExportMatchesPresenterImp() override;
 
 // IPresenter interface
@@ -60,8 +60,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IExportMatchesPresenter interface
+// ExportMatchesPresenter interface
 
 public:
 
@@ -73,6 +74,7 @@ protected:
   ExportMatchesView *mView;
   ExportMatchesModel *mModel;
   HelpDialog *mHelp;
+
 };
 
 

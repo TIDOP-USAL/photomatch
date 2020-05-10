@@ -44,7 +44,7 @@ namespace photomatch
 
 class ThumbnailsWidget;
 class LogWidget;
-class GraphicViewer;
+class GraphicViewerImp;
 class TabHandler;
 
 class MainWindowView
@@ -86,10 +86,20 @@ public:
   void addImages(const QStringList &images);
   void setActiveImage(const QString &image);
   void setActiveImages(const QStringList &images);
-  void addSession(const QString &sessionName, const QString &sessionDescription);
-  void addPreprocess(const QString &sessionName, const QString &preprocess, const std::vector<QString> &preprocessImages);
-  void addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const std::vector<QString> &features);
-  void addMatches(const QString &sessionName, const QString &matcher, const QString &left, const QString &right, const QString &file);
+  void addSession(const QString &sessionName,
+                  const QString &sessionDescription);
+  void addPreprocess(const QString &sessionName,
+                     const QString &preprocess,
+                     const std::vector<QString> &preprocessImages);
+  void addFeatures(const QString &sessionName,
+                   const QString &detector,
+                   const QString &descriptor,
+                   const std::vector<QString> &features);
+  void addMatches(const QString &sessionName,
+                  const QString &matcher,
+                  const QString &left,
+                  const QString &right,
+                  const QString &file);
 
   /*!
    * \brief Añade un mensaje temporal en la barra de herramientas
@@ -130,9 +140,12 @@ public slots:
    * \param[in] file
    */
   void deleteImage(const QString &file);
-  void deletePreprocess(const QString &session, const QString &preprocess);
-  void deleteFeatures(const QString &session, const QString &feat);
-  void deleteMatches(const QString &session, const QString &matches);
+  void deletePreprocess(const QString &session,
+                        const QString &preprocess);
+  void deleteFeatures(const QString &session,
+                      const QString &feat);
+  void deleteMatches(const QString &session,
+                     const QString &matches);
   void setActiveSession(const QString &session);
 
 signals:
@@ -217,6 +230,8 @@ protected:
 private slots:
 
   void update();
+  void retranslate();
+
   void openFromHistory();
   void onSelectionChanged();
   void onItemDoubleClicked(QTreeWidgetItem *item, int column);
@@ -224,7 +239,8 @@ private slots:
 
 private:
 
-  void init();
+  void initUI();
+  void initSignalAndSlots();
 
 // QWidget interface
 

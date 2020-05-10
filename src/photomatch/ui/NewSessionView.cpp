@@ -31,6 +31,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QIcon>
+#include <QApplication>
 
 namespace photomatch
 {
@@ -53,7 +54,6 @@ NewSessionViewImp::~NewSessionViewImp()
 
 void NewSessionViewImp::initUI()
 {
-  this->setWindowTitle(tr("New Session"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(450,250);
 
@@ -73,7 +73,8 @@ void NewSessionViewImp::initUI()
   mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
   layout->addWidget(mButtonBox, 4, 0, 1, 3);
 
-  update();
+  this->retranslate();
+  this->update();
 }
 
 void NewSessionViewImp::initSignalAndSlots()
@@ -100,7 +101,7 @@ void NewSessionViewImp::update()
 
 void NewSessionViewImp::retranslate()
 {
-
+  this->setWindowTitle(QApplication::translate("NewSessionViewImp", "New Session", nullptr));
 }
 
 QString NewSessionViewImp::sessionName() const

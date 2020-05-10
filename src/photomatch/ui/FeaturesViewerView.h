@@ -33,7 +33,7 @@ class QDialogButtonBox;
 namespace photomatch
 {
 
-class GraphicViewer;
+class GraphicViewerImp;
 
 class FeaturesViewerViewImp
   : public FeaturesViewerView
@@ -90,7 +90,7 @@ protected:
 
   QDialogButtonBox *mButtonBox;
   QComboBox *mComboBoxImages;
-  GraphicViewer *mGraphicView;
+  GraphicViewerImp *mGraphicView;
   QTreeWidget *mTreeWidget;
   QString mMarkerColor;
   QString mSelectedMarkerColor;

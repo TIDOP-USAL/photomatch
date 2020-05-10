@@ -50,7 +50,6 @@
 #include "photomatch/core/features/vgg.h"
 #include "photomatch/core/preprocess/decolor.h"
 
-//#include "photomatch/ui/FeatureExtractorModel.h"
 #include "photomatch/ui/FeatureExtractorView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/SettingsModel.h"
@@ -102,12 +101,10 @@ namespace photomatch
 {
 
 FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView *view,
-                                                     //IFeatureExtractorModel *model,
-                                                     ProjectModel *projectModel,
-                                                     SettingsModel *settingsModel)
+                                                           ProjectModel *projectModel,
+                                                           SettingsModel *settingsModel)
   : FeatureExtractorPresenter(),
     mView(view),
-    //mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
@@ -151,14 +148,8 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
-  connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
-
-  connect(mView, SIGNAL(run()),                                this, SLOT(run()));
-  connect(mView, SIGNAL(help()),                               this, SLOT(help()));
-
+  this->init();
+  this->initSignalAndSlots();
 }
 
 FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
@@ -1076,6 +1067,15 @@ void FeatureExtractorPresenterImp::init()
 
   mView->addKeypointsFilter(mKeypointsFilterWidget);
   
+}
+
+void FeatureExtractorPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
+  connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
+
+  connect(mView, SIGNAL(run()),                                this, SLOT(run()));
+  connect(mView, SIGNAL(help()),                               this, SLOT(help()));
 }
 
 void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)

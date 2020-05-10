@@ -36,7 +36,8 @@
 namespace photomatch
 {
 
-HomographyViewerViewImp::HomographyViewerViewImp(QWidget *parent, Qt::WindowFlags f)
+HomographyViewerViewImp::HomographyViewerViewImp(QWidget *parent,
+                                                 Qt::WindowFlags f)
   : HomographyViewerView(parent, f)
 {
   this->initUI();
@@ -130,7 +131,7 @@ void HomographyViewerViewImp::initUI()
   mComboBoxRightImage = new QComboBox(this);
   gridLayout->addWidget(mComboBoxRightImage, 1, 1, 1, 1);
 
-  mGraphicsView = new GraphicViewer(this);
+  mGraphicsView = new GraphicViewerImp(this);
   gridLayout->addWidget(mGraphicsView, 2, 0, 1, 2);
 
   mButtonBox = new QDialogButtonBox(this);

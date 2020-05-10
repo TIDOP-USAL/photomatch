@@ -29,7 +29,7 @@ TabHandler::TabHandler(QWidget *parent)
 void TabHandler::hideTab(int tabId)
 {
   if (tabId != -1) {
-    GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(this->widget(tabId));
+    GraphicViewerImp *graphicViewer = dynamic_cast<GraphicViewerImp *>(this->widget(tabId));
     this->removeTab(tabId);
     if (graphicViewer){
       delete graphicViewer;
@@ -44,7 +44,7 @@ void TabHandler::hideTab(int tabId)
 void TabHandler::setCurrentTab(int tabId)
 {
   this->setCurrentIndex(tabId);
-  if (GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(this->widget(tabId)))
+  if (GraphicViewerImp *graphicViewer = dynamic_cast<GraphicViewerImp *>(this->widget(tabId)))
     mGraphicViewer = graphicViewer;
 }
 
@@ -90,7 +90,7 @@ void TabHandler::setImage(const QString &image)
   }
 
   if (id == -1) {
-    GraphicViewer *graphicViewer = new GraphicViewer(this);
+    GraphicViewerImp *graphicViewer = new GraphicViewerImp(this);
     mGraphicViewer = graphicViewer;
     mGraphicViewer->setImage(QImage(image));
     id = this->addTab(mGraphicViewer, fileInfo.fileName());
@@ -114,9 +114,9 @@ void TabHandler::setImage(const QString &image)
   update();
 }
 
-GraphicViewer *TabHandler::graphicViewer(int tabId)
+GraphicViewerImp *TabHandler::graphicViewer(int tabId)
 {
-  return dynamic_cast<GraphicViewer *>(this->widget(tabId));
+  return dynamic_cast<GraphicViewerImp *>(this->widget(tabId));
 }
 
 int TabHandler::graphicViewerId(const QString &name)
@@ -130,7 +130,7 @@ int TabHandler::graphicViewerId(const QString &name)
   return id;
 }
 
-GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
+GraphicViewerImp *TabHandler::addGraphicViewer(const QString &name)
 {
 
   if (mGraphicViewer != nullptr){
@@ -143,7 +143,7 @@ GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
   int id = this->graphicViewerId(name);
 
   if (id == -1 ) {
-    GraphicViewer *graphicViewer = new GraphicViewer(this);
+    GraphicViewerImp *graphicViewer = new GraphicViewerImp(this);
 
     QMenu *contextMenu = new QMenu(graphicViewer);
     contextMenu->addAction(mActionZoomIn);
@@ -168,7 +168,7 @@ GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
 
 void TabHandler::onTabChanged(int tabId)
 {
-  GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(this->widget(tabId));
+  GraphicViewerImp *graphicViewer = dynamic_cast<GraphicViewerImp *>(this->widget(tabId));
 
   if (graphicViewer){
     setImage(this->tabToolTip(tabId));

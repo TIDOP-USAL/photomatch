@@ -32,15 +32,20 @@
 #include <QTextEdit>
 #include <QGridLayout>
 #include <QLabel>
+#include <QApplication>
 
 namespace photomatch
 {
 
 NewProjectViewImp::NewProjectViewImp(QWidget *parent)
   : NewProjectView(parent),
+    mLabelProjectName(new QLabel(this)),
     mLineEditProjectName(new QLineEdit(this)),
+    mLabelProjectPath(new QLabel(this)),
     mLineEditProjectPath(new QLineEdit(this)),
+    mLabelProjectFile(new QLabel(this)),
     mLineEditProjectFile(new QLineEdit(this)),
+    mLabelDescription(new QLabel(this)),
     mTextEditDescription(new QTextEdit(this)),
     mCheckBoxProjectFolder(new QCheckBox(this)),
     mPushButtonProjectPath(new QPushButton(this)),
@@ -104,42 +109,38 @@ void NewProjectViewImp::onClickButtonSelectPath()
 
 void NewProjectViewImp::initUI()
 {
-  this->setWindowTitle(tr("New Project"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(450,300);
 
   QGridLayout *layout = new QGridLayout();
   this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Project Name")), 0, 0);
+  layout->addWidget(mLabelProjectName, 0, 0);
   layout->addWidget(mLineEditProjectName, 0, 1, 1, 2);
 
-  layout->addWidget(new QLabel(tr("Project Path")), 1, 0);
+  layout->addWidget(mLabelProjectPath, 1, 0);
   layout->addWidget(mLineEditProjectPath, 1, 1);
   mPushButtonProjectPath->setMaximumSize(QSize(31,28));
   mPushButtonProjectPath->setText("...");
   layout->addWidget(mPushButtonProjectPath, 1, 2);
 
-  layout->addWidget(new QLabel(tr("Project File")), 2, 0);
+  layout->addWidget(mLabelProjectFile, 2, 0);
   mLineEditProjectFile->setEnabled(false);
   layout->addWidget(mLineEditProjectFile, 2, 1, 1, 2);
 
-  mCheckBoxProjectFolder->setText(tr("Create folder with project name"));
   mCheckBoxProjectFolder->setChecked(true);
   layout->addWidget(mCheckBoxProjectFolder, 3, 0, 1, 3);
 
-  layout->addWidget(new QLabel(tr("Description")), 4, 0);
+  layout->addWidget(mLabelDescription, 4, 0);
 
   layout->addWidget(mTextEditDescription, 5, 0, 1, 3);
 
   mButtonBox->setOrientation(Qt::Orientation::Horizontal);
   mButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
-  mButtonBox->button(QDialogButtonBox::Save)->setText("Save");
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
   layout->addWidget(mButtonBox, 7, 0, 1, 3);
 
-  update();
+  this->retranslate();
+  this->update();
 }
 
 void NewProjectViewImp::initSignalAndSlots()
@@ -186,7 +187,16 @@ void NewProjectViewImp::update()
 
 void NewProjectViewImp::retranslate()
 {
+  this->setWindowTitle(QApplication::translate("NewProjectViewImp", "New Project", nullptr));
+  mLabelProjectName->setText(QApplication::translate("NewProjectViewImp", "Project Name", nullptr));
+  mLabelProjectPath->setText(QApplication::translate("NewProjectViewImp", "Project Path", nullptr));
+  mLabelProjectFile->setText(QApplication::translate("NewProjectViewImp", "Project File", nullptr));
+  mCheckBoxProjectFolder->setText(QApplication::translate("NewProjectViewImp", "Create folder with project name", nullptr));
+  mLabelDescription->setText(QApplication::translate("NewProjectViewImp", "Description", nullptr));
 
+  mButtonBox->button(QDialogButtonBox::Save)->setText(QApplication::translate("NewProjectViewImp", "Save", nullptr));
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("NewProjectViewImp", "Cancel", nullptr));
+  mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("NewProjectViewImp", "Help", nullptr));
 }
 
 } // namespace photomatch

@@ -39,6 +39,7 @@
 #include <QColorDialog>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QApplication>
 
 namespace photomatch
 {
@@ -176,7 +177,6 @@ void SettingsViewImp::onPushButtonSelectGroundTruthEditorMarkerColorClicked()
 
 void SettingsViewImp::initUI()
 {
-  this->setWindowTitle(tr("Settings"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(750, 450);
 
@@ -732,7 +732,7 @@ void SettingsViewImp::update()
 
 void SettingsViewImp::retranslate()
 {
-
+  this->setWindowTitle(QApplication::translate("SettingsViewImp", "Settings", nullptr));
 }
 
 QString SettingsViewImp::activeLanguage() const

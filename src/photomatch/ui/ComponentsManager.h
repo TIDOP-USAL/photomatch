@@ -64,7 +64,8 @@ class ProgressHandler;
 class IProgressDialog;
 
 
-class ComponentsManager : public QObject
+class ComponentsManager
+  : public QObject
 {
   Q_OBJECT
 
@@ -80,8 +81,6 @@ public:
 
   ProjectModel *projectModel();
 
-//  Settings *settings();
-//  SettingsController *settingsRW();
   SettingsModel *settingsModel();
   SettingsPresenter *settingsPresenter();
 
@@ -94,13 +93,10 @@ public:
   ExportMatchesPresenter *exportMatchesPresenter();
   ExportMatchesModel *exportMatchesModel();
 
-  //IPreprocessModel *preprocessModel();
   PreprocessPresenter *preprocessPresenter();
 
-  //IFeatureExtractorModel *featureExtractorModel();
   FeatureExtractorPresenter *featureExtractorPresenter();
 
-  //IDescriptorMatcherModel *descriptorMatcherModel();
   DescriptorMatcherPresenter *descriptorMatcherPresenter();
 
   FeaturesViewerPresenter *featuresViewerPresenter();
@@ -172,7 +168,7 @@ protected:
   MainWindowPresenter *mMainWindowPresenter;
 
   Project *mProject;
-  ProjectController *mProjectIO;
+  ProjectController *mProjectController;
   ProjectModel *mProjectModel;
 
   NewProjectPresenter *mNewProjectPresenter;

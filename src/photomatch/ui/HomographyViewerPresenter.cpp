@@ -36,21 +36,16 @@ namespace photomatch
 {
 
 HomographyViewerPresenterImp::HomographyViewerPresenterImp(HomographyViewerView *view,
-                                                     HomographyViewerModel *model,
-                                                     SettingsModel *settings)
+                                                           HomographyViewerModel *model,
+                                                           SettingsModel *settings)
   : HomographyViewerPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settings),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
-  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
-  connect(mView, SIGNAL(homography(QString, QString)),     this, SLOT(homography(QString, QString)));
-
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 HomographyViewerPresenterImp::~HomographyViewerPresenterImp()
@@ -89,6 +84,15 @@ void HomographyViewerPresenterImp::init()
   mModel->setUseCuda(mSettingsModel->useCuda());
 }
 
+void HomographyViewerPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(loadLeftImage(QString)));
+  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(loadRightImage(QString)));
+  connect(mView, SIGNAL(homography(QString, QString)),     this, SLOT(homography(QString, QString)));
+
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+}
+
 void HomographyViewerPresenterImp::loadLeftImage(const QString &image)
 {
   mView->setLeftImage(image);
@@ -105,7 +109,8 @@ void HomographyViewerPresenterImp::loadRightImage(const QString &image)
   mView->setRightImage(image);
 }
 
-void HomographyViewerPresenterImp::homography(const QString &imageLeft, const QString &imageRight)
+void HomographyViewerPresenterImp::homography(const QString &imageLeft,
+                                              const QString &imageRight)
 {
   QImage image = mModel->homography(imageLeft, imageRight);
   mView->setHomography(image);

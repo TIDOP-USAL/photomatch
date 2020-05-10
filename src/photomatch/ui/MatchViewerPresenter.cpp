@@ -36,24 +36,16 @@ namespace photomatch
 {
 
 MatchViewerPresenterImp::MatchViewerPresenterImp(MatchViewerView *view,
-                                           MatchViewerModel *model,
-                                           SettingsModel *settings)
+                                                 MatchViewerModel *model,
+                                                 SettingsModel *settings)
   : MatchViewerPresenter(),
     mView(view),
     mModel(model),
     mSettingsModel(settings),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(setLeftImage(QString)));
-  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(setRightImage(QString)));
-  connect(mView, SIGNAL(loadMatches(QString, QString)),    this, SLOT(loadMatches(QString, QString)));
-
-  connect(mView, SIGNAL(deleteMatch(QString, QString, int, int)),
-          this,  SLOT(deleteMatch(QString, QString, int, int)));
-
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 MatchViewerPresenterImp::~MatchViewerPresenterImp()
@@ -154,6 +146,18 @@ void MatchViewerPresenterImp::setHelp(HelpDialog *help)
 
 void MatchViewerPresenterImp::init()
 {
+}
+
+void MatchViewerPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(leftImageChange(QString)),         this, SLOT(setLeftImage(QString)));
+  connect(mView, SIGNAL(rightImageChange(QString)),        this, SLOT(setRightImage(QString)));
+  connect(mView, SIGNAL(loadMatches(QString, QString)),    this, SLOT(loadMatches(QString, QString)));
+
+  connect(mView, SIGNAL(deleteMatch(QString, QString, int, int)),
+          this,  SLOT(deleteMatch(QString, QString, int, int)));
+
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 } // namespace photomatch

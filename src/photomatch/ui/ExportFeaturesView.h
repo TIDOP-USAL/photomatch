@@ -53,7 +53,7 @@ protected slots:
 
   void onPushButtonExportFormat();
 
-// IExportFeaturesView interface
+// ExportFeaturesView interface
 
 public:
 

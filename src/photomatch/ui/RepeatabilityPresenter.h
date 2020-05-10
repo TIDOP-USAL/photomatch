@@ -48,10 +48,10 @@ class RepeatabilityPresenterImp
 public:
 
   RepeatabilityPresenterImp(RepeatabilityView *view,
-                         RepeatabilityModel *model);
+                            RepeatabilityModel *model);
   ~RepeatabilityPresenterImp() override {}
 
-//IRepeatabilityPresenter interface
+// RepeatabilityPresenter interface
 
 protected slots:
 
@@ -68,12 +68,14 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
 private:
 
   RepeatabilityView *mView;
   RepeatabilityModel *mModel;
   HelpDialog *mHelp;
+
 };
 
 } // namespace photomatch

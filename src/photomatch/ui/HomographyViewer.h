@@ -46,7 +46,8 @@ public:
   virtual QString currentSession() const = 0;
   virtual std::vector<QString> images() const = 0;
   virtual std::vector<QString> imagePairs(const QString &imageName) const = 0;
-  virtual QImage homography(const QString &imgName1, const QString &imgName2) const = 0;
+  virtual QImage homography(const QString &imgName1,
+                            const QString &imgName2) const = 0;
   virtual void setUseCuda(bool active) = 0;
 
 };
@@ -61,7 +62,7 @@ class HomographyViewerView
 public:
 
   HomographyViewerView(QWidget *parent = nullptr,
-                    Qt::WindowFlags f = Qt::WindowFlags())
+                       Qt::WindowFlags f = Qt::WindowFlags())
     : IDialogView(parent, f) {}
   virtual ~HomographyViewerView() = default;
 
@@ -121,7 +122,8 @@ protected slots:
 
   virtual void loadLeftImage(const QString &image) = 0;
   virtual void loadRightImage(const QString &image) = 0;
-  virtual void homography(const QString &imageLeft, const QString &imageRight) = 0;
+  virtual void homography(const QString &imageLeft,
+                          const QString &imageRight) = 0;
 
 };
 

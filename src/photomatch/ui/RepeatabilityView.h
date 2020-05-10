@@ -43,7 +43,7 @@ class RepeatabilityViewImp
 public:
 
   RepeatabilityViewImp(QWidget *parent = nullptr,
-                   Qt::WindowFlags f = Qt::WindowFlags());
+                       Qt::WindowFlags f = Qt::WindowFlags());
 
   virtual ~RepeatabilityViewImp() override;
 
@@ -51,9 +51,11 @@ private slots:
 
   void onTreeWidgetSessionsItemSelectionChanged();
 
-// IRepeatabilityView interface
+// RepeatabilityView interface
 
-  void addSession(const QString &session, const QString &detector, const QString &descriptor) override;
+  void addSession(const QString &session,
+                  const QString &detector,
+                  const QString &descriptor) override;
   void setRepeatability(const std::vector<std::tuple<QString, QString, QString, float, int>> &repeatability) override;
 
 // IDialogView interface

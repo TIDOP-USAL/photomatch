@@ -73,12 +73,10 @@ namespace photomatch
 {
 
 PreprocessPresenterImp::PreprocessPresenterImp(PreprocessView *view,
-                                         //IPreprocessModel *model,
-                                         ProjectModel *projectModel,
-                                         SettingsModel *settingsModel)
+                                               ProjectModel *projectModel,
+                                               SettingsModel *settingsModel)
   : PreprocessPresenter(),
     mView(view),
-    //mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
@@ -98,13 +96,8 @@ PreprocessPresenterImp::PreprocessPresenterImp(PreprocessView *view,
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(preprocessChange(QString)), this, SLOT(setCurrentPreprocess(QString)));
-
-  connect(mView, SIGNAL(run()),      this, SLOT(run()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
-
+  this->init();
+  this->initSignalAndSlots();
 }
 
 PreprocessPresenterImp::~PreprocessPresenterImp()
@@ -366,6 +359,14 @@ void PreprocessPresenterImp::init()
   mView->addPreprocess(mWallis);
 
   mView->setCurrentPreprocess(mDecolor->windowTitle());
+}
+
+void PreprocessPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(preprocessChange(QString)), this, SLOT(setCurrentPreprocess(QString)));
+
+  connect(mView, SIGNAL(run()),      this, SLOT(run()));
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 void PreprocessPresenterImp::setProgressHandler(ProgressHandler *progressHandler)

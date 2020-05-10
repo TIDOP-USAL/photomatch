@@ -32,15 +32,14 @@ namespace photomatch
 {
 
 MultiViewMatchingAssessmentPresenterImp::MultiViewMatchingAssessmentPresenterImp(MultiviewMatchingAssessmentView *view,
-                                                                           MultiViewMatchingAssessmentModel *model)
+                                                                                 MultiViewMatchingAssessmentModel *model)
   : MultiViewMatchingAssessmentPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(idChange(int)),  this, SLOT(onIdChange(int)));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 void MultiViewMatchingAssessmentPresenterImp::onIdChange(int id)
@@ -85,6 +84,11 @@ void MultiViewMatchingAssessmentPresenterImp::setHelp(HelpDialog *help)
 
 void MultiViewMatchingAssessmentPresenterImp::init()
 {
+}
+
+void MultiViewMatchingAssessmentPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(idChange(int)),  this, SLOT(onIdChange(int)));
 }
 
 } // namespace photomatch

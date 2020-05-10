@@ -37,7 +37,7 @@ class QLabel;
 namespace photomatch
 {
 
-class GraphicViewer;
+class GraphicViewerImp;
 class CrossGraphicItem;
 
 
@@ -74,7 +74,7 @@ private:
   void removeHomologousPointInGraphicsViews(int id);
   void removeHomologousPointsInGraphicsViews();
 
-// IGroundTruthView interface
+// GroundTruthView interface
 
 public slots:
 
@@ -128,8 +128,8 @@ protected:
   QTreeWidget *mTreeWidget;
   QComboBox  *mComboBoxLeftImage;
   QComboBox  *mComboBoxRightImage;
-  GraphicViewer *mGraphicsViewRight;
-  GraphicViewer *mGraphicsViewLeft;
+  GraphicViewerImp *mGraphicsViewRight;
+  GraphicViewerImp *mGraphicsViewLeft;
   QLineEdit *mLineEditLeftX;
   QLineEdit *mLineEditLeftY;
   QLabel *mLabelDetailLeft;
@@ -142,7 +142,6 @@ protected:
   QAction *mImportGroundTruth;
   QAction *mSaveGroundTruth;
   QAction *mAddPoints;
-  //QAction *mDeletePoints;
   CrossGraphicItem *mCrossGraphicItem1;
   CrossGraphicItem *mCrossGraphicItem2;
   bool bUnsavedChanges;

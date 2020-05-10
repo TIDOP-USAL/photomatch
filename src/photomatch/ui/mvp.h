@@ -203,6 +203,10 @@ private:
    */
   virtual void init() = 0;
 
+  /*!
+   * \brief Signal and slots initialization
+   */
+  virtual void initSignalAndSlots() = 0;
 };
 
 } // namespace photomatch

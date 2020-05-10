@@ -46,23 +46,18 @@ namespace photomatch
 {
 
 DescriptorMatcherPresenterImp::DescriptorMatcherPresenterImp(DescriptorMatcherView *view,
-                                                       //IDescriptorMatcherModel *model,
-                                                       ProjectModel *projectModel,
-                                                       SettingsModel *settingsModel)
+                                                             ProjectModel *projectModel,
+                                                             SettingsModel *settingsModel)
   : DescriptorMatcherPresenter(),
     mView(view),
-    //mModel(model),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
     mHelp(nullptr),
     mMultiProcess(new MultiProcess(true)),
     mProgressHandler(nullptr)
 {
-  init();
-
-  connect(mView, SIGNAL(run()),      this, SLOT(run()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
-
+  this->init();
+  this->initSignalAndSlots();
 }
 
 DescriptorMatcherPresenterImp::~DescriptorMatcherPresenterImp()
@@ -236,6 +231,12 @@ void DescriptorMatcherPresenterImp::setHelp(HelpDialog *help)
 
 void DescriptorMatcherPresenterImp::init()
 {
+}
+
+void DescriptorMatcherPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(run()),      this, SLOT(run()));
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 void DescriptorMatcherPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
@@ -532,7 +533,9 @@ void DescriptorMatcherPresenterImp::onFinished()
   msgInfo("Feature matching finished.");
 }
 
-void DescriptorMatcherPresenterImp::onMatchCompute(const QString &left, const QString &right, const QString &match)
+void DescriptorMatcherPresenterImp::onMatchCompute(const QString &left,
+                                                   const QString &right,
+                                                   const QString &match)
 {
   mProjectModel->addMatches(left, right, match);
   emit matchCompute(match);

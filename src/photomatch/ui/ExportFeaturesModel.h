@@ -44,6 +44,10 @@ public:
   ExportFeaturesModelImp(ProjectModel *mProjectModel);
   ~ExportFeaturesModelImp() override;
 
+// ExportFeaturesModel interface
+
+public:
+
   QStringList sessions() const override;
   QString activeSessionName() const override;
   QStringList formats() const override;

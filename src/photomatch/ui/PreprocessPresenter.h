@@ -37,7 +37,6 @@ namespace photomatch
 {
 
 class PreprocessView;
-//class IPreprocessModel;
 class ProjectModel;
 class SettingsModel;
 class HelpDialog;
@@ -68,9 +67,8 @@ class PreprocessPresenterImp
 public:
 
   PreprocessPresenterImp(PreprocessView *view,
-                      //IPreprocessModel *model,
-                      ProjectModel *projectModel,
-                      SettingsModel *settingsModel);
+                         ProjectModel *projectModel,
+                         SettingsModel *settingsModel);
   ~PreprocessPresenterImp() override;
 
 private:
@@ -102,8 +100,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IPreprocessPresenter interface
+// PreprocessPresenter interface
 
 public slots:
 
@@ -122,7 +121,6 @@ private slots:
 protected:
 
   PreprocessView *mView;
-  //IPreprocessModel *mModel;  /// Por ahora es una clase vacia
   ProjectModel *mProjectModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
@@ -144,6 +142,7 @@ protected:
   MultiProcess *mMultiProcess;
 
   ProgressHandler *mProgressHandler;
+
 };
 
 } // namespace photomatch

@@ -37,15 +37,14 @@ namespace photomatch
 {
 
 ExportMatchesPresenterImp::ExportMatchesPresenterImp(ExportMatchesView *view,
-                                               ExportMatchesModel *model)
+                                                     ExportMatchesModel *model)
   : ExportMatchesPresenter(),
     mView(view),
     mModel(model),
     mHelp(nullptr)
 {
-  connect(mView, SIGNAL(sessionChange(QString)),   this, SLOT(sessionChange(QString)));
-  connect(mView, SIGNAL(accepted()),               this, SLOT(save()));
-  connect(mView, SIGNAL(help()),                   this, SLOT(help()));
+  this->init();
+  this->initSignalAndSlots();
 }
 
 ExportMatchesPresenterImp::~ExportMatchesPresenterImp()
@@ -78,6 +77,13 @@ void ExportMatchesPresenterImp::setHelp(HelpDialog *help)
 
 void ExportMatchesPresenterImp::init()
 {
+}
+
+void ExportMatchesPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(sessionChange(QString)),   this, SLOT(sessionChange(QString)));
+  connect(mView, SIGNAL(accepted()),               this, SLOT(save()));
+  connect(mView, SIGNAL(help()),                   this, SLOT(help()));
 }
 
 void ExportMatchesPresenterImp::save()

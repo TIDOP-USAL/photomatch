@@ -35,7 +35,7 @@ class QTreeWidgetItem;
 namespace photomatch
 {
 
-class GraphicViewer;
+class GraphicViewerImp;
 
 
 class MatchViewerViewImp
@@ -102,8 +102,8 @@ protected:
   QTreeWidget *mTreeWidgetMatches;
   QComboBox  *mComboBoxLeftImage;
   QComboBox  *mComboBoxRightImage;
-  GraphicViewer *mGraphicsViewRight;
-  GraphicViewer *mGraphicsViewLeft;
+  GraphicViewerImp *mGraphicsViewRight;
+  GraphicViewerImp *mGraphicsViewLeft;
   QPushButton *mPushButtonDeleteMatch;
   bool bUnsavedChanges;
   QString mMarkerColor;

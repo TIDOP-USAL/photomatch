@@ -84,7 +84,7 @@ private slots:
   void update() override;
   void retranslate() override;
 
-// ISettingsView interface
+// SettingsView interface
 
 public:
 

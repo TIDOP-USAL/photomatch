@@ -95,7 +95,8 @@ std::vector<QString> HomographyViewerModelImp::imagePairs(const QString &imageNa
   return pairs;
 }
 
-QImage HomographyViewerModelImp::homography(const QString &imgName1, const QString &imgName2) const
+QImage HomographyViewerModelImp::homography(const QString &imgName1,
+                                            const QString &imgName2) const
 {
   QImage image;
   QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();

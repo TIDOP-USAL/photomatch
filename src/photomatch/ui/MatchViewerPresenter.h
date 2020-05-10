@@ -48,8 +48,8 @@ class MatchViewerPresenterImp
 public:
 
   MatchViewerPresenterImp(MatchViewerView *view,
-                       MatchViewerModel *model,
-                       SettingsModel *settings);
+                          MatchViewerModel *model,
+                          SettingsModel *settings);
 
   ~MatchViewerPresenterImp() override;
 
@@ -58,14 +58,20 @@ public:
 public slots:
 
   void openFromSession(const QString &session) override;
-  void openFromSessionAndImages(const QString &session, const QString &imageLeft, const QString &imageRight) override;
+  void openFromSessionAndImages(const QString &session,
+                                const QString &imageLeft,
+                                const QString &imageRight) override;
 
 protected slots:
 
 //  void loadLeftImage(const QString &image) override;
 //  void loadRightImage(const QString &image) override;
-  void loadMatches(const QString &imageLeft, const QString &imageRight) override;
-  void deleteMatch(const QString &imageLeft, const QString &imageRight, int query_id, int train_id) override;
+  void loadMatches(const QString &imageLeft,
+                   const QString &imageRight) override;
+  void deleteMatch(const QString &imageLeft,
+                   const QString &imageRight,
+                   int query_id,
+                   int train_id) override;
   void setSession(const QString &session) override;
   void setLeftImage(const QString &image) override;
   void setRightImage(const QString &image) override;
@@ -84,12 +90,11 @@ public slots:
 private:
 
   void init() override;
-
-
+  void initSignalAndSlots() override;
 
 public slots:
 
-// IMatchViewerPresenter interface
+// MatchViewerPresenter interface
 
 
 protected slots:

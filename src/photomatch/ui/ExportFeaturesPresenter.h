@@ -46,7 +46,7 @@ class ExportFeaturesPresenterImp
 public:
 
   ExportFeaturesPresenterImp(ExportFeaturesView *view,
-                          ExportFeaturesModel *model);
+                             ExportFeaturesModel *model);
   ~ExportFeaturesPresenterImp() override;
 
 // IPresenter interface
@@ -60,8 +60,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IExportFeaturesPresenter interface
+// ExportFeaturesPresenter interface
 
 public:
 
@@ -73,6 +74,7 @@ protected:
   ExportFeaturesView *mView;
   ExportFeaturesModel *mModel;
   HelpDialog *mHelp;
+
 };
 
 

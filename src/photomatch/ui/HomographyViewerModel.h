@@ -46,14 +46,15 @@ public:
   HomographyViewerModelImp(ProjectModel *mProjectModel);
   ~HomographyViewerModelImp() override;
 
-// IHomographyViewerModel interface
+// HomographyViewerModel interface
 
 public:
 
   QString currentSession() const override;
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
-  QImage homography(const QString &imgName1, const QString &imgName2) const override;
+  QImage homography(const QString &imgName1,
+                    const QString &imgName2) const override;
   void setUseCuda(bool active) override;
 
 // IModel interface

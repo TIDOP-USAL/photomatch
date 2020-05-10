@@ -39,7 +39,6 @@ namespace photomatch
 {
 
 class FeatureExtractorView;
-//class IFeatureExtractorModel;
 class ProjectModel;
 class SettingsModel;
 class HelpDialog;
@@ -56,7 +55,6 @@ class GfttWidget;
 class HogWidget;
 class KazeWidget;
 class LatchWidget;
-//class ILucidWidget;
 class LssWidget;
 class MsdWidget;
 class MserWidget;
@@ -78,9 +76,8 @@ class FeatureExtractorPresenterImp
 public:
 
   FeatureExtractorPresenterImp(FeatureExtractorView *view,
-                            //IFeatureExtractorModel *model,
-                            ProjectModel *projectModel,
-                            SettingsModel *settingsModel);
+                               ProjectModel *projectModel,
+                               SettingsModel *settingsModel);
   ~FeatureExtractorPresenterImp() override;
 
 private:
@@ -123,8 +120,9 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
 
-// IFeatureExtractorPresenter interface
+// FeatureExtractorPresenter interface
 
 public slots:
 
@@ -145,7 +143,6 @@ private slots:
 protected:
 
   FeatureExtractorView *mView;
-  //IFeatureExtractorModel *mModel;  /// Por ahora es una clase vacia.
   ProjectModel *mProjectModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
@@ -178,7 +175,6 @@ protected:
   HogWidget *mHogDescriptor;
   KazeWidget *mKazeDescriptor;
   LatchWidget *mLatchDescriptor;
-  //ILucidWidget *mLucidDescriptor;
   LssWidget *mLssDescriptor;
   OrbWidget *mOrbDescriptor;
 #ifdef OPENCV_ENABLE_NONFREE
@@ -191,6 +187,7 @@ protected:
   KeypointsFilterWidget *mKeypointsFilterWidget;
   MultiProcess *mMultiProcess;
   ProgressHandler *mProgressHandler;
+
 };
 
 } // namespace photomatch

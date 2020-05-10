@@ -49,8 +49,12 @@ public:
 
 private:
 
-  QPointF findPoint(const QString &image1, const QString &image2, const QPointF &ptImage1);
-  QPointF findProjectedPoint(const QString &image1, const QString &image2, const QPointF &ptImage1);
+  QPointF findPoint(const QString &image1,
+                    const QString &image2,
+                    const QPointF &ptImage1);
+  QPointF findProjectedPoint(const QString &image1,
+                             const QString &image2,
+                             const QPointF &ptImage1);
 
 // IModel interface
 
@@ -58,36 +62,56 @@ private:
 
   void init() override;
 
-// IGroundTruthModel interface
+// GroundTruthModel interface
 
 public:
 
   void loadGroundTruth() override;
   std::vector<QString> images() const override;
   std::vector<QString> imagePairs(const QString &imageName) const override;
-  std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1, const QString &imgName2) const override;
-  std::pair<QPointF, QPointF> homologus(const QString &imgName1, const QString &imgName2, int pointId) const override;
-  photomatch::HomologusPoints homologusPoints(const QString &imgName1, const QString &imgName2) const override;
-  QTransform homography(const QString &imgName1, const QString &imgName2) const override;
-  QTransform homography(const photomatch::HomologusPoints &homologusPoints) const override;
+  std::vector<std::pair<QPointF, QPointF>> groundTruth(const QString &imgName1,
+                                                       const QString &imgName2) const override;
+  std::pair<QPointF, QPointF> homologus(const QString &imgName1,
+                                        const QString &imgName2,
+                                        int pointId) const override;
+  HomologusPoints homologusPoints(const QString &imgName1,
+                                  const QString &imgName2) const override;
+  QTransform homography(const QString &imgName1,
+                        const QString &imgName2) const override;
+  QTransform homography(const HomologusPoints &homologusPoints) const override;
   cv::Mat fundamental(const QString &imgName1,
                       const QString &imgName2) const override;
-  cv::Mat fundamental(const photomatch::HomologusPoints &homologusPoints) const override;
-  std::vector<double> errorsHomography(const QString &imgName1, const QString &imgName2) const override;
-  std::vector<double> errorsFundamental(const QString &imgName1, const QString &imgName2) const override;
+  cv::Mat fundamental(const HomologusPoints &homologusPoints) const override;
+  std::vector<double> errorsHomography(const QString &imgName1,
+                                       const QString &imgName2) const override;
+  std::vector<double> errorsFundamental(const QString &imgName1,
+                                        const QString &imgName2) const override;
   void saveGroundTruth() override;
   void setGroundTruth(const QString &file) override;
   bool existGroundTruth() const override;
   QString projectPath() const override;
-  QPointF findLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
-  QPointF findRightPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
-  QPointF findProjectedLeftPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
-  QPointF findProjectedRightPoint(const QString &image1, const QString &image2, const QPointF &pt) override;
+  QPointF findLeftPoint(const QString &image1,
+                        const QString &image2,
+                        const QPointF &pt) override;
+  QPointF findRightPoint(const QString &image1,
+                         const QString &image2,
+                         const QPointF &pt) override;
+  QPointF findProjectedLeftPoint(const QString &image1,
+                                 const QString &image2,
+                                 const QPointF &pt) override;
+  QPointF findProjectedRightPoint(const QString &image1,
+                                  const QString &image2,
+                                  const QPointF &pt) override;
   
 public slots:
 
-  void addHomologus(const QString &image1, const QPointF &pt1, const QString &image2, const QPointF &pt2) override;
-  void deleteHomologus(const QString &image1, const QString &image2, int pointId) override;
+  void addHomologus(const QString &image1,
+                    const QPointF &pt1,
+                    const QString &image2,
+                    const QPointF &pt2) override;
+  void deleteHomologus(const QString &image1,
+                       const QString &image2,
+                       int pointId) override;
 
 protected:
 
