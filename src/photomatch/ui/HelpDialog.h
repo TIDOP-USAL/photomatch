@@ -25,6 +25,8 @@
 #ifndef PHOTOMATCH_HELP_DIALOG_H
 #define PHOTOMATCH_HELP_DIALOG_H
 
+#include "photomatch/photomatch_global.h"
+
 #include "mvp.h"
 
 #include <QTextBrowser>

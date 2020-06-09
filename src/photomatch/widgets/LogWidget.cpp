@@ -28,6 +28,7 @@
 #include <QGridLayout>
 #include <QListWidgetItem>
 #include <QAbstractItemModel>
+#include <QApplication>
 
 using namespace tl;
 
@@ -45,12 +46,82 @@ LogWidget::LogWidget(QWidget *parent)
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 LogWidget::~LogWidget()
 {
 
+}
+
+void LogWidget::initUI()
+{
+  this->setObjectName("LogWidget");
+
+  QToolBar *toolBar = new QToolBar(this);
+
+  mMsgErrorAction = new QAction(this);
+  mMsgErrorAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_close_window_48px.png"));
+  mMsgErrorAction->setCheckable(true);
+  mMsgErrorAction->setChecked(true);
+  toolBar->addAction(mMsgErrorAction);
+
+  mMsgWarningAction = new QAction(this);
+  mMsgWarningAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_error_48px.png"));
+  mMsgWarningAction->setCheckable(true);
+  mMsgWarningAction->setChecked(true);
+  toolBar->addAction(mMsgWarningAction);
+
+  mMsgInfoAction = new QAction(this);
+  mMsgInfoAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_box_important_48px.png"));
+  mMsgInfoAction->setCheckable(true);
+  mMsgInfoAction->setChecked(true);
+  toolBar->addAction(mMsgInfoAction);
+
+  toolBar->addSeparator();
+
+  mClearAction = new QAction(this);
+  mClearAction->setIcon(QIcon(":/ico/48/img/material/48/icons8_trash_48px.png"));
+  toolBar->addAction(mClearAction);
+
+  mGridLayout->setMargin(0);
+  mGridLayout->addWidget(toolBar);
+  mListWidget = new QListWidget(this);
+  mGridLayout->addWidget(mListWidget);
+
+  this->retranslate();
+}
+
+void LogWidget::initSignalAndSlots()
+{
+  connect(mMsgErrorAction,      &QAction::toggled,                             this, &LogWidget::onPushButtonShowLogErrorsToggled);
+  connect(mMsgWarningAction,    &QAction::toggled,                             this, &LogWidget::onPushButtonShowLogWarningToggled);
+  connect(mMsgInfoAction,       &QAction::toggled,                             this, &LogWidget::onPushButtonShowLogInfoToggled);
+  connect(mClearAction,         SIGNAL(triggered(bool)),                           this, SLOT(clear()));
+  connect(mListWidget->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)), this, SLOT(onRowsInserted(const QModelIndex &,int,int)));
+  connect(mListWidget->model(), SIGNAL(rowsRemoved(const QModelIndex &,int,int)),  this, SLOT(onRowsRemoved(const QModelIndex &,int,int)));
+}
+
+void LogWidget::reset()
+{
+  std::lock_guard<std::mutex> lck(LogWidget::mtx);
+  clear();
+}
+
+void LogWidget::update()
+{
+  mClearAction->setEnabled(mListWidget->count() > 0);
+}
+
+void LogWidget::retranslate()
+{
+  mMsgErrorAction->setText(QApplication::translate("LogWidget", "Show errors"));
+  mMsgErrorAction->setStatusTip(QApplication::translate("LogWidget", "Show errors"));
+  mMsgWarningAction->setText(QApplication::translate("LogWidget", "Show warnings"));
+  mMsgWarningAction->setStatusTip(QApplication::translate("LogWidget", "Show warnings"));
+  mMsgInfoAction->setText(QApplication::translate("LogWidget", "Show messages"));
+  mMsgInfoAction->setStatusTip(QApplication::translate("LogWidget", "Show messages"));
+  mClearAction->setText(QApplication::translate("LogWidget", "Clean log"));
+  mClearAction->setStatusTip(QApplication::translate("LogWidget", "Clean log"));
 }
 
 void LogWidget::filter(tl::MessageLevel level)
@@ -140,66 +211,6 @@ void LogWidget::onRowsInserted(const QModelIndex &parent, int start, int end, Lo
 void LogWidget::onRowsRemoved(const QModelIndex &parent, int start, int end, LogWidget::QPrivateSignal)
 {
   update();
-}
-
-void LogWidget::update()
-{
-  mClearAction->setEnabled(mListWidget->count() > 0);
-}
-
-void LogWidget::retranslate()
-{
-
-}
-
-void LogWidget::reset()
-{
-  std::lock_guard<std::mutex> lck(LogWidget::mtx);
-  clear();
-}
-
-void LogWidget::initUI()
-{
-  QToolBar *toolBar = new QToolBar(this);
-
-  mMsgErrorAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_close_window_48px.png"), tr("Show errors"), this);
-  mMsgErrorAction->setStatusTip(tr("Show errors"));
-  mMsgErrorAction->setCheckable(true);
-  mMsgErrorAction->setChecked(true);
-  toolBar->addAction(mMsgErrorAction);
-
-  mMsgWarningAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_error_48px.png"), tr("Show warnings"), this);
-  mMsgWarningAction->setStatusTip(tr("Show warnings"));
-  mMsgWarningAction->setCheckable(true);
-  mMsgWarningAction->setChecked(true);
-  toolBar->addAction(mMsgWarningAction);
-
-  mMsgInfoAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_box_important_48px.png"), tr("Show messages"), this);
-  mMsgInfoAction->setStatusTip(tr("Show messages"));
-  mMsgInfoAction->setCheckable(true);
-  mMsgInfoAction->setChecked(true);
-  toolBar->addAction(mMsgInfoAction);
-
-  toolBar->addSeparator();
-
-  mClearAction = new QAction(QIcon(":/ico/48/img/material/48/icons8_trash_48px.png"), tr("Clean log"), this);
-  mClearAction->setStatusTip(tr("Clean log"));
-  toolBar->addAction(mClearAction);
-
-  mGridLayout->setMargin(0);
-  mGridLayout->addWidget(toolBar);
-  mListWidget = new QListWidget(this);
-  mGridLayout->addWidget(mListWidget);
-}
-
-void LogWidget::initSignalAndSlots()
-{
-  connect(mMsgErrorAction,      SIGNAL(toggled(bool)),                             this, SLOT(onPushButtonShowLogErrorsToggled(bool)));
-  connect(mMsgWarningAction,    SIGNAL(toggled(bool)),                             this, SLOT(onPushButtonShowLogWarningToggled(bool)));
-  connect(mMsgInfoAction,       SIGNAL(toggled(bool)),                             this, SLOT(onPushButtonShowLogInfoToggled(bool)));
-  connect(mClearAction,         SIGNAL(triggered(bool)),                           this, SLOT(clear()));
-  connect(mListWidget->model(), SIGNAL(rowsInserted(const QModelIndex &,int,int)), this, SLOT(onRowsInserted(const QModelIndex &,int,int)));
-  connect(mListWidget->model(), SIGNAL(rowsRemoved(const QModelIndex &,int,int)),  this, SLOT(onRowsRemoved(const QModelIndex &,int,int)));
 }
 
 void LogWidget::onMsgDebug(const char *msg, const char *date)

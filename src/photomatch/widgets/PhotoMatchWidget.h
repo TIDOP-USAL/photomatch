@@ -28,6 +28,7 @@
 #include "photomatch/photomatch_global.h"
 
 #include <QWidget>
+#include <QEvent>
 
 namespace photomatch
 {
@@ -39,12 +40,12 @@ class PHOTOMATCH_EXPORT PhotoMatchWidget
 public:
 
   PhotoMatchWidget(QWidget *parent = nullptr) : QWidget(parent){}
-  ~PhotoMatchWidget() = default;
+  ~PhotoMatchWidget() override = default;
 
-protected slots:
+private:
 
-  virtual void update() = 0;
-  virtual void retranslate() = 0;
+  virtual void initUI() = 0;
+  virtual void initSignalAndSlots() = 0;
 
 public slots:
 
@@ -53,11 +54,29 @@ public slots:
    */
   virtual void reset() = 0;
 
-private:
+protected slots:
 
-  virtual void initUI() = 0;
-  virtual void initSignalAndSlots() = 0;
+  virtual void update() = 0;
+  virtual void retranslate() = 0;
+
+// QWidget interface
+
+protected:
+
+  void changeEvent(QEvent *event) override
+  {
+    QWidget::changeEvent(event);
+    switch (event->type()) {
+      case QEvent::LanguageChange:
+        this->retranslate();
+        break;
+      default:
+        break;
+    }
+  }
 };
+
+
 
 } // namespace photomatch
 

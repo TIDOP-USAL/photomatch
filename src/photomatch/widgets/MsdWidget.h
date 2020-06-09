@@ -88,6 +88,9 @@ public slots:
 
 };
 
+
+
+
 class PHOTOMATCH_EXPORT MsdWidgetImp
   : public MsdWidget
 {
@@ -98,8 +101,7 @@ public:
   MsdWidgetImp(QWidget *parent = nullptr);
   ~MsdWidgetImp() override;
 
-
-// IMsdWidget interface
+// MsdWidget interface
 
 public:
 
@@ -131,25 +133,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

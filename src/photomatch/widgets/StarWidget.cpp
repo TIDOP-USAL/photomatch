@@ -56,6 +56,84 @@ StarWidgetImp::~StarWidgetImp()
 
 }
 
+
+void StarWidgetImp::initUI()
+{
+  this->setWindowTitle("STAR");
+  this->setObjectName("StarWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelMaxSize, 0, 0);
+  mMaxSize->setRange(0, 100);
+  propertiesLayout->addWidget(mMaxSize, 0, 1);
+
+  propertiesLayout->addWidget(mLabelResponseThreshold, 1, 0);
+  mResponseThreshold->setRange(0, 100);
+  propertiesLayout->addWidget(mResponseThreshold, 1, 1);
+
+  propertiesLayout->addWidget(mLabelLineThresholdProjected, 2, 0);
+  mLineThresholdProjected->setRange(0, 100);
+  propertiesLayout->addWidget(mLineThresholdProjected, 2, 1);
+
+  propertiesLayout->addWidget(mLabelLineThresholdBinarized, 3, 0);
+  mLineThresholdBinarized->setRange(0, 100);
+  propertiesLayout->addWidget(mLineThresholdBinarized, 3, 1);
+
+  propertiesLayout->addWidget(mLabelSuppressNonmaxSize, 4, 0);
+  mSuppressNonmaxSize->setRange(0, 100);
+  propertiesLayout->addWidget(mSuppressNonmaxSize, 4, 1);
+
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
+}
+
+void StarWidgetImp::initSignalAndSlots()
+{
+  connect(mMaxSize,                 QOverload<int>::of(&QSpinBox::valueChanged),  this, &StarWidget::maxSizeChange);
+  connect(mResponseThreshold,       QOverload<int>::of(&QSpinBox::valueChanged),  this, &StarWidget::responseThresholdChange);
+  connect(mLineThresholdProjected,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &StarWidget::lineThresholdProjectedChange);
+  connect(mLineThresholdBinarized,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &StarWidget::lineThresholdBinarizedChange);
+  connect(mSuppressNonmaxSize,      QOverload<int>::of(&QSpinBox::valueChanged),  this, &StarWidget::suppressNonmaxSizeChange);
+}
+
+void StarWidgetImp::reset()
+{
+  const QSignalBlocker blockerMaxSize(mMaxSize);
+  const QSignalBlocker blockerResponseThreshold(mResponseThreshold);
+  const QSignalBlocker blockerLineThresholdProjected(mLineThresholdProjected);
+  const QSignalBlocker blockerLineThresholdBinarized(mLineThresholdBinarized);
+  const QSignalBlocker blockerSuppressNonmaxSize(mSuppressNonmaxSize);
+
+  mMaxSize->setValue(45);
+  mResponseThreshold->setValue(30);
+  mLineThresholdProjected->setValue(10);
+  mLineThresholdBinarized->setValue(8);
+  mSuppressNonmaxSize->setValue(5);
+}
+
+void StarWidgetImp::update()
+{
+}
+
+void StarWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("StarWidget", "STAR Parameters"));
+  mLabelMaxSize->setText(QApplication::translate("StarWidget", "Max Size:"));
+  mLabelResponseThreshold->setText(QApplication::translate("StarWidget", "Response Threshold:"));
+  mLabelLineThresholdProjected->setText(QApplication::translate("StarWidget", "Line Threshold Projected:"));
+  mLabelLineThresholdBinarized->setText(QApplication::translate("StarWidget", "Line Threshold Binarized:"));
+  mLabelSuppressNonmaxSize->setText(QApplication::translate("StarWidget", "Suppress Nonmax Size:"));
+}
+
 int StarWidgetImp::maxSize() const
 {
   return mMaxSize->value();
@@ -111,93 +189,7 @@ void StarWidgetImp::setSuppressNonmaxSize(int suppressNonmaxSize)
   mSuppressNonmaxSize->setValue(suppressNonmaxSize);
 }
 
-void StarWidgetImp::update()
-{
-}
 
-void StarWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("StarWidgetImp", "STAR Parameters"));
-  mLabelMaxSize->setText(QApplication::translate("StarWidgetImp", "Max Size:"));
-  mLabelResponseThreshold->setText(QApplication::translate("StarWidgetImp", "Response Threshold:"));
-  mLabelLineThresholdProjected->setText(QApplication::translate("StarWidgetImp", "Line Threshold Projected:"));
-  mLabelLineThresholdBinarized->setText(QApplication::translate("StarWidgetImp", "Line Threshold Binarized:"));
-  mLabelSuppressNonmaxSize->setText(QApplication::translate("StarWidgetImp", "Suppress Nonmax Size:"));
-}
-
-void StarWidgetImp::reset()
-{
-  const QSignalBlocker blockerMaxSize(mMaxSize);
-  const QSignalBlocker blockerResponseThreshold(mResponseThreshold);
-  const QSignalBlocker blockerLineThresholdProjected(mLineThresholdProjected);
-  const QSignalBlocker blockerLineThresholdBinarized(mLineThresholdBinarized);
-  const QSignalBlocker blockerSuppressNonmaxSize(mSuppressNonmaxSize);
-
-  mMaxSize->setValue(45);
-  mResponseThreshold->setValue(30);
-  mLineThresholdProjected->setValue(10);
-  mLineThresholdBinarized->setValue(8);
-  mSuppressNonmaxSize->setValue(5);
-}
-
-void StarWidgetImp::initUI()
-{
-  this->setWindowTitle("STAR");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelMaxSize, 0, 0);
-  mMaxSize->setRange(0, 100);
-  propertiesLayout->addWidget(mMaxSize, 0, 1);
-
-  propertiesLayout->addWidget(mLabelResponseThreshold, 1, 0);
-  mResponseThreshold->setRange(0, 100);
-  propertiesLayout->addWidget(mResponseThreshold, 1, 1);
-
-  propertiesLayout->addWidget(mLabelLineThresholdProjected, 2, 0);
-  mLineThresholdProjected->setRange(0, 100);
-  propertiesLayout->addWidget(mLineThresholdProjected, 2, 1);
-
-  propertiesLayout->addWidget(mLabelLineThresholdBinarized, 3, 0);
-  mLineThresholdBinarized->setRange(0, 100);
-  propertiesLayout->addWidget(mLineThresholdBinarized, 3, 1);
-
-  propertiesLayout->addWidget(mLabelSuppressNonmaxSize, 4, 0);
-  mSuppressNonmaxSize->setRange(0, 100);
-  propertiesLayout->addWidget(mSuppressNonmaxSize, 4, 1);
-
-  this->retranslate();
-  this->reset(); /// set default values
-  this->update();
-}
-
-void StarWidgetImp::initSignalAndSlots()
-{
-  connect(mMaxSize,                    SIGNAL(valueChanged(int)),            this, SIGNAL(maxSizeChange(int)));
-  connect(mResponseThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(responseThresholdChange(int)));
-  connect(mLineThresholdProjected,     SIGNAL(valueChanged(int)),            this, SIGNAL(lineThresholdProjectedChange(int)));
-  connect(mLineThresholdBinarized,     SIGNAL(valueChanged(int)),            this, SIGNAL(lineThresholdBinarizedChange(int)));
-  connect(mSuppressNonmaxSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(suppressNonmaxSizeChange(int)));
-}
-
-void StarWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
-}
 
 } // namespace photomatch
 

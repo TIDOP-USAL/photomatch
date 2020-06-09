@@ -50,39 +50,11 @@ DheWidgetImp::~DheWidgetImp()
 
 }
 
-int DheWidgetImp::x() const
-{
-  return mX->value();
-}
-
-void DheWidgetImp::setX(int x)
-{
-  const QSignalBlocker blockerX(mX);
-  mX->setValue(x);
-}
-
-void DheWidgetImp::update()
-{
-
-}
-
-void DheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("DheWidgetImp", "DHE Parameters"));
-  mLabelDescription->setText(QApplication::translate("DheWidgetImp", "Dynamic Histogram Equalization"));
-  mLabelX->setText(QApplication::translate("DheWidgetImp", "x:"));
-}
-
-void DheWidgetImp::reset()
-{
-  const QSignalBlocker blockerX(mX);
-
-  mX->setValue(1);
-}
 
 void DheWidgetImp::initUI()
 {
   this->setWindowTitle("DHE");
+  this->setObjectName("DheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -109,19 +81,37 @@ void DheWidgetImp::initUI()
 
 void DheWidgetImp::initSignalAndSlots()
 {
-  connect(mX,    SIGNAL(valueChanged(int)),      this, SIGNAL(xChange(int)));
+  connect(mX, QOverload<int>::of(&QSpinBox::valueChanged), this, &DheWidget::xChange);
 }
 
-void DheWidgetImp::changeEvent(QEvent *event)
+void DheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerX(mX);
+
+  mX->setValue(1);
+}
+
+void DheWidgetImp::update()
+{
+
+}
+
+void DheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("DheWidget", "DHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("DheWidget", "Dynamic Histogram Equalization"));
+  mLabelX->setText(QApplication::translate("DheWidget", "x:"));
+}
+
+int DheWidgetImp::x() const
+{
+  return mX->value();
+}
+
+void DheWidgetImp::setX(int x)
+{
+  const QSignalBlocker blockerX(mX);
+  mX->setValue(x);
 }
 
 

@@ -17,35 +17,9 @@ StartPageWidget::StartPageWidget(QWidget *parent)
   this->initSignalAndSlots();
 }
 
-void StartPageWidget::setHistory(const QStringList &history)
-{
-  const QSignalBlocker blocker(mListWidgetRecentProjects);
-  mListWidgetRecentProjects->clear();
-  mListWidgetRecentProjects->addItems(history);
-}
-
-void StartPageWidget::update()
-{
-}
-
-void StartPageWidget::retranslate()
-{
-  this->setWindowTitle(QApplication::translate("StartPage", "Start Page", nullptr));
-  mLabelPhotoMatch->setText(QApplication::translate("StartPage", "PhotoMatch", nullptr));
-  mCommandLinkButtonNewProject->setText(QApplication::translate("StartPage", "New Project", nullptr));
-  mCommandLinkButtonOpenProject->setText(QApplication::translate("StartPage", "Open Project", nullptr));
-  mCommandLinkButtonSettings->setText(QApplication::translate("StartPage", "Settings", nullptr));
-  mCommandLinkButtonGitHub->setText(QApplication::translate("StartPage", "GitHub", nullptr));
-  mLabelRecentProjects->setText(QApplication::translate("StartPage", "Recent Projects", nullptr));
-  mCommandLinkButtonClearHistory->setText(QApplication::translate("StartPage", "Clear History", nullptr));
-}
-
-void StartPageWidget::reset()
-{
-}
-
 void StartPageWidget::initUI()
 {
+  this->setObjectName("StartPageWidget");
 
   QGridLayout *layout = new QGridLayout(this);
   layout->setSpacing(6);
@@ -166,16 +140,30 @@ void StartPageWidget::initSignalAndSlots()
   connect(mListWidgetRecentProjects,      &QListWidget::currentTextChanged, this, &StartPageWidget::openProjectFromHistory);
 }
 
-void StartPageWidget::changeEvent(QEvent *event)
+void StartPageWidget::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+}
+void StartPageWidget::update()
+{
+}
+
+void StartPageWidget::retranslate()
+{
+  this->setWindowTitle(QApplication::translate("StartPageWidget", "Start Page", nullptr));
+  mLabelPhotoMatch->setText(QApplication::translate("StartPageWidget", "PhotoMatch", nullptr));
+  mCommandLinkButtonNewProject->setText(QApplication::translate("StartPageWidget", "New Project", nullptr));
+  mCommandLinkButtonOpenProject->setText(QApplication::translate("StartPageWidget", "Open Project", nullptr));
+  mCommandLinkButtonSettings->setText(QApplication::translate("StartPageWidget", "Settings", nullptr));
+  mCommandLinkButtonGitHub->setText(QApplication::translate("StartPageWidget", "GitHub", nullptr));
+  mLabelRecentProjects->setText(QApplication::translate("StartPageWidget", "Recent Projects", nullptr));
+  mCommandLinkButtonClearHistory->setText(QApplication::translate("StartPageWidget", "Clear History", nullptr));
+}
+
+void StartPageWidget::setHistory(const QStringList &history)
+{
+  const QSignalBlocker blocker(mListWidgetRecentProjects);
+  mListWidgetRecentProjects->clear();
+  mListWidgetRecentProjects->addItems(history);
 }
 
 } // namespace photomatch

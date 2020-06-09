@@ -45,6 +45,20 @@ LssWidgetImp::~LssWidgetImp()
 
 }
 
+void LssWidgetImp::initSignalAndSlots()
+{
+
+}
+
+void LssWidgetImp::initUI()
+{
+  this->setWindowTitle("LSS");
+}
+
+void LssWidgetImp::reset()
+{
+}
+
 void LssWidgetImp::update()
 {
 }
@@ -54,19 +68,6 @@ void LssWidgetImp::retranslate()
 
 }
 
-void LssWidgetImp::reset()
-{
-}
-
-void LssWidgetImp::initUI()
-{
-  this->setWindowTitle("LSS");
-}
-
-void LssWidgetImp::initSignalAndSlots()
-{
-
-}
 
 } // namespace photomatch
 

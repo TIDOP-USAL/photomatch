@@ -55,6 +55,77 @@ SurfWidgetImp::~SurfWidgetImp()
 {
 }
 
+void SurfWidgetImp::initUI()
+{
+  this->setWindowTitle("SURF");
+  this->setObjectName("SurfWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelHessianThreshold, 0, 0);
+  mHessianThreshold->setRange(0, 10000);
+  propertiesLayout->addWidget(mHessianThreshold, 0, 1);
+
+  propertiesLayout->addWidget(mLabelOctaves, 1, 0);
+  mOctaves->setRange(0, 100);
+  propertiesLayout->addWidget(mOctaves, 1, 1);
+
+  propertiesLayout->addWidget(mLabelOctaveLayers, 2, 0);
+  mOctaveLayers->setRange(0, 100);
+  propertiesLayout->addWidget(mOctaveLayers, 2, 1);
+
+  propertiesLayout->addWidget(mExtendedDescriptor, 3, 0);
+
+  propertiesLayout->addWidget(mUpright, 4, 0);
+
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
+}
+
+void SurfWidgetImp::initSignalAndSlots()
+{
+  connect(mHessianThreshold,    QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &SurfWidget::hessianThresholdChange);
+  connect(mOctaves,             QOverload<int>::of(&QSpinBox::valueChanged),          this, &SurfWidget::octavesChange);
+  connect(mOctaveLayers,        QOverload<int>::of(&QSpinBox::valueChanged),          this, &SurfWidget::octaveLayersChange);
+  connect(mExtendedDescriptor,  &QAbstractButton::clicked,                            this, &SurfWidget::extendedDescriptorChange);
+  connect(mUpright,             &QAbstractButton::clicked,                            this, &SurfWidget::rotatedFeaturesChange);
+}
+
+void SurfWidgetImp::reset()
+{
+  const QSignalBlocker blockerHessianThreshold(mHessianThreshold);
+  const QSignalBlocker blockerOctaves(mOctaves);
+  const QSignalBlocker blockerOctaveLayers(mOctaveLayers);
+
+  mHessianThreshold->setValue(100);
+  mOctaves->setValue(4);
+  mOctaveLayers->setValue(3);
+  mExtendedDescriptor->setChecked(false);
+  mUpright->setChecked(false);
+}
+
+void SurfWidgetImp::update()
+{
+}
+
+void SurfWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("SurfWidget", "SURF Parameters"));
+  mLabelHessianThreshold->setText(QApplication::translate("SurfWidget", "Hessian Threshold:"));
+  mLabelOctaves->setText(QApplication::translate("SurfWidget", "Octaves:"));
+  mLabelOctaveLayers->setText(QApplication::translate("SurfWidget", "Octave Layers:"));
+  mExtendedDescriptor->setText(QApplication::translate("SurfWidget", "Extended Descriptor"));
+  mUpright->setText(QApplication::translate("SurfWidget", "Upright"));
+}
+
 double SurfWidgetImp::hessianThreshold() const
 {
   return mHessianThreshold->value();
@@ -106,89 +177,6 @@ void SurfWidgetImp::setExtendedDescriptor(bool extendedDescriptor)
 void SurfWidgetImp::seUpright(bool upright)
 {
   mUpright->setChecked(upright);
-}
-
-void SurfWidgetImp::update()
-{
-}
-
-void SurfWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("SurfWidgetImp", "SURF Parameters"));
-  mLabelHessianThreshold->setText(QApplication::translate("SurfWidgetImp", "Hessian Threshold:"));
-  mLabelOctaves->setText(QApplication::translate("SurfWidgetImp", "Octaves:"));
-  mLabelOctaveLayers->setText(QApplication::translate("SurfWidgetImp", "Octave Layers:"));
-  mExtendedDescriptor->setText(QApplication::translate("SurfWidgetImp", "Extended Descriptor"));
-  mUpright->setText(QApplication::translate("SurfWidgetImp", "Upright"));
-}
-
-void SurfWidgetImp::reset()
-{
-  const QSignalBlocker blockerHessianThreshold(mHessianThreshold);
-  const QSignalBlocker blockerOctaves(mOctaves);
-  const QSignalBlocker blockerOctaveLayers(mOctaveLayers);
-
-  mHessianThreshold->setValue(100);
-  mOctaves->setValue(4);
-  mOctaveLayers->setValue(3);
-  mExtendedDescriptor->setChecked(false);
-  mUpright->setChecked(false);
-}
-
-void SurfWidgetImp::initUI()
-{
-  this->setWindowTitle("SURF");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelHessianThreshold, 0, 0);
-  mHessianThreshold->setRange(0, 10000);
-  propertiesLayout->addWidget(mHessianThreshold, 0, 1);
-
-  propertiesLayout->addWidget(mLabelOctaves, 1, 0);
-  mOctaves->setRange(0, 100);
-  propertiesLayout->addWidget(mOctaves, 1, 1);
-
-  propertiesLayout->addWidget(mLabelOctaveLayers, 2, 0);
-  mOctaveLayers->setRange(0, 100);
-  propertiesLayout->addWidget(mOctaveLayers, 2, 1);
-
-  propertiesLayout->addWidget(mExtendedDescriptor, 3, 0);
-
-  propertiesLayout->addWidget(mUpright, 4, 0);
-
-  this->retranslate();
-  this->reset(); /// set default values
-  this->update();
-}
-
-void SurfWidgetImp::initSignalAndSlots()
-{
-  connect(mHessianThreshold,    SIGNAL(valueChanged(double)),    this, SIGNAL(hessianThresholdChange(double)));
-  connect(mOctaves,             SIGNAL(valueChanged(int)),       this, SIGNAL(octavesChange(int)));
-  connect(mOctaveLayers,        SIGNAL(valueChanged(int)),       this, SIGNAL(octaveLayersChange(int)));
-  connect(mExtendedDescriptor,  SIGNAL(clicked(bool)),           this, SIGNAL(extendedDescriptorChange(bool)));
-  connect(mUpright,             SIGNAL(clicked(bool)),           this, SIGNAL(rotatedFeaturesChange(bool)));
-
-}
-
-void SurfWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

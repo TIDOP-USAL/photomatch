@@ -34,7 +34,7 @@ class QLabel;
 namespace photomatch
 {
 
-class DheWidget
+class PHOTOMATCH_EXPORT DheWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
@@ -56,7 +56,10 @@ public slots:
 
 };
 
-class DheWidgetImp
+
+
+
+class PHOTOMATCH_EXPORT DheWidgetImp
   : public DheWidget
 {
   Q_OBJECT
@@ -66,7 +69,7 @@ public:
   DheWidgetImp(QWidget *parent = nullptr);
   ~DheWidgetImp() override;
 
-// IDheWidget interface
+// DheWidget interface
 
 public:
 
@@ -78,25 +81,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

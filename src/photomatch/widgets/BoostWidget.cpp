@@ -52,63 +52,10 @@ BoostWidgetImp::~BoostWidgetImp()
 
 }
 
-QString BoostWidgetImp::descriptorType() const
-{
-  return mDescriptorType->currentText();
-}
-
-bool BoostWidgetImp::useOrientation() const
-{
-  return mUseOrientation->isChecked();
-}
-
-double BoostWidgetImp::scaleFactor() const
-{
-  return mScaleFactor->value();
-}
-
-void BoostWidgetImp::setDescriptorType(const QString &descriptorType)
-{
-  const QSignalBlocker blockerBytes(mDescriptorType);
-  mDescriptorType->setCurrentText(descriptorType);
-}
-
-void BoostWidgetImp::setUseOrientation(bool useOrientation)
-{
-  mUseOrientation->setChecked(useOrientation);
-}
-
-void BoostWidgetImp::setScaleFactor(double scaleFactor)
-{
-  const QSignalBlocker blockerScaleFactor(mScaleFactor);
-  mScaleFactor->setValue(scaleFactor);
-}
-
-void BoostWidgetImp::update()
-{
-}
-
-void BoostWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("BoostWidgetImp", "BOOST Parameters", nullptr));
-  mLabelDescriptorType->setText(QApplication::translate("BoostWidgetImp", "Descriptor Type:", nullptr));
-  mUseOrientation->setText(QApplication::translate("BoostWidgetImp", "Use Keypoints Orientation"));
-
-}
-
-void BoostWidgetImp::reset()
-{
-  const QSignalBlocker blockerBytes(mDescriptorType);
-  const QSignalBlocker blockerScaleFactor(mScaleFactor);
-  
-  mDescriptorType->setCurrentText("BINBOOST_256");
-  mUseOrientation->setChecked(true);
-  mScaleFactor->setValue(6.25);
-}
-
 void BoostWidgetImp::initUI()
 {
   this->setWindowTitle("BOOST");
+  this->setObjectName("BoostWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -142,21 +89,62 @@ void BoostWidgetImp::initUI()
 
 void BoostWidgetImp::initSignalAndSlots()
 {
-  connect(mDescriptorType,    SIGNAL(currentTextChanged(QString)),   this, SIGNAL(descriptorTypeChange(QString)));
-  connect(mUseOrientation,    SIGNAL(clicked(bool)),                 this, SIGNAL(useOrientationChange(bool)));
-  connect(mScaleFactor,       SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
+  connect(mDescriptorType,  &QComboBox::currentTextChanged,                       this, &BoostWidget::descriptorTypeChange);
+  connect(mUseOrientation,  &QAbstractButton::clicked,                            this, &BoostWidget::useOrientationChange);
+  connect(mScaleFactor,     QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &BoostWidget::scaleFactorChange);
 }
 
-void BoostWidgetImp::changeEvent(QEvent *event)
+void BoostWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBytes(mDescriptorType);
+  const QSignalBlocker blockerScaleFactor(mScaleFactor);
+
+  mDescriptorType->setCurrentText("BINBOOST_256");
+  mUseOrientation->setChecked(true);
+  mScaleFactor->setValue(6.25);
+}
+
+void BoostWidgetImp::update()
+{
+}
+
+void BoostWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("BoostWidget", "BOOST Parameters", nullptr));
+  mLabelDescriptorType->setText(QApplication::translate("BoostWidget", "Descriptor Type:", nullptr));
+  mUseOrientation->setText(QApplication::translate("BoostWidget", "Use Keypoints Orientation"));
+}
+
+QString BoostWidgetImp::descriptorType() const
+{
+  return mDescriptorType->currentText();
+}
+
+bool BoostWidgetImp::useOrientation() const
+{
+  return mUseOrientation->isChecked();
+}
+
+double BoostWidgetImp::scaleFactor() const
+{
+  return mScaleFactor->value();
+}
+
+void BoostWidgetImp::setDescriptorType(const QString &descriptorType)
+{
+  const QSignalBlocker blockerBytes(mDescriptorType);
+  mDescriptorType->setCurrentText(descriptorType);
+}
+
+void BoostWidgetImp::setUseOrientation(bool useOrientation)
+{
+  mUseOrientation->setChecked(useOrientation);
+}
+
+void BoostWidgetImp::setScaleFactor(double scaleFactor)
+{
+  const QSignalBlocker blockerScaleFactor(mScaleFactor);
+  mScaleFactor->setValue(scaleFactor);
 }
 
 } // namespace photomatch

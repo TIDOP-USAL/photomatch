@@ -52,60 +52,10 @@ PoheWidgetImp::~PoheWidgetImp()
 
 }
 
-void PoheWidgetImp::onBlockSizeXChange(int blockSizeX)
-{
-  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
-}
-
-void PoheWidgetImp::onBlockSizeYChange(int blockSizeY)
-{
-  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
-}
-
-QSize PoheWidgetImp::blockSize() const
-{
-  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
-}
-
-void PoheWidgetImp::setBlockSize(const QSize &blockSize)
-{
-  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
-  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
-  mBlockSizeX->setValue(blockSize.width());
-  mBlockSizeY->setValue(blockSize.height());
-
-}
-
-void PoheWidgetImp::update()
-{
-}
-
-void PoheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("PoheWidgetImp", "POHE Parameters", nullptr));
-  mLabelDescription->setText(QApplication::translate("PoheWidgetImp", "Parametric-Oriented Histogram Equalization", nullptr));
-  mGroupBoxBlocksize->setTitle(QApplication::translate("PoheWidgetImp", "Block Size", nullptr));
-  mLabelBlockSizeX->setText(QApplication::translate("PoheWidgetImp", "Width:", nullptr));
-  mLabelBlockSizeY->setText(QApplication::translate("PoheWidgetImp", "Height:", nullptr));
-
-//#ifndef QT_NO_WHATSTHIS
-//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-//#endif // QT_NO_WHATSTHIS
-}
-
-void PoheWidgetImp::reset()
-{
-  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
-  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
-
-  mBlockSizeX->setValue(127);
-  mBlockSizeY->setValue(127);
-}
-
 void PoheWidgetImp::initUI()
 {
   this->setWindowTitle("POHE");
+  this->setObjectName("PoheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -140,20 +90,54 @@ void PoheWidgetImp::initUI()
 
 void PoheWidgetImp::initSignalAndSlots()
 {
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mBlockSizeX, QOverload<int>::of(&QSpinBox::valueChanged), this, &PoheWidgetImp::onBlockSizeXChange);
+  connect(mBlockSizeY, QOverload<int>::of(&QSpinBox::valueChanged), this, &PoheWidgetImp::onBlockSizeYChange);
 }
 
-void PoheWidgetImp::changeEvent(QEvent *event)
+void PoheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
+  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
+
+  mBlockSizeX->setValue(127);
+  mBlockSizeY->setValue(127);
+}
+
+void PoheWidgetImp::update()
+{
+}
+
+void PoheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("PoheWidget", "POHE Parameters", nullptr));
+  mLabelDescription->setText(QApplication::translate("PoheWidget", "Parametric-Oriented Histogram Equalization", nullptr));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("PoheWidget", "Block Size", nullptr));
+  mLabelBlockSizeX->setText(QApplication::translate("PoheWidget", "Width:", nullptr));
+  mLabelBlockSizeY->setText(QApplication::translate("PoheWidget", "Height:", nullptr));
+}
+
+void PoheWidgetImp::onBlockSizeXChange(int blockSizeX)
+{
+  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
+}
+
+void PoheWidgetImp::onBlockSizeYChange(int blockSizeY)
+{
+  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
+}
+
+QSize PoheWidgetImp::blockSize() const
+{
+  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
+}
+
+void PoheWidgetImp::setBlockSize(const QSize &blockSize)
+{
+  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
+  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
+  mBlockSizeX->setValue(blockSize.width());
+  mBlockSizeY->setValue(blockSize.height());
+
 }
 
 } // namespace photomatch

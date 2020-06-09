@@ -49,6 +49,8 @@ public:
 };
 
 
+
+
 class PHOTOMATCH_EXPORT LssWidgetImp
   : public LssWidget
 {
@@ -60,22 +62,21 @@ public:
   LssWidgetImp(QWidget *parent = nullptr);
   ~LssWidgetImp() override;
 
-
 // PhotoMatchWidget interface
-
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
 
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
+
+public slots:
+
+  void reset() override;
+
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 };
 

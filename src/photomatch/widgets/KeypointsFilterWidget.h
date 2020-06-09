@@ -36,7 +36,7 @@ class QCheckBox;
 namespace photomatch
 {
 
-class KeypointsFilterWidget
+class PHOTOMATCH_EXPORT KeypointsFilterWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
@@ -72,7 +72,9 @@ public slots:
 };
 
 
-class KeypointsFilterWidgetImp
+
+
+class PHOTOMATCH_EXPORT KeypointsFilterWidgetImp
   : public KeypointsFilterWidget
 {
   Q_OBJECT
@@ -82,7 +84,7 @@ public:
   KeypointsFilterWidgetImp(QWidget *parent = nullptr);
   ~KeypointsFilterWidgetImp() override;
 
-// IKeypointsFilterWidget interface
+// KeypointsFilterWidget interface
 
 public:
 
@@ -104,25 +106,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

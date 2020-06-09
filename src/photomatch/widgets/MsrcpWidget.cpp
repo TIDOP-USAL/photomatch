@@ -49,68 +49,11 @@ MsrcpWidgetImp::MsrcpWidgetImp(QWidget *parent)
   this->initSignalAndSlots();
 }
 
-double MsrcpWidgetImp::smallScale() const
-{
-  return mSmallScale->value();
-}
-
-double MsrcpWidgetImp::midScale() const
-{
-  return mMidScale->value();
-}
-
-double MsrcpWidgetImp::largeScale() const
-{
-  return mLargeScale->value();
-}
-
-void MsrcpWidgetImp::setSmallScale(double smallScale)
-{
-  const QSignalBlocker blockerSmallScale(mSmallScale);
-  mSmallScale->setValue(smallScale);
-}
-
-void MsrcpWidgetImp::setMidScale(double midScale)
-{
-  const QSignalBlocker blockerMidScale(mMidScale);
-  mMidScale->setValue(midScale);
-}
-
-void MsrcpWidgetImp::setLargeScale(double largeScale)
-{
-  const QSignalBlocker blockerLargeScale(mLargeScale);
-  mLargeScale->setValue(largeScale);
-}
-
-void MsrcpWidgetImp::update()
-{
-}
-
-void MsrcpWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("MsrcpWidgetImp", "MSRCP Parameters"));
-  mLabelDescription->setText(QApplication::translate("MsrcpWidgetImp", "MultiScale Retinex with Chromaticity Preservation"));
-  mGroupBoxBlocksize->setTitle(QApplication::translate("MsrcpWidgetImp", "Retinex Scales"));
-  mLabelSmallScale->setText(QApplication::translate("MsrcpWidgetImp", "Small Scale:"));
-  mLabelMidScale->setText(QApplication::translate("MsrcpWidgetImp", "Mid Scale:"));
-  mLabelLargeScale->setText(QApplication::translate("MsrcpWidgetImp", "Large Scale:"));
-}
-
-void MsrcpWidgetImp::reset()
-{
-  const QSignalBlocker blockerSmallScale(mSmallScale);
-  const QSignalBlocker blockerMidScale(mMidScale);
-  const QSignalBlocker blockerLargeScale(mLargeScale);
-
-  mSmallScale->setValue(10.);
-  mMidScale->setValue(100.);
-  mLargeScale->setValue(220.);
-
-}
 
 void MsrcpWidgetImp::initUI()
 {
   this->setWindowTitle("MSRCP");
+  this->setObjectName("MsrcpWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -149,22 +92,69 @@ void MsrcpWidgetImp::initUI()
 
 void MsrcpWidgetImp::initSignalAndSlots()
 {
-  connect(mSmallScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(smallScaleChange(double)));
-  connect(mMidScale,        SIGNAL(valueChanged(double)),     this, SIGNAL(midScaleChange(double)));
-  connect(mLargeScale,      SIGNAL(valueChanged(double)),     this, SIGNAL(largeScaleChange(double)));
+  connect(mSmallScale,  QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &MsrcpWidget::smallScaleChange);
+  connect(mMidScale,    QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &MsrcpWidget::midScaleChange);
+  connect(mLargeScale,  QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &MsrcpWidget::largeScaleChange);
 }
 
-void MsrcpWidgetImp::changeEvent(QEvent *event)
+void MsrcpWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerSmallScale(mSmallScale);
+  const QSignalBlocker blockerMidScale(mMidScale);
+  const QSignalBlocker blockerLargeScale(mLargeScale);
+
+  mSmallScale->setValue(10.);
+  mMidScale->setValue(100.);
+  mLargeScale->setValue(220.);
 }
+
+void MsrcpWidgetImp::update()
+{
+}
+
+void MsrcpWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("MsrcpWidget", "MSRCP Parameters"));
+  mLabelDescription->setText(QApplication::translate("MsrcpWidget", "MultiScale Retinex with Chromaticity Preservation"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("MsrcpWidget", "Retinex Scales"));
+  mLabelSmallScale->setText(QApplication::translate("MsrcpWidget", "Small Scale:"));
+  mLabelMidScale->setText(QApplication::translate("MsrcpWidget", "Mid Scale:"));
+  mLabelLargeScale->setText(QApplication::translate("MsrcpWidget", "Large Scale:"));
+}
+
+double MsrcpWidgetImp::smallScale() const
+{
+  return mSmallScale->value();
+}
+
+double MsrcpWidgetImp::midScale() const
+{
+  return mMidScale->value();
+}
+
+double MsrcpWidgetImp::largeScale() const
+{
+  return mLargeScale->value();
+}
+
+void MsrcpWidgetImp::setSmallScale(double smallScale)
+{
+  const QSignalBlocker blockerSmallScale(mSmallScale);
+  mSmallScale->setValue(smallScale);
+}
+
+void MsrcpWidgetImp::setMidScale(double midScale)
+{
+  const QSignalBlocker blockerMidScale(mMidScale);
+  mMidScale->setValue(midScale);
+}
+
+void MsrcpWidgetImp::setLargeScale(double largeScale)
+{
+  const QSignalBlocker blockerLargeScale(mLargeScale);
+  mLargeScale->setValue(largeScale);
+}
+
 
 } // namespace photomatch
 

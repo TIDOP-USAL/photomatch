@@ -53,6 +53,69 @@ FreakWidgetImp::~FreakWidgetImp()
 
 }
 
+void FreakWidgetImp::initUI()
+{
+  this->setWindowTitle("FREAK");
+  this->setObjectName("FreakWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mOrientationNormalized, 1, 0);
+
+  propertiesLayout->addWidget(mScaleNormalized, 2, 0);
+
+  propertiesLayout->addWidget(mLabelPatternScale, 3, 0);
+  mPatternScale->setRange(0., 1000.);
+  propertiesLayout->addWidget(mPatternScale, 3, 1);
+
+  propertiesLayout->addWidget(mLabelOctaves, 4, 0);
+  mOctaves->setRange(0, 100);
+  propertiesLayout->addWidget(mOctaves, 4, 1);
+
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
+}
+
+void FreakWidgetImp::initSignalAndSlots()
+{
+  connect(mOrientationNormalized,  &QAbstractButton::clicked,                            this, &FreakWidget::orientationNormalizedChange);
+  connect(mScaleNormalized,        &QAbstractButton::clicked,                            this, &FreakWidget::scaleNormalizedChange);
+  connect(mPatternScale,           QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &FreakWidget::patternScaleChange);
+  connect(mOctaves,                QOverload<int>::of(&QSpinBox::valueChanged),          this, &FreakWidget::octavesChange);
+}
+
+void FreakWidgetImp::reset()
+{
+  const QSignalBlocker blockerPatternScale(mPatternScale);
+  const QSignalBlocker blockerOctaves(mOctaves);
+
+  mOrientationNormalized->setChecked(true);
+  mScaleNormalized->setChecked(true);
+  mPatternScale->setValue(22.0);
+  mOctaves->setValue(4);
+}
+
+void FreakWidgetImp::update()
+{
+}
+
+void FreakWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("FreakWidget", "FREAK Parameters"));
+  mOrientationNormalized->setText(QApplication::translate("FreakWidget", "Orientation Normalization"));
+  mScaleNormalized->setText(QApplication::translate("FreakWidget", "Scale Normalization"));
+  mLabelPatternScale->setText(QApplication::translate("FreakWidget", "Pattern Scale:"));
+  mLabelOctaves->setText(QApplication::translate("FreakWidget", "Number of Octaves:"));
+}
+
 bool FreakWidgetImp::orientationNormalized() const
 {
   return mOrientationNormalized->isChecked();
@@ -93,81 +156,6 @@ void FreakWidgetImp::setOctaves(int octaves)
 {
   const QSignalBlocker blockerOctaves(mOctaves);
   mOctaves->setValue(octaves);
-}
-
-void FreakWidgetImp::update()
-{
-}
-
-void FreakWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("FreakWidgetImp", "FREAK Parameters"));
-  mOrientationNormalized->setText(QApplication::translate("FreakWidgetImp", "Orientation Normalization"));
-  mScaleNormalized->setText(QApplication::translate("FreakWidgetImp", "Scale Normalization"));
-  mLabelPatternScale->setText(QApplication::translate("FreakWidgetImp", "Pattern Scale:"));
-  mLabelOctaves->setText(QApplication::translate("FreakWidgetImp", "Number of Octaves:"));
-
-}
-
-void FreakWidgetImp::reset()
-{
-  const QSignalBlocker blockerPatternScale(mPatternScale);
-  const QSignalBlocker blockerOctaves(mOctaves);
-
-  mOrientationNormalized->setChecked(true);
-  mScaleNormalized->setChecked(true);
-  mPatternScale->setValue(22.0);
-  mOctaves->setValue(4);
-}
-
-void FreakWidgetImp::initUI()
-{
-  this->setWindowTitle("FREAK");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mOrientationNormalized, 1, 0);
-
-  propertiesLayout->addWidget(mScaleNormalized, 2, 0);
-
-  propertiesLayout->addWidget(mLabelPatternScale, 3, 0);
-  mPatternScale->setRange(0., 1000.);
-  propertiesLayout->addWidget(mPatternScale, 3, 1);
-
-  propertiesLayout->addWidget(mLabelOctaves, 4, 0);
-  mOctaves->setRange(0, 100);
-  propertiesLayout->addWidget(mOctaves, 4, 1);
-
-  this->retranslate();
-  this->reset(); // Set default values
-  this->update();
-}
-
-void FreakWidgetImp::initSignalAndSlots()
-{
-  connect(mOrientationNormalized,  SIGNAL(clicked(bool)),                this, SIGNAL(orientationNormalizedChange(bool)));
-  connect(mScaleNormalized,        SIGNAL(clicked(bool)),                this, SIGNAL(scaleNormalizedChange(bool)));
-  connect(mPatternScale,           SIGNAL(valueChanged(double)),         this, SIGNAL(patternScaleChange(double)));
-  connect(mOctaves,                SIGNAL(valueChanged(int)),            this, SIGNAL(octavesChange(int)));
-}
-
-void FreakWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

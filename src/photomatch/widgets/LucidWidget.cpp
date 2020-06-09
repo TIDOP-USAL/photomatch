@@ -51,51 +51,10 @@ LucidWidgetImp::~LucidWidgetImp()
 
 }
 
-int LucidWidgetImp::lucidKernel() const
-{
-  return mLucidKernel->value();
-}
-
-int LucidWidgetImp::blurKernel() const
-{
-  return mBlurKernel->value();
-}
-
-void LucidWidgetImp::setLucidKernel(int lucidKernel)
-{
-  const QSignalBlocker blockerLucidKernel(mLucidKernel);
-  mLucidKernel->setValue(lucidKernel);
-}
-
-void LucidWidgetImp::setBlurKernel(int blurKernel)
-{
-  const QSignalBlocker blockerBlurKernel(mBlurKernel);
-  mBlurKernel->setValue(blurKernel);
-}
-
-void LucidWidgetImp::update()
-{
-}
-
-void LucidWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("LucidWidgetImp", "LUCID Parameters"));
-  mLabelLucidKernel->setText(QApplication::translate("LucidWidgetImp", "Lucid Kernel:"));
-  mLabelBlurKernel->setText(QApplication::translate("LucidWidgetImp", "Blur Kernel:"));
-}
-
-void LucidWidgetImp::reset()
-{
-  const QSignalBlocker blockerLucidKernel(mLucidKernel);
-  const QSignalBlocker blockerBlurKernel(mBlurKernel);
-
-  mLucidKernel->setValue(1);
-  mBlurKernel->setValue(2);
-}
-
 void LucidWidgetImp::initUI()
 {
   this->setWindowTitle("LUCID");
+  this->setObjectName("LucidWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -121,21 +80,52 @@ void LucidWidgetImp::initUI()
 
 void LucidWidgetImp::initSignalAndSlots()
 {
-  connect(mLucidKernel,  SIGNAL(valueChanged(int)),  this, SIGNAL(lucidKernelChange(int)));
-  connect(mBlurKernel,   SIGNAL(valueChanged(int)),  this, SIGNAL(blurKernelChange(int)));
+  connect(mLucidKernel,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &LucidWidget::lucidKernelChange);
+  connect(mBlurKernel,   QOverload<int>::of(&QSpinBox::valueChanged),  this, &LucidWidget::blurKernelChange);
 }
 
-void LucidWidgetImp::changeEvent(QEvent *event)
+void LucidWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerLucidKernel(mLucidKernel);
+  const QSignalBlocker blockerBlurKernel(mBlurKernel);
+
+  mLucidKernel->setValue(1);
+  mBlurKernel->setValue(2);
 }
+
+void LucidWidgetImp::update()
+{
+}
+
+void LucidWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("LucidWidget", "LUCID Parameters"));
+  mLabelLucidKernel->setText(QApplication::translate("LucidWidget", "Lucid Kernel:"));
+  mLabelBlurKernel->setText(QApplication::translate("LucidWidget", "Blur Kernel:"));
+}
+
+int LucidWidgetImp::lucidKernel() const
+{
+  return mLucidKernel->value();
+}
+
+int LucidWidgetImp::blurKernel() const
+{
+  return mBlurKernel->value();
+}
+
+void LucidWidgetImp::setLucidKernel(int lucidKernel)
+{
+  const QSignalBlocker blockerLucidKernel(mLucidKernel);
+  mLucidKernel->setValue(lucidKernel);
+}
+
+void LucidWidgetImp::setBlurKernel(int blurKernel)
+{
+  const QSignalBlocker blockerBlurKernel(mBlurKernel);
+  mBlurKernel->setValue(blurKernel);
+}
+
 
 } // namespace photomatch
 

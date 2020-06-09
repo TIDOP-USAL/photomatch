@@ -52,59 +52,10 @@ CmbfheWidgetImp::~CmbfheWidgetImp()
 
 }
 
-void CmbfheWidgetImp::onBlockSizeXChange(int blockSizeX)
-{
-  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
-}
-
-void CmbfheWidgetImp::onBlockSizeYChange(int blockSizeY)
-{
-  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
-}
-
-QSize CmbfheWidgetImp::blockSize() const
-{
-  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
-}
-
-void CmbfheWidgetImp::setBlockSize(const QSize &blockSize)
-{
-  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
-  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
-  mBlockSizeX->setValue(blockSize.width());
-  mBlockSizeY->setValue(blockSize.height());
-}
-
-void CmbfheWidgetImp::update()
-{
-}
-
-void CmbfheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("CmbfheWidgetImp", "CMBFHE Parameters"));
-  mLabelDescription->setText(QApplication::translate("CmbfheWidgetImp", "Cascaded Multistep Binomial Filtering Histogram Equalization", nullptr));
-  mGroupBoxBlocksize->setTitle(QApplication::translate("CmbfheWidgetImp", "Block Size"));
-  mLabelBlockSizeX->setText(QApplication::translate("CmbfheWidgetImp", "Width:"));
-  mLabelBlockSizeY->setText(QApplication::translate("CmbfheWidgetImp", "Height:"));
-
-//#ifndef QT_NO_WHATSTHIS
-//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-//#endif // QT_NO_WHATSTHIS
-}
-
-void CmbfheWidgetImp::reset()
-{
-  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
-  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
-
-  mBlockSizeX->setValue(11);
-  mBlockSizeY->setValue(11);
-}
-
 void CmbfheWidgetImp::initUI()
 {
   this->setWindowTitle("CMBFHE");
+  this->setObjectName("CmbfheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -140,20 +91,53 @@ void CmbfheWidgetImp::initUI()
 
 void CmbfheWidgetImp::initSignalAndSlots()
 {
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mBlockSizeX,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &CmbfheWidgetImp::onBlockSizeXChange);
+  connect(mBlockSizeY,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &CmbfheWidgetImp::onBlockSizeYChange);
 }
 
-void CmbfheWidgetImp::changeEvent(QEvent *event)
+void CmbfheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
+  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
+
+  mBlockSizeX->setValue(11);
+  mBlockSizeY->setValue(11);
+}
+
+void CmbfheWidgetImp::update()
+{
+}
+
+void CmbfheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("CmbfheWidget", "CMBFHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("CmbfheWidget", "Cascaded Multistep Binomial Filtering Histogram Equalization", nullptr));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("CmbfheWidget", "Block Size"));
+  mLabelBlockSizeX->setText(QApplication::translate("CmbfheWidget", "Width:"));
+  mLabelBlockSizeY->setText(QApplication::translate("CmbfheWidget", "Height:"));
+}
+
+void CmbfheWidgetImp::onBlockSizeXChange(int blockSizeX)
+{
+  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
+}
+
+void CmbfheWidgetImp::onBlockSizeYChange(int blockSizeY)
+{
+  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
+}
+
+QSize CmbfheWidgetImp::blockSize() const
+{
+  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
+}
+
+void CmbfheWidgetImp::setBlockSize(const QSize &blockSize)
+{
+  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
+  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
+  mBlockSizeX->setValue(blockSize.width());
+  mBlockSizeY->setValue(blockSize.height());
 }
 
 } // namespace photomatch

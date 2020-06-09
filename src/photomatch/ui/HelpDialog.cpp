@@ -146,7 +146,7 @@ void HelpDialog::navigateBackward()
 void HelpDialog::init()
 {
 #ifdef _DEBUG
-  mHelpEngine = new QHelpEngine("D:/Desarrollo/libs_sources/FME/res/help/en/photomatch.qhc", this);
+  mHelpEngine = new QHelpEngine(QString(PHOTOMATCH_SOURCE_PATH).append("/res/help/en/photomatch.qhc"), this);
 #else
   QString path = QApplication::applicationDirPath();
   path.append("/help/en/photomatch.qhc");

@@ -80,25 +80,19 @@ private slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
+private:
 
-  void update() override;
-  void retranslate() override;
+  void initUI() override;
+  void initSignalAndSlots() override;
 
 public slots:
 
   void reset() override;
 
-private:
+protected slots:
 
-  virtual void initUI() override;
-  void initSignalAndSlots() override;
-
-// QWidget interface
-
-protected:
-
-  void changeEvent(QEvent *event) override;
+  void update() override;
+  void retranslate() override;
 
 protected:
 

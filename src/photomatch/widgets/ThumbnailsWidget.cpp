@@ -320,6 +320,7 @@ void ThumbnailsWidget::reset()
 void ThumbnailsWidget::initUI()
 {
   this->setWindowTitle("Thumbnails");
+  this->setObjectName("ThumbnailsWidget");
 
   QToolBar *toolBar = new QToolBar(this);
 
@@ -374,16 +375,5 @@ void ThumbnailsWidget::initSignalAndSlots()
   connect(mFutureWatcherThumbnail, &QFutureWatcherBase::finished,       this, &ThumbnailsWidget::finished);
 }
 
-void ThumbnailsWidget::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
-}
 
 } // namespace photomatch

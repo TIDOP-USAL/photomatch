@@ -52,59 +52,10 @@ FaheWidgetImp::~FaheWidgetImp()
 
 }
 
-void FaheWidgetImp::onBlockSizeXChange(int blockSizeX)
-{
-  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
-}
-
-void FaheWidgetImp::onBlockSizeYChange(int blockSizeY)
-{
-  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
-}
-
-QSize FaheWidgetImp::blockSize() const
-{
-  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
-}
-
-void FaheWidgetImp::setBlockSize(const QSize &blockSize)
-{
-  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
-  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
-  mBlockSizeX->setValue(blockSize.width());
-  mBlockSizeY->setValue(blockSize.height());
-
-}
-
-void FaheWidgetImp::update()
-{
-}
-
-void FaheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("FaheWidgetImp", "FAHE Parameters"));
-  mLabelDescription->setText(QApplication::translate("FaheWidgetImp", "Fast implementation of Adaptive Histogram Equalization", nullptr));
-  mGroupBoxBlocksize->setTitle(QApplication::translate("FaheWidgetImp", "Block Size"));
-  mLabelBlockSizeX->setText(QApplication::translate("FaheWidgetImp", "Width:"));
-  mLabelBlockSizeY->setText(QApplication::translate("FaheWidgetImp", "Height:"));
-//#ifndef QT_NO_WHATSTHIS
-//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-//#endif // QT_NO_WHATSTHIS
-}
-
-void FaheWidgetImp::reset()
-{
-  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
-  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
-
-  mBlockSizeX->setValue(11);
-  mBlockSizeY->setValue(11);
-}
-
 void FaheWidgetImp::initUI()
 {
   this->setWindowTitle("FAHE");
+  this->setObjectName("FaheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -141,20 +92,54 @@ void FaheWidgetImp::initUI()
 
 void FaheWidgetImp::initSignalAndSlots()
 {
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mBlockSizeX, QOverload<int>::of(&QSpinBox::valueChanged),  this, &FaheWidgetImp::onBlockSizeXChange);
+  connect(mBlockSizeY, QOverload<int>::of(&QSpinBox::valueChanged),  this, &FaheWidgetImp::onBlockSizeYChange);
 }
 
-void FaheWidgetImp::changeEvent(QEvent *event)
+void FaheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
+  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
+
+  mBlockSizeX->setValue(11);
+  mBlockSizeY->setValue(11);
+}
+
+void FaheWidgetImp::update()
+{
+}
+
+void FaheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("FaheWidget", "FAHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("FaheWidget", "Fast implementation of Adaptive Histogram Equalization", nullptr));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("FaheWidget", "Block Size"));
+  mLabelBlockSizeX->setText(QApplication::translate("FaheWidget", "Width:"));
+  mLabelBlockSizeY->setText(QApplication::translate("FaheWidget", "Height:"));
+}
+
+void FaheWidgetImp::onBlockSizeXChange(int blockSizeX)
+{
+  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
+}
+
+void FaheWidgetImp::onBlockSizeYChange(int blockSizeY)
+{
+  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
+}
+
+QSize FaheWidgetImp::blockSize() const
+{
+  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
+}
+
+void FaheWidgetImp::setBlockSize(const QSize &blockSize)
+{
+  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
+  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
+  mBlockSizeX->setValue(blockSize.width());
+  mBlockSizeY->setValue(blockSize.height());
+
 }
 
 } // namespace photomatch

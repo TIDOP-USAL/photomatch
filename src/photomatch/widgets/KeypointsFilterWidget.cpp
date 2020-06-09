@@ -54,6 +54,99 @@ KeypointsFilterWidgetImp::~KeypointsFilterWidgetImp()
 {
 }
 
+void KeypointsFilterWidgetImp::initUI()
+{
+  this->setWindowTitle("Keypoints Filter");
+  this->setObjectName("KeypointsFilterWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  mCheckBoxPointsNumber->setChecked(false);
+  propertiesLayout->addWidget(mCheckBoxPointsNumber, 0, 0, 1, 1);
+
+  mPointsNumber->setRange(0, 100000);
+  propertiesLayout->addWidget(mPointsNumber, 0, 1, 1, 4);
+
+  mCheckBoxSize->setChecked(false);
+  propertiesLayout->addWidget(mCheckBoxSize, 1, 0, 1, 1);
+
+  propertiesLayout->addWidget(mLabelMinSize, 1, 1, 1, 1);
+  mMinSize->setRange(0., 49.);
+  mMinSize->setSingleStep(0.01);
+  mMinSize->setDecimals(3);
+  propertiesLayout->addWidget(mMinSize, 1, 2, 1, 1);
+
+  propertiesLayout->addWidget(mLabelMaxSize, 1, 3, 1, 1);
+  mMaxSize->setRange(50., 10000.);
+  mMaxSize->setSingleStep(0.01);
+  mMaxSize->setDecimals(3);
+  propertiesLayout->addWidget(mMaxSize, 1, 4, 1, 1);
+
+  propertiesLayout->addWidget(mCheckBoxRemoveDuplicated, 2, 0, 1, 4);
+
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
+}
+
+void KeypointsFilterWidgetImp::initSignalAndSlots()
+{
+  connect(mCheckBoxPointsNumber,     &QAbstractButton::clicked,                             this, &KeypointsFilterWidgetImp::update);
+  connect(mCheckBoxSize,             &QAbstractButton::clicked,                             this, &KeypointsFilterWidgetImp::update);
+  connect(mCheckBoxRemoveDuplicated, &QAbstractButton::clicked,                             this, &KeypointsFilterWidgetImp::update);
+  connect(mMinSize,                  QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &KeypointsFilterWidgetImp::update);
+  connect(mMaxSize,                  QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &KeypointsFilterWidgetImp::update);
+  connect(mPointsNumber,             QOverload<int>::of(&QSpinBox::valueChanged),           this, &KeypointsFilterWidget::nPointsChange);
+  connect(mMinSize,                  QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &KeypointsFilterWidget::minSizeChange);
+  connect(mMaxSize,                  QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &KeypointsFilterWidget::maxSizeChange);
+}
+
+void KeypointsFilterWidgetImp::reset()
+{
+  const QSignalBlocker blockerNPoints(mPointsNumber);
+  const QSignalBlocker blockerMinSize(mMinSize);
+  const QSignalBlocker blockerMaxSizee(mMaxSize);
+
+  mCheckBoxPointsNumber->setChecked(false);
+  mPointsNumber->setValue(10000);
+  mCheckBoxSize->setChecked(false);
+  mMinSize->setValue(0.);
+  mMaxSize->setValue(50.);
+  mCheckBoxRemoveDuplicated->setChecked(false);
+
+  update();
+}
+
+void KeypointsFilterWidgetImp::update()
+{
+  bActiveFilterBest = mCheckBoxPointsNumber->isChecked();
+  bActiveFilterSize = mCheckBoxSize->isChecked();
+  bActiveRemoveDuplicated = mCheckBoxRemoveDuplicated->isChecked();
+  mPointsNumber->setEnabled(bActiveFilterBest);
+  mMinSize->setEnabled(bActiveFilterSize);
+  mMaxSize->setEnabled(bActiveFilterSize);
+
+  mMaxSize->setMinimum(mMinSize->value());
+  mMinSize->setMaximum(mMaxSize->value());
+}
+
+void KeypointsFilterWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("KeypointsFilterWidget", "Keypoints Filters"));
+  mCheckBoxPointsNumber->setText(QApplication::translate("KeypointsFilterWidget", "N Best"));
+  mCheckBoxSize->setText(QApplication::translate("KeypointsFilterWidget", "Keypoints Size"));
+  mLabelMinSize->setText(QApplication::translate("KeypointsFilterWidget", "Min:"));
+  mLabelMaxSize->setText(QApplication::translate("KeypointsFilterWidget", "Max:"));
+  mCheckBoxRemoveDuplicated->setText(QApplication::translate("KeypointsFilterWidget", "Remove duplicated keypoints"));
+}
+
 int KeypointsFilterWidgetImp::nPoints() const
 {
   return mPointsNumber->value();
@@ -120,111 +213,6 @@ void KeypointsFilterWidgetImp::setActiveRemoveDuplicated(bool active)
 {
   mCheckBoxRemoveDuplicated->setChecked(active);
   update();
-}
-
-void KeypointsFilterWidgetImp::update()
-{
-  bActiveFilterBest = mCheckBoxPointsNumber->isChecked();
-  bActiveFilterSize = mCheckBoxSize->isChecked();
-  bActiveRemoveDuplicated = mCheckBoxRemoveDuplicated->isChecked();
-  mPointsNumber->setEnabled(bActiveFilterBest);
-  mMinSize->setEnabled(bActiveFilterSize);
-  mMaxSize->setEnabled(bActiveFilterSize);
-
-  mMaxSize->setMinimum(mMinSize->value());
-  mMinSize->setMaximum(mMaxSize->value());
-}
-
-void KeypointsFilterWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("KeypointsFilterWidgetImp", "Keypoints Filters"));
-  mCheckBoxPointsNumber->setText(QApplication::translate("KeypointsFilterWidgetImp", "N Best"));
-  mCheckBoxSize->setText(QApplication::translate("KeypointsFilterWidgetImp", "Keypoints Size"));
-  mLabelMinSize->setText(QApplication::translate("KeypointsFilterWidgetImp", "Min:"));
-  mLabelMaxSize->setText(QApplication::translate("KeypointsFilterWidgetImp", "Max:"));
-  mCheckBoxRemoveDuplicated->setText(QApplication::translate("KeypointsFilterWidgetImp", "Remove duplicated keypoints"));
-}
-
-void KeypointsFilterWidgetImp::reset()
-{
-  const QSignalBlocker blockerNPoints(mPointsNumber);
-  const QSignalBlocker blockerMinSize(mMinSize);
-  const QSignalBlocker blockerMaxSizee(mMaxSize);
-
-  mCheckBoxPointsNumber->setChecked(false);
-  mPointsNumber->setValue(10000);
-  mCheckBoxSize->setChecked(false);
-  mMinSize->setValue(0.);
-  mMaxSize->setValue(50.);
-  mCheckBoxRemoveDuplicated->setChecked(false);
-
-  update();
-}
-
-void KeypointsFilterWidgetImp::initUI()
-{
-  this->setWindowTitle("Keypoints Filter");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  mCheckBoxPointsNumber->setChecked(false);
-  propertiesLayout->addWidget(mCheckBoxPointsNumber, 0, 0, 1, 1);
-
-  mPointsNumber->setRange(0, 100000);
-  propertiesLayout->addWidget(mPointsNumber, 0, 1, 1, 4);
-
-  mCheckBoxSize->setChecked(false);
-  propertiesLayout->addWidget(mCheckBoxSize, 1, 0, 1, 1);
-
-  propertiesLayout->addWidget(mLabelMinSize, 1, 1, 1, 1);
-  mMinSize->setRange(0., 49.);
-  mMinSize->setSingleStep(0.01);
-  mMinSize->setDecimals(3);
-  propertiesLayout->addWidget(mMinSize, 1, 2, 1, 1);
-
-  propertiesLayout->addWidget(mLabelMaxSize, 1, 3, 1, 1);
-  mMaxSize->setRange(50., 10000.);
-  mMaxSize->setSingleStep(0.01);
-  mMaxSize->setDecimals(3);
-  propertiesLayout->addWidget(mMaxSize, 1, 4, 1, 1);
-
-  propertiesLayout->addWidget(mCheckBoxRemoveDuplicated, 2, 0, 1, 4);
-
-  this->retranslate();
-  this->reset(); // Set default values
-  this->update();
-}
-
-void KeypointsFilterWidgetImp::initSignalAndSlots()
-{
-  connect(mCheckBoxPointsNumber,     SIGNAL(clicked(bool)),            this, SLOT(update()));
-  connect(mCheckBoxSize,             SIGNAL(clicked(bool)),            this, SLOT(update()));
-  connect(mCheckBoxRemoveDuplicated, SIGNAL(clicked(bool)),            this, SLOT(update()));
-  connect(mMinSize,                  SIGNAL(valueChanged(double)),     this, SLOT(update()));
-  connect(mMaxSize,                  SIGNAL(valueChanged(double)),     this, SLOT(update()));
-
-  connect(mPointsNumber,  SIGNAL(valueChanged(int)),        this, SIGNAL(nPointsChange(int)));
-  connect(mMinSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(minSizeChange(double)));
-  connect(mMaxSize,       SIGNAL(valueChanged(double)),     this, SIGNAL(maxSizeChange(double)));
-}
-
-void KeypointsFilterWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

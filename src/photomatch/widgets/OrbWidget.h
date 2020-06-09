@@ -83,6 +83,9 @@ public slots:
 
 };
 
+
+
+
 class PHOTOMATCH_EXPORT OrbWidgetImp
   : public OrbWidget
 {
@@ -93,7 +96,7 @@ public:
   explicit OrbWidgetImp(QWidget *parent = nullptr);
   ~OrbWidgetImp() override;
 
-// IOrbWidget interface
+// OrbWidget interface
 
 public:
 
@@ -119,25 +122,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

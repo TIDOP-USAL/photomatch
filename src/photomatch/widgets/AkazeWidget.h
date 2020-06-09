@@ -145,6 +145,9 @@ public slots:
 
 };
 
+
+
+
 class PHOTOMATCH_EXPORT AkazeWidgetImp
   : public AkazeWidget
 {
@@ -155,7 +158,7 @@ public:
   AkazeWidgetImp(QWidget *parent = nullptr);
   ~AkazeWidgetImp() override;
 
-// IAkazeWidget interface
+// AkazeWidget interface
 
   QString descriptorType() const override;
   int descriptorSize() const override;
@@ -177,25 +180,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

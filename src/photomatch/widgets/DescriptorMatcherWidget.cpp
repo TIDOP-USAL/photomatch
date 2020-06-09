@@ -75,6 +75,308 @@ DescriptorMatcherWidgetImp::~DescriptorMatcherWidgetImp()
 
 }
 
+
+void DescriptorMatcherWidgetImp::initUI()
+{
+  this->setObjectName("DescriptorMatcherWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mLabelMatchingMethod, 0, 0);
+  mMatchingMethod->addItem("Brute-Force");
+  mMatchingMethod->addItem("FLANN");
+  layout->addWidget(mMatchingMethod, 0, 1);
+
+  layout->addWidget(mLabelMatchingStrategy, 1, 0);
+  mMatchingStrategy->addItem("Robust Matching");
+  mMatchingStrategy->addItem("GMS");
+  layout->addWidget(mMatchingStrategy, 1, 1);
+
+  mGroupBoxBFParameters = new QGroupBox(this);
+  layout->addWidget(mGroupBoxBFParameters, 2, 0, 1, 2);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBoxBFParameters->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mNormTypeLabel, 0, 0);
+  mNormType->addItem("NORM_L1");
+  mNormType->addItem("NORM_L2");
+  mNormType->addItem("NORM_HAMMING");
+  mNormType->addItem("NORM_HAMMING2");
+  propertiesLayout->addWidget(mNormType, 0, 1);
+
+  /// Robust Matching
+
+  mGroupBoxFilteringTest = new QGroupBox(this);
+  layout->addWidget(mGroupBoxFilteringTest, 3, 0, 1, 2);
+
+  QGridLayout *filteringTestLayout = new QGridLayout();
+  mGroupBoxFilteringTest->setLayout(filteringTestLayout);
+
+  filteringTestLayout->addWidget(mLabelRatio, 0, 0);
+  mRatio->setDecimals(3);
+  mRatio->setRange(0.001, 100.);
+  mRatio->setSingleStep(0.1);
+  filteringTestLayout->addWidget(mRatio, 0, 1);
+
+  filteringTestLayout->addWidget(mCrossMatching, 1, 0);
+
+  filteringTestLayout->addWidget(mLabelGeometricTest, 2, 0);
+  mGeometricTest->addItem("");
+  mGeometricTest->addItem("");
+  //mGeometricTest->addItem("");
+  filteringTestLayout->addWidget(mGeometricTest, 2, 1);
+
+  filteringTestLayout->addWidget(mHComputeMethodLabel, 3, 0);
+  mHComputeMethod->addItem("All Points");
+  mHComputeMethod->addItem("RANSAC");
+  mHComputeMethod->addItem("LMedS");
+  mHComputeMethod->addItem("RHO");
+  filteringTestLayout->addWidget(mHComputeMethod, 3, 1);
+
+  filteringTestLayout->addWidget(mFComputeMethodLabel, 4, 0);
+  mFComputeMethod->addItem("7-point algorithm");
+  mFComputeMethod->addItem("8-point algorithm");
+  mFComputeMethod->addItem("RANSAC");
+  mFComputeMethod->addItem("LMedS");
+  filteringTestLayout->addWidget(mFComputeMethod, 4, 1);
+
+  filteringTestLayout->addWidget(mEComputeMethodLabel, 5, 0);
+  mEComputeMethod->addItem("RANSAC");
+  mEComputeMethod->addItem("LMedS");
+  filteringTestLayout->addWidget(mEComputeMethod, 5, 1);
+
+  filteringTestLayout->addWidget(mDistanceLabel, 6, 0);
+  mDistance->setRange(0.001, 100.);
+  mDistance->setDecimals(3);
+  mDistance->setSingleStep(0.1);
+  filteringTestLayout->addWidget(mDistance, 6, 1);
+
+  filteringTestLayout->addWidget(mConfidenceLabel, 7, 0);
+  mConfidence->setRange(0., 1.);
+  mConfidence->setDecimals(3);
+  mConfidence->setSingleStep(0.001);
+  filteringTestLayout->addWidget(mConfidence, 7, 1);
+
+  filteringTestLayout->addWidget(mMaxItersLabel, 8, 0);
+  mMaxIters->setRange(0, 10000);
+  mMaxIters->setSingleStep(1);
+  filteringTestLayout->addWidget(mMaxIters, 8, 1);
+
+  mGroupBoxGMS = new QGroupBox("GMS", this);
+  layout->addWidget(mGroupBoxGMS, 3, 0, 1, 2);
+
+  QGridLayout *gmsLayout = new QGridLayout();
+  mGroupBoxGMS->setLayout(gmsLayout);
+
+  gmsLayout->addWidget(mRotationGMS, 0, 0);
+
+  gmsLayout->addWidget(mScaleGMS, 1, 0);
+
+  gmsLayout->addWidget(mLabelThresholdGMS, 2, 0);
+  mThresholdGMS->setDecimals(1);
+  mThresholdGMS->setRange(0.1, 100.);
+  mThresholdGMS->setSingleStep(0.1);
+  gmsLayout->addWidget(mThresholdGMS, 2, 1);
+
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
+}
+
+void DescriptorMatcherWidgetImp::initSignalAndSlots()
+{
+  connect(mMatchingMethod,    &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::matchingMethodChange);
+  connect(mMatchingStrategy,  &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::matchingStrategyChange);
+  connect(mNormType,          &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::normTypeChange);
+  connect(mRatio,             QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DescriptorMatcherWidget::ratioChange);
+  connect(mDistance,          QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DescriptorMatcherWidget::distanceChange);
+  connect(mConfidence,        QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DescriptorMatcherWidget::confidenceChange);
+  connect(mCrossMatching,     &QAbstractButton::clicked,                            this, &DescriptorMatcherWidget::crossMatchingChange);
+  connect(mMaxIters,          QOverload<int>::of(&QSpinBox::valueChanged),          this, &DescriptorMatcherWidget::maxItersChange);
+  connect(mGeometricTest,     &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::geometricTestChange);
+  connect(mHComputeMethod,    &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::homographyComputeMethodChange);
+  connect(mFComputeMethod,    &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::fundamentalComputeMethodChange);
+  connect(mEComputeMethod,    &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::essentialComputeMethodChange);
+  connect(mRotationGMS,       &QAbstractButton::clicked,                            this, &DescriptorMatcherWidget::gmsRotationChange);
+  connect(mScaleGMS,          &QAbstractButton::clicked,                            this, &DescriptorMatcherWidget::gmsScaleChange);
+  connect(mThresholdGMS,      QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DescriptorMatcherWidget::gmsThresholdChange);
+
+  connect(this, SIGNAL(matchingMethodChange(QString)),           this,  SLOT(update()));
+  connect(this, SIGNAL(matchingStrategyChange(QString)),         this,  SLOT(update()));
+  connect(this, SIGNAL(geometricTestChange(QString)),            this,  SLOT(update()));
+  connect(this, SIGNAL(homographyComputeMethodChange(QString)),  this,  SLOT(update()));
+  connect(this, SIGNAL(fundamentalComputeMethodChange(QString)), this,  SLOT(update()));
+  connect(this, SIGNAL(essentialComputeMethodChange(QString)),   this,  SLOT(update()));
+}
+
+void DescriptorMatcherWidgetImp::reset()
+{
+  const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
+  const QSignalBlocker blockerMatchingStrategy(mMatchingStrategy);
+  const QSignalBlocker blockerNormType(mNormType);
+  const QSignalBlocker blockerRatio(mRatio);
+  const QSignalBlocker blockerGeometricTest(mGeometricTest);
+  const QSignalBlocker blockerHomographyComputeMethod(mHComputeMethod);
+  const QSignalBlocker blockerFundamentalComputeMethod(mFComputeMethod);
+  const QSignalBlocker blockerEssentialComputeMethod(mEComputeMethod);
+  const QSignalBlocker blockerDistance(mDistance);
+  const QSignalBlocker blockerConfidence(mConfidence);
+  const QSignalBlocker blockerMaxIters(mMaxIters);
+  const QSignalBlocker blockerThresholdGMS(mThresholdGMS);
+
+  mMatchingMethod->setCurrentText("Brute-Force");
+  mNormType->setCurrentText("NORM_L1");
+  mGroupBoxBFParameters->show();
+  mMatchingStrategy->setCurrentText(QApplication::translate("DescriptorMatcherWidget", "Robust Matching"));
+  mGroupBoxFilteringTest->show();
+  mGroupBoxGMS->hide();
+  mRatio->setValue(0.8);
+  mGeometricTest->setCurrentText(QApplication::translate("DescriptorMatcherWidget", "Fundamental Matrix"));
+  mHComputeMethod->setCurrentText("RANSAC");
+  mFComputeMethod->setCurrentText("RANSAC");
+  mEComputeMethod->setCurrentText("RANSAC");
+  mDistance->setValue(0.7);
+  mConfidence->setValue(0.999);
+  mMaxIters->setValue(2000);
+  mCrossMatching->setChecked(true);
+  mRotationGMS->setChecked(false);
+  mScaleGMS->setChecked(false);
+  mThresholdGMS->setValue(6.0);
+
+  update();
+}
+
+void DescriptorMatcherWidgetImp::update()
+{
+  if (mMatchingMethod->currentText().compare("FLANN") == 0){
+    mGroupBoxBFParameters->hide();
+  } else {
+    mGroupBoxBFParameters->show();
+  }
+
+  if (mMatchingStrategy->currentText().compare("GMS") == 0){
+    mGroupBoxFilteringTest->hide();
+    mGroupBoxGMS->show();
+  } else {
+    mGroupBoxFilteringTest->show();
+    mGroupBoxGMS->hide();
+  }
+
+  QString geomTest = mGeometricTest->currentText();
+  if (geomTest.compare(QApplication::translate("DescriptorMatcherWidget", "Homography Matrix")) == 0){
+    mHComputeMethod->show();
+    mHComputeMethodLabel->show();
+    mFComputeMethod->hide();
+    mFComputeMethodLabel->hide();
+    mEComputeMethod->hide();
+    mEComputeMethodLabel->hide();
+    QString computeMethod = mHComputeMethod->currentText();
+    mConfidence->show();
+    mConfidenceLabel->show();
+    if (computeMethod.compare(QApplication::translate("DescriptorMatcherWidget", "All Points")) == 0){
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mMaxIters->hide();
+      mMaxItersLabel->hide();
+    } else if (computeMethod.compare("RANSAC") == 0){
+      mDistance->show();
+      mDistanceLabel->show();
+      mMaxIters->show();
+      mMaxItersLabel->show();
+    } else if (computeMethod.compare("LMedS") == 0){
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mMaxIters->hide();
+      mMaxItersLabel->hide();
+    } else if (computeMethod.compare("RHO") == 0){
+      mDistance->show();
+      mDistanceLabel->show();
+      mMaxIters->hide();
+      mMaxItersLabel->hide();
+    }
+  } else if (geomTest.compare(QApplication::translate("DescriptorMatcherWidget", "Fundamental Matrix")) == 0){
+    mHComputeMethod->hide();
+    mHComputeMethodLabel->hide();
+    mFComputeMethod->show();
+    mFComputeMethodLabel->show();
+    mEComputeMethod->hide();
+    mEComputeMethodLabel->hide();
+    QString computeMethod = mFComputeMethod->currentText();
+    mMaxIters->hide();
+    mMaxItersLabel->hide();
+    if (computeMethod.compare("7-point algorithm") == 0){
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mConfidence->hide();
+      mConfidenceLabel->hide();
+    } else if (computeMethod.compare("8-point algorithm") == 0){
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mConfidence->hide();
+      mConfidenceLabel->hide();
+    } else if (computeMethod.compare("RANSAC") == 0){
+      mDistance->show();
+      mDistanceLabel->show();
+      mConfidence->show();
+      mConfidenceLabel->show();
+    } else if (computeMethod.compare("LMedS") == 0){
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mConfidence->show();
+      mConfidenceLabel->show();
+    }
+  } else if (geomTest.compare(QApplication::translate("DescriptorMatcherWidget", "Essential Matrix")) == 0) {
+    mHComputeMethod->hide();
+    mHComputeMethodLabel->hide();
+    mFComputeMethod->hide();
+    mFComputeMethodLabel->hide();
+    mEComputeMethod->show();
+    mEComputeMethodLabel->show();
+    mConfidence->show();
+    mConfidenceLabel->show();
+    mMaxIters->hide();
+    mMaxItersLabel->hide();
+    QString computeMethod = mEComputeMethod->currentText();
+    if (computeMethod.compare("RANSAC") == 0){
+      mDistance->show();
+      mDistanceLabel->show();
+    } else if (computeMethod.compare("LMedS") == 0){
+      mDistance->hide();
+      mDistanceLabel->hide();
+    }
+  }
+}
+
+void DescriptorMatcherWidgetImp::retranslate()
+{
+  this->setWindowTitle(QApplication::translate("DescriptorMatcherWidget", "Descriptor Matcher"));
+  mLabelMatchingMethod->setText(QApplication::translate("DescriptorMatcherWidget", "Matching Method:"));
+  mLabelMatchingStrategy->setText(QApplication::translate("DescriptorMatcherWidget", "Matching Strategy:"));
+  mGroupBoxBFParameters->setTitle(QApplication::translate("DescriptorMatcherWidget", "Brute Force Parameters"));
+  mNormTypeLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Norm Type:"));
+  mGroupBoxFilteringTest->setTitle(QApplication::translate("DescriptorMatcherWidget", "Filtering Test"));
+  mLabelRatio->setText(QApplication::translate("DescriptorMatcherWidget", "Ratio:"));
+  mCrossMatching->setText(QApplication::translate("DescriptorMatcherWidget", "Cross Matching"));
+  mLabelGeometricTest->setText(QApplication::translate("DescriptorMatcherWidget", "Geometric Test:"));
+  mHComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Compute method:"));
+  mFComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Compute method:"));
+  mEComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Compute method:"));
+  mDistanceLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Distance:"));
+  mConfidenceLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Confidence:"));
+  mMaxItersLabel->setText(QApplication::translate("DescriptorMatcherWidget", "Maximum RANSAC iterations:"));
+  mLabelThresholdGMS->setText(QApplication::translate("DescriptorMatcherWidget", "Threshold:"));
+  mRotationGMS->setText(QApplication::translate("DescriptorMatcherWidget", "Rotation:"));
+  mScaleGMS->setText(QApplication::translate("DescriptorMatcherWidget", "Scale:"));
+
+  mGeometricTest->setItemText(0, QApplication::translate("DescriptorMatcherWidget", "Homography Matrix"));
+  mGeometricTest->setItemText(1, QApplication::translate("DescriptorMatcherWidget", "Fundamental Matrix"));
+  //mGeometricTest->setItemText(2, QApplication::translate("DescriptorMatcherWidget", "Essential Matrix"));  /// Desactivada matriz esencial porque se necesitaria calibración de la cámara y no es el objetivo de la herramienta
+
+}
+
 QString DescriptorMatcherWidgetImp::matchingMethod() const
 {
   return mMatchingMethod->currentText();
@@ -263,312 +565,6 @@ void DescriptorMatcherWidgetImp::setGmsThreshold(double threshold)
 {
   const QSignalBlocker blocker(mThresholdGMS);
   mThresholdGMS->setValue(threshold);
-}
-
-void DescriptorMatcherWidgetImp::update()
-{
-  if (mMatchingMethod->currentText().compare("FLANN") == 0){
-    mGroupBoxBFParameters->hide();
-  } else {
-    mGroupBoxBFParameters->show();
-  }
-
-  if (mMatchingStrategy->currentText().compare("GMS") == 0){
-    mGroupBoxFilteringTest->hide();
-    mGroupBoxGMS->show();
-  } else {
-    mGroupBoxFilteringTest->show();
-    mGroupBoxGMS->hide();
-  }
-
-  QString geomTest = mGeometricTest->currentText();
-  if (geomTest.compare(tr("Homography Matrix")) == 0){
-    mHComputeMethod->show();
-    mHComputeMethodLabel->show();
-    mFComputeMethod->hide();
-    mFComputeMethodLabel->hide();
-    mEComputeMethod->hide();
-    mEComputeMethodLabel->hide();
-    QString computeMethod = mHComputeMethod->currentText();
-    mConfidence->show();
-    mConfidenceLabel->show();
-    if (computeMethod.compare(tr("All Points")) == 0){
-      mDistance->hide();
-      mDistanceLabel->hide();
-      mMaxIters->hide();
-      mMaxItersLabel->hide();
-    } else if (computeMethod.compare("RANSAC") == 0){
-      mDistance->show();
-      mDistanceLabel->show();
-      mMaxIters->show();
-      mMaxItersLabel->show();
-    } else if (computeMethod.compare("LMedS") == 0){
-      mDistance->hide();
-      mDistanceLabel->hide();
-      mMaxIters->hide();
-      mMaxItersLabel->hide();
-    } else if (computeMethod.compare("RHO") == 0){
-      mDistance->show();
-      mDistanceLabel->show();
-      mMaxIters->hide();
-      mMaxItersLabel->hide();
-    }
-  } else if (geomTest.compare(tr("Fundamental Matrix")) == 0){
-    mHComputeMethod->hide();
-    mHComputeMethodLabel->hide();
-    mFComputeMethod->show();
-    mFComputeMethodLabel->show();
-    mEComputeMethod->hide();
-    mEComputeMethodLabel->hide();
-    QString computeMethod = mFComputeMethod->currentText();
-    mMaxIters->hide();
-    mMaxItersLabel->hide();
-    if (computeMethod.compare("7-point algorithm") == 0){
-      mDistance->hide();
-      mDistanceLabel->hide();
-      mConfidence->hide();
-      mConfidenceLabel->hide();
-    } else if (computeMethod.compare("8-point algorithm") == 0){
-      mDistance->hide();
-      mDistanceLabel->hide();
-      mConfidence->hide();
-      mConfidenceLabel->hide();
-    } else if (computeMethod.compare("RANSAC") == 0){
-      mDistance->show();
-      mDistanceLabel->show();
-      mConfidence->show();
-      mConfidenceLabel->show();
-    } else if (computeMethod.compare("LMedS") == 0){
-      mDistance->hide();
-      mDistanceLabel->hide();
-      mConfidence->show();
-      mConfidenceLabel->show();
-    }
-  } else if (geomTest.compare(tr("Essential Matrix")) == 0) {
-    mHComputeMethod->hide();
-    mHComputeMethodLabel->hide();
-    mFComputeMethod->hide();
-    mFComputeMethodLabel->hide();
-    mEComputeMethod->show();
-    mEComputeMethodLabel->show();
-    mConfidence->show();
-    mConfidenceLabel->show();
-    mMaxIters->hide();
-    mMaxItersLabel->hide();
-    QString computeMethod = mEComputeMethod->currentText();
-    if (computeMethod.compare("RANSAC") == 0){
-      mDistance->show();
-      mDistanceLabel->show();
-    } else if (computeMethod.compare("LMedS") == 0){
-      mDistance->hide();
-      mDistanceLabel->hide();
-    }
-  }
-}
-
-void DescriptorMatcherWidgetImp::retranslate()
-{
-  this->setWindowTitle(QApplication::translate("DescriptorMatcherWidgetImp", "Descriptor Matcher"));
-  mLabelMatchingMethod->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Matching Method:"));
-  mLabelMatchingStrategy->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Matching Strategy:"));
-  mGroupBoxBFParameters->setTitle(QApplication::translate("DescriptorMatcherWidgetImp", "Brute Force Parameters"));
-  mNormTypeLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Norm Type:"));
-  mGroupBoxFilteringTest->setTitle(QApplication::translate("DescriptorMatcherWidgetImp", "Filtering Test"));
-  mLabelRatio->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Ratio:"));
-  mCrossMatching->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Cross Matching"));
-  mLabelGeometricTest->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Geometric Test:"));
-  mHComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Compute method:"));
-  mFComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Compute method:"));
-  mEComputeMethodLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Compute method:"));
-  mDistanceLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Distance:"));
-  mConfidenceLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Confidence:"));
-  mMaxItersLabel->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Maximum RANSAC iterations:"));
-  mLabelThresholdGMS->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Threshold:"));
-  mRotationGMS->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Rotation:"));
-  mScaleGMS->setText(QApplication::translate("DescriptorMatcherWidgetImp", "Scale:"));
-}
-
-void DescriptorMatcherWidgetImp::reset()
-{
-  const QSignalBlocker blockerMatchingMethod(mMatchingMethod);
-  const QSignalBlocker blockerMatchingStrategy(mMatchingStrategy);
-  const QSignalBlocker blockerNormType(mNormType);
-  const QSignalBlocker blockerRatio(mRatio);
-  const QSignalBlocker blockerGeometricTest(mGeometricTest);
-  const QSignalBlocker blockerHomographyComputeMethod(mHComputeMethod);
-  const QSignalBlocker blockerFundamentalComputeMethod(mFComputeMethod);
-  const QSignalBlocker blockerEssentialComputeMethod(mEComputeMethod);
-  const QSignalBlocker blockerDistance(mDistance);
-  const QSignalBlocker blockerConfidence(mConfidence);
-  const QSignalBlocker blockerMaxIters(mMaxIters);
-  const QSignalBlocker blockerThresholdGMS(mThresholdGMS);
-
-  mMatchingMethod->setCurrentText("Brute-Force");
-  mNormType->setCurrentText("NORM_L1");
-  mGroupBoxBFParameters->show();
-  mMatchingStrategy->setCurrentText(tr("Robust Matching"));
-  mGroupBoxFilteringTest->show();
-  mGroupBoxGMS->hide();
-  mRatio->setValue(0.8);
-  mGeometricTest->setCurrentText(tr("Fundamental Matrix"));
-  mHComputeMethod->setCurrentText("RANSAC");
-  mFComputeMethod->setCurrentText("RANSAC");
-  mEComputeMethod->setCurrentText("RANSAC");
-  mDistance->setValue(0.7);
-  mConfidence->setValue(0.999);
-  mMaxIters->setValue(2000);
-  mCrossMatching->setChecked(true);
-  mRotationGMS->setChecked(false);
-  mScaleGMS->setChecked(false);
-  mThresholdGMS->setValue(6.0);
-
-  update();
-}
-
-void DescriptorMatcherWidgetImp::initUI()
-{
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mLabelMatchingMethod, 0, 0);
-  mMatchingMethod->addItem("Brute-Force");
-  mMatchingMethod->addItem("FLANN");
-  layout->addWidget(mMatchingMethod, 0, 1);
-
-  layout->addWidget(mLabelMatchingStrategy, 1, 0);
-  mMatchingStrategy->addItem("Robust Matching");
-  mMatchingStrategy->addItem("GMS");
-  layout->addWidget(mMatchingStrategy, 1, 1);
-
-  mGroupBoxBFParameters = new QGroupBox(this);
-  layout->addWidget(mGroupBoxBFParameters, 2, 0, 1, 2);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBoxBFParameters->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mNormTypeLabel, 0, 0);
-  mNormType->addItem("NORM_L1");
-  mNormType->addItem("NORM_L2");
-  mNormType->addItem("NORM_HAMMING");
-  mNormType->addItem("NORM_HAMMING2");
-  propertiesLayout->addWidget(mNormType, 0, 1);
-
-  /// Robust Matching
-
-  mGroupBoxFilteringTest = new QGroupBox(this);
-  layout->addWidget(mGroupBoxFilteringTest, 3, 0, 1, 2);
-
-  QGridLayout *filteringTestLayout = new QGridLayout();
-  mGroupBoxFilteringTest->setLayout(filteringTestLayout);
-
-  filteringTestLayout->addWidget(mLabelRatio, 0, 0);
-  mRatio->setDecimals(3);
-  mRatio->setRange(0.001, 100.);
-  mRatio->setSingleStep(0.1);
-  filteringTestLayout->addWidget(mRatio, 0, 1);
-
-  filteringTestLayout->addWidget(mCrossMatching, 1, 0);
-
-  filteringTestLayout->addWidget(mLabelGeometricTest, 2, 0);
-  mGeometricTest->addItem("Homography Matrix");
-  mGeometricTest->addItem("Fundamental Matrix");
-  //mGeometricTest->addItem("Essential Matrix");  /// Desactivada matriz esencial porque se necesitaria calibración de la cámara y no es el objetivo de la herramienta
-  filteringTestLayout->addWidget(mGeometricTest, 2, 1);
-
-  filteringTestLayout->addWidget(mHComputeMethodLabel, 3, 0);
-  mHComputeMethod->addItem("All Points");
-  mHComputeMethod->addItem("RANSAC");
-  mHComputeMethod->addItem("LMedS");
-  mHComputeMethod->addItem("RHO");
-  filteringTestLayout->addWidget(mHComputeMethod, 3, 1);
-
-  filteringTestLayout->addWidget(mFComputeMethodLabel, 4, 0);
-  mFComputeMethod->addItem("7-point algorithm");
-  mFComputeMethod->addItem("8-point algorithm");
-  mFComputeMethod->addItem("RANSAC");
-  mFComputeMethod->addItem("LMedS");
-  filteringTestLayout->addWidget(mFComputeMethod, 4, 1);
-
-  filteringTestLayout->addWidget(mEComputeMethodLabel, 5, 0);
-  mEComputeMethod->addItem("RANSAC");
-  mEComputeMethod->addItem("LMedS");
-  filteringTestLayout->addWidget(mEComputeMethod, 5, 1);
-
-  filteringTestLayout->addWidget(mDistanceLabel, 6, 0);
-  mDistance->setRange(0.001, 100.);
-  mDistance->setDecimals(3);
-  mDistance->setSingleStep(0.1);
-  filteringTestLayout->addWidget(mDistance, 6, 1);
-
-  filteringTestLayout->addWidget(mConfidenceLabel, 7, 0);
-  mConfidence->setRange(0., 1.);
-  mConfidence->setDecimals(3);
-  mConfidence->setSingleStep(0.001);
-  filteringTestLayout->addWidget(mConfidence, 7, 1);
-
-  filteringTestLayout->addWidget(mMaxItersLabel, 8, 0);
-  mMaxIters->setRange(0, 10000);
-  mMaxIters->setSingleStep(1);
-  filteringTestLayout->addWidget(mMaxIters, 8, 1);
-
-  mGroupBoxGMS = new QGroupBox("GMS", this);
-  layout->addWidget(mGroupBoxGMS, 3, 0, 1, 2);
-
-  QGridLayout *gmsLayout = new QGridLayout();
-  mGroupBoxGMS->setLayout(gmsLayout);
-
-  gmsLayout->addWidget(mRotationGMS, 0, 0);
-
-  gmsLayout->addWidget(mScaleGMS, 1, 0);
-
-  gmsLayout->addWidget(mLabelThresholdGMS, 2, 0);
-  mThresholdGMS->setDecimals(1);
-  mThresholdGMS->setRange(0.1, 100.);
-  mThresholdGMS->setSingleStep(0.1);
-  gmsLayout->addWidget(mThresholdGMS, 2, 1);
-
-  this->retranslate();
-  this->reset(); // Set default values
-  this->update();
-}
-
-void DescriptorMatcherWidgetImp::initSignalAndSlots()
-{
-  connect(mMatchingMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingMethodChange(QString)));
-  connect(mMatchingStrategy,     SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchingStrategyChange(QString)));
-  connect(mNormType,             SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normTypeChange(QString)));
-  connect(mRatio,                SIGNAL(valueChanged(double)),         this, SIGNAL(ratioChange(double)));
-  connect(mDistance,             SIGNAL(valueChanged(double)),         this, SIGNAL(distanceChange(double)));
-  connect(mConfidence,           SIGNAL(valueChanged(double)),         this, SIGNAL(confidenceChange(double)));
-  connect(mCrossMatching,        SIGNAL(clicked(bool)),                this, SIGNAL(crossMatchingChange(bool)));
-  connect(mMaxIters,             SIGNAL(valueChanged(int)),            this, SIGNAL(maxItersChange(int)));
-  connect(mGeometricTest,        SIGNAL(currentTextChanged(QString)),  this, SIGNAL(geometricTestChange(QString)));
-  connect(mHComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(homographyComputeMethodChange(QString)));
-  connect(mFComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(fundamentalComputeMethodChange(QString)));
-  connect(mEComputeMethod,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(essentialComputeMethodChange(QString)));
-  connect(mRotationGMS,          SIGNAL(clicked(bool)),                this, SIGNAL(gmsRotationChange(bool)));
-  connect(mScaleGMS,             SIGNAL(clicked(bool)),                this, SIGNAL(gmsScaleChange(bool)));
-  connect(mThresholdGMS,         SIGNAL(valueChanged(double)),         this, SIGNAL(gmsThresholdChange(double)));
-
-  connect(this, SIGNAL(matchingMethodChange(QString)),           this,  SLOT(update()));
-  connect(this, SIGNAL(matchingStrategyChange(QString)),         this,  SLOT(update()));
-  connect(this, SIGNAL(geometricTestChange(QString)),            this,  SLOT(update()));
-  connect(this, SIGNAL(homographyComputeMethodChange(QString)),  this,  SLOT(update()));
-  connect(this, SIGNAL(fundamentalComputeMethodChange(QString)), this,  SLOT(update()));
-  connect(this, SIGNAL(essentialComputeMethodChange(QString)),   this,  SLOT(update()));
-}
-
-void DescriptorMatcherWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

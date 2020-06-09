@@ -35,7 +35,7 @@ class QDoubleSpinBox;
 namespace photomatch
 {
 
-class HmclaheWidget
+class PHOTOMATCH_EXPORT HmclaheWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
@@ -64,7 +64,9 @@ public slots:
 };
 
 
-class HmclaheWidgetImp
+
+
+class PHOTOMATCH_EXPORT HmclaheWidgetImp
   : public HmclaheWidget
 {
   Q_OBJECT
@@ -79,7 +81,7 @@ protected slots:
   void onBlockSizeXChange(int blockSizeX);
   void onBlockSizeYChange(int blockSizeY);
 
-// IHmclaheWidget interface
+// HmclaheWidget interface
 
 public:
 
@@ -95,25 +97,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 
