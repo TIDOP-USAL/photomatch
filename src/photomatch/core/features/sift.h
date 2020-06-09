@@ -54,7 +54,7 @@ public:
   SiftProperties(const SiftProperties &siftProperties);
   ~SiftProperties() override = default;
 
-// ISift interface
+// Sift interface
 
 public:
 
@@ -127,7 +127,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// ISift interface
+// Sift interface
 
 public:
 

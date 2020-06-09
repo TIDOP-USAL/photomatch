@@ -29,9 +29,9 @@
 
 #include "photomatch/core/features/features.h"
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 #include <opencv2/cudafeatures2d.hpp>
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #include <QString>
 
@@ -48,7 +48,7 @@ public:
   OrbProperties(const OrbProperties &orbProperties);
   ~OrbProperties() override = default;
 
-// IOrb interface
+// Orb interface
 
 public:
 
@@ -139,7 +139,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// IOrb interface
+// Orb interface
 
 public:
 
@@ -168,7 +168,7 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 class PHOTOMATCH_EXPORT OrbCudaDetectorDescriptor
   : public OrbProperties,
@@ -217,7 +217,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// IOrb interface
+// Orb interface
 
 public:
 
@@ -242,7 +242,7 @@ protected:
   cv::Ptr<cv::cuda::ORB> mOrb;
 };
 
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 } // namespace photomatch
 

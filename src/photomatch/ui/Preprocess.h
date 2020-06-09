@@ -54,10 +54,10 @@ public:
   virtual void addPreprocess(QWidget *detector) = 0;
   virtual QString currentPreprocess() const = 0;
   virtual void setCurrentPreprocess(const QString &preprocess) = 0;
-  virtual int maxImageSize() = 0;
+  virtual int maxImageSize() const = 0;
   virtual void setMaxImageSize(int imageSize) = 0;
   virtual void setFullImageSize(bool fullImageSize) = 0;
-  virtual bool fullImageSize() = 0;
+  virtual bool fullImageSize() const = 0;
 
 signals:
 

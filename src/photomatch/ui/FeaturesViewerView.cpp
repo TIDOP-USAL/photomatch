@@ -35,6 +35,7 @@
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QFileInfo>
+#include <QApplication>
 
 namespace photomatch
 {
@@ -54,6 +55,116 @@ FeaturesViewerViewImp::FeaturesViewerViewImp(QWidget *parent, Qt::WindowFlags f)
 
 FeaturesViewerViewImp::~FeaturesViewerViewImp()
 {
+}
+
+void FeaturesViewerViewImp::initUI()
+{
+  this->setObjectName(QString("FeaturesViewerView"));
+
+  this->setWindowTitle(tr("Keypoints Viewer"));
+  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  this->resize(994, 688);
+
+  QGridLayout *gridLayout = new QGridLayout();
+  this->setLayout(gridLayout);
+
+  mLabelImages = new QLabel(this);
+  gridLayout->addWidget(mLabelImages, 0, 0, 1, 1);
+
+  mComboBoxImages = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxImages, 0, 1, 1, 1);
+
+  mGraphicView = new GraphicViewerImp(this);
+  gridLayout->addWidget(mGraphicView, 1, 0, 1, 2);
+
+  mTreeWidget = new QTreeWidget(this);
+  mTreeWidget->setAlternatingRowColors(true);
+  mTreeWidget->setMaximumSize(QSize(16777215, 192));
+
+  gridLayout->addWidget(mTreeWidget, 2, 0, 1, 2);
+
+  mButtonBox = new QDialogButtonBox(this);
+  mButtonBox->setOrientation(Qt::Horizontal);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
+  gridLayout->addWidget(mButtonBox, 3, 0, 1, 2);
+
+  mButtonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
+  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
+
+  mContextMenuLeft = new QMenu(mGraphicView);
+
+  mActionZoomIn = new QAction(this);
+  QIcon iconZoomIn;
+  iconZoomIn.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomIn->setIcon(iconZoomIn);
+  mContextMenuLeft->addAction(mActionZoomIn);
+
+  mActionZoomOut = new QAction(this);
+  QIcon iconZoomOut;
+  iconZoomOut.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomOut->setIcon(iconZoomOut);
+  mContextMenuLeft->addAction(mActionZoomOut);
+
+  mActionZoomExtend = new QAction(this);
+  QIcon iconZoomExtend;
+  iconZoomExtend.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomExtend->setIcon(iconZoomExtend);
+  mContextMenuLeft->addAction(mActionZoomExtend);
+
+  mActionZoom11 = new QAction(this);
+  QIcon iconZoom11;
+  iconZoom11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoom11->setIcon(iconZoom11);
+  mContextMenuLeft->addAction(mActionZoom11);
+
+  mGraphicView->setContextMenu(mContextMenuLeft);
+
+  this->retranslate();
+  this->update();
+}
+
+void FeaturesViewerViewImp::initSignalAndSlots()
+{
+  connect(mComboBoxImages,   &QComboBox::currentTextChanged,      this,          &FeaturesViewerView::imageChange);
+  connect(mTreeWidget,       &QTreeWidget::itemSelectionChanged,  this,          &FeaturesViewerViewImp::onTreeWidgetItemSelectionChanged);
+  connect(mGraphicView,      &GraphicViewerImp::selectionChanged, this,          &FeaturesViewerViewImp::onGraphicsViewSelectionChanged);
+  connect(mActionZoomIn,     &QAction::triggered,                 mGraphicView,  &GraphicViewerImp::zoomIn);
+  connect(mActionZoomOut,    &QAction::triggered,                 mGraphicView,  &GraphicViewerImp::zoomOut);
+  connect(mActionZoomExtend, &QAction::triggered,                 mGraphicView,  &GraphicViewerImp::zoomExtend);
+  connect(mActionZoom11,     &QAction::triggered,                 mGraphicView,  &GraphicViewerImp::zoom11);
+
+  connect(mButtonBox->button(QDialogButtonBox::Close),  &QAbstractButton::clicked, this, &QDialog::accept);
+  connect(mButtonBox->button(QDialogButtonBox::Help),   &QAbstractButton::clicked, this, &IDialogView::help);
+}
+
+void FeaturesViewerViewImp::clear()
+{
+  this->setWindowTitle(tr("Keypoints Viewer"));
+  const QSignalBlocker blockerTreeWidget(mTreeWidget);
+  mTreeWidget->clear();
+
+  const QSignalBlocker blockerComboBoxImages(mComboBoxImages);
+  mComboBoxImages->clear();
+}
+
+void FeaturesViewerViewImp::update()
+{
+
+}
+
+void FeaturesViewerViewImp::retranslate()
+{
+  mLabelImages->setText(QApplication::translate("FeaturesViewerView", "Images:"));
+  QTreeWidgetItem *qTreeWidgetItem = mTreeWidget->headerItem();
+  qTreeWidgetItem->setText(0, QApplication::translate("FeaturesViewerView", "ID"));
+  qTreeWidgetItem->setText(1, QApplication::translate("FeaturesViewerView", "X"));
+  qTreeWidgetItem->setText(2, QApplication::translate("FeaturesViewerView", "Y"));
+  qTreeWidgetItem->setText(3, QApplication::translate("FeaturesViewerView", "Size"));
+  qTreeWidgetItem->setText(4, QApplication::translate("FeaturesViewerView", "Angle"));
+  mActionZoomIn->setText(QApplication::translate("FeaturesViewerView", "Zoom In"));
+  mActionZoomOut->setText(QApplication::translate("FeaturesViewerView", "Zoom Out"));
+  mActionZoomExtend->setText(QApplication::translate("FeaturesViewerView", "Zoom Extend"));
+  mActionZoom11->setText(QApplication::translate("FeaturesViewerView", "Zoom 1:1"));
 }
 
 void FeaturesViewerViewImp::onGraphicsViewSelectionChanged()
@@ -290,85 +401,6 @@ void FeaturesViewerViewImp::setMarkerStyle(const QString &color, int width, int 
   /// Para volver a cargar los puntos
   if (mComboBoxImages->currentText().isEmpty() == false)
     emit imageChange(mComboBoxImages->currentText());
-
-}
-
-void FeaturesViewerViewImp::initUI()
-{
-  this->setWindowTitle(tr("Keypoints Viewer"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
-  this->resize(994, 688);
-
-  QGridLayout *gridLayout = new QGridLayout();
-  this->setLayout(gridLayout);
-
-  QLabel *labelImage1 = new QLabel(tr("Images:"), this);
-  gridLayout->addWidget(labelImage1, 0, 0, 1, 1);
-
-  mComboBoxImages = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxImages, 0, 1, 1, 1);
-
-  mGraphicView = new GraphicViewerImp(this);
-  gridLayout->addWidget(mGraphicView, 1, 0, 1, 2);
-
-  mTreeWidget = new QTreeWidget(this);
-  QTreeWidgetItem *qTreeWidgetItem = mTreeWidget->headerItem();
-  qTreeWidgetItem->setText(0, "ID");
-  qTreeWidgetItem->setText(1, tr("X"));
-  qTreeWidgetItem->setText(2, tr("Y"));
-  qTreeWidgetItem->setText(3, tr("Size"));
-  qTreeWidgetItem->setText(4, tr("Angle"));
-  mTreeWidget->setAlternatingRowColors(true);
-  mTreeWidget->setMaximumSize(QSize(16777215, 192));
-
-  gridLayout->addWidget(mTreeWidget, 2, 0, 1, 2);
-
-  mButtonBox = new QDialogButtonBox(this);
-  mButtonBox->setOrientation(Qt::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
-  gridLayout->addWidget(mButtonBox, 3, 0, 1, 2);
-
-  mButtonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
-
-  QMenu *contextMenuLeft = new QMenu(mGraphicView);
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), tr("Zoom In"), mGraphicView, SLOT(zoomIn()));
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), tr("Zoom Out"), mGraphicView, SLOT(zoomOut()));
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), tr("Zoom Extend"), mGraphicView, SLOT(zoomExtend()));
-  contextMenuLeft->addAction(QIcon(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), tr("Zoom 1:1"), mGraphicView, SLOT(zoom11()));
-  mGraphicView->setContextMenu(contextMenuLeft);
-  connect(mGraphicView, SIGNAL(selectionChanged()), this, SLOT(onGraphicsViewSelectionChanged()));
-
-  update();
-
-}
-
-void FeaturesViewerViewImp::initSignalAndSlots()
-{
-  connect(mComboBoxImages,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(imageChange(QString)));
-  connect(mTreeWidget,      SIGNAL(itemSelectionChanged()),       this, SLOT(onTreeWidgetItemSelectionChanged()));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close),  SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)), this, SIGNAL(help()));
-}
-
-void FeaturesViewerViewImp::clear()
-{
-  this->setWindowTitle(tr("Keypoints Viewer"));
-  const QSignalBlocker blockerTreeWidget(mTreeWidget);
-  mTreeWidget->clear();
-
-  const QSignalBlocker blockerComboBoxImages(mComboBoxImages);
-  mComboBoxImages->clear();
-}
-
-void FeaturesViewerViewImp::update()
-{
-
-}
-
-void FeaturesViewerViewImp::retranslate()
-{
 
 }
 

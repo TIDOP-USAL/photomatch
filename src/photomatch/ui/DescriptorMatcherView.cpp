@@ -31,6 +31,7 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QStandardItemModel>
+#include <QApplication>
 
 namespace photomatch
 {
@@ -48,6 +49,55 @@ DescriptorMatcherViewImp::~DescriptorMatcherViewImp()
     delete mDescriptorMatcherWidget;
     mDescriptorMatcherWidget = nullptr;
   }
+}
+
+void DescriptorMatcherViewImp::initUI()
+{
+  this->setObjectName(QString("DescriptorMatcherView"));
+  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  this->resize(350, 400);
+
+  QGridLayout *gridLayout = new QGridLayout();
+  this->setLayout(gridLayout);
+
+  mDescriptorMatcherWidget = new DescriptorMatcherWidgetImp(this);
+  gridLayout->addWidget(mDescriptorMatcherWidget, 0, 0, 1, 2);
+
+  mButtonBox = new QDialogButtonBox(this);
+  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Apply |
+                                 QDialogButtonBox::Cancel |
+                                 QDialogButtonBox::Help);
+  gridLayout->addWidget(mButtonBox, 1, 0, 1, 2);
+
+  this->retranslate();
+  this->update();
+}
+
+void DescriptorMatcherViewImp::initSignalAndSlots()
+{
+  connect(mButtonBox,                                  &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(mButtonBox->button(QDialogButtonBox::Apply), &QAbstractButton::clicked,   this, &DescriptorMatcherView::run);
+  connect(mButtonBox->button(QDialogButtonBox::Help),  &QAbstractButton::clicked,   this, &IDialogView::help);
+}
+
+void DescriptorMatcherViewImp::clear()
+{
+  mDescriptorMatcherWidget->reset();
+}
+
+void DescriptorMatcherViewImp::update()
+{
+
+}
+
+void DescriptorMatcherViewImp::retranslate()
+{
+  this->setWindowTitle(QApplication::translate("DescriptorMatcherView", "Descriptor Matcher"));
+
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("DescriptorMatcherView", "Cancel"));
+  mButtonBox->button(QDialogButtonBox::Apply)->setText(QApplication::translate("DescriptorMatcherView", "Run"));
+  mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("DescriptorMatcherView", "Help"));
 }
 
 void DescriptorMatcherViewImp::setSessionName(const QString &name)
@@ -213,56 +263,6 @@ void DescriptorMatcherViewImp::setGmsScale(bool active)
 void DescriptorMatcherViewImp::setGmsThreshold(double threshold)
 {
   mDescriptorMatcherWidget->setGmsThreshold(threshold);
-}
-
-void DescriptorMatcherViewImp::initUI()
-{
-  this->setWindowTitle(tr("Descriptor Matcher"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
-  this->resize(350, 400);
-
-  QGridLayout *gridLayout = new QGridLayout();
-  this->setLayout(gridLayout);
-
-  mDescriptorMatcherWidget = new DescriptorMatcherWidgetImp(this);
-  gridLayout->addWidget(mDescriptorMatcherWidget, 0, 0, 1, 2);
-
-  mButtonBox = new QDialogButtonBox(this);
-  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Apply |
-                                 QDialogButtonBox::Cancel |
-                                 QDialogButtonBox::Help);
-
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
-  mButtonBox->button(QDialogButtonBox::Apply)->setText("Run");
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
-  gridLayout->addWidget(mButtonBox, 1, 0, 1, 2);
-
-
-  update();
-}
-
-void DescriptorMatcherViewImp::initSignalAndSlots()
-{
-  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
-
-}
-
-void DescriptorMatcherViewImp::clear()
-{
-  mDescriptorMatcherWidget->reset();
-}
-
-void DescriptorMatcherViewImp::update()
-{
-
-}
-
-void DescriptorMatcherViewImp::retranslate()
-{
-
 }
 
 } // namespace photomatch

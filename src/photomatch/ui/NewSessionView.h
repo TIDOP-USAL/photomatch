@@ -30,6 +30,7 @@
 class QLineEdit;
 class QTextEdit;
 class QDialogButtonBox;
+class QLabel;
 
 namespace photomatch
 {
@@ -72,7 +73,9 @@ public:
 
 protected:
 
+  QLabel *mLabelSessionName;
   QLineEdit *mLineEditSessionName;
+  QLabel *mLabelSessionDescription;
   QTextEdit *mTextEditSessionDescription;
   QDialogButtonBox *mButtonBox;
   bool bNameExist;

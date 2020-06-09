@@ -96,7 +96,9 @@ ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
 /*----------------------------------------------------------------*/
 
 
-
+/*!
+ * \brief Keypoint Detector class
+ */
 class PHOTOMATCH_EXPORT KeypointDetector
 {
 
@@ -123,7 +125,9 @@ public:
 /*----------------------------------------------------------------*/
 
 
-
+/*!
+ * \brief Descriptor Extractor class
+ */
 class PHOTOMATCH_EXPORT DescriptorExtractor
 {
 
@@ -234,7 +238,7 @@ public:
 
 
 /*!
- * \brief The IAkaze class
+ * \brief The Akaze class
  */
 class PHOTOMATCH_EXPORT Akaze
   : public Feature
@@ -766,7 +770,9 @@ public:
 /*----------------------------------------------------------------*/
 
 
-
+/*!
+ * \brief The GFTT class
+ */
 class PHOTOMATCH_EXPORT Gftt
   : public Feature
 {
@@ -848,7 +854,7 @@ public:
 
 
 /*!
- * \brief The IKaze class
+ * \brief Kaze Interface
  *
  * Multiscale 2D feature detection and description algorithm in nonlinear scale spaces.
  *
@@ -974,7 +980,7 @@ public:
 
 
 /*!
- * \brief Interface for LUCID class
+ * \brief LUCID Interface
  * Eric Christiansen David Kriegman Ziegler, Andrew and Serge J. Belongie.
  * Locally uniform comparison image descriptor
  */
@@ -1444,7 +1450,7 @@ public:
 
 
 /*!
- * \brief The IVgg class
+ * \brief Vgg interface
  * K. Simonyan, A. Vedaldi, and A. Zisserman. Learning local feature
  * descriptors using convex optimisation. IEEE Transactions on Pattern
  * Analysis and Machine Intelligence, 2014.

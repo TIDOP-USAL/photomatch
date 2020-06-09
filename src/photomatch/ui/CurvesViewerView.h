@@ -21,6 +21,7 @@
  *                                                                      *
  ************************************************************************/
 
+
 #ifndef PHOTOMATCH_CURVES_VIEWER_VIEW_H
 #define PHOTOMATCH_CURVES_VIEWER_VIEW_H
 
@@ -50,8 +51,7 @@ public:
 
   CurvesViewerViewImp(QWidget *parent = nullptr,
                       Qt::WindowFlags f = Qt::WindowFlags());
-
-  virtual ~CurvesViewerViewImp() override;
+  ~CurvesViewerViewImp() override;
 
 protected slots :
 
@@ -120,7 +120,6 @@ public:
 private:
 
   void initUI() override;
-
 };
 
 

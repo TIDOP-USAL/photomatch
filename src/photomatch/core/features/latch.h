@@ -48,7 +48,7 @@ public:
   LatchProperties(const LatchProperties &latchProperties);
   ~LatchProperties() override = default;
 
-// ILatch interface
+// Latch interface
 
 public:
 
@@ -88,7 +88,6 @@ public:
   LatchDescriptor(const QString& bytes,
                   bool rotationInvariance,
                   int halfSsdSize);
-
   ~LatchDescriptor() override = default;
 
 private:
@@ -104,7 +103,7 @@ public:
                cv::Mat &descriptors) override;
 
 
-// IBrief interface
+// Latch interface
 
 public:
 

@@ -36,6 +36,7 @@ class QGridLayout;
 class QSpinBox;
 class QLineEdit;
 class QCheckBox;
+class QLabel;
 
 namespace photomatch
 {
@@ -68,21 +69,12 @@ protected slots:
   void onPushButtonGroundTruthEditorMarkerColorClicked();
   void onPushButtonSelectGroundTruthEditorMarkerColorClicked();
 
-// IDialogView interface
-
 private:
 
-  void initUI() override;
-  void initSignalAndSlots() override;
-
-public slots:
-
-  void clear() override;
-
-private slots:
-
-  void update() override;
-  void retranslate() override;
+  void initGeneralPage();
+  void initImageViewerPage();
+  void initToolsPage();
+  void initQualityControlPage();
 
 // SettingsView interface
 
@@ -171,16 +163,35 @@ public slots:
 
   void setUnsavedChanges(bool unsaveChanges) override;
 
+// IDialogView interface
+
+private:
+
+  void initUI() override;
+  void initSignalAndSlots() override;
+
+public slots:
+
+  void clear() override;
+
+private slots:
+
+  void update() override;
+  void retranslate() override;
+
 protected:
 
   QListWidget *mListWidget;
   QStackedWidget *mStackedWidget;
+  QLabel *mLabelLanguage;
   QComboBox *mLanguages;
+  QLabel *mLabelHistoryMaxSize;
   QSpinBox *mHistoryMaxSize;
   QTabWidget *mTabWidgetTools;
   QTabWidget *mTabQualityControl;
   QComboBox *mKeypointsFormat;
   QComboBox *mMatchesFormat;
+  QLabel *mLabelUseCuda;
   QCheckBox *mCheckBoxUseCuda;
   QGridLayout *mGridLayoutPreprocess;
   QGridLayout *mGridLayoutFeatures;

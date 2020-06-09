@@ -38,7 +38,7 @@
 namespace photomatch
 {
 
-class VggProperties
+class PHOTOMATCH_EXPORT VggProperties
   : public Vgg
 {
 
@@ -48,7 +48,7 @@ public:
   VggProperties(const VggProperties &vggProperties);
   ~VggProperties() override = default;
 
-// IVgg interface
+// Vgg interface
 
 public:
 
@@ -88,7 +88,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class VggDescriptor
+class PHOTOMATCH_EXPORT VggDescriptor
   : public VggProperties,
     public DescriptorExtractor
 {
@@ -115,7 +115,7 @@ public:
 
   void reset() override;
 
-// IVgg interface
+// Vgg interface
 
 public:
 

@@ -116,7 +116,7 @@ void VggProperties::setUseScaleOrientation(bool useScaleOrientation)
   bUseScaleOrientation = useScaleOrientation;
 }
 
-void photomatch::VggProperties::reset()
+void VggProperties::reset()
 {
   mDescriptorType = "VGG_120";
   mScaleFactor = 6.25;
@@ -126,7 +126,7 @@ void photomatch::VggProperties::reset()
   bUseScaleOrientation = true;
 }
 
-QString photomatch::VggProperties::name() const
+QString VggProperties::name() const
 {
   return QString("VGG");
 }

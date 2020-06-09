@@ -47,7 +47,7 @@ class ExportFeaturesViewImp
 public:
 
   ExportFeaturesViewImp(QWidget *parent = nullptr);
-  virtual ~ExportFeaturesViewImp() override;
+  ~ExportFeaturesViewImp() override;
 
 protected slots:
 
@@ -102,7 +102,6 @@ protected:
   QListWidget *mListWidgetfeatures;
   QDialogButtonBox *mButtonBox;
 };
-
 
 } // namespace photomatch
 

@@ -200,10 +200,10 @@ void SurfDetectorDescriptor::setExtendedDescriptor(bool extendedDescriptor)
   mSurf->setExtended(extendedDescriptor);
 }
 
-void SurfDetectorDescriptor::setUpright(bool rotatedFeatures)
+void SurfDetectorDescriptor::setUpright(bool upright)
 {
-  SurfProperties::setUpright(rotatedFeatures);
-  mSurf->setUpright(rotatedFeatures);
+  SurfProperties::setUpright(upright);
+  mSurf->setUpright(upright);
 }
 
 void SurfDetectorDescriptor::reset()
@@ -222,7 +222,7 @@ void SurfDetectorDescriptor::reset()
 /*----------------------------------------------------------------*/
 
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor()
   : mSurf(new cv::cuda::SURF_CUDA())
@@ -335,7 +335,7 @@ void SurfCudaDetectorDescriptor::reset()
 }
 
 
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #endif // OPENCV_ENABLE_NONFREE
 

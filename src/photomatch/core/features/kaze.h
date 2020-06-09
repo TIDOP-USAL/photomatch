@@ -44,7 +44,7 @@ public:
   KazeProperties(const KazeProperties &kazeProperties);
   ~KazeProperties() override = default;
 
-// IKaze interface
+// Kaze interface
 
 public:
 
@@ -99,7 +99,6 @@ public:
                          int octaves,
                          int octaveLayers,
                          const QString &diffusivity);
-
   ~KazeDetectorDescriptor() override = default;
 
 private:
@@ -127,7 +126,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// IKaze interface
+// Kaze interface
 
 public:
 

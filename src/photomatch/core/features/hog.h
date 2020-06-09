@@ -48,7 +48,7 @@ public:
   HogProperties(const HogProperties &hogProperties);
   ~HogProperties() override = default;
 
-// IHog interface
+// Hog interface
 
 public:
 
@@ -101,7 +101,6 @@ public:
                 QSize cellSize,
                 int nbins,
                 int derivAperture);
-
   ~HogDescriptor() override = default;
 
 private:
@@ -117,7 +116,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// IHog interface
+// Hog interface
 
 public:
 

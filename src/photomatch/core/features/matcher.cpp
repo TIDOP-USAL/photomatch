@@ -234,7 +234,7 @@ void BruteForceMatcherImp::setNormType(BruteForceMatcher::Norm normType)
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 BruteForceMatcherCuda::BruteForceMatcherCuda()
 {
@@ -316,7 +316,7 @@ void BruteForceMatcherCuda::setNormType(BruteForceMatcher::Norm normType)
   update();
 }
 
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 /*----------------------------------------------------------------*/
 
@@ -436,7 +436,7 @@ void RobustMatchingProperties::reset()
   mMaxIters = 2000;
 }
 
-QString photomatch::RobustMatchingProperties::name() const
+QString RobustMatchingProperties::name() const
 {
   return QString("Robust Matcher");
 }

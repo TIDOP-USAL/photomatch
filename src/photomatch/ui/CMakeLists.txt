@@ -89,7 +89,7 @@ set(PHOTOMATCH_SOURCES
 
 set(PHOTOMATCH_HEADERS
     mvp.h
-	ComponentsManager.h
+    ComponentsManager.h
     ComponentsManager.cpp
     MainWindowModel.h
     MainWindowPresenter.h

@@ -11,7 +11,8 @@
 
 using namespace photomatch;
 
-class TestNewProjectView : public NewProjectViewImp
+class TestNewProjectView
+  : public NewProjectViewImp
 {
   Q_OBJECT
 
@@ -22,6 +23,8 @@ public:
 
 private slots:
 
+  void initTestCase();
+  void cleanupTestCase();
   void test_constructor();
   void test_projectName();
   void test_projectPath_data();
@@ -32,7 +35,8 @@ private slots:
   void test_createProjectFolder();
   void test_pushButtonProjectPath();
   void test_dialogButtonBox();
-  void test_clear();
+  void test_setExistingProject();
+
 };
 
 TestNewProjectView::TestNewProjectView()
@@ -43,6 +47,22 @@ TestNewProjectView::TestNewProjectView()
 
 TestNewProjectView::~TestNewProjectView()
 {
+}
+
+void TestNewProjectView::initTestCase()
+{
+
+}
+
+void TestNewProjectView::cleanupTestCase()
+{
+  this->clear();
+
+  QCOMPARE(this->projectName(), QString(""));
+  QCOMPARE(this->projectPath(), QString(""));
+  QCOMPARE(this->mLineEditProjectFile->text(), QString(""));
+  QCOMPARE(this->projectDescription(), QString(""));
+  QCOMPARE(true, this->createProjectFolder());
 }
 
 void TestNewProjectView::test_constructor()
@@ -174,15 +194,19 @@ void TestNewProjectView::test_dialogButtonBox()
   QCOMPARE(spy_help.count(), 1);
 }
 
-void TestNewProjectView::test_clear()
+void TestNewProjectView::test_setExistingProject()
 {
-  this->clear();
+  this->setExistingProject(true);
+  QPalette palette = mLineEditProjectName->palette();
+  QColor color = palette.color(QPalette::Text);
+  QCOMPARE(QColor(Qt::red), color);
+  QCOMPARE(false, this->mButtonBox->button(QDialogButtonBox::Save)->isEnabled());
 
-  QCOMPARE(this->projectName(), QString(""));
-  QCOMPARE(this->projectPath(), QString(""));
-  QCOMPARE(this->mLineEditProjectFile->text(), QString(""));
-  QCOMPARE(this->projectDescription(), QString(""));
-  QCOMPARE(true, this->createProjectFolder());
+  this->setExistingProject(false);
+  palette = mLineEditProjectName->palette();
+  color = palette.color(QPalette::Text);
+  QCOMPARE(QColor(Qt::black), color);
+  QCOMPARE(true, this->mButtonBox->button(QDialogButtonBox::Save)->isEnabled());
 }
 
 QTEST_MAIN(TestNewProjectView)

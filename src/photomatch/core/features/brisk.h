@@ -44,7 +44,7 @@ public:
   BriskProperties(const BriskProperties &briskProperties);
   ~BriskProperties() override = default;
 
-// IBrisk interface
+// Brisk interface
 
 public:
 
@@ -86,7 +86,6 @@ public:
   BriskDetectorDescriptor(int threshold,
                           int octaves,
                           double patternScale);
-
   ~BriskDetectorDescriptor() override = default;
 
 protected:
@@ -110,7 +109,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// IAkaze interface
+// Brisk interface
 
 public:
 

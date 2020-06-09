@@ -45,7 +45,7 @@ class ExportMatchesViewImp
 public:
 
   ExportMatchesViewImp(QWidget *parent = nullptr);
-  virtual ~ExportMatchesViewImp() override;
+  ~ExportMatchesViewImp() override;
 
 // ExportMatchesView interface
 

@@ -61,7 +61,7 @@ class AboutDialog;
 class HelpDialog;
 
 class ProgressHandler;
-class IProgressDialog;
+class ProgressDialog;
 
 
 class ComponentsManager
@@ -129,7 +129,7 @@ public:
   HelpDialog *helpDialog();
 
   ProgressHandler *progressHandler();
-  IProgressDialog *progressDialog();
+  ProgressDialog *progressDialog();
 
 signals:
 
@@ -221,7 +221,7 @@ protected:
   HelpDialog *mHelpDialog;
 
   ProgressHandler *mProgressHandler;
-  IProgressDialog *mProgressDialog;
+  ProgressDialog *mProgressDialog;
 
 };
 

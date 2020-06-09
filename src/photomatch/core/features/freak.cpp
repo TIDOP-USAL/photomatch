@@ -37,7 +37,6 @@ FreakProperties::FreakProperties()
     mPatternScale(22.),
     mOctaves(4)
 {
-
 }
 
 FreakProperties::FreakProperties(const FreakProperties &freakProperties)
@@ -47,7 +46,6 @@ FreakProperties::FreakProperties(const FreakProperties &freakProperties)
     mPatternScale(freakProperties.mPatternScale),
     mOctaves(freakProperties.mOctaves)
 {
-
 }
 
 bool FreakProperties::orientationNormalized() const

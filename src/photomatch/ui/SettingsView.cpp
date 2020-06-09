@@ -48,11 +48,14 @@ SettingsViewImp::SettingsViewImp(QWidget *parent)
   : SettingsView(parent),
     mListWidget(new QListWidget(this)),
     mStackedWidget(new QStackedWidget(this)),
+    mLabelLanguage(new QLabel(this)),
     mLanguages(new QComboBox(this)),
+    mLabelHistoryMaxSize(new QLabel(this)),
     mHistoryMaxSize(new QSpinBox(this)),
     mTabWidgetTools(nullptr),
     mKeypointsFormat(new QComboBox(this)),
     mMatchesFormat(new QComboBox(this)),
+    mLabelUseCuda(new QLabel(this)),
     mCheckBoxUseCuda(new QCheckBox(this)),
     mListWidgetPreprocess(nullptr),
     mListWidgetFeatures(nullptr),
@@ -68,115 +71,9 @@ SettingsViewImp::~SettingsViewImp()
 
 }
 
-void SettingsViewImp::onPreprocessChange(const QString &method)
-{
-  for (int idx = 1; idx < mGridLayoutPreprocess->count(); idx++){
-    QLayoutItem * const item = mGridLayoutPreprocess->itemAt(idx);
-    if(dynamic_cast<QWidgetItem *>(item)){
-      if (item->widget()->windowTitle().compare(method) == 0)
-        item->widget()->setVisible(true);
-      else
-        item->widget()->setVisible(false);
-    }
-  }
-  mListWidgetPreprocess->setMinimumHeight(150);
-  mListWidgetPreprocess->setMaximumHeight(150);
-}
-
-void SettingsViewImp::onFeatureDetectorDescriptorChange(const QString &method)
-{
-  for (int idx = 1; idx < mGridLayoutFeatures->count(); idx++){
-    QLayoutItem * const item = mGridLayoutFeatures->itemAt(idx);
-    if(dynamic_cast<QWidgetItem *>(item)){
-      if (item->widget()->windowTitle().compare(method) == 0)
-        item->widget()->setVisible(true);
-      else
-        item->widget()->setVisible(false);
-    }
-  }
-  mListWidgetFeatures->setMinimumHeight(150);
-  mListWidgetFeatures->setMaximumHeight(150);
-}
-
-void SettingsViewImp::onPushButtonImageViewerBGColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditImageViewerBGcolor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    emit imageViewerBGColorChange(color.name());
-}
-
-void SettingsViewImp::onPushButtonKeypointViewerBGColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditKeypointViewerBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditKeypointViewerBGColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonKeypointViewerMarkerColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditKeypointViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditKeypointViewerMarkerColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonSelectKeypointViewerMarkerColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditSelectKeypointViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditSelectKeypointViewerMarkerColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonMatchViewerBGColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditMatchesViewerBGColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonMatchViewerMarkerColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditMatchesViewerMarkerColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonSelectMatchViewerMarkerColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditSelectMatchesViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditSelectMatchesViewerMarkerColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonMatchViewerLineColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerLineColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditMatchesViewerLineColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonGroundTruthEditorBGColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditGroundTruthEditorBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditGroundTruthEditorBGColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonGroundTruthEditorMarkerColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditGroundTruthEditorMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditGroundTruthEditorMarkerColor->setText(color.name());
-}
-
-void SettingsViewImp::onPushButtonSelectGroundTruthEditorMarkerColorClicked()
-{
-  QColor color = QColorDialog::getColor(QColor(mLineEditSelectGTEditorMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
-  if (color.isValid())
-    mLineEditSelectGTEditorMarkerColor->setText(color.name());
-}
-
 void SettingsViewImp::initUI()
 {
+  this->setObjectName(QString("SettingsView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(750, 450);
 
@@ -184,27 +81,47 @@ void SettingsViewImp::initUI()
   this->setLayout(layout);
 
   mListWidget->setMaximumSize(QSize(250, 16777215));
-  mListWidget->addItem(tr("General"));
-  mListWidget->addItem(tr("Image Viewer"));
-  mListWidget->addItem(tr("Tools"));
-  mListWidget->addItem(tr("Quality Control"));
+  mListWidget->addItem("");
+  mListWidget->addItem("");
+  mListWidget->addItem("");
+  mListWidget->addItem("");
   layout->addWidget(mListWidget, 0, 0, 1, 1);
 
   layout->addWidget(mStackedWidget, 0, 1, 1, 3);
 
-  /* General */
+  this->initGeneralPage();
+  this->initImageViewerPage();
+  this->initToolsPage();
+  this->initQualityControlPage();
+
+
+  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel |
+                                 QDialogButtonBox::Apply | QDialogButtonBox::Help);
+  mButtonBox->button(QDialogButtonBox::Ok)->setText("Ok");
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
+  mButtonBox->button(QDialogButtonBox::Apply)->setText("Apply");
+  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
+  layout->addWidget(mButtonBox, 1, 0, 1, 4);
+
+  this->retranslate();
+  this->update();
+}
+
+void SettingsViewImp::initGeneralPage()
+{
   QWidget *pageGeneral = new QWidget(this);
   QGridLayout *gridLayoutGeneral = new QGridLayout(pageGeneral);
 
-  gridLayoutGeneral->addWidget(new QLabel(tr("Language")), 0, 0, 1, 1);
+  gridLayoutGeneral->addWidget(mLabelLanguage, 0, 0, 1, 1);
   gridLayoutGeneral->addWidget(mLanguages, 0, 1, 1, 1);
 
-  gridLayoutGeneral->addWidget(new QLabel(tr("History Max Size")), 1, 0, 1, 1);
+  gridLayoutGeneral->addWidget(mLabelHistoryMaxSize, 1, 0, 1, 1);
   mHistoryMaxSize->setRange(1, 50);
   mHistoryMaxSize->setValue(10);
   gridLayoutGeneral->addWidget(mHistoryMaxSize, 1, 1, 1, 1);
 
-  gridLayoutGeneral->addWidget(new QLabel(tr("Use Cuda")), 2, 0, 1, 1);
+  gridLayoutGeneral->addWidget(mLabelUseCuda, 2, 0, 1, 1);
   gridLayoutGeneral->addWidget(mCheckBoxUseCuda, 2, 1, 1, 1);
 
   QSpacerItem *verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
@@ -212,8 +129,10 @@ void SettingsViewImp::initUI()
   gridLayoutGeneral->addItem(verticalSpacer, 3, 0, 1, 1);
 
   mStackedWidget->addWidget(pageGeneral);
+}
 
-  /* Viewer */
+void SettingsViewImp::initImageViewerPage()
+{
   QWidget *pageImageViewer = new QWidget(this);
   QGridLayout *gridLayoutViewer = new QGridLayout(pageImageViewer);
   gridLayoutViewer->setContentsMargins(0, 0, 0, 0);
@@ -244,8 +163,10 @@ void SettingsViewImp::initUI()
   gridLayoutViewer->addWidget(tabWidgetImageViewer, 0, 0, 1, 1);
 
   mStackedWidget->addWidget(pageImageViewer);
+}
 
-  /* Tools */
+void SettingsViewImp::initToolsPage()
+{
   QWidget *pageTools = new QWidget(this);
   QGridLayout *gridLayoutTools = new QGridLayout(pageTools);
   gridLayoutTools->setContentsMargins(0, 0, 0, 0);
@@ -313,8 +234,10 @@ void SettingsViewImp::initUI()
 
   gridLayoutTools->addWidget(mTabWidgetTools, 0, 0, 1, 1);
   mStackedWidget->addWidget(pageTools);
+}
 
-  /* Quality Control */
+void SettingsViewImp::initQualityControlPage()
+{
   QWidget *pageQualityControl = new QWidget(this);
   QGridLayout *gridLayoutQualityControl = new QGridLayout(pageQualityControl);
   gridLayoutQualityControl->setContentsMargins(0, 0, 0, 0);
@@ -580,18 +503,6 @@ void SettingsViewImp::initUI()
 
   gridLayoutQualityControl->addWidget(mTabQualityControl, 0, 0, 1, 1);
   mStackedWidget->addWidget(pageQualityControl);
-
-
-  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel |
-                                 QDialogButtonBox::Apply | QDialogButtonBox::Help);
-  mButtonBox->button(QDialogButtonBox::Ok)->setText("Ok");
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
-  mButtonBox->button(QDialogButtonBox::Apply)->setText("Apply");
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
-  layout->addWidget(mButtonBox, 1, 0, 1, 4);
-
-  update();
 }
 
 void SettingsViewImp::initSignalAndSlots()
@@ -732,7 +643,121 @@ void SettingsViewImp::update()
 
 void SettingsViewImp::retranslate()
 {
-  this->setWindowTitle(QApplication::translate("SettingsViewImp", "Settings", nullptr));
+  this->setWindowTitle(QApplication::translate("SettingsView", "Settings", nullptr));
+  mListWidget->item(0)->setText(QApplication::translate("SettingsView", "General"));
+  mListWidget->item(1)->setText(QApplication::translate("SettingsView", "Image Viewer"));
+  mListWidget->item(2)->setText(QApplication::translate("SettingsView", "Tools"));
+  mListWidget->item(3)->setText(QApplication::translate("SettingsView", "Quality Control"));
+  mLabelLanguage->setText(QApplication::translate("SettingsView", "Language"));
+  mLabelHistoryMaxSize->setText(QApplication::translate("SettingsView", "History Max Size"));
+  mLabelUseCuda->setText(QApplication::translate("SettingsView", "Use Cuda"));
+}
+
+void SettingsViewImp::onPreprocessChange(const QString &method)
+{
+  for (int idx = 1; idx < mGridLayoutPreprocess->count(); idx++){
+    QLayoutItem * const item = mGridLayoutPreprocess->itemAt(idx);
+    if(dynamic_cast<QWidgetItem *>(item)){
+      if (item->widget()->windowTitle().compare(method) == 0)
+        item->widget()->setVisible(true);
+      else
+        item->widget()->setVisible(false);
+    }
+  }
+  mListWidgetPreprocess->setMinimumHeight(150);
+  mListWidgetPreprocess->setMaximumHeight(150);
+}
+
+void SettingsViewImp::onFeatureDetectorDescriptorChange(const QString &method)
+{
+  for (int idx = 1; idx < mGridLayoutFeatures->count(); idx++){
+    QLayoutItem * const item = mGridLayoutFeatures->itemAt(idx);
+    if(dynamic_cast<QWidgetItem *>(item)){
+      if (item->widget()->windowTitle().compare(method) == 0)
+        item->widget()->setVisible(true);
+      else
+        item->widget()->setVisible(false);
+    }
+  }
+  mListWidgetFeatures->setMinimumHeight(150);
+  mListWidgetFeatures->setMaximumHeight(150);
+}
+
+void SettingsViewImp::onPushButtonImageViewerBGColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditImageViewerBGcolor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    emit imageViewerBGColorChange(color.name());
+}
+
+void SettingsViewImp::onPushButtonKeypointViewerBGColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditKeypointViewerBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditKeypointViewerBGColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonKeypointViewerMarkerColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditKeypointViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditKeypointViewerMarkerColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonSelectKeypointViewerMarkerColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditSelectKeypointViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditSelectKeypointViewerMarkerColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonMatchViewerBGColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditMatchesViewerBGColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonMatchViewerMarkerColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditMatchesViewerMarkerColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonSelectMatchViewerMarkerColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditSelectMatchesViewerMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditSelectMatchesViewerMarkerColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonMatchViewerLineColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditMatchesViewerLineColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditMatchesViewerLineColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonGroundTruthEditorBGColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditGroundTruthEditorBGColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditGroundTruthEditorBGColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonGroundTruthEditorMarkerColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditGroundTruthEditorMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditGroundTruthEditorMarkerColor->setText(color.name());
+}
+
+void SettingsViewImp::onPushButtonSelectGroundTruthEditorMarkerColorClicked()
+{
+  QColor color = QColorDialog::getColor(QColor(mLineEditSelectGTEditorMarkerColor->text()), this, "Pick a color",  QColorDialog::DontUseNativeDialog);
+  if (color.isValid())
+    mLineEditSelectGTEditorMarkerColor->setText(color.name());
 }
 
 QString SettingsViewImp::activeLanguage() const

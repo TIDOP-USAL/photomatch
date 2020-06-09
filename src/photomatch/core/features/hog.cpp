@@ -41,7 +41,6 @@ HogProperties::HogProperties()
     mNbins(9),
     mDerivAperture(1)
 {
-
 }
 
 HogProperties::HogProperties(const HogProperties &hogProperties)
@@ -53,7 +52,6 @@ HogProperties::HogProperties(const HogProperties &hogProperties)
     mNbins(hogProperties.mNbins),
     mDerivAperture(hogProperties.mDerivAperture)
 {
-
 }
 
 QSize HogProperties::winSize() const

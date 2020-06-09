@@ -37,7 +37,6 @@ class QLabel;
 namespace photomatch
 {
 
-
 class NewProjectViewImp
   : public NewProjectView
 {
@@ -46,9 +45,9 @@ class NewProjectViewImp
 public:
 
   explicit NewProjectViewImp(QWidget *parent = nullptr);
-  ~NewProjectViewImp() override;
+  ~NewProjectViewImp() override = default;
 
-// INewProjectView interface
+// NewProjectView interface
 
 public:
 
@@ -57,6 +56,7 @@ public:
   void setProjectPath(const QString &path) override;
   QString projectDescription() const override;
   bool createProjectFolder() const override;
+  void setExistingProject(bool prjExist) override;
 
 protected slots:
 
@@ -91,7 +91,7 @@ protected:
   QCheckBox *mCheckBoxProjectFolder;
   QPushButton *mPushButtonProjectPath;
   QDialogButtonBox *mButtonBox;
-
+  bool bPrjExist;
 };
 
 } // namespace photomatch

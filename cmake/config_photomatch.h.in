@@ -11,4 +11,6 @@
 
 #cmakedefine HAVE_CUDA
 
+#define PHOTOMATCH_SOURCE_PATH ${CMAKE_SOURCE_DIR} 
+
 #endif // PHOTOMATCH_CONFIG_H

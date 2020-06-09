@@ -231,7 +231,3 @@ void HelpDialog::retranslate()
 }
 
 } // namespace photomatch
-
-
-
-

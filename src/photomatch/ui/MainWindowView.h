@@ -284,10 +284,10 @@ protected:
   QAction *mActionQualityControlSettings;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
-  QAction *mActionZoomIn;
-  QAction *mActionZoomOut;
-  QAction *mActionZoomExtend;
-  QAction *mActionZoom11;
+//  QAction *mActionZoomIn;
+//  QAction *mActionZoomOut;
+//  QAction *mActionZoomExtend;
+//  QAction *mActionZoom11;
   QAction *mActionSetSession;
   QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;

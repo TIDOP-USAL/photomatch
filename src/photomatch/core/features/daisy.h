@@ -45,7 +45,7 @@ public:
   DaisyProperties(const DaisyProperties &daisyProperties);
   ~DaisyProperties() override = default;
 
-// IDaisy interface
+// Daisy interface
 
 public:
 
@@ -102,7 +102,6 @@ public:
                   const QString &norm,
                   bool interpolation,
                   bool useOrientation);
-
   ~DaisyDescriptor() override = default;
 
 private:
@@ -118,7 +117,7 @@ public:
                cv::Mat &descriptors) override;
 
 
-// IDaisy interface
+// Daisy interface
 
 public:
 

@@ -32,6 +32,7 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QStandardItemModel>
+#include <QApplication>
 
 namespace photomatch
 {
@@ -47,6 +48,81 @@ FeatureExtractorViewImp::FeatureExtractorViewImp(QWidget *parent)
 FeatureExtractorViewImp::~FeatureExtractorViewImp()
 {
 
+}
+
+void FeatureExtractorViewImp::initUI()
+{
+  this->setObjectName(QString("FeatureExtractorView"));
+  this->setWindowTitle(tr("Feature Extractor"));
+  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  this->resize(350, 450);
+
+  QGridLayout *gridLayout = new QGridLayout();
+  this->setLayout(gridLayout);
+
+  mLabelKeypointDetector = new QLabel(this);
+  gridLayout->addWidget(mLabelKeypointDetector, 0, 0, 1, 1);
+  mComboBoxKeypointDetector = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxKeypointDetector, 0, 1, 1, 1);
+
+  mLabelDescriptorExtractor = new QLabel(this);
+  gridLayout->addWidget(mLabelDescriptorExtractor, 1, 0, 1, 1);
+  mComboBoxDescriptorExtractor = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxDescriptorExtractor, 1, 1, 1, 1);
+
+  QWidget *widgetFeatureExtractor = new QWidget();
+  mGridLayoutKeypointDetector = new QGridLayout(widgetFeatureExtractor);
+  mGridLayoutKeypointDetector->setContentsMargins(0, 0, 0, 0);
+  gridLayout->addWidget(widgetFeatureExtractor, 2, 0, 1, 2);
+
+  QWidget *widgetDescriptorExtractor = new QWidget();
+  mGridLayoutDescriptorExtractor = new QGridLayout(widgetDescriptorExtractor);
+  mGridLayoutDescriptorExtractor->setContentsMargins(0, 0, 0, 0);
+  gridLayout->addWidget(widgetDescriptorExtractor, 3, 0, 1, 2);
+
+  QWidget *widgetKeypointsFilter = new QWidget();
+  mGridLayoutKeypointsFilter = new QGridLayout(widgetKeypointsFilter);
+  mGridLayoutKeypointsFilter->setContentsMargins(0, 0, 0, 0);
+  gridLayout->addWidget(widgetKeypointsFilter, 4, 0, 1, 2);
+
+  gridLayout->addItem(new QSpacerItem(1,1, QSizePolicy::Fixed, QSizePolicy::Expanding), 5, 0, 1, 2);
+
+  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
+  gridLayout->addWidget(mButtonBox, 6, 0, 1, 2);
+
+
+  update();
+}
+
+void FeatureExtractorViewImp::initSignalAndSlots()
+{
+  connect(mComboBoxKeypointDetector,     &QComboBox::currentTextChanged, this, &FeatureExtractorView::keypointDetectorChange);
+  connect(mComboBoxDescriptorExtractor,  &QComboBox::currentTextChanged, this, &FeatureExtractorView::descriptorExtractorChange);
+
+  connect(mButtonBox,                                    &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(mButtonBox->button(QDialogButtonBox::Apply),   &QAbstractButton::clicked,   this, &FeatureExtractorView::run);
+  connect(mButtonBox->button(QDialogButtonBox::Help),    &QAbstractButton::clicked,   this, &IDialogView::help);
+}
+
+void FeatureExtractorViewImp::clear()
+{
+  mCurrentKeypointDetector.clear();
+  mCurrentDescriptorExtractor.clear();
+}
+
+void FeatureExtractorViewImp::update()
+{
+
+}
+
+void FeatureExtractorViewImp::retranslate()
+{
+  mLabelKeypointDetector->setText(QApplication::translate("FeatureExtractorView", "Keypoint Detector:"));
+  mLabelDescriptorExtractor->setText(QApplication::translate("FeatureExtractorView", "Descriptor Extractor:"));
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("FeatureExtractorView", "Cancel"));
+  mButtonBox->button(QDialogButtonBox::Apply)->setText(QApplication::translate("FeatureExtractorView", "Run"));
+  mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("FeatureExtractorView", "Help"));
 }
 
 void FeatureExtractorViewImp::setSessionName(const QString &name)
@@ -140,77 +216,6 @@ void FeatureExtractorViewImp::enableDescriptorExtractor(const QString &descripto
       item->setFlags(item->flags() | Qt::ItemIsEnabled);
     }
   }
-}
-
-void FeatureExtractorViewImp::initUI()
-{
-  this->setWindowTitle(tr("Feature Extractor"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
-  this->resize(350, 450);
-
-  QGridLayout *gridLayout = new QGridLayout();
-  this->setLayout(gridLayout);
-
-  gridLayout->addWidget(new QLabel("Keypoint Detector:"), 0, 0, 1, 1);
-  mComboBoxKeypointDetector = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxKeypointDetector, 0, 1, 1, 1);
-
-  gridLayout->addWidget(new QLabel("Descriptor Extractor:"), 1, 0, 1, 1);
-  mComboBoxDescriptorExtractor = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxDescriptorExtractor, 1, 1, 1, 1);
-
-  QWidget *widgetFeatureExtractor = new QWidget();
-  mGridLayoutKeypointDetector = new QGridLayout(widgetFeatureExtractor);
-  mGridLayoutKeypointDetector->setContentsMargins(0, 0, 0, 0);
-  gridLayout->addWidget(widgetFeatureExtractor, 2, 0, 1, 2);
-
-  QWidget *widgetDescriptorExtractor = new QWidget();
-  mGridLayoutDescriptorExtractor = new QGridLayout(widgetDescriptorExtractor);
-  mGridLayoutDescriptorExtractor->setContentsMargins(0, 0, 0, 0);
-  gridLayout->addWidget(widgetDescriptorExtractor, 3, 0, 1, 2);
-
-  QWidget *widgetKeypointsFilter = new QWidget();
-  mGridLayoutKeypointsFilter = new QGridLayout(widgetKeypointsFilter);
-  mGridLayoutKeypointsFilter->setContentsMargins(0, 0, 0, 0);
-  gridLayout->addWidget(widgetKeypointsFilter, 4, 0, 1, 2);
-
-  gridLayout->addItem(new QSpacerItem(1,1, QSizePolicy::Fixed, QSizePolicy::Expanding), 5, 0, 1, 2);
-
-  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
-  mButtonBox->button(QDialogButtonBox::Apply)->setText("Run");
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
-  gridLayout->addWidget(mButtonBox, 6, 0, 1, 2);
-
-
-  update();
-}
-
-void FeatureExtractorViewImp::initSignalAndSlots()
-{
-  connect(mComboBoxKeypointDetector,     SIGNAL(currentTextChanged(QString)), this, SIGNAL(keypointDetectorChange(QString)));
-  connect(mComboBoxDescriptorExtractor,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(descriptorExtractorChange(QString)));
-
-  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
-}
-
-void FeatureExtractorViewImp::clear()
-{
-  mCurrentKeypointDetector.clear();
-  mCurrentDescriptorExtractor.clear();
-}
-
-void FeatureExtractorViewImp::update()
-{
-
-}
-
-void FeatureExtractorViewImp::retranslate()
-{
-
 }
 
 } // namespace photomatch

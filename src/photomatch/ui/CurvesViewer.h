@@ -73,11 +73,11 @@ class CurvesViewerView
 public:
 
   CurvesViewerView(QWidget *parent = nullptr,
-                    Qt::WindowFlags f = Qt::WindowFlags())
+                   Qt::WindowFlags f = Qt::WindowFlags())
     : IDialogView(parent, f)
   {}
 
-  virtual ~CurvesViewerView() override = default;
+  ~CurvesViewerView() override = default;
 
   virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) = 0;
   virtual bool isSessionActive(const QString &session) const = 0;

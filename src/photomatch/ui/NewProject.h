@@ -42,7 +42,7 @@ class NewProjectView
 public:
 
   NewProjectView(QWidget *parent) : IDialogView(parent) {}
-  virtual ~NewProjectView() override = default;
+  ~NewProjectView() override = default;
 
   /*!
    * \brief Devuelve el nombre del proyecto
@@ -69,11 +69,15 @@ public:
   virtual QString projectDescription() const = 0;
 
   virtual bool createProjectFolder() const = 0;
+  virtual void setExistingProject(bool prjExist) = 0;
 
 protected slots:
 
   virtual void onClickButtonSelectPath() = 0;
 
+signals:
+
+  void projectNameChange();
 };
 
 
@@ -110,6 +114,11 @@ protected slots:
    * \brief Descarta los cambios en el proyecto
    */
   virtual void discartProject() = 0;
+
+  /*!
+   * \brief Comprueba si ya existe un proyecto con el mismo nombre
+   */
+  virtual void checkProjectName() const = 0;
 
 };
 

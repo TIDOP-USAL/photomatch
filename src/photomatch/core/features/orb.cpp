@@ -353,7 +353,7 @@ void OrbDetectorDescriptor::reset()
 /*----------------------------------------------------------------*/
 
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor()
 {
@@ -432,10 +432,9 @@ void OrbCudaDetectorDescriptor::update()
 }
 
 bool OrbCudaDetectorDescriptor::detect(const cv::Mat &img,
-                                   std::vector<cv::KeyPoint> &keyPoints,
-                                   cv::InputArray &mask)
+                                       std::vector<cv::KeyPoint> &keyPoints,
+                                       cv::InputArray &mask)
 {
-
   try {
     cv::cuda::GpuMat g_img(img);
     cv::cuda::GpuMat g_mask(mask);
@@ -452,7 +451,6 @@ bool OrbCudaDetectorDescriptor::extract(const cv::Mat &img,
                                         std::vector<cv::KeyPoint> &keyPoints,
                                         cv::Mat &descriptors)
 {
-
   try {
     cv::cuda::GpuMat g_img(img);
     cv::cuda::GpuMat g_descriptors;
@@ -526,7 +524,7 @@ void OrbCudaDetectorDescriptor::reset()
   update();
 }
 
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 } // namespace photomatch
 

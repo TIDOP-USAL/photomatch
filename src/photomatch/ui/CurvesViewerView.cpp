@@ -56,6 +56,7 @@ CurvesViewerViewImp::~CurvesViewerViewImp()
       serie = nullptr;
     }
   }
+
   if (mChart) {
     delete mChart;
     mChart = nullptr;
@@ -72,25 +73,93 @@ CurvesViewerViewImp::~CurvesViewerViewImp()
   }
 }
 
-void CurvesViewerViewImp::onComboBoxLeftImageIndexChanged(int idx)
+void CurvesViewerViewImp::initUI()
 {
-  emit leftImageChange(mComboBoxLeftImage->itemText(idx));
+  this->setObjectName(QString("CurvesViewerView"));
+  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  this->resize(994, 688);
+
+  QGridLayout *gridLayout = new QGridLayout();
+  this->setLayout(gridLayout);
+
+  QLabel *labelImage1 = new QLabel(tr("Left Image:"), this);
+  gridLayout->addWidget(labelImage1, 0, 0, 1, 1);
+
+  mComboBoxLeftImage = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxLeftImage, 0, 1, 1, 1);
+
+  QLabel *labelImage2 = new QLabel(tr("Right Image:"), this);
+  gridLayout->addWidget(labelImage2, 0, 2, 1, 1);
+
+  mComboBoxRightImage = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxRightImage, 0, 3, 1, 1);
+
+  QHBoxLayout *hBoxLayout = new QHBoxLayout();
+
+  mTreeWidgetSessions = new QTreeWidget(this);
+  QTreeWidgetItem *qtreewidgetitem = new QTreeWidgetItem();
+  qtreewidgetitem->setText(0, tr("Session"));
+  qtreewidgetitem->setText(1, tr("Detector"));
+  qtreewidgetitem->setText(2, tr("Descriptor"));
+  mTreeWidgetSessions->setHeaderItem(qtreewidgetitem);
+  mTreeWidgetSessions->setMaximumWidth(250);
+  hBoxLayout->addWidget(mTreeWidgetSessions);
+
+
+  mChart = new QtCharts::QChart();
+  mAxisX = new QValueAxis(this);
+  mAxisX->setRange(0,1);
+  mChart->addAxis(mAxisX, Qt::AlignBottom);
+  mAxisY = new QValueAxis(this);
+  mAxisY->setRange(0,1);
+  mChart->addAxis(mAxisY, Qt::AlignLeft);
+  mChart->legend()->setAlignment(Qt::AlignRight);
+
+  QChartView *chartView = new QChartView(mChart);
+  chartView->setRenderHint(QPainter::Antialiasing);
+  hBoxLayout->addWidget(chartView);
+  gridLayout->addLayout(hBoxLayout, 1, 0, 1, 4);
+
+  mButtonBox = new QDialogButtonBox(this);
+  mButtonBox->setOrientation(Qt::Horizontal);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
+  gridLayout->addWidget(mButtonBox, 2, 0, 1, 4);
+
+  mButtonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
+  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
+
+  this->update();
+  this->retranslate();
 }
 
-void CurvesViewerViewImp::onComboBoxRightImageIndexChanged(int idx)
+void CurvesViewerViewImp::initSignalAndSlots()
 {
-  emit rightImageChange(mComboBoxRightImage->itemText(idx));
+  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
+  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
+  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
+
+  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
+  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
 }
 
-void CurvesViewerViewImp::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
+void CurvesViewerViewImp::clear()
 {
-  if (item == nullptr) return;
+  QSignalBlocker blocker1(mComboBoxLeftImage);
+  QSignalBlocker blocker2(mComboBoxRightImage);
+  QSignalBlocker blocker3(mTreeWidgetSessions);
 
-  if (item->checkState(column)) {
-    emit activeSession(item->text(0));
-  } else {
-    emit disableSession(item->text(0));
-  }
+  mComboBoxLeftImage->clear();
+  mComboBoxLeftImage->clear();
+  mTreeWidgetSessions->clear();
+}
+
+void CurvesViewerViewImp::update()
+{
+}
+
+void CurvesViewerViewImp::retranslate()
+{
+
 }
 
 void CurvesViewerViewImp::addSession(const QString &session,
@@ -192,91 +261,25 @@ void CurvesViewerViewImp::eraseCurve(const QString &session)
   }
 }
 
-void CurvesViewerViewImp::initUI()
+void CurvesViewerViewImp::onComboBoxLeftImageIndexChanged(int idx)
 {
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
-  this->resize(994, 688);
-
-  QGridLayout *gridLayout = new QGridLayout();
-  this->setLayout(gridLayout);
-
-  QLabel *labelImage1 = new QLabel(tr("Left Image:"), this);
-  gridLayout->addWidget(labelImage1, 0, 0, 1, 1);
-
-  mComboBoxLeftImage = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxLeftImage, 0, 1, 1, 1);
-
-  QLabel *labelImage2 = new QLabel(tr("Right Image:"), this);
-  gridLayout->addWidget(labelImage2, 0, 2, 1, 1);
-
-  mComboBoxRightImage = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxRightImage, 0, 3, 1, 1);
-
-  QHBoxLayout *hBoxLayout = new QHBoxLayout();
-
-  mTreeWidgetSessions = new QTreeWidget(this);
-  QTreeWidgetItem *qtreewidgetitem = new QTreeWidgetItem();
-  qtreewidgetitem->setText(0, tr("Session"));
-  qtreewidgetitem->setText(1, tr("Detector"));
-  qtreewidgetitem->setText(2, tr("Descriptor"));
-  mTreeWidgetSessions->setHeaderItem(qtreewidgetitem);
-  mTreeWidgetSessions->setMaximumWidth(250);
-  hBoxLayout->addWidget(mTreeWidgetSessions);
-
-
-  mChart = new QtCharts::QChart();
-  mAxisX = new QValueAxis(this);
-  mAxisX->setRange(0,1);
-  mChart->addAxis(mAxisX, Qt::AlignBottom);
-  mAxisY = new QValueAxis(this);
-  mAxisY->setRange(0,1);
-  mChart->addAxis(mAxisY, Qt::AlignLeft);
-  mChart->legend()->setAlignment(Qt::AlignRight);
-
-  QChartView *chartView = new QChartView(mChart);
-  chartView->setRenderHint(QPainter::Antialiasing);
-  hBoxLayout->addWidget(chartView);
-  gridLayout->addLayout(hBoxLayout, 1, 0, 1, 4);
-
-  mButtonBox = new QDialogButtonBox(this);
-  mButtonBox->setOrientation(Qt::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
-  gridLayout->addWidget(mButtonBox, 2, 0, 1, 4);
-
-  mButtonBox->button(QDialogButtonBox::Close)->setText(tr("Close"));
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
-
-  update();
+  emit leftImageChange(mComboBoxLeftImage->itemText(idx));
 }
 
-void CurvesViewerViewImp::initSignalAndSlots()
+void CurvesViewerViewImp::onComboBoxRightImageIndexChanged(int idx)
 {
-  connect(mComboBoxLeftImage,  SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxLeftImageIndexChanged(int)));
-  connect(mComboBoxRightImage, SIGNAL(currentIndexChanged(int)), this, SLOT(onComboBoxRightImageIndexChanged(int)));
-  connect(mTreeWidgetSessions, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(onTreeWidgetSessionsItemChanged(QTreeWidgetItem *, int)));
-
-  connect(mButtonBox->button(QDialogButtonBox::Close), SIGNAL(clicked(bool)), this, SLOT(accept()));
-  connect(mButtonBox->button(QDialogButtonBox::Help), SIGNAL(clicked(bool)), this, SIGNAL(help()));
+  emit rightImageChange(mComboBoxRightImage->itemText(idx));
 }
 
-void CurvesViewerViewImp::clear()
+void CurvesViewerViewImp::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item, int column)
 {
-  QSignalBlocker blocker1(mComboBoxLeftImage);
-  QSignalBlocker blocker2(mComboBoxRightImage);
-  QSignalBlocker blocker3(mTreeWidgetSessions);
+  if (item == nullptr) return;
 
-  mComboBoxLeftImage->clear();
-  mComboBoxLeftImage->clear();
-  mTreeWidgetSessions->clear();
-}
-
-void CurvesViewerViewImp::update()
-{
-}
-
-void CurvesViewerViewImp::retranslate()
-{
-
+  if (item->checkState(column)) {
+    emit activeSession(item->text(0));
+  } else {
+    emit disableSession(item->text(0));
+  }
 }
 
 /*----------------------------------------------------------------*/
@@ -377,4 +380,5 @@ void DETCurvesViewer::initUI()
   QList<QLegendMarker *> legendMarker = legend->markers(series);
   legendMarker.at(0)->setVisible(false);
 }
+
 } // namespace photomatch

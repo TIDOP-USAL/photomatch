@@ -32,6 +32,7 @@ class QComboBox;
 class QDialogButtonBox;
 class QSpinBox;
 class QCheckBox;
+class QLabel;
 
 namespace photomatch
 {
@@ -57,10 +58,10 @@ public:
   void addPreprocess(QWidget *preprocess) override;
   QString currentPreprocess() const override;
   void setCurrentPreprocess(const QString &preprocess) override;
-  int maxImageSize() override;
+  int maxImageSize() const override;
   void setMaxImageSize(int imageSize) override;
   void setFullImageSize(bool fullImageSize) override;
-  bool fullImageSize() override;
+  bool fullImageSize() const override;
 
 protected slots:
 
@@ -87,6 +88,7 @@ protected:
   QGridLayout *mGridLayoutPreprocess;
   QComboBox *mComboBoxPreprocess;
   QCheckBox *mCheckBoxFullImage;
+  QLabel *mLabelMaxImageSize;
   QSpinBox *mSpinBoxMaxImageSize;
   QDialogButtonBox *mButtonBox;
   QString mCurrentPreprocess;

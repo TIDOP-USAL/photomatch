@@ -419,38 +419,57 @@ bool ProjectControllerImp::read(const QString &file, Project &prj)
 
 bool ProjectControllerImp::write(const QString &file, const Project &prj) const
 {
-  QFileInfo file_info(file);
-  QString tmpfile = file_info.path().append(file_info.baseName()).append(".bak");
-  std::ifstream  src(file.toStdString().c_str(), std::ios::binary);
-  std::ofstream  dst(tmpfile.toStdString().c_str(), std::ios::binary);
-  dst << src.rdbuf();
-  src.close();
-  dst.close();
-
   std::lock_guard<std::mutex> lck(ProjectControllerImp::sMutex);
 
-  QFile output(file);
-  output.open(QFile::WriteOnly);
-  QXmlStreamWriter stream(&output);
-  stream.setAutoFormatting(true);
-  stream.writeStartDocument();
+  bool err = false;
+  QFileInfo file_info(file);
+  QString tmpfile = file_info.path().append(file_info.baseName()).append(".bak");
 
-  stream.writeStartElement("PhotoMatch");
-  {
-    writeVersion(stream, prj.version());
-    writeGeneral(stream, prj);
-    writeImages(stream, prj);
-    writeGroundTruth(stream, prj.groundTruth());
-    writeSessions(stream, prj);
+  try {
+
+    std::ifstream  src(file.toStdString().c_str(), std::ios::binary);
+    std::ofstream  dst(tmpfile.toStdString().c_str(), std::ios::binary);
+    dst << src.rdbuf();
+    src.close();
+    dst.close();
+
+    QFile output(file);
+    if (output.open(QFile::WriteOnly)){
+      QXmlStreamWriter stream(&output);
+      stream.setAutoFormatting(true);
+      stream.writeStartDocument();
+
+      stream.writeStartElement("PhotoMatch");
+      {
+        writeVersion(stream, prj.version());
+        writeGeneral(stream, prj);
+        writeImages(stream, prj);
+        writeGroundTruth(stream, prj.groundTruth());
+        writeSessions(stream, prj);
+      }
+
+      stream.writeEndElement(); // PhotoMatch
+
+      output.close();
+    } else{
+      err = true;
+    }
+
+  } catch (std::exception &e) {
+    msgError(e.what());
+
+    std::ifstream  src(tmpfile.toStdString().c_str(), std::ios::binary);
+    std::ofstream  dst(file.toStdString().c_str(), std::ios::binary);
+    dst << src.rdbuf();
+    src.close();
+    dst.close();
+
+    err = true;
   }
-
-  stream.writeEndElement(); // PhotoMatch
-
-  output.close();
 
   std::remove(tmpfile.toStdString().c_str());
 
-  return false;
+  return err;
 }
 
 bool ProjectControllerImp::checkOldVersion(const QString &file) const
@@ -766,7 +785,8 @@ void ProjectControllerImp::readFeaturesDetector(QXmlStreamReader &stream, Sessio
       std::shared_ptr<Surf> surf = std::make_shared<SurfProperties>();
       readSURF(stream, surf.get());
       session->setDetector(surf);
-    }
+    } else
+      stream.skipCurrentElement();
   }
 }
 
@@ -825,7 +845,8 @@ void ProjectControllerImp::readFeaturesDescriptor(QXmlStreamReader &stream, Sess
       std::shared_ptr<Surf> surf = std::make_shared<SurfProperties>();
       readSURF(stream, surf.get());
       session->setDescriptor(surf);
-    }
+    } else
+      stream.skipCurrentElement();
   }
 }
 

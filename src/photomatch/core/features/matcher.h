@@ -34,9 +34,9 @@
 #include <QSize>
 
 #include <opencv2/xfeatures2d.hpp>
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 #include <opencv2/cudafeatures2d.hpp>
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #include <tidop/core/flags.h>
 
@@ -341,7 +341,7 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 class PHOTOMATCH_EXPORT BruteForceMatcherCuda
   : public BruteForceMatcherProperties,
@@ -389,7 +389,7 @@ protected:
   cv::Ptr<cv::cuda::DescriptorMatcher> mBFMatcher;
 };
 
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 
 

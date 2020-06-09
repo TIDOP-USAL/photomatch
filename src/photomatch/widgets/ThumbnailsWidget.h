@@ -70,9 +70,9 @@ private slots:
   void onThumbnailDoubleClicked(QListWidgetItem *item);
   void onSelectionChanged();
 
-  void onThumbnailToggled(bool active);
-  void onThumbnailSmallToggled(bool active);
-  void onDetailsToggled(bool active);
+  void onThumbnailClicked();
+  void onThumbnailSmallClicked();
+  void onDetailsClicked();
   void onDeleteImageClicked();
 
   void showThumbnail(int id);
@@ -111,6 +111,7 @@ protected:
   QAction *mDeleteImageAction;
   QFutureWatcher<QImage> *mFutureWatcherThumbnail;
   int mThumbnaislSize;
+  bool bLoadingImages;
 };
 
 } // namespace photomatch

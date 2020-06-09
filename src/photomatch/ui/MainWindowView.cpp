@@ -1122,7 +1122,7 @@ void MainWindowView::update()
   mActionExit->setEnabled(!bProcessing);
 
 
-  mActionLoadImages->setEnabled(bProjectExists && !bProcessing);
+  mActionLoadImages->setEnabled(bProjectExists && !bProcessing && !bLoadingImages);
   mActionGroundTruthEditor->setEnabled(mFlags.isActive(Flag::images_added));
   mActionNewSession->setEnabled(mFlags.isActive(Flag::images_added) && !bProcessing);
   mActionPreprocess->setEnabled(mFlags.isActive(Flag::session_created) && !bProcessing);
@@ -1146,8 +1146,6 @@ void MainWindowView::update()
   mComboBoxActiveSession->setDisabled(bProcessing);
   mActionSetSession->setDisabled(bProcessing);
   mActionDeleteSession->setDisabled(bProcessing);
-
-  mActionLoadImages->setDisabled(bLoadingImages || bProcessing);
 }
 
 void MainWindowView::retranslate()

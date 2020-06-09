@@ -129,7 +129,7 @@ public:
 
 signals:
 
-  void MatchMethodChange(QString);
+  void matchMethodChange(QString);
   void run();
 
 public slots:

@@ -32,6 +32,7 @@ class QComboBox;
 class QDialogButtonBox;
 class QSpinBox;
 class QCheckBox;
+class QLabel;
 
 namespace photomatch
 {
@@ -89,7 +90,9 @@ protected:
   QGridLayout *mGridLayoutKeypointDetector;
   QGridLayout *mGridLayoutDescriptorExtractor;
   QGridLayout *mGridLayoutKeypointsFilter;
+  QLabel *mLabelKeypointDetector;
   QComboBox *mComboBoxKeypointDetector;
+  QLabel *mLabelDescriptorExtractor;
   QComboBox *mComboBoxDescriptorExtractor;
   QDialogButtonBox *mButtonBox;
   QString mCurrentKeypointDetector;

@@ -104,7 +104,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class MsdDetector
+class PHOTOMATCH_EXPORT MsdDetector
   : public MsdProperties,
     public KeypointDetector
 {

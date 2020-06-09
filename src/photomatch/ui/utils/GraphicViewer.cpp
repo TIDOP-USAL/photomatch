@@ -266,12 +266,12 @@ void GraphicViewerImp::zoom11()
   scale(scale11, scale11);
 }
 
-void GraphicViewerImp::zoomIn(QPoint point)
+void GraphicViewerImp::zoomIn()
 {
   scale(mZoomFactor, mZoomFactor);
 }
 
-void GraphicViewerImp::zoomOut(QPoint point)
+void GraphicViewerImp::zoomOut()
 {
   double factor = 1.0 / mZoomFactor;
   scale(factor, factor);

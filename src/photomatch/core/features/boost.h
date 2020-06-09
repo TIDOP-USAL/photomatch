@@ -36,7 +36,7 @@
 namespace photomatch
 {
 
-class BoostProperties
+class PHOTOMATCH_EXPORT BoostProperties
   : public Boost
 {
 
@@ -46,7 +46,7 @@ public:
   BoostProperties(const BoostProperties &boostProperties);
   ~BoostProperties() override = default;
 
-// IBoost interface
+// Boost interface
 
 public:
 
@@ -75,7 +75,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
-class BoostDescriptor
+class PHOTOMATCH_EXPORT BoostDescriptor
   : public BoostProperties,
     public DescriptorExtractor
 {
@@ -99,7 +99,7 @@ public:
 
   void reset() override;
 
-// IBoost interface
+// Boost interface
 
 public:
 

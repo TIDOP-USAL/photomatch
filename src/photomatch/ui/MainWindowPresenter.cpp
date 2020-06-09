@@ -301,6 +301,9 @@ void MainWindowPresenter::loadProject()
 {
   mView->clear();
 
+  mView->setProjectTitle(mProjectModel->name());
+  mView->setFlag(MainWindowView::Flag::project_exists, true);
+
   QString prjFile = mProjectModel->path();
 
   /// Se añade al historial de proyectos recientes
@@ -308,8 +311,6 @@ void MainWindowPresenter::loadProject()
   mView->updateHistory(mSettingsModel->history());
   mStartPageWidget->setHistory(mSettingsModel->history());
 
-  mView->setProjectTitle(mProjectModel->name());
-  mView->setFlag(MainWindowView::Flag::project_exists, true);
   QString msg = tr("Load project: ").append(prjFile);
   mView->setStatusBarMsg(msg);
   QByteArray ba = prjFile.toLocal8Bit();
@@ -388,8 +389,8 @@ void MainWindowPresenter::deleteImages(const QStringList &images)
     mView->deleteImage(image);
     TL_TODO("Se tienen que eliminar de la vista las imagenes procesadas, y los ficheros de keypoints y de matches")
   }
-  mView->setFlag(MainWindowView::Flag::project_modified, true);
 
+  mView->setFlag(MainWindowView::Flag::project_modified, true);
   mView->setFlag(MainWindowView::Flag::images_added, mProjectModel->imagesCount() > 0);
 }
 

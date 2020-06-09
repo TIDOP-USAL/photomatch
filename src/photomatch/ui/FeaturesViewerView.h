@@ -29,6 +29,8 @@
 class QTreeWidget;
 class QComboBox;
 class QDialogButtonBox;
+class QLabel;
+class QMenu;
 
 namespace photomatch
 {
@@ -42,19 +44,16 @@ class FeaturesViewerViewImp
 
 public:
 
-  FeaturesViewerViewImp(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  FeaturesViewerViewImp(QWidget *parent = nullptr,
+                        Qt::WindowFlags f = Qt::WindowFlags());
   ~FeaturesViewerViewImp() override;
-
-protected:
-
-  //void changeEvent(QEvent *e) override;
 
 protected slots:
 
   void onGraphicsViewSelectionChanged();
   void onTreeWidgetItemSelectionChanged();
 
-// IFeaturesViewerView interface
+// FeaturesViewerView interface
 
   void setSessionName(const QString &name) override;
   void setImageList(const std::vector<QString> &imageList) override;
@@ -89,9 +88,15 @@ protected:
 protected:
 
   QDialogButtonBox *mButtonBox;
+  QLabel *mLabelImages;
   QComboBox *mComboBoxImages;
   GraphicViewerImp *mGraphicView;
   QTreeWidget *mTreeWidget;
+  QMenu *mContextMenuLeft;
+  QAction *mActionZoomIn;
+  QAction *mActionZoomOut;
+  QAction *mActionZoomExtend;
+  QAction *mActionZoom11;
   QString mMarkerColor;
   QString mSelectedMarkerColor;
   int mMarkerType;

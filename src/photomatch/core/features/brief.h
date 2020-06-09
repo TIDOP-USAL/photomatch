@@ -46,7 +46,7 @@ public:
   BriefProperties(const BriefProperties &briefProperties);
   ~BriefProperties() override = default;
 
-// IBrief interface
+// Brief interface
 
 public:
 
@@ -83,7 +83,6 @@ public:
   BriefDescriptor(const BriefDescriptor &briefDescriptor);
   BriefDescriptor(QString bytes,
                   bool useOrientation);
-
   ~BriefDescriptor() override = default;
 
 private:
@@ -99,7 +98,7 @@ public:
                cv::Mat &descriptors) override;
 
 
-// IBrief interface
+// Brief interface
 
 public:
 

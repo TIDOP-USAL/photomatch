@@ -47,7 +47,7 @@ public:
   FreakProperties(const FreakProperties &freakProperties);
   ~FreakProperties() override = default;
 
-// IFreak interface
+// Freak interface
 
 public:
 
@@ -92,7 +92,6 @@ public:
                   bool scaleNormalized,
                   double patternScale,
                   int octaves);
-
   ~FreakDescriptor() override = default;
 
 private:
@@ -107,7 +106,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// IFreak interface
+// Freak interface
 
 public:
 

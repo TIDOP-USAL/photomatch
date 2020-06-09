@@ -22,8 +22,8 @@
  ************************************************************************/
 
 
-#ifndef MATCHIO_H
-#define MATCHIO_H
+#ifndef PHOTOMATCH_MATCHIO_H
+#define PHOTOMATCH_MATCHIO_H
 
 #include "photomatch/photomatch_global.h"
 
@@ -122,10 +122,7 @@ public:
 };
 
 
-
-
-
 } // namespace photomatch
 
 
-#endif // MATCHIO_H
+#endif // PHOTOMATCH_MATCHIO_H

@@ -38,7 +38,9 @@ namespace photomatch
 
 NewSessionViewImp::NewSessionViewImp(QWidget *parent)
   : NewSessionView(parent),
+    mLabelSessionName(new QLabel(this)),
     mLineEditSessionName(new QLineEdit(this)),
+    mLabelSessionDescription(new QLabel(this)),
     mTextEditSessionDescription(new QTextEdit(this)),
     mButtonBox(new QDialogButtonBox(this)),
     bNameExist(false)
@@ -54,23 +56,21 @@ NewSessionViewImp::~NewSessionViewImp()
 
 void NewSessionViewImp::initUI()
 {
+  this->setObjectName(QString("NewSessionView"));
   this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(450,250);
 
   QGridLayout *layout = new QGridLayout();
   this->setLayout(layout);
 
-  layout->addWidget(new QLabel(tr("Session Name")), 0, 0);
+  layout->addWidget(mLabelSessionName, 0, 0);
   layout->addWidget(mLineEditSessionName, 0, 1, 1, 2);
 
-  layout->addWidget(new QLabel(tr("Description")), 1, 0);
+  layout->addWidget(mLabelSessionDescription, 1, 0);
   layout->addWidget(mTextEditSessionDescription, 2, 0, 1, 3);
 
   mButtonBox->setOrientation(Qt::Orientation::Horizontal);
   mButtonBox->setStandardButtons(QDialogButtonBox::Save | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
-  mButtonBox->button(QDialogButtonBox::Save)->setText("Save");
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
   layout->addWidget(mButtonBox, 4, 0, 1, 3);
 
   this->retranslate();
@@ -79,12 +79,12 @@ void NewSessionViewImp::initUI()
 
 void NewSessionViewImp::initSignalAndSlots()
 {
-  connect(mLineEditSessionName, SIGNAL(textChanged(QString)), this, SLOT(update()));
-  connect(mLineEditSessionName, SIGNAL(textChanged(QString)), this, SIGNAL(sessionNameChange(QString)));
+  connect(mLineEditSessionName, &QLineEdit::textChanged, this, &NewSessionViewImp::update);
+  connect(mLineEditSessionName, &QLineEdit::textChanged, this, &NewSessionView::sessionNameChange);
 
-  connect(mButtonBox,  SIGNAL(accepted()), this, SLOT(accept()));
-  connect(mButtonBox,  SIGNAL(rejected()), this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)), this, SIGNAL(help()));
+  connect(mButtonBox,  &QDialogButtonBox::accepted, this, &QDialog::accept);
+  connect(mButtonBox,  &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(mButtonBox->button(QDialogButtonBox::Help),    &QAbstractButton::clicked, this, &IDialogView::help);
 }
 
 void NewSessionViewImp::clear()
@@ -102,6 +102,11 @@ void NewSessionViewImp::update()
 void NewSessionViewImp::retranslate()
 {
   this->setWindowTitle(QApplication::translate("NewSessionViewImp", "New Session", nullptr));
+  mLabelSessionName->setText(QApplication::translate("NewSessionView", "Session Name", nullptr));
+  mLabelSessionDescription->setText(QApplication::translate("NewSessionView", "Description", nullptr));
+  mButtonBox->button(QDialogButtonBox::Save)->setText(QApplication::translate("NewSessionView", "Save", nullptr));
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("NewSessionView", "Cancel", nullptr));
+  mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("NewSessionView", "Help", nullptr));
 }
 
 QString NewSessionViewImp::sessionName() const

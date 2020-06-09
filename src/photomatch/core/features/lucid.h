@@ -45,7 +45,7 @@ public:
   LucidProperties();
   ~LucidProperties() override = default;
 
-// ILucid interface
+// Lucid interface
 
 public:
 
@@ -95,7 +95,7 @@ public:
                cv::Mat &descriptors) override;
 
 
-// ILucid interface
+// Lucid interface
 
 public:
 

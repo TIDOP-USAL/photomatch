@@ -21,6 +21,7 @@
  *                                                                      *
  ************************************************************************/
 
+
 #ifndef PHOTOMATCH_DESCRIPTOR_MATCHER_VIEW_H
 #define PHOTOMATCH_DESCRIPTOR_MATCHER_VIEW_H
 

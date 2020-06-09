@@ -32,10 +32,10 @@
 #include <QString>
 
 #include <opencv2/xfeatures2d.hpp>
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 #include <opencv2/cudafeatures2d.hpp>
-#include "opencv2/xfeatures2d/cuda.hpp"
-#endif // HAVE_CUDA
+#include <opencv2/xfeatures2d/cuda.hpp>
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 
 namespace photomatch
@@ -55,7 +55,7 @@ public:
   SurfProperties(const SurfProperties &surfProperties);
   ~SurfProperties() override = default;
 
-  // ISurf interface
+// Surf interface
 
 public:
 
@@ -124,7 +124,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// ISurf interface
+// Surf interface
 
 public:
 
@@ -148,7 +148,7 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 class PHOTOMATCH_EXPORT SurfCudaDetectorDescriptor
   : public SurfProperties,
@@ -165,7 +165,6 @@ public:
                              int octaveLayers,
                              bool extendedDescriptor,
                              bool upright);
-                             
   ~SurfCudaDetectorDescriptor() override = default;
 
 // KeypointDetector interface
@@ -184,7 +183,7 @@ public:
                std::vector<cv::KeyPoint> &keyPoints,
                cv::Mat &descriptors) override;
 
-// ISurf interface
+// Surf interface
 
 public:
 
@@ -206,8 +205,7 @@ protected:
 };
 
 
-#endif // HAVE_CUDA
-
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #endif // OPENCV_ENABLE_NONFREE
 

@@ -48,7 +48,7 @@ public:
   AkazeProperties(const AkazeProperties &akazeProperties);
   ~AkazeProperties() override = default;
 
-// IAkaze interface
+// Akaze interface
 
 public:
 
@@ -137,7 +137,7 @@ public:
                cv::Mat &descriptors) override;
 
 
-// IAkaze interface
+// Akaze interface
 
 public:
 

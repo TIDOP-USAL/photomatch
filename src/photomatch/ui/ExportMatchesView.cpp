@@ -45,24 +45,6 @@ ExportMatchesViewImp::ExportMatchesViewImp(QWidget *parent)
   this->initSignalAndSlots();
 }
 
-ExportMatchesViewImp::~ExportMatchesViewImp()
-{
-
-}
-
-void ExportMatchesViewImp::setSessions(const QStringList &sessions)
-{
-  const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
-  mComboBoxSession->clear();
-  mComboBoxSession->addItems(sessions);
-}
-
-void ExportMatchesViewImp::setActiveSession(const QString &session)
-{
-  const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
-  mComboBoxSession->setCurrentText(session);
-}
-
 void ExportMatchesViewImp::initUI()
 {
   this->setObjectName(QStringLiteral("ExportMatchesView"));
@@ -84,18 +66,17 @@ void ExportMatchesViewImp::initUI()
   mButtonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok|QDialogButtonBox::Help);
   gridLayout->addWidget(mButtonBox, 3, 0, 1, 3);
 
-  retranslate();
-
-  update();
+  this->retranslate();
+  this->update();
 }
 
 void ExportMatchesViewImp::initSignalAndSlots()
 {
-  connect(mComboBoxSession, SIGNAL(currentTextChanged(QString)), this, SIGNAL(sessionChange(QString)));
+  connect(mComboBoxSession, &QComboBox::currentTextChanged, this, &ExportMatchesView::sessionChange);
 
-  connect(mButtonBox,                                   SIGNAL(accepted()),      this, SLOT(accept()));
-  connect(mButtonBox,                                   SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),   SIGNAL(clicked(bool)),   this, SIGNAL(help()));
+  connect(mButtonBox,                                   &QDialogButtonBox::accepted, this, &QDialog::accept);
+  connect(mButtonBox,                                   &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(mButtonBox->button(QDialogButtonBox::Help),   &QAbstractButton::clicked,   this, &IDialogView::help);
 }
 
 void ExportMatchesViewImp::clear()
@@ -120,6 +101,24 @@ void ExportMatchesViewImp::retranslate()
   mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("ExportMatchesView", "Cancel", nullptr));
   mButtonBox->button(QDialogButtonBox::Ok)->setText(QApplication::translate("ExportMatchesView", "Export", nullptr));
   mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("ExportMatchesView", "Help", nullptr));
+}
+
+ExportMatchesViewImp::~ExportMatchesViewImp()
+{
+
+}
+
+void ExportMatchesViewImp::setSessions(const QStringList &sessions)
+{
+  const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
+  mComboBoxSession->clear();
+  mComboBoxSession->addItems(sessions);
+}
+
+void ExportMatchesViewImp::setActiveSession(const QString &session)
+{
+  const QSignalBlocker blockerComboBoxSession(mComboBoxSession);
+  mComboBoxSession->setCurrentText(session);
 }
 
 } // namespace photomatch

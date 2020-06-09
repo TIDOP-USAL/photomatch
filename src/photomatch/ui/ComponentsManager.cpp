@@ -707,10 +707,10 @@ ProgressHandler *ComponentsManager::progressHandler()
   return mProgressHandler;
 }
 
-IProgressDialog *ComponentsManager::progressDialog()
+ProgressDialog *ComponentsManager::progressDialog()
 {
   if (mProgressDialog == nullptr){
-    mProgressDialog = new ProgressDialog;
+    mProgressDialog = new ProgressDialogImp;
   }
   return mProgressDialog;
 }
