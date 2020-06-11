@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/PreprocessView.h"
+#include "photomatch/ui/preprocess/PreprocessView.h"
 
 #include "photomatch/widgets/AcebsfWidget.h"
 #include "photomatch/widgets/ClaheWidget.h"

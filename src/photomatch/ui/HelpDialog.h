@@ -115,7 +115,7 @@ private slots:
    */
   void searchFinished(int hits);
 
-// IDialogView interface
+// PhotoMatchDialogView interface
 
 private:
 

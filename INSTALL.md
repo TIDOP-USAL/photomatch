@@ -8,11 +8,24 @@
 CMAKE:
 - OPENCV_EXTRA_MODULES_PATH
 - OPENCV_ENABLE_NONFREE (for SIFT and SURF)
+- WITH_CUDA
 
 ### [Boost](https://www.boost.org)
 
 https://sourceforge.net/projects/boost/files/boost-binaries/
 
 
+## Install
 
-#CMAKE
+```
+git clone https://github.com/TIDOP-USAL/photomatch.git
+```
+
+```
+cd photomatch
+mkdir build
+cd build
+cmake ..
+sudo make
+sudo make install
+```

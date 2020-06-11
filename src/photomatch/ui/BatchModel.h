@@ -9,7 +9,7 @@ namespace photomatch
 class IProjectModel;
 
 class IBatchModel
-  : public IModel
+  : public PhotoMatchModel
 {
 
   Q_OBJECT
@@ -40,7 +40,7 @@ public:
   BatchModel(/*IProjectModel *mProjectModel*/);
   ~BatchModel() override;
 
-// IModel interface
+// PhotoMatchModel interface
 
 private:
 

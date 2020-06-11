@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/GroundTruthView.h"
+#include "photomatch/ui/groundtruth/GroundTruthView.h"
 
 
 #include <QListWidget>

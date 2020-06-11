@@ -34,7 +34,7 @@ namespace photomatch
 {
 
 class ProjectModel
-  : public IModel/*,
+  : public PhotoMatchModel/*,
     public IProject*/
 {
 
@@ -42,7 +42,7 @@ class ProjectModel
 
 public:
 
-  ProjectModel(QObject *parent = nullptr) : IModel(parent) {}
+  ProjectModel(QObject *parent = nullptr) : PhotoMatchModel(parent) {}
 
   /*!
    * \brief Project file path
@@ -528,7 +528,7 @@ public:
   void addImages(const QStringList &fileNames) override;
   void deleteImages(const QStringList &images) override;
 
-// IModel interface
+// PhotoMatchModel interface
 
 private:
 

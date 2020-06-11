@@ -193,11 +193,11 @@ public:
 
 private:
 
-#if CV_VERSION_MAJOR >= 4
-  cv::ORB::ScoreType convertScoreType(const QString &scoreType);
-#else
+//#if CV_VERSION_MAJOR >= 4
+//  cv::ORB::ScoreType convertScoreType(const QString &scoreType);
+//#else
   int convertScoreType(const QString &scoreType);
-#endif
+//#endif
 
   void update();
 

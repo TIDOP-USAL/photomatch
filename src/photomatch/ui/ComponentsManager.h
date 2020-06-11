@@ -68,7 +68,7 @@ class ComponentsManager
   : public QObject
 {
   Q_OBJECT
-
+    
 public:
 
   explicit ComponentsManager(QObject *parent = nullptr);
@@ -141,10 +141,13 @@ protected slots:
   void initAndOpenFeatureExtractionDialog();
   void initAndOpenFeatureMatchingDialog();
   void initAndOpenKeypointsViewerDialogFromSession(const QString &session);
-  void initAndOpenKeypointsViewerDialogFromSessionAndImage(const QString &session, const QString &image);
+  void initAndOpenKeypointsViewerDialogFromSessionAndImage(const QString &session,
+                                                           const QString &image);
   void initKeypointsViewer();
   void initAndOpenMatchesViewerDialogFromSession(const QString &session);
-  void initAndOpenMatchesViewerDialogFromSessionAndImages(const QString &session, const QString &leftImage, const QString &rightImage);
+  void initAndOpenMatchesViewerDialogFromSessionAndImages(const QString &session,
+                                                          const QString &leftImage,
+                                                          const QString &rightImage);
   void initMatchesViewer();
   void initAndOpenExportFeaturesDialog();
   void initAndOpenExportMatchesDialog();
@@ -160,6 +163,10 @@ protected slots:
   void initAndOpenToolSettingsDialog();
   void initSettingsDialog();
   void initAndOpenMultiviewMatchingAssessmentDialog();
+
+private:
+
+  void mainWindowConnectSignalsSlots();
 
 protected:
 

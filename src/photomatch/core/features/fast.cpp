@@ -222,23 +222,23 @@ FastDetectorCuda::FastDetectorCuda(int threshold,
 }
 
 
-#if CV_VERSION_MAJOR >= 4
-cv::FastFeatureDetector::DetectorType FastDetectorCuda::convertDetectorType(const QString &detectorType)
-{
-  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
+//#if CV_VERSION_MAJOR >= 4
+//cv::FastFeatureDetector::DetectorType FastDetectorCuda::convertDetectorType(const QString &detectorType)
+//{
+//  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
 
-  if (detectorType.compare("TYPE_5_8") == 0){
-    type = cv::FastFeatureDetector::TYPE_5_8;
-  } else if (detectorType.compare("TYPE_7_12") == 0) {
-    type = cv::FastFeatureDetector::TYPE_7_12;
-  } else if (detectorType.compare("TYPE_9_16") == 0) {
-    type = cv::FastFeatureDetector::TYPE_9_16;
-  }
+//  if (detectorType.compare("TYPE_5_8") == 0){
+//    type = cv::FastFeatureDetector::TYPE_5_8;
+//  } else if (detectorType.compare("TYPE_7_12") == 0) {
+//    type = cv::FastFeatureDetector::TYPE_7_12;
+//  } else if (detectorType.compare("TYPE_9_16") == 0) {
+//    type = cv::FastFeatureDetector::TYPE_9_16;
+//  }
 
-  return type;
-}
+//  return type;
+//}
 
-#else
+//#else
 
 int FastDetectorCuda::convertDetectorType(const QString &detectorType)
 {
@@ -254,7 +254,7 @@ int FastDetectorCuda::convertDetectorType(const QString &detectorType)
 
   return type;
 }
-#endif
+//#endif
 
 void FastDetectorCuda::update()
 {

@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/MultiViewModel.h"
+#include "photomatch/ui/multiview/MultiViewModel.h"
 
 
 using namespace photomatch;
