@@ -24,12 +24,12 @@
 
 #include "MainWindowPresenter.h"
 
-#include "MainWindowView.h"
-#include "MainWindowModel.h"
-#include "ProjectModel.h"
-#include "SettingsModel.h"
-#include "SettingsPresenter.h"
-#include "SettingsView.h"
+#include "photomatch/ui/MainWindowView.h"
+#include "photomatch/ui/MainWindowModel.h"
+#include "photomatch/ui/ProjectModel.h"
+#include "photomatch/ui/settings/SettingsModel.h"
+#include "photomatch/ui/settings/SettingsPresenter.h"
+#include "photomatch/ui/settings/SettingsView.h"
 #include "photomatch/ui/utils/TabHandler.h"
 #include "photomatch/ui/utils/GraphicViewer.h"
 #include "photomatch/ui/HelpDialog.h"
@@ -51,7 +51,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
                                          MainWindowModel *model,
                                          ProjectModel *projectModel,
                                          SettingsModel *settingsModel)
-  : IPresenter(),
+  : PhotoMatchPresenter(),
     mView(view),
     mModel(model),
     mProjectModel(projectModel),

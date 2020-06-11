@@ -9,9 +9,9 @@ set(test_KIND TEST)
 set(the_target "${test_kind}_${test_name}")
 add_executable(${the_target}
     ${test_filename}
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/ExportFeaturesView.cpp
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/ExportFeaturesView.h
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/ExportFeatures.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/exportfeat/ExportFeaturesView.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/exportfeat/ExportFeaturesView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/exportfeat/ExportFeatures.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 

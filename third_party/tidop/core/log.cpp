@@ -22,7 +22,7 @@
 //http://en.cppreference.com/w/cpp/filesystem
 #include <filesystem>
 namespace fs = std::filesystem;
-#elif defined HAVE_BOOST
+#else
 //Boost
 //http://www.boost.org/doc/libs/1_66_0/libs/filesystem/doc/index.htm
 #include <boost/filesystem.hpp>

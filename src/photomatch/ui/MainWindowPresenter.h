@@ -41,7 +41,7 @@ class TabHandler;
 class StartPageWidget;
 
 class MainWindowPresenter
-  : public IPresenter
+  : public PhotoMatchPresenter
 {
   Q_OBJECT
 
@@ -148,7 +148,7 @@ protected slots:
 
   void onLoadImages();
 
-// IPresenter interface
+// PhotoMatchModel interface
 
 public slots:
 

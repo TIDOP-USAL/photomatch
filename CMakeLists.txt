@@ -77,13 +77,12 @@ endif (BUILD_SHARED_LIBS)
 ##############################################################
 
 ### No son opcionales
-option(WITH_BOOST    "Include Boost"                   ON)
-option(WITH_OPENCV   "Include OpenCV"                  ON)
+#option(WITH_BOOST    "Include Boost"                   ON)
+#option(WITH_OPENCV   "Include OpenCV"                  ON)
 option(WITH_PIXKIT   "Include PixKit"                  ON)
 if(MSVC)
 option (WITH_VLD     "Include Visual Leak Detector Support"    OFF)
 endif(MSVC)
-option(WITH_CUDA     "Include Cuda"                    OFF)
 
 #------------------------------------------------------------#
 
@@ -131,77 +130,64 @@ endif()
 
 # Boost
 
-if(WITH_BOOST)
 
-    set(Boost_USE_STATIC_LIBS        ON) # only find static libs
-    set(Boost_USE_MULTITHREADED      ON)
-    set(Boost_USE_STATIC_RUNTIME     OFF)
+set(Boost_USE_STATIC_LIBS        ON) # only find static libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME     OFF)
 
-    find_package(Boost REQUIRED
-                 COMPONENTS
-                     thread
-                     chrono
-                     filesystem
-                     system
-                     date_time
-                     atomic)
+find_package(Boost REQUIRED
+             COMPONENTS
+                 thread
+                 chrono
+                 filesystem
+                 system
+                 date_time
+                 atomic)
 
-    if(Boost_FOUND)
-        include_directories(${Boost_INCLUDE_DIRS})
-        set(HAVE_BOOST YES)
-        message(STATUS "\n")
-    else()
-        set(HAVE_BOOST NO)
-    endif(Boost_FOUND)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS})
+    set(HAVE_BOOST YES)
+    message(STATUS "\n")
+else()
+    set(HAVE_BOOST NO)
+endif(Boost_FOUND)
 
-endif(WITH_BOOST)
+
 
 #------------------------------------------------------------#
 
 # OpenCV
 
-set(HAVE_CUDA NO)
 
-if(WITH_OPENCV)
+list(APPEND OPENCV_MODULES
+    core
+    highgui
+    photo
+    xfeatures2d
+    imgproc
+    imgcodecs
+    calib3d
+    features2d
+    flann
+    objdetect
+    cudafilters
+    cudawarping
+    cudev
+    cudaarithm
+    cudafeatures2d)
 
-    list(APPEND OPENCV_MODULES
-        core
-        highgui
-        photo
-        xfeatures2d
-        imgproc
-        imgcodecs
-        calib3d
-        features2d
-        flann
-        objdetect)
+find_package(OpenCV REQUIRED
+             COMPONENTS ${OPENCV_MODULES})
 
-    if(WITH_CUDA)
-        list(APPEND OPENCV_MODULES
-            cudafilters
-            cudawarping
-            cudev
-            cudaarithm
-            cudafeatures2d)
-  endif(WITH_CUDA)
-
-    find_package(OpenCV REQUIRED
-                 COMPONENTS ${OPENCV_MODULES})
-
-    if(NOT OPENCV_FOUND)
-        set(HAVE_OPENCV NO)
-    else()
-        set(HAVE_OPENCV YES)
-        include_directories(${OpenCV_INCLUDE_DIRS})
-        message(STATUS "Found OpenCV")
-        message(STATUS "  Includes:  ${OpenCV_INCLUDE_DIRS}")
-        message(STATUS "  Libraries: ${OpenCV_LIBS}")
-        if(WITH_CUDA)
-            set(HAVE_CUDA YES)
-        endif(WITH_CUDA)
-    endif()
-
-endif(WITH_OPENCV)
+if(NOT OPENCV_FOUND)
+    set(HAVE_OPENCV NO)
+else()
+    set(HAVE_OPENCV YES)
+    include_directories(${OpenCV_INCLUDE_DIRS})
+    message(STATUS "Found OpenCV")
+    message(STATUS "  Include:  ${OpenCV_INCLUDE_DIRS}")
+    message(STATUS "  Libraries: ${OpenCV_LIBS}")
+endif()
 
 #------------------------------------------------------------#
 

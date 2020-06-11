@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/ExportFeaturesModel.h"
+#include "photomatch/ui/exportfeat/ExportFeaturesModel.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/core/image.h"
 #include "photomatch/core/session.h"

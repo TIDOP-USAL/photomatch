@@ -33,7 +33,7 @@ namespace photomatch
 class ProjectModel;
 
 class MainWindowModel
-  : public IModel
+  : public PhotoMatchModel
 {
   Q_OBJECT
 
@@ -61,7 +61,7 @@ signals:
 public slots:
 
 
-// IModel interface
+// PhotoMatchModel interface
 
 private:
 

@@ -7,8 +7,6 @@
 #include <QTreeWidgetItem>
 #include <QAction>
 
-//#include "ui_MainWindowView.h"
-
 using namespace photomatch;
 
 class TestMainWindowView

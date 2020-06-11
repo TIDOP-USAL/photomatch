@@ -387,22 +387,22 @@ OrbCudaDetectorDescriptor::OrbCudaDetectorDescriptor(int featuresNumber,
   setFastThreshold(fastThreshold);
 }
 
-#if CV_VERSION_MAJOR >= 4
+//#if CV_VERSION_MAJOR >= 4
 
-cv::ORB::ScoreType OrbCudaDetectorDescriptor::convertScoreType(const QString &scoreType)
-{
-  cv::ORB::ScoreType score = cv::ORB::ScoreType::HARRIS_SCORE;
+//cv::ORB::ScoreType OrbCudaDetectorDescriptor::convertScoreType(const QString &scoreType)
+//{
+//  cv::ORB::ScoreType score = cv::ORB::ScoreType::HARRIS_SCORE;
 
-  if (scoreType.compare("Harris") == 0){
-    score = cv::ORB::HARRIS_SCORE;
-  } else if (scoreType.compare("FAST") == 0){
-    score = cv::ORB::FAST_SCORE;
-  }
+//  if (scoreType.compare("Harris") == 0){
+//    score = cv::ORB::HARRIS_SCORE;
+//  } else if (scoreType.compare("FAST") == 0){
+//    score = cv::ORB::FAST_SCORE;
+//  }
 
-  return score;
-}
+//  return score;
+//}
 
-#else
+//#else
 
 int OrbCudaDetectorDescriptor::convertScoreType(const QString &scoreType)
 {
@@ -416,7 +416,7 @@ int OrbCudaDetectorDescriptor::convertScoreType(const QString &scoreType)
 
   return score;
 }
-#endif
+//#endif
 
 void OrbCudaDetectorDescriptor::update()
 {

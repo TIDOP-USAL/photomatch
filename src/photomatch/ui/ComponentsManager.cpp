@@ -6,57 +6,57 @@
 
 #include "photomatch/ui/ProjectModel.h"
 
-#include "photomatch/ui/NewProjectPresenter.h"
-#include "photomatch/ui/NewProjectView.h"
+#include "photomatch/ui/createproj/NewProjectPresenter.h"
+#include "photomatch/ui/createproj/NewProjectView.h"
 
-#include "photomatch/ui/NewSessionPresenter.h"
-#include "photomatch/ui/NewSessionView.h"
+#include "photomatch/ui/createsession/NewSessionPresenter.h"
+#include "photomatch/ui/createsession/NewSessionView.h"
 
-#include "photomatch/ui/ExportFeaturesModel.h"
-#include "photomatch/ui/ExportFeaturesView.h"
-#include "photomatch/ui/ExportFeaturesPresenter.h"
-#include "photomatch/ui/ExportMatchesModel.h"
-#include "photomatch/ui/ExportMatchesView.h"
-#include "photomatch/ui/ExportMatchesPresenter.h"
+#include "photomatch/ui/exportfeat/ExportFeaturesModel.h"
+#include "photomatch/ui/exportfeat/ExportFeaturesView.h"
+#include "photomatch/ui/exportfeat/ExportFeaturesPresenter.h"
+#include "photomatch/ui/exportmatch/ExportMatchesModel.h"
+#include "photomatch/ui/exportmatch/ExportMatchesView.h"
+#include "photomatch/ui/exportmatch/ExportMatchesPresenter.h"
 
-#include "photomatch/ui/SettingsModel.h"
-#include "photomatch/ui/SettingsView.h"
-#include "photomatch/ui/SettingsPresenter.h"
+#include "photomatch/ui/settings/SettingsModel.h"
+#include "photomatch/ui/settings/SettingsView.h"
+#include "photomatch/ui/settings/SettingsPresenter.h"
 
-#include "photomatch/ui/PreprocessView.h"
-#include "photomatch/ui/PreprocessPresenter.h"
-#include "photomatch/ui/FeatureExtractorView.h"
-#include "photomatch/ui/FeatureExtractorPresenter.h"
-#include "photomatch/ui/DescriptorMatcherView.h"
-#include "photomatch/ui/DescriptorMatcherPresenter.h"
+#include "photomatch/ui/preprocess/PreprocessView.h"
+#include "photomatch/ui/preprocess/PreprocessPresenter.h"
+#include "photomatch/ui/featextract/FeatureExtractorView.h"
+#include "photomatch/ui/featextract/FeatureExtractorPresenter.h"
+#include "photomatch/ui/featmatch/DescriptorMatcherView.h"
+#include "photomatch/ui/featmatch/DescriptorMatcherPresenter.h"
 
-#include "photomatch/ui/FeaturesViewerModel.h"
-#include "photomatch/ui/FeaturesViewerView.h"
-#include "photomatch/ui/FeaturesViewerPresenter.h"
+#include "photomatch/ui/featviewer/FeaturesViewerModel.h"
+#include "photomatch/ui/featviewer/FeaturesViewerView.h"
+#include "photomatch/ui/featviewer/FeaturesViewerPresenter.h"
 
-#include "photomatch/ui/MatchViewerModel.h"
-#include "photomatch/ui/MatchViewerView.h"
-#include "photomatch/ui/MatchViewerPresenter.h"
+#include "photomatch/ui/matchviewer/MatchViewerModel.h"
+#include "photomatch/ui/matchviewer/MatchViewerView.h"
+#include "photomatch/ui/matchviewer/MatchViewerPresenter.h"
 
-#include "photomatch/ui/MultiViewModel.h"
-#include "photomatch/ui/MultiViewView.h"
-#include "photomatch/ui/MultiViewPresenter.h"
+#include "photomatch/ui/multiview/MultiViewModel.h"
+#include "photomatch/ui/multiview/MultiViewView.h"
+#include "photomatch/ui/multiview/MultiViewPresenter.h"
 
-#include "photomatch/ui/GroundTruthModel.h"
-#include "photomatch/ui/GroundTruthView.h"
-#include "photomatch/ui/GroundTruthPresenter.h"
+#include "photomatch/ui/groundtruth/GroundTruthModel.h"
+#include "photomatch/ui/groundtruth/GroundTruthView.h"
+#include "photomatch/ui/groundtruth/GroundTruthPresenter.h"
 
-#include "photomatch/ui/HomographyViewerModel.h"
-#include "photomatch/ui/HomographyViewerView.h"
-#include "photomatch/ui/HomographyViewerPresenter.h"
+#include "photomatch/ui/homography/HomographyViewerModel.h"
+#include "photomatch/ui/homography/HomographyViewerView.h"
+#include "photomatch/ui/homography/HomographyViewerPresenter.h"
 
-#include "photomatch/ui/CurvesViewerModel.h"
-#include "photomatch/ui/CurvesViewerView.h"
-#include "photomatch/ui/CurvesViewerPresenter.h"
+#include "photomatch/ui/curves/CurvesViewerModel.h"
+#include "photomatch/ui/curves/CurvesViewerView.h"
+#include "photomatch/ui/curves/CurvesViewerPresenter.h"
 
-#include "photomatch/ui/RepeatabilityModel.h"
-#include "photomatch/ui/RepeatabilityView.h"
-#include "photomatch/ui/RepeatabilityPresenter.h"
+#include "photomatch/ui/repeatability/RepeatabilityModel.h"
+#include "photomatch/ui/repeatability/RepeatabilityView.h"
+#include "photomatch/ui/repeatability/RepeatabilityPresenter.h"
 
 #include "photomatch/ui/AboutDialog.h"
 #include "photomatch/ui/HelpDialog.h"
@@ -343,30 +343,57 @@ MainWindowPresenter *ComponentsManager::mainWindowPresenter()
 
     mMainWindowPresenter->setHelp(this->helpDialog());
 
-    connect(mMainWindowPresenter, SIGNAL(openNewProjectDialog()),        this, SLOT(initAndOpenNewProjectDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openNewSessionDialog()),        this, SLOT(initAndOpenNewSessionDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openPreprocessDialog()),        this, SLOT(initAndOpenPreprocessDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openFeatureExtractionDialog()), this, SLOT(initAndOpenFeatureExtractionDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openFeatureMatchingDialog()),   this, SLOT(initAndOpenFeatureMatchingDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openKeypointsViewerDialogFromSession(QString)),   this, SLOT(initAndOpenKeypointsViewerDialogFromSession(QString)));
-    connect(mMainWindowPresenter, SIGNAL(openKeypointsViewerDialogFromSessionAndImage(QString, QString)), this, SLOT(initAndOpenKeypointsViewerDialogFromSessionAndImage(QString, QString)));
-    connect(mMainWindowPresenter, SIGNAL(openMatchesViewerDialogFromSession(QString)),     this, SLOT(initAndOpenMatchesViewerDialogFromSession(QString)));
-    connect(mMainWindowPresenter, SIGNAL(openMatchesViewerDialogFromSessionAndImages(QString, QString, QString)),     this, SLOT(initAndOpenMatchesViewerDialogFromSessionAndImages(QString, QString, QString)));
-    connect(mMainWindowPresenter, SIGNAL(openExportFeaturesDialog()),    this, SLOT(initAndOpenExportFeaturesDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openExportMatchesDialog()),     this, SLOT(initAndOpenExportMatchesDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openGroundTruthEditorDialog()), this, SLOT(initAndOpenGroundTruthEditorDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openHomographyViewerDialog()),  this, SLOT(initAndOpenHomographyViewerDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openPRCurvesViewerDialog()),  this, SLOT(initAndOpenPRCurvesViewerDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openROCCurvesViewerDialog()),  this, SLOT(initAndOpenROCCurvesViewerDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openDETCurvesViewerDialog()),  this, SLOT(initAndOpenDETCurvesViewerDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openAboutDialog()),            this, SLOT(initAndOpenAboutDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openSettingsDialog()),         this, SLOT(initAndOpenSettingsDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openViewSettingsDialog()),     this, SLOT(initAndOpenViewSettingsDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openQualityControlSettingsDialog()),         this, SLOT(initAndOpenQualityControlDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openToolSettingsDialog()),     this, SLOT(initAndOpenToolSettingsDialog()));
-    connect(mMainWindowPresenter, SIGNAL(openMultiviewMatchingAssessmentDialog()),     this, SLOT(initAndOpenMultiviewMatchingAssessmentDialog()));
+    this->mainWindowConnectSignalsSlots();
   }
   return mMainWindowPresenter;
+}
+
+void ComponentsManager::mainWindowConnectSignalsSlots()
+{
+  connect(mMainWindowPresenter, &MainWindowPresenter::openNewProjectDialog,
+          this, &ComponentsManager::initAndOpenNewProjectDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openNewSessionDialog,
+          this, &ComponentsManager::initAndOpenNewSessionDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openPreprocessDialog,
+          this, &ComponentsManager::initAndOpenPreprocessDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openFeatureExtractionDialog,
+          this, &ComponentsManager::initAndOpenFeatureExtractionDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openFeatureMatchingDialog,
+          this, &ComponentsManager::initAndOpenFeatureMatchingDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openKeypointsViewerDialogFromSession,
+          this, &ComponentsManager::initAndOpenKeypointsViewerDialogFromSession);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openKeypointsViewerDialogFromSessionAndImage,
+          this, &ComponentsManager::initAndOpenKeypointsViewerDialogFromSessionAndImage);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openMatchesViewerDialogFromSession,
+          this, &ComponentsManager::initAndOpenMatchesViewerDialogFromSession);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openMatchesViewerDialogFromSessionAndImages,
+          this, &ComponentsManager::initAndOpenMatchesViewerDialogFromSessionAndImages);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openExportFeaturesDialog,
+          this, &ComponentsManager::initAndOpenExportFeaturesDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openExportMatchesDialog,
+          this, &ComponentsManager::initAndOpenExportMatchesDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openGroundTruthEditorDialog,
+          this, &ComponentsManager::initAndOpenGroundTruthEditorDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openHomographyViewerDialog,
+          this, &ComponentsManager::initAndOpenHomographyViewerDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openPRCurvesViewerDialog,
+          this, &ComponentsManager::initAndOpenPRCurvesViewerDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openROCCurvesViewerDialog,
+          this, &ComponentsManager::initAndOpenROCCurvesViewerDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openDETCurvesViewerDialog,
+          this, &ComponentsManager::initAndOpenDETCurvesViewerDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openAboutDialog,
+          this, &ComponentsManager::initAndOpenAboutDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openSettingsDialog,
+          this, &ComponentsManager::initAndOpenSettingsDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openViewSettingsDialog,
+          this, &ComponentsManager::initAndOpenViewSettingsDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openQualityControlSettingsDialog,
+          this, &ComponentsManager::initAndOpenQualityControlDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openToolSettingsDialog,
+          this, &ComponentsManager::initAndOpenToolSettingsDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog,
+          this, &ComponentsManager::initAndOpenMultiviewMatchingAssessmentDialog);
 }
 
 ProjectModel *ComponentsManager::projectModel()
@@ -689,19 +716,25 @@ ProgressHandler *ComponentsManager::progressHandler()
 
     mProgressHandler = new ProgressHandler;
 
-    connect(mProgressHandler, SIGNAL(rangeChange(int, int)),      this->progressDialog(), SLOT(setRange(int, int)));
-    connect(mProgressHandler, SIGNAL(valueChange(int)),           this->progressDialog(), SLOT(setValue(int)));
-    connect(mProgressHandler, SIGNAL(initialized()),              this->progressDialog(), SLOT(setInitialized()));
-    connect(mProgressHandler, SIGNAL(finished()),                 this->progressDialog(), SLOT(setFinished()));
-    connect(mProgressHandler, SIGNAL(titleChange(QString)),       this->progressDialog(), SLOT(setWindowTitle(QString)));
-    connect(mProgressHandler, SIGNAL(descriptionChange(QString)), this->progressDialog(), SLOT(setStatusText(QString)));
+    connect(mProgressHandler, &ProgressHandler::rangeChange,
+            this->progressDialog(), &ProgressDialog::setRange);
+    connect(mProgressHandler, &ProgressHandler::valueChange,
+            this->progressDialog(), &ProgressDialog::setValue);
+    connect(mProgressHandler, &ProgressHandler::initialized,
+            this->progressDialog(), &ProgressDialog::setInitialized);
+    connect(mProgressHandler, &ProgressHandler::finished,
+            this->progressDialog(), &ProgressDialog::setFinished);
+    connect(mProgressHandler, &ProgressHandler::titleChange,
+            this->progressDialog(), &QWidget::setWindowTitle);
+    connect(mProgressHandler, &ProgressHandler::descriptionChange,
+            this->progressDialog(), &ProgressDialog::setStatusText);
 
     QProgressBar *statusBarProgress = this->mainWindowView()->progressBar();
 
-    connect(mProgressHandler, SIGNAL(rangeChange(int, int)),      statusBarProgress, SLOT(setRange(int, int)));
-    connect(mProgressHandler, SIGNAL(valueChange(int)),           statusBarProgress, SLOT(setValue(int)));
-    connect(mProgressHandler, SIGNAL(initialized()),              statusBarProgress, SLOT(show()));
-    connect(mProgressHandler, SIGNAL(finished()),                 statusBarProgress, SLOT(hide()));
+    connect(mProgressHandler, &ProgressHandler::rangeChange, statusBarProgress, &QProgressBar::setRange);
+    connect(mProgressHandler, &ProgressHandler::valueChange, statusBarProgress, &QProgressBar::setValue);
+    connect(mProgressHandler, &ProgressHandler::initialized, statusBarProgress, &QWidget::show);
+    connect(mProgressHandler, &ProgressHandler::finished,    statusBarProgress, &QWidget::hide);
 
   }
   return mProgressHandler;
@@ -717,9 +750,11 @@ ProgressDialog *ComponentsManager::progressDialog()
 
 void ComponentsManager::initAndOpenNewProjectDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openNewProjectDialog()), this, SLOT(initAndOpenNewProjectDialog()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openNewProjectDialog,
+             this, &ComponentsManager::initAndOpenNewProjectDialog);
 
-  connect(this->mainWindowPresenter(), SIGNAL(openNewProjectDialog()), this->newProjectPresenter(), SLOT(open()));
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openNewProjectDialog,
+          this->newProjectPresenter(), &PhotoMatchPresenter::open);
   connect(this->newProjectPresenter(), SIGNAL(projectCreate()),        this->mainWindowPresenter(), SLOT(loadProject()));
 
   this->newProjectPresenter()->setHelp(this->helpDialog());
@@ -728,9 +763,11 @@ void ComponentsManager::initAndOpenNewProjectDialog()
 
 void ComponentsManager::initAndOpenNewSessionDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openNewSessionDialog()), this, SLOT(initAndOpenNewSessionDialog()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openNewSessionDialog,
+             this, &ComponentsManager::initAndOpenNewSessionDialog);
 
-  connect(this->mainWindowPresenter(), SIGNAL(openNewSessionDialog()), this->newSessionPresenter(), SLOT(open()));
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openNewSessionDialog,
+          this->newSessionPresenter(), &PhotoMatchPresenter::open);
   connect(this->newSessionPresenter(), SIGNAL(sessionCreate(QString)), this->mainWindowPresenter(), SLOT(loadSession(QString)));
   connect(this->newSessionPresenter(), SIGNAL(sessionCreate(QString)), this->mainWindowPresenter(), SLOT(activeSession(QString)));
 
@@ -740,8 +777,10 @@ void ComponentsManager::initAndOpenNewSessionDialog()
 
 void ComponentsManager::initAndOpenPreprocessDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openPreprocessDialog()), this, SLOT(initAndOpenPreprocessDialog()));
-  connect(this->mainWindowPresenter(), SIGNAL(openPreprocessDialog()),  this->preprocessPresenter(), SLOT(open()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openPreprocessDialog,
+             this, &ComponentsManager::initAndOpenPreprocessDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openPreprocessDialog,
+          this->preprocessPresenter(), &PhotoMatchPresenter::open);
   connect(this->preprocessPresenter(), SIGNAL(running()),   this->mainWindowPresenter(), SLOT(processRunning()));
   connect(this->preprocessPresenter(), SIGNAL(running()),   this->mainWindowPresenter(), SLOT(deletePreprocess()));
   connect(this->preprocessPresenter(), SIGNAL(finished()),  this->mainWindowPresenter(), SLOT(processFinish()));
@@ -755,8 +794,10 @@ void ComponentsManager::initAndOpenPreprocessDialog()
 
 void ComponentsManager::initAndOpenFeatureExtractionDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openFeatureExtractionDialog()), this, SLOT(initAndOpenFeatureExtractionDialog()));
-  connect(this->mainWindowPresenter(), SIGNAL(openFeatureExtractionDialog()), this->featureExtractorPresenter(), SLOT(open()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openFeatureExtractionDialog,
+             this, &ComponentsManager::initAndOpenFeatureExtractionDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openFeatureExtractionDialog,
+          this->featureExtractorPresenter(), &PhotoMatchPresenter::open);
 
   connect(this->featureExtractorPresenter(), SIGNAL(running()),                  this->mainWindowPresenter(), SLOT(processRunning()));
   connect(this->featureExtractorPresenter(), SIGNAL(running()),                  this->mainWindowPresenter(), SLOT(deleteFeatures()));
@@ -773,8 +814,10 @@ void ComponentsManager::initAndOpenFeatureExtractionDialog()
 
 void ComponentsManager::initAndOpenFeatureMatchingDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openFeatureMatchingDialog()), this, SLOT(initAndOpenFeatureMatchingDialog()));
-  connect(this->mainWindowPresenter(), SIGNAL(openFeatureMatchingDialog()),   this->descriptorMatcherPresenter(), SLOT(open()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openFeatureMatchingDialog,
+             this, &ComponentsManager::initAndOpenFeatureMatchingDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openFeatureMatchingDialog,
+          this->descriptorMatcherPresenter(), &PhotoMatchPresenter::open);
 
   connect(this->descriptorMatcherPresenter(), SIGNAL(running()),             this->mainWindowPresenter(), SLOT(processRunning()));
   connect(this->descriptorMatcherPresenter(), SIGNAL(running()),             this->mainWindowPresenter(), SLOT(deleteMatches()));
@@ -846,16 +889,21 @@ void ComponentsManager::initMatchesViewer()
 
 void ComponentsManager::initAndOpenExportFeaturesDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openExportFeaturesDialog()), this, SLOT(initAndOpenExportFeaturesDialog()));
-  connect(this->mainWindowPresenter(), SIGNAL(openExportFeaturesDialog()), this->exportFeaturesPresenter(), SLOT(open()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openExportFeaturesDialog,
+             this, &ComponentsManager::initAndOpenExportFeaturesDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openExportFeaturesDialog,
+          this->exportFeaturesPresenter(), &PhotoMatchPresenter::open);
+
   this->exportFeaturesPresenter()->setHelp(this->helpDialog());
   this->exportFeaturesPresenter()->open();
 }
 
 void ComponentsManager::initAndOpenExportMatchesDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openExportMatchesDialog()),     this, SLOT(initAndOpenExportMatchesDialog()));
-  connect(this->mainWindowPresenter(), SIGNAL(openExportMatchesDialog()), this->exportMatchesPresenter(), SLOT(open()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openExportMatchesDialog,
+             this, &ComponentsManager::initAndOpenExportMatchesDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openExportMatchesDialog,
+          this->exportMatchesPresenter(), &PhotoMatchPresenter::open);
 
   this->exportMatchesPresenter()->setHelp(this->helpDialog());
   this->exportMatchesPresenter()->open();
@@ -863,8 +911,10 @@ void ComponentsManager::initAndOpenExportMatchesDialog()
 
 void ComponentsManager::initAndOpenGroundTruthEditorDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openGroundTruthEditorDialog()), this, SLOT(initAndOpenGroundTruthEditorDialog()));
-  connect(this->mainWindowPresenter(), SIGNAL(openGroundTruthEditorDialog()), this->groundTruthPresenter(), SLOT(open()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openGroundTruthEditorDialog,
+             this, &ComponentsManager::initAndOpenGroundTruthEditorDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openGroundTruthEditorDialog,
+          this->groundTruthPresenter(), &PhotoMatchPresenter::open);
   connect(this->groundTruthPresenter(), SIGNAL(groundTruthAdded()), this->mainWindowPresenter(), SLOT(groundTruthAdded()));
 
   this->groundTruthPresenter()->setHelp(this->helpDialog());
@@ -876,7 +926,7 @@ void ComponentsManager::initAndOpenHomographyViewerDialog()
   disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openHomographyViewerDialog,
              this, &ComponentsManager::initAndOpenHomographyViewerDialog);
   connect(this->mainWindowPresenter(), &MainWindowPresenter::openHomographyViewerDialog,
-          this->homographyViewerPresenter(), &IPresenter::open);
+          this->homographyViewerPresenter(), &PhotoMatchPresenter::open);
 
   this->homographyViewerPresenter()->setHelp(this->helpDialog());
   this->homographyViewerPresenter()->open();
@@ -887,7 +937,7 @@ void ComponentsManager::initAndOpenPRCurvesViewerDialog()
   disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openPRCurvesViewerDialog,
              this, &ComponentsManager::initAndOpenPRCurvesViewerDialog);
   connect(this->mainWindowPresenter(), &MainWindowPresenter::openPRCurvesViewerDialog,
-          this->curvesPRViewerPresenter(), &IPresenter::open);
+          this->curvesPRViewerPresenter(), &PhotoMatchPresenter::open);
 
   this->curvesPRViewerPresenter()->setHelp(this->helpDialog());
   this->curvesPRViewerPresenter()->open();
@@ -898,7 +948,7 @@ void ComponentsManager::initAndOpenROCCurvesViewerDialog()
   disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openROCCurvesViewerDialog,
              this, &ComponentsManager::initAndOpenROCCurvesViewerDialog);
   connect(this->mainWindowPresenter(), &MainWindowPresenter::openPRCurvesViewerDialog,
-          this->curvesROCViewerPresenter(), &IPresenter::open);
+          this->curvesROCViewerPresenter(), &PhotoMatchPresenter::open);
 
   this->curvesROCViewerPresenter()->setHelp(this->helpDialog());
   this->curvesROCViewerPresenter()->open();
@@ -909,7 +959,7 @@ void ComponentsManager::initAndOpenDETCurvesViewerDialog()
   disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openDETCurvesViewerDialog,
              this, &ComponentsManager::initAndOpenDETCurvesViewerDialog);
   connect(this->mainWindowPresenter(), &MainWindowPresenter::openPRCurvesViewerDialog,
-          this->curvesDETViewerPresenter(), &IPresenter::open);
+          this->curvesDETViewerPresenter(), &PhotoMatchPresenter::open);
 
   this->curvesDETViewerPresenter()->setHelp(this->helpDialog());
   this->curvesDETViewerPresenter()->open();
@@ -950,23 +1000,33 @@ void ComponentsManager::initAndOpenToolSettingsDialog()
 
 void ComponentsManager::initSettingsDialog()
 {
-  disconnect(this->mainWindowPresenter(), SIGNAL(openSettingsDialog()), this, SLOT(initAndOpenSettingsDialog()));
-  disconnect(this->mainWindowPresenter(), SIGNAL(openViewSettingsDialog()), this, SLOT(initAndOpenViewSettingsDialog()));
-  disconnect(this->mainWindowPresenter(), SIGNAL(openQualityControlSettingsDialog()), this, SLOT(initAndOpenQualityControlDialog()));
-  disconnect(this->mainWindowPresenter(), SIGNAL(openToolSettingsDialog()), this, SLOT(initAndOpenToolSettingsDialog()));
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openSettingsDialog,
+             this, &ComponentsManager::initAndOpenSettingsDialog);
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openViewSettingsDialog,
+             this, &ComponentsManager::initAndOpenViewSettingsDialog);
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openQualityControlSettingsDialog,
+             this, &ComponentsManager::initAndOpenQualityControlDialog);
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openToolSettingsDialog,
+             this, &ComponentsManager::initAndOpenToolSettingsDialog);
 
-  connect(this->mainWindowPresenter(), SIGNAL(openSettingsDialog()), this->settingsPresenter(), SLOT(open()));
-  connect(this->mainWindowPresenter(), SIGNAL(openViewSettingsDialog()), this->settingsPresenter(), SLOT(openViewSettings()));
-  connect(this->mainWindowPresenter(), SIGNAL(openQualityControlSettingsDialog()), this->settingsPresenter(), SLOT(openQualityControlSettings()));
-  connect(this->mainWindowPresenter(), SIGNAL(openToolSettingsDialog()), this->settingsPresenter(), SLOT(openToolSettings()));
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openSettingsDialog,
+          this->settingsPresenter(), &PhotoMatchPresenter::open);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openViewSettingsDialog,
+          this->settingsPresenter(), &SettingsPresenter::openViewSettings);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openQualityControlSettingsDialog,
+          this->settingsPresenter(), &SettingsPresenter::openQualityControlSettings);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openToolSettingsDialog,
+          this->settingsPresenter(), &SettingsPresenter::openToolSettings);
 
   this->settingsPresenter()->setHelp(this->helpDialog());
 }
 
 void ComponentsManager::initAndOpenMultiviewMatchingAssessmentDialog()
 {
-  disconnect(mMainWindowPresenter, SIGNAL(openMultiviewMatchingAssessmentDialog()), this, SLOT(initAndOpenMultiviewMatchingAssessmentDialog()));
-  connect(mMainWindowPresenter, SIGNAL(openMultiviewMatchingAssessmentDialog()), this->multiviewMatchingAssessmentPresenter(), SLOT(open()));
+  disconnect(mMainWindowPresenter, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog,
+             this, &ComponentsManager::initAndOpenMultiviewMatchingAssessmentDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog,
+          this->multiviewMatchingAssessmentPresenter(), &PhotoMatchPresenter::open);
 
   this->multiviewMatchingAssessmentPresenter()->open();
 }

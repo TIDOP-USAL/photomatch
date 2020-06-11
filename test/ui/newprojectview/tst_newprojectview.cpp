@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/NewProjectView.h"
+#include "photomatch/ui/createproj/NewProjectView.h"
 
 #include <QLineEdit>
 #include <QCheckBox>

@@ -149,11 +149,11 @@ public:
 
 private:
 
-#if CV_VERSION_MAJOR >= 4
-  cv::FastFeatureDetector::DetectorType convertDetectorType(const QString &detectorType);
-#else
+//#if CV_VERSION_MAJOR >= 4
+//  cv::FastFeatureDetector::DetectorType convertDetectorType(const QString &detectorType);
+//#else
   int convertDetectorType(const QString &detectorType);
-#endif
+//#endif
 
   void update();
 

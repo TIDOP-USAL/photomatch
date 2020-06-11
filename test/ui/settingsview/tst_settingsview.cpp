@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/SettingsView.h"
+#include "photomatch/ui/settings/SettingsView.h"
 
 #include <QComboBox>
 #include <QPushButton>

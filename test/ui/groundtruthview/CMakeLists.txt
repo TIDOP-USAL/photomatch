@@ -10,9 +10,9 @@ set(test_KIND TEST)
 set(the_target "${test_kind}_${test_name}")
 add_executable(${the_target}
     ${test_filename}
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/GroundTruthView.cpp
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/GroundTruthView.h
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/GroundTruth.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/groundtruth/GroundTruthView.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/groundtruth/GroundTruthView.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/groundtruth/GroundTruth.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.cpp
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/utils/GraphicViewer.h
