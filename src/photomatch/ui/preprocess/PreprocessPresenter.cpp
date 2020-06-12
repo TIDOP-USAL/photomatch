@@ -392,6 +392,8 @@ void PreprocessPresenterImp::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
+  mMultiProcess->clearProcessList();
+
   emit finished();
 
   msgWarning("Processing has been canceled by the user");
@@ -410,8 +412,6 @@ void PreprocessPresenterImp::run()
         return;
       }
     }
-
-    mMultiProcess->clearProcessList();
 
     QString currentPreprocess = mView->currentPreprocess();
     std::shared_ptr<ImageProcess> image_process = this->preprocess(currentPreprocess);
@@ -556,6 +556,8 @@ void PreprocessPresenterImp::onError(int code, const QString &msg)
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
+  mMultiProcess->clearProcessList();
+
   emit finished();
 }
 
@@ -574,6 +576,8 @@ void PreprocessPresenterImp::onFinished()
     disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
+
+  mMultiProcess->clearProcessList();
 
   emit finished();
 
