@@ -21,16 +21,16 @@
  *                                                                      *
  ************************************************************************/
 
+#include "ExternalProcess.h"
+
+#include <iostream>
 
 #include <QDir>
 #include <QWaitCondition>
 #include <QDebug>
 #include <csignal>
-
-#include <iostream>
-
-#include "ExternalProcess.h"
-
+#include <QFileSystemWatcher>
+#include <QFile>
 
 ExternalProcess::ExternalProcess(const QString &commandPath)
   : mCommandPath(commandPath),
@@ -48,70 +48,85 @@ ExternalProcess::ExternalProcess(const QString &commandPath)
 
   mErrorWatcher = new QFileSystemWatcher(QStringList() << mErrorFilePath);
 
-  connect(mErrorWatcher, SIGNAL(fileChanged(QString)),this,SLOT(onError(QString)));
-  connect(this, SIGNAL(error(QProcess::ProcessError)),this,SLOT(onError(QProcess::ProcessError)));
-  connect(mProcess,SIGNAL(readyReadStandardOutput()),this, SIGNAL(readyReadStandardOutput()));
-  connect(mProcess,SIGNAL(readyReadStandardError()),this, SIGNAL(readyReadStandardError()));
-  connect(mProcess,SIGNAL(readyReadStandardOutput()),this, SLOT(on_newStdData()));
-  connect(mProcess,SIGNAL(readyReadStandardError()),this, SLOT(on_newErrorData()));
-//    connect(&mTimer,SIGNAL(timeout()),this,SLOT(onTimeout()));
+  connect(mErrorWatcher, SIGNAL(fileChanged(QString)), this, SLOT(onError(QString)));
+  connect(this, SIGNAL(error(QProcess::ProcessError)), this, SLOT(onError(QProcess::ProcessError)));
+  connect(mProcess, SIGNAL(readyReadStandardOutput()), this, SIGNAL(readyReadStandardOutput()));
+  connect(mProcess, SIGNAL(readyReadStandardError()), this, SIGNAL(readyReadStandardError()));
+  connect(mProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(on_newStdData()));
+  connect(mProcess, SIGNAL(readyReadStandardError()), this, SLOT(on_newErrorData()));
 }
 
 ExternalProcess::~ExternalProcess()
 {
-  delete mProcess;
-  delete mErrorWatcher;
-  delete mStdOutFile;
-  delete mErrOutFile;
+  if (mProcess) {
+    delete mProcess;
+    mProcess = nullptr;
+  }
+
+  if (mErrorWatcher) {
+    delete mErrorWatcher;
+    mErrorWatcher = nullptr;
+  }
+
+  if (mStdOutFile) {
+    delete mStdOutFile;
+    mStdOutFile = nullptr;
+  }
+
+  if (mErrOutFile) {
+    delete mErrOutFile;
+    mErrOutFile = nullptr;
+  }
 }
 
 void ExternalProcess::start()
 {
-    run();
+  run();
 }
 
 void ExternalProcess::setWaitForFinished(bool wait)
 {
-    mProcess->waitForFinished();
+  mProcess->waitForFinished();
 }
 
 bool ExternalProcess::isRunning()
 {
-    return mRunning;
+  return mRunning;
 }
 
 void ExternalProcess::run()
 {
-    mRunning = true;
+  mRunning = true;
 
-    //Open log files:
-    mStdOutFile->setFileName(mStdOutputFilePath);
-    if(mStdOutFile->exists())
-        mStdOutFile->open(QFile::WriteOnly);
-    mErrOutFile->setFileName(mStdErrorFilePath);
-    if(mErrOutFile->exists())
-        mErrOutFile->open(QFile::WriteOnly);
+  this->openLogFiles();
 
-    QDir workingDir(mWorkingDir);
-    if (workingDir.exists(mWorkingDir))
-        mProcess->setWorkingDirectory(mWorkingDir);
-    connect(mProcess,SIGNAL(finished(int)),this, SLOT(on_mProcessFinished(int)));
-    emit statusChanged(0,getStartupMessage());
-//    std::cout<<"Working dir="<<mWorkingDir.toStdString()<<std::endl;
-//    std::cout<<"Command path="<<mCommandPath.toStdString()<<std::endl;
-//    std::cout<<"Inputs:"<<std::endl;
-//    for(int ni=0;ni<mInputs.size();ni++)
-//    {
-//        if(ni==1)
-//        {
-//            QString input=mInputs[ni];
-//            input=input.replace("\\","/");
-//            input=""""+input+"""";
-//            mInputs[ni]=input;
-//        }
-//        std::cout<<"input["<<QString::number(ni).toStdString()<<"]="<<mInputs[ni].toStdString()<<std::endl;
-//    }
-    mProcess->start(mCommandPath, mInputs);
+  QDir workingDir(mWorkingDir);
+  if (workingDir.exists(mWorkingDir))
+    mProcess->setWorkingDirectory(mWorkingDir);
+    
+  connect(mProcess, SIGNAL(finished(int)), this, SLOT(on_mProcessFinished(int)));
+    
+  emit statusChanged(0, startupMessage());
+
+  mProcess->start(mCommandPath, mInputs);
+}
+
+void ExternalProcess::openLogFiles()
+{
+  mStdOutFile->setFileName(mStdOutputFilePath);
+  if (mStdOutFile->exists())
+    mStdOutFile->open(QFile::WriteOnly);
+  mErrOutFile->setFileName(mStdErrorFilePath);
+  if (mErrOutFile->exists())
+    mErrOutFile->open(QFile::WriteOnly);
+}
+
+void ExternalProcess::closeLogFiles()
+{
+  if (mStdOutFile->exists())
+    mStdOutFile->close();
+  if (mErrOutFile->exists())
+    mErrOutFile->close();
 }
 
 void ExternalProcess::setWorkingDir(const QString &workingDir)
@@ -129,9 +144,9 @@ void ExternalProcess::onError(const QString &path)
 {
   QFileInfo fileInfo(mErrorFilePath);
   int errorFileSize = fileInfo.size();
-  if (errorFileSize > 0 && (errorFileSize - mErrorFileSize) < 0){
-      stop();
-      emit Process::error(1, mCommandPath);
+  if (errorFileSize > 0 && (errorFileSize - mErrorFileSize) < 0) {
+    stop();
+    emit Process::error(1, mCommandPath);
   }
 }
 
@@ -147,7 +162,7 @@ void ExternalProcess::on_newStdData()
   QString out(array);
   emit newStdData(out);
   if(mStdOutFile->exists()){
-      mStdOutFile->write(array);
+    mStdOutFile->write(array);
   }
 }
 
@@ -163,15 +178,11 @@ void ExternalProcess::on_newErrorData()
 
 void ExternalProcess::on_mProcessFinished(int code)
 {
-  disconnect(mProcess,SIGNAL(finished(int)),this, SLOT(on_mProcessFinished(int)));
-  emit statusChanged(1,getStartupMessage());
+  disconnect(mProcess, SIGNAL(finished(int)), this, SLOT(on_mProcessFinished(int)));
+  emit statusChanged(1, startupMessage());
   mRunning = false;
 
-  //Close log files:
-  if(mStdOutFile->exists())
-    mStdOutFile->close();
-  if(mErrOutFile->exists())
-    mErrOutFile->close();
+  this->closeLogFiles();
 
   qDebug() << QString(" ************** Finishing: ") << mCommandPath <<
               QString(" ExitCode: ") << QString::number(code) << QString(" ExitCode: ") << this->objectName();
@@ -208,24 +219,24 @@ void ExternalProcess::setStdErrorFilePath(const QString &filePath)
 
 qint64 ExternalProcess::write(const char *data)
 {
-    return mProcess->write(data);
+  return mProcess->write(data);
 }
 
 QByteArray ExternalProcess::readStdout()
 {
-    return mProcess->readAllStandardOutput();
+  return mProcess->readAllStandardOutput();
 }
 
 QByteArray ExternalProcess::readStderr()
 {
-    return mProcess->readAllStandardError();
+  return mProcess->readAllStandardError();
 }
 
 void ExternalProcess::insertEnvironmentVar(const QString &varName, const QString &value)
 {
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert(varName, value);
-    mProcess->setProcessEnvironment(env);
+  QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+  env.insert(varName, value);
+  mProcess->setProcessEnvironment(env);
 }
 
 void ExternalProcess::appendEnvironmentValue(const QString &varName, const QString &value, int position)
