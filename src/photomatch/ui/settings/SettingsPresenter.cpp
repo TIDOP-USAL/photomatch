@@ -57,7 +57,6 @@
 #include "photomatch/widgets/HogWidget.h"
 #include "photomatch/widgets/KazeWidget.h"
 #include "photomatch/widgets/LatchWidget.h"
-//#include "photomatch/widgets/LucidWidget.h"
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
@@ -249,11 +248,6 @@ SettingsPresenterImp::~SettingsPresenterImp()
     mLatch = nullptr;
   }
 
-//  if (mLucid){
-//    delete mLucid;
-//    mLucid = nullptr;
-//  }
-
   if (mMsd){
     delete mMsd;
     mMsd = nullptr;
@@ -301,12 +295,6 @@ SettingsPresenterImp::~SettingsPresenterImp()
   }
 }
 
-//void SettingsPresenter::openPage(int page)
-//{
-//  mView->setPage(page);
-//  this->open();
-//}
-
 void SettingsPresenterImp::openViewSettings()
 {
   mView->setPage(1);
@@ -335,6 +323,15 @@ void SettingsPresenterImp::help()
 
 void SettingsPresenterImp::open()
 {
+  this->setGeneralSettings();
+  this->setToolsSettings();
+  this->setQualityControlSettings();
+
+  mView->exec();
+}
+
+void SettingsPresenterImp::setGeneralSettings()
+{
   QStringList languages = mModel->languages();
   QStringList langs;
   mLang.clear();
@@ -352,58 +349,155 @@ void SettingsPresenterImp::open()
 
   mView->setHistoryMaxSize(mModel->historyMaxSize());
   mView->setUseCuda(mModel->useCuda());
-  mView->setCudaEnabled(false);
 #ifdef HAVE_CUDA
   mView->setCudaEnabled(true);
 #else
   mView->setCudaEnabled(false);
 #endif //HAVE_CUDA
 
-  mView->setKeypointsFormat(mModel->keypointsFormat());
-  mView->setMatchesFormat(mModel->matchesFormat());
+}
 
+void SettingsPresenterImp::setToolsSettings()
+{
+  this->setKeypointsFormat();
+  this->setMatchesFormat();
+  this->setPreprocessSettings();
+  this->setFeatureDetectorExtractorSettings();
+  this->setMatchingSettings();
+}
+
+void SettingsPresenterImp::setKeypointsFormat()
+{
+  mView->setKeypointsFormat(mModel->keypointsFormat());
+}
+
+void SettingsPresenterImp::setMatchesFormat()
+{
+  mView->setMatchesFormat(mModel->matchesFormat());
+}
+
+void SettingsPresenterImp::setPreprocessSettings()
+{
+  this->setAcebsfSettings();
+  this->setClaheSettings();
+  this->setCmbfhe();
+  this->setDheSettings();
+  this->setFahe();
+  this->setHmclaheSettings();
+  this->setLceBsescsSettings();
+  this->setMsrcpSettings();
+  this->setNoshpSettings();
+  this->setPoheSettings();
+  this->setRswheSettings();
+  this->setWallisSettings();
+}
+
+void SettingsPresenterImp::setAcebsfSettings()
+{
   mACEBSF->setBlockSize(mModel->acebsfBlockSize());
   mACEBSF->setL(mModel->acebsfL());
   mACEBSF->setK1(mModel->acebsfK1());
   mACEBSF->setK2(mModel->acebsfK2());
+}
 
+void SettingsPresenterImp::setClaheSettings()
+{
   mCLAHE->setClipLimit(mModel->claheClipLimit());
   mCLAHE->setTilesGridSize(mModel->claheTilesGridSize());
+}
 
-  mCMBFHE->setBlockSize(mModel->faheBlockSize());
 
+void SettingsPresenterImp::setCmbfhe()
+{
+  mCMBFHE->setBlockSize(mModel->cmbfheBlockSize());
+}
+
+void SettingsPresenterImp::setDheSettings()
+{
   mDHE->setX(mModel->dheX());
+}
 
+void SettingsPresenterImp::setFahe()
+{
   mFAHE->setBlockSize(mModel->faheBlockSize());
+}
 
+void SettingsPresenterImp::setHmclaheSettings()
+{
   mHMCLAHE->setBlockSize(mModel->hmclaheBlockSize());
   mHMCLAHE->setL(mModel->hmclaheL());
   mHMCLAHE->setPhi(mModel->hmclahePhi());
+}
 
+void SettingsPresenterImp::setLceBsescsSettings()
+{
   mLCEBSESCS->setBlockSize(mModel->lceBsescsBlockSize());
+}
 
+void SettingsPresenterImp::setMsrcpSettings()
+{
   mMSRCP->setMidScale(mModel->msrcpMidScale());
   mMSRCP->setLargeScale(mModel->msrcpLargeScale());
   mMSRCP->setSmallScale(mModel->msrcpSmallScale());
+}
 
+void SettingsPresenterImp::setNoshpSettings()
+{
   mNOSHP->setBlockSize(mModel->noshpBlockSize());
+}
 
+void SettingsPresenterImp::setPoheSettings()
+{
   mPOHE->setBlockSize(mModel->poheBlockSize());
+}
 
+void SettingsPresenterImp::setRswheSettings()
+{
   mRSWHE->setHistogramCut(static_cast<RswheWidget::HistogramCut>(mModel->rswheHistogramCut()));
   mRSWHE->setHistogramDivisions(mModel->rswheHistogramDivisions());
+}
 
+void SettingsPresenterImp::setWallisSettings()
+{
   mWallis->setContrast(mModel->wallisContrast());
   mWallis->setBrightness(mModel->wallisBrightness());
   mWallis->setKernelSize(mModel->wallisKernelSize());
   mWallis->setImposedAverage(mModel->wallisImposedAverage());
   mWallis->setImposedLocalStdDev(mModel->wallisImposedLocalStdDev());
+}
 
+void SettingsPresenterImp::setFeatureDetectorExtractorSettings()
+{
+  this->setAgastSettings();
+  this->setAkazeSettings();
+  this->setBoostSettings();
+  this->setBriefSettings();
+  this->setBriskSettings();
+  this->setDaisySettings();
+  this->setFastSettings();
+  this->setFreakSettings();
+  this->setGfttSettings();
+  this->setHogSettings();
+  this->setKazeSettings();
+  this->setLatchSettings();
+  this->setMsdSettings();
+  this->setMserSettings();
+  this->setOrbSettings();
+  this->setSiftSettings();
+  this->setStarSettings();
+  this->setSurfSettings();
+  this->setVggSettings();
+}
 
+void SettingsPresenterImp::setAgastSettings()
+{
   mAgast->setThreshold(mModel->agastThreshold());
   mAgast->setDetectorType(mModel->agastDetectorType());
   mAgast->setNonmaxSuppression(mModel->agastNonmaxSuppression());
+}
 
+void SettingsPresenterImp::setAkazeSettings()
+{
   mAkaze->setOctaves(mModel->akazeOctaves());
   mAkaze->setThreshold(mModel->akazeThreshold());
   mAkaze->setDiffusivity(mModel->akazeDiffusivity());
@@ -411,20 +505,32 @@ void SettingsPresenterImp::open()
   mAkaze->setDescriptorSize(mModel->akazeDescriptorSize());
   mAkaze->setDescriptorType(mModel->akazeDescriptorType());
   mAkaze->setDescriptorChannels(mModel->akazeDescriptorChannels());
+}
 
+void SettingsPresenterImp::setBoostSettings()
+{
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mBoost->setDescriptorType(mModel->boostDescriptorType());
   mBoost->setUseOrientation(mModel->boostUseOrientation());
   mBoost->setScaleFactor(mModel->boostScaleFactor());
 #endif
+}
 
+void SettingsPresenterImp::setBriefSettings()
+{
   mBrief->setBytes(mModel->briefBytes());
   mBrief->setUseOrientation(mModel->briefUseOrientation());
+}
 
+void SettingsPresenterImp::setBriskSettings()
+{
   mBrisk->setThreshold(mModel->briskThreshold());
   mBrisk->setOctaves(mModel->briskOctaves());
   mBrisk->setPatternScale(mModel->briskPatternScale());
+}
 
+void SettingsPresenterImp::setDaisySettings()
+{
   mDaisy->setNorm(mModel->daisyNorm());
   mDaisy->setQRadius(mModel->daisyQRadius());
   mDaisy->setQTheta(mModel->daisyQTheta());
@@ -432,44 +538,62 @@ void SettingsPresenterImp::open()
   mDaisy->setNorm(mModel->daisyNorm());
   mDaisy->setInterpolation(mModel->daisyInterpolation());
   mDaisy->setUseOrientation(mModel->daisyUseOrientation());
+}
 
+void SettingsPresenterImp::setFastSettings()
+{
   mFast->setThreshold(mModel->fastThreshold());
   mFast->setNonmaxSuppression(mModel->fastNonmaxSuppression());
   mFast->setDetectorType(mModel->fastdetectorType());
+}
 
+void SettingsPresenterImp::setFreakSettings()
+{
   mFreak->setOrientationNormalized(mModel->freakOrientationNormalized());
   mFreak->setScaleNormalized(mModel->freakScaleNormalized());
   mFreak->setPatternScale(mModel->freakPatternScale());
   mFreak->setOctaves(mModel->freakOctaves());
+}
 
+void SettingsPresenterImp::setGfttSettings()
+{
   mGftt->setMaxFeatures(mModel->gfttMaxFeatures());
   mGftt->setQualityLevel(mModel->gfttQualityLevel());
   mGftt->setMinDistance(mModel->gfttMinDistance());
   mGftt->setBlockSize(mModel->gfttBlockSize());
   mGftt->setHarrisDetector(mModel->gfttHarrisDetector());
   mGftt->setK(mModel->gfttK());
+}
 
+void SettingsPresenterImp::setHogSettings()
+{
   mHog->setWinSize(mModel->hogWinSize());
   mHog->setBlockSize(mModel->hogBlockSize());
   mHog->setBlockStride(mModel->hogBlockStride());
   mHog->setCellSize(mModel->hogCellSize());
   mHog->setNbins(mModel->hogNbins());
   mHog->setDerivAperture(mModel->hogDerivAperture());
+}
 
+void SettingsPresenterImp::setKazeSettings()
+{
   mKaze->setExtendedDescriptor(mModel->kazeExtendedDescriptor());
   mKaze->setUprightDescriptor(mModel->kazeUpright());
   mKaze->setThreshold(mModel->kazeUpright());
   mKaze->setOctaves(mModel->kazeOctaves());
   mKaze->setOctaveLayers(mModel->kazeOctaveLayers());
   mKaze->setDiffusivity(mModel->kazeDiffusivity());
+}
 
+void SettingsPresenterImp::setLatchSettings()
+{
   mLatch->setBytes(mModel->latchBytes());
   mLatch->setRotationInvariance(mModel->latchRotationInvariance());
   mLatch->setHalfSsdSize(mModel->latchHalfSsdSize());
+}
 
-//  mLucid->setLucidKernel(mModel->lucidKernel());
-//  mLucid->setBlurKernel(mModel->lucidBlurKernel());
-
+void SettingsPresenterImp::setMsdSettings()
+{
   mMsd->setThresholdSaliency(mModel->msdThresholdSaliency());
   mMsd->setPatchRadius(mModel->msdPathRadius());
   mMsd->setKNN(mModel->msdKnn());
@@ -481,7 +605,10 @@ void SettingsPresenterImp::open()
   mMsd->setComputeOrientations(mModel->msdComputeOrientations());
   mMsd->setAffineMSD(mModel->msdAffineMSD());
   mMsd->setTilts(mModel->msdTilts());
+}
 
+void SettingsPresenterImp::setMserSettings()
+{
   mMser->setDelta(mModel->mserDelta());
   mMser->setMaxArea(mModel->mserMaxArea());
   mMser->setMinArea(mModel->mserMinArea());
@@ -491,7 +618,10 @@ void SettingsPresenterImp::open()
   mMser->setAreaThreshold(mModel->mserAreaThreshold());
   mMser->setMinMargin(mModel->mserMinMargin());
   mMser->setEdgeBlurSize(mModel->mserEdgeBlurSize());
+}
 
+void SettingsPresenterImp::setOrbSettings()
+{
   mOrb->setScaleFactor(mModel->orbScaleFactor());
   mOrb->setFeaturesNumber(mModel->orbFeaturesNumber());
   mOrb->setLevelsNumber(mModel->orbLevelsNumber());
@@ -500,7 +630,10 @@ void SettingsPresenterImp::open()
   mOrb->setScoreType(mModel->orbScoreType());
   mOrb->setPatchSize(mModel->orbPatchSize());
   mOrb->setFastThreshold(mModel->orbFastThreshold());
+}
 
+void SettingsPresenterImp::setSiftSettings()
+{
 #ifdef OPENCV_ENABLE_NONFREE
   mSift->setSigma(mModel->siftSigma());
   mSift->setOctaveLayers(mModel->siftOctaveLayers());
@@ -508,13 +641,19 @@ void SettingsPresenterImp::open()
   mSift->setFeaturesNumber(mModel->siftFeaturesNumber());
   mSift->setContrastThreshold(mModel->siftContrastThreshold());
 #endif
+}
 
+void SettingsPresenterImp::setStarSettings()
+{
   mStar->setMaxSize(mModel->starMaxSize());
   mStar->setResponseThreshold(mModel->starResponseThreshold());
   mStar->setLineThresholdProjected(mModel->starLineThresholdProjected());
   mStar->setLineThresholdBinarized(mModel->starLineThresholdBinarized());
   mStar->setSuppressNonmaxSize(mModel->starSuppressNonmaxSize());
+}
 
+void SettingsPresenterImp::setSurfSettings()
+{
 #ifdef OPENCV_ENABLE_NONFREE
   mSurf->setOctaves(mModel->surfOctaves());
   mSurf->setOctaveLayers(mModel->surfOctaveLayers());
@@ -522,7 +661,10 @@ void SettingsPresenterImp::open()
   mSurf->setHessianThreshold(mModel->surfHessianThreshold());
   mSurf->setExtendedDescriptor(mModel->surfExtendedDescriptor());
 #endif
+}
 
+void SettingsPresenterImp::setVggSettings()
+{
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mVgg->setDescriptorType(mModel->boostDescriptorType());
   mVgg->setScaleFactor(mModel->boostScaleFactor());
@@ -531,7 +673,10 @@ void SettingsPresenterImp::open()
   mVgg->setUseNormalizeImage(mModel->vggUseNormalizeImage());
   mVgg->setUseScaleOrientation(mModel->vggUseScaleOrientation());
 #endif
+}
 
+void SettingsPresenterImp::setMatchingSettings()
+{
   mMatcher->setMatchingMethod(mModel->matchMethod());
   mMatcher->setNormType(mModel->matchNormType());
   mMatcher->setRatio(mModel->matchRatio());
@@ -543,7 +688,10 @@ void SettingsPresenterImp::open()
   mMatcher->setHomographyComputeMethod(mModel->matchHomographyComputeMethod());
   mMatcher->setFundamentalComputeMethod(mModel->matchFundamentalComputeMethod());
   mMatcher->setEssentialComputeMethod(mModel->matchEssentialComputeMethod());
+}
 
+void SettingsPresenterImp::setQualityControlSettings()
+{
   mView->setKeypointsViewerBGColor(mModel->keypointsViewerBGColor());
   mView->setKeypointsViewerMarkerType(mModel->keypointsViewerMarkerType());
   mView->setKeypointsViewerMarkerSize(mModel->keypointsViewerMarkerSize());
@@ -569,8 +717,6 @@ void SettingsPresenterImp::open()
   mView->setSelectGroundTruthEditorMarkerWidth(mModel->groundTruthEditorSelectMarkerWidth());
   mView->setSelectGroundTruthEditorMarkerColor(mModel->groundTruthEditorSelectMarkerColor());
   mView->setGroundTruthEditorMatrixAdjust(mModel->groundTruthEditorMatrixAdjust());
-
-  mView->exec();
 }
 
 void SettingsPresenterImp::setHelp(HelpDialog *help)
@@ -579,6 +725,13 @@ void SettingsPresenterImp::setHelp(HelpDialog *help)
 }
 
 void SettingsPresenterImp::init()
+{
+  this->addPreprocesses();
+  this->addFeatureDetectorMethods();
+  this->addDescriptorMatcher();
+}
+
+void SettingsPresenterImp::addPreprocesses()
 {
   mView->addPreprocess(mACEBSF);
   mView->addPreprocess(mCLAHE);
@@ -592,7 +745,10 @@ void SettingsPresenterImp::init()
   mView->addPreprocess(mPOHE);
   mView->addPreprocess(mRSWHE);
   mView->addPreprocess(mWallis);
+}
 
+void SettingsPresenterImp::addFeatureDetectorMethods()
+{
 #ifdef OPENCV_ENABLE_NONFREE
   mView->addFeatureDetectorMethod(mSift);
   mView->addFeatureDetectorMethod(mSurf);
@@ -612,7 +768,6 @@ void SettingsPresenterImp::init()
   mView->addFeatureDetectorMethod(mHog);
   mView->addFeatureDetectorMethod(mKaze);
   mView->addFeatureDetectorMethod(mLatch);
-  //mView->addFeatureDetectorMethod(mLucid);
   mView->addFeatureDetectorMethod(mMsd);
   mView->addFeatureDetectorMethod(mMser);
   mView->addFeatureDetectorMethod(mStar);
@@ -620,24 +775,22 @@ void SettingsPresenterImp::init()
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
   mView->addFeatureDetectorMethod(mVgg);
 #endif
+}
 
+void SettingsPresenterImp::addDescriptorMatcher()
+{
   mView->addDescriptorMatcher(mMatcher);
 }
 
 void SettingsPresenterImp::initSignalAndSlots()
 {
-  connect(mView, SIGNAL(languageChange(QString)),        this,   SLOT(setLanguage(QString)));
-  connect(mView, SIGNAL(historyMaxSizeChange(int)),      mModel, SLOT(setHistoryMaxSize(int)));
-  connect(mView, SIGNAL(keypointsFormatChange(QString)), mModel, SLOT(setKeypointsFormat(QString)));
-  connect(mView, SIGNAL(matchesFormatChange(QString)),   mModel, SLOT(setMatchesFormat(QString)));
-  connect(mView, SIGNAL(useCudaChange(bool)),            mModel, SLOT(setUseCuda(bool)));
+  connect(mView, &SettingsView::languageChange,        this,   &SettingsPresenterImp::setLanguage);
+  connect(mView, &SettingsView::historyMaxSizeChange,  mModel, &SettingsModel::setHistoryMaxSize);
+  connect(mView, &SettingsView::keypointsFormatChange, mModel, &SettingsModel::setKeypointsFormat);
+  connect(mView, &SettingsView::matchesFormatChange,   mModel, &SettingsModel::setMatchesFormat);
+  connect(mView, &SettingsView::useCudaChange,         mModel, &SettingsModel::setUseCuda);
 
-  connect(mView, SIGNAL(imageViewerBGColorChange(QString)),  mModel, SLOT(setImageViewerBGcolor(QString)));
-
-  connect(mView, SIGNAL(accepted()), this, SLOT(save()));
-  connect(mView, SIGNAL(applyChanges()), this, SLOT(save()));
-  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+  connect(mView, &SettingsView::imageViewerBGColorChange,  mModel, &SettingsModel::setImageViewerBGcolor);
 
   connect(mModel, SIGNAL(unsavedChanges(bool)), mView, SLOT(setUnsavedChanges(bool)));
 
@@ -879,6 +1032,12 @@ void SettingsPresenterImp::initSignalAndSlots()
   connect(mView, SIGNAL(selectGroundTruthEditorMarkerWidthChange(int)),     mModel, SLOT(setGroundTruthEditorSelectMarkerWidth(int)));
   connect(mView, SIGNAL(selectGroundTruthEditorMarkerColorChange(QString)), mModel, SLOT(setGroundTruthEditorSelectMarkerColor(QString)));
   connect(mView, SIGNAL(groundTruthEditorMatrixAdjustChange(QString)),      mModel, SLOT(setGroundTruthEditorMatrixAdjust(QString)));
+
+  connect(mView, SIGNAL(accepted()), this, SLOT(save()));
+  connect(mView, SIGNAL(applyChanges()), this, SLOT(save()));
+  connect(mView, SIGNAL(rejected()), this, SLOT(discart()));
+  connect(mView, SIGNAL(help()), this, SLOT(help()));
+
 }
 
 void SettingsPresenterImp::setLanguage(const QString &language)

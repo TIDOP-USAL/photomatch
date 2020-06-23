@@ -666,17 +666,17 @@ int SettingsModelImp::siftOctaveLayers() const
   return mSettings->sift()->octaveLayers();
 }
 
-double SettingsModelImp::siftContrastThreshold()
+double SettingsModelImp::siftContrastThreshold() const
 {
   return mSettings->sift()->contrastThreshold();
 }
 
-double SettingsModelImp::siftEdgeThreshold()
+double SettingsModelImp::siftEdgeThreshold() const
 {
   return mSettings->sift()->edgeThreshold();
 }
 
-double SettingsModelImp::siftSigma()
+double SettingsModelImp::siftSigma() const
 {
   return mSettings->sift()->sigma();
 }

@@ -222,9 +222,9 @@ public:
 
   virtual int siftFeaturesNumber() const = 0;
   virtual int siftOctaveLayers() const = 0;
-  virtual double siftContrastThreshold() = 0;
-  virtual double siftEdgeThreshold() = 0;
-  virtual double siftSigma() = 0;
+  virtual double siftContrastThreshold() const = 0;
+  virtual double siftEdgeThreshold() const  = 0;
+  virtual double siftSigma() const = 0;
 
   virtual int starMaxSize() const  = 0;
   virtual int starResponseThreshold() const  = 0;
@@ -675,11 +675,11 @@ public slots:
 
 signals:
 
-  void languageChange(QString);
+  void languageChange(const QString &);
   void historyMaxSizeChange(int);
-  void imageViewerBGColorChange(QString);
-  void keypointsFormatChange(QString);
-  void matchesFormatChange(QString);
+  void imageViewerBGColorChange(const QString&);
+  void keypointsFormatChange(const QString&);
+  void matchesFormatChange(const QString&);
   void useCudaChange(bool);
   void applyChanges();
 

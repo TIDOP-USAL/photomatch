@@ -90,11 +90,64 @@ public:
                        SettingsModel *model);
   ~SettingsPresenterImp() override;
 
+private:
+
+  void setGeneralSettings();
+  void setToolsSettings();
+  void setKeypointsFormat();
+  void setMatchesFormat();
+  void setPreprocessSettings();
+  void setAcebsfSettings();
+  void setClaheSettings();
+  void setCmbfhe();
+  void setDheSettings();
+  void setFahe();
+  void setHmclaheSettings();
+  void setLceBsescsSettings();
+  void setMsrcpSettings();
+  void setNoshpSettings();
+  void setPoheSettings();
+  void setRswheSettings();
+  void setWallisSettings();
+  void setFeatureDetectorExtractorSettings();
+  void setAgastSettings();
+  void setAkazeSettings();
+  void setBoostSettings();
+  void setBriefSettings();
+  void setBriskSettings();
+  void setDaisySettings();
+  void setFastSettings();
+  void setFreakSettings();
+  void setGfttSettings();
+  void setHogSettings();
+  void setKazeSettings();
+  void setLatchSettings();
+  void setMsdSettings();
+  void setMserSettings();
+  void setOrbSettings();
+  void setSiftSettings();
+  void setStarSettings();
+  void setSurfSettings();
+  void setVggSettings();
+  void setMatchingSettings();
+  void setQualityControlSettings();
+  void addPreprocesses();
+  void addFeatureDetectorMethods();
+  void addDescriptorMatcher();
+
+// SettingsPresenter interface
+
 public slots:
 
   void openViewSettings() override;
   void openQualityControlSettings() override;
   void openToolSettings() override;
+
+private slots:
+
+  void setLanguage(const QString& language) override;
+  void save() override;
+  void discart() override;
 
 // PhotoMatchModel interface
 
@@ -108,14 +161,6 @@ private:
 
   void init() override;
   void initSignalAndSlots() override;
-
-// SettingsPresenter interface
-
-private slots:
-
-  void setLanguage(const QString &language) override;
-  void save() override;
-  void discart() override;
 
 protected:
 
