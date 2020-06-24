@@ -2094,9 +2094,4 @@ void SettingsModelImp::write()
   emit unsavedChanges(false);
 }
 
-//bool SettingsModel::checkUnsavedChanges() const
-//{
-//  return bUnsavedChanges;
-//}
-
 } // namespace photomatch

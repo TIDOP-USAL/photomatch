@@ -61,7 +61,7 @@ public:
   
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
   //void stepSizeChange(QSize);
   
 public slots:

@@ -109,7 +109,7 @@ signals:
   void qRadiusChange(int);
   void qThetaChange(int);
   void qHistChange(int);
-  void normChange(QString);
+  void normChange(const QString &);
   void interpolationChange(bool);
   void useOrientationChange(bool);
 

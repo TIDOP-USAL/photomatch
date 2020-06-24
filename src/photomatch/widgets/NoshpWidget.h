@@ -52,7 +52,7 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
 
 public slots:
 

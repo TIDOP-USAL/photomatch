@@ -68,7 +68,7 @@ public:
 
 signals:
 
-  void bytesChange(QString);
+  void bytesChange(const QString &);
   void useOrientationChange(bool);
 
 public slots:
