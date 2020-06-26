@@ -217,7 +217,6 @@ target_link_libraries(${PROJECT_NAME}
                       libwidgets
                       libprocess
                       ${OpenCV_LIBS}
-#                      ${Boost_ATOMIC_LIBRARY}
                       ${PIXKIT_LIBRARIES}
 )
 
@@ -229,7 +228,13 @@ target_link_libraries(${PROJECT_NAME}
                       ${Boost_CHRONO_LIBRARY})
 
 if(HAVE_VLD)
-target_link_libraries(${PROJECT_NAME} ${VLD_LIBRARY})
+target_link_libraries(${PROJECT_NAME}
+                      ${VLD_LIBRARY})
+endif()
+
+if (HAVE_CUDA)
+target_link_libraries(${PROJECT_NAME}
+                      ${CUDA_LIBRARIES})
 endif()
 
 if(ENABLE_SOLUTION_FOLDERS)

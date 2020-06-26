@@ -348,6 +348,7 @@ class PHOTOMATCH_EXPORT SettingsImp
 public:
 
   SettingsImp();
+  SettingsImp(const SettingsImp &settings) = delete;
   ~SettingsImp() override;
 
 // Settings interface

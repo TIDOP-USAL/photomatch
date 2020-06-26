@@ -513,7 +513,7 @@ void SettingsViewImp::initSignalAndSlots()
 
   connect(mKeypointsFormat,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(keypointsFormatChange(QString)));
   connect(mMatchesFormat,    SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchesFormatChange(QString)));
-  connect(mCheckBoxUseCuda,  SIGNAL(clicked(bool)),                this, SIGNAL(useCudaChange(bool)));
+  connect(mCheckBoxUseCuda,  &QAbstractButton::clicked,                this, &SettingsView::useCudaChange);
 
   connect(mLineEditKeypointViewerBGColor,             SIGNAL(textChanged(QString)),         this,  SIGNAL(keypointsViewerBGColorChange(QString)));
   connect(mPushButtonKeypointViewerBGColor,           SIGNAL(clicked(bool)),                this,  SLOT(onPushButtonKeypointViewerBGColorClicked()));

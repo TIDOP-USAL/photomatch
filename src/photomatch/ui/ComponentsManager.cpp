@@ -1,5 +1,8 @@
 #include "ComponentsManager.h"
 
+#include "photomatch/core/utils.h"
+#include "photomatch/core/project.h"
+
 #include "photomatch/ui/MainWindowModel.h"
 #include "photomatch/ui/MainWindowView.h"
 #include "photomatch/ui/MainWindowPresenter.h"
@@ -63,8 +66,6 @@
 
 #include "photomatch/ui/utils/Progress.h"
 #include "photomatch/ui/utils/ProgressDialog.h"
-
-#include "photomatch/core/project.h"
 
 #include <QProgressBar>
 
@@ -416,7 +417,12 @@ SettingsModel *ComponentsManager::settingsModel()
 SettingsPresenter *ComponentsManager::settingsPresenter()
 {
   if (mSettingsPresenter == nullptr){
+//    bool bUseGPU = cudaEnabled(8.0, 5.0);
     SettingsView *view = new SettingsViewImp(this->mainWindowView());
+//    if (!bUseGPU) {
+//      this->settingsModel()->setUseCuda(false);
+//      view->setCudaEnabled(false);
+//    }
     mSettingsPresenter = new SettingsPresenterImp(view, this->settingsModel());
   }
   return mSettingsPresenter;

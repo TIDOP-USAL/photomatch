@@ -85,6 +85,7 @@ option(WITH_PIXKIT   "Include PixKit"                  ON)
 if(MSVC)
 option (WITH_VLD     "Include Visual Leak Detector Support"    OFF)
 endif(MSVC)
+option(WITH_CUDA     "Include Cuda"                    OFF)
 
 #------------------------------------------------------------#
 
@@ -158,6 +159,20 @@ endif(Boost_FOUND)
 
 #------------------------------------------------------------#
 
+if (WITH_CUDA)
+find_package(CUDA 10)
+include_directories(${CUDA_INCLUDE_DIRS})
+
+if (CUDA_FOUND)
+  message(STATUS "  Includes: ${CUDA_INCLUDE_DIRS}")
+  message(STATUS "  Libraries: ${CUDA_LIBRARIES}")
+  set(HAVE_CUDA YES)
+else()
+  set(HAVE_CUDA NO)
+endif()
+
+endif(WITH_CUDA)
+
 # OpenCV
 
 
@@ -171,12 +186,19 @@ list(APPEND OPENCV_MODULES
     calib3d
     features2d
     flann
-    objdetect
-    cudafilters
-    cudawarping
-    cudev
-    cudaarithm
-    cudafeatures2d)
+    objdetect)
+
+if(WITH_CUDA)
+    list(APPEND OPENCV_MODULES
+        cudafilters
+        cudawarping
+        cudev
+        cudaarithm
+        cudafeatures2d)
+    #set(HAVE_CUDA YES)
+else()
+    #set(HAVE_CUDA NO)
+endif(WITH_CUDA)
 
 find_package(OpenCV REQUIRED
              COMPONENTS ${OPENCV_MODULES})
