@@ -222,7 +222,7 @@ void SurfDetectorDescriptor::reset()
 /*----------------------------------------------------------------*/
 
 
-#ifdef HAVE_OPENCV_CUDAFEATURES2D
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
 
 SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor()
   : mSurf(new cv::cuda::SURF_CUDA())
