@@ -164,7 +164,7 @@ signals:
   void exit();
   void openSettings();
 
-  /* Menú View */
+  /* Menu View */
 
   void openStartPage();
   void openViewSettings();

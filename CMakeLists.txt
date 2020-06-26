@@ -59,11 +59,10 @@ endif(BUILD_TEST)
 # Se permite elegir entre libreria estatica o dinamica
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 
-# Por defecto se establece el tipo de librería estática
+
 set (LIB_TYPE STATIC)
 
 if (BUILD_SHARED_LIBS)
-  # Se configura como libreria estática
   set (LIB_TYPE SHARED)
   
   if (MSVC)
