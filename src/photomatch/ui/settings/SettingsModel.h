@@ -199,9 +199,9 @@ public:
 
   int siftFeaturesNumber() const override;
   int siftOctaveLayers() const override;
-  double siftContrastThreshold() override;
-  double siftEdgeThreshold() override;
-  double siftSigma() override;
+  double siftContrastThreshold() const override;
+  double siftEdgeThreshold() const override;
+  double siftSigma() const override;
 
   int starMaxSize() const override;
   int starResponseThreshold() const override;

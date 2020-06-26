@@ -21,93 +21,91 @@
  *                                                                      *
  ************************************************************************/
 
-
 #include "ProcessConcurrent.h"
+
+
 #include <QtConcurrent/QtConcurrentRun>
 #include <QtConcurrent/QtConcurrentMap>
+#include <QFutureWatcher>
+
 #include <iostream>
 
 
-ProcessConcurrent::ProcessConcurrent():
-    mRunning(false),
+ProcessConcurrent::ProcessConcurrent()
+  : mRunning(false),
+    mWatcher(nullptr),
     mWait(false)
 {
 }
 
+ProcessConcurrent::~ProcessConcurrent()
+{
+  if (mWatcher) {
+    delete mWatcher;
+    mWatcher = nullptr;
+  }
+}
+
 void ProcessConcurrent::start()
 {
-    mWatcher = new QFutureWatcher<int>();
-    connect(mWatcher, SIGNAL(finished()), this, SLOT(on_mProcessFinished()));
-//  connect(mWatcher, SIGNAL(finished()), this, SIGNAL(finished()));
+  mWatcher = new QFutureWatcher<int>();
 
-    mRunning = true;
-    QFuture<int> future = QtConcurrent::run(this, &ProcessConcurrent::runLauncher);
-    mWatcher->setFuture(future);
-    if (mWait)
-        future.waitForFinished();
+  connect(mWatcher, SIGNAL(finished()), this, SLOT(on_mProcessFinished()));
+
+  mRunning = true;
+  QFuture<int> future = QtConcurrent::run(this, &ProcessConcurrent::runLauncher);
+  mWatcher->setFuture(future);
+  if (mWait)
+    future.waitForFinished();
 }
 
 void ProcessConcurrent::setWaitForFinished(bool wait)
 {
-    mWait=wait;
+  mWait = wait;
 }
 
 bool ProcessConcurrent::isRunning()
 {
-    return mRunning;
+  return mRunning;
 }
 
 QByteArray ProcessConcurrent::readStdout()
 {
-    return "";
+  return "";
 }
 
 QByteArray ProcessConcurrent::readStderr()
 {
-    return "";
+  return "";
 }
 
 void ProcessConcurrent::stop()
 {
-    mWatcher->cancel();
-    if (mWatcher->isRunning())
-        mWatcher->waitForFinished();
-    mRunning = false;
+  mWatcher->cancel();
+  if (mWatcher->isRunning())
+    mWatcher->waitForFinished();
+  mRunning = false;
+
+  if (mWatcher) {
     delete mWatcher;
+    mWatcher = nullptr;
+  }
 }
 
 void ProcessConcurrent::on_mProcessFinished()
 {
-    mRunning = false;
+  mRunning = false;
+
+  if (mWatcher) {
     delete mWatcher;
-    emit finished();
+    mWatcher = nullptr;
+  }
+
+  emit finished();
 }
 
 int ProcessConcurrent::runLauncher()
 {
-    run();
-    return 0;
+  run();
+  return 0;
 }
-
-
-//template <class T>  ProcessConcurrentList<T>::ProcessConcurrentList(QVector<T> v):
-//    mVector(v)
-//{
-
-//}
-
-//template <class T> ProcessConcurrentList<T>::~ProcessConcurrentList()
-//{
-
-//}
-
-//template <class T>void ProcessConcurrentList<T>::run()
-//{
-//    mWatcher = new QFutureWatcher<int>();
-//    connect(mWatcher, SIGNAL(finished()), this, SLOT(on_mProcessFinished()));
-////  connect(mWatcher, SIGNAL(finished()), this, SIGNAL(finished()));
-
-//    mRunning = true;
-//    QFuture<int> future = QtConcurrent::map(mVector,&ProcessConcurrentList::run);
-//    mWatcher->setFuture(future);
-//}

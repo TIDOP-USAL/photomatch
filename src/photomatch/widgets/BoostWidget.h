@@ -55,7 +55,7 @@ public:
 
 signals:
 
-  void descriptorTypeChange(QString);
+  void descriptorTypeChange(const QString &);
   void useOrientationChange(bool);
   void scaleFactorChange(double);
   

@@ -48,7 +48,6 @@ private slots:
   void test_matchesFormatChange();
 
   void test_useCuda();
-  void test_useCudaChange();
 
   void test_keypointsViewerBGColor_data();
   void test_keypointsViewerBGColor();
@@ -118,6 +117,8 @@ private slots:
   void test_groundTruthEditorSelectMarkerColor_data();
   void test_groundTruthEditorSelectMarkerColor();
   void test_groundTruthEditorSelectMarkerColorChange();
+  void test_groundTruthEditorMatrixAdjust_data();
+  void test_groundTruthEditorMatrixAdjust();
 
   void test_dialogButtonBox();
   void test_setUnsavedChanges();
@@ -155,7 +156,37 @@ void TestSettingsView::initTestCase()
 
 void TestSettingsView::cleanupTestCase()
 {
+  this->clear();
 
+  QCOMPARE("", this->activeLanguage());
+  QCOMPARE(10, this->historyMaxSize());
+  QCOMPARE("#dcdcdc", this->imageViewerBGColor());
+  QCOMPARE("XML", this->keypointsFormat());
+  QCOMPARE("XML", this->matchesFormat());
+  QCOMPARE(false, this->useCuda());
+  QCOMPARE("#dcdcdc", this->keypointsViewerBGColor());
+  QCOMPARE(0, this->keypointsViewerMarkerType());
+  QCOMPARE(20, this->keypointsViewerMarkerSize());
+  QCOMPARE(2, this->keypointsViewerMarkerWidth());
+  QCOMPARE("#00aa00", this->keypointsViewerMarkerColor());
+  QCOMPARE(2, this->selectKeypointsViewerMarkerWidth());
+  QCOMPARE("#e5097e", this->selectKeypointsViewerMarkerColor());
+  QCOMPARE("#dcdcdc", matchesViewerBGColor());
+  QCOMPARE(0, matchesViewerMarkerType());
+  QCOMPARE(20, matchesViewerMarkerSize());
+  QCOMPARE(2, matchesViewerMarkerWidth());
+  QCOMPARE("#00aa00", matchesViewerMarkerColor());
+  QCOMPARE(2, selectMatchesViewerMarkerWidth());
+  QCOMPARE("#e5097e", selectMatchesViewerMarkerColor());
+  QCOMPARE("#0000ff", matchesViewerLineColor());
+  QCOMPARE(2, matchesViewerLineWidth());
+  QCOMPARE("#dcdcdc", groundTruthEditorBGColor());
+  QCOMPARE(20, groundTruthEditorMarkerSize());
+  QCOMPARE(2, groundTruthEditorMarkerWidth());
+  QCOMPARE("#00aa00", groundTruthEditorMarkerColor());
+  QCOMPARE(2, selectGroundTruthEditorMarkerWidth());
+  QCOMPARE("#e5097e", selectGroundTruthEditorMarkerColor());
+  QCOMPARE("Fundamental Matrix", groundTruthEditorMatrixAdjust());
 }
 
 void TestSettingsView::test_setLanguages()
@@ -339,28 +370,6 @@ void TestSettingsView::test_useCuda()
 
   this->setUseCuda(true);
   QCOMPARE(true, this->useCuda());
-
-  this->setCudaEnabled(false);
-  QCOMPARE(false, this->useCuda());
-
-  this->setCudaEnabled(true);
-  QCOMPARE(true, this->useCuda());
-}
-
-void TestSettingsView::test_useCudaChange()
-{
-
-  QSignalSpy spy_useCudaChange(this, &SettingsViewImp::useCudaChange);
-
-  QTest::mouseClick(this->mCheckBoxUseCuda, Qt::MouseButton::LeftButton);
-
-  QCOMPARE(spy_useCudaChange.count(), 1);
-
-  QList<QVariant> args = spy_useCudaChange.takeFirst();
-  QCOMPARE(args.at(0).toBool(), true);
-
-  this->setUseCuda(true);
-  QCOMPARE(spy_useCudaChange.count(), 0);
 }
 
 void TestSettingsView::test_keypointsViewerBGColor_data()
@@ -1121,6 +1130,24 @@ void TestSettingsView::test_groundTruthEditorSelectMarkerColorChange()
 
   this->setSelectGroundTruthEditorMarkerColor("FF00FF");
   QCOMPARE(spy_selectGroundTruthEditorMarkerColorChange.count(), 0);
+}
+
+void TestSettingsView::test_groundTruthEditorMatrixAdjust_data()
+{
+  QTest::addColumn<QString>("value");
+  QTest::addColumn<QString>("result");
+
+  QTest::newRow("Homography") << "Homography" << "Homography";
+  QTest::newRow("Fundamental Matrix") << "Fundamental Matrix" << "Fundamental Matrix";
+}
+
+void TestSettingsView::test_groundTruthEditorMatrixAdjust()
+{
+  QFETCH(QString, value);
+  QFETCH(QString, result);
+
+  this->setGroundTruthEditorMatrixAdjust(value);
+  QCOMPARE(result, this->groundTruthEditorMatrixAdjust());
 }
 
 void TestSettingsView::test_dialogButtonBox()

@@ -98,10 +98,6 @@ void SettingsViewImp::initUI()
   mButtonBox->setOrientation(Qt::Orientation::Horizontal);
   mButtonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel |
                                  QDialogButtonBox::Apply | QDialogButtonBox::Help);
-  mButtonBox->button(QDialogButtonBox::Ok)->setText("Ok");
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
-  mButtonBox->button(QDialogButtonBox::Apply)->setText("Apply");
-  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
   layout->addWidget(mButtonBox, 1, 0, 1, 4);
 
   this->retranslate();
@@ -517,7 +513,7 @@ void SettingsViewImp::initSignalAndSlots()
 
   connect(mKeypointsFormat,  SIGNAL(currentTextChanged(QString)),  this, SIGNAL(keypointsFormatChange(QString)));
   connect(mMatchesFormat,    SIGNAL(currentTextChanged(QString)),  this, SIGNAL(matchesFormatChange(QString)));
-  connect(mCheckBoxUseCuda,  SIGNAL(clicked(bool)),                this, SIGNAL(useCudaChange(bool)));
+  connect(mCheckBoxUseCuda,  &QAbstractButton::clicked,                this, &SettingsView::useCudaChange);
 
   connect(mLineEditKeypointViewerBGColor,             SIGNAL(textChanged(QString)),         this,  SIGNAL(keypointsViewerBGColorChange(QString)));
   connect(mPushButtonKeypointViewerBGColor,           SIGNAL(clicked(bool)),                this,  SLOT(onPushButtonKeypointViewerBGColorClicked()));
@@ -651,6 +647,10 @@ void SettingsViewImp::retranslate()
   mLabelLanguage->setText(QApplication::translate("SettingsView", "Language"));
   mLabelHistoryMaxSize->setText(QApplication::translate("SettingsView", "History Max Size"));
   mLabelUseCuda->setText(QApplication::translate("SettingsView", "Use Cuda"));
+  mButtonBox->button(QDialogButtonBox::Ok)->setText("Ok");
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText("Cancel");
+  mButtonBox->button(QDialogButtonBox::Apply)->setText("Apply");
+  mButtonBox->button(QDialogButtonBox::Help)->setText("Help");
 }
 
 void SettingsViewImp::onPreprocessChange(const QString &method)

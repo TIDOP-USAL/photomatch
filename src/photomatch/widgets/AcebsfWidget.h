@@ -52,7 +52,7 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
   void lChange(double);
   void k1Change(double);
   void k2Change(double);

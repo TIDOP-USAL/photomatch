@@ -70,10 +70,10 @@ public:
 
 signals:
 
-  void winSizeChange(QSize);
-  void blockSizeChange(QSize);
-  void blockStrideChange(QSize);
-  void cellSizeChange(QSize);
+  void winSizeChange(const QSize &);
+  void blockSizeChange(const QSize &);
+  void blockStrideChange(const QSize &);
+  void cellSizeChange(const QSize &);
   void nbinsChange(int);
   void derivApertureChange(int);
 //  void winSigmaChange(double);

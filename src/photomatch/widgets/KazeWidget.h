@@ -102,7 +102,7 @@ signals:
   void thresholdChange(double);
   void octavesChange(int);
   void octaveLayersChange(int);
-  void diffusivityChange(QString);
+  void diffusivityChange(const QString &);
 
 public slots:
 

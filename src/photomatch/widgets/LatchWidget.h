@@ -52,7 +52,7 @@ public:
 
 signals:
 
-  void bytesChange(QString);
+  void bytesChange(const QString &);
   void rotationInvarianceChange(bool);
   void halfSsdSizeChange(int);
 

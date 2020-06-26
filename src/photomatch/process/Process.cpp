@@ -24,44 +24,45 @@
 
 #include "Process.h"
 
-
-Process::Process() :
-    mStopped(false)
+Process::Process() 
+  : mInputs(0),
+    mStopped(false),
+    mSteps(0),
+    mStartupMessage("")
 {
 }
 
-void Process::addIntputs(QStringList inputs)
+void Process::addIntputs(const QStringList& inputs)
 {
-    mInputs = inputs;
+  mInputs = inputs;
 }
 
-QString Process::getStartupMessage()
+QString Process::startupMessage()
 {
-    return mStartupMessage;
+  return mStartupMessage;
 }
 
-void Process::setStartupMessage(QString message)
+void Process::setStartupMessage(const QString &message)
 {
-    mStartupMessage = message;
+  mStartupMessage = message;
 }
 
 void Process::stop()
 {
-    mStopped = true;
-//    quit();
+  mStopped = true;
 }
 
 bool Process::isStopped()
 {
-    return mStopped;
+  return mStopped;
 }
 
 int Process::getSteps()
 {
-    return mSteps;
+  return mSteps;
 }
 
 void Process::setSteps(int steps)
 {
-    mSteps = steps;
+  mSteps = steps;
 }

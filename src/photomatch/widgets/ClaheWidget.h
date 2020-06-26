@@ -56,7 +56,7 @@ public:
 signals:
 
   void clipLimitChange(double);
-  void tileGridSizeChange(QSize);
+  void tileGridSizeChange(const QSize &);
 
 public slots:
 

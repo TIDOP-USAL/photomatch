@@ -222,9 +222,9 @@ public:
 
   virtual int siftFeaturesNumber() const = 0;
   virtual int siftOctaveLayers() const = 0;
-  virtual double siftContrastThreshold() = 0;
-  virtual double siftEdgeThreshold() = 0;
-  virtual double siftSigma() = 0;
+  virtual double siftContrastThreshold() const = 0;
+  virtual double siftEdgeThreshold() const  = 0;
+  virtual double siftSigma() const = 0;
 
   virtual int starMaxSize() const  = 0;
   virtual int starResponseThreshold() const  = 0;
@@ -675,39 +675,39 @@ public slots:
 
 signals:
 
-  void languageChange(QString);
+  void languageChange(const QString &);
   void historyMaxSizeChange(int);
-  void imageViewerBGColorChange(QString);
-  void keypointsFormatChange(QString);
-  void matchesFormatChange(QString);
+  void imageViewerBGColorChange(const QString&);
+  void keypointsFormatChange(const QString&);
+  void matchesFormatChange(const QString&);
   void useCudaChange(bool);
   void applyChanges();
 
-  void keypointsViewerBGColorChange(QString);
+  void keypointsViewerBGColorChange(const QString &);
   void keypointsViewerMarkerTypeChange(int);
   void keypointsViewerMarkerSizeChange(int);
   void keypointsViewerMarkerWidthChange(int);
-  void keypointsViewerMarkerColorChange(QString);
+  void keypointsViewerMarkerColorChange(const QString &);
   void selectKeypointsViewerMarkerWidthChange(int);
-  void selectKeypointsViewerMarkerColorChange(QString);
+  void selectKeypointsViewerMarkerColorChange(const QString &);
 
-  void matchesViewerBGColorChange(QString);
+  void matchesViewerBGColorChange(const QString &);
   void matchesViewerMarkerTypeChange(int);
   void matchesViewerMarkerSizeChange(int);
   void matchesViewerMarkerWidthChange(int);
-  void matchesViewerMarkerColorChange(QString);
+  void matchesViewerMarkerColorChange(const QString &);
   void matchesViewerLineWidthChange(int);
-  void matchesViewerLineColorChange(QString);
+  void matchesViewerLineColorChange(const QString &);
   void selectMatchesViewerMarkerWidthChange(int);
-  void selectMatchesViewerMarkerColorChange(QString);
+  void selectMatchesViewerMarkerColorChange(const QString &);
 
-  void groundTruthEditorBGColorChange(QString);
+  void groundTruthEditorBGColorChange(const QString &);
   void groundTruthEditorMarkerSizeChange(int);
   void groundTruthEditorMarkerWidthChange(int);
-  void groundTruthEditorMarkerColorChange(QString);
+  void groundTruthEditorMarkerColorChange(const QString &);
   void selectGroundTruthEditorMarkerWidthChange(int);
-  void selectGroundTruthEditorMarkerColorChange(QString);
-  void groundTruthEditorMatrixAdjustChange(QString);
+  void selectGroundTruthEditorMarkerColorChange(const QString &);
+  void groundTruthEditorMatrixAdjustChange(const QString &);
 };
 
 

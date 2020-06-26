@@ -25,6 +25,8 @@
 #ifndef PHOTOMATCH_MULTIPROCESS_H
 #define PHOTOMATCH_MULTIPROCESS_H
 
+#include <memory>
+
 #include <QList>
 
 #include "photomatch/process/Process.h"
@@ -38,51 +40,51 @@ class PHOTOMATCH_EXPORT MultiProcess
 
 public:
 
-    MultiProcess();
-    explicit MultiProcess(bool isSequential);
-    ~MultiProcess() override;
+  MultiProcess();
+  explicit MultiProcess(bool isSequential);
+  ~MultiProcess() override;
 
-    virtual void start() override;
-    virtual void setWaitForFinished(bool wait) override;
-    virtual bool isRunning() override;
+  virtual void start() override;
+  virtual void setWaitForFinished(bool wait) override;
+  virtual bool isRunning() override;
 
-    virtual QByteArray readStdout() override;
-    virtual QByteArray readStderr() override;
+  virtual QByteArray readStdout() override;
+  virtual QByteArray readStderr() override;
 
-    void appendProcess(const std::shared_ptr<Process> &process);
-    void appendProcess(const QList<std::shared_ptr<Process> > &processList);
-    void clearProcessList();
-    int count();
-    Process *at(int i);
+  void appendProcess(const std::shared_ptr<Process> &process);
+  void appendProcess(const QList<std::shared_ptr<Process> > &processList);
+  void clearProcessList();
+  int count();
+  Process *at(int i);
 
-    virtual int getSteps() override;
+  virtual int getSteps() override;
 
 public slots:
 
-    virtual void stop() override;
+  virtual void stop() override;
 
 protected:
 
-    void run();
-
-private:
-
-    QList<std::shared_ptr<Process>> mProcessList;
-    bool mIsSequential;
-    int mCurrentProcess;
-    int mRunningCount;
-    int mIdealThreadCount;
-    int mFinishedCount;
-    int mCurrentStep;
-    bool mConcatenateMessages;
-    bool mWaitForFinished;
+  void run();
 
 private slots:
 
-    void onError(int code, QString cause);
-    void onAProcessFinished();
-    void OnChildStatusChanged(int step, QString childMessage);
-    void OnChildStatusChangedNext();
+  void onError(int code, const QString &cause);
+  void onAProcessFinished();
+  void OnChildStatusChanged(int step, const QString &childMessage);
+  void OnChildStatusChangedNext();
+
+private:
+
+  QList<std::shared_ptr<Process>> mProcessList;
+  bool mIsSequential;
+  int mCurrentProcess;
+  int mRunningCount;
+  int mIdealThreadCount;
+  int mFinishedCount;
+  int mCurrentStep;
+  bool mWaitForFinished;
+
 };
 
 

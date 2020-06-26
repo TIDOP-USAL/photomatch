@@ -51,7 +51,7 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
   void lChange(double);
   void phiChange(double);
 

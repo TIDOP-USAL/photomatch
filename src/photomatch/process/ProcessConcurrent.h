@@ -25,9 +25,9 @@
 #ifndef PHOTOMATCH_PROCESS_CONCURRENT_H
 #define PHOTOMATCH_PROCESS_CONCURRENT_H
 
-#include <QFutureWatcher>
-
 #include "Process.h"
+
+template <typename T> class QFutureWatcher;
 
 class  PHOTOMATCH_EXPORT ProcessConcurrent 
   : public Process
@@ -37,7 +37,7 @@ class  PHOTOMATCH_EXPORT ProcessConcurrent
 public:
 
   ProcessConcurrent();
-  virtual ~ProcessConcurrent() override = default;
+  ~ProcessConcurrent() override;
 
   virtual void start() override;
   virtual void setWaitForFinished(bool wait) override;
@@ -53,7 +53,7 @@ public slots:
 
 protected:
 
-  virtual void run()=0;
+  virtual void run() = 0;
   int runLauncher();
 
 private:

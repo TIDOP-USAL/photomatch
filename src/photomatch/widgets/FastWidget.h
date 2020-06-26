@@ -75,7 +75,7 @@ signals:
 
   void thresholdChange(int);
   void nonmaxSuppressionChange(bool);
-  void detectorTypeChange(QString);
+  void detectorTypeChange(const QString &);
 
 public slots:
 
