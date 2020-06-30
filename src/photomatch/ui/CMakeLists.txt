@@ -204,6 +204,22 @@ add_executable(${PROJECT_NAME} WIN32
 source_group("Form Files"  FILES ${PHOTOMATCH_FORMS})
 source_group("Resource Files"  FILES ${PHOTOMATCH_RESOURCES})
 #source_group("Translation Files"  FILES ${PHOTOMATCH_TS_FILES})
+#source_group("Header Files\\createproj" FILES ${PHOTOMATCH_HEADERS_CREATE_PROJECT})
+#source_group("Source Files\\createproj" FILES ${PHOTOMATCH_SOURCES_CREATE_PROJECT})
+
+foreach(_source IN ITEMS ${PHOTOMATCH_SOURCES} ${PHOTOMATCH_HEADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    #file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path}")
+    source_group("Source Files\\${_group_path}" FILES "${_source}")
+endforeach()
+
+foreach(_source IN ITEMS ${PHOTOMATCH_HEADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    #file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path}")
+    source_group("Header Files\\${_group_path}" FILES "${_source}")
+endforeach()
 
 # Lincado de librerias
 target_link_libraries(${PROJECT_NAME}
