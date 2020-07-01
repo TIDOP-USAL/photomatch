@@ -1,8 +1,10 @@
 # Minimum version required CMAKE
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
 # PhotoMatch
-project(photomatch CXX)
+project(photomatch 
+        VERSION 1.0.0 
+		LANGUAGES CXX)
 
 
 
@@ -33,13 +35,6 @@ if(MSVC)
 endif(MSVC)
 
 if (UNIX)
-#    include(CheckCXXCompilerFlag)
-#    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-#    if(COMPILER_SUPPORTS_CXX11)
-#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-#    else()
-#        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-#    endif()
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
