@@ -159,7 +159,8 @@ void ThumbnailsWidget::addThumbnails(const QStringList &thumbs)
   }
 
   if (thumbs.empty() == false) {
-    mFutureWatcherThumbnail->setFuture(QtConcurrent::mapped(thumbs, /*&ThumbnailsWidget::*/makeThumbnail));
+    QFuture<QImage> future = QtConcurrent::mapped(thumbs, /*&ThumbnailsWidget::*/makeThumbnail);
+    mFutureWatcherThumbnail->setFuture(future);
   }
 }
 
@@ -365,14 +366,14 @@ void ThumbnailsWidget::initUI()
 
 void ThumbnailsWidget::initSignalAndSlots()
 {
-  connect(mListWidget,             &QListWidget::itemDoubleClicked,     this, &ThumbnailsWidget::onThumbnailDoubleClicked);
-  connect(mListWidget,             &QListWidget::itemSelectionChanged,  this, &ThumbnailsWidget::onSelectionChanged);
-  connect(mThumbnailAction,        &QAction::changed,                   this, &ThumbnailsWidget::onThumbnailClicked);
-  connect(mThumbnailSmallAction,   &QAction::changed,                   this, &ThumbnailsWidget::onThumbnailSmallClicked);
-  connect(mDetailsAction,          &QAction::changed,                   this, &ThumbnailsWidget::onDetailsClicked);
-  connect(mDeleteImageAction,      &QAction::triggered,                 this, &ThumbnailsWidget::onDeleteImageClicked);
-  connect(mFutureWatcherThumbnail, &QFutureWatcherBase::resultReadyAt,  this, &ThumbnailsWidget::showThumbnail);
-  connect(mFutureWatcherThumbnail, &QFutureWatcherBase::finished,       this, &ThumbnailsWidget::finished);
+  connect(mListWidget,             &QListWidget::itemDoubleClicked,        this, &ThumbnailsWidget::onThumbnailDoubleClicked);
+  connect(mListWidget,             &QListWidget::itemSelectionChanged,     this, &ThumbnailsWidget::onSelectionChanged);
+  connect(mThumbnailAction,        &QAction::changed,                      this, &ThumbnailsWidget::onThumbnailClicked);
+  connect(mThumbnailSmallAction,   &QAction::changed,                      this, &ThumbnailsWidget::onThumbnailSmallClicked);
+  connect(mDetailsAction,          &QAction::changed,                      this, &ThumbnailsWidget::onDetailsClicked);
+  connect(mDeleteImageAction,      &QAction::triggered,                    this, &ThumbnailsWidget::onDeleteImageClicked);
+  connect(mFutureWatcherThumbnail, &QFutureWatcher<QImage>::resultReadyAt, this, &ThumbnailsWidget::showThumbnail);
+  connect(mFutureWatcherThumbnail, &QFutureWatcher<QImage>::finished,      this, &ThumbnailsWidget::finished);
 }
 
 

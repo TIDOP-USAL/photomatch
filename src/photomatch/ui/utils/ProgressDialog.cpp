@@ -43,7 +43,7 @@ ProgressDialogImp::ProgressDialogImp(QWidget *parent)
   this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
 
   ui->setupUi(this);
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
 
   ui->pushButtonMinimize->setEnabled(false);
 
