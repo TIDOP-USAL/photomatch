@@ -44,7 +44,7 @@ namespace photomatch
 
 class ThumbnailsWidget;
 class LogWidget;
-class GraphicViewerImp;
+//class GraphicViewerImp;
 class TabHandler;
 
 class MainWindowView
@@ -164,7 +164,7 @@ signals:
   void exit();
   void openSettings();
 
-  /* Menú View */
+  /* Menu View */
 
   void openStartPage();
   void openViewSettings();
@@ -240,6 +240,23 @@ private slots:
 private:
 
   void initUI();
+  void initTabHandler();
+  void initThumbnailsTool();
+  void initConsole();
+  void initActions();
+  void initToolbars();
+  void initToolbarFile();
+  void initToolbarTools();
+  void initToolbarView();
+  void initQualityControl();
+  void initTreeWidget();
+  void initMenus();
+  void initMenuFile();
+  void initMenuView();
+  void initMenuTools();
+  void initMenuQualityControl();
+  void initMenuHelp();
+  void initProgressBar();
   void initSignalAndSlots();
 
 // QWidget interface
@@ -292,6 +309,8 @@ protected:
   QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;
   QMenu *mMenuExport;
+  QMenu* mMenuPanels;
+  QMenu* mMenuToolBar;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
   QWidget *mStartPageWidget;

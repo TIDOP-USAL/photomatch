@@ -8,7 +8,7 @@ The documentation is available at https://elliestath.github.io/HelpTest/site/
 
 ## Installation
 
-INSTALL.md
+[INSTALL.md](https://github.com/TIDOP-USAL/photomatch/blob/develop/INSTALL.md)
 
 ## Authors
 
@@ -24,5 +24,5 @@ INSTALL.md
 
 ## License
 
-This project is licensed under the LGPL-3.0 License - see the LICENSE file for details
+This project is licensed under the LGPL-3.0 License - see the [LICENSE](https://github.com/TIDOP-USAL/photomatch/blob/develop/LICENSE) file for details
 

@@ -154,7 +154,9 @@ find_package_handle_standard_args(PIXKIT_TIMER
 )
 
 if(PIXKIT_TIMER_FOUND)
-  set(PIXKIT_TIMER_LIBRARIES debug ${PIXKIT_TIMER_LIBRARY_DEBUG} optimized ${PIXKIT_TIMER_LIBRARY})
+  set(PIXKIT_TIMER_LIBRARIES 
+      debug ${PIXKIT_TIMER_LIBRARY_DEBUG} 
+	  optimized ${PIXKIT_TIMER_LIBRARY})
   set(PIXKIT_TIMER_DEFINITIONS ${PIXKIT_TIMER_CFLAGS_OTHER})
 endif()
 ################################### 

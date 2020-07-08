@@ -1101,6 +1101,8 @@ void FeatureExtractorPresenterImp::cancel()
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
+  mMultiProcess->clearProcessList();
+
   emit finished();
 
   msgWarning("Processing has been canceled by the user");
@@ -1133,8 +1135,6 @@ void FeatureExtractorPresenterImp::run()
       return;
     }
   }
-
-  mMultiProcess->clearProcessList();
 
   QString currentKeypointDetector = mView->currentKeypointDetector();
   QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
@@ -1691,6 +1691,8 @@ void FeatureExtractorPresenterImp::onError(int code, const QString &msg)
     disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
   }
 
+  mMultiProcess->clearProcessList();
+
   emit finished();
 }
 
@@ -1711,6 +1713,8 @@ void FeatureExtractorPresenterImp::onFinished()
   }
 
   emit finished();
+
+  mMultiProcess->clearProcessList();
 
   msgInfo("Feature detection and description finished.");
 }
