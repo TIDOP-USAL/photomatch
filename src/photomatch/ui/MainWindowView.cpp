@@ -1201,6 +1201,11 @@ void MainWindowView::retranslate()
   mActionSetSession->setText(QApplication::translate("MainWindowView", "Set as current session", nullptr));
   mActionDeleteSession->setText(QApplication::translate("MainWindowView", "Delete session", nullptr));
 
+  mMenuRecentProjects->setTitle(QApplication::translate("MainWindowView", "Recent Projects", nullptr));
+  mMenuExport->setTitle(QApplication::translate("MainWindowView", "Export", nullptr));
+  mMenuPanels->setTitle(QApplication::translate("MainWindowView", "Dockable panels", nullptr));
+  mMenuToolBar->setTitle(QApplication::translate("MainWindowView", "Toolbars", nullptr));
+
 }
 
 void MainWindowView::openFromHistory()
@@ -1425,6 +1430,58 @@ void MainWindowView::initUI()
 {
   setWindowTitle(QString("PhotoMatch"));
 
+  mLayoutCentral = new QGridLayout(this->centralWidget());
+  mLayoutCentral->setSpacing(6);
+  mLayoutCentral->setContentsMargins(0, 0, 0, 0);
+
+  this->initTabHandler();
+  this->initThumbnailsTool();
+  this->initConsole();
+
+  this->initActions();
+  this->initToolbars();
+  this->initTreeWidget();
+  this->initMenus();
+  this->initProgressBar();
+
+  // Configuración de mensajes
+  tl::MessageManager &msg_h = tl::MessageManager::instance();
+  msg_h.addListener(mLogWidget);
+
+  this->retranslate();
+  this->update();
+}
+
+
+
+void MainWindowView::initTabHandler()
+{
+  mTabHandler = new TabHandler(this->centralWidget());
+  mLayoutCentral->addWidget(mTabHandler);
+}
+
+void MainWindowView::initThumbnailsTool()
+{
+  QGridLayout* gridLayoutThumb = new QGridLayout(ui->dockWidgetThumbContents);
+  gridLayoutThumb->setSpacing(6);
+  gridLayoutThumb->setContentsMargins(11, 11, 11, 11);
+  gridLayoutThumb->setContentsMargins(0, 0, 0, 0);
+  mThumbnailsWidget = new ThumbnailsWidget(ui->dockWidgetThumbContents);
+  gridLayoutThumb->addWidget(mThumbnailsWidget, 0, 0, 1, 1);
+}
+
+void MainWindowView::initConsole()
+{
+  QGridLayout* gridLayoutConsole = new QGridLayout(ui->dockWidgetContentsConsole);
+  gridLayoutConsole->setSpacing(6);
+  gridLayoutConsole->setContentsMargins(11, 11, 11, 11);
+  gridLayoutConsole->setContentsMargins(0, 0, 0, 0);
+  mLogWidget = new LogWidget(ui->dockWidgetThumbContents);
+  gridLayoutConsole->addWidget(mLogWidget, 0, 0, 1, 1);
+}
+
+void MainWindowView::initActions()
+{
   QIcon iconNewProject;
   iconNewProject.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_file_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionNewProject->setIcon(iconNewProject);
@@ -1498,6 +1555,14 @@ void MainWindowView::initUI()
 
   //mActionRepeatability->setText(QApplication::translate("MainWindowView", "Repeatability", nullptr));
 
+  QIcon iconFeaturesViewer;
+  iconFeaturesViewer.addFile(QStringLiteral(":/ico/24/img/material/24/points_viewer.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionFeaturesViewer->setIcon(iconFeaturesViewer);
+
+  QIcon iconMatchesViewer;
+  iconMatchesViewer.addFile(QStringLiteral(":/ico/24/img/material/24/match_viewer.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionMatchesViewer->setIcon(iconMatchesViewer);
+
   QIcon iconPRCurves;
   iconPRCurves.addFile(QStringLiteral(":/ico/24/img/material/24/pr_curve_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionPRCurves->setIcon(iconPRCurves);
@@ -1523,9 +1588,62 @@ void MainWindowView::initUI()
   QIcon iconDeleteSession;
   iconDeleteSession.addFile(QStringLiteral(":/ico/24/img/material/24/delete_list_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
   mActionDeleteSession->setIcon(iconDeleteSession);
+}
 
-  /* Árbol de proyecto */
-  //ui->dockWidgetContentsProject->setContentsMargins(0, 0, 0, 0);
+void MainWindowView::initToolbars()
+{
+  this->initToolbarFile();
+  this->initToolbarTools();
+  this->initToolbarView();
+  this->initQualityControl();
+}
+
+void MainWindowView::initToolbarFile()
+{
+  ui->mainToolBar->addAction(mActionNewProject);
+  ui->mainToolBar->addAction(mActionOpenProject);
+  ui->mainToolBar->addAction(mActionSaveProject);
+  ui->mainToolBar->addAction(mActionSaveProjectAs);
+}
+
+void MainWindowView::initToolbarTools()
+{
+  ui->toolBarTools->addAction(mActionLoadImages);
+  ui->toolBarTools->addSeparator();
+  ui->toolBarTools->addAction(mActionNewSession);
+  ui->toolBarTools->addSeparator();
+  ui->toolBarTools->addWidget(new QLabel(tr("Active Session: "), this));
+  mComboBoxActiveSession->setMinimumWidth(100);
+  mComboBoxActiveSession->setContentsMargins(8, 0, 0, 0);
+  ui->toolBarTools->addWidget(mComboBoxActiveSession);
+  ui->toolBarTools->addSeparator();
+  ui->toolBarTools->addAction(mActionPreprocess);
+  ui->toolBarTools->addAction(mActionFeatureExtraction);
+  ui->toolBarTools->addAction(mActionFeatureMatching);
+  //  ui->toolBarTools->addSeparator();
+  //  ui->toolBarTools->addAction(mActionBatch);
+}
+
+void MainWindowView::initToolbarView()
+{
+  ui->toolBarView->addAction(mTabHandler->actionZoomIn());
+  ui->toolBarView->addAction(mTabHandler->actionZoomOut());
+  ui->toolBarView->addAction(mTabHandler->actionZoom11());
+  ui->toolBarView->addAction(mTabHandler->actionZoomExtend());
+}
+
+void MainWindowView::initQualityControl()
+{
+  ui->toolBarQualityControl->addAction(mActionFeaturesViewer);
+  ui->toolBarQualityControl->addAction(mActionMatchesViewer);
+  ui->toolBarQualityControl->addSeparator();
+  //ui->toolBarQualityControl->addAction(mActionPRCurves);
+  ui->toolBarQualityControl->addAction(mActionROCCurves);
+  ui->toolBarQualityControl->addAction(mActionDETCurves);
+}
+
+void MainWindowView::initTreeWidget()
+{
   mTreeWidgetProject = new QTreeWidget(ui->dockWidgetContentsProject);
   mTreeWidgetProject->setContextMenuPolicy(Qt::CustomContextMenu);
   mTreeWidgetProject->header()->close();
@@ -1534,35 +1652,22 @@ void MainWindowView::initUI()
   mTreeWidgetProject->header()->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
   mTreeWidgetProject->header()->setStretchLastSection(false);
   ui->gridLayout->addWidget(mTreeWidgetProject, 0, 0, 1, 1);
+}
 
-  /* Thumbnails */
-  QGridLayout *gridLayoutThumb = new QGridLayout(ui->dockWidgetThumbContents);
-  gridLayoutThumb->setSpacing(6);
-  gridLayoutThumb->setContentsMargins(11, 11, 11, 11);
-  gridLayoutThumb->setContentsMargins(0, 0, 0, 0);
-  mThumbnailsWidget = new ThumbnailsWidget(ui->dockWidgetThumbContents);
-  gridLayoutThumb->addWidget(mThumbnailsWidget, 0, 0, 1, 1);
+void MainWindowView::initMenus()
+{
+  this->initMenuFile();
+  this->initMenuView();
+  this->initMenuTools();
+  this->initMenuQualityControl();
+  this->initMenuHelp();
+}
 
-  /* Log */
-  QGridLayout *gridLayoutConsole = new QGridLayout(ui->dockWidgetContentsConsole);
-  gridLayoutConsole->setSpacing(6);
-  gridLayoutConsole->setContentsMargins(11, 11, 11, 11);
-  gridLayoutConsole->setContentsMargins(0, 0, 0, 0);
-  mLogWidget = new LogWidget(ui->dockWidgetThumbContents);
-  gridLayoutConsole->addWidget(mLogWidget, 0, 0, 1, 1);
-
-  /* Tab Handler */
-  QGridLayout *gridLayoutCentral = new QGridLayout(this->centralWidget());
-  gridLayoutCentral->setSpacing(6);
-  gridLayoutCentral->setContentsMargins(0,0,0,0);
-  mTabHandler = new TabHandler(this->centralWidget());
-  gridLayoutCentral->addWidget(mTabHandler);
-
-  /* Menu file */
-
+void MainWindowView::initMenuFile()
+{
   ui->menuFile->addAction(mActionNewProject);
   ui->menuFile->addAction(mActionOpenProject);
-  mMenuRecentProjects = new QMenu(tr("Recent Projects"), this);
+  mMenuRecentProjects = new QMenu(this);
   mMenuRecentProjects->addAction(mActionNotRecentProjects);
   mMenuRecentProjects->addSeparator();
   mMenuRecentProjects->addAction(mActionClearHistory);
@@ -1571,7 +1676,7 @@ void MainWindowView::initUI()
   ui->menuFile->addAction(mActionSaveProject);
   ui->menuFile->addAction(mActionSaveProjectAs);
   ui->menuFile->addSeparator();
-  mMenuExport = new QMenu(tr("Export"), this);
+  mMenuExport = new QMenu(this);
   mMenuExport->addAction(mActionExportTiePoints);
   mMenuExport->addAction(mActionExportMatches);
   //mMenuExportTiePoints = new QMenu(tr("Tie Points"), this);
@@ -1588,33 +1693,37 @@ void MainWindowView::initUI()
   ui->menuFile->addAction(mActionCloseProject);
   ui->menuFile->addSeparator();
   ui->menuFile->addAction(mActionExit);
+}
 
-  /* Menu View */
-
+void MainWindowView::initMenuView()
+{
   ui->menuView->addAction(mActionStartPage);
   ui->menuView->addSeparator();
-  QMenu *menuPanels = new QMenu(tr("Dockable panels"), this);
-  menuPanels->addAction(ui->dockWidgetProject->toggleViewAction());
-  menuPanels->addAction(ui->dockWidgetProperties->toggleViewAction());
-  menuPanels->addAction(ui->dockWidgetConsole->toggleViewAction());
-  menuPanels->addAction(ui->dockWidgetThumb->toggleViewAction());
-  ui->menuView->addMenu(menuPanels);
+  mMenuPanels = new QMenu(this);
+  mMenuPanels->setIcon(QIcon(":/ico/24/img/material/24/icons8_navigation_toolbar_left_24px.png"));
+  mMenuPanels->addAction(ui->dockWidgetProject->toggleViewAction());
+  mMenuPanels->addAction(ui->dockWidgetProperties->toggleViewAction());
+  mMenuPanels->addAction(ui->dockWidgetConsole->toggleViewAction());
+  mMenuPanels->addAction(ui->dockWidgetThumb->toggleViewAction());
+  ui->menuView->addMenu(mMenuPanels);
 
   ui->menuView->addSeparator();
 
-  QMenu *menuToolBar = new QMenu(tr("Toolbars"), this);
-  menuToolBar->addAction(ui->mainToolBar->toggleViewAction());
-  menuToolBar->addAction(ui->toolBarTools->toggleViewAction());
-  menuToolBar->addAction(ui->toolBarView->toggleViewAction());
-  menuToolBar->addAction(ui->toolBarQualityControl->toggleViewAction());
-  ui->menuView->addMenu(menuToolBar);
+  mMenuToolBar = new QMenu(this);
+  mMenuToolBar->setIcon(QIcon(":/ico/24/img/material/24/icons8_navigation_toolbar_top_24px.png"));
+  mMenuToolBar->addAction(ui->mainToolBar->toggleViewAction());
+  mMenuToolBar->addAction(ui->toolBarTools->toggleViewAction());
+  mMenuToolBar->addAction(ui->toolBarView->toggleViewAction());
+  mMenuToolBar->addAction(ui->toolBarQualityControl->toggleViewAction());
+  ui->menuView->addMenu(mMenuToolBar);
 
   ui->menuView->addSeparator();
 
   ui->menuView->addAction(mActionViewSettings);
+}
 
-  /* Menu Tools */
-
+void MainWindowView::initMenuTools()
+{
   ui->menuTools->addAction(mActionLoadImages);
   ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionNewSession);
@@ -1626,9 +1735,10 @@ void MainWindowView::initUI()
   //ui->menuTools->addAction(mActionBatch);
   //ui->menuTools->addSeparator();
   ui->menuTools->addAction(mActionToolSettings);
+}
 
-  /* Menu Quality Control */
-
+void MainWindowView::initMenuQualityControl()
+{
   ui->menuQualityControl->addAction(mActionFeaturesViewer);
   ui->menuQualityControl->addAction(mActionMatchesViewer);
   ui->menuQualityControl->addAction(mActionPassPointsViewer);
@@ -1642,61 +1752,22 @@ void MainWindowView::initUI()
   ui->menuQualityControl->addAction(mActionDETCurves);
   ui->menuQualityControl->addSeparator();
   ui->menuQualityControl->addAction(mActionQualityControlSettings);
+}
 
-  /* Menu Help */
-
+void MainWindowView::initMenuHelp()
+{
   ui->menuHelp->addAction(mActionHelp);
   ui->menuHelp->addAction(mActionOnlineHelp);
   ui->menuHelp->addSeparator();
   ui->menuHelp->addAction(mActionAbout);
+}
 
-  /* Toolbars */
-
-  ui->mainToolBar->addAction(mActionNewProject);
-  ui->mainToolBar->addAction(mActionOpenProject);
-  ui->mainToolBar->addAction(mActionSaveProject);
-  ui->mainToolBar->addAction(mActionSaveProjectAs);
-
-  ui->toolBarTools->addAction(mActionLoadImages);
-  ui->toolBarTools->addSeparator();
-  ui->toolBarTools->addAction(mActionNewSession);
-  ui->toolBarTools->addSeparator();
-  ui->toolBarTools->addWidget(new QLabel(tr("Active Session: "), this));
-  mComboBoxActiveSession->setMinimumWidth(100);
-  mComboBoxActiveSession->setContentsMargins(8,0,0,0);
-  ui->toolBarTools->addWidget(mComboBoxActiveSession);
-  ui->toolBarTools->addSeparator();
-  ui->toolBarTools->addAction(mActionPreprocess);
-  ui->toolBarTools->addAction(mActionFeatureExtraction);
-  ui->toolBarTools->addAction(mActionFeatureMatching);
-//  ui->toolBarTools->addSeparator();
-//  ui->toolBarTools->addAction(mActionBatch);
-
-  ui->toolBarView->addAction(mTabHandler->actionZoomIn());
-  ui->toolBarView->addAction(mTabHandler->actionZoomOut());
-  ui->toolBarView->addAction(mTabHandler->actionZoom11());
-  ui->toolBarView->addAction(mTabHandler->actionZoomExtend());
-
-
-  //ui->toolBarQualityControl->addAction(mActionPRCurves);
-  ui->toolBarQualityControl->addAction(mActionROCCurves);
-  ui->toolBarQualityControl->addAction(mActionDETCurves);
-
-  mLayoutCentral = new QGridLayout(this->centralWidget());
-  mLayoutCentral->setSpacing(6);
-  mLayoutCentral->setContentsMargins(0,0,0,0);
-
+void MainWindowView::initProgressBar()
+{
   mProgressBar = new QProgressBar(this);
   mProgressBar->setVisible(false);
   mProgressBar->setMaximumSize(150, 20);
   ui->statusBar->addPermanentWidget(mProgressBar);
-
-  // Configuración de mensajes
-  tl::MessageManager &msg_h = tl::MessageManager::instance();
-  msg_h.addListener(mLogWidget);
-
-  this->retranslate();
-  this->update();
 }
 
 void MainWindowView::initSignalAndSlots()

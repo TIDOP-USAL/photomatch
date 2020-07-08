@@ -48,6 +48,10 @@
         <file>img/material/24/icons8_web_lock_24px.png</file>
         <file>img/material/24/icons8_list_view_24px.png</file>
         <file>img/material/24/delete_list_24px.png</file>
+        <file>img/material/24/match_viewer.png</file>
+        <file>img/material/24/points_viewer.png</file>
+        <file>img/material/24/icons8_navigation_toolbar_left_24px.png</file>
+        <file>img/material/24/icons8_navigation_toolbar_top_24px.png</file>
     </qresource>
     <qresource prefix="/ico/48">
         <file>img/material/48/icons8_add_list_48px.png</file>
