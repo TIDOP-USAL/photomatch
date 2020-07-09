@@ -38,13 +38,13 @@ class QTreeWidgetItem;
 class QComboBox;
 class QProgressBar;
 class QGridLayout;
+class QLabel;
 
 namespace photomatch
 {
 
 class ThumbnailsWidget;
 class LogWidget;
-//class GraphicViewerImp;
 class TabHandler;
 
 class MainWindowView
@@ -239,11 +239,45 @@ private slots:
 
 private:
 
+  void initActions();
+  void initActionNewProject();
+  void initActionOpenProject();
+  void initActionSaveProject();
+  void initActionSaveProjectAs();
+  void initActionCloseProject();
+  void initActionExit();
+  void initActionStartPage();
+  void initActionViewSettings();
+  void initActionLoadImages();
+  void initActionNewSession();
+  void initActionPreprocess();
+  void initActionFeatureExtraction();
+  void initActionFeatureMatching();
+  void initActionBatch();
+  void initActionToolsSettings();
+  void initActionHelp();
+  void initActionOnlineHelp();
+  void initActionAbout();
+  void initActionRepeatability();
+  void initActionExportTiePoints();
+  void initActionExportMatches();
+  void initActionFeaturesViewer();
+  void initActionMatchesViewer();
+  void initActionPassPointsViewer();
+  void initActionGroundTruthEditor();
+  void initActionHomography();
+  void initActionPRCurves();
+  void initActionROCCurves();
+  void initActionDETCurves();
+  void initActionQualityControlSettings();
+  void initActionNotRecentProjects();
+  void initActionClearHistory();
+  void initActionsetSession();
+  void initActionDeleteSession();
   void initUI();
   void initTabHandler();
   void initThumbnailsTool();
   void initConsole();
-  void initActions();
   void initToolbars();
   void initToolbarFile();
   void initToolbarTools();
@@ -257,14 +291,13 @@ private:
   void initMenuQualityControl();
   void initMenuHelp();
   void initProgressBar();
-  void initSignalAndSlots();
+  void connectSignalAndSlots();
 
 // QWidget interface
 
 public:
 
   void closeEvent(QCloseEvent *event) override;
-
 
 protected:
 
@@ -301,10 +334,6 @@ protected:
   QAction *mActionQualityControlSettings;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
-//  QAction *mActionZoomIn;
-//  QAction *mActionZoomOut;
-//  QAction *mActionZoomExtend;
-//  QAction *mActionZoom11;
   QAction *mActionSetSession;
   QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;
@@ -314,6 +343,7 @@ protected:
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
   QWidget *mStartPageWidget;
+  QLabel *mLabelActiveSession;
   QComboBox *mComboBoxActiveSession;
   QProgressBar *mProgressBar;
 

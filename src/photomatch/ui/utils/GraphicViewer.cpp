@@ -195,7 +195,7 @@ void GraphicViewerImp::wheelEvent(QWheelEvent *event)
   setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
   double factor = (event->modifiers() & Qt::ControlModifier) ? mZoomCtrlFactor : mZoomFactor;
-  if(event->delta() > 0)
+  if (event->angleDelta().y() > 0)
     // Zoom +
     scale(factor, factor);
   else {

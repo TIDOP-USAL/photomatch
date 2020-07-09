@@ -113,7 +113,7 @@ void PreprocessViewImp::onCheckBoxFullImageChange()
 void PreprocessViewImp::initUI()
 {
   this->setObjectName(QStringLiteral("PreprocessView"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(350, 450);
 
   QGridLayout *gridLayout = new QGridLayout();
