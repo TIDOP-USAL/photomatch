@@ -17,7 +17,7 @@ Q_OBJECT
 public:
 
   TabHandler(QWidget *parent = nullptr);
-  ~TabHandler(){}
+  ~TabHandler() override = default;
 
   QAction *actionZoomIn() const;
   QAction *actionZoomOut() const;
@@ -43,6 +43,15 @@ protected slots:
 protected:
 
   void init();
+  void initActions();
+  void connectSignalsAndSlots();
+  void retranslate();
+  
+// QWidget interface
+
+protected:
+
+  void changeEvent(QEvent* event) override;
 
 protected:
 
