@@ -757,7 +757,7 @@ void MainWindowView::setActiveImage(const QString &image)
       // Se busca la imagen en el árbol
       for (int i = 0; i < itemImages->childCount(); i++) {
         QTreeWidgetItem *temp = itemImages->child(i);
-        itemImages->child(i)->setSelected(temp->toolTip(0).compare(image) == 0);
+        itemImages->child(i)->setSelected(temp->text(0).compare(image) == 0);
       }
     }
   }
@@ -788,7 +788,7 @@ void MainWindowView::setActiveImages(const QStringList &images)
         QTreeWidgetItem *temp = itemImages->child(i);
         temp->setSelected(false);
         for (auto &image : images){
-          if (temp->toolTip(0).compare(image) == 0){
+          if (temp->text(0).compare(image) == 0){
             temp->setSelected(true);
             break;
           }
@@ -1302,7 +1302,7 @@ void MainWindowView::deleteImage(const QString &file)
       QTreeWidgetItem *itemImage = nullptr;
       for (int i = 0; i < itemImages->childCount(); i++) {
         QTreeWidgetItem *temp = itemImages->child(i);
-        if (temp->toolTip(0).compare(file) == 0) {
+        if (temp->text(0).compare(file) == 0) {
           itemImage = itemImages->child(i);
           delete itemImage;
           itemImage = nullptr;
@@ -1766,11 +1766,11 @@ void MainWindowView::onSelectionChanged()
     int size = item.size();
     if(size > 0){
       if (size == 1) {
-        emit selectImage(item[0]->toolTip(0));
+        emit selectImage(item[0]->text(0));
       } else {
         QStringList selected_images;
         for (int i = 0; i < size; i++){
-          selected_images.push_back(item[i]->toolTip(0));
+          selected_images.push_back(item[i]->text(0));
         }
         emit selectImages(selected_images);
       }
@@ -1782,13 +1782,7 @@ void MainWindowView::onSelectionChanged()
     if(size > 0){
       if (size == 1) {
         emit selectSession(item[0]->text(0));
-      } /*else {
-        QStringList selected_images;
-        for (int i = 0; i < size; i++){
-          selected_images.push_back(item[i]->toolTip(0));
-        }
-        emit selectImages(selected_images);
-      }*/
+      }
     }
   } else if (item[0]->data(0, Qt::UserRole) == photomatch::preprocess){
     int size = item.size();
@@ -1859,7 +1853,7 @@ void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
   if (item){
     if (item->data(0, Qt::UserRole) == photomatch::image ||
       item->data(0, Qt::UserRole) == photomatch::preprocess_image){
-     emit openImage(item->toolTip(column));
+     emit openImage(item->text(column));
    } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
      QString session = item->parent()->parent()->parent()->parent()->text(0);
      emit openImageMatches(session, item->parent()->text(0), item->text(column));
@@ -1897,9 +1891,9 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     menu.addAction(delete_image);
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("Open Image")) {
-        emit openImage(item->toolTip(0));
+        emit openImage(item->text(0));
       } else if (selectedItem->text() == tr("Delete Image")) {
-        emit deleteImages(QStringList(item->toolTip(0)));
+        emit deleteImages(QStringList(item->text(0)));
       }
     }
   } else if (item->data(0, Qt::UserRole) == photomatch::sessions){

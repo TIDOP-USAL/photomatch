@@ -47,8 +47,8 @@ public:
   explicit ThumbnailsWidget(QWidget *parent = nullptr);
   virtual ~ThumbnailsWidget() override {}
 
-  void setActiveImage(const QString &image);
-  void setActiveImages(const QStringList &images);
+  void setActiveImage(const QString &imageName);
+  void setActiveImages(const QStringList &imageNames);
 
 signals:
 

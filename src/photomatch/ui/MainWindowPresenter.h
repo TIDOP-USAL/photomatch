@@ -121,6 +121,7 @@ protected slots:
   void activeImage(const QString &image);
   void activeImages(const QStringList &images);
   void deleteImages(const QStringList &images);
+  void deleteImage(const QString &image);
 
   void loadSession(const QString &session);
   void selectSession(const QString &session);

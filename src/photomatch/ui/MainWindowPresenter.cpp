@@ -366,14 +366,25 @@ void MainWindowPresenter::updateProject()
 
 void MainWindowPresenter::openImage(const QString &image)
 {
-  mTabHandler->setImage(image);
+  try {
+    QString image_path = mProjectModel->findImageByName(image)->path();
+    mTabHandler->setImage(image_path);
+  } catch (std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  }
 }
 
 void MainWindowPresenter::activeImage(const QString &image)
 {
-  std::list<std::pair<QString, QString>> properties = mModel->exif(image);
-  mView->setProperties(properties);
-  mView->setActiveImage(image);
+  try {
+    QString image_path = mProjectModel->findImageByName(image)->path();
+
+    std::list<std::pair<QString, QString>> properties = mModel->exif(image_path);
+    mView->setProperties(properties);
+    mView->setActiveImage(image);
+  } catch (std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  }
 }
 
 void MainWindowPresenter::activeImages(const QStringList &images)
@@ -383,15 +394,26 @@ void MainWindowPresenter::activeImages(const QStringList &images)
 
 void MainWindowPresenter::deleteImages(const QStringList &images)
 {
-  mProjectModel->deleteImages(images);
+  //mProjectModel->deleteImages(images);
   TL_TODO("Se tienen que eliminar del proyecto las imagenes procesadas, y los ficheros de keypoints y de matches")
-  for (const auto &image : images){
-    mView->deleteImage(image);
+  for (const auto &image : images) {
+    //mView->deleteImage(image);
+    this->deleteImage(image);
     TL_TODO("Se tienen que eliminar de la vista las imagenes procesadas, y los ficheros de keypoints y de matches")
   }
+}
 
-  mView->setFlag(MainWindowView::Flag::project_modified, true);
-  mView->setFlag(MainWindowView::Flag::images_added, mProjectModel->imagesCount() > 0);
+void MainWindowPresenter::deleteImage(const QString &image)
+{
+  try {
+    QString image_path = mProjectModel->findImageByName(image)->path();
+    mProjectModel->deleteImage(image_path);
+    mView->deleteImage(image);
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+    mView->setFlag(MainWindowView::Flag::images_added, mProjectModel->imagesCount() > 0);
+  } catch (std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  }
 }
 
 void MainWindowPresenter::loadSession(const QString &session)
