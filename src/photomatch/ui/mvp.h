@@ -98,7 +98,7 @@ public:
     Qt::WindowFlags helpFlag = Qt::WindowContextHelpButtonHint;
     Qt::WindowFlags flags = windowFlags();
     flags = flags & (~helpFlag);
-    setWindowFlags(flags);
+    QDialog::setWindowFlags(flags);
   }
 
   virtual ~PhotoMatchDialogView() override = default;

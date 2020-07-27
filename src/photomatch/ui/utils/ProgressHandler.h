@@ -42,6 +42,10 @@ public:
   ProgressHandler(QObject *parent = nullptr);
   ~ProgressHandler() override;
 
+  int min() const;
+  int max() const;
+  int value() const;
+
 signals:
 
   void rangeChange(int, int);
@@ -55,9 +59,9 @@ public slots:
 
   void setRange(int min, int max);
   void setValue(int value);
-  void onNextPosition();
-  void onInit();
-  void onFinish();
+  void next();
+  void init();
+  void finish();
   void setTitle(const QString &title);
   void setDescription(const QString &description);
 

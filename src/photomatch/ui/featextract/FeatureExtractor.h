@@ -24,7 +24,8 @@
 #ifndef PHOTOMATCH_FEATURE_EXTRACTOR_INTERFACES_H
 #define PHOTOMATCH_FEATURE_EXTRACTOR_INTERFACES_H
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/process/ProcessView.h"
+#include "photomatch/ui/process/ProcessPresenter.h"
 
 namespace photomatch
 {
@@ -44,14 +45,16 @@ public:
 
 
 class FeatureExtractorView
-  : public PhotoMatchDialogView
+  : public ProcessView
 {
 
   Q_OBJECT
 
 public:
 
-  FeatureExtractorView(QWidget *parent = nullptr) : PhotoMatchDialogView(parent) {}
+
+  FeatureExtractorView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()) 
+    : ProcessView(parent) {}
   virtual ~FeatureExtractorView(){}
 
   virtual void setSessionName(const QString &name) = 0;
@@ -65,7 +68,6 @@ signals:
 
   void keypointDetectorChange(QString);
   void descriptorExtractorChange(QString);
-  void run();
 
 public slots:
 
@@ -78,7 +80,7 @@ public slots:
 
 
 class FeatureExtractorPresenter
-  : public PhotoMatchPresenter
+  : public ProcessPresenter
 {
 
   Q_OBJECT
@@ -90,19 +92,11 @@ public:
 
 signals:
 
-  void running();
   void imagePreprocessed(QString);
   void featuresExtracted(QString);
-  void finished();
-
-public slots:
-
-  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
-  virtual void cancel() = 0;
 
 private slots:
 
-  virtual void run() = 0;
   virtual void setCurrentkeypointDetector(const QString &keypointDetector) = 0;
   virtual void setCurrentDescriptorExtractor(const QString &descriptorExtractor) = 0;
 

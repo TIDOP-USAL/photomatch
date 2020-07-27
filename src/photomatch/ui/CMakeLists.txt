@@ -70,6 +70,8 @@ set(PHOTOMATCH_SOURCES
     exportmatch/ExportMatchesModel.cpp
     exportmatch/ExportMatchesView.cpp
     exportmatch/ExportMatchesPresenter.cpp
+    process/ProcessPresenter.cpp
+    process/ProcessView.cpp
     #BatchModel.cpp
     #BatchView.cpp
     #BatchPresenter.cpp
@@ -77,7 +79,7 @@ set(PHOTOMATCH_SOURCES
     HelpDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
-    utils/Progress.cpp
+    utils/ProgressHandler.cpp
     #utils/KeyPointGraphicsItem.cpp
     #utils/CrossGraphicItem.cpp
     #utils/DiagonalCrossGraphicItem.cpp
@@ -152,6 +154,8 @@ set(PHOTOMATCH_HEADERS
     exportmatch/ExportMatchesModel.h
     exportmatch/ExportMatchesView.h
     exportmatch/ExportMatchesPresenter.h
+    process/ProcessPresenter.h
+    process/ProcessView.h
     #BatchModel.h
     #BatchView.h
     #BatchPresenter.h
@@ -159,7 +163,7 @@ set(PHOTOMATCH_HEADERS
     HelpDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
-    utils/Progress.h
+    utils/ProgressHandler.h
     #utils/KeyPointGraphicsItem.h
     #utils/CrossGraphicItem.h
     #utils/DiagonalCrossGraphicItem.h

@@ -54,7 +54,7 @@
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/settings/SettingsModel.h"
 #include "photomatch/ui/HelpDialog.h"
-#include "photomatch/ui/utils/Progress.h"
+#include "photomatch/ui/utils/ProgressHandler.h"
 
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
@@ -144,9 +144,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
     mVggDescriptor(new VggWidgetImp),
 #endif
-    mKeypointsFilterWidget(new KeypointsFilterWidgetImp),
-    mMultiProcess(new MultiProcess(true)),
-    mProgressHandler(nullptr)
+    mKeypointsFilterWidget(new KeypointsFilterWidgetImp)
 {
   this->init();
   this->initSignalAndSlots();
@@ -299,10 +297,63 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mKeypointsFilterWidget = nullptr;
   }
 
-  if (mMultiProcess){
-    delete mMultiProcess;
-    mMultiProcess = nullptr;
-  }
+}
+
+void FeatureExtractorPresenterImp::init()
+{
+  mView->addKeypointDetector(mAgastDetector);
+  mView->addKeypointDetector(mAkazeDetector);
+  mView->addKeypointDetector(mBriskDetector);
+  mView->addKeypointDetector(mFastDetector);
+  mView->addKeypointDetector(mGfttDetector);
+  mView->addKeypointDetector(mKazeDetector);
+  mView->addKeypointDetector(mMsdDetector);
+  mView->addKeypointDetector(mMserDetector);
+  mView->addKeypointDetector(mOrbDetector);
+#ifdef OPENCV_ENABLE_NONFREE
+  mView->addKeypointDetector(mSiftDetector);
+#endif
+  mView->addKeypointDetector(mStarDetector);
+#ifdef OPENCV_ENABLE_NONFREE
+  mView->addKeypointDetector(mSurfDetector);
+#endif
+
+  mView->addDescriptorExtractor(mAkazeDescriptor);
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+  mView->addDescriptorExtractor(mBoostDescriptor);
+#endif
+  mView->addDescriptorExtractor(mBriefDescriptor);
+  mView->addDescriptorExtractor(mBriskDescriptor);
+  mView->addDescriptorExtractor(mDaisyDescriptor);
+  mView->addDescriptorExtractor(mFreakDescriptor);
+  mView->addDescriptorExtractor(mHogDescriptor);
+  mView->addDescriptorExtractor(mKazeDescriptor);
+  mView->addDescriptorExtractor(mLatchDescriptor);
+  mView->addDescriptorExtractor(mLssDescriptor);
+  mView->addDescriptorExtractor(mOrbDescriptor);
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+  mView->addDescriptorExtractor(mVggDescriptor);
+#endif
+#ifdef OPENCV_ENABLE_NONFREE
+  mView->addDescriptorExtractor(mSiftDescriptor);
+  mView->addDescriptorExtractor(mSurfDescriptor);
+
+  this->setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
+#else
+  this->setCurrentkeypointDetector(mOrbDescriptor->windowTitle());
+#endif
+
+  mView->addKeypointsFilter(mKeypointsFilterWidget);
+  
+}
+
+void FeatureExtractorPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
+  connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
+
+  connect(mView, SIGNAL(run()),                                this, SLOT(run()));
+  connect(mView, SIGNAL(help()),                               this, SLOT(help()));
 }
 
 void FeatureExtractorPresenterImp::help()
@@ -332,6 +383,177 @@ void FeatureExtractorPresenterImp::open()
 
   mView->setSessionName(current_session->name());
   mView->exec();
+}
+
+void FeatureExtractorPresenterImp::setHelp(HelpDialog *help)
+{
+  mHelp = help;
+}
+
+void FeatureExtractorPresenterImp::onError(int code, const QString &msg)
+{
+  ProcessPresenter::onError(code, msg);
+
+  if (mProgressHandler) {
+    mProgressHandler->setDescription(tr("Feature detection and description error"));
+  }
+}
+
+void FeatureExtractorPresenterImp::onFinished()
+{
+  ProcessPresenter::onFinished();
+
+  if (mProgressHandler) {
+    mProgressHandler->setDescription(tr("Feature detection and description finished"));
+  }
+
+  msgInfo("Feature detection and description finished.");
+}
+
+void FeatureExtractorPresenterImp::createProcess()
+{
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) throw std::runtime_error("No active session found");
+  
+
+  std::shared_ptr<Preprocess> preprocess = current_session->preprocess();
+  std::shared_ptr<ImageProcess> imageProcess;
+  if (preprocess == nullptr){
+    imageProcess = std::make_shared<DecolorPreprocess>();
+    mProjectModel->setMaxImageSize(2000);
+    mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
+  }
+
+  Feature *detector = current_session->detector().get();
+  Feature *descriptor = current_session->descriptor().get();
+  if (detector && descriptor){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      //return;
+      throw std::runtime_error("Canceled by user");
+    }
+  }
+
+  QString currentKeypointDetector = mView->currentKeypointDetector();
+  QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
+  std::shared_ptr<KeypointDetector> keypointDetector = makeKeypointDetector(currentKeypointDetector);
+  std::shared_ptr<DescriptorExtractor> descriptorExtractor = makeDescriptorExtractor(currentDescriptorExtractor, 
+                                                                                     currentKeypointDetector);
+
+
+  mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
+  mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+
+
+  for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+    QString fileName = (*it)->name();
+    QString preprocessed_image;
+
+    if (imageProcess){
+      QString file_in = (*it)->path();
+      QFileInfo fileInfo(file_in);
+      preprocessed_image = mProjectModel->projectFolder();
+      preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
+      preprocessed_image.append("\\preprocess\\");
+      QDir dir_out(preprocessed_image);
+      if (!dir_out.exists()) {
+        dir_out.mkpath(".");
+      }
+      preprocessed_image.append(fileInfo.fileName());
+      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
+                                                                      preprocessed_image,
+                                                                      imageProcess,
+                                                                      2000));
+      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+      mMultiProcess->appendProcess(preprocess);
+    } else {
+      preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
+    }
+
+    QString features = mProjectModel->projectFolder();
+    features.append("\\").append(mProjectModel->currentSession()->name());
+    features.append("\\features\\");
+    QDir dir_out(features);
+    if (!dir_out.exists()) {
+      dir_out.mkpath(".");
+    }
+    features.append(fileName);
+    QString keypointsFormat = mSettingsModel->keypointsFormat();
+    if (keypointsFormat.compare("Binary") == 0){
+      features.append(".bin");
+    } else if (keypointsFormat.compare("YML") == 0){
+      features.append(".yml");
+    } else {
+      features.append(".xml");
+    }
+
+    double scale = 1.;
+    if (mProjectModel->fullImageSize() == false){
+      int maxSize = mProjectModel->maxImageSize();
+      QImageReader imageReader((*it)->path());
+      QSize size = imageReader.size();
+      int w = size.width();
+      int h = size.height();
+      if (w > h){
+        scale = w / static_cast<double>(maxSize);
+      } else {
+        scale = h / static_cast<double>(maxSize);
+      }
+      if (scale < 1.) scale = 1.;
+    }
+
+    /// Se añade aqui porque se necesita la escala
+    std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+    if (mKeypointsFilterWidget->isActiveFilterBest()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+      keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+    }
+    if (mKeypointsFilterWidget->isActiveFilterSize()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize()/scale, 
+                                                                                                              mKeypointsFilterWidget->maxSize()/scale);
+      keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+    }
+    if (mKeypointsFilterWidget->isActiveRemoveDuplicated()){
+      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
+      keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
+    }
+
+    std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
+                                                                        features,
+                                                                        scale,
+                                                                        keypointDetector,
+                                                                        descriptorExtractor,
+                                                                        keyPointsFiltersProcess));
+    connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
+
+    mMultiProcess->appendProcess(feat_extract);
+  }
+
+
+  if (mProgressHandler){
+    mProgressHandler->setTitle("Computing Features...");
+    mProgressHandler->setDescription("Computing Features...");
+  }
+
+  mView->hide();
+
+  msgInfo("Starting Feature Extraction");
+  QByteArray ba = currentKeypointDetector.toLocal8Bit();
+  const char *keypoint_detector = ba.constData();
+  msgInfo("  Feature Detector     :  %s", keypoint_detector);
+  ba = currentDescriptorExtractor.toLocal8Bit();
+  const char *descriptor_extractor = ba.constData();
+  msgInfo("  DescriptorExtractor  :  %s", descriptor_extractor);
+
+}
+
+void FeatureExtractorPresenterImp::cancel()
+{
+  ProcessPresenter::cancel();
+  msgWarning("Processing has been canceled by the user");
 }
 
 void FeatureExtractorPresenterImp::setDetectorAndDescriptorProperties()
@@ -1016,168 +1238,46 @@ void FeatureExtractorPresenterImp::setVggDescriptorProperties()
 #endif
 }
 
-void FeatureExtractorPresenterImp::setHelp(HelpDialog *help)
+std::shared_ptr<KeypointDetector> FeatureExtractorPresenterImp::makeKeypointDetector(const QString &keypointDetector)
 {
-  mHelp = help;
-}
+  std::shared_ptr<KeypointDetector> keypoint_detector;
 
-void FeatureExtractorPresenterImp::init()
-{
-  mView->addKeypointDetector(mAgastDetector);
-  mView->addKeypointDetector(mAkazeDetector);
-  mView->addKeypointDetector(mBriskDetector);
-  mView->addKeypointDetector(mFastDetector);
-  mView->addKeypointDetector(mGfttDetector);
-  mView->addKeypointDetector(mKazeDetector);
-  mView->addKeypointDetector(mMsdDetector);
-  mView->addKeypointDetector(mMserDetector);
-  mView->addKeypointDetector(mOrbDetector);
-#ifdef OPENCV_ENABLE_NONFREE
-  mView->addKeypointDetector(mSiftDetector);
-#endif
-  mView->addKeypointDetector(mStarDetector);
-#ifdef OPENCV_ENABLE_NONFREE
-  mView->addKeypointDetector(mSurfDetector);
-#endif
-
-  mView->addDescriptorExtractor(mAkazeDescriptor);
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  mView->addDescriptorExtractor(mBoostDescriptor);
-#endif
-  mView->addDescriptorExtractor(mBriefDescriptor);
-  mView->addDescriptorExtractor(mBriskDescriptor);
-  mView->addDescriptorExtractor(mDaisyDescriptor);
-  mView->addDescriptorExtractor(mFreakDescriptor);
-  mView->addDescriptorExtractor(mHogDescriptor);
-  mView->addDescriptorExtractor(mKazeDescriptor);
-  mView->addDescriptorExtractor(mLatchDescriptor);
-  mView->addDescriptorExtractor(mLssDescriptor);
-  mView->addDescriptorExtractor(mOrbDescriptor);
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  mView->addDescriptorExtractor(mVggDescriptor);
-#endif
-#ifdef OPENCV_ENABLE_NONFREE
-  mView->addDescriptorExtractor(mSiftDescriptor);
-  mView->addDescriptorExtractor(mSurfDescriptor);
-
-  this->setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
-#else
-  this->setCurrentkeypointDetector(mOrbDescriptor->windowTitle());
-#endif
-
-  mView->addKeypointsFilter(mKeypointsFilterWidget);
-  
-}
-
-void FeatureExtractorPresenterImp::initSignalAndSlots()
-{
-  connect(mView, SIGNAL(keypointDetectorChange(QString)),      this, SLOT(setCurrentkeypointDetector(QString)));
-  connect(mView, SIGNAL(descriptorExtractorChange(QString)),   this, SLOT(setCurrentDescriptorExtractor(QString)));
-
-  connect(mView, SIGNAL(run()),                                this, SLOT(run()));
-  connect(mView, SIGNAL(help()),                               this, SLOT(help()));
-}
-
-void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
-{
-  mProgressHandler = progressHandler;
-}
-
-void FeatureExtractorPresenterImp::cancel()
-{
-  mMultiProcess->stop();
-
-  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    mProgressHandler->setRange(0,1);
-    mProgressHandler->setValue(1);
-    mProgressHandler->onFinish();
-    mProgressHandler->setDescription(tr("Processing has been canceled by the user"));
-
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
-  }
-
-  mMultiProcess->clearProcessList();
-
-  emit finished();
-
-  msgWarning("Processing has been canceled by the user");
-}
-
-void FeatureExtractorPresenterImp::run()
-{
-  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
-  if (current_session == nullptr) {
-    msgError("No active session found");
-    return;
-  }
-
-  std::shared_ptr<Preprocess> preprocess = current_session->preprocess();
-  std::shared_ptr<ImageProcess> imageProcess;
-  if (preprocess == nullptr){
-    imageProcess = std::make_shared<DecolorPreprocess>();
-    mProjectModel->setMaxImageSize(2000);
-    mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
-  }
-
-  Feature *detector = current_session->detector().get();
-  Feature *descriptor = current_session->descriptor().get();
-  if (detector && descriptor){
-    int i_ret = QMessageBox(QMessageBox::Warning,
-                            tr("Previous results"),
-                            tr("The previous results will be overwritten. Do you wish to continue?"),
-                            QMessageBox::Yes|QMessageBox::No).exec();
-    if (i_ret == QMessageBox::No) {
-      return;
-    }
-  }
-
-  QString currentKeypointDetector = mView->currentKeypointDetector();
-  QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
-  std::shared_ptr<KeypointDetector> keypointDetector;
-  std::shared_ptr<DescriptorExtractor> descriptorExtractor;
-
-
-  if (currentKeypointDetector.compare("AGAST") == 0) {
-    keypointDetector = std::make_shared<AgastDetector>(mAgastDetector->threshold(),
+  if (keypointDetector.compare("AGAST") == 0) {
+    keypoint_detector = std::make_shared<AgastDetector>(mAgastDetector->threshold(),
                                                        mAgastDetector->nonmaxSuppression(),
                                                        mAgastDetector->detectorType());
-  } else if (currentKeypointDetector.compare("AKAZE") == 0){
-    keypointDetector = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
+  } else if (keypointDetector.compare("AKAZE") == 0){
+    keypoint_detector = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
                                                                  mAkazeDetector->descriptorSize(),
                                                                  mAkazeDetector->descriptorChannels(),
                                                                  mAkazeDetector->threshold(),
                                                                  mAkazeDetector->octaves(),
                                                                  mAkazeDetector->octaveLayers(),
                                                                  mAkazeDetector->diffusivity());
-  } else if (currentKeypointDetector.compare("BRISK") == 0){
-    keypointDetector = std::make_shared<BriskDetectorDescriptor>(mBriskDetector->threshold(),
+  } else if (keypointDetector.compare("BRISK") == 0){
+    keypoint_detector = std::make_shared<BriskDetectorDescriptor>(mBriskDetector->threshold(),
                                                                  mBriskDetector->octaves(),
                                                                  mBriskDetector->patternScale());
-  } else if (currentKeypointDetector.compare("FAST") == 0){
-    keypointDetector = std::make_shared<FastDetector>(mFastDetector->threshold(),
+  } else if (keypointDetector.compare("FAST") == 0){
+    keypoint_detector = std::make_shared<FastDetector>(mFastDetector->threshold(),
                                                       mFastDetector->nonmaxSuppression(),
                                                       mFastDetector->detectorType());
-  } else if (currentKeypointDetector.compare("GFTT") == 0){
-    keypointDetector = std::make_shared<GfttDetector>(mGfttDetector->maxFeatures(),
+  } else if (keypointDetector.compare("GFTT") == 0){
+    keypoint_detector = std::make_shared<GfttDetector>(mGfttDetector->maxFeatures(),
                                                       mGfttDetector->qualityLevel(),
                                                       mGfttDetector->minDistance(),
                                                       mGfttDetector->blockSize(),
                                                       mGfttDetector->harrisDetector(),
                                                       mGfttDetector->k());
-  } else if (currentKeypointDetector.compare("KAZE") == 0){
-    keypointDetector = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
+  } else if (keypointDetector.compare("KAZE") == 0){
+    keypoint_detector = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
                                                                 mKazeDetector->uprightDescriptor(),
                                                                 mKazeDetector->threshold(),
                                                                 mKazeDetector->octaves(),
                                                                 mKazeDetector->octaveLayers(),
                                                                 mKazeDetector->diffusivity());
-  } else if (currentKeypointDetector.compare("MSD") == 0){
-    keypointDetector = std::make_shared<MsdDetector>(mMsdDetector->thresholdSaliency(),
+  } else if (keypointDetector.compare("MSD") == 0){
+    keypoint_detector = std::make_shared<MsdDetector>(mMsdDetector->thresholdSaliency(),
                                                      mMsdDetector->pathRadius(),
                                                      mMsdDetector->knn(),
                                                      mMsdDetector->areaRadius(),
@@ -1188,8 +1288,8 @@ void FeatureExtractorPresenterImp::run()
                                                      mMsdDetector->computeOrientations(),
                                                      mMsdDetector->affineMSD(),
                                                      mMsdDetector->tilts());
-  } else if (currentKeypointDetector.compare("MSER") == 0){
-    keypointDetector = std::make_shared<MserDetector>(mMserDetector->delta(),
+  } else if (keypointDetector.compare("MSER") == 0){
+    keypoint_detector = std::make_shared<MserDetector>(mMserDetector->delta(),
                                                       mMserDetector->minArea(),
                                                       mMserDetector->maxArea(),
                                                       mMserDetector->maxVariation(),
@@ -1198,10 +1298,10 @@ void FeatureExtractorPresenterImp::run()
                                                       mMserDetector->areaThreshold(),
                                                       mMserDetector->minMargin(),
                                                       mMserDetector->edgeBlurSize());
-  } else if (currentKeypointDetector.compare("ORB") == 0){
+  } else if (keypointDetector.compare("ORB") == 0){
 #ifdef HAVE_CUDA
     if (mSettingsModel->useCuda()){
-      keypointDetector = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDetector->featuresNumber(),
+      keypoint_detector = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDetector->featuresNumber(),
                                                                      mOrbDetector->scaleFactor(),
                                                                      mOrbDetector->levelsNumber(),
                                                                      mOrbDetector->edgeThreshold(),
@@ -1211,7 +1311,7 @@ void FeatureExtractorPresenterImp::run()
                                                                      mOrbDetector->fastThreshold());
     } else {
 #endif // HAVE_CUDA
-      keypointDetector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
+      keypoint_detector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
                                                                  mOrbDetector->scaleFactor(),
                                                                  mOrbDetector->levelsNumber(),
                                                                  mOrbDetector->edgeThreshold(),
@@ -1225,26 +1325,26 @@ void FeatureExtractorPresenterImp::run()
 #endif // HAVE_CUDA
   } 
 #ifdef OPENCV_ENABLE_NONFREE
-  else if (currentKeypointDetector.compare("SIFT") == 0){
-    keypointDetector = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
+  else if (keypointDetector.compare("SIFT") == 0){
+    keypoint_detector = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
                                                                 mSiftDetector->octaveLayers(),
                                                                 mSiftDetector->contrastThreshold(),
                                                                 mSiftDetector->edgeThreshold(),
                                                                 mSiftDetector->sigma());
   }
 #endif
-  else if (currentKeypointDetector.compare("STAR") == 0){
-    keypointDetector = std::make_shared<StarDetector>(mStarDetector->maxSize(),
+  else if (keypointDetector.compare("STAR") == 0){
+    keypoint_detector = std::make_shared<StarDetector>(mStarDetector->maxSize(),
                                                       mStarDetector->responseThreshold(),
                                                       mStarDetector->lineThresholdProjected(),
                                                       mStarDetector->lineThresholdBinarized(),
                                                       mStarDetector->suppressNonmaxSize());
   } 
 #ifdef OPENCV_ENABLE_NONFREE
-  else if (currentKeypointDetector.compare("SURF") == 0){
+  else if (keypointDetector.compare("SURF") == 0){
 #ifdef HAVE_CUDA
     if (mSettingsModel->useCuda()){
-      keypointDetector = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+      keypoint_detector = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                       mSurfDetector->octaves(),
                                                                       mSurfDetector->octaveLayers(),
                                                                       mSurfDetector->extendedDescriptor(),
@@ -1252,7 +1352,7 @@ void FeatureExtractorPresenterImp::run()
     } else {
 #endif // HAVE_CUDA
 
-    keypointDetector = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+    keypoint_detector = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                 mSurfDetector->octaves(),
                                                                 mSurfDetector->octaveLayers(),
                                                                 mSurfDetector->extendedDescriptor(),
@@ -1263,14 +1363,20 @@ void FeatureExtractorPresenterImp::run()
   } 
 #endif
   else {
-    ///TODO: error
-    return;
+    throw std::runtime_error("Keypoint Detector not found");
   }
 
+  return keypoint_detector;
+}
 
-  if (currentDescriptorExtractor.compare("AKAZE") == 0){
-    if (currentKeypointDetector.compare("AKAZE") == 0){
-      descriptorExtractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
+std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescriptorExtractor(const QString &descriptorExtractor, 
+                                                                                           const QString &keypointDetector)
+{
+  std::shared_ptr<DescriptorExtractor> descriptor_extractor;
+
+  if (descriptorExtractor.compare("AKAZE") == 0){
+    if (keypointDetector.compare("AKAZE") == 0){
+      descriptor_extractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
                                                                       mAkazeDetector->descriptorSize(),
                                                                       mAkazeDetector->descriptorChannels(),
                                                                       mAkazeDetector->threshold(),
@@ -1278,7 +1384,7 @@ void FeatureExtractorPresenterImp::run()
                                                                       mAkazeDetector->octaveLayers(),
                                                                       mAkazeDetector->diffusivity());
     } else {
-      descriptorExtractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDescriptor->descriptorType(),
+      descriptor_extractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDescriptor->descriptorType(),
                                                                       mAkazeDescriptor->descriptorSize(),
                                                                       mAkazeDescriptor->descriptorChannels(),
                                                                       mAkazeDescriptor->threshold(),
@@ -1288,69 +1394,69 @@ void FeatureExtractorPresenterImp::run()
     }
   }
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  else if (currentDescriptorExtractor.compare("BOOST") == 0){
-    descriptorExtractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
+  else if (descriptorExtractor.compare("BOOST") == 0){
+    descriptor_extractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
                                                             mBoostDescriptor->useOrientation(),
                                                             mBoostDescriptor->scaleFactor());
   }
 #endif
-  else if (currentDescriptorExtractor.compare("BRIEF") == 0){
-    descriptorExtractor = std::make_shared<BriefDescriptor>(mBriefDescriptor->bytes(),
+  else if (descriptorExtractor.compare("BRIEF") == 0){
+    descriptor_extractor = std::make_shared<BriefDescriptor>(mBriefDescriptor->bytes(),
                                                             mBriefDescriptor->useOrientation());
-  } else if (currentDescriptorExtractor.compare("BRISK") == 0){
-    descriptorExtractor = std::make_shared<BriskDetectorDescriptor>(mBriskDescriptor->threshold(),
+  } else if (descriptorExtractor.compare("BRISK") == 0){
+    descriptor_extractor = std::make_shared<BriskDetectorDescriptor>(mBriskDescriptor->threshold(),
                                                                     mBriskDescriptor->octaves(),
                                                                     mBriskDescriptor->patternScale());
-  } else if (currentDescriptorExtractor.compare("DAISY") == 0){
-    descriptorExtractor = std::make_shared<DaisyDescriptor>(mDaisyDescriptor->radius(),
+  } else if (descriptorExtractor.compare("DAISY") == 0){
+    descriptor_extractor = std::make_shared<DaisyDescriptor>(mDaisyDescriptor->radius(),
                                                             mDaisyDescriptor->qRadius(),
                                                             mDaisyDescriptor->qTheta(),
                                                             mDaisyDescriptor->qHist(),
                                                             mDaisyDescriptor->norm(),
                                                             mDaisyDescriptor->interpolation(),
                                                             mDaisyDescriptor->useOrientation());
-  } else if (currentDescriptorExtractor.compare("FREAK") == 0){
-    descriptorExtractor = std::make_shared<FreakDescriptor>(mFreakDescriptor->orientationNormalized(),
+  } else if (descriptorExtractor.compare("FREAK") == 0){
+    descriptor_extractor = std::make_shared<FreakDescriptor>(mFreakDescriptor->orientationNormalized(),
                                                             mFreakDescriptor->scaleNormalized(),
                                                             mFreakDescriptor->patternScale(),
                                                             mFreakDescriptor->octaves());
-  } else if (currentDescriptorExtractor.compare("HOG") == 0){
-    descriptorExtractor = std::make_shared<HogDescriptor>(mHogDescriptor->winSize(),
+  } else if (descriptorExtractor.compare("HOG") == 0){
+    descriptor_extractor = std::make_shared<HogDescriptor>(mHogDescriptor->winSize(),
                                                           mHogDescriptor->blockSize(),
                                                           mHogDescriptor->blockStride(),
                                                           mHogDescriptor->cellSize(),
                                                           mHogDescriptor->nbins(),
                                                           mHogDescriptor->derivAperture());
-  } else if (currentDescriptorExtractor.compare("KAZE") == 0){
-    if (currentKeypointDetector.compare("KAZE") == 0){
-      descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
+  } else if (descriptorExtractor.compare("KAZE") == 0){
+    if (keypointDetector.compare("KAZE") == 0){
+      descriptor_extractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
                                                                      mKazeDetector->uprightDescriptor(),
                                                                      mKazeDetector->threshold(),
                                                                      mKazeDetector->octaves(),
                                                                      mKazeDetector->octaveLayers(),
                                                                      mKazeDetector->diffusivity());
     } else {
-      descriptorExtractor = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
+      descriptor_extractor = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
                                                                      mKazeDescriptor->uprightDescriptor(),
                                                                      mKazeDescriptor->threshold(),
                                                                      mKazeDescriptor->octaves(),
                                                                      mKazeDescriptor->octaveLayers(),
                                                                      mKazeDescriptor->diffusivity());
     }
-  } else if (currentDescriptorExtractor.compare("LATCH") == 0){
-    descriptorExtractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
+  } else if (descriptorExtractor.compare("LATCH") == 0){
+    descriptor_extractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
                                                             mLatchDescriptor->rotationInvariance(),
                                                             mLatchDescriptor->halfSsdSize());
-  } /* else if (currentDescriptorExtractor.compare("LUCID") == 0){
-    descriptorExtractor = std::make_shared<LucidDescriptor>(mLucidDescriptor->lucidKernel(),
+  } /* else if (descriptorExtractor.compare("LUCID") == 0){
+    descriptor_extractor = std::make_shared<LucidDescriptor>(mLucidDescriptor->lucidKernel(),
                                                             mLucidDescriptor->blurKernel());
-  }*/ else if (currentDescriptorExtractor.compare("LSS") == 0){
-    descriptorExtractor = std::make_shared<LssDescriptor>();
-  } else if (currentDescriptorExtractor.compare("ORB") == 0){
+  }*/ else if (descriptorExtractor.compare("LSS") == 0){
+    descriptor_extractor = std::make_shared<LssDescriptor>();
+  } else if (descriptorExtractor.compare("ORB") == 0){
 #ifdef HAVE_CUDA
     if (mSettingsModel->useCuda()){
-      if (currentKeypointDetector.compare("ORB") == 0){
-        descriptorExtractor = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDetector->featuresNumber(),
+      if (keypointDetector.compare("ORB") == 0){
+        descriptor_extractor = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDetector->featuresNumber(),
                                                                           mOrbDetector->scaleFactor(),
                                                                           mOrbDetector->levelsNumber(),
                                                                           mOrbDetector->edgeThreshold(),
@@ -1359,7 +1465,7 @@ void FeatureExtractorPresenterImp::run()
                                                                           mOrbDetector->patchSize(),
                                                                           mOrbDetector->fastThreshold());
       } else {
-        descriptorExtractor = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
+        descriptor_extractor = std::make_shared<OrbCudaDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
                                                                           mOrbDescriptor->scaleFactor(),
                                                                           mOrbDescriptor->levelsNumber(),
                                                                           mOrbDescriptor->edgeThreshold(),
@@ -1370,8 +1476,8 @@ void FeatureExtractorPresenterImp::run()
       }
     } else {
 #endif // HAVE_CUDA
-      if (currentKeypointDetector.compare("ORB") == 0){
-        descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
+      if (keypointDetector.compare("ORB") == 0){
+        descriptor_extractor = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
                                                                       mOrbDetector->scaleFactor(),
                                                                       mOrbDetector->levelsNumber(),
                                                                       mOrbDetector->edgeThreshold(),
@@ -1380,7 +1486,7 @@ void FeatureExtractorPresenterImp::run()
                                                                       mOrbDetector->patchSize(),
                                                                       mOrbDetector->fastThreshold());
       } else {
-        descriptorExtractor = std::make_shared<OrbDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
+        descriptor_extractor = std::make_shared<OrbDetectorDescriptor>(mOrbDescriptor->featuresNumber(),
                                                                       mOrbDescriptor->scaleFactor(),
                                                                       mOrbDescriptor->levelsNumber(),
                                                                       mOrbDescriptor->edgeThreshold(),
@@ -1394,31 +1500,31 @@ void FeatureExtractorPresenterImp::run()
 #endif // HAVE_CUDA
   } 
 #ifdef OPENCV_ENABLE_NONFREE
-  else if (currentDescriptorExtractor.compare("SIFT") == 0){
-    if (currentKeypointDetector.compare("SIFT") == 0){
-      descriptorExtractor = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
+  else if (descriptorExtractor.compare("SIFT") == 0){
+    if (keypointDetector.compare("SIFT") == 0){
+      descriptor_extractor = std::make_shared<SiftDetectorDescriptor>(mSiftDetector->featuresNumber(),
                                                                   mSiftDetector->octaveLayers(),
                                                                   mSiftDetector->contrastThreshold(),
                                                                   mSiftDetector->edgeThreshold(),
                                                                   mSiftDetector->sigma());
     } else {
-      descriptorExtractor = std::make_shared<SiftDetectorDescriptor>(mSiftDescriptor->featuresNumber(),
+      descriptor_extractor = std::make_shared<SiftDetectorDescriptor>(mSiftDescriptor->featuresNumber(),
                                                                      mSiftDescriptor->octaveLayers(),
                                                                      mSiftDescriptor->contrastThreshold(),
                                                                      mSiftDescriptor->edgeThreshold(),
                                                                      mSiftDescriptor->sigma());
     }
-  } else if (currentDescriptorExtractor.compare("SURF") == 0){
+  } else if (descriptorExtractor.compare("SURF") == 0){
 #ifdef HAVE_CUDA
     if (mSettingsModel->useCuda()){
-      if (currentKeypointDetector.compare("SURF") == 0){
-        descriptorExtractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+      if (keypointDetector.compare("SURF") == 0){
+        descriptor_extractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                            mSurfDetector->octaves(),
                                                                            mSurfDetector->octaveLayers(),
                                                                            mSurfDetector->extendedDescriptor(),
                                                                            mSurfDetector->upright());
       } else {
-        descriptorExtractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
+        descriptor_extractor = std::make_shared<SurfCudaDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
                                                                            mSurfDescriptor->octaves(),
                                                                            mSurfDescriptor->octaveLayers(),
                                                                            mSurfDescriptor->extendedDescriptor(),
@@ -1426,14 +1532,14 @@ void FeatureExtractorPresenterImp::run()
       }
     } else {
 #endif // HAVE_CUDA
-      if (currentKeypointDetector.compare("SURF") == 0){
-        descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
+      if (keypointDetector.compare("SURF") == 0){
+        descriptor_extractor = std::make_shared<SurfDetectorDescriptor>(mSurfDetector->hessianThreshold(),
                                                                        mSurfDetector->octaves(),
                                                                        mSurfDetector->octaveLayers(),
                                                                        mSurfDetector->extendedDescriptor(),
                                                                        mSurfDetector->upright());
       } else {
-        descriptorExtractor = std::make_shared<SurfDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
+        descriptor_extractor = std::make_shared<SurfDetectorDescriptor>(mSurfDescriptor->hessianThreshold(),
                                                                        mSurfDescriptor->octaves(),
                                                                        mSurfDescriptor->octaveLayers(),
                                                                        mSurfDescriptor->extendedDescriptor(),
@@ -1445,8 +1551,8 @@ void FeatureExtractorPresenterImp::run()
   } 
 #endif
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  else if (currentDescriptorExtractor.compare("VGG") == 0){
-    descriptorExtractor = std::make_shared<VggDescriptor>(mVggDescriptor->descriptorType(),
+  else if (descriptorExtractor.compare("VGG") == 0){
+    descriptor_extractor = std::make_shared<VggDescriptor>(mVggDescriptor->descriptorType(),
                                                           mVggDescriptor->scaleFactor(),
                                                           mVggDescriptor->sigma(),
                                                           mVggDescriptor->useNormalizeDescriptor(),
@@ -1455,126 +1561,15 @@ void FeatureExtractorPresenterImp::run()
   }
 #endif
   else {
-    ///TODO: error
-    return;
+    throw std::runtime_error("Descriptor Extractor not found");
   }
 
-  mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
-  mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+  return descriptor_extractor;
+}
 
-
-  for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-    QString fileName = (*it)->name();
-    QString preprocessed_image;
-
-    if (imageProcess){
-      QString file_in = (*it)->path();
-      QFileInfo fileInfo(file_in);
-      preprocessed_image = mProjectModel->projectFolder();
-      preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
-      preprocessed_image.append("\\preprocess\\");
-      QDir dir_out(preprocessed_image);
-      if (!dir_out.exists()) {
-        dir_out.mkpath(".");
-      }
-      preprocessed_image.append(fileInfo.fileName());
-      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
-                                                                      preprocessed_image,
-                                                                      imageProcess,
-                                                                      2000));
-      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
-      mMultiProcess->appendProcess(preprocess);
-    } else {
-      preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
-    }
-
-    QString features = mProjectModel->projectFolder();
-    features.append("\\").append(mProjectModel->currentSession()->name());
-    features.append("\\features\\");
-    QDir dir_out(features);
-    if (!dir_out.exists()) {
-      dir_out.mkpath(".");
-    }
-    features.append(fileName);
-    QString keypointsFormat = mSettingsModel->keypointsFormat();
-    if (keypointsFormat.compare("Binary") == 0){
-      features.append(".bin");
-    } else if (keypointsFormat.compare("YML") == 0){
-      features.append(".yml");
-    } else {
-      features.append(".xml");
-    }
-
-    double scale = 1.;
-    if (mProjectModel->fullImageSize() == false){
-      int maxSize = mProjectModel->maxImageSize();
-      QImageReader imageReader((*it)->path());
-      QSize size = imageReader.size();
-      int w = size.width();
-      int h = size.height();
-      if (w > h){
-        scale = w / static_cast<double>(maxSize);
-      } else {
-        scale = h / static_cast<double>(maxSize);
-      }
-      if (scale < 1.) scale = 1.;
-    }
-
-    /// Se añade aqui porque se necesita la escala
-    std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
-    if (mKeypointsFilterWidget->isActiveFilterBest()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
-      keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
-    }
-    if (mKeypointsFilterWidget->isActiveFilterSize()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize()/scale, 
-                                                                                                              mKeypointsFilterWidget->maxSize()/scale);
-      keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
-    }
-    if (mKeypointsFilterWidget->isActiveRemoveDuplicated()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
-      keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
-    }
-
-    std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
-                                                                        features,
-                                                                        scale,
-                                                                        keypointDetector,
-                                                                        descriptorExtractor,
-                                                                        keyPointsFiltersProcess));
-    connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
-
-    mMultiProcess->appendProcess(feat_extract);
-  }
-
-  connect(mMultiProcess, SIGNAL(error(int, QString)),          this, SLOT(onError(int, QString)));
-  connect(mMultiProcess, SIGNAL(finished()),                   this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
-    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
-    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
-
-    mProgressHandler->setRange(0, mMultiProcess->count());
-    mProgressHandler->setValue(0);
-    mProgressHandler->setTitle("Computing Features...");
-    mProgressHandler->setDescription("Computing Features...");
-    mProgressHandler->onInit();
-  }
-
-  mView->hide();
-
-  msgInfo("Starting Feature Extraction");
-  QByteArray ba = currentKeypointDetector.toLocal8Bit();
-  const char *keypoint_detector = ba.constData();
-  msgInfo("  Feature Detector     :  %s", keypoint_detector);
-  ba = currentDescriptorExtractor.toLocal8Bit();
-  const char *descriptor_extractor = ba.constData();
-  msgInfo("  DescriptorExtractor  :  %s", descriptor_extractor);
-
-  emit running();
-
-  mMultiProcess->start();
+void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
+{
+  mProgressHandler = progressHandler;
 }
 
 void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &keypointDetector)
@@ -1673,50 +1668,6 @@ void FeatureExtractorPresenterImp::setCurrentDescriptorExtractor(const QString &
   }
 #endif
   mView->setCurrentDescriptorExtractor(descriptorExtractor);
-}
-
-void FeatureExtractorPresenterImp::onError(int code, const QString &msg)
-{
-  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    mProgressHandler->setRange(0,1);
-    mProgressHandler->setValue(1);
-    mProgressHandler->onFinish();
-    mProgressHandler->setDescription(tr("Feature detection and description error"));
-
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
-  }
-
-  mMultiProcess->clearProcessList();
-
-  emit finished();
-}
-
-void FeatureExtractorPresenterImp::onFinished()
-{
-  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    mProgressHandler->setRange(0,1);
-    mProgressHandler->setValue(1);
-    mProgressHandler->onFinish();
-    mProgressHandler->setDescription(tr("Feature detection and description finished"));
-
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
-  }
-
-  emit finished();
-
-  mMultiProcess->clearProcessList();
-
-  msgInfo("Feature detection and description finished.");
 }
 
 void FeatureExtractorPresenterImp::onImagePreprocessed(const QString &image)

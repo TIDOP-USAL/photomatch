@@ -21,66 +21,33 @@
  *                                                                      *
  ************************************************************************/
 
+#ifndef PHOTOMATCH_PROCESS_VIEW_H
+#define PHOTOMATCH_PROCESS_VIEW_H
 
+#include "photomatch/ui/mvp.h"
 
-#include "Progress.h"
 
 namespace photomatch
 {
 
-ProgressHandler::ProgressHandler(QObject *parent)
-  : QObject(parent),
-    mMin(0),
-    mMax(1),
-    mValue(0)
+class ProcessView
+  : public PhotoMatchDialogView
 {
 
-}
+  Q_OBJECT
 
-ProgressHandler::~ProgressHandler()
-{
+public:
 
-}
+  ProcessView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ~ProcessView();
 
-void ProgressHandler::setRange(int min, int max)
-{
-  mMin = min;
-  mMax = max;
-  emit rangeChange(min, max);
-}
+signals:
 
-void ProgressHandler::setValue(int value)
-{
-  mValue = value;
-  emit valueChange(value);
-}
+  void run();
 
-void ProgressHandler::onNextPosition()
-{
-  setValue(++mValue);
-}
-
-void ProgressHandler::onInit()
-{
-  emit initialized();
-}
-
-void ProgressHandler::onFinish()
-{
-  emit finished();
-}
-
-void ProgressHandler::setTitle(const QString &title)
-{
-  emit titleChange(title);
-}
-
-void ProgressHandler::setDescription(const QString &description)
-{
-  emit descriptionChange(description);
-}
-
+};
 
 } // namespace photomatch
 
 
+#endif // PHOTOMATCH_PROCESS_VIEW_H

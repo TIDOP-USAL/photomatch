@@ -33,8 +33,6 @@
 
 #include "photomatch/ui/featextract/FeatureExtractor.h"
 
-class MultiProcess;
-
 namespace photomatch
 {
 
@@ -64,8 +62,8 @@ class StarWidget;
 class SurfWidget;
 class VggWidget;
 class KeypointsFilterWidget;
-
-class ProgressHandler;
+class KeypointDetector;
+class DescriptorExtractor;
 
 
 class FeatureExtractorPresenterImp
@@ -109,7 +107,37 @@ private:
   void setSurfDescriptorProperties();
   void setVggDescriptorProperties();
 
-// PhotoMatchModel interface
+  std::shared_ptr<KeypointDetector> makeKeypointDetector(const QString &keypointDetector);
+  std::shared_ptr<DescriptorExtractor> makeDescriptorExtractor(const QString &descriptorExtractor, 
+                                                               const QString &keypointDetector);
+
+// FeatureExtractorPresenter interface
+
+public slots:
+
+  void setProgressHandler(ProgressHandler *progressHandler) override;
+
+private slots:
+
+  void setCurrentkeypointDetector(const QString &keypointDetector) override;
+  void setCurrentDescriptorExtractor(const QString &descriptorExtractor) override;
+
+  void onImagePreprocessed(const QString &image);
+  void onFeaturesExtracted(const QString &features);
+
+// ProcessPresenter interface
+
+protected slots:
+
+  void onError(int code, const QString &msg) override;
+  void onFinished() override;
+  void createProcess() override;
+
+public slots:
+
+  void cancel();
+
+// PhotoMatchPresenter interface
 
 public slots:
 
@@ -121,24 +149,6 @@ private:
 
   void init() override;
   void initSignalAndSlots() override;
-
-// FeatureExtractorPresenter interface
-
-public slots:
-
-  void setProgressHandler(ProgressHandler *progressHandler) override;
-  void cancel() override;
-
-private slots:
-
-  void run() override;
-  void setCurrentkeypointDetector(const QString &keypointDetector) override;
-  void setCurrentDescriptorExtractor(const QString &descriptorExtractor) override;
-
-  void onError(int code, const QString &msg);
-  void onFinished();
-  void onImagePreprocessed(const QString &image);
-  void onFeaturesExtracted(const QString &features);
 
 protected:
 
@@ -185,8 +195,6 @@ protected:
   VggWidget *mVggDescriptor;
 #endif
   KeypointsFilterWidget *mKeypointsFilterWidget;
-  MultiProcess *mMultiProcess;
-  ProgressHandler *mProgressHandler;
 
 };
 

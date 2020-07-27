@@ -25,12 +25,11 @@
 #include "DescriptorMatcherPresenter.h"
 
 #include "photomatch/core/features/matcher.h"
-//#include "photomatch/ui/featmatch/DescriptorMatcherModel.h"
 #include "photomatch/ui/featmatch/DescriptorMatcherView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/settings/SettingsModel.h"
 #include "photomatch/ui/HelpDialog.h"
-#include "photomatch/ui/utils/Progress.h"
+#include "photomatch/ui/utils/ProgressHandler.h"
 
 #include "photomatch/process/MultiProcess.h"
 #include "photomatch/process/Matching/MatchingProcess.h"
@@ -254,12 +253,12 @@ void DescriptorMatcherPresenterImp::cancel()
   if (mProgressHandler){
     mProgressHandler->setRange(0,1);
     mProgressHandler->setValue(1);
-    mProgressHandler->onFinish();
+    mProgressHandler->finish();
     mProgressHandler->setDescription(tr("Processing has been canceled by the user"));
 
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(finish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(next()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(finish()));
   }
 
   mMultiProcess->clearProcessList();
@@ -475,15 +474,15 @@ void DescriptorMatcherPresenterImp::run()
   connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
 
   if (mProgressHandler){
-    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(onFinish()));
-    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(onNextPosition()));
-    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(onFinish()));
+    connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(finish()));
+    connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(next()));
+    connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(finish()));
 
     mProgressHandler->setRange(0, mMultiProcess->count());
     mProgressHandler->setValue(0);
     mProgressHandler->setTitle("Feature Matching");
     mProgressHandler->setDescription("Matching Features...");
-    mProgressHandler->onInit();
+    mProgressHandler->init();
   }
 
   mView->hide();
@@ -501,12 +500,12 @@ void DescriptorMatcherPresenterImp::onError(int code, const QString &msg)
   if (mProgressHandler){
     mProgressHandler->setRange(0,1);
     mProgressHandler->setValue(1);
-    mProgressHandler->onFinish();
+    mProgressHandler->finish();
     mProgressHandler->setDescription(tr("Feature Matching error"));
 
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(finish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(next()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(finish()));
   }
 
   mMultiProcess->clearProcessList();
@@ -522,12 +521,12 @@ void DescriptorMatcherPresenterImp::onFinished()
   if (mProgressHandler){
     mProgressHandler->setRange(0,1);
     mProgressHandler->setValue(1);
-    mProgressHandler->onFinish();
+    mProgressHandler->finish();
     mProgressHandler->setDescription(tr("Feature Matching finished"));
 
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(onFinish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(onNextPosition()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(onFinish()));
+    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(finish()));
+    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(next()));
+    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(finish()));
   }
 
   mMultiProcess->clearProcessList();

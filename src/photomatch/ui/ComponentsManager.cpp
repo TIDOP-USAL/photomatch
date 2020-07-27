@@ -64,7 +64,7 @@
 #include "photomatch/ui/AboutDialog.h"
 #include "photomatch/ui/HelpDialog.h"
 
-#include "photomatch/ui/utils/Progress.h"
+#include "photomatch/ui/utils/ProgressHandler.h"
 #include "photomatch/ui/utils/ProgressDialog.h"
 
 #include <QProgressBar>
