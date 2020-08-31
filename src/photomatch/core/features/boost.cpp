@@ -173,7 +173,9 @@ void BoostDescriptor::setScaleFactor(double scaleFactor)
   update();
 }
 
-bool BoostDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
+bool BoostDescriptor::extract(const cv::Mat &img, 
+                              std::vector<cv::KeyPoint> &keyPoints, 
+                              cv::Mat &descriptors)
 {
 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)

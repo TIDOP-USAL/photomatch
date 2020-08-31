@@ -94,7 +94,8 @@ bool NoshpPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 
   try {
 
-    pixkit::enhancement::local::LiuJinChenLiuLi2011(convertToGray(imgIn), imgOut,
+    pixkit::enhancement::local::LiuJinChenLiuLi2011(convertToGray(imgIn), 
+                                                    imgOut,
                                                     qSizeToCvSize(NoshpProperties::blockSize()));
 
   } catch (cv::Exception &e) {

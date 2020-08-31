@@ -688,7 +688,9 @@ bool FeaturesWriterTxt::isOpen()
 
 void FeaturesWriterTxt::writeHeader()
 {
-  ofs << mKeyPoints.size() << " " <<  mDescriptors.cols << " " << mDescriptors.type() << std::endl;
+  ofs << mKeyPoints.size() << " " 
+      <<  mDescriptors.cols << " " 
+      << mDescriptors.type() << std::endl;
 }
 
 void FeaturesWriterTxt::writeBody()

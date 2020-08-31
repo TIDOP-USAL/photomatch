@@ -145,10 +145,10 @@ HogDescriptor::HogDescriptor(const HogDescriptor &hogDescriptor)
   update();
 }
 
-HogDescriptor::HogDescriptor(QSize winSize,
-                             QSize blockSize,
-                             QSize blockStride,
-                             QSize cellSize,
+HogDescriptor::HogDescriptor(const QSize &winSize,
+                             const QSize &blockSize,
+                             const QSize &blockStride,
+                             const QSize &cellSize,
                              int nbins,
                              int derivAperture)
 {
@@ -163,17 +163,26 @@ HogDescriptor::HogDescriptor(QSize winSize,
 
 void HogDescriptor::update()
 {
-  cv::Size win_size(HogProperties::winSize().width(), HogProperties::winSize().height());
-  cv::Size block_size(HogProperties::blockSize().width(), HogProperties::blockSize().height());
-  cv::Size block_stride(HogProperties::blockStride().width(), HogProperties::blockStride().height());
-  cv::Size cell_size(HogProperties::cellSize().width(), HogProperties::cellSize().height());
+  cv::Size win_size(HogProperties::winSize().width(), 
+                    HogProperties::winSize().height());
+  cv::Size block_size(HogProperties::blockSize().width(), 
+                      HogProperties::blockSize().height());
+  cv::Size block_stride(HogProperties::blockStride().width(), 
+                        HogProperties::blockStride().height());
+  cv::Size cell_size(HogProperties::cellSize().width(), 
+                     HogProperties::cellSize().height());
 
-  mHOG = std::make_shared<cv::HOGDescriptor>(win_size, block_size, block_stride,
-                                             cell_size, HogProperties::nbins(),
+  mHOG = std::make_shared<cv::HOGDescriptor>(win_size, 
+                                             block_size, 
+                                             block_stride,
+                                             cell_size, 
+                                             HogProperties::nbins(),
                                              HogProperties::derivAperture());
 }
 
-void HogDescriptor::normalizepatch(const cv::Mat &gray, const cv::KeyPoint &keypoint, cv::Mat &output)
+void HogDescriptor::normalizepatch(const cv::Mat &gray, 
+                                   const cv::KeyPoint &keypoint, 
+                                   cv::Mat &output)
 {
 
   cv::Point center = keypoint.pt;
@@ -228,7 +237,8 @@ bool HogDescriptor::extract(const cv::Mat &img,
 {
 
   try {
-    cv::Size win_size(HogProperties::winSize().width(), HogProperties::winSize().height());
+    cv::Size win_size(HogProperties::winSize().width(), 
+                      HogProperties::winSize().height());
 
     std::vector<cv::Point> p_c;
     cv::Point punto_central;

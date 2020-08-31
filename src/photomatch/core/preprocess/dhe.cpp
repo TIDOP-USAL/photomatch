@@ -101,7 +101,9 @@ bool DhePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 
   try {
 
-    pixkit::enhancement::global::WadudKabirDewanChae2007(convertToGray(imgIn), imgOut, DheProperties::x());
+    pixkit::enhancement::global::WadudKabirDewanChae2007(convertToGray(imgIn), 
+                                                         imgOut, 
+                                                         DheProperties::x());
 
   } catch (cv::Exception &e) {
     msgError("DHE image preprocess error: %s", e.what());

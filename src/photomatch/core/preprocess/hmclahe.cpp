@@ -99,7 +99,9 @@ HmclahePreprocess::HmclahePreprocess()
 {
 }
 
-HmclahePreprocess::HmclahePreprocess(const QSize &blockSize, double l, double phi)
+HmclahePreprocess::HmclahePreprocess(const QSize &blockSize, 
+                                     double l, 
+                                     double phi)
   : HmclaheProperties(),
     ImageProcess()
 {

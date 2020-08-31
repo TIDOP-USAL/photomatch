@@ -241,7 +241,8 @@ size_t ProjectImp::imagesCount() const
   return mImages.size();
 }
 
-void ProjectImp::addSession(const QString &name, const QString &description)
+void ProjectImp::addSession(const QString &name, 
+                            const QString &description)
 {
   std::shared_ptr<Session> session(new SessionImp(name, description));
   addSession(session);
@@ -417,7 +418,8 @@ bool ProjectControllerImp::read(const QString &file, Project &prj)
   return false;
 }
 
-bool ProjectControllerImp::write(const QString &file, const Project &prj) const
+bool ProjectControllerImp::write(const QString &file, 
+                                 const Project &prj) const
 {
   std::lock_guard<std::mutex> lck(ProjectControllerImp::sMutex);
 

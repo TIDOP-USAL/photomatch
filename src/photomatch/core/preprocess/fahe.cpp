@@ -100,7 +100,8 @@ bool FahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
 {
   try {
 
-    pixkit::enhancement::local::FAHE2006(convertToGray(imgIn), imgOut,
+    pixkit::enhancement::local::FAHE2006(convertToGray(imgIn), 
+                                         imgOut,
                                          qSizeToCvSize(FaheProperties::blockSize()));
 
   } catch (cv::Exception &e) {

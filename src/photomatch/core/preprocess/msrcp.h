@@ -84,7 +84,9 @@ class PHOTOMATCH_EXPORT MsrcpPreprocess
 public:
 
   MsrcpPreprocess();
-  MsrcpPreprocess(double smallScale, double midScale, double largeScale);
+  MsrcpPreprocess(double smallScale, 
+                  double midScale, 
+                  double largeScale);
   ~MsrcpPreprocess() override;
 
 // ImageProcess interface

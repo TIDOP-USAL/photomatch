@@ -99,7 +99,9 @@ bool PohePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
     else
       imgIn.copyTo(tmp);
 
-    pixkit::enhancement::local::POHE2013(tmp, imgOut, qSizeToCvSize(PoheProperties::blockSize()));
+    pixkit::enhancement::local::POHE2013(tmp, 
+                                         imgOut, 
+                                         qSizeToCvSize(PoheProperties::blockSize()));
     tmp.release();
 
     if (imgIn.channels() >= 3) {

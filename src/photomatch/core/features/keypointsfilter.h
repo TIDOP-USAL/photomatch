@@ -161,7 +161,8 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
+  bool filter(const std::vector<cv::KeyPoint> &keypoints, 
+              std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
 };
 
@@ -241,7 +242,8 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
+  bool filter(const std::vector<cv::KeyPoint> &keypoints, 
+              std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
 // KeyPointsFilter interface
 
@@ -270,7 +272,8 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
+  bool filter(const std::vector<cv::KeyPoint> &keypoints, 
+              std::vector<cv::KeyPoint> &filteredKeypoints) override;
 
 // KeyPointsFilter interface
 

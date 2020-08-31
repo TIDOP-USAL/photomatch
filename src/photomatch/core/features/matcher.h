@@ -107,10 +107,10 @@ public:
    * \param[in] mask
    * \return
    */
-  virtual bool match(cv::InputArray &queryDescriptors,
-                     cv::InputArray &trainDescriptors,
+  virtual bool match(const cv::Mat &queryDescriptors,
+                     const cv::Mat &trainDescriptors,
                      std::vector<cv::DMatch> &matches,
-                     cv::InputArray mask = cv::noArray()) = 0;
+                     const cv::Mat &mask = cv::Mat()) = 0;
 
   /*!
    * \brief Compute matching
@@ -120,10 +120,10 @@ public:
    * \param[in] mask
    * \return true if error
    */
-  virtual bool match(cv::InputArray &queryDescriptors,
-                     cv::InputArray &trainDescriptors,
+  virtual bool match(const cv::Mat &queryDescriptors,
+                     const cv::Mat &trainDescriptors,
                      std::vector<std::vector<cv::DMatch>> &matches,
-                     cv::InputArray mask = cv::noArray()) = 0;
+                     const cv::Mat &mask = cv::Mat()) = 0;
 
 };
 
@@ -206,15 +206,15 @@ private:
 
 public:
 
-  bool match(cv::InputArray &queryDescriptors,
-             cv::InputArray &trainDescriptors,
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
              std::vector<cv::DMatch> &matches,
-             cv::InputArray mask = cv::noArray()) override;
+             const cv::Mat &mask = cv::Mat()) override;
 
-  bool match(cv::InputArray &queryDescriptors,
-             cv::InputArray &trainDescriptors,
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
              std::vector<std::vector<cv::DMatch>> &matches,
-             cv::InputArray mask = cv::noArray()) override;
+             const cv::Mat &mask = cv::Mat()) override;
 
 // Match interface
 
@@ -312,15 +312,15 @@ private:
 
 public:
 
-  bool match(cv::InputArray &queryDescriptors,
-             cv::InputArray &trainDescriptors,
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
              std::vector<cv::DMatch> &matches,
-             cv::InputArray mask = cv::noArray()) override;
+             const cv::Mat &mask = cv::Mat()) override;
 
-  bool match(cv::InputArray &queryDescriptors,
-             cv::InputArray &trainDescriptors,
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
              std::vector<std::vector<cv::DMatch>> &matches,
-             cv::InputArray mask = cv::noArray()) override;
+             const cv::Mat &mask = cv::Mat()) override;
 
 // Match interface
 
@@ -362,15 +362,15 @@ private:
 
 public:
 
-  bool match(cv::InputArray &queryDescriptors,
-             cv::InputArray &trainDescriptors,
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
              std::vector<cv::DMatch> &matches,
-             cv::InputArray mask = cv::noArray()) override;
+             const cv::Mat &mask = cv::Mat()) override;
 
-  bool match(cv::InputArray &queryDescriptors,
-             cv::InputArray &trainDescriptors,
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
              std::vector<std::vector<cv::DMatch>> &matches,
-             cv::InputArray mask = cv::noArray()) override;
+             const cv::Mat &mask = cv::Mat()) override;
 
 // Match interface
 
@@ -626,8 +626,8 @@ public:
    * \param[out] wrongMatches
    */
   static std::vector<std::vector<cv::DMatch>> ratioTest(const std::vector<std::vector<cv::DMatch>> &matches,
-                        double ratio,
-                        std::vector<std::vector<cv::DMatch>> *wrongMatches = nullptr)
+                                                        double ratio,
+                                                        std::vector<std::vector<cv::DMatch>> *wrongMatches = nullptr)
   {
     std::vector<std::vector<cv::DMatch>> goodMatches;
 

@@ -141,7 +141,9 @@ AgastDetector::AgastDetector(AgastDetector &&agastDetector) noexcept
   this->initAgastFromProperties();
 }
 
-AgastDetector::AgastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType)
+AgastDetector::AgastDetector(int threshold, 
+                             bool nonmaxSuppression, 
+                             const QString &detectorType)
   : mAgast(cv::AgastFeatureDetector::create())
 {
   setThreshold(threshold);

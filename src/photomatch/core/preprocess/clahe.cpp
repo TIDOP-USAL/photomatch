@@ -177,7 +177,8 @@ ClahePreprocessCuda::ClahePreprocessCuda(const ClahePreprocessCuda &clahePreproc
   mCvClahe = cv::cuda::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
-ClahePreprocessCuda::ClahePreprocessCuda(double clipLimit, const QSize &tilesGridSize)
+ClahePreprocessCuda::ClahePreprocessCuda(double clipLimit, 
+                                         const QSize &tilesGridSize)
   : ClaheProperties(),
     ImageProcess(),
     mCvClahe(cv::cuda::createCLAHE())

@@ -98,7 +98,9 @@ MsrcpPreprocess::MsrcpPreprocess()
 {
 }
 
-MsrcpPreprocess::MsrcpPreprocess(double smallScale, double midScale, double largeScale)
+MsrcpPreprocess::MsrcpPreprocess(double smallScale, 
+                                 double midScale, 
+                                 double largeScale)
   : MsrcpProperties(),
     ImageProcess()
 {

@@ -89,10 +89,10 @@ void FlannMatcherImp::update()
   mFlannBasedMatcher = cv::Ptr<cv::FlannBasedMatcher>(new cv::FlannBasedMatcher(indexParams));
 }
 
-bool FlannMatcherImp::match(cv::InputArray &queryDescriptors,
-                         cv::InputArray &trainDescriptors,
-                         std::vector<cv::DMatch> &matches,
-                         cv::InputArray mask)
+bool FlannMatcherImp::match(const cv::Mat &queryDescriptors,
+                            const cv::Mat &trainDescriptors,
+                            std::vector<cv::DMatch> &matches,
+                            const cv::Mat &mask)
 {
   try {
     mFlannBasedMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
@@ -103,10 +103,10 @@ bool FlannMatcherImp::match(cv::InputArray &queryDescriptors,
   return false;
 }
 
-bool FlannMatcherImp::match(cv::InputArray &queryDescriptors,
-                         cv::InputArray &trainDescriptors,
-                         std::vector<std::vector<cv::DMatch>> &matches,
-                         cv::InputArray mask)
+bool FlannMatcherImp::match(const cv::Mat &queryDescriptors,
+                            const cv::Mat &trainDescriptors,
+                            std::vector<std::vector<cv::DMatch>> &matches,
+                            const cv::Mat &mask)
 {
   try {
     mFlannBasedMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
@@ -192,10 +192,10 @@ void BruteForceMatcherImp::update()
   }
 }
 
-bool BruteForceMatcherImp::match(cv::InputArray &queryDescriptors,
-                                 cv::InputArray &trainDescriptors,
+bool BruteForceMatcherImp::match(const cv::Mat &queryDescriptors,
+                                 const cv::Mat &trainDescriptors,
                                  std::vector<cv::DMatch> &matches,
-                                 cv::InputArray mask)
+                                 const cv::Mat &mask)
 {
   try {
     mBFMatcher->match(queryDescriptors, trainDescriptors, matches, mask);
@@ -206,10 +206,10 @@ bool BruteForceMatcherImp::match(cv::InputArray &queryDescriptors,
   return false;
 }
 
-bool BruteForceMatcherImp::match(cv::InputArray &queryDescriptors,
-                                 cv::InputArray &trainDescriptors,
+bool BruteForceMatcherImp::match(const cv::Mat &queryDescriptors,
+                                 const cv::Mat &trainDescriptors,
                                  std::vector<std::vector<cv::DMatch>> &matches,
-                                 cv::InputArray mask)
+                                 const cv::Mat &mask)
 {
   try {
     mBFMatcher->knnMatch(queryDescriptors, trainDescriptors, matches, 2, mask);
@@ -270,10 +270,10 @@ void BruteForceMatcherCuda::update()
   }
 }
 
-bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
-                                  cv::InputArray &trainDescriptors,
+bool BruteForceMatcherCuda::match(const cv::Mat &queryDescriptors,
+                                  const cv::Mat &trainDescriptors,
                                   std::vector<cv::DMatch> &matches,
-                                  cv::InputArray mask)
+                                  const cv::Mat &mask)
 {
   try {
     cv::cuda::GpuMat gQueryDescriptors(queryDescriptors);
@@ -287,10 +287,10 @@ bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
   return false;
 }
 
-bool BruteForceMatcherCuda::match(cv::InputArray &queryDescriptors,
-                                  cv::InputArray &trainDescriptors,
+bool BruteForceMatcherCuda::match(const cv::Mat &queryDescriptors,
+                                  const cv::Mat &trainDescriptors,
                                   std::vector<std::vector<cv::DMatch>> &matches,
-                                  cv::InputArray mask)
+                                  const cv::Mat &mask)
 {
   try {
     cv::cuda::GpuMat gQueryDescriptors(queryDescriptors);
@@ -452,15 +452,15 @@ RobustMatchingImp::RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &d
 }
 
 RobustMatchingImp::RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
-                                               double ratio,
-                                               bool crossCheck,
-                                               GeometricTest geometricTest,
-                                               HomographyComputeMethod homographyComputeMethod,
-                                               FundamentalComputeMethod fundamentalComputeMethod,
-                                               EssentialComputeMethod essentialComputeMethod,
-                                               double distance,
-                                               double confidence,
-                                               int maxIter)
+                                     double ratio,
+                                     bool crossCheck,
+                                     GeometricTest geometricTest,
+                                     HomographyComputeMethod homographyComputeMethod,
+                                     FundamentalComputeMethod fundamentalComputeMethod,
+                                     EssentialComputeMethod essentialComputeMethod,
+                                     double distance,
+                                     double confidence,
+                                     int maxIter)
   : mDescriptorMatcher(descriptorMatcher)
 {
   this->setRatio(ratio);
@@ -479,7 +479,10 @@ void RobustMatchingImp::setDescriptorMatcher(const std::shared_ptr<DescriptorMat
   mDescriptorMatcher = descriptorMatcher;
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::geometricFilter(const std::vector<cv::DMatch> &matches, const std::vector<cv::KeyPoint> &keypoints1, const std::vector<cv::KeyPoint> &keypoints2, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::geometricFilter(const std::vector<cv::DMatch> &matches, 
+                                                           const std::vector<cv::KeyPoint> &keypoints1, 
+                                                           const std::vector<cv::KeyPoint> &keypoints2, 
+                                                           std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -511,7 +514,10 @@ std::vector<cv::DMatch> RobustMatchingImp::geometricFilter(const std::vector<cv:
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::filterByHomographyMatrix(const std::vector<cv::DMatch> &matches, const std::vector<cv::Point2f> &points1, const std::vector<cv::Point2f> &points2, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::filterByHomographyMatrix(const std::vector<cv::DMatch> &matches, 
+                                                                    const std::vector<cv::Point2f> &points1, 
+                                                                    const std::vector<cv::Point2f> &points2, 
+                                                                    std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -548,7 +554,10 @@ std::vector<cv::DMatch> RobustMatchingImp::filterByHomographyMatrix(const std::v
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::filterByEssentialMatrix(const std::vector<cv::DMatch> &matches, const std::vector<cv::Point2f> &points1, const std::vector<cv::Point2f> &points2, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::filterByEssentialMatrix(const std::vector<cv::DMatch> &matches, 
+                                                                   const std::vector<cv::Point2f> &points1, 
+                                                                   const std::vector<cv::Point2f> &points2, 
+                                                                   std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> filter_matches;
 
@@ -578,7 +587,10 @@ std::vector<cv::DMatch> RobustMatchingImp::filterByEssentialMatrix(const std::ve
       return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches, const std::vector<cv::Point2f> &points1, const std::vector<cv::Point2f> &points2, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches, 
+                                                                     const std::vector<cv::Point2f> &points1, 
+                                                                     const std::vector<cv::Point2f> &points2, 
+                                                                     std::vector<cv::DMatch> *wrongMatches)
 {
   int fm_method = cv::FM_RANSAC;
   RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = this->fundamentalComputeMethod();
@@ -615,7 +627,9 @@ std::vector<cv::DMatch> RobustMatchingImp::filterByFundamentalMatrix(const std::
   return filter_matches;
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::match(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::match(const cv::Mat &queryDescriptor, 
+                                                 const cv::Mat &trainDescriptor, 
+                                                 std::vector<cv::DMatch> *wrongMatches)
 {
   if (this->crossCheck()){
     return this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
@@ -624,7 +638,9 @@ std::vector<cv::DMatch> RobustMatchingImp::match(const cv::Mat &queryDescriptor,
   }
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescriptor, 
+                                                       const cv::Mat &trainDescriptor, 
+                                                       std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> goodMatches;
 
@@ -639,8 +655,12 @@ std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescr
 
   std::vector<std::vector<cv::DMatch>> wrong_matches12;
   std::vector<std::vector<cv::DMatch>> wrong_matches21;
-  std::vector<std::vector<cv::DMatch>> good_matches12 = RobustMatchingImp::ratioTest(matches12, this->ratio(), &wrong_matches12);
-  std::vector<std::vector<cv::DMatch>> good_matches21 = RobustMatchingImp::ratioTest(matches21, this->ratio(), &wrong_matches21);
+  std::vector<std::vector<cv::DMatch>> good_matches12 = RobustMatchingImp::ratioTest(matches12, 
+                                                                                     this->ratio(), 
+                                                                                     &wrong_matches12);
+  std::vector<std::vector<cv::DMatch>> good_matches21 = RobustMatchingImp::ratioTest(matches21, 
+                                                                                     this->ratio(), 
+                                                                                     &wrong_matches21);
 
   matches12.clear();
   matches21.clear();
@@ -656,7 +676,9 @@ std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescr
   return goodMatches;
 }
 
-std::vector<cv::DMatch> RobustMatchingImp::fastRobustMatch(const cv::Mat &queryDescriptor, const cv::Mat &trainDescriptor, std::vector<cv::DMatch> *wrongMatches)
+std::vector<cv::DMatch> RobustMatchingImp::fastRobustMatch(const cv::Mat &queryDescriptor, 
+                                                           const cv::Mat &trainDescriptor, 
+                                                           std::vector<cv::DMatch> *wrongMatches)
 {
   std::vector<cv::DMatch> goodMatches;
 
@@ -665,7 +687,9 @@ std::vector<cv::DMatch> RobustMatchingImp::fastRobustMatch(const cv::Mat &queryD
   if (err) return goodMatches;
 
   std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches = RobustMatchingImp::ratioTest(matches, this->ratio(), &ratio_test_wrong_matches);
+  std::vector<std::vector<cv::DMatch>> ratio_test_matches = RobustMatchingImp::ratioTest(matches, 
+                                                                                         this->ratio(), 
+                                                                                         &ratio_test_wrong_matches);
 
   for (auto &match : ratio_test_matches){
     goodMatches.push_back(match[0]);
@@ -681,13 +705,13 @@ std::vector<cv::DMatch> RobustMatchingImp::fastRobustMatch(const cv::Mat &queryD
 }
 
 bool RobustMatchingImp::compute(const cv::Mat &queryDescriptor,
-                                     const cv::Mat &trainDescriptor,
-                                     const std::vector<cv::KeyPoint> &keypoints1,
-                                     const std::vector<cv::KeyPoint> &keypoints2,
-                                     std::vector<cv::DMatch> *goodMatches,
-                                     std::vector<cv::DMatch> *wrongMatches,
-                                     const QSize &queryImageSize,
-                                     const QSize &trainImageSize)
+                                const cv::Mat &trainDescriptor,
+                                const std::vector<cv::KeyPoint> &keypoints1,
+                                const std::vector<cv::KeyPoint> &keypoints2,
+                                std::vector<cv::DMatch> *goodMatches,
+                                std::vector<cv::DMatch> *wrongMatches,
+                                const QSize &queryImageSize,
+                                const QSize &trainImageSize)
 {
   try {
     *goodMatches = this->match(queryDescriptor, trainDescriptor, wrongMatches);
@@ -763,9 +787,9 @@ GsmImp::GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher)
 }
 
 GsmImp::GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
-                         bool rotation,
-                         bool scale,
-                         double threshold)
+               bool rotation,
+               bool scale,
+               double threshold)
   : GmsProperties(),
     mDescriptorMatcher(descriptorMatcher)
 {
@@ -858,7 +882,8 @@ void passPointsWrite(const QString &fname,
   }
 }
 
-void passPointsRead(const QString &fname, std::vector<std::vector<std::pair<QString, int>>> &pass_points)
+void passPointsRead(const QString &fname, 
+                    std::vector<std::vector<std::pair<QString, int>>> &pass_points)
 {
   pass_points.resize(0);
   std::ifstream ifs(fname.toStdString());

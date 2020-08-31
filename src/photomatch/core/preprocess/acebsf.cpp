@@ -162,7 +162,9 @@ AcebsfPreprocess::AcebsfPreprocess(AcebsfPreprocess &&acebsfPreprocess) PHOTOMAT
 }
 
 AcebsfPreprocess::AcebsfPreprocess(const QSize &blockSize,
-                                   double l, double k1, double k2)
+                                   double l, 
+                                   double k1, 
+                                   double k2)
   : AcebsfProperties(),
     ImageProcess()
 {

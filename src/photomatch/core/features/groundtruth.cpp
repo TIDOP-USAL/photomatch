@@ -39,7 +39,8 @@ HomologusPoints::HomologusPoints(const QString &idImg1,
     mHomologusPoints(0)
 {}
 
-void HomologusPoints::addPoints(const QPointF &pt1, const QPointF &pt2)
+void HomologusPoints::addPoints(const QPointF &pt1, 
+                                const QPointF &pt2)
 {
   mHomologusPoints.emplace_back(pt1, pt2);
 }
@@ -99,7 +100,8 @@ void HomologusPoints::resize(HomologusPoints::size_type count)
   mHomologusPoints.resize(count);
 }
 
-void HomologusPoints::resize(size_type count, const std::pair<QPointF, QPointF> &points)
+void HomologusPoints::resize(size_type count, 
+                             const std::pair<QPointF, QPointF> &points)
 {
   mHomologusPoints.resize(count, points);
 }
@@ -119,7 +121,8 @@ HomologusPoints::reference HomologusPoints::operator[](HomologusPoints::size_typ
   return mHomologusPoints[position];
 }
 
-HomologusPoints::iterator HomologusPoints::erase(HomologusPoints::const_iterator first, HomologusPoints::const_iterator last)
+HomologusPoints::iterator HomologusPoints::erase(HomologusPoints::const_iterator first, 
+                                                 HomologusPoints::const_iterator last)
 {
   return mHomologusPoints.erase(first, last);
 }
@@ -277,7 +280,8 @@ void GroundTruth::write(const QString &gtFile)
   }
 }
 
-std::shared_ptr<HomologusPoints> GroundTruth::findPair(const QString &idImg1, const QString &idImg2)
+std::shared_ptr<HomologusPoints> GroundTruth::findPair(const QString &idImg1, 
+                                                       const QString &idImg2)
 {
   for (auto &homologusPoints : mHomologusPoints) {
     if (homologusPoints->idImg1().compare(idImg1) == 0 &&
@@ -289,7 +293,8 @@ std::shared_ptr<HomologusPoints> GroundTruth::findPair(const QString &idImg1, co
   return nullptr;
 }
 
-std::shared_ptr<HomologusPoints> GroundTruth::pair(const QString &idImg1, const QString &idImg2)
+std::shared_ptr<HomologusPoints> GroundTruth::pair(const QString &idImg1, 
+                                                   const QString &idImg2)
 {
   std::shared_ptr<HomologusPoints> homologus = this->findPair(idImg1, idImg2);
   if (homologus == nullptr){
