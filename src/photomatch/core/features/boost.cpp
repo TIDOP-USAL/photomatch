@@ -124,7 +124,7 @@ BoostDescriptor::BoostDescriptor(const QString &descriptorType,
 
 void BoostDescriptor::update()
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   int descriptor_type = cv::xfeatures2d::BoostDesc::BGM;
   QString descriptorType = BoostProperties::descriptorType();
   if (descriptorType.compare("BGM") == 0 ) {
@@ -178,7 +178,7 @@ bool BoostDescriptor::extract(const cv::Mat &img,
                               cv::Mat &descriptors)
 {
 
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   try {
     mBoost->compute(img, keyPoints, descriptors);
   } catch (cv::Exception &e) {

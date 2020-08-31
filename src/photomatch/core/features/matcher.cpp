@@ -807,7 +807,7 @@ bool GsmImp::compute(const cv::Mat &queryDescriptor,
                      const QSize &queryImageSize,
                      const QSize &trainImageSize)
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1 )
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1 )
   try {
 
     if (goodMatches == nullptr) return true;

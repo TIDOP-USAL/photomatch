@@ -166,7 +166,7 @@ VggDescriptor::VggDescriptor(QString descriptorType,
 
 void VggDescriptor::update()
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   int descriptor_type = cv::xfeatures2d::VGG::VGG_120;
   QString descriptorType = VggProperties::descriptorType();
   if (descriptorType.compare("VGG_120") == 0 ) {
@@ -232,7 +232,7 @@ void VggDescriptor::setUseScaleOrientation(bool useScaleOrientation)
 
 bool VggDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   try {
     mVGG->compute(img, keyPoints, descriptors);
   } catch (cv::Exception &e) {

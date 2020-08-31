@@ -88,7 +88,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
 
 class PHOTOMATCH_EXPORT SiftDetectorDescriptor
   : public SiftProperties,
