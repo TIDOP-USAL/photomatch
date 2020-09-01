@@ -73,6 +73,11 @@ void FeatureExtractor::setFeatures(const QString &features)
   mFeatures = features;
 }
 
+void FeatureExtractor::setScale(double scale)
+{
+  mImageScale = scale;
+}
+
 std::shared_ptr<DescriptorExtractor> FeatureExtractor::descriptorExtractor() const
 {
   return mDescriptorExtractor;
