@@ -268,37 +268,21 @@ int AkazeDetectorDescriptor::convertDiffusivity(const QString &diffusivity)
 
   return diff;
 }
+
 #endif
 
-bool AkazeDetectorDescriptor::detect(const cv::Mat &img,
-                                     std::vector<cv::KeyPoint> &keyPoints,
-                                     cv::InputArray &mask)
+std::vector<cv::KeyPoint> AkazeDetectorDescriptor::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-
-  try {
-    mAkaze->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("AKAZE Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mAkaze->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
-
-bool AkazeDetectorDescriptor::extract(const cv::Mat &img,
-                                      std::vector<cv::KeyPoint> &keyPoints,
-                                      cv::Mat &descriptors)
+cv::Mat AkazeDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mAkaze->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("AKAZE Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mAkaze->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void AkazeDetectorDescriptor::setDescriptorType(const QString &descriptorType)

@@ -93,10 +93,8 @@ private:
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
-
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
 // Brief interface
 

@@ -155,32 +155,20 @@ void SiftDetectorDescriptor::update()
                                         SiftProperties::sigma());
 }
 
-bool SiftDetectorDescriptor::detect(const cv::Mat &img,
-                                    std::vector<cv::KeyPoint> &keyPoints,
-                                    cv::InputArray &mask)
+std::vector<cv::KeyPoint> SiftDetectorDescriptor::detect(const cv::Mat &img, 
+                                                         const cv::Mat &mask)
 {
-  try {
-    mSift->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("SIFT Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mSift->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
-bool SiftDetectorDescriptor::extract(const cv::Mat &img,
-                                     std::vector<cv::KeyPoint> &keyPoints,
-                                     cv::Mat &descriptors)
+cv::Mat SiftDetectorDescriptor::extract(const cv::Mat &img, 
+                                        std::vector<cv::KeyPoint> &keyPoints)
 {
-  try {
-    mSift->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("SIFT Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mSift->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void SiftDetectorDescriptor::setFeaturesNumber(int featuresNumber)

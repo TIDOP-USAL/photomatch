@@ -110,14 +110,11 @@ public:
   /*!
    * \brief Detects keypoints in an image
    * \param[in] img Image
-   * \param[out] keyPoints The detected keypoints
    * \param[in] mask Optional mask
-   * \return true if error
+   * \return key points detected
    */
-  virtual bool detect(const cv::Mat &img,
-                      std::vector<cv::KeyPoint> &keyPoints,
-                      cv::InputArray &mask = cv::noArray()) = 0;
-
+  virtual std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                           const cv::Mat &mask = cv::Mat()) = 0;
 };
 
 
@@ -140,13 +137,10 @@ public:
    * \brief Extract descriptors
    * \param[in] img Image
    * \param[in] keyPoints KeyPoints
-   * \param[out] descriptors Computed descriptors
-   * \return true if error
+   * \return Computed descriptors
    */
-  virtual bool extract(const cv::Mat &img,
-                       std::vector<cv::KeyPoint> &keyPoints,
-                       cv::Mat &descriptors) = 0;
-
+  virtual cv::Mat extract(const cv::Mat &img,
+                          std::vector<cv::KeyPoint> &keyPoints) = 0;
 };
 
 

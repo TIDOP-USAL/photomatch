@@ -236,77 +236,68 @@ MsdDetector::MsdDetector(double thresholdSaliency,
   setAffineTilts(affineTilts);
 }
 
-bool MsdDetector::detect(const cv::Mat &img,
-                         std::vector<cv::KeyPoint> &keyPoints,
-                         cv::InputArray &mask)
+std::vector<cv::KeyPoint> MsdDetector::detect(const cv::Mat &img,
+                                              const cv::Mat &mask)
 {
-  try {
+  std::vector<cv::KeyPoint> keyPoints;
 
-    if (MsdProperties::affineMSD()) {
+  if (MsdProperties::affineMSD()) {
 
-      float maxX = 0;
-      float maxY = 0;
+    float maxX = 0;
+    float maxY = 0;
 
-      int affineTilts = MsdProperties::affineTilts();
-      for (int tl = 1; tl <= affineTilts; tl++) {
+    int affineTilts = MsdProperties::affineTilts();
+    for (int tl = 1; tl <= affineTilts; tl++) {
 
-        double t = pow(2, 0.5*tl);
+      double t = pow(2, 0.5*tl);
 
-        for (double phi = 0.; phi < 180.; phi += 72.0 / t) {
+      for (double phi = 0.; phi < 180.; phi += 72.0 / t) {
 
-          std::vector<cv::KeyPoint> kps;
-          cv::Mat timg;
-          cv::Mat _mask;
-          cv::Mat Ai;
-          mask.copyTo(_mask);
-          img.copyTo(timg);
-          affineSkew(t, phi, timg, _mask, Ai);
+        std::vector<cv::KeyPoint> kps;
+        cv::Mat timg;
+        cv::Mat _mask;
+        cv::Mat Ai;
+        mask.copyTo(_mask);
+        img.copyTo(timg);
+        affineSkew(t, phi, timg, _mask, Ai);
 
-          kps = mMSD->detect(timg);
+        kps = mMSD->detect(timg);
 
 
-          for (unsigned int i = 0; i < kps.size(); i++) {
-            cv::Point3f kpt(kps[i].pt.x, kps[i].pt.y, 1);
-            cv::Mat kpt_t = Ai*cv::Mat(kpt);
+        for (unsigned int i = 0; i < kps.size(); i++) {
+          cv::Point3f kpt(kps[i].pt.x, kps[i].pt.y, 1);
+          cv::Mat kpt_t = Ai * cv::Mat(kpt);
 
-            kps[i].pt.x = kpt_t.at<float>(0, 0);
-            kps[i].pt.y = kpt_t.at<float>(1, 0);
-            if (phi == 0. || pointIsAcceptable(kps[i], img.cols, img.rows)) {
-              if (kps[i].pt.x > maxX) {
-                maxX = kps[i].pt.x;
-              }
-              if (kps[i].pt.y > maxY) {
-                maxY = kps[i].pt.y;
-              }
-              keyPoints.push_back(kps[i]);
+          kps[i].pt.x = kpt_t.at<float>(0, 0);
+          kps[i].pt.y = kpt_t.at<float>(1, 0);
+          if (phi == 0. || pointIsAcceptable(kps[i], img.cols, img.rows)) {
+            if (kps[i].pt.x > maxX) {
+              maxX = kps[i].pt.x;
             }
-            kpt_t.release();
+            if (kps[i].pt.y > maxY) {
+              maxY = kps[i].pt.y;
+            }
+            keyPoints.push_back(kps[i]);
           }
-
-
-          timg.release();
-          _mask.release();
-          Ai.release();
+          kpt_t.release();
         }
+
+
+        timg.release();
+        _mask.release();
+        Ai.release();
       }
-
-    } else {
-
-      cv::Mat img2;
-      img.copyTo(img2);
-      keyPoints = mMSD->detect(img2);
-
     }
 
-  } catch (cv::Exception &e) {
-    msgError("MSD Detector error: %s", e.what());
-    return true;
-  } catch (std::exception &e) {
-    msgError("MSD Detector error: %s", e.what());
-    return true;
+  } else {
+
+    cv::Mat img2;
+    img.copyTo(img2);
+    keyPoints = mMSD->detect(img2);
+
   }
 
-  return false;
+  return keyPoints;
 }
 
 void MsdDetector::compensateAffineCoor1(float *x0, float *y0, int w1, int h1, float t1, float t2, float Rtheta)

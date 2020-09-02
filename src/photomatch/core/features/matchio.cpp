@@ -25,6 +25,7 @@
 #include "matchio.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/core/exception.h>
 
 #include <QFileInfo>
 
@@ -505,7 +506,7 @@ std::unique_ptr<MatchesReader> MatchesReaderFactory::createReader(const QString 
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
     matches_reader = std::make_unique<MatchesReaderOpenCV>(fileName);
   } else {
-    throw std::runtime_error("Invalid Matches Reader");
+    throw TL_ERROR("Invalid Matches Reader");
   }
   return matches_reader;
 }
@@ -525,7 +526,7 @@ std::unique_ptr<MatchesWriter> MatchesWriterFactory::createWriter(const QString 
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
     matches_writer = std::make_unique<MatchesWriterOpenCV>(fileName);
   } else {
-    throw std::runtime_error("Invalid Writer Reader");
+    throw TL_ERROR("Invalid Writer Reader");
   }
   return matches_writer;
 }

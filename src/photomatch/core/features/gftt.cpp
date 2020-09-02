@@ -168,19 +168,11 @@ GfttDetector::GfttDetector(int maxFeatures,
   setK(k);
 }
 
-bool GfttDetector::detect(const cv::Mat &img,
-                          std::vector<cv::KeyPoint> &keyPoints,
-                          cv::InputArray &mask)
+std::vector<cv::KeyPoint> GfttDetector::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-
-  try {
-    mGFTT->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("GFTT Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mGFTT->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
 void GfttDetector::setMaxFeatures(int maxFeatures)

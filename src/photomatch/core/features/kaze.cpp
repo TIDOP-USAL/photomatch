@@ -209,34 +209,20 @@ void KazeDetectorDescriptor::updateCvKaze()
   mKaze->setDiffusivity(convertDiffusivity(KazeProperties::diffusivity()));
 }
 
-bool KazeDetectorDescriptor::detect(const cv::Mat &img,
-                                    std::vector<cv::KeyPoint> &keyPoints,
-                                    cv::InputArray &mask)
+std::vector<cv::KeyPoint> KazeDetectorDescriptor::detect(const cv::Mat &img, 
+                                                         const cv::Mat &mask)
 {
-
-  try {
-    mKaze->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("KAZE Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mKaze->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
-bool KazeDetectorDescriptor::extract(const cv::Mat &img,
-                                     std::vector<cv::KeyPoint> &keyPoints,
-                                     cv::Mat &descriptors)
+cv::Mat KazeDetectorDescriptor::extract(const cv::Mat &img, 
+                                        std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mKaze->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("KAZE Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mKaze->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void KazeDetectorDescriptor::setExtendedDescriptor(bool extended)

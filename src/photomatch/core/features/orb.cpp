@@ -251,34 +251,20 @@ int OrbDetectorDescriptor::convertScoreType(const QString &scoreType)
 }
 #endif
 
-bool OrbDetectorDescriptor::detect(const cv::Mat &img,
-                                   std::vector<cv::KeyPoint> &keyPoints,
-                                   cv::InputArray &mask)
+std::vector<cv::KeyPoint> OrbDetectorDescriptor::detect(const cv::Mat &img, 
+                                                        const cv::Mat &mask)
 {
-
-  try {
-    mOrb->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("ORB Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mOrb->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
-bool OrbDetectorDescriptor::extract(const cv::Mat &img,
-                                    std::vector<cv::KeyPoint> &keyPoints,
-                                    cv::Mat &descriptors)
+cv::Mat OrbDetectorDescriptor::extract(const cv::Mat &img, 
+                                       std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mOrb->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("ORB Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mOrb->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void OrbDetectorDescriptor::setFeaturesNumber(int featuresNumber)
@@ -431,37 +417,23 @@ void OrbCudaDetectorDescriptor::update()
                                OrbProperties::fastThreshold());
 }
 
-bool OrbCudaDetectorDescriptor::detect(const cv::Mat &img,
-                                       std::vector<cv::KeyPoint> &keyPoints,
-                                       cv::InputArray &mask)
+std::vector<cv::KeyPoint> OrbCudaDetectorDescriptor::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-  try {
-    cv::cuda::GpuMat g_img(img);
-    cv::cuda::GpuMat g_mask(mask);
-    mOrb->detect(g_img, keyPoints, g_mask);
-  } catch (cv::Exception &e) {
-    msgError("ORB Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  cv::cuda::GpuMat g_img(img);
+  cv::cuda::GpuMat g_mask(mask);
+  mOrb->detect(g_img, keyPoints, g_mask);
+  return keyPoints;
 }
 
-bool OrbCudaDetectorDescriptor::extract(const cv::Mat &img,
-                                        std::vector<cv::KeyPoint> &keyPoints,
-                                        cv::Mat &descriptors)
+cv::Mat OrbCudaDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-  try {
-    cv::cuda::GpuMat g_img(img);
-    cv::cuda::GpuMat g_descriptors;
-    mOrb->compute(g_img, keyPoints, g_descriptors);
-    g_descriptors.download(descriptors);
-  } catch (cv::Exception &e) {
-    msgError("ORB Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  cv::cuda::GpuMat g_img(img);
+  cv::cuda::GpuMat g_descriptors;
+  mOrb->compute(g_img, keyPoints, g_descriptors);
+  g_descriptors.download(descriptors);
+  return descriptors;
 }
 
 void OrbCudaDetectorDescriptor::setFeaturesNumber(int featuresNumber)

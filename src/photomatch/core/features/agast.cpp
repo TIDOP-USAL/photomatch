@@ -204,19 +204,11 @@ void AgastDetector::initAgastFromProperties()
                                             convertDetectorType(AgastProperties::detectorType()));
 }
 
-bool AgastDetector::detect(const cv::Mat &img,
-                           std::vector<cv::KeyPoint> &keyPoints,
-                           cv::InputArray &mask)
+std::vector<cv::KeyPoint> AgastDetector::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-
-  try {
-    mAgast->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("AGAST Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mAgast->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
 void AgastDetector::setThreshold(int threshold)

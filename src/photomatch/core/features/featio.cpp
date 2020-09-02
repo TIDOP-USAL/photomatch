@@ -25,6 +25,7 @@
 #include "featio.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/core/exception.h>
 
 #include <QFileInfo>
 
@@ -758,7 +759,7 @@ std::unique_ptr<FeaturesReader> FeaturesReaderFactory::createReader(const QStrin
   } else if (ext.compare("txt", Qt::CaseInsensitive) == 0) {
     features_reader = std::make_unique<FeaturesReaderTxt>(fileName);
   } else {
-    throw std::runtime_error("Invalid Features Reader");
+    throw TL_ERROR("Invalid Features Reader");
   }
   return features_reader;
 }
@@ -782,7 +783,7 @@ std::unique_ptr<FeaturesWriter> FeaturesWriterFactory::createWriter(const QStrin
   } else if (ext.compare("yml", Qt::CaseInsensitive) == 0) {
     features_writer = std::make_unique<FeaturesWriterOpenCV>(fileName);
   } else {
-    throw std::runtime_error("Invalid Features Writer");
+    throw TL_ERROR("Invalid Features Writer");
   }
   return features_writer;
 }

@@ -230,20 +230,16 @@ void VggDescriptor::setUseScaleOrientation(bool useScaleOrientation)
   update();
 }
 
-bool VggDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
+cv::Mat VggDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
-  try {
-    mVGG->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("VGG Descriptor error: %s", e.what());
-    return true;
-  }
-
-#  else
+  cv::Mat descriptors;
+  mVGG->compute(img, keyPoints, descriptors);
+  return descriptors;
+#else
   TL_COMPILER_WARNING("VGG Descriptor not supported in OpenCV versions < 3.3 ")
+  throw std::exception("VGG Descriptor not supported in OpenCV versions < 3.3");
 #endif
-  return false;
 }
 
 } // namespace photomatch

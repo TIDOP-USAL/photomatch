@@ -128,19 +128,12 @@ void LatchDescriptor::update()
                                           LatchProperties::halfSsdSize());
 }
 
-bool LatchDescriptor::extract(const cv::Mat &img,
-                              std::vector<cv::KeyPoint> &keyPoints,
-                              cv::Mat &descriptors)
+cv::Mat LatchDescriptor::extract(const cv::Mat &img, 
+                                 std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mLATCH->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("LATCH Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mLATCH->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void LatchDescriptor::setBytes(const QString &bytes)

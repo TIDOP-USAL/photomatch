@@ -56,52 +56,44 @@ void LssDescriptor::update()
 {
 }
 
-bool LssDescriptor::extract(const cv::Mat &img,
-                            std::vector<cv::KeyPoint> &keyPoints,
-                            cv::Mat &descriptors)
+cv::Mat LssDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
+  cv::Mat descriptors;
 
-  try {
+  cv::Mat cvImg;
+  img.convertTo(cvImg, CV_32F);
+  std::vector<cv::Mat_<float>> aux_des_left;
 
-    cv::Mat cvImg;
-    img.convertTo(cvImg, CV_32F);
-    std::vector<cv::Mat_<float>> aux_des_left;
+  std::vector<cv::KeyPoint> lss_key;
 
-    std::vector<cv::KeyPoint> lss_key;
-
-    for (auto &keyPoint : keyPoints) {
-      cv::Mat_<float> enter;
-      int error = mLSS->compute(keyPoint.pt, cvImg, enter);
-      if (error == 1) {
-        aux_des_left.push_back(enter);
-        lss_key.push_back(keyPoint);
-      }
+  for (auto &keyPoint : keyPoints) {
+    cv::Mat_<float> enter;
+    int error = mLSS->compute(keyPoint.pt, cvImg, enter);
+    if (error == 1) {
+      aux_des_left.push_back(enter);
+      lss_key.push_back(keyPoint);
     }
-
-    cv::Mat tempDesc = cv::Mat(static_cast<int>(aux_des_left.size()), aux_des_left[0].rows*aux_des_left[0].cols, CV_32FC1);
-
-    for (size_t i = 0; i < aux_des_left.size(); i++) {
-      int i1 = 0;
-      for (int j = 0; j < aux_des_left[i].cols; j++) {
-
-        for (int k = 0; k < aux_des_left[i].rows; k++) {
-          float aux = aux_des_left[i].at<float>(k, j);
-          tempDesc.at<float>(static_cast<int>(i), i1) = aux;
-          i1++;
-        }
-
-      }
-    }
-
-    descriptors = tempDesc;
-    keyPoints = lss_key;
-
-  } catch (cv::Exception &e) {
-    msgError("LSS Descriptor error: %s", e.what());
-    return true;
   }
 
-  return false;
+  cv::Mat tempDesc = cv::Mat(static_cast<int>(aux_des_left.size()), aux_des_left[0].rows*aux_des_left[0].cols, CV_32FC1);
+
+  for (size_t i = 0; i < aux_des_left.size(); i++) {
+    int i1 = 0;
+    for (int j = 0; j < aux_des_left[i].cols; j++) {
+
+      for (int k = 0; k < aux_des_left[i].rows; k++) {
+        float aux = aux_des_left[i].at<float>(k, j);
+        tempDesc.at<float>(static_cast<int>(i), i1) = aux;
+        i1++;
+      }
+
+    }
+  }
+
+  descriptors = tempDesc;
+  keyPoints = lss_key;
+
+  return descriptors;
 }
 
 void LssDescriptor::reset()
