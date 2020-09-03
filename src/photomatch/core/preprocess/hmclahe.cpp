@@ -115,22 +115,16 @@ HmclahePreprocess::~HmclahePreprocess()
 
 }
 
-bool HmclahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat HmclahePreprocess::process(const cv::Mat &imgIn)
 {
+  cv::Mat imgOut;
 
-  try {
+  pixkit::enhancement::local::Sundarami2011(convertToGray(imgIn), imgOut,
+                                            qSizeToCvSize(HmclaheProperties::blockSize()),
+                                            static_cast<float>(HmclaheProperties::l()),
+                                            static_cast<float>(HmclaheProperties::phi()));
 
-    pixkit::enhancement::local::Sundarami2011(convertToGray(imgIn), imgOut,
-                                              qSizeToCvSize(HmclaheProperties::blockSize()),
-                                              static_cast<float>(HmclaheProperties::l()),
-                                              static_cast<float>(HmclaheProperties::phi()));
-
-  } catch (cv::Exception &e) {
-    msgError("HMCLAHE image preprocess error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  return imgOut;
 }
 
 } // namespace photomatch

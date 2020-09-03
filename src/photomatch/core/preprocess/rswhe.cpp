@@ -102,27 +102,22 @@ RswhePreprocess::~RswhePreprocess()
 
 }
 
-bool RswhePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat RswhePreprocess::process(const cv::Mat &imgIn)
 {
-  try {
+  cv::Mat imgOut;
 
-    int histogram_cut;
-    if (RswheProperties::histogramCut() == HistogramCut::by_mean)
-      histogram_cut = 1;
-    else {
-      histogram_cut = 2;
-    }
-
-    pixkit::enhancement::global::MaryKim2008(convertToGray(imgIn), imgOut,
-                                             histogram_cut,
-                                             RswheProperties::histogramDivisions());
-
-  } catch (cv::Exception &e) {
-    msgError("RSWHE Image preprocess error: %s", e.what());
-    return true;
+  int histogram_cut;
+  if (RswheProperties::histogramCut() == HistogramCut::by_mean)
+    histogram_cut = 1;
+  else {
+    histogram_cut = 2;
   }
 
-  return false;
+  pixkit::enhancement::global::MaryKim2008(convertToGray(imgIn), imgOut,
+                                           histogram_cut,
+                                           RswheProperties::histogramDivisions());
+
+  return imgOut;
 }
 
 

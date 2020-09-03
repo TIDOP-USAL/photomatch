@@ -96,20 +96,15 @@ FahePreprocess::~FahePreprocess()
 
 }
 
-bool FahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat FahePreprocess::process(const cv::Mat &imgIn)
 {
-  try {
+  cv::Mat imgOut;
 
-    pixkit::enhancement::local::FAHE2006(convertToGray(imgIn), 
-                                         imgOut,
-                                         qSizeToCvSize(FaheProperties::blockSize()));
+  pixkit::enhancement::local::FAHE2006(convertToGray(imgIn),
+                                       imgOut,
+                                       qSizeToCvSize(FaheProperties::blockSize()));
 
-  } catch (cv::Exception &e) {
-    msgError("FAHE image preprocess error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  return imgOut;
 }
 
 } // namespace photomatch

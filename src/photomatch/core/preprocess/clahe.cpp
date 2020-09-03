@@ -89,8 +89,7 @@ ClahePreprocess::ClahePreprocess()
   : ClaheProperties(),
     ImageProcess()
 {
-  cv::Size size(ClaheProperties::tilesGridSize().width(),
-                ClaheProperties::tilesGridSize().height());
+  cv::Size size = qSizeToCvSize(ClaheProperties::tilesGridSize());
   mCvClahe = cv::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
@@ -98,8 +97,7 @@ ClahePreprocess::ClahePreprocess(const ClahePreprocess &clahePreprocess)
   : ClaheProperties(clahePreprocess),
     ImageProcess()
 {
-  cv::Size size(ClaheProperties::tilesGridSize().width(),
-                ClaheProperties::tilesGridSize().height());
+  cv::Size size = qSizeToCvSize(ClaheProperties::tilesGridSize());
   mCvClahe = cv::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
@@ -121,8 +119,7 @@ ClahePreprocess::~ClahePreprocess()
 void ClahePreprocess::reset()
 {
   ClaheProperties::reset();
-  cv::Size size(ClaheProperties::tilesGridSize().width(),
-                ClaheProperties::tilesGridSize().height());
+  cv::Size size = qSizeToCvSize(ClaheProperties::tilesGridSize());
   mCvClahe->setClipLimit(ClaheProperties::clipLimit());
   mCvClahe->setTilesGridSize(size);
 }
@@ -136,23 +133,18 @@ void ClahePreprocess::setClipLimit(double clipLimit)
 void ClahePreprocess::setTilesGridSize(const QSize &tilesGridSize)
 {
   ClaheProperties::setTilesGridSize(tilesGridSize);
-  mCvClahe->setTilesGridSize(cv::Size(tilesGridSize.width(), tilesGridSize.height()));
+  cv::Size size = qSizeToCvSize(tilesGridSize);
+  mCvClahe->setTilesGridSize(size);
 }
 
-bool ClahePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat ClahePreprocess::process(const cv::Mat &imgIn)
 {
-  try {
+  cv::Mat imgOut;
 
-    mCvClahe->apply(convertToGray(imgIn), imgOut);
+  mCvClahe->apply(convertToGray(imgIn), imgOut);
 
-  } catch (cv::Exception &e) {
-    msgError("CLAHE image preprocess error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  return imgOut;
 }
-
 
 /*----------------------------------------------------------------*/
 
@@ -163,8 +155,7 @@ ClahePreprocessCuda::ClahePreprocessCuda()
   : ClaheProperties(),
     ImageProcess()
 {
-  cv::Size size(ClaheProperties::tilesGridSize().width(),
-                ClaheProperties::tilesGridSize().height());
+  cv::Size size = qSizeToCvSize(ClaheProperties::tilesGridSize());
   mCvClahe = cv::cuda::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
@@ -172,8 +163,7 @@ ClahePreprocessCuda::ClahePreprocessCuda(const ClahePreprocessCuda &clahePreproc
   : ClaheProperties(clahePreprocessCuda),
     ImageProcess()
 {
-  cv::Size size(ClaheProperties::tilesGridSize().width(),
-                ClaheProperties::tilesGridSize().height());
+  cv::Size size = qSizeToCvSize(ClaheProperties::tilesGridSize());
   mCvClahe = cv::cuda::createCLAHE(ClaheProperties::clipLimit(), size);
 }
 
@@ -195,8 +185,7 @@ ClahePreprocessCuda::~ClahePreprocessCuda()
 void ClahePreprocessCuda::reset()
 {
   ClaheProperties::reset();
-  cv::Size size(ClaheProperties::tilesGridSize().width(),
-                ClaheProperties::tilesGridSize().height());
+  cv::Size size = qSizeToCvSize(ClaheProperties::tilesGridSize());
   mCvClahe->setClipLimit(ClaheProperties::clipLimit());
   mCvClahe->setTilesGridSize(size);
 }
@@ -210,31 +199,29 @@ void ClahePreprocessCuda::setClipLimit(double clipLimit)
 void ClahePreprocessCuda::setTilesGridSize(const QSize &tilesGridSize)
 {
   ClaheProperties::setTilesGridSize(tilesGridSize);
-  mCvClahe->setTilesGridSize(cv::Size(tilesGridSize.width(), tilesGridSize.height()));
+  cv::Size size = qSizeToCvSize(tilesGridSize);
+  mCvClahe->setTilesGridSize(size);
 }
 
-bool ClahePreprocessCuda::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat ClahePreprocessCuda::process(const cv::Mat &imgIn)
 {
-  try {
+  cv::Mat imgOut;
 
-    if (imgIn.channels() >= 3) {
-      cv::Mat color_boost;
-      cv::decolor(imgIn, imgOut, color_boost);
-      color_boost.release();
-    } else {
-      imgIn.copyTo(imgOut);
-    }
-
-    cv::cuda::GpuMat gImgOut(imgOut);
-    mCvClahe->apply(gImgOut, gImgOut);
-    gImgOut.download(imgOut);
-  } catch (cv::Exception &e) {
-    msgError("CLAHE image preprocess error: %s", e.what());
-    return true;
+  if (imgIn.channels() >= 3) {
+    cv::Mat color_boost;
+    cv::decolor(imgIn, imgOut, color_boost);
+    color_boost.release();
+  } else {
+    imgIn.copyTo(imgOut);
   }
 
-  return false;
+  cv::cuda::GpuMat gImgOut(imgOut);
+  mCvClahe->apply(gImgOut, gImgOut);
+  gImgOut.download(imgOut);
+
+  return imgOut;
 }
+
 
 #endif // HAVE_CUDA
 

@@ -94,19 +94,15 @@ CmbfhePreprocess::~CmbfhePreprocess()
 
 }
 
-bool CmbfhePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat CmbfhePreprocess::process(const cv::Mat &imgIn)
 {
-  try {
+  cv::Mat imgOut;
 
-    pixkit::enhancement::local::LambertiMontrucchioSanna2006(convertToGray(imgIn), imgOut,
-                                                             qSizeToCvSize(CmbfheProperties::blockSize()),
-                                                             cv::Size(44,44));
-  } catch (cv::Exception &e) {
-    msgError("CMBFHE image preprocess error: %s", e.what());
-    return true;
-  }
+  pixkit::enhancement::local::LambertiMontrucchioSanna2006(convertToGray(imgIn), imgOut,
+                                                           qSizeToCvSize(CmbfheProperties::blockSize()),
+                                                           cv::Size(44,44));
 
-  return false;
+  return imgOut;
 }
 
 } // namespace photomatch

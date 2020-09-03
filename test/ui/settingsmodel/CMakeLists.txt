@@ -32,6 +32,11 @@ target_link_libraries(${the_target} PRIVATE
                       ${Boost_DATE_TIME_LIBRARY}
                       ${Boost_CHRONO_LIBRARY})
 
+if (HAVE_CUDA)
+target_link_libraries(${the_target} PRIVATE
+                      ${CUDA_LIBRARIES})
+endif()
+
 set_property(TARGET ${the_target} PROPERTY FOLDER "test/settings_model")
 
 set_target_properties(${the_target} PROPERTIES

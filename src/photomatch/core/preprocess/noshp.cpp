@@ -89,22 +89,15 @@ NoshpPreprocess::~NoshpPreprocess()
 
 }
 
-bool NoshpPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat NoshpPreprocess::process(const cv::Mat &imgIn)
 {
+  cv::Mat imgOut;
 
-  try {
+  pixkit::enhancement::local::LiuJinChenLiuLi2011(convertToGray(imgIn),
+                                                  imgOut,
+                                                  qSizeToCvSize(NoshpProperties::blockSize()));
 
-    pixkit::enhancement::local::LiuJinChenLiuLi2011(convertToGray(imgIn), 
-                                                    imgOut,
-                                                    qSizeToCvSize(NoshpProperties::blockSize()));
-
-  } catch (cv::Exception &e) {
-    msgError("NOSHP Image preprocess error: %s", e.what());
-    return true;
-  }
-
-
-  return false;
+  return imgOut;
 }
 
 

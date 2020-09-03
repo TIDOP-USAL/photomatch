@@ -89,35 +89,30 @@ PohePreprocess::~PohePreprocess()
 
 }
 
-bool PohePreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat PohePreprocess::process(const cv::Mat &imgIn)
 {
-  try {
+  cv::Mat imgOut;
 
-    cv::Mat tmp;
-    if (imgIn.channels() == 1)
-      cv::cvtColor(imgIn, tmp, cv::COLOR_GRAY2BGR);
-    else
-      imgIn.copyTo(tmp);
+  cv::Mat tmp;
+  if (imgIn.channels() == 1)
+    cv::cvtColor(imgIn, tmp, cv::COLOR_GRAY2BGR);
+  else
+    imgIn.copyTo(tmp);
 
-    pixkit::enhancement::local::POHE2013(tmp, 
-                                         imgOut, 
-                                         qSizeToCvSize(PoheProperties::blockSize()));
-    tmp.release();
+  pixkit::enhancement::local::POHE2013(tmp,
+                                       imgOut,
+                                       qSizeToCvSize(PoheProperties::blockSize()));
+  tmp.release();
 
-    if (imgIn.channels() >= 3) {
-      cv::Mat color_boost;
-      cv::decolor(imgOut, imgOut, color_boost);
-      color_boost.release();
-    } else {
-      cv::cvtColor(imgOut, imgOut, cv::COLOR_BGR2GRAY);
-    }
-
-  } catch (cv::Exception &e) {
-    msgError("POHE Image preprocess error: %s", e.what());
-    return true;
+  if (imgIn.channels() >= 3) {
+    cv::Mat color_boost;
+    cv::decolor(imgOut, imgOut, color_boost);
+    color_boost.release();
+  } else {
+    cv::cvtColor(imgOut, imgOut, cv::COLOR_BGR2GRAY);
   }
 
-  return false;
+  return imgOut;
 }
 
 
