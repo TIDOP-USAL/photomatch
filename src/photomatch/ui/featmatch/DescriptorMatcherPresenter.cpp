@@ -24,7 +24,10 @@
 
 #include "DescriptorMatcherPresenter.h"
 
-#include "photomatch/core/features/matcher.h"
+#include "photomatch/core/features/flann.h"
+#include "photomatch/core/features/bfmatch.h"
+#include "photomatch/core/features/robustmatch.h"
+#include "photomatch/core/features/gsm.h"
 #include "photomatch/ui/featmatch/DescriptorMatcherView.h"
 #include "photomatch/ui/ProjectModel.h"
 #include "photomatch/ui/settings/SettingsModel.h"

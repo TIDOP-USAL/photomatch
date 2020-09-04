@@ -122,6 +122,28 @@ public:
 };
 
 
+
+
+/*----------------------------------------------------------------*/
+
+
+
+/*!
+ * \brief Pass Points write
+ * \param[in] fname File name
+ * \param[in] pass_points Pass Points
+ */
+PHOTOMATCH_EXPORT void passPointsWrite(const QString &fname,
+                                       const std::vector<std::vector<std::pair<QString,int>>> &pass_points);
+
+/*!
+ * \brief Pass Points read
+ * \param[in] fname File name
+ * \param[out] pass_points Pass Points
+ */
+PHOTOMATCH_EXPORT void passPointsRead(const QString &fname,
+                                      std::vector<std::vector<std::pair<QString,int>>> &pass_points);
+
 } // namespace photomatch
 
 

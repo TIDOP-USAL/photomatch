@@ -58,7 +58,6 @@ add_library(libcore ${LIB_TYPE}
             features/orb.cpp
             features/vgg.h
             features/vgg.cpp
-            features/matcher.cpp
             features/matcher.h
             features/matchio.cpp
             features/matchio.h
@@ -69,6 +68,14 @@ add_library(libcore ${LIB_TYPE}
             features/keypointsfilter.cpp
             features/featio.cpp
             features/featio.h
+            features/flann.cpp
+            features/flann.h
+            features/bfmatch.cpp
+            features/bfmatch.h
+            features/robustmatch.cpp
+            features/robustmatch.h
+            features/gsm.cpp
+            features/gsm.h
             preprocess/preprocess.h
             preprocess/acebsf.cpp
             preprocess/acebsf.h

@@ -119,7 +119,7 @@ void FeatureExtractor::run()
 
     /// Filtrado de puntos
     for (auto &filter : mKeyPointsFiltersProcess) {
-      filter->filter(key_points, key_points);
+      key_points = filter->filter(key_points);
     }
 
     if (mDescriptorExtractor == nullptr) {

@@ -532,7 +532,65 @@ std::unique_ptr<MatchesWriter> MatchesWriterFactory::createWriter(const QString 
 }
 
 
+/* ---------------------------------------------------------------------------------- */
 
+
+void passPointsWrite(const QString &fname,
+                     const std::vector<std::vector<std::pair<QString, int>>> &pass_points)
+{
+  std::ofstream ofs(fname.toStdString(), std::ofstream::trunc);
+  if (ofs.is_open()){
+
+    for (size_t i = 0; i < pass_points.size(); i++) {
+
+      ofs << i;
+
+      for (size_t j = 0; j < pass_points[i].size(); j++){
+        ofs << ";" << pass_points[i][j].first.toStdString()
+          << ";" << pass_points[i][j].second;
+      }
+
+      ofs << std::endl;
+    }
+
+    ofs.close();
+  }
+}
+
+void passPointsRead(const QString &fname,
+                    std::vector<std::vector<std::pair<QString, int>>> &pass_points)
+{
+  pass_points.resize(0);
+  std::ifstream ifs(fname.toStdString());
+  std::string line;
+  if (ifs.is_open()) {
+
+    int r = 0;
+    while (std::getline(ifs, line)) {
+
+      QStringList list = QString(line.c_str()).split(";");
+      int size = list.size();
+      if (size >= 1){
+        if (size == 1 || size % 2 == 0){
+          /// deleted point
+          pass_points.push_back(std::vector<std::pair<QString, int>>());
+        } else {
+          std::vector<std::pair<QString, int>> pass_point;
+          for(int i = 1; i < size; i++){
+            QString idImage = list[i];
+            int idx = list[++i].toInt();
+            pass_point.emplace_back(idImage, idx);
+          }
+          pass_points.push_back(pass_point);
+        }
+      }
+
+      r++;
+    }
+
+    ifs.close();
+  }
+}
 
 
 } // namespace photomatch

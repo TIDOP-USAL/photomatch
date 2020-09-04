@@ -46,8 +46,10 @@
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
-#include "photomatch/core/features/matcher.h"
-
+#include "photomatch/core/features/flann.h"
+#include "photomatch/core/features/bfmatch.h"
+#include "photomatch/core/features/robustmatch.h"
+#include "photomatch/core/features/gsm.h"
 #include "photomatch/core/preprocess/acebsf.h"
 #include "photomatch/core/preprocess/clahe.h"
 #include "photomatch/core/preprocess/cmbfhe.h"

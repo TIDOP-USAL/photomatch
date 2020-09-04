@@ -25,6 +25,7 @@
 #include "MultiViewModel.h"
 
 #include "photomatch/core/features/featio.h"
+#include "photomatch/core/features/matchio.h"
 #include "photomatch/ui/ProjectModel.h"
 
 #include <QImageReader>

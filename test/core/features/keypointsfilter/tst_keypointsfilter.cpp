@@ -95,25 +95,22 @@ void TestKeypointsFilter::test_constructor()
 
 void TestKeypointsFilter::test_filterNBest()
 {
-  std::vector<cv::KeyPoint> filtered_keypoints;
   mKeyPointsFilterNBest.setNPoints(10);
-  mKeyPointsFilterNBest.filter(keypoints, filtered_keypoints);
+  std::vector<cv::KeyPoint> filtered_keypoints = mKeyPointsFilterNBest.filter(keypoints);
   QCOMPARE(10, filtered_keypoints.size());
 }
 
 void TestKeypointsFilter::test_filterBySize()
 {
-  std::vector<cv::KeyPoint> filtered_keypoints;
   mKeyPointsFilterBySize.setMinSize(70.);
   mKeyPointsFilterBySize.setMaxSize(100.);
-  mKeyPointsFilterBySize.filter(keypoints, filtered_keypoints);
+  std::vector<cv::KeyPoint> filtered_keypoints = mKeyPointsFilterBySize.filter(keypoints);
   QCOMPARE(15, filtered_keypoints.size());
 }
 
 void TestKeypointsFilter::test_filterRemoveDuplicated()
 {
-  std::vector<cv::KeyPoint> filtered_keypoints;
-  mKeyPointsFilterRemoveDuplicated.filter(keypoints, filtered_keypoints);
+  std::vector<cv::KeyPoint> filtered_keypoints = mKeyPointsFilterRemoveDuplicated.filter(keypoints);
   QCOMPARE(19, filtered_keypoints.size());
 }
 

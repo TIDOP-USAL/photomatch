@@ -4,7 +4,8 @@
 #include "photomatch/core/preprocess/acebsf.h"
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/brief.h"
-#include "photomatch/core/features/matcher.h"
+#include "photomatch/core/features/bfmatch.h"
+#include "photomatch/core/features/robustmatch.h"
 
 using namespace photomatch;
 

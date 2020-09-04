@@ -25,7 +25,7 @@
 #include "ExportMatchesModel.h"
 
 #include "photomatch/ui/ProjectModel.h"
-#include "photomatch/core/features/matcher.h"
+#include "photomatch/core/features/matchio.h"
 #include "photomatch/core/features/features.h"
 #include "photomatch/core/features/featio.h"
 
