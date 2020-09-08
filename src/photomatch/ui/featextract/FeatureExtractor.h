@@ -30,9 +30,6 @@
 namespace photomatch
 {
 
-class ProgressHandler;
-
-
 class FeatureExtractorModel
 {
 
@@ -53,8 +50,9 @@ class FeatureExtractorView
 public:
 
 
-  FeatureExtractorView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags()) 
-    : ProcessView(parent) {}
+  FeatureExtractorView(QWidget *parent = nullptr,
+                       Qt::WindowFlags f = Qt::WindowFlags())
+    : ProcessView(parent, f) {}
   virtual ~FeatureExtractorView(){}
 
   virtual void setSessionName(const QString &name) = 0;
@@ -88,7 +86,7 @@ class FeatureExtractorPresenter
 public:
 
   FeatureExtractorPresenter() {}
-  virtual ~FeatureExtractorPresenter(){}
+  virtual ~FeatureExtractorPresenter() = default;
 
 signals:
 

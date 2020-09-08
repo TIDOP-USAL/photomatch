@@ -24,7 +24,8 @@
 #ifndef PHOTOMATCH_PREPROCESS_INTERFACES_H
 #define PHOTOMATCH_PREPROCESS_INTERFACES_H
 
-#include "photomatch/ui/mvp.h"
+#include "photomatch/ui/process/ProcessView.h"
+#include "photomatch/ui/process/ProcessPresenter.h"
 
 namespace photomatch
 {
@@ -40,14 +41,15 @@ public:
 
 
 class PreprocessView
-  : public PhotoMatchDialogView
+  : public ProcessView
 {
 
   Q_OBJECT
 
 public:
 
-  PreprocessView(QWidget *parent = nullptr) : PhotoMatchDialogView(parent) {}
+  PreprocessView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags())
+    : ProcessView(parent, f) {}
   virtual ~PreprocessView(){}
 
   virtual void setSessionName(const QString &name) = 0;
@@ -62,15 +64,12 @@ public:
 signals:
 
   void preprocessChange(QString);
-  void run();
 
 };
 
 
-class ProgressHandler;
-
 class PreprocessPresenter
-  : public PhotoMatchPresenter
+  : public ProcessPresenter
 {
 
   Q_OBJECT
@@ -78,22 +77,14 @@ class PreprocessPresenter
 public:
 
   PreprocessPresenter() {}
-  virtual ~PreprocessPresenter(){}
+  virtual ~PreprocessPresenter() = default;
 
 signals:
 
-  void running();
   void imagePreprocessed(QString);
-  void finished();
-
-public slots:
-
-  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
-  virtual void cancel() = 0;
 
 private slots:
 
-  virtual void run() = 0;
   virtual void setCurrentPreprocess(const QString &preprocess) = 0;
 
 };

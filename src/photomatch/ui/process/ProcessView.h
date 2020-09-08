@@ -38,7 +38,8 @@ class ProcessView
 
 public:
 
-  ProcessView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+  ProcessView(QWidget *parent = nullptr,
+              Qt::WindowFlags f = Qt::WindowFlags());
   ~ProcessView();
 
 signals:

@@ -21,7 +21,6 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_PREPROCESS_PRESENTER_H
 #define PHOTOMATCH_PREPROCESS_PRESENTER_H
 
@@ -31,7 +30,6 @@
 
 #include "photomatch/ui/preprocess/Preprocess.h"
 
-class MultiProcess;
 
 namespace photomatch
 {
@@ -54,7 +52,6 @@ class NoshpWidget;
 class PoheWidget;
 class RswheWidget;
 class WallisWidget;
-class ProgressHandler;
 class Preprocess;
 class ImageProcess;
 
@@ -71,6 +68,10 @@ public:
                          SettingsModel *settingsModel);
   ~PreprocessPresenterImp() override;
 
+private slots:
+
+  void onImagePreprocessed(const QString &image);
+
 private:
 
   void setPreprocessProperties(Preprocess *preprocess);
@@ -86,8 +87,28 @@ private:
   void setPoheProperties(Preprocess *preprocess);
   void setRswheProperties(Preprocess *preprocess);
   void setWallisProperties(Preprocess *preprocess);
-  std::shared_ptr<ImageProcess> preprocess(const QString &preprocess);
+
+  std::shared_ptr<ImageProcess> makePreprocess(const QString &preprocess);
   QString fileOut(const QString &fileIn);
+
+// PreprocessPresenter interface
+
+private slots:
+
+  void setCurrentPreprocess(const QString &preprocess) override;
+
+// ProcessPresenter interface
+
+protected slots:
+
+  void onError(int code, const QString &msg) override;
+  void onFinished() override;
+  void createProcess() override;
+
+public slots:
+
+  //void setProgressHandler(ProgressHandler *progressHandler);
+  void cancel() override;
 
 // PhotoMatchModel interface
 
@@ -101,22 +122,6 @@ private:
 
   void init() override;
   void initSignalAndSlots() override;
-
-// PreprocessPresenter interface
-
-public slots:
-
-  void setProgressHandler(ProgressHandler *progressHandler) override;
-  void cancel() override;
-
-private slots:
-
-  void run() override;
-  void setCurrentPreprocess(const QString &preprocess) override;
-
-  void onError(int code, const QString &msg);
-  void onFinished();
-  void onImagePreprocessed(const QString &image);
 
 protected:
 
@@ -138,10 +143,6 @@ protected:
   PoheWidget *mPOHE;
   RswheWidget *mRSWHE;
   WallisWidget *mWallis;
-
-  MultiProcess *mMultiProcess;
-
-  ProgressHandler *mProgressHandler;
 
 };
 

@@ -21,7 +21,6 @@
  *                                                                      *
  ************************************************************************/
 
-
 #ifndef PHOTOMATCH_FEATURE_EXTRACTOR_PRESENTER_H
 #define PHOTOMATCH_FEATURE_EXTRACTOR_PRESENTER_H
 
@@ -113,10 +112,6 @@ private:
 
 // FeatureExtractorPresenter interface
 
-public slots:
-
-  void setProgressHandler(ProgressHandler *progressHandler) override;
-
 private slots:
 
   void setCurrentkeypointDetector(const QString &keypointDetector) override;
@@ -135,7 +130,7 @@ protected slots:
 
 public slots:
 
-  void cancel();
+  void cancel() override;
 
 // PhotoMatchPresenter interface
 

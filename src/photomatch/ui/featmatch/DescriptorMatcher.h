@@ -24,14 +24,11 @@
 #ifndef PHOTOMATCH_DESCRIPTOR_MATCHER_INTERFACES_H
 #define PHOTOMATCH_DESCRIPTOR_MATCHER_INTERFACES_H
 
-#include "photomatch/ui/mvp.h"
-
+#include "photomatch/ui/process/ProcessView.h"
+#include "photomatch/ui/process/ProcessPresenter.h"
 
 namespace photomatch
 {
-
-class ProgressHandler;
-
 
 class DescriptorMatcherModel
 {
@@ -44,14 +41,16 @@ public:
 
 
 class DescriptorMatcherView
-  : public PhotoMatchDialogView
+  : public ProcessView
 {
 
   Q_OBJECT
 
 public:
 
-  DescriptorMatcherView(QWidget *parent = nullptr) : PhotoMatchDialogView(parent) {}
+  DescriptorMatcherView(QWidget *parent = nullptr,
+                        Qt::WindowFlags f = Qt::WindowFlags())
+    : ProcessView(parent, f) {}
   virtual ~DescriptorMatcherView(){}
 
   virtual void setSessionName(const QString &name) = 0;
@@ -130,7 +129,6 @@ public:
 signals:
 
   void matchMethodChange(QString);
-  void run();
 
 public slots:
 
@@ -212,7 +210,7 @@ public slots:
 
 
 class DescriptorMatcherPresenter
-  : public PhotoMatchPresenter
+  : public ProcessPresenter
 {
 
   Q_OBJECT
@@ -224,18 +222,7 @@ public:
 
 signals:
 
-  void running();
   void matchCompute(QString);
-  void finished();
-
-public slots:
-
-  virtual void setProgressHandler(ProgressHandler *progressHandler) = 0;
-  virtual void cancel() = 0;
-
-private slots:
-
-  virtual void run() = 0;
 
 };
 

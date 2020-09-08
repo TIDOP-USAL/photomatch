@@ -92,9 +92,7 @@ PreprocessPresenterImp::PreprocessPresenterImp(PreprocessView *view,
     mNOSHP(new NoshpWidgetImp),
     mPOHE(new PoheWidgetImp),
     mRSWHE(new RswheWidgetImp),
-    mWallis(new WallisWidgetImp),
-    mMultiProcess(new MultiProcess(true)),
-    mProgressHandler(nullptr)
+    mWallis(new WallisWidgetImp)
 {
   this->init();
   this->initSignalAndSlots();
@@ -166,11 +164,33 @@ PreprocessPresenterImp::~PreprocessPresenterImp()
     delete mWallis;
     mWallis = nullptr;
   }
+}
 
-  if (mMultiProcess){
-    delete mMultiProcess;
-    mMultiProcess = nullptr;
-  }
+void PreprocessPresenterImp::init()
+{
+  mView->addPreprocess(mDecolor);
+  mView->addPreprocess(mACEBSF);
+  mView->addPreprocess(mCLAHE);
+  mView->addPreprocess(mCMBFHE);
+  mView->addPreprocess(mDHE);
+  mView->addPreprocess(mFAHE);
+  mView->addPreprocess(mHMCLAHE);
+  mView->addPreprocess(mLCEBSESCS);
+  mView->addPreprocess(mMSRCP);
+  mView->addPreprocess(mNOSHP);
+  mView->addPreprocess(mPOHE);
+  mView->addPreprocess(mRSWHE);
+  mView->addPreprocess(mWallis);
+
+  mView->setCurrentPreprocess(mDecolor->windowTitle());
+}
+
+void PreprocessPresenterImp::initSignalAndSlots()
+{
+  connect(mView, SIGNAL(preprocessChange(QString)), this, SLOT(setCurrentPreprocess(QString)));
+
+  connect(mView, SIGNAL(run()),      this, SLOT(run()));
+  connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
 void PreprocessPresenterImp::help()
@@ -196,6 +216,11 @@ void PreprocessPresenterImp::open()
     msgError("No active session found");
     return;
   }
+}
+
+void PreprocessPresenterImp::setHelp(HelpDialog *help)
+{
+  mHelp = help;
 }
 
 void PreprocessPresenterImp::setPreprocessProperties(Preprocess *preprocess)
@@ -337,133 +362,89 @@ void PreprocessPresenterImp::setWallisProperties(Preprocess *preprocess)
                                    mSettingsModel->wallisImposedLocalStdDev());
 }
 
-void PreprocessPresenterImp::setHelp(HelpDialog *help)
+void PreprocessPresenterImp::onError(int code, const QString &msg)
 {
-  mHelp = help;
+  ProcessPresenter::onError(code, msg);
+
+  if (mProgressHandler) {
+    mProgressHandler->setDescription(tr("Image preprocessing error"));
+  }
 }
 
-void PreprocessPresenterImp::init()
+void PreprocessPresenterImp::onFinished()
 {
-  mView->addPreprocess(mDecolor);
-  mView->addPreprocess(mACEBSF);
-  mView->addPreprocess(mCLAHE);
-  mView->addPreprocess(mCMBFHE);
-  mView->addPreprocess(mDHE);
-  mView->addPreprocess(mFAHE);
-  mView->addPreprocess(mHMCLAHE);
-  mView->addPreprocess(mLCEBSESCS);
-  mView->addPreprocess(mMSRCP);
-  mView->addPreprocess(mNOSHP);
-  mView->addPreprocess(mPOHE);
-  mView->addPreprocess(mRSWHE);
-  mView->addPreprocess(mWallis);
+  ProcessPresenter::onFinished();
 
-  mView->setCurrentPreprocess(mDecolor->windowTitle());
+  if (mProgressHandler) {
+    mProgressHandler->setDescription(tr("Image preprocessing finished"));
+  }
+
+  msgInfo("Image preprocessing finished");
 }
 
-void PreprocessPresenterImp::initSignalAndSlots()
+void PreprocessPresenterImp::createProcess()
 {
-  connect(mView, SIGNAL(preprocessChange(QString)), this, SLOT(setCurrentPreprocess(QString)));
+  std::shared_ptr<Session> current_session = mProjectModel->currentSession();
+  if (current_session == nullptr) throw std::runtime_error("No active session found");
 
-  connect(mView, SIGNAL(run()),      this, SLOT(run()));
-  connect(mView, SIGNAL(help()),     this, SLOT(help()));
+
+  if(std::shared_ptr<Preprocess> preprocess = current_session->preprocess()){
+    int i_ret = QMessageBox(QMessageBox::Warning,
+                            tr("Previous results"),
+                            tr("The previous results will be overwritten. Do you wish to continue?"),
+                            QMessageBox::Yes|QMessageBox::No).exec();
+    if (i_ret == QMessageBox::No) {
+      throw std::runtime_error("Canceled by user");
+    }
+  }
+
+  QString currentPreprocess = mView->currentPreprocess();
+  std::shared_ptr<ImageProcess> image_process = this->makePreprocess(currentPreprocess);
+
+  mProjectModel->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
+  mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(image_process));
+
+  for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
+    QString file_in = (*it)->path();
+    QString file_out = fileOut(file_in);
+
+    std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess(file_in,
+                                                                    file_out,
+                                                                    image_process,
+                                                                    mView->fullImageSize() ? -1 : mView->maxImageSize()));
+
+    connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+
+    mMultiProcess->appendProcess(preprocess);
+
+  }
+
+  if (mProgressHandler) {
+    mProgressHandler->setTitle("Image Preprocessing");
+    mProgressHandler->setDescription("Preprocessing images...");
+  }
+
+  mView->hide();
+
+  msgInfo("Preprocessing images");
+  QByteArray ba = currentPreprocess.toLocal8Bit();
+  const char *data = ba.constData();
+  msgInfo("  Preprocessing method     :  %s", data);
+
 }
 
-void PreprocessPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
-{
-  mProgressHandler = progressHandler;
-}
+//void PreprocessPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
+//{
+//  mProgressHandler = progressHandler;
+//}
 
 void PreprocessPresenterImp::cancel()
 {
-  mMultiProcess->stop();
-
-  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    mProgressHandler->setRange(0,1);
-    mProgressHandler->setValue(1);
-    mProgressHandler->finish();
-    mProgressHandler->setDescription(tr("Processing has been canceled by the user"));
-
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(finish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(next()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(finish()));
-  }
-
-  mMultiProcess->clearProcessList();
-
-  emit finished();
-
+  ProcessPresenter::cancel();
   msgWarning("Processing has been canceled by the user");
 }
 
-void PreprocessPresenterImp::run()
-{
-  if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
-
-    if(std::shared_ptr<Preprocess> preprocess = current_session->preprocess()){
-      int i_ret = QMessageBox(QMessageBox::Warning,
-                              tr("Previous results"),
-                              tr("The previous results will be overwritten. Do you wish to continue?"),
-                              QMessageBox::Yes|QMessageBox::No).exec();
-      if (i_ret == QMessageBox::No) {
-        return;
-      }
-    }
-
-    QString currentPreprocess = mView->currentPreprocess();
-    std::shared_ptr<ImageProcess> image_process = this->preprocess(currentPreprocess);
-
-    mProjectModel->setMaxImageSize(mView->fullImageSize() ? -1 : mView->maxImageSize());
-    mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(image_process));
-
-    for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-      QString file_in = (*it)->path();
-      QString file_out = fileOut(file_in);
-
-      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess(file_in,
-                                                                      file_out,
-                                                                      image_process,
-                                                                      mView->fullImageSize() ? -1 : mView->maxImageSize()));
-
-      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
-      mMultiProcess->appendProcess(preprocess);
-    }
-
-    connect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-    connect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-    if (mProgressHandler) {
-      connect(mMultiProcess, SIGNAL(finished()),             mProgressHandler,    SLOT(finish()));
-      connect(mMultiProcess, SIGNAL(statusChangedNext()),    mProgressHandler,    SLOT(next()));
-      connect(mMultiProcess, SIGNAL(error(int, QString)),    mProgressHandler,    SLOT(finish()));
-
-      mProgressHandler->setRange(0, mMultiProcess->count());
-      mProgressHandler->setValue(0);
-      mProgressHandler->setTitle("Image Preprocessing");
-      mProgressHandler->setDescription("Preprocessing images...");
-      mProgressHandler->init();
-    }
-
-    mView->hide();
-
-    msgInfo("Preprocessing images");
-    QByteArray ba = currentPreprocess.toLocal8Bit();
-    const char *data = ba.constData();
-    msgInfo("  Preprocessing method     :  %s", data);
-
-    emit running();
-
-    mMultiProcess->start();
-  } else {
-    msgError("No active session found");
-    return;
-  }
-}
-
-std::shared_ptr<ImageProcess> PreprocessPresenterImp::preprocess(const QString &currentPreprocess)
+std::shared_ptr<ImageProcess> PreprocessPresenterImp::makePreprocess(const QString &currentPreprocess)
 {
   std::shared_ptr<ImageProcess> image_process;
   if (currentPreprocess.compare("ACEBSF") == 0) {
@@ -514,7 +495,10 @@ std::shared_ptr<ImageProcess> PreprocessPresenterImp::preprocess(const QString &
                                                        mWallis->imposedAverage(),
                                                        mWallis->imposedLocalStdDev(),
                                                        mWallis->kernelSize());
+  } else {
+    throw std::runtime_error("Preprocess not found");
   }
+
   return image_process;
 }
 
@@ -538,50 +522,6 @@ QString PreprocessPresenterImp::fileOut(const QString &fileIn)
 void PreprocessPresenterImp::setCurrentPreprocess(const QString &preprocess)
 {
   mView->setCurrentPreprocess(preprocess);
-}
-
-void PreprocessPresenterImp::onError(int code, const QString &msg)
-{
-  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    mProgressHandler->setRange(0,1);
-    mProgressHandler->setValue(1);
-    mProgressHandler->finish();
-    mProgressHandler->setDescription(tr("Image preprocessing error"));
-
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(finish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(next()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(finish()));
-  }
-
-  mMultiProcess->clearProcessList();
-
-  emit finished();
-}
-
-void PreprocessPresenterImp::onFinished()
-{
-  disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
-  disconnect(mMultiProcess, SIGNAL(finished()),          this, SLOT(onFinished()));
-
-  if (mProgressHandler){
-    mProgressHandler->setRange(0, 1);
-    mProgressHandler->setValue(1);
-    mProgressHandler->finish();
-    mProgressHandler->setDescription(tr("Image preprocessing finished"));
-
-    disconnect(mMultiProcess, SIGNAL(finished()),                 mProgressHandler,    SLOT(finish()));
-    disconnect(mMultiProcess, SIGNAL(statusChangedNext()),        mProgressHandler,    SLOT(next()));
-    disconnect(mMultiProcess, SIGNAL(error(int, QString)),        mProgressHandler,    SLOT(finish()));
-  }
-
-  mMultiProcess->clearProcessList();
-
-  emit finished();
-
-  msgInfo("Image preprocessing finished");
 }
 
 void PreprocessPresenterImp::onImagePreprocessed(const QString &image)

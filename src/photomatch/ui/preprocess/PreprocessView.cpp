@@ -42,12 +42,80 @@ PreprocessViewImp::PreprocessViewImp(QWidget *parent)
 {
   this->initUI();
   this->initSignalAndSlots();
-  this->retranslate();
 }
 
 PreprocessViewImp::~PreprocessViewImp()
 {
 
+}
+
+void PreprocessViewImp::initUI()
+{
+  this->setObjectName(QStringLiteral("PreprocessView"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  this->resize(350, 450);
+
+  QGridLayout *gridLayout = new QGridLayout();
+  this->setLayout(gridLayout);
+
+  mCheckBoxFullImage = new QCheckBox(this);
+  mCheckBoxFullImage->setChecked(false);
+  gridLayout->addWidget(mCheckBoxFullImage, 0, 0, 1, 1);
+
+  mLabelMaxImageSize = new QLabel(this);
+  gridLayout->addWidget(mLabelMaxImageSize, 1, 0, 1, 1);
+  mSpinBoxMaxImageSize = new QSpinBox(this);
+  mSpinBoxMaxImageSize->setRange(100, 100000);
+  mSpinBoxMaxImageSize->setValue(2000);
+  gridLayout->addWidget(mSpinBoxMaxImageSize, 1, 1, 1, 1);
+
+  mLabelPreprocess = new QLabel(this);
+  gridLayout->addWidget(mLabelPreprocess, 2, 0, 1, 1);
+  mComboBoxPreprocess = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxPreprocess, 2, 1, 1, 1);
+
+  QWidget *widgetPreprocess = new QWidget();
+  mGridLayoutPreprocess = new QGridLayout(widgetPreprocess);
+  mGridLayoutPreprocess->setContentsMargins(0, 0, 0, 0);
+  gridLayout->addWidget(widgetPreprocess, 3, 0, 1, 2);
+
+  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
+  mButtonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
+  gridLayout->addWidget(mButtonBox, 4, 0, 1, 2);
+
+  this->retranslate();
+  this->update();
+}
+
+void PreprocessViewImp::initSignalAndSlots()
+{
+  connect(mComboBoxPreprocess,  &QComboBox::currentTextChanged, this, &PreprocessView::preprocessChange);
+  connect(mCheckBoxFullImage,   &QAbstractButton::clicked,      this, &PreprocessViewImp::onCheckBoxFullImageChange);
+
+  connect(mButtonBox,                                    &QDialogButtonBox::rejected, this, &QDialog::reject);
+  connect(mButtonBox->button(QDialogButtonBox::Apply),   &QAbstractButton::clicked,   this, &ProcessView::run);
+  connect(mButtonBox->button(QDialogButtonBox::Help),    &QAbstractButton::clicked,   this, &PhotoMatchDialogView::help);
+}
+
+void PreprocessViewImp::clear()
+{
+  mCurrentPreprocess.clear();
+}
+
+void PreprocessViewImp::update()
+{
+
+}
+
+void PreprocessViewImp::retranslate()
+{
+  this->setWindowTitle(QApplication::translate("PreprocessView", "Preprocess"));
+  mCheckBoxFullImage->setText(QApplication::translate("PreprocessView", "Full Image Size"));
+  mLabelPreprocess->setText(QApplication::translate("PreprocessView", "Preprocess:"));
+  mLabelMaxImageSize->setText(QApplication::translate("PreprocessView", "Max Image Size:"));
+  mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("PreprocessView", "Cancel"));
+  mButtonBox->button(QDialogButtonBox::Apply)->setText(QApplication::translate("PreprocessView", "Run"));
+  mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("PreprocessView", "Help"));
 }
 
 void PreprocessViewImp::setSessionName(const QString &name)
@@ -108,83 +176,6 @@ bool PreprocessViewImp::fullImageSize() const
 void PreprocessViewImp::onCheckBoxFullImageChange()
 {
   mSpinBoxMaxImageSize->setEnabled(!mCheckBoxFullImage->isChecked());
-}
-
-void PreprocessViewImp::initUI()
-{
-  this->setObjectName(QStringLiteral("PreprocessView"));
-  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
-  this->resize(350, 450);
-
-  QGridLayout *gridLayout = new QGridLayout();
-  this->setLayout(gridLayout);
-
-  mCheckBoxFullImage = new QCheckBox(this);
-  mCheckBoxFullImage->setChecked(false);
-  gridLayout->addWidget(mCheckBoxFullImage, 0, 0, 1, 1);
-
-  mLabelMaxImageSize = new QLabel(this);
-  gridLayout->addWidget(mLabelMaxImageSize, 1, 0, 1, 1);
-  mSpinBoxMaxImageSize = new QSpinBox(this);
-  mSpinBoxMaxImageSize->setRange(100, 100000);
-  mSpinBoxMaxImageSize->setValue(2000);
-  gridLayout->addWidget(mSpinBoxMaxImageSize, 1, 1, 1, 1);
-
-  gridLayout->addWidget(new QLabel("Preprocess:"), 2, 0, 1, 1);
-  mComboBoxPreprocess = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxPreprocess, 2, 1, 1, 1);
-
-  QWidget *widgetPreprocess = new QWidget();
-  mGridLayoutPreprocess = new QGridLayout(widgetPreprocess);
-  mGridLayoutPreprocess->setContentsMargins(0, 0, 0, 0);
-  gridLayout->addWidget(widgetPreprocess, 3, 0, 1, 2);
-
-  mButtonBox->setOrientation(Qt::Orientation::Horizontal);
-  mButtonBox->setStandardButtons(QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Help);
-  gridLayout->addWidget(mButtonBox, 4, 0, 1, 2);
-
-  update();
-}
-
-void PreprocessViewImp::initSignalAndSlots()
-{
-  connect(mComboBoxPreprocess,  SIGNAL(currentTextChanged(QString)), this, SIGNAL(preprocessChange(QString)));
-  connect(mCheckBoxFullImage,   SIGNAL(clicked(bool)),               this, SLOT(onCheckBoxFullImageChange()));
-
-  connect(mButtonBox,                                    SIGNAL(rejected()),      this, SLOT(reject()));
-  connect(mButtonBox->button(QDialogButtonBox::Apply),   SIGNAL(clicked(bool)),   this, SIGNAL(run()));
-  connect(mButtonBox->button(QDialogButtonBox::Help),    SIGNAL(clicked(bool)),   this, SIGNAL(help()));
-}
-
-void PreprocessViewImp::clear()
-{
-  mCurrentPreprocess.clear();
-}
-
-void PreprocessViewImp::update()
-{
-
-}
-
-void PreprocessViewImp::retranslate()
-{
-  ///TODO: mover aqui todos los textos
-  this->setWindowTitle(QApplication::translate("PreprocessView", "Preprocess"));
-  mCheckBoxFullImage->setText(QApplication::translate("PreprocessView", "Full Image Size"));
-  mLabelMaxImageSize->setText(QApplication::translate("PreprocessView", "Max Image Size:"));
-  mButtonBox->button(QDialogButtonBox::Cancel)->setText(QApplication::translate("PreprocessView", "Cancel"));
-  mButtonBox->button(QDialogButtonBox::Apply)->setText(QApplication::translate("PreprocessView", "Run"));
-  mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("PreprocessView", "Help"));
-
-//#ifndef QT_NO_WHATSTHIS
-//  mCheckBoxFullImage->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>If checked, use the full image size.</p></body></html>"));
-//  mSpinBoxMaxImageSize->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Select maximun image size.</p></body></html>"));
-//  mComboBoxPreprocess->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Select preprocesing method.</p></body></html>"));
-//  mButtonBox->button(QDialogButtonBox::Cancel)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Cancel the changes and close the image preprocessing tool.</p></body></html>"));
-//  mButtonBox->button(QDialogButtonBox::Apply)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Apply the selected preprocessing to the project images.</p></body></html>"));
-//  mButtonBox->button(QDialogButtonBox::Help)->setWhatsThis(QApplication::translate("PreprocessView", "<html><head/><body><p>Show help.</p></body></html>"));
-//#endif // QT_NO_WHATSTHIS
-
 }
 
 } // namespace photomatch

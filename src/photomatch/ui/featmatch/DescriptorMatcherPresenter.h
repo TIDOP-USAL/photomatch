@@ -28,8 +28,6 @@
 
 #include "photomatch/ui/featmatch/DescriptorMatcher.h"
 
-class MultiProcess;
-
 namespace photomatch
 {
 
@@ -37,8 +35,8 @@ class DescriptorMatcherView;
 class ProjectModel;
 class SettingsModel;
 class HelpDialog;
-class ProgressHandler;
-
+class DescriptorMatcher;
+class MatchingAlgorithm;
 
 class DescriptorMatcherPresenterImp
   : public DescriptorMatcherPresenter
@@ -53,7 +51,32 @@ public:
                                 SettingsModel *settingsModel);
   ~DescriptorMatcherPresenterImp() override;
 
-// PhotoMatchModel interface
+private slots:
+
+  void onMatchCompute(const QString &left,
+                      const QString &right,
+                      const QString &match);
+  void onPassPointsFinished(const QString &file);
+
+private:
+
+  std::shared_ptr<DescriptorMatcher> makeDescriptorMatcher(const QString &matchingMethod);
+  std::shared_ptr<MatchingAlgorithm> makeMatchingAlgorithm(const QString &matchingStrategy,
+                                                           std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+
+// ProcessPresenter interface
+
+protected slots:
+
+  void onError(int code, const QString &msg) override;
+  void onFinished() override;
+  void createProcess() override;
+
+public slots:
+
+  void cancel() override;
+
+// PhotoMatchPresenter interface
 
 public slots:
 
@@ -66,31 +89,12 @@ private:
   void init() override;
   void initSignalAndSlots() override;
 
-// DescriptorMatcherPresenter interface
-
-public slots:
-
-  void setProgressHandler(ProgressHandler *progressHandler) override;
-  void cancel() override;
-
-private slots:
-
-  void run() override;
-  void onError(int code, const QString &msg);
-  void onFinished();
-  void onMatchCompute(const QString &left,
-                      const QString &right,
-                      const QString &match);
-  void onPassPointsFinished(const QString &file);
-
 protected:
 
   DescriptorMatcherView *mView;
   ProjectModel *mProjectModel;
   SettingsModel *mSettingsModel;
   HelpDialog *mHelp;
-  MultiProcess *mMultiProcess;
-  ProgressHandler *mProgressHandler;
 
 };
 

@@ -48,11 +48,6 @@ ProcessPresenter::~ProcessPresenter()
   }
 }
 
-void ProcessPresenter::setProgressHandler(ProgressHandler *progressHandler)
-{
-  mProgressHandler = progressHandler;
-}
-
 void ProcessPresenter::onFinished()
 {
   disconnect(mMultiProcess, SIGNAL(error(int, QString)), this, SLOT(onError(int, QString)));
@@ -73,6 +68,11 @@ void ProcessPresenter::onFinished()
   mMultiProcess->clearProcessList();
 
   emit finished();
+}
+
+void ProcessPresenter::setProgressHandler(ProgressHandler *progressHandler)
+{
+  mProgressHandler = progressHandler;
 }
 
 void ProcessPresenter::onError(int code, const QString &msg)

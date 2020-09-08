@@ -432,17 +432,15 @@ void FeatureExtractorPresenterImp::createProcess()
                             tr("The previous results will be overwritten. Do you wish to continue?"),
                             QMessageBox::Yes|QMessageBox::No).exec();
     if (i_ret == QMessageBox::No) {
-      //return;
       throw std::runtime_error("Canceled by user");
     }
   }
 
   QString currentKeypointDetector = mView->currentKeypointDetector();
   QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
-  std::shared_ptr<KeypointDetector> keypointDetector = makeKeypointDetector(currentKeypointDetector);
-  std::shared_ptr<DescriptorExtractor> descriptorExtractor = makeDescriptorExtractor(currentDescriptorExtractor, 
+  std::shared_ptr<KeypointDetector> keypointDetector = this->makeKeypointDetector(currentKeypointDetector);
+  std::shared_ptr<DescriptorExtractor> descriptorExtractor = this->makeDescriptorExtractor(currentDescriptorExtractor,
                                                                                      currentKeypointDetector);
-
 
   mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
   mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
@@ -468,7 +466,9 @@ void FeatureExtractorPresenterImp::createProcess()
                                                                       imageProcess,
                                                                       2000));
       connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+
       mMultiProcess->appendProcess(preprocess);
+
     } else {
       preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
     }
@@ -1565,11 +1565,6 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
   }
 
   return descriptor_extractor;
-}
-
-void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
-{
-  mProgressHandler = progressHandler;
 }
 
 void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &keypointDetector)

@@ -50,7 +50,7 @@ public:
 
 protected slots:
 
-// IPreprocessView interface
+// PreprocessView interface
 
 public:
 
@@ -86,13 +86,13 @@ private slots:
 protected:
 
   QGridLayout *mGridLayoutPreprocess;
+  QLabel *mLabelPreprocess;
   QComboBox *mComboBoxPreprocess;
   QCheckBox *mCheckBoxFullImage;
   QLabel *mLabelMaxImageSize;
   QSpinBox *mSpinBoxMaxImageSize;
   QDialogButtonBox *mButtonBox;
   QString mCurrentPreprocess;
-
 
 };
 

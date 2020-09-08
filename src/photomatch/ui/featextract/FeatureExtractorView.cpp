@@ -54,7 +54,7 @@ void FeatureExtractorViewImp::initUI()
 {
   this->setObjectName(QString("FeatureExtractorView"));
   this->setWindowTitle(tr("Feature Extractor"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(350, 450);
 
   QGridLayout *gridLayout = new QGridLayout();
