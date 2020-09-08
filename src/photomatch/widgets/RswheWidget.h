@@ -67,6 +67,9 @@ public slots:
 
 };
 
+
+
+
 class RswheWidgetImp
   : public RswheWidget
 {
@@ -82,7 +85,7 @@ protected slots:
   void onHistogramCutByMean();
   void onHistogramCutByMedian();
 
-// IRswheWidget interface
+// RswheWidget interface
 
 public:
 
@@ -96,25 +99,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

@@ -26,50 +26,52 @@ set(PHOTOMATCH_SOURCES
     MainWindowModel.cpp
     MainWindowPresenter.cpp
     MainWindowView.cpp
-    NewProjectView.cpp
-    NewProjectPresenter.cpp
-    NewSessionView.cpp
-    NewSessionPresenter.cpp
+    createproj/NewProjectView.cpp
+    createproj/NewProjectPresenter.cpp
+    createsession/NewSessionView.cpp
+    createsession/NewSessionPresenter.cpp
     ProjectModel.cpp
-    SettingsModel.cpp
-    SettingsPresenter.cpp
-    SettingsView.cpp
-    PreprocessView.cpp
-    PreprocessModel.cpp
-    PreprocessPresenter.cpp
-    FeatureExtractorView.cpp
-    FeatureExtractorModel.cpp
-    FeatureExtractorPresenter.cpp
-    FeaturesViewerView.cpp
-    FeaturesViewerModel.cpp
-    FeaturesViewerPresenter.cpp
-    DescriptorMatcherView.cpp
-    DescriptorMatcherModel.cpp
-    DescriptorMatcherPresenter.cpp
-    MatchViewerModel.cpp
-    MatchViewerView.cpp
-    MatchViewerPresenter.cpp
-    MultiViewModel.cpp
-    MultiViewView.cpp
-    MultiViewPresenter.cpp
-    HomographyViewerModel.cpp
-    HomographyViewerView.cpp
-    HomographyViewerPresenter.cpp
-    CurvesViewerModel.cpp
-    CurvesViewerView.cpp
-    CurvesViewerPresenter.cpp
-    GroundTruthModel.cpp
-    GroundTruthView.cpp
-    GroundTruthPresenter.cpp
-    RepeatabilityModel.cpp
-    RepeatabilityView.cpp
-    RepeatabilityPresenter.cpp
-    ExportFeaturesModel.cpp
-    ExportFeaturesView.cpp
-    ExportFeaturesPresenter.cpp
-    ExportMatchesModel.cpp
-    ExportMatchesView.cpp
-    ExportMatchesPresenter.cpp
+    settings/SettingsModel.cpp
+    settings/SettingsPresenter.cpp
+    settings/SettingsView.cpp
+    preprocess/PreprocessView.cpp
+    preprocess/PreprocessModel.cpp
+    preprocess/PreprocessPresenter.cpp
+    featextract/FeatureExtractorView.cpp
+    featextract/FeatureExtractorModel.cpp
+    featextract/FeatureExtractorPresenter.cpp
+    featmatch/DescriptorMatcherView.cpp
+    featmatch/DescriptorMatcherModel.cpp
+    featmatch/DescriptorMatcherPresenter.cpp
+    featviewer/FeaturesViewerView.cpp
+    featviewer/FeaturesViewerModel.cpp
+    featviewer/FeaturesViewerPresenter.cpp
+    matchviewer/MatchViewerModel.cpp
+    matchviewer/MatchViewerView.cpp
+    matchviewer/MatchViewerPresenter.cpp
+    multiview/MultiViewModel.cpp
+    multiview/MultiViewView.cpp
+    multiview/MultiViewPresenter.cpp
+    homography/HomographyViewerModel.cpp
+    homography/HomographyViewerView.cpp
+    homography/HomographyViewerPresenter.cpp
+    curves/CurvesViewerModel.cpp
+    curves/CurvesViewerView.cpp
+    curves/CurvesViewerPresenter.cpp
+    groundtruth/GroundTruthModel.cpp
+    groundtruth/GroundTruthView.cpp
+    groundtruth/GroundTruthPresenter.cpp
+    repeatability/RepeatabilityModel.cpp
+    repeatability/RepeatabilityView.cpp
+    repeatability/RepeatabilityPresenter.cpp
+    exportfeat/ExportFeaturesModel.cpp
+    exportfeat/ExportFeaturesView.cpp
+    exportfeat/ExportFeaturesPresenter.cpp
+    exportmatch/ExportMatchesModel.cpp
+    exportmatch/ExportMatchesView.cpp
+    exportmatch/ExportMatchesPresenter.cpp
+    process/ProcessPresenter.cpp
+    process/ProcessView.cpp
     #BatchModel.cpp
     #BatchView.cpp
     #BatchPresenter.cpp
@@ -77,7 +79,7 @@ set(PHOTOMATCH_SOURCES
     HelpDialog.cpp
     utils/GraphicViewer.cpp
     utils/ProgressDialog.cpp
-    utils/Progress.cpp
+    utils/ProgressHandler.cpp
     #utils/KeyPointGraphicsItem.cpp
     #utils/CrossGraphicItem.cpp
     #utils/DiagonalCrossGraphicItem.cpp
@@ -89,70 +91,71 @@ set(PHOTOMATCH_SOURCES
 
 set(PHOTOMATCH_HEADERS
     mvp.h
-	ComponentsManager.h
-    ComponentsManager.cpp
+    ComponentsManager.h
     MainWindowModel.h
     MainWindowPresenter.h
     MainWindowView.h
-    NewProject.h
-    NewProjectView.h
-    NewProjectPresenter.h
-    NewSession.h
-    NewSessionView.h
-    NewSessionPresenter.h
+    createproj/NewProject.h
+    createproj/NewProjectView.h
+    createproj/NewProjectPresenter.h
+    createsession/NewSession.h
+    createsession/NewSessionView.h
+    createsession/NewSessionPresenter.h
     ProjectModel.h
-    Settings.h
-    SettingsModel.h
-    SettingsPresenter.h
-    SettingsView.h
-    Preprocess.h
-    PreprocessView.h
-    PreprocessModel.h
-    PreprocessPresenter.h
-    FeatureExtractor.h
-    FeatureExtractorView.h
-    FeatureExtractorModel.h
-    FeatureExtractorPresenter.h
-    FeaturesViewer.h
-    FeaturesViewerView.h
-    FeaturesViewerModel.h
-    FeaturesViewerPresenter.h
-    DescriptorMatcher.h
-    DescriptorMatcherView.h
-    DescriptorMatcherModel.h
-    DescriptorMatcherPresenter.h
-    MatchViewer.h
-    MatchViewerModel.h
-    MatchViewerView.h
-    MatchViewerPresenter.h
-    Multiview.h
-    MultiViewModel.h
-    MultiViewView.h
-    MultiViewPresenter.h
-    HomographyViewer.h
-    HomographyViewerModel.h
-    HomographyViewerView.h
-    HomographyViewerPresenter.h
-    CurvesViewer.h
-    CurvesViewerModel.h
-    CurvesViewerView.h
-    CurvesViewerPresenter.h
-    GroundTruth.h
-    GroundTruthModel.h
-    GroundTruthView.h
-    GroundTruthPresenter.h
-    Repeatability.h
-    RepeatabilityModel.h
-    RepeatabilityView.h
-    RepeatabilityPresenter.h
-    ExportFeatures.h
-    ExportFeaturesModel.h
-    ExportFeaturesView.h
-    ExportFeaturesPresenter.h
-    ExportMatches.h
-    ExportMatchesModel.h
-    ExportMatchesView.h
-    ExportMatchesPresenter.h
+    settings/Settings.h
+    settings/SettingsModel.h
+    settings/SettingsPresenter.h
+    settings/SettingsView.h
+    preprocess/Preprocess.h
+    preprocess/PreprocessView.h
+    preprocess/PreprocessModel.h
+    preprocess/PreprocessPresenter.h
+    featextract/FeatureExtractor.h
+    featextract/FeatureExtractorView.h
+    featextract/FeatureExtractorModel.h
+    featextract/FeatureExtractorPresenter.h
+    featmatch/DescriptorMatcher.h
+    featmatch/DescriptorMatcherView.h
+    featmatch/DescriptorMatcherModel.h
+    featmatch/DescriptorMatcherPresenter.h
+    featviewer/FeaturesViewer.h
+    featviewer/FeaturesViewerView.h
+    featviewer/FeaturesViewerModel.h
+    featviewer/FeaturesViewerPresenter.h
+    matchviewer/MatchViewer.h
+    matchviewer/MatchViewerModel.h
+    matchviewer/MatchViewerView.h
+    matchviewer/MatchViewerPresenter.h
+    multiview/Multiview.h
+    multiview/MultiViewModel.h
+    multiview/MultiViewView.h
+    multiview/MultiViewPresenter.h
+    homography/HomographyViewer.h
+    homography/HomographyViewerModel.h
+    homography/HomographyViewerView.h
+    homography/HomographyViewerPresenter.h
+    curves/CurvesViewer.h
+    curves/CurvesViewerModel.h
+    curves/CurvesViewerView.h
+    curves/CurvesViewerPresenter.h
+    groundtruth/GroundTruth.h
+    groundtruth/GroundTruthModel.h
+    groundtruth/GroundTruthView.h
+    groundtruth/GroundTruthPresenter.h
+    repeatability/Repeatability.h
+    repeatability/RepeatabilityModel.h
+    repeatability/RepeatabilityView.h
+    repeatability/RepeatabilityPresenter.h
+    exportfeat/ExportFeatures.h
+    exportfeat/ExportFeaturesModel.h
+    exportfeat/ExportFeaturesView.h
+    exportfeat/ExportFeaturesPresenter.h
+    exportmatch/ExportMatches.h
+    exportmatch/ExportMatchesModel.h
+    exportmatch/ExportMatchesView.h
+    exportmatch/ExportMatchesPresenter.h
+    process/ProcessPresenter.h
+    process/ProcessView.h
     #BatchModel.h
     #BatchView.h
     #BatchPresenter.h
@@ -160,7 +163,7 @@ set(PHOTOMATCH_HEADERS
     HelpDialog.h
     utils/GraphicViewer.h
     utils/ProgressDialog.h
-    utils/Progress.h
+    utils/ProgressHandler.h
     #utils/KeyPointGraphicsItem.h
     #utils/CrossGraphicItem.h
     #utils/DiagonalCrossGraphicItem.h
@@ -183,12 +186,13 @@ set(PHOTOMATCH_FORMS
 
 # Translation files
 ### TODO: Por si se quiere añadir soporte para varios idiomas
-#SET(PHOTOMATCH_TS_FILES
-#    ${CMAKE_SOURCE_DIR}/resources/lang/photomatch_en.ts
-#    ${CMAKE_SOURCE_DIR}/resources/lang/photomatch_es.ts
-#)
+SET(PHOTOMATCH_TS_FILES
+    ${CMAKE_SOURCE_DIR}/res/lang/photomatch_en.ts
+    ${CMAKE_SOURCE_DIR}/res/lang/photomatch_es.ts
+)
 
 #qt5_add_translation(PHOTOMATCH_QM_FILES ${PHOTOMATCH_TS_FILES})
+qt5_create_translation(PHOTOMATCH_QM_FILES ${CMAKE_SOURCE_DIR} photomatch_en.ts photomatch_es.ts)
 
 QT5_ADD_RESOURCES(UI_PHOTOMATCH_RES ${PHOTOMATCH_RESOURCES} )
 
@@ -197,12 +201,28 @@ add_executable(${PROJECT_NAME} WIN32
                ${PHOTOMATCH_HEADERS}
                ${PHOTOMATCH_FORMS}
                ${UI_PHOTOMATCH_RES}
-               #${PHOTOMATCH_TS_FILES}
+#               ${PHOTOMATCH_TS_FILES}
 )
 
 source_group("Form Files"  FILES ${PHOTOMATCH_FORMS})
 source_group("Resource Files"  FILES ${PHOTOMATCH_RESOURCES})
 #source_group("Translation Files"  FILES ${PHOTOMATCH_TS_FILES})
+#source_group("Header Files\\createproj" FILES ${PHOTOMATCH_HEADERS_CREATE_PROJECT})
+#source_group("Source Files\\createproj" FILES ${PHOTOMATCH_SOURCES_CREATE_PROJECT})
+
+foreach(_source IN ITEMS ${PHOTOMATCH_SOURCES} ${PHOTOMATCH_HEADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    #file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path}")
+    source_group("Source Files\\${_group_path}" FILES "${_source}")
+endforeach()
+
+foreach(_source IN ITEMS ${PHOTOMATCH_HEADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    #file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path}")
+    source_group("Header Files\\${_group_path}" FILES "${_source}")
+endforeach()
 
 # Lincado de librerias
 target_link_libraries(${PROJECT_NAME}
@@ -216,7 +236,6 @@ target_link_libraries(${PROJECT_NAME}
                       libwidgets
                       libprocess
                       ${OpenCV_LIBS}
-#                      ${Boost_ATOMIC_LIBRARY}
                       ${PIXKIT_LIBRARIES}
 )
 
@@ -228,7 +247,13 @@ target_link_libraries(${PROJECT_NAME}
                       ${Boost_CHRONO_LIBRARY})
 
 if(HAVE_VLD)
-target_link_libraries(${PROJECT_NAME} ${VLD_LIBRARY})
+target_link_libraries(${PROJECT_NAME}
+                      ${VLD_LIBRARY})
+endif()
+
+if (HAVE_CUDA)
+target_link_libraries(${PROJECT_NAME}
+                      ${CUDA_LIBRARIES})
 endif()
 
 if(ENABLE_SOLUTION_FOLDERS)

@@ -10,9 +10,9 @@ set(test_KIND TEST)
 set(the_target "${test_kind}_${test_name}")
 add_executable(${the_target}
     ${test_filename}
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/SettingsModel.cpp
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/SettingsModel.h
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/Settings.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/settings/SettingsModel.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/settings/SettingsModel.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/settings/Settings.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 
@@ -31,6 +31,11 @@ target_link_libraries(${the_target} PRIVATE
                       ${Boost_THREAD_LIBRARY}
                       ${Boost_DATE_TIME_LIBRARY}
                       ${Boost_CHRONO_LIBRARY})
+
+if (HAVE_CUDA)
+target_link_libraries(${the_target} PRIVATE
+                      ${CUDA_LIBRARIES})
+endif()
 
 set_property(TARGET ${the_target} PROPERTY FOLDER "test/settings_model")
 

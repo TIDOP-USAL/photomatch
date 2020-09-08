@@ -35,9 +35,6 @@ namespace photomatch
 {
 
 
-/*!
- * \brief AGAST detector properties class
- */
 class PHOTOMATCH_EXPORT AgastProperties
   : public Agast
 {
@@ -52,7 +49,7 @@ public:
   AgastProperties &operator =(const AgastProperties &agast);
   AgastProperties &operator =(AgastProperties &&agast) noexcept;
 
-// IAgast interface
+// Agast interface
 
 public:
 
@@ -92,7 +89,9 @@ public:
   AgastDetector();
   AgastDetector(const AgastDetector &agastDetector);
   AgastDetector(AgastDetector &&agastDetector) noexcept;
-  AgastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType);
+  AgastDetector(int threshold,
+                bool nonmaxSuppression,
+                const QString &detectorType);
   ~AgastDetector() override = default;
   AgastDetector &operator =(const AgastDetector &agastDetector);
   AgastDetector &operator =(AgastDetector &&agastDetector) noexcept;
@@ -111,11 +110,9 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
-
-// IAgast interface
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
+// Agast interface
 
 public:
 

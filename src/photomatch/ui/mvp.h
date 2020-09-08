@@ -85,23 +85,23 @@ protected:
 };
 
 
-class IDialogView
+class PhotoMatchDialogView
   : public QDialog
 {
   Q_OBJECT
 
 public:
 
-  IDialogView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags())
+  PhotoMatchDialogView(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags())
     : QDialog(parent, f)
   {
     Qt::WindowFlags helpFlag = Qt::WindowContextHelpButtonHint;
     Qt::WindowFlags flags = windowFlags();
     flags = flags & (~helpFlag);
-    setWindowFlags(flags);
+    QDialog::setWindowFlags(flags);
   }
 
-  virtual ~IDialogView() override = default;
+  virtual ~PhotoMatchDialogView() override = default;
 
 private:
 
@@ -147,7 +147,7 @@ protected:
 
 
 
-class IModel
+class PhotoMatchModel
   : public QObject
 {
 
@@ -155,8 +155,8 @@ class IModel
 
 public:
 
-  IModel(QObject *parent = nullptr) : QObject(parent){}
-  virtual ~IModel(){}
+  PhotoMatchModel(QObject *parent = nullptr) : QObject(parent){}
+  virtual ~PhotoMatchModel(){}
 
 private:
 
@@ -168,15 +168,15 @@ private:
 };
 
 
-class IPresenter
+class PhotoMatchPresenter
   : public QObject
 {
   Q_OBJECT
 
 public:
 
-  IPresenter() : QObject(){}
-  virtual ~IPresenter() = default;
+  PhotoMatchPresenter() : QObject(){}
+  virtual ~PhotoMatchPresenter() = default;
 
 public slots:
 
@@ -203,6 +203,10 @@ private:
    */
   virtual void init() = 0;
 
+  /*!
+   * \brief Signal and slots initialization
+   */
+  virtual void initSignalAndSlots() = 0;
 };
 
 } // namespace photomatch

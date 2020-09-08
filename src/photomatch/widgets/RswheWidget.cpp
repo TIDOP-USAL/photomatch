@@ -53,69 +53,10 @@ RswheWidgetImp::~RswheWidgetImp()
 
 }
 
-void RswheWidgetImp::onHistogramCutByMean()
-{
-  emit histogramCutChange(static_cast<int>(HistogramCut::by_mean));
-}
-
-void RswheWidgetImp::onHistogramCutByMedian()
-{
-  emit histogramCutChange(static_cast<int>(HistogramCut::by_median));
-}
-
-int RswheWidgetImp::histogramDivisions() const
-{
-  return mHistogramDivisions->value();
-}
-
-RswheWidget::HistogramCut RswheWidgetImp::histogramCut() const
-{
-  return mHistogramCut;
-}
-
-void RswheWidgetImp::setHistogramDivisions(int histogramDivisions)
-{
-  const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);
-  mHistogramDivisions->setValue(histogramDivisions);
-}
-
-void RswheWidgetImp::setHistogramCut(RswheWidget::HistogramCut histogramCut)
-{
-  mHistogramCut = histogramCut;
-  update();
-}
-
-void RswheWidgetImp::update()
-{
-  const QSignalBlocker blockerHistogramCutByMean(mHistogramCutByMean);
-  const QSignalBlocker blockerHistogramCutByMedian(mHistogramCutByMedian);
-  if (mHistogramCut == HistogramCut::by_mean){
-    mHistogramCutByMean->setChecked(true);
-  } else {
-    mHistogramCutByMedian->setChecked(true);
-  }
-}
-
-void RswheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("RswheWidgetImp", "RSWHE Parameters"));
-  mLabelDescription->setText(QApplication::translate("RswheWidgetImp", "Recursively Separated and Weighted Histogram Equalization"));
-  mHistogramCutByMean->setText(QApplication::translate("RswheWidgetImp", "Histogram cut by mean"));
-  mHistogramCutByMedian->setText(QApplication::translate("RswheWidgetImp", "Histogram cut by median"));
-  mLabelHistogramDivisions->setText(QApplication::translate("RswheWidgetImp", "Histogram Divisions:"));
-}
-
-void RswheWidgetImp::reset()
-{
-  const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);
-
-  mHistogramDivisions->setValue(2);
-  mHistogramCut = HistogramCut::by_mean;
-}
-
 void RswheWidgetImp::initUI()
 {
   this->setWindowTitle("RSWHE");
+  this->setObjectName("RswheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -146,21 +87,69 @@ void RswheWidgetImp::initUI()
 
 void RswheWidgetImp::initSignalAndSlots()
 {
-  connect(mHistogramDivisions,    SIGNAL(valueChanged(int)),        this, SIGNAL(histogramDivisionsChange(int)));
-  connect(mHistogramCutByMean,    SIGNAL(clicked()),                this, SLOT(onHistogramCutByMean()));
-  connect(mHistogramCutByMedian,  SIGNAL(clicked()),                this, SLOT(onHistogramCutByMedian()));
+  connect(mHistogramDivisions,    QOverload<int>::of(&QSpinBox::valueChanged), this, &RswheWidget::histogramDivisionsChange);
+  connect(mHistogramCutByMean,    &QAbstractButton::released,                  this, &RswheWidgetImp::onHistogramCutByMean);
+  connect(mHistogramCutByMedian,  &QAbstractButton::released,                  this, &RswheWidgetImp::onHistogramCutByMedian);
 }
 
-void RswheWidgetImp::changeEvent(QEvent *event)
+void RswheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
+  const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);
+
+  mHistogramDivisions->setValue(2);
+  mHistogramCut = HistogramCut::by_mean;
+}
+
+void RswheWidgetImp::update()
+{
+  const QSignalBlocker blockerHistogramCutByMean(mHistogramCutByMean);
+  const QSignalBlocker blockerHistogramCutByMedian(mHistogramCutByMedian);
+  if (mHistogramCut == HistogramCut::by_mean){
+    mHistogramCutByMean->setChecked(true);
+  } else {
+    mHistogramCutByMedian->setChecked(true);
   }
+}
+
+void RswheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("RswheWidget", "RSWHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("RswheWidget", "Recursively Separated and Weighted Histogram Equalization"));
+  mHistogramCutByMean->setText(QApplication::translate("RswheWidget", "Histogram cut by mean"));
+  mHistogramCutByMedian->setText(QApplication::translate("RswheWidget", "Histogram cut by median"));
+  mLabelHistogramDivisions->setText(QApplication::translate("RswheWidget", "Histogram Divisions:"));
+}
+
+void RswheWidgetImp::onHistogramCutByMean()
+{
+  emit histogramCutChange(static_cast<int>(HistogramCut::by_mean));
+}
+
+void RswheWidgetImp::onHistogramCutByMedian()
+{
+  emit histogramCutChange(static_cast<int>(HistogramCut::by_median));
+}
+
+int RswheWidgetImp::histogramDivisions() const
+{
+  return mHistogramDivisions->value();
+}
+
+RswheWidget::HistogramCut RswheWidgetImp::histogramCut() const
+{
+  return mHistogramCut;
+}
+
+void RswheWidgetImp::setHistogramDivisions(int histogramDivisions)
+{
+  const QSignalBlocker blockerHistogramDivisions(mHistogramDivisions);
+  mHistogramDivisions->setValue(histogramDivisions);
+}
+
+void RswheWidgetImp::setHistogramCut(RswheWidget::HistogramCut histogramCut)
+{
+  mHistogramCut = histogramCut;
+  update();
 }
 
 

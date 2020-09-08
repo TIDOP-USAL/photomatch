@@ -4,10 +4,10 @@ add_definitions(-DUNICODE)
 
 set(CMAKE_DEBUG_POSTFIX d)
 
-set(TL_MESSAGE_HANDLER YES)
-message(STATUS "[TidopLib] Message manager enabled")
+#set(TL_MESSAGE_HANDLER YES)
+#message(STATUS "[TidopLib] Message manager enabled")
 
-configure_file("${PROJECT_SOURCE_DIR}/cmake/config_tl.h.in" "${PROJECT_BINARY_DIR}/config_tl.h")
+#configure_file("${PROJECT_SOURCE_DIR}/cmake/config_tl.h.in" "${PROJECT_BINARY_DIR}/config_tl.h")
 
 add_library(tl_core ${LIB_TYPE}
             console.cpp

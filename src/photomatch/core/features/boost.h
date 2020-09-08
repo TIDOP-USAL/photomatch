@@ -36,7 +36,7 @@
 namespace photomatch
 {
 
-class BoostProperties
+class PHOTOMATCH_EXPORT BoostProperties
   : public Boost
 {
 
@@ -46,7 +46,7 @@ public:
   BoostProperties(const BoostProperties &boostProperties);
   ~BoostProperties() override = default;
 
-// IBoost interface
+// Boost interface
 
 public:
 
@@ -75,7 +75,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
-class BoostDescriptor
+class PHOTOMATCH_EXPORT BoostDescriptor
   : public BoostProperties,
     public DescriptorExtractor
 {
@@ -99,7 +99,7 @@ public:
 
   void reset() override;
 
-// IBoost interface
+// Boost interface
 
 public:
 
@@ -111,13 +111,12 @@ public:
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
 protected:
 
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   cv::Ptr<cv::xfeatures2d::BoostDesc> mBoost;
 #endif
 

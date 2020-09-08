@@ -24,12 +24,12 @@
 
 #include "MainWindowPresenter.h"
 
-#include "MainWindowView.h"
-#include "MainWindowModel.h"
-#include "ProjectModel.h"
-#include "SettingsModel.h"
-#include "SettingsPresenter.h"
-#include "SettingsView.h"
+#include "photomatch/ui/MainWindowView.h"
+#include "photomatch/ui/MainWindowModel.h"
+#include "photomatch/ui/ProjectModel.h"
+#include "photomatch/ui/settings/SettingsModel.h"
+#include "photomatch/ui/settings/SettingsPresenter.h"
+#include "photomatch/ui/settings/SettingsView.h"
 #include "photomatch/ui/utils/TabHandler.h"
 #include "photomatch/ui/utils/GraphicViewer.h"
 #include "photomatch/ui/HelpDialog.h"
@@ -51,7 +51,7 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
                                          MainWindowModel *model,
                                          ProjectModel *projectModel,
                                          SettingsModel *settingsModel)
-  : IPresenter(),
+  : PhotoMatchPresenter(),
     mView(view),
     mModel(model),
     mProjectModel(projectModel),
@@ -59,78 +59,8 @@ MainWindowPresenter::MainWindowPresenter(MainWindowView *view,
     mTabHandler(nullptr),
     mStartPageWidget(nullptr)
 {
-  init();
-
-  /* Menú Archivo */
-
-  connect(mView, &MainWindowView::openNew,                this, &MainWindowPresenter::openNew);
-  connect(mView, &MainWindowView::openProject,            this, &MainWindowPresenter::openProject);
-  connect(mView, &MainWindowView::openProjectFromHistory, this, &MainWindowPresenter::openFromHistory);  ///TODO: falta test señal
-  connect(mView, &MainWindowView::clearHistory,           this, &MainWindowPresenter::deleteHistory);
-  connect(mView, &MainWindowView::openExportFeatures,     this, &MainWindowPresenter::openExportFeaturesDialog);
-  connect(mView, &MainWindowView::openExportMatches,      this, &MainWindowPresenter::openExportMatchesDialog);
-  connect(mView, &MainWindowView::saveProject,            this, &MainWindowPresenter::saveProject);
-  connect(mView, &MainWindowView::saveProjectAs,          this, &MainWindowPresenter::saveProjectAs);
-  connect(mView, &MainWindowView::closeProject,           this, &MainWindowPresenter::closeProject);
-  connect(mView, &MainWindowView::exit,                   this, &MainWindowPresenter::exit);
-
-  /* Menú View */
-
-  connect(mView,   &MainWindowView::openStartPage,        this, &MainWindowPresenter::openStartPage);
-  connect(mView,   &MainWindowView::openSettings,         this, &MainWindowPresenter::openSettingsDialog);
-  connect(mView,   &MainWindowView::openViewSettings,     this, &MainWindowPresenter::openViewSettingsDialog);
-
-  /* Quality Control */
-
-  connect(mView,  SIGNAL(openKeypointsViewer()),      this, SLOT(openKeypointsViewer()));
-  connect(mView,  SIGNAL(openMatchesViewer()),        this, SLOT(openMatchesViewer()));
-  connect(mView,  &MainWindowView::openMultiviewMatchingAssessment,  this, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog);
-  connect(mView,  &MainWindowView::groundTruthEditor,        this, &MainWindowPresenter::openGroundTruthEditorDialog);
-  connect(mView,  &MainWindowView::homography,               this, &MainWindowPresenter::openHomographyViewerDialog);
-  connect(mView,  &MainWindowView::prCurves,                 this, &MainWindowPresenter::openPRCurvesViewerDialog);
-  connect(mView,  &MainWindowView::rocCurves,                this, &MainWindowPresenter::openROCCurvesViewerDialog);
-  connect(mView,  &MainWindowView::detCurves,                this, &MainWindowPresenter::openDETCurvesViewerDialog);
-  connect(mView,  &MainWindowView::openQualityControlSettings, this, &MainWindowPresenter::openQualityControlSettingsDialog);
-
-  /* Menú herramientas */
-
-  connect(mView,   &MainWindowView::loadImages,            this, &MainWindowPresenter::loadImages);
-  connect(mView,   &MainWindowView::newSession,            this, &MainWindowPresenter::openNewSessionDialog);
-  connect(mView,   &MainWindowView::openPreprocess,        this, &MainWindowPresenter::openPreprocessDialog);
-  connect(mView,   &MainWindowView::openFeatureExtraction, this, &MainWindowPresenter::openFeatureExtractionDialog);
-  connect(mView,   &MainWindowView::openFeatureMatching,   this, &MainWindowPresenter::openFeatureMatchingDialog);
-  connect(mView,   &MainWindowView::openToolSettings,      this, &MainWindowPresenter::openToolSettingsDialog);
-
-  /* Menú Ayuda */
-
-  connect(mView, &MainWindowView::openHelpDialog,     this, &MainWindowPresenter::help);
-  connect(mView, &MainWindowView::openOnlineHelp,     this, &MainWindowPresenter::openOnlineHelp);
-  connect(mView, &MainWindowView::openAboutDialog,    this, &MainWindowPresenter::openAboutDialog);
-
-  /* Panel de vistas en miniatura */
-
-  connect(mView, SIGNAL(openImage(QString)),          this, SLOT(openImage(QString)));
-  connect(mView, SIGNAL(selectImage(QString)),        this, SLOT(activeImage(QString)));
-  connect(mView, SIGNAL(selectImages(QStringList)),   this, SLOT(activeImages(QStringList)));
-  connect(mView, SIGNAL(deleteImages(QStringList)),   this, SLOT(deleteImages(QStringList)));
-  connect(mView, SIGNAL(selectSession(QString)),      this, SLOT(selectSession(QString)));
-
-  connect(mView, SIGNAL(selectPreprocess(QString)),   this, SLOT(selectPreprocess(QString)));
-  connect(mView, SIGNAL(selectFeatures(QString)),     this, SLOT(selectFeatures(QString)));
-  connect(mView, SIGNAL(selectDetector(QString)),     this, SLOT(selectDetector(QString)));
-  connect(mView, SIGNAL(selectDescriptor(QString)),   this, SLOT(selectDescriptor(QString)));
-  connect(mView, SIGNAL(selectImageFeatures(QString)),   this, SLOT(selectImageFeatures(QString)));
-
-  /* Visor de imagenes */
-
-  connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
-
-  connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
-  connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
-
-  connect(mView, SIGNAL(openKeypointsViewer(QString, QString)),         this, SIGNAL(openKeypointsViewerDialogFromSessionAndImage(QString, QString)));
-  connect(mView, SIGNAL(openMatchesViewer(QString, QString, QString)),  this, SIGNAL(openMatchesViewerDialogFromSessionAndImages(QString, QString, QString)));
-
+  this->init();
+  this->initSignalAndSlots();
 }
 
 MainWindowPresenter::~MainWindowPresenter()
@@ -282,7 +212,6 @@ void MainWindowPresenter::closeProject()
   mProjectModel->clear();
 ///TODO:  mModel->finishLog();
   mView->clear();
-  mView->setWindowTitle(QString("PhotoMatch"));
 }
 
 void MainWindowPresenter::exit()
@@ -372,6 +301,9 @@ void MainWindowPresenter::loadProject()
 {
   mView->clear();
 
+  mView->setProjectTitle(mProjectModel->name());
+  mView->setFlag(MainWindowView::Flag::project_exists, true);
+
   QString prjFile = mProjectModel->path();
 
   /// Se añade al historial de proyectos recientes
@@ -379,8 +311,6 @@ void MainWindowPresenter::loadProject()
   mView->updateHistory(mSettingsModel->history());
   mStartPageWidget->setHistory(mSettingsModel->history());
 
-  mView->setProjectTitle(mProjectModel->name());
-  mView->setFlag(MainWindowView::Flag::project_exists, true);
   QString msg = tr("Load project: ").append(prjFile);
   mView->setStatusBarMsg(msg);
   QByteArray ba = prjFile.toLocal8Bit();
@@ -436,14 +366,25 @@ void MainWindowPresenter::updateProject()
 
 void MainWindowPresenter::openImage(const QString &image)
 {
-  mTabHandler->setImage(image);
+  try {
+    QString image_path = mProjectModel->findImageByName(image)->path();
+    mTabHandler->setImage(image_path);
+  } catch (std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  }
 }
 
 void MainWindowPresenter::activeImage(const QString &image)
 {
-  std::list<std::pair<QString, QString>> properties = mModel->exif(image);
-  mView->setProperties(properties);
-  mView->setActiveImage(image);
+  try {
+    QString image_path = mProjectModel->findImageByName(image)->path();
+
+    std::list<std::pair<QString, QString>> properties = mModel->exif(image_path);
+    mView->setProperties(properties);
+    mView->setActiveImage(image);
+  } catch (std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  }
 }
 
 void MainWindowPresenter::activeImages(const QStringList &images)
@@ -453,15 +394,26 @@ void MainWindowPresenter::activeImages(const QStringList &images)
 
 void MainWindowPresenter::deleteImages(const QStringList &images)
 {
-  mProjectModel->deleteImages(images);
+  //mProjectModel->deleteImages(images);
   TL_TODO("Se tienen que eliminar del proyecto las imagenes procesadas, y los ficheros de keypoints y de matches")
-  for (const auto &image : images){
-    mView->deleteImage(image);
+  for (const auto &image : images) {
+    //mView->deleteImage(image);
+    this->deleteImage(image);
     TL_TODO("Se tienen que eliminar de la vista las imagenes procesadas, y los ficheros de keypoints y de matches")
   }
-  mView->setFlag(MainWindowView::Flag::project_modified, true);
+}
 
-  mView->setFlag(MainWindowView::Flag::images_added, mProjectModel->imagesCount() > 0);
+void MainWindowPresenter::deleteImage(const QString &image)
+{
+  try {
+    QString image_path = mProjectModel->findImageByName(image)->path();
+    mProjectModel->deleteImage(image_path);
+    mView->deleteImage(image);
+    mView->setFlag(MainWindowView::Flag::project_modified, true);
+    mView->setFlag(MainWindowView::Flag::images_added, mProjectModel->imagesCount() > 0);
+  } catch (std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  }
 }
 
 void MainWindowPresenter::loadSession(const QString &session)
@@ -836,7 +788,9 @@ void MainWindowPresenter::selectImageFeatures(const QString &imageFeatures)
   mView->setProperties(properties);
 }
 
-void MainWindowPresenter::openImageMatches(const QString &sessionName, const QString &imgName1, const QString &imgName2)
+void MainWindowPresenter::openImageMatches(const QString &sessionName,
+                                           const QString &imgName1,
+                                           const QString &imgName2)
 {
   std::vector<std::pair<QPointF, QPointF>> matches;
   QString imgPath1 = mProjectModel->findImageByName(imgName1)->path();
@@ -864,7 +818,7 @@ void MainWindowPresenter::openImageMatches(const QString &sessionName, const QSt
       }
     }
 
-    GraphicViewer *graphicViewer = mTabHandler->addGraphicViewer(name);
+    GraphicViewerImp *graphicViewer = mTabHandler->addGraphicViewer(name);
     if (graphicViewer){
       QImage imageLeft(imgPath1);
       QImage imageRight(imgPath2);
@@ -1054,6 +1008,80 @@ void MainWindowPresenter::init()
   /* Projects history */
   mView->updateHistory(mSettingsModel->history());
   mStartPageWidget->setHistory(mSettingsModel->history());
+}
+
+void MainWindowPresenter::initSignalAndSlots()
+{
+/* Menú Archivo */
+
+  connect(mView, &MainWindowView::openNew,                this, &MainWindowPresenter::openNew);
+  connect(mView, &MainWindowView::openProject,            this, &MainWindowPresenter::openProject);
+  connect(mView, &MainWindowView::openProjectFromHistory, this, &MainWindowPresenter::openFromHistory);  ///TODO: falta test señal
+  connect(mView, &MainWindowView::clearHistory,           this, &MainWindowPresenter::deleteHistory);
+  connect(mView, &MainWindowView::openExportFeatures,     this, &MainWindowPresenter::openExportFeaturesDialog);
+  connect(mView, &MainWindowView::openExportMatches,      this, &MainWindowPresenter::openExportMatchesDialog);
+  connect(mView, &MainWindowView::saveProject,            this, &MainWindowPresenter::saveProject);
+  connect(mView, &MainWindowView::saveProjectAs,          this, &MainWindowPresenter::saveProjectAs);
+  connect(mView, &MainWindowView::closeProject,           this, &MainWindowPresenter::closeProject);
+  connect(mView, &MainWindowView::exit,                   this, &MainWindowPresenter::exit);
+
+  /* Menú View */
+
+  connect(mView,   &MainWindowView::openStartPage,        this, &MainWindowPresenter::openStartPage);
+  connect(mView,   &MainWindowView::openSettings,         this, &MainWindowPresenter::openSettingsDialog);
+  connect(mView,   &MainWindowView::openViewSettings,     this, &MainWindowPresenter::openViewSettingsDialog);
+
+  /* Quality Control */
+
+  connect(mView,  SIGNAL(openKeypointsViewer()),      this, SLOT(openKeypointsViewer()));
+  connect(mView,  SIGNAL(openMatchesViewer()),        this, SLOT(openMatchesViewer()));
+  connect(mView,  &MainWindowView::openMultiviewMatchingAssessment,  this, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog);
+  connect(mView,  &MainWindowView::groundTruthEditor,        this, &MainWindowPresenter::openGroundTruthEditorDialog);
+  connect(mView,  &MainWindowView::homography,               this, &MainWindowPresenter::openHomographyViewerDialog);
+  connect(mView,  &MainWindowView::prCurves,                 this, &MainWindowPresenter::openPRCurvesViewerDialog);
+  connect(mView,  &MainWindowView::rocCurves,                this, &MainWindowPresenter::openROCCurvesViewerDialog);
+  connect(mView,  &MainWindowView::detCurves,                this, &MainWindowPresenter::openDETCurvesViewerDialog);
+  connect(mView,  &MainWindowView::openQualityControlSettings, this, &MainWindowPresenter::openQualityControlSettingsDialog);
+
+  /* Menú herramientas */
+
+  connect(mView,   &MainWindowView::loadImages,            this, &MainWindowPresenter::loadImages);
+  connect(mView,   &MainWindowView::newSession,            this, &MainWindowPresenter::openNewSessionDialog);
+  connect(mView,   &MainWindowView::openPreprocess,        this, &MainWindowPresenter::openPreprocessDialog);
+  connect(mView,   &MainWindowView::openFeatureExtraction, this, &MainWindowPresenter::openFeatureExtractionDialog);
+  connect(mView,   &MainWindowView::openFeatureMatching,   this, &MainWindowPresenter::openFeatureMatchingDialog);
+  connect(mView,   &MainWindowView::openToolSettings,      this, &MainWindowPresenter::openToolSettingsDialog);
+
+  /* Menú Ayuda */
+
+  connect(mView, &MainWindowView::openHelpDialog,     this, &MainWindowPresenter::help);
+  connect(mView, &MainWindowView::openOnlineHelp,     this, &MainWindowPresenter::openOnlineHelp);
+  connect(mView, &MainWindowView::openAboutDialog,    this, &MainWindowPresenter::openAboutDialog);
+
+  /* Panel de vistas en miniatura */
+
+  connect(mView, SIGNAL(openImage(QString)),          this, SLOT(openImage(QString)));
+  connect(mView, SIGNAL(selectImage(QString)),        this, SLOT(activeImage(QString)));
+  connect(mView, SIGNAL(selectImages(QStringList)),   this, SLOT(activeImages(QStringList)));
+  connect(mView, SIGNAL(deleteImages(QStringList)),   this, SLOT(deleteImages(QStringList)));
+  connect(mView, SIGNAL(selectSession(QString)),      this, SLOT(selectSession(QString)));
+
+  connect(mView, SIGNAL(selectPreprocess(QString)),   this, SLOT(selectPreprocess(QString)));
+  connect(mView, SIGNAL(selectFeatures(QString)),     this, SLOT(selectFeatures(QString)));
+  connect(mView, SIGNAL(selectDetector(QString)),     this, SLOT(selectDetector(QString)));
+  connect(mView, SIGNAL(selectDescriptor(QString)),   this, SLOT(selectDescriptor(QString)));
+  connect(mView, SIGNAL(selectImageFeatures(QString)),   this, SLOT(selectImageFeatures(QString)));
+
+  /* Visor de imagenes */
+
+  connect(mView, SIGNAL(openImageMatches(QString,QString,QString)),   this, SLOT(openImageMatches(QString,QString,QString)));
+
+  connect(mView, SIGNAL(activeSessionChange(QString)), this, SLOT(activeSession(QString)));
+  connect(mView, SIGNAL(delete_session(QString)),      this, SLOT(deleteSession(QString)));
+
+  connect(mView, SIGNAL(openKeypointsViewer(QString, QString)),         this, SIGNAL(openKeypointsViewerDialogFromSessionAndImage(QString, QString)));
+  connect(mView, SIGNAL(openMatchesViewer(QString, QString, QString)),  this, SIGNAL(openMatchesViewerDialogFromSessionAndImages(QString, QString, QString)));
+
 }
 
 void MainWindowPresenter::initStartPage()

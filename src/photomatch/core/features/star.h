@@ -46,7 +46,7 @@ public:
   StarProperties(const StarProperties &starProperties);
   ~StarProperties() override = default;
 
-// IStar interface
+// Star interface
 
 public:
 
@@ -82,7 +82,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class StarDetector
+class PHOTOMATCH_EXPORT StarDetector
   : public StarProperties,
     public KeypointDetector
 {
@@ -106,11 +106,10 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
-// IStar interface
+// Star interface
 
 public:
 

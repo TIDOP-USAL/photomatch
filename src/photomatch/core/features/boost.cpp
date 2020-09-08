@@ -124,7 +124,7 @@ BoostDescriptor::BoostDescriptor(const QString &descriptorType,
 
 void BoostDescriptor::update()
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   int descriptor_type = cv::xfeatures2d::BoostDesc::BGM;
   QString descriptorType = BoostProperties::descriptorType();
   if (descriptorType.compare("BGM") == 0 ) {
@@ -173,23 +173,17 @@ void BoostDescriptor::setScaleFactor(double scaleFactor)
   update();
 }
 
-bool BoostDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints, cv::Mat &descriptors)
+cv::Mat BoostDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
-  try {
-    mBoost->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("BOOST Descriptor error: %s", e.what());
-    return true;
-  }
-
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
+  cv::Mat descriptors;
+  mBoost->compute(img, keyPoints, descriptors);
+  return descriptors;
 #  else
   TL_COMPILER_WARNING("Boost Descriptor not supported in OpenCV versions < 3.3")
+  throw std::exception("Boost Descriptor not supported in OpenCV versions < 3.3");
 #endif
-  return false;
 }
-
 
 
 

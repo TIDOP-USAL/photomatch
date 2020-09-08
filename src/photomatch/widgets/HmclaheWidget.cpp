@@ -56,89 +56,10 @@ HmclaheWidgetImp::~HmclaheWidgetImp()
 
 }
 
-void HmclaheWidgetImp::onBlockSizeXChange(int blockSizeX)
-{
-  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
-}
-
-void HmclaheWidgetImp::onBlockSizeYChange(int blockSizeY)
-{
-  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
-}
-
-QSize HmclaheWidgetImp::blockSize() const
-{
-  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
-}
-
-double HmclaheWidgetImp::l() const
-{
-  return mL->value();
-}
-
-double HmclaheWidgetImp::phi() const
-{
-  return mPhi->value();
-}
-
-void HmclaheWidgetImp::setBlockSize(const QSize &blockSize)
-{
-  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
-  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
-  mBlockSizeX->setValue(blockSize.width());
-  mBlockSizeY->setValue(blockSize.height());
-}
-
-void HmclaheWidgetImp::setL(double l)
-{
-  const QSignalBlocker blockerL(mL);
-  mL->setValue(static_cast<double>(l));
-}
-
-void HmclaheWidgetImp::setPhi(double phi)
-{
-  const QSignalBlocker blockerPhi(mPhi);
-  mPhi->setValue(static_cast<double>(phi));
-}
-
-void HmclaheWidgetImp::update()
-{
-}
-
-void HmclaheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("HmclaheWidgetImp", "HMCLAHE Parameters"));
-  mLabelDescription->setText(QApplication::translate("HmclaheWidgetImp", "Histogram Modified Contrast Limited Adaptive Histogram Equalization"));
-  mGroupBoxBlocksize->setTitle(QApplication::translate("HmclaheWidgetImp", "Block Size", nullptr));
-  mLabelBlockSizeX->setText(QApplication::translate("HmclaheWidgetImp", "Width:", nullptr));
-  mLabelBlockSizeY->setText(QApplication::translate("HmclaheWidgetImp", "Height:", nullptr));
-  mLabelL->setText(QApplication::translate("HmclaheWidgetImp", "L:", nullptr));
-  mLabelPhi->setText(QApplication::translate("HmclaheWidgetImp", "K1:", nullptr));
-
-//#ifndef QT_NO_WHATSTHIS
-//  mL->setWhatsThis(tr("<html><head/><body><p>Use to district the range of histogram. Range between 0 and 1.</p></body></html>"));
-//  mPhi->setWhatsThis(tr("<html><head/><body><p>Use to adjust the histogram. Range between 0 and 1.</p></body></html>"));
-//  mBlockSizeX->setWhatsThis(tr("<html><head/><body><p><p>Block size X.</p></p></body></html>"));
-//  mBlockSizeY->setWhatsThis(tr("<html><head/><body><p><p>Block size Y.</p></p></body></html>"));
-//#endif // QT_NO_WHATSTHIS
-}
-
-void HmclaheWidgetImp::reset()
-{
-  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
-  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
-  const QSignalBlocker blockerL(mL);
-  const QSignalBlocker blockerPhi(mPhi);
-
-  mBlockSizeX->setValue(17);
-  mBlockSizeY->setValue(17);
-  mL->setValue(0.03);
-  mPhi->setValue(0.5);
-}
-
 void HmclaheWidgetImp::initUI()
 {
   this->setWindowTitle("HMCLAHE");
+  this->setObjectName("HmclaheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -185,22 +106,83 @@ void HmclaheWidgetImp::initUI()
 
 void HmclaheWidgetImp::initSignalAndSlots()
 {
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-  connect(mL,             SIGNAL(valueChanged(double)),     this, SIGNAL(lChange(double)));
-  connect(mPhi,           SIGNAL(valueChanged(double)),     this, SIGNAL(phiChange(double)));
+  connect(mBlockSizeX,  QOverload<int>::of(&QSpinBox::valueChanged),          this, &HmclaheWidgetImp::onBlockSizeXChange);
+  connect(mBlockSizeY,  QOverload<int>::of(&QSpinBox::valueChanged),          this, &HmclaheWidgetImp::onBlockSizeYChange);
+  connect(mL,           QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &HmclaheWidget::lChange);
+  connect(mPhi,         QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &HmclaheWidget::phiChange);
 }
 
-void HmclaheWidgetImp::changeEvent(QEvent *event)
+void HmclaheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
+  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
+  const QSignalBlocker blockerL(mL);
+  const QSignalBlocker blockerPhi(mPhi);
+
+  mBlockSizeX->setValue(17);
+  mBlockSizeY->setValue(17);
+  mL->setValue(0.03);
+  mPhi->setValue(0.5);
+}
+
+void HmclaheWidgetImp::update()
+{
+}
+
+void HmclaheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("HmclaheWidget", "HMCLAHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("HmclaheWidget", "Histogram Modified Contrast Limited Adaptive Histogram Equalization"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("HmclaheWidget", "Block Size", nullptr));
+  mLabelBlockSizeX->setText(QApplication::translate("HmclaheWidget", "Width:", nullptr));
+  mLabelBlockSizeY->setText(QApplication::translate("HmclaheWidget", "Height:", nullptr));
+  mLabelL->setText(QApplication::translate("HmclaheWidget", "L:", nullptr));
+  mLabelPhi->setText(QApplication::translate("HmclaheWidget", "K1:", nullptr));
+}
+
+void HmclaheWidgetImp::onBlockSizeXChange(int blockSizeX)
+{
+  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
+}
+
+void HmclaheWidgetImp::onBlockSizeYChange(int blockSizeY)
+{
+  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
+}
+
+QSize HmclaheWidgetImp::blockSize() const
+{
+  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
+}
+
+double HmclaheWidgetImp::l() const
+{
+  return mL->value();
+}
+
+double HmclaheWidgetImp::phi() const
+{
+  return mPhi->value();
+}
+
+void HmclaheWidgetImp::setBlockSize(const QSize &blockSize)
+{
+  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
+  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
+  mBlockSizeX->setValue(blockSize.width());
+  mBlockSizeY->setValue(blockSize.height());
+}
+
+void HmclaheWidgetImp::setL(double l)
+{
+  const QSignalBlocker blockerL(mL);
+  mL->setValue(static_cast<double>(l));
+}
+
+void HmclaheWidgetImp::setPhi(double phi)
+{
+  const QSignalBlocker blockerPhi(mPhi);
+  mPhi->setValue(static_cast<double>(phi));
 }
 
 } // namespace photomatch

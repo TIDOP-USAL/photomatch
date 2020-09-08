@@ -1,8 +1,10 @@
 # Minimum version required CMAKE
-cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
 # PhotoMatch
-project(photomatch CXX)
+project(photomatch 
+        VERSION 1.0.0 
+		LANGUAGES CXX)
 
 
 
@@ -33,17 +35,12 @@ if(MSVC)
 endif(MSVC)
 
 if (UNIX)
-    include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-    if(COMPILER_SUPPORTS_CXX11)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    else()
-        message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-    endif()
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 endif(UNIX)
+
+set (CMAKE_CXX_STANDARD 14)
 
 # Find extra modules
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE_PATH})
@@ -59,11 +56,10 @@ endif(BUILD_TEST)
 # Se permite elegir entre libreria estatica o dinamica
 OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 
-# Por defecto se establece el tipo de librería estática
+
 set (LIB_TYPE STATIC)
 
 if (BUILD_SHARED_LIBS)
-  # Se configura como libreria estática
   set (LIB_TYPE SHARED)
   
   if (MSVC)
@@ -79,7 +75,7 @@ endif (BUILD_SHARED_LIBS)
 ### No son opcionales
 #option(WITH_BOOST    "Include Boost"                   ON)
 #option(WITH_OPENCV   "Include OpenCV"                  ON)
-#option(WITH_PIXKIT   "Include PixKit"                  ON)
+option(WITH_PIXKIT   "Include PixKit"                  ON)
 if(MSVC)
 option (WITH_VLD     "Include Visual Leak Detector Support"    OFF)
 endif(MSVC)
@@ -154,32 +150,48 @@ else()
 endif(Boost_FOUND)
 
 
+
 #------------------------------------------------------------#
+
+if (WITH_CUDA)
+find_package(CUDA 10)
+include_directories(${CUDA_INCLUDE_DIRS})
+
+if (CUDA_FOUND)
+  message(STATUS "  Includes: ${CUDA_INCLUDE_DIRS}")
+  message(STATUS "  Libraries: ${CUDA_LIBRARIES}")
+  set(HAVE_CUDA YES)
+else()
+  set(HAVE_CUDA NO)
+endif()
+
+endif(WITH_CUDA)
 
 # OpenCV
 
-set(HAVE_CUDA NO)
-
 
 list(APPEND OPENCV_MODULES
-     core
-     highgui
-     photo
-     xfeatures2d
-     imgproc
-     imgcodecs
-     calib3d
-     features2d
-     flann
-     objdetect)
+    core
+    highgui
+    photo
+    xfeatures2d
+    imgproc
+    imgcodecs
+    calib3d
+    features2d
+    flann
+    objdetect)
 
 if(WITH_CUDA)
-   list(APPEND OPENCV_MODULES
+    list(APPEND OPENCV_MODULES
         cudafilters
         cudawarping
         cudev
         cudaarithm
         cudafeatures2d)
+    #set(HAVE_CUDA YES)
+else()
+    #set(HAVE_CUDA NO)
 endif(WITH_CUDA)
 
 find_package(OpenCV REQUIRED
@@ -191,25 +203,25 @@ else()
     set(HAVE_OPENCV YES)
     include_directories(${OpenCV_INCLUDE_DIRS})
     message(STATUS "Found OpenCV")
-    message(STATUS "  Includes:  ${OpenCV_INCLUDE_DIRS}")
+    message(STATUS "  Include:  ${OpenCV_INCLUDE_DIRS}")
     message(STATUS "  Libraries: ${OpenCV_LIBS}")
-    if(WITH_CUDA)
-        set(HAVE_CUDA YES)
-    endif(WITH_CUDA)
 endif()
-
 
 #------------------------------------------------------------#
 
 # PixKit
 
-find_package(PIXKIT REQUIRED)
-if(NOT PIXKIT_FOUND)
-    set(HAVE_PIXKIT NO)
-else()
-    set(HAVE_PIXKIT YES)
-    include_directories(${PIXKIT_INCLUDE_DIRS})
-endif()
+if(WITH_PIXKIT)
+
+    find_package(PIXKIT REQUIRED)
+    if(NOT PIXKIT_FOUND)
+        set(HAVE_PIXKIT NO)
+    else()
+        set(HAVE_PIXKIT YES)
+        include_directories(${PIXKIT_INCLUDE_DIRS})
+    endif()
+
+endif(WITH_PIXKIT)
 
 
 #------------------------------------------------------------#
@@ -234,6 +246,15 @@ endif(WITH_VLD)
 # LIB / EXE                                                  #
 ##############################################################
 
+set(TL_MESSAGE_HANDLER YES)
+message(STATUS "[TidopLib] Message manager enabled")
+
+configure_file("${PROJECT_SOURCE_DIR}/cmake/config_tl.h.in" "${PROJECT_BINARY_DIR}/config_tl.h")
+include_directories("${PROJECT_BINARY_DIR}")
+
+add_subdirectory(third_party)
+
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
@@ -244,12 +265,11 @@ set(CMAKE_AUTORCC ON)
 
 # Configuration header file
 configure_file("${PROJECT_SOURCE_DIR}/cmake/config_photomatch.h.in" "${PROJECT_BINARY_DIR}/config_photomatch.h")
-include_directories("${PROJECT_BINARY_DIR}")
+
 
 # resources
 set(PHOTOMATCH_RESOURCES ${CMAKE_CURRENT_SOURCE_DIR}/res/res.qrc)
 
-add_subdirectory(third_party)
 add_subdirectory(src)
 
 

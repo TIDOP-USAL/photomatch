@@ -56,6 +56,88 @@ WallisWidgetImp::~WallisWidgetImp()
 
 }
 
+void WallisWidgetImp::initUI()
+{
+  this->setWindowTitle("Wallis Filter");
+  this->setObjectName("WallisWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelContrast, 0, 0);
+  mContrast->setRange(0, 1);
+  mContrast->setSingleStep(0.1);
+  propertiesLayout->addWidget(mContrast, 0, 1);
+
+  propertiesLayout->addWidget(mLabelBrightness, 1, 0);
+  mBrightness->setRange(0, 1);
+  mBrightness->setSingleStep(0.1);
+  propertiesLayout->addWidget(mBrightness, 1, 1);
+
+  propertiesLayout->addWidget(mLabelImposedAverage, 2, 0);
+  mImposedAverage->setRange(1, 1000);
+  mImposedAverage->setSingleStep(1);
+  propertiesLayout->addWidget(mImposedAverage, 2,1);
+
+  propertiesLayout->addWidget(mLabelImposedLocalStdDev, 3, 0);
+  mImposedLocalStdDev->setRange(1, 10000);
+  mImposedLocalStdDev->setSingleStep(1);
+  propertiesLayout->addWidget(mImposedLocalStdDev, 3, 1);
+
+  propertiesLayout->addWidget(mLabelKernelSize, 4, 0);
+  mKernelSize->setRange(1, 10000);
+  mKernelSize->setSingleStep(1);
+  propertiesLayout->addWidget(mKernelSize, 4, 1);
+
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
+}
+
+void WallisWidgetImp::initSignalAndSlots()
+{
+  connect(mContrast,            QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &WallisWidget::contrastChange);
+  connect(mBrightness,          QOverload<double>::of(&QDoubleSpinBox::valueChanged),  this, &WallisWidget::brightnessChange);
+  connect(mImposedAverage,      QOverload<int>::of(&QSpinBox::valueChanged),           this, &WallisWidget::imposedAverageChange);
+  connect(mImposedLocalStdDev,  QOverload<int>::of(&QSpinBox::valueChanged),           this, &WallisWidget::imposedLocalStdDevChange);
+  connect(mKernelSize,          QOverload<int>::of(&QSpinBox::valueChanged),           this, &WallisWidget::kernelSizeChange);
+}
+
+void WallisWidgetImp::reset()
+{
+  const QSignalBlocker blockerContrast(mContrast);
+  const QSignalBlocker blockerBrightness(mBrightness);
+  const QSignalBlocker blockerImposedAverage(mImposedAverage);
+  const QSignalBlocker blockerImposedLocalStdDev(mImposedLocalStdDev);
+  const QSignalBlocker blockerKernelSize(mKernelSize);
+
+  mContrast->setValue(1.0);
+  mBrightness->setValue(0.2);
+  mImposedAverage->setValue(41);
+  mImposedLocalStdDev->setValue(127);
+  mKernelSize->setValue(50);
+}
+
+void WallisWidgetImp::update()
+{
+}
+
+void WallisWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("WallisWidget", "Wallis Parameters"));
+  mLabelContrast->setText(QApplication::translate("WallisWidget", "Contrast:"));
+  mLabelBrightness->setText(QApplication::translate("WallisWidget", "Brightness:"));
+  mLabelImposedAverage->setText(QApplication::translate("WallisWidget", "Imposed Average:"));
+  mLabelImposedLocalStdDev->setText(QApplication::translate("WallisWidget", "Imposed Local StdDev:"));
+  mLabelKernelSize->setText(QApplication::translate("WallisWidget", "Kernel Size:"));
+}
+
 double WallisWidgetImp::contrast() const
 {
   return mContrast->value();
@@ -111,98 +193,6 @@ void WallisWidgetImp::setKernelSize(int kernelSize)
   mKernelSize->setValue(kernelSize);
 }
 
-void WallisWidgetImp::update()
-{
-}
-
-void WallisWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("WallisWidgetImp", "Wallis Parameters"));
-  mLabelContrast->setText(QApplication::translate("WallisWidgetImp", "Contrast:"));
-  mLabelBrightness->setText(QApplication::translate("WallisWidgetImp", "Brightness:"));
-  mLabelImposedAverage->setText(QApplication::translate("WallisWidgetImp", "Imposed Average:"));
-  mLabelImposedLocalStdDev->setText(QApplication::translate("WallisWidgetImp", "Imposed Local StdDev:"));
-  mLabelKernelSize->setText(QApplication::translate("WallisWidgetImp", "Kernel Size:"));
-}
-
-void WallisWidgetImp::reset()
-{
-  const QSignalBlocker blockerContrast(mContrast);
-  const QSignalBlocker blockerBrightness(mBrightness);
-  const QSignalBlocker blockerImposedAverage(mImposedAverage);
-  const QSignalBlocker blockerImposedLocalStdDev(mImposedLocalStdDev);
-  const QSignalBlocker blockerKernelSize(mKernelSize);
-
-  mContrast->setValue(1.0);
-  mBrightness->setValue(0.2);
-  mImposedAverage->setValue(41);
-  mImposedLocalStdDev->setValue(127);
-  mKernelSize->setValue(50);
-}
-
-void WallisWidgetImp::initUI()
-{
-  this->setWindowTitle("Wallis Filter");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelContrast, 0, 0);
-  mContrast->setRange(0, 1);
-  mContrast->setSingleStep(0.1);
-  propertiesLayout->addWidget(mContrast, 0, 1);
-
-  propertiesLayout->addWidget(mLabelBrightness, 1, 0);
-  mBrightness->setRange(0, 1);
-  mBrightness->setSingleStep(0.1);
-  propertiesLayout->addWidget(mBrightness, 1, 1);
-
-  propertiesLayout->addWidget(mLabelImposedAverage, 2, 0);
-  mImposedAverage->setRange(1, 1000);
-  mImposedAverage->setSingleStep(1);
-  propertiesLayout->addWidget(mImposedAverage, 2,1);
-
-  propertiesLayout->addWidget(mLabelImposedLocalStdDev, 3, 0);
-  mImposedLocalStdDev->setRange(1, 10000);
-  mImposedLocalStdDev->setSingleStep(1);
-  propertiesLayout->addWidget(mImposedLocalStdDev, 3, 1);
-
-  propertiesLayout->addWidget(mLabelKernelSize, 4, 0);
-  mKernelSize->setRange(1, 10000);
-  mKernelSize->setSingleStep(1);
-  propertiesLayout->addWidget(mKernelSize, 4, 1);
-
-  this->retranslate();
-  this->reset(); /// set default values
-  this->update();
-}
-
-void WallisWidgetImp::initSignalAndSlots()
-{
-  connect(mContrast,            SIGNAL(valueChanged(double)),     this, SIGNAL(contrastChange(double)));
-  connect(mBrightness,          SIGNAL(valueChanged(double)),     this, SIGNAL(brightnessChange(double)));
-  connect(mImposedAverage,      SIGNAL(valueChanged(int)),        this, SIGNAL(imposedAverageChange(int)));
-  connect(mImposedLocalStdDev,  SIGNAL(valueChanged(int)),        this, SIGNAL(imposedLocalStdDevChange(int)));
-  connect(mKernelSize,          SIGNAL(valueChanged(int)),        this, SIGNAL(kernelSizeChange(int)));
-}
-
-void WallisWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
-}
 
 } // namespace photomatch
 

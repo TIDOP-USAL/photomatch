@@ -29,9 +29,9 @@
 
 #include "photomatch/core/features/features.h"
 
-#ifdef HAVE_CUDA
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
 #include <opencv2/cudafeatures2d.hpp>
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #include <QString>
 
@@ -48,7 +48,7 @@ public:
   OrbProperties(const OrbProperties &orbProperties);
   ~OrbProperties() override = default;
 
-// IOrb interface
+// Orb interface
 
 public:
 
@@ -127,19 +127,17 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-// IOrb interface
+// Orb interface
 
 public:
 
@@ -168,7 +166,7 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
 
 class PHOTOMATCH_EXPORT OrbCudaDetectorDescriptor
   : public OrbProperties,
@@ -193,11 +191,11 @@ public:
 
 private:
 
-#if CV_VERSION_MAJOR >= 4
-  cv::ORB::ScoreType convertScoreType(const QString &scoreType);
-#else
+//#if CV_VERSION_MAJOR >= 4
+//  cv::ORB::ScoreType convertScoreType(const QString &scoreType);
+//#else
   int convertScoreType(const QString &scoreType);
-#endif
+//#endif
 
   void update();
 
@@ -205,19 +203,17 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-// IOrb interface
+// Orb interface
 
 public:
 
@@ -242,7 +238,7 @@ protected:
   cv::Ptr<cv::cuda::ORB> mOrb;
 };
 
-#endif // HAVE_CUDA
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 } // namespace photomatch
 

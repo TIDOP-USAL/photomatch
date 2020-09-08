@@ -14,6 +14,8 @@
 
 #include "tidop/core/exception.h"
 
+#include <boost/filesystem.hpp>
+
 //#if defined WIN32
 //#include <atlstr.h>
 //#endif
@@ -26,6 +28,8 @@
 //https://stackoverflow.com/questions/37227300/why-doesnt-c-use-stdnested-exception-to-allow-throwing-from-destructor/37227893#37227893
 //https://github.com/GPMueller/mwe-cpp-exception
 //https://www.boost.org/doc/libs/1_65_1/doc/html/stacktrace/getting_started.html#stacktrace.getting_started.how_to_print_current_call_stack
+
+namespace fs = boost::filesystem;
 
 namespace tl
 {
@@ -49,7 +53,7 @@ Exception::Exception(const char *error, const char *file, int line, const char *
 }
 #endif
 
-Exception::Exception(const std::string & error)
+Exception::Exception(const std::string &error)
   : mError(error),
     mFile(""),
     mLine(-1),
@@ -59,10 +63,11 @@ Exception::Exception(const std::string & error)
 
 Exception::Exception(const std::string &error, const std::string &file, int line, const std::string &function )
   : mError(error), 
-    mFile(file), 
+    //mFile(file),
     mLine(line), 
     mFunction(function)
 {
+  mFile = fs::path(file).filename().string();
   messagef();
 }
 

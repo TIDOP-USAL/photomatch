@@ -29,6 +29,10 @@
 
 #include "photomatch/core/features/features.h"
 
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
+#include <opencv2/cudafeatures2d.hpp>
+#endif // HAVE_OPENCV_CUDAFEATURES2D
+
 #include <QString>
 
 namespace photomatch
@@ -45,7 +49,7 @@ public:
   FastProperties(const FastProperties &fastProperties);
   ~FastProperties() override = default;
 
-// IFast interface
+// Fast interface
 
 public:
 
@@ -74,7 +78,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class FastDetector
+class PHOTOMATCH_EXPORT FastDetector
   : public FastProperties,
     public KeypointDetector
 {
@@ -83,7 +87,9 @@ public:
 
   FastDetector();
   FastDetector(const FastDetector &fastDetector);
-  FastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType);
+  FastDetector(int threshold,
+               bool nonmaxSuppression,
+               const QString &detectorType);
   ~FastDetector() override = default;
 
 private:
@@ -98,11 +104,10 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
-// IFast interface
+// Fast interface
 
 public:
 
@@ -122,6 +127,62 @@ protected:
 
 };
 
+
+/*----------------------------------------------------------------*/
+
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
+
+class PHOTOMATCH_EXPORT FastDetectorCuda
+  : public FastProperties,
+    public KeypointDetector
+{
+
+public:
+
+  FastDetectorCuda();
+  FastDetectorCuda(const FastDetector &fastDetector);
+  FastDetectorCuda(int threshold,
+                   bool nonmaxSuppression,
+                   const QString &detectorType);
+  ~FastDetectorCuda() override = default;
+
+private:
+
+//#if CV_VERSION_MAJOR >= 4
+//  cv::FastFeatureDetector::DetectorType convertDetectorType(const QString &detectorType);
+//#else
+  int convertDetectorType(const QString &detectorType);
+//#endif
+
+  void update();
+
+// KeypointDetector interface
+
+public:
+
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
+// Fast interface
+
+public:
+
+  void setThreshold(int threshold) override;
+  void setNonmaxSuppression(bool nonmaxSuppression) override;
+  void setDetectorType(const QString &detectorType) override;
+
+// Feature interface
+
+public:
+
+  void reset() override;
+
+protected:
+
+  cv::Ptr<cv::cuda::FastFeatureDetector> mFast;
+
+};
+
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 } // namespace photomatch
 

@@ -73,7 +73,7 @@ public:
 
 public:
 
-  Feature(Type type) : mFeatType(type) {}
+  Feature() {}
   virtual ~Feature() = default;
 
   /*!
@@ -81,7 +81,7 @@ public:
    */
   virtual void reset() = 0;
 
-  Type type() const { return mFeatType.flags(); }
+  virtual Type type() const = 0;
   virtual QString name() const = 0;
 
 protected:
@@ -93,10 +93,34 @@ ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
 
 
 
+class PHOTOMATCH_EXPORT FeatureBase
+  : public Feature
+{
+
+public:
+
+  FeatureBase(Type type) : mFeatType(type) {}
+  ~FeatureBase() override = default;
+
+  Type type() const override 
+  { 
+    return mFeatType.flags(); 
+  }
+
+protected:
+
+  tl::EnumFlags<Type> mFeatType;
+
+};
+
+
+
 /*----------------------------------------------------------------*/
 
 
-
+/*!
+ * \brief Keypoint Detector class
+ */
 class PHOTOMATCH_EXPORT KeypointDetector
 {
 
@@ -108,14 +132,11 @@ public:
   /*!
    * \brief Detects keypoints in an image
    * \param[in] img Image
-   * \param[out] keyPoints The detected keypoints
    * \param[in] mask Optional mask
-   * \return true if error
+   * \return key points detected
    */
-  virtual bool detect(const cv::Mat &img,
-                      std::vector<cv::KeyPoint> &keyPoints,
-                      cv::InputArray &mask = cv::noArray()) = 0;
-
+  virtual std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                           const cv::Mat &mask = cv::Mat()) = 0;
 };
 
 
@@ -123,7 +144,9 @@ public:
 /*----------------------------------------------------------------*/
 
 
-
+/*!
+ * \brief Descriptor Extractor class
+ */
 class PHOTOMATCH_EXPORT DescriptorExtractor
 {
 
@@ -136,13 +159,10 @@ public:
    * \brief Extract descriptors
    * \param[in] img Image
    * \param[in] keyPoints KeyPoints
-   * \param[out] descriptors Computed descriptors
-   * \return true if error
+   * \return Computed descriptors
    */
-  virtual bool extract(const cv::Mat &img,
-                       std::vector<cv::KeyPoint> &keyPoints,
-                       cv::Mat &descriptors) = 0;
-
+  virtual cv::Mat extract(const cv::Mat &img,
+                          std::vector<cv::KeyPoint> &keyPoints) = 0;
 };
 
 
@@ -162,12 +182,12 @@ public:
  * https://mediatum.ub.tum.de/doc/1287456/1287456.pdf
  */
 class PHOTOMATCH_EXPORT Agast
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Agast() : Feature(Feature::Type::agast) {}
+  Agast() : FeatureBase(Feature::Type::agast) {}
   ~Agast() override = default;
 
   /*!
@@ -234,15 +254,15 @@ public:
 
 
 /*!
- * \brief The IAkaze class
+ * \brief The Akaze class
  */
 class PHOTOMATCH_EXPORT Akaze
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Akaze() : Feature(Feature::Type::akaze) {}
+  Akaze() : FeatureBase(Feature::Type::akaze) {}
   ~Akaze() override = default;
 
   /*!
@@ -343,12 +363,12 @@ public:
  * \brief The Boost class
  */
 class PHOTOMATCH_EXPORT Boost
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Boost() : Feature(Feature::Type::boost){}
+  Boost() : FeatureBase(Feature::Type::boost){}
   ~Boost() override = default;
 
   /*!
@@ -407,12 +427,12 @@ public:
  * https://www.cs.ubc.ca/~lowe/525/papers/calonder_eccv10.pdf
  */
 class PHOTOMATCH_EXPORT Brief
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Brief() : Feature(Feature::Type::brief) {}
+  Brief() : FeatureBase(Feature::Type::brief) {}
   ~Brief() override = default;
 
   /*!
@@ -457,12 +477,12 @@ public:
  * http://margaritachli.com/papers/ICCV2011paper.pdf
  */
 class PHOTOMATCH_EXPORT Brisk
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Brisk() : Feature(Feature::Type::brisk) {}
+  Brisk() : FeatureBase(Feature::Type::brisk) {}
   ~Brisk() override = default;
 
   /*!
@@ -517,12 +537,12 @@ public:
  * Intelligence, 32(5):815–830, May 2010.
  */
 class PHOTOMATCH_EXPORT Daisy
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Daisy() : Feature(Feature::Type::daisy) {}
+  Daisy() : FeatureBase(Feature::Type::daisy) {}
   ~Daisy() override = default;
 
   /*!
@@ -636,12 +656,12 @@ public:
  * Lecture Notes in Computer Science, vol 3951. Springer, Berlin, Heidelberg
  */
 class PHOTOMATCH_EXPORT Fast
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Fast() : Feature(Feature::Type::fast) {}
+  Fast() : FeatureBase(Feature::Type::fast) {}
   ~Fast() override = default;
 
   /*!
@@ -703,12 +723,12 @@ public:
  * Recognition (CVPR), 2012 IEEE Conference on, pages 510–517. Ieee, 2012.
  */
 class PHOTOMATCH_EXPORT Freak
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Freak() : Feature(Feature::Type::freak) {}
+  Freak() : FeatureBase(Feature::Type::freak) {}
   ~Freak() override = default;
 
   /*!
@@ -766,14 +786,16 @@ public:
 /*----------------------------------------------------------------*/
 
 
-
+/*!
+ * \brief The GFTT class
+ */
 class PHOTOMATCH_EXPORT Gftt
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Gftt() : Feature(Feature::Type::gftt) {}
+  Gftt() : FeatureBase(Feature::Type::gftt) {}
   ~Gftt() override = default;
 
   virtual int maxFeatures() const = 0;
@@ -803,12 +825,12 @@ public:
  * Navneet Dalal and Bill Triggs @cite Dalal2005
  */
 class PHOTOMATCH_EXPORT Hog
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Hog() : Feature(Feature::Type::hog) {}
+  Hog() : FeatureBase(Feature::Type::hog) {}
   ~Hog() override = default;
 
   virtual QSize winSize() const = 0;
@@ -848,7 +870,7 @@ public:
 
 
 /*!
- * \brief The IKaze class
+ * \brief Kaze Interface
  *
  * Multiscale 2D feature detection and description algorithm in nonlinear scale spaces.
  *
@@ -860,12 +882,12 @@ public:
  * https://www.doc.ic.ac.uk/~ajd/Publications/alcantarilla_etal_eccv2012.pdf
  */
 class PHOTOMATCH_EXPORT Kaze
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Kaze() : Feature(Feature::Type::kaze) {}
+  Kaze() : FeatureBase(Feature::Type::kaze) {}
   ~Kaze() override = default;
 
   /*!
@@ -949,12 +971,12 @@ public:
 
 
 class PHOTOMATCH_EXPORT Latch
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Latch() : Feature(Feature::Type::latch) {}
+  Latch() : FeatureBase(Feature::Type::latch) {}
   ~Latch() override = default;
 
   virtual QString bytes() const = 0;
@@ -974,16 +996,16 @@ public:
 
 
 /*!
- * \brief Interface for LUCID class
+ * \brief LUCID Interface
  * Eric Christiansen David Kriegman Ziegler, Andrew and Serge J. Belongie.
  * Locally uniform comparison image descriptor
  */
 class PHOTOMATCH_EXPORT Lucid
-  : public Feature
+  : public FeatureBase
 {
 public:
 
-  Lucid() : Feature(Feature::Type::lucid) {}
+  Lucid() : FeatureBase(Feature::Type::lucid) {}
   ~Lucid() override = default;
 
   /*!
@@ -1021,12 +1043,12 @@ public:
 
 
 class PHOTOMATCH_EXPORT Lss
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Lss() : Feature(Feature::Type::lss) {}
+  Lss() : FeatureBase(Feature::Type::lss) {}
   ~Lss() override = default;
 
 };
@@ -1038,12 +1060,12 @@ public:
 
 
 class PHOTOMATCH_EXPORT Msd
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Msd() : Feature(Feature::Type::msd) {}
+  Msd() : FeatureBase(Feature::Type::msd) {}
   ~Msd() override = default;
 
   virtual double thresholdSaliency() const = 0;//
@@ -1079,12 +1101,12 @@ public:
 
 
 class PHOTOMATCH_EXPORT Mser
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Mser() : Feature(Feature::Type::mser) {}
+  Mser() : FeatureBase(Feature::Type::mser) {}
   ~Mser() override = default;
 
   virtual int delta() const = 0;
@@ -1119,12 +1141,12 @@ public:
  * \brief Interface ORB
  */
 class PHOTOMATCH_EXPORT Orb
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Orb() : Feature(Feature::Type::orb)  {}
+  Orb() : FeatureBase(Feature::Type::orb)  {}
   ~Orb() override = default;
 
   /*!
@@ -1254,10 +1276,10 @@ public:
 
 
 class PHOTOMATCH_EXPORT Sift
-  : public Feature
+  : public FeatureBase
 {
 public:
-  Sift() : Feature(Feature::Type::sift)  {}
+  Sift() : FeatureBase(Feature::Type::sift)  {}
   ~Sift() override = default;
 
   /*!
@@ -1337,12 +1359,12 @@ public:
 
 
 class PHOTOMATCH_EXPORT Star
-  : public Feature
+  : public FeatureBase
 {
 
 public:
 
-  Star() : Feature(Feature::Type::star) {}
+  Star() : FeatureBase(Feature::Type::star) {}
   ~Star() override = default;
 
   virtual int maxSize() const  = 0;
@@ -1366,11 +1388,11 @@ public:
 
 
 class PHOTOMATCH_EXPORT Surf
-  : public Feature
+  : public FeatureBase
 {
 public:
 
-  Surf() : Feature(Feature::Type::surf) {}
+  Surf() : FeatureBase(Feature::Type::surf) {}
   ~Surf() override = default;
 
   /*!
@@ -1444,17 +1466,17 @@ public:
 
 
 /*!
- * \brief The IVgg class
+ * \brief Vgg interface
  * K. Simonyan, A. Vedaldi, and A. Zisserman. Learning local feature
  * descriptors using convex optimisation. IEEE Transactions on Pattern
  * Analysis and Machine Intelligence, 2014.
  */
 class PHOTOMATCH_EXPORT Vgg
-  : public Feature
+  : public FeatureBase
 {
 public:
 
-  Vgg() : Feature(Feature::Type::vgg) {}
+  Vgg() : FeatureBase(Feature::Type::vgg) {}
   ~Vgg() override = default;
 
   /*!

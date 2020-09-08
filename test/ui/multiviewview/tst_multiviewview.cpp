@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/MultiViewView.h"
+#include "photomatch/ui/multiview/MultiViewView.h"
 
 //#include <QPushButton>
 //#include <QDialogButtonBox>

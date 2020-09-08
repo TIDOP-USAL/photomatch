@@ -89,13 +89,13 @@ void CircleGraphicItem::setSelectedPen(const QPen &pen)
   mSelectedPen = pen;
 }
 
-QRectF photomatch::CircleGraphicItem::boundingRect() const
+QRectF CircleGraphicItem::boundingRect() const
 {
   double r = mSize / 2.;
   return QRectF(mCenter.x() - r, mCenter.y() - r, mSize, mSize);
 }
 
-QPainterPath photomatch::CircleGraphicItem::shape() const
+QPainterPath CircleGraphicItem::shape() const
 {
   QPainterPath path;
   double r = mSize / 2.;
@@ -103,7 +103,7 @@ QPainterPath photomatch::CircleGraphicItem::shape() const
   return path;
 }
 
-void photomatch::CircleGraphicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void CircleGraphicItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
   if (this->isSelected()) {
     painter->setPen(mSelectedPen);

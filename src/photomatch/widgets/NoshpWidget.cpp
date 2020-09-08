@@ -52,56 +52,10 @@ NoshpWidgetImp::~NoshpWidgetImp()
 
 }
 
-void NoshpWidgetImp::onBlockSizeXChange(int blockSizeX)
-{
-  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
-}
-
-void NoshpWidgetImp::onBlockSizeYChange(int blockSizeY)
-{
-  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
-}
-
-QSize NoshpWidgetImp::blockSize() const
-{
-  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
-}
-
-void NoshpWidgetImp::setBlockSize(const QSize &blockSize)
-{
-  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
-  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
-  mBlockSizeX->setValue(blockSize.width());
-  mBlockSizeY->setValue(blockSize.height());
-
-}
-
-void NoshpWidgetImp::update()
-{
-}
-
-void NoshpWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("NoshpWidgetImp", "NOSHP Parameters"));
-  mLabelDescription->setText(QApplication::translate("NoshpWidgetImp", "Non-Overlapped Sub-blocks and local Histogram Projection"));
-  mGroupBoxBlocksize->setTitle(QApplication::translate("NoshpWidgetImp", "Block Size"));
-  mLabelBlockSizeX->setText(QApplication::translate("NoshpWidgetImp", "Width:"));
-  mLabelBlockSizeY->setText(QApplication::translate("NoshpWidgetImp", "Height:"));
-
-}
-
-void NoshpWidgetImp::reset()
-{
-  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
-  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
-
-  mBlockSizeX->setValue(127);
-  mBlockSizeY->setValue(127);
-}
-
 void NoshpWidgetImp::initUI()
 {
   this->setWindowTitle("NOSHP");
+  this->setObjectName("NoshpWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -136,20 +90,53 @@ void NoshpWidgetImp::initUI()
 
 void NoshpWidgetImp::initSignalAndSlots()
 {
-  connect(mBlockSizeX,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,    SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
+  connect(mBlockSizeX, QOverload<int>::of(&QSpinBox::valueChanged),  this, &NoshpWidgetImp::onBlockSizeXChange);
+  connect(mBlockSizeY, QOverload<int>::of(&QSpinBox::valueChanged),  this, &NoshpWidgetImp::onBlockSizeYChange);
 }
 
-void NoshpWidgetImp::changeEvent(QEvent *event)
+void NoshpWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
+  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
+
+  mBlockSizeX->setValue(127);
+  mBlockSizeY->setValue(127);
+}
+void NoshpWidgetImp::update()
+{
+}
+
+void NoshpWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("NoshpWidget", "NOSHP Parameters"));
+  mLabelDescription->setText(QApplication::translate("NoshpWidget", "Non-Overlapped Sub-blocks and local Histogram Projection"));
+  mGroupBoxBlocksize->setTitle(QApplication::translate("NoshpWidget", "Block Size"));
+  mLabelBlockSizeX->setText(QApplication::translate("NoshpWidget", "Width:"));
+  mLabelBlockSizeY->setText(QApplication::translate("NoshpWidget", "Height:"));
+}
+
+void NoshpWidgetImp::onBlockSizeXChange(int blockSizeX)
+{
+  emit blockSizeChange(QSize(blockSizeX, mBlockSizeY->value()));
+}
+
+void NoshpWidgetImp::onBlockSizeYChange(int blockSizeY)
+{
+  emit blockSizeChange(QSize(mBlockSizeX->value(), blockSizeY));
+}
+
+QSize NoshpWidgetImp::blockSize() const
+{
+  return QSize(mBlockSizeX->value(), mBlockSizeY->value());
+}
+
+void NoshpWidgetImp::setBlockSize(const QSize &blockSize)
+{
+  const QSignalBlocker blockerTilesGridX(mBlockSizeX);
+  const QSignalBlocker blockerTilesGridY(mBlockSizeY);
+  mBlockSizeX->setValue(blockSize.width());
+  mBlockSizeY->setValue(blockSize.height());
+
 }
 
 } // namespace photomatch

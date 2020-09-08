@@ -41,7 +41,7 @@ class TabHandler;
 class StartPageWidget;
 
 class MainWindowPresenter
-  : public IPresenter
+  : public PhotoMatchPresenter
 {
   Q_OBJECT
 
@@ -121,6 +121,7 @@ protected slots:
   void activeImage(const QString &image);
   void activeImages(const QStringList &images);
   void deleteImages(const QStringList &images);
+  void deleteImage(const QString &image);
 
   void loadSession(const QString &session);
   void selectSession(const QString &session);
@@ -130,7 +131,9 @@ protected slots:
   void selectDetector(const QString &session);
   void selectDescriptor(const QString &session);
   void selectImageFeatures(const QString &imageFeatures);
-  void openImageMatches(const QString &sessionName, const QString &imgName1, const QString &imgName2);
+  void openImageMatches(const QString &sessionName,
+                        const QString &imgName1,
+                        const QString &imgName2);
 
   void updatePreprocess();
   void updateFeatures();
@@ -146,7 +149,7 @@ protected slots:
 
   void onLoadImages();
 
-// IPresenter interface
+// PhotoMatchModel interface
 
 public slots:
 
@@ -157,6 +160,10 @@ public slots:
 private:
 
   void init() override;
+  void initSignalAndSlots() override;
+
+private:
+
   void initStartPage();
 
   bool loadPreprocess(const QString &session);

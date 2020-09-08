@@ -54,13 +54,15 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
 
 public slots:
 
   virtual void setBlockSize(const QSize &blockSize) = 0;
 
 };
+
+
 
 
 class PHOTOMATCH_EXPORT FaheWidgetImp
@@ -78,7 +80,7 @@ protected slots:
   void onBlockSizeXChange(int blockSizeX);
   void onBlockSizeYChange(int blockSizeY);
 
-// ICLAHEWidget interface
+// FaheWidget interface
 
 public:
 
@@ -90,25 +92,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

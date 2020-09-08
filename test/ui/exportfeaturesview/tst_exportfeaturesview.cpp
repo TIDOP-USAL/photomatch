@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/ExportFeaturesView.h"
+#include "photomatch/ui/exportfeat/ExportFeaturesView.h"
 
 #include <QPushButton>
 #include <QDialogButtonBox>

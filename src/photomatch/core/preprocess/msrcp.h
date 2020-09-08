@@ -84,14 +84,16 @@ class PHOTOMATCH_EXPORT MsrcpPreprocess
 public:
 
   MsrcpPreprocess();
-  MsrcpPreprocess(double smallScale, double midScale, double largeScale);
+  MsrcpPreprocess(double smallScale, 
+                  double midScale, 
+                  double largeScale);
   ~MsrcpPreprocess() override;
 
 // ImageProcess interface
 
 public:
 
-  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
+  cv::Mat process(const cv::Mat &imgIn) override;
 
 };
 

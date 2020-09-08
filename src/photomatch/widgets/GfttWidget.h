@@ -72,6 +72,9 @@ public slots:
   virtual void setK(double k) = 0;
 };
 
+
+
+
 class PHOTOMATCH_EXPORT GfttWidgetImp
   : public GfttWidget
 {
@@ -82,7 +85,7 @@ public:
   GfttWidgetImp(QWidget *parent = nullptr);
   ~GfttWidgetImp() override;
 
-// IGfttWidget interface
+// GfttWidget interface
 
 public:
 
@@ -104,25 +107,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

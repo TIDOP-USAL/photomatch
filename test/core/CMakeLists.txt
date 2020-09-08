@@ -25,6 +25,11 @@ MACRO(DEFINE_TEST_CORE name srcs)
                           ${Boost_DATE_TIME_LIBRARY}
                           ${Boost_CHRONO_LIBRARY})
 
+    if (HAVE_CUDA)
+    target_link_libraries(${the_target} PRIVATE
+                          ${CUDA_LIBRARIES})
+    endif()
+
     set_property(TARGET ${the_target} PROPERTY FOLDER "test/core")
 
     set_target_properties(${the_target} PROPERTIES

@@ -57,6 +57,84 @@ VggWidgetImp::~VggWidgetImp()
 
 }
 
+void VggWidgetImp::initUI()
+{
+  this->setWindowTitle("VGG");
+  this->setObjectName("VggWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelDescriptorType, 0, 0);
+  mDescriptorType->addItem("VGG_120");
+  mDescriptorType->addItem("VGG_80");
+  mDescriptorType->addItem("VGG_64");
+  mDescriptorType->addItem("VGG_48");
+  propertiesLayout->addWidget(mDescriptorType, 0, 1);
+
+  //propertiesLayout->addWidget(mLabelScaleFactor, 1, 0);
+  propertiesLayout->addWidget(mScaleFactor, 1, 1);
+  mScaleFactor->setVisible(false); ///Se desactiva y se modifica internamente según el detector usado
+
+  propertiesLayout->addWidget(mLabelSigma, 2, 0);
+  propertiesLayout->addWidget(mSigma, 2, 1);
+
+
+  propertiesLayout->addWidget(mUseNormalizeDescriptor, 3, 0);
+
+  propertiesLayout->addWidget(mUseNormalizeImage, 4, 0);
+
+  propertiesLayout->addWidget(mUseScaleOrientation, 5, 0);
+
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
+}
+
+void VggWidgetImp::initSignalAndSlots()
+{
+  connect(mDescriptorType,          &QComboBox::currentTextChanged,                       this, &VggWidget::descriptorTypeChange);
+  connect(mScaleFactor,             QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &VggWidget::scaleFactorChange);
+  connect(mSigma,                   QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &VggWidget::sigmaChange);
+  connect(mUseNormalizeDescriptor,  &QAbstractButton::clicked,                           this, &VggWidget::useNormalizeDescriptorChange);
+  connect(mUseNormalizeImage,       &QAbstractButton::clicked,                           this, &VggWidget::useNormalizeImageChange);
+  connect(mUseScaleOrientation,     &QAbstractButton::clicked,                           this, &VggWidget::useScaleOrientationChange);
+}
+
+void VggWidgetImp::reset()
+{
+  const QSignalBlocker blockerBytes(mDescriptorType);
+  const QSignalBlocker blockerScaleFactor(mScaleFactor);
+  const QSignalBlocker blockerSigma(mSigma);
+
+  mDescriptorType->setCurrentText("VGG_120");
+  mScaleFactor->setValue(6.25);
+  mSigma->setValue(1.4);
+  mUseNormalizeDescriptor->setChecked(false);
+  mUseNormalizeImage->setChecked(true);
+  mUseScaleOrientation->setChecked(true);
+}
+void VggWidgetImp::update()
+{
+}
+
+void VggWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("VggWidget", "VGG Parameters"));
+  mLabelDescriptorType->setText(QApplication::translate("VggWidget", "Descriptor Type:"));
+  //mLabelScaleFactor->setText(QApplication::translate("VggWidget", "Scale Factor:"));
+  mLabelSigma->setText(QApplication::translate("VggWidget", "Sigma:"));
+  mUseNormalizeDescriptor->setText(QApplication::translate("VggWidget", "Use Normalize Descriptor"));
+  mUseNormalizeImage->setText(QApplication::translate("VggWidget", "Use Normalize Image"));
+  mUseScaleOrientation->setText(QApplication::translate("VggWidget", "Use Scale Orientation"));
+}
+
 QString VggWidgetImp::descriptorType() const
 {
   return mDescriptorType->currentText();
@@ -118,96 +196,6 @@ void VggWidgetImp::setUseNormalizeImage(bool active)
 void VggWidgetImp::setUseScaleOrientation(bool active)
 {
   mUseScaleOrientation->setChecked(active);
-}
-
-void VggWidgetImp::update()
-{
-}
-
-void VggWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("VggWidgetImp", "VGG Parameters"));
-  mLabelDescriptorType->setText(QApplication::translate("VggWidgetImp", "Descriptor Type:"));
-  //mLabelScaleFactor->setText(QApplication::translate("VggWidgetImp", "Scale Factor:"));
-  mLabelSigma->setText(QApplication::translate("VggWidgetImp", "Sigma:"));
-  mUseNormalizeDescriptor->setText(QApplication::translate("VggWidgetImp", "Use Normalize Descriptor"));
-  mUseNormalizeImage->setText(QApplication::translate("VggWidgetImp", "Use Normalize Image"));
-  mUseScaleOrientation->setText(QApplication::translate("VggWidgetImp", "Use Scale Orientation"));
-}
-
-void VggWidgetImp::reset()
-{
-  const QSignalBlocker blockerBytes(mDescriptorType);
-  const QSignalBlocker blockerScaleFactor(mScaleFactor);
-  const QSignalBlocker blockerSigma(mSigma);
-
-  mDescriptorType->setCurrentText("VGG_120");
-  mScaleFactor->setValue(6.25);
-  mSigma->setValue(1.4);
-  mUseNormalizeDescriptor->setChecked(false);
-  mUseNormalizeImage->setChecked(true);
-  mUseScaleOrientation->setChecked(true);
-}
-
-void VggWidgetImp::initUI()
-{
-  this->setWindowTitle("VGG");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelDescriptorType, 0, 0);
-  mDescriptorType->addItem("VGG_120");
-  mDescriptorType->addItem("VGG_80");
-  mDescriptorType->addItem("VGG_64");
-  mDescriptorType->addItem("VGG_48");
-  propertiesLayout->addWidget(mDescriptorType, 0, 1);
-
-  //propertiesLayout->addWidget(mLabelScaleFactor, 1, 0);
-  propertiesLayout->addWidget(mScaleFactor, 1, 1);
-  mScaleFactor->setVisible(false); ///Se desactiva y se modifica internamente según el detector usado
-
-  propertiesLayout->addWidget(mLabelSigma, 2, 0);
-  propertiesLayout->addWidget(mSigma, 2, 1);
-
-
-  propertiesLayout->addWidget(mUseNormalizeDescriptor, 3, 0);
-
-  propertiesLayout->addWidget(mUseNormalizeImage, 4, 0);
-
-  propertiesLayout->addWidget(mUseScaleOrientation, 5, 0);
-
-  this->retranslate();
-  this->reset(); /// set default values
-  this->update();
-}
-
-void VggWidgetImp::initSignalAndSlots()
-{
-  connect(mDescriptorType,          SIGNAL(currentTextChanged(QString)),   this, SIGNAL(descriptorTypeChange(QString)));
-  connect(mScaleFactor,             SIGNAL(valueChanged(double)),          this, SIGNAL(scaleFactorChange(double)));
-  connect(mSigma,                   SIGNAL(valueChanged(double)),          this, SIGNAL(sigmaChange(double)));
-  connect(mUseNormalizeDescriptor,  SIGNAL(clicked(bool)),                 this, SIGNAL(useNormalizeDescriptorChange(bool)));
-  connect(mUseNormalizeImage,       SIGNAL(clicked(bool)),                 this, SIGNAL(useNormalizeImageChange(bool)));
-  connect(mUseScaleOrientation,     SIGNAL(clicked(bool)),                 this, SIGNAL(useScaleOrientationChange(bool)));
-}
-
-void VggWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

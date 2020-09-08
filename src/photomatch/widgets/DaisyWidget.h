@@ -109,7 +109,7 @@ signals:
   void qRadiusChange(int);
   void qThetaChange(int);
   void qHistChange(int);
-  void normChange(QString);
+  void normChange(const QString &);
   void interpolationChange(bool);
   void useOrientationChange(bool);
 
@@ -165,6 +165,8 @@ public slots:
 };
 
 
+
+
 class PHOTOMATCH_EXPORT DaisyWidgetImp
   : public DaisyWidget
 {
@@ -175,7 +177,7 @@ public:
   DaisyWidgetImp(QWidget *parent = nullptr);
   ~DaisyWidgetImp() override;
 
-// IDaisyWidget interface
+// DaisyWidget interface
 
 public:
 
@@ -199,25 +201,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

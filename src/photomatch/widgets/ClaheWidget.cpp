@@ -54,74 +54,10 @@ ClaheWidgetImp::~ClaheWidgetImp()
 
 }
 
-void ClaheWidgetImp::onTilesGridXChange(int gx)
-{
-  emit tileGridSizeChange(QSize(gx, mTilesGridY->value()));
-}
-
-void ClaheWidgetImp::onTilesGridYChange(int gy)
-{
-  emit tileGridSizeChange(QSize(mTilesGridX->value(), gy));
-}
-
-double ClaheWidgetImp::clipLimit() const
-{
-  return mClipLimit->value();
-}
-
-QSize ClaheWidgetImp::tileGridSize() const
-{
-  return QSize(mTilesGridX->value(), mTilesGridY->value());
-}
-
-void ClaheWidgetImp::setClipLimit(double clipLimit)
-{
-  const QSignalBlocker blockerClipLimit(mClipLimit);
-  mClipLimit->setValue(clipLimit);
-}
-
-void ClaheWidgetImp::setTilesGridSize(const QSize &tileGridSize)
-{
-  const QSignalBlocker blockerTilesGridX(mTilesGridX);
-  const QSignalBlocker blockerTilesGridY(mTilesGridY);
-  mTilesGridX->setValue(tileGridSize.width());
-  mTilesGridY->setValue(tileGridSize.height());
-
-}
-
-void ClaheWidgetImp::update()
-{
-}
-
-void ClaheWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("ClaheWidgetImp", "CLAHE Parameters"));
-  mLabelDescription->setText(QApplication::translate("ClaheWidgetImp", "Contrast Limited Adaptive Histogram Equalization", nullptr));
-  mLabelClipLimit->setText(QApplication::translate("ClaheWidgetImp", "Clip Limit:"));
-  mGroupBoxBlockSize->setTitle(QApplication::translate("ClaheWidgetImp", "Block Size"));
-  mLabelTilesGridX->setText(QApplication::translate("ClaheWidgetImp", "Width:"));
-  mLabelTilesGridY->setText(QApplication::translate("ClaheWidgetImp", "Height:"));
-//#ifndef QT_NO_WHATSTHIS
-//  mClipLimit->setWhatsThis(tr("<html><head/><body><p>Threshold value for contrast limiting.</p></body></html>"));
-//  mTilesGridX->setWhatsThis(tr("<html><head/><body><p>Width of grid for histogram equalization.</p></p></body></html>"));
-//  mTilesGridY->setWhatsThis(tr("<html><head/><body><p>Height of grid for histogram equalization.</p></p></body></html>"));
-//#endif // QT_NO_WHATSTHIS
-}
-
-void ClaheWidgetImp::reset()
-{
-  const QSignalBlocker blockerClipLimit(mClipLimit);
-  const QSignalBlocker blockerTilesGridX(mTilesGridX);
-  const QSignalBlocker blockerTilesGridY(mTilesGridY);
-
-  mClipLimit->setValue(40.0);
-  mTilesGridX->setValue(8);
-  mTilesGridY->setValue(8);
-}
-
 void ClaheWidgetImp::initUI()
 {
   this->setWindowTitle("CLAHE");
+  this->setObjectName("ClaheWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -165,21 +101,68 @@ void ClaheWidgetImp::initUI()
 
 void ClaheWidgetImp::initSignalAndSlots()
 {
-  connect(mClipLimit,     SIGNAL(valueChanged(double)),     this, SIGNAL(clipLimitChange(double)));
-  connect(mTilesGridX,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridXChange(int)));
-  connect(mTilesGridY,    SIGNAL(valueChanged(int)),        this, SLOT(onTilesGridYChange(int)));
+  connect(mClipLimit,   QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &ClaheWidget::clipLimitChange);
+  connect(mTilesGridX,  QOverload<int>::of(&QSpinBox::valueChanged),          this, &ClaheWidgetImp::onTilesGridXChange);
+  connect(mTilesGridY,  QOverload<int>::of(&QSpinBox::valueChanged),          this, &ClaheWidgetImp::onTilesGridYChange);
 }
 
-void ClaheWidgetImp::changeEvent(QEvent *event)
+void ClaheWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerClipLimit(mClipLimit);
+  const QSignalBlocker blockerTilesGridX(mTilesGridX);
+  const QSignalBlocker blockerTilesGridY(mTilesGridY);
+
+  mClipLimit->setValue(40.0);
+  mTilesGridX->setValue(8);
+  mTilesGridY->setValue(8);
+}
+
+void ClaheWidgetImp::update()
+{
+}
+
+void ClaheWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("ClaheWidget", "CLAHE Parameters"));
+  mLabelDescription->setText(QApplication::translate("ClaheWidget", "Contrast Limited Adaptive Histogram Equalization", nullptr));
+  mLabelClipLimit->setText(QApplication::translate("ClaheWidget", "Clip Limit:"));
+  mGroupBoxBlockSize->setTitle(QApplication::translate("ClaheWidget", "Block Size"));
+  mLabelTilesGridX->setText(QApplication::translate("ClaheWidget", "Width:"));
+  mLabelTilesGridY->setText(QApplication::translate("ClaheWidget", "Height:"));
+}
+
+void ClaheWidgetImp::onTilesGridXChange(int gx)
+{
+  emit tileGridSizeChange(QSize(gx, mTilesGridY->value()));
+}
+
+void ClaheWidgetImp::onTilesGridYChange(int gy)
+{
+  emit tileGridSizeChange(QSize(mTilesGridX->value(), gy));
+}
+
+double ClaheWidgetImp::clipLimit() const
+{
+  return mClipLimit->value();
+}
+
+QSize ClaheWidgetImp::tileGridSize() const
+{
+  return QSize(mTilesGridX->value(), mTilesGridY->value());
+}
+
+void ClaheWidgetImp::setClipLimit(double clipLimit)
+{
+  const QSignalBlocker blockerClipLimit(mClipLimit);
+  mClipLimit->setValue(clipLimit);
+}
+
+void ClaheWidgetImp::setTilesGridSize(const QSize &tileGridSize)
+{
+  const QSignalBlocker blockerTilesGridX(mTilesGridX);
+  const QSignalBlocker blockerTilesGridY(mTilesGridY);
+  mTilesGridX->setValue(tileGridSize.width());
+  mTilesGridY->setValue(tileGridSize.height());
 }
 
 } // namespace photomatch

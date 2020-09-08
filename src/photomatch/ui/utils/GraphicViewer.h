@@ -39,9 +39,9 @@ namespace photomatch
 {
 
 /*!
- * \brief The IGraphicViewer class
+ * \brief The GraphicViewer class
  */
-class IGraphicViewer
+class GraphicViewer
 {
 
 public:
@@ -49,8 +49,8 @@ public:
   /*!
    * \brief IGraphicViewer
    */
-  IGraphicViewer() {}
-  virtual ~IGraphicViewer() = default;
+  GraphicViewer() {}
+  virtual ~GraphicViewer() = default;
 
   /*!
    * \brief Establece la imagen
@@ -91,15 +91,13 @@ public:
 
   /*!
    * \brief zoom +
-   * \param point
    */
-  virtual void zoomIn(QPoint point = QPoint()) = 0;
+  virtual void zoomIn() = 0;
 
   /*!
    * \brief zoom -
-   * \param point
    */
-  virtual void zoomOut(QPoint point = QPoint()) = 0;
+  virtual void zoomOut() = 0;
 
   virtual void setContextMenu(QMenu *contextMenu) = 0;
 
@@ -114,17 +112,17 @@ protected:
 };
 
 
-class GraphicViewer
+class GraphicViewerImp
   : public QGraphicsView,
-    public IGraphicViewer
+    public GraphicViewer
 {
   Q_OBJECT
 
 public:
     
-  GraphicViewer(QWidget *parent = nullptr);
+  GraphicViewerImp(QWidget *parent = nullptr);
     
-  ~GraphicViewer() override;
+  ~GraphicViewerImp() override;
 
   /*!
    * \brief Establece la imagen
@@ -201,8 +199,8 @@ public slots:
 
   virtual void zoomExtend() override;
   virtual void zoom11() override;
-  virtual void zoomIn(QPoint point = QPoint()) override;
-  virtual void zoomOut(QPoint point = QPoint()) override;
+  virtual void zoomIn() override;
+  virtual void zoomOut() override;
 
 protected slots:
 

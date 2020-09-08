@@ -38,13 +38,13 @@ class QTreeWidgetItem;
 class QComboBox;
 class QProgressBar;
 class QGridLayout;
+class QLabel;
 
 namespace photomatch
 {
 
 class ThumbnailsWidget;
 class LogWidget;
-class GraphicViewer;
 class TabHandler;
 
 class MainWindowView
@@ -86,10 +86,20 @@ public:
   void addImages(const QStringList &images);
   void setActiveImage(const QString &image);
   void setActiveImages(const QStringList &images);
-  void addSession(const QString &sessionName, const QString &sessionDescription);
-  void addPreprocess(const QString &sessionName, const QString &preprocess, const std::vector<QString> &preprocessImages);
-  void addFeatures(const QString &sessionName, const QString &detector, const QString &descriptor, const std::vector<QString> &features);
-  void addMatches(const QString &sessionName, const QString &matcher, const QString &left, const QString &right, const QString &file);
+  void addSession(const QString &sessionName,
+                  const QString &sessionDescription);
+  void addPreprocess(const QString &sessionName,
+                     const QString &preprocess,
+                     const std::vector<QString> &preprocessImages);
+  void addFeatures(const QString &sessionName,
+                   const QString &detector,
+                   const QString &descriptor,
+                   const std::vector<QString> &features);
+  void addMatches(const QString &sessionName,
+                  const QString &matcher,
+                  const QString &left,
+                  const QString &right,
+                  const QString &file);
 
   /*!
    * \brief Añade un mensaje temporal en la barra de herramientas
@@ -130,9 +140,12 @@ public slots:
    * \param[in] file
    */
   void deleteImage(const QString &file);
-  void deletePreprocess(const QString &session, const QString &preprocess);
-  void deleteFeatures(const QString &session, const QString &feat);
-  void deleteMatches(const QString &session, const QString &matches);
+  void deletePreprocess(const QString &session,
+                        const QString &preprocess);
+  void deleteFeatures(const QString &session,
+                      const QString &feat);
+  void deleteMatches(const QString &session,
+                     const QString &matches);
   void setActiveSession(const QString &session);
 
 signals:
@@ -151,7 +164,7 @@ signals:
   void exit();
   void openSettings();
 
-  /* Menú View */
+  /* Menu View */
 
   void openStartPage();
   void openViewSettings();
@@ -217,6 +230,8 @@ protected:
 private slots:
 
   void update();
+  void retranslate();
+
   void openFromHistory();
   void onSelectionChanged();
   void onItemDoubleClicked(QTreeWidgetItem *item, int column);
@@ -224,14 +239,65 @@ private slots:
 
 private:
 
-  void init();
+  void initActions();
+  void initActionNewProject();
+  void initActionOpenProject();
+  void initActionSaveProject();
+  void initActionSaveProjectAs();
+  void initActionCloseProject();
+  void initActionExit();
+  void initActionStartPage();
+  void initActionViewSettings();
+  void initActionLoadImages();
+  void initActionNewSession();
+  void initActionPreprocess();
+  void initActionFeatureExtraction();
+  void initActionFeatureMatching();
+  void initActionBatch();
+  void initActionToolsSettings();
+  void initActionHelp();
+  void initActionOnlineHelp();
+  void initActionAbout();
+  void initActionRepeatability();
+  void initActionExportTiePoints();
+  void initActionExportMatches();
+  void initActionFeaturesViewer();
+  void initActionMatchesViewer();
+  void initActionPassPointsViewer();
+  void initActionGroundTruthEditor();
+  void initActionHomography();
+  void initActionPRCurves();
+  void initActionROCCurves();
+  void initActionDETCurves();
+  void initActionQualityControlSettings();
+  void initActionNotRecentProjects();
+  void initActionClearHistory();
+  void initActionsetSession();
+  void initActionDeleteSession();
+  void initUI();
+  void initTabHandler();
+  void initThumbnailsTool();
+  void initConsole();
+  void initToolbars();
+  void initToolbarFile();
+  void initToolbarTools();
+  void initToolbarView();
+  void initQualityControl();
+  void initTreeWidget();
+  void initMenus();
+  void initMenuFile();
+  void initMenuView();
+  void initMenuTools();
+  void initMenuQualityControl();
+  void initMenuHelp();
+  void initProgressBar();
+  void connectSignalAndSlots();
 
 // QWidget interface
 
 public:
 
   void closeEvent(QCloseEvent *event) override;
-
 
 protected:
 
@@ -268,17 +334,16 @@ protected:
   QAction *mActionQualityControlSettings;
   QAction *mActionNotRecentProjects;
   QAction *mActionClearHistory;
-  QAction *mActionZoomIn;
-  QAction *mActionZoomOut;
-  QAction *mActionZoomExtend;
-  QAction *mActionZoom11;
   QAction *mActionSetSession;
   QAction *mActionDeleteSession;
   QMenu *mMenuRecentProjects;
   QMenu *mMenuExport;
+  QMenu* mMenuPanels;
+  QMenu* mMenuToolBar;
   ThumbnailsWidget *mThumbnailsWidget;
   LogWidget *mLogWidget;
   QWidget *mStartPageWidget;
+  QLabel *mLabelActiveSession;
   QComboBox *mComboBoxActiveSession;
   QProgressBar *mProgressBar;
 

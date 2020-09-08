@@ -44,7 +44,7 @@ public:
   BriskProperties(const BriskProperties &briskProperties);
   ~BriskProperties() override = default;
 
-// IBrisk interface
+// Brisk interface
 
 public:
 
@@ -86,7 +86,6 @@ public:
   BriskDetectorDescriptor(int threshold,
                           int octaves,
                           double patternScale);
-
   ~BriskDetectorDescriptor() override = default;
 
 protected:
@@ -98,19 +97,17 @@ protected:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-// IAkaze interface
+// Brisk interface
 
 public:
 

@@ -153,42 +153,36 @@ cv::Mat WallisPreprocess::convertToGray32F(const cv::Mat &imageGray)
   return imageGray32F;
 }
 
-bool WallisPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat WallisPreprocess::process(const cv::Mat &imgIn)
 {
 
-  try {
+  cv::Mat imgOut;
 
-    cv::Mat imageGray = convertToGray(imgIn);
-    cv::Mat imageGray32F = convertToGray32F(imageGray);
-    imageGray.release();
+  cv::Mat imageGray = convertToGray(imgIn);
+  cv::Mat imageGray32F = convertToGray32F(imageGray);
+  imageGray.release();
 
-    cv::Mat localMean;
-    cv::Size kernelSize(WallisProperties::kernelSize(), WallisProperties::kernelSize());
-    cv::blur(imageGray32F, localMean, kernelSize); //Easier to compute this way
-    cv::Mat differentialImage;
-    cv::blur(imageGray32F.mul(imageGray32F), differentialImage, kernelSize);
-    cv::Mat localStandardDeviation;
-    cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
-    differentialImage.release();
+  cv::Mat localMean;
+  cv::Size kernelSize(WallisProperties::kernelSize(), WallisProperties::kernelSize());
+  cv::blur(imageGray32F, localMean, kernelSize); //Easier to compute this way
+  cv::Mat differentialImage;
+  cv::blur(imageGray32F.mul(imageGray32F), differentialImage, kernelSize);
+  cv::Mat localStandardDeviation;
+  cv::sqrt(differentialImage - localMean.mul(localMean), localStandardDeviation);
+  differentialImage.release();
 
-    cv::Mat r1 = static_cast<double>(WallisProperties::contrast() * WallisProperties::imposedLocalStdDev())
-                 / (localStandardDeviation + (1. - static_cast<double>(WallisProperties::contrast())));
-    localStandardDeviation.release();
-    cv::Mat r0 = static_cast<double>(WallisProperties::brightness() * WallisProperties::imposedAverage())
-                 + localMean.mul(1. - static_cast<double>(WallisProperties::brightness()) - r1);
-    localMean.release();
-    imgOut = imageGray32F.mul(r1) + r0;
-    imageGray32F.release();
-    r0.release();
-    r1.release();
+  cv::Mat r1 = static_cast<double>(WallisProperties::contrast() * WallisProperties::imposedLocalStdDev())
+    / (localStandardDeviation + (1. - static_cast<double>(WallisProperties::contrast())));
+  localStandardDeviation.release();
+  cv::Mat r0 = static_cast<double>(WallisProperties::brightness() * WallisProperties::imposedAverage())
+    + localMean.mul(1. - static_cast<double>(WallisProperties::brightness()) - r1);
+  localMean.release();
+  imgOut = imageGray32F.mul(r1) + r0;
+  imageGray32F.release();
+  r0.release();
+  r1.release();
 
-  } catch (cv::Exception &e) {
-    msgError("WALLIS Image preprocess error: %s", e.what());
-    return true;
-  }
-
-
-  return false;
+  return imgOut;
 }
 
 

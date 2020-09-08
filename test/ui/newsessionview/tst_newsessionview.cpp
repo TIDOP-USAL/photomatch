@@ -1,7 +1,7 @@
 #include <QtTest>
 #include <QCoreApplication>
 
-#include "photomatch/ui/NewSessionView.h"
+#include "photomatch/ui/createsession/NewSessionView.h"
 
 #include <QLineEdit>
 #include <QCheckBox>

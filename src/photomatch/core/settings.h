@@ -348,9 +348,10 @@ class PHOTOMATCH_EXPORT SettingsImp
 public:
 
   SettingsImp();
+  SettingsImp(const SettingsImp &settings) = delete;
   ~SettingsImp() override;
 
-// ISettings interface
+// Settings interface
 
 public:
 
@@ -589,9 +590,6 @@ protected:
 /*----------------------------------------------------------------*/
 
 
-/*!
- * \brief The SettingsRW class
- */
 class PHOTOMATCH_EXPORT SettingsControllerImp
   : public SettingsController
 {
@@ -601,7 +599,7 @@ public:
   explicit SettingsControllerImp();
   ~SettingsControllerImp() override;
 
-// ISettingsRW interface
+// SettingsController interface
 
 public:
 

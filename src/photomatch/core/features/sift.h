@@ -54,7 +54,7 @@ public:
   SiftProperties(const SiftProperties &siftProperties);
   ~SiftProperties() override = default;
 
-// ISift interface
+// Sift interface
 
 public:
 
@@ -88,7 +88,7 @@ private:
 
 /*----------------------------------------------------------------*/
 
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
 
 class PHOTOMATCH_EXPORT SiftDetectorDescriptor
   : public SiftProperties,
@@ -115,19 +115,17 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-// ISift interface
+// Sift interface
 
 public:
 

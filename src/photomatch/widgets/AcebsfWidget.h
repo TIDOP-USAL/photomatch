@@ -35,7 +35,7 @@ class QDoubleSpinBox;
 namespace photomatch
 {
 
-class AcebsfWidget
+class PHOTOMATCH_EXPORT AcebsfWidget
   : public PhotoMatchWidget
 {
   Q_OBJECT
@@ -52,7 +52,7 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
   void lChange(double);
   void k1Change(double);
   void k2Change(double);
@@ -66,7 +66,10 @@ public slots:
 
 };
 
-class AcebsfWidgetImp
+
+
+
+class PHOTOMATCH_EXPORT AcebsfWidgetImp
   : public AcebsfWidget
 {
   Q_OBJECT
@@ -81,7 +84,7 @@ protected slots:
   void onBlockSizeXChange(int blockSizeX);
   void onBlockSizeYChange(int blockSizeY);
 
-// IAcebsfWidget interface
+// AcebsfWidget interface
 
 public:
 
@@ -99,25 +102,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 
@@ -134,7 +131,6 @@ protected:
   QDoubleSpinBox *mK1;
   QLabel *mLabelK2;
   QDoubleSpinBox *mK2;
-
 
 };
 

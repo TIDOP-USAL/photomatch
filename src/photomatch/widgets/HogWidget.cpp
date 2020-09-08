@@ -75,6 +75,157 @@ HogWidgetImp::~HogWidgetImp()
 
 }
 
+void HogWidgetImp::initUI()
+{
+  this->setWindowTitle("HOG");
+  this->setObjectName("HogWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelWinSizeHeight, 0, 0);
+  mWinSizeHeight->setRange(0, 10000);
+  propertiesLayout->addWidget(mWinSizeHeight, 0, 1);
+  propertiesLayout->addWidget(mLabelWinSizeWidth, 0, 2);
+  mWinSizeWidth->setRange(0, 10000);
+  propertiesLayout->addWidget(mWinSizeWidth, 0, 3);
+
+  propertiesLayout->addWidget(mLabelBlockSizeX, 1, 0);
+  mBlockSizeX->setRange(0, 10000);
+  propertiesLayout->addWidget(mBlockSizeX, 1, 1);
+  propertiesLayout->addWidget(mLabelBlockSizeY, 1, 2);
+  mBlockSizeY->setRange(0, 10000);
+  propertiesLayout->addWidget(mBlockSizeY, 1, 3);
+
+  propertiesLayout->addWidget(mLabelBlockStrideX, 2, 0);
+  mBlockStrideX->setRange(0, 10000);
+  propertiesLayout->addWidget(mBlockStrideX, 2, 1);
+  propertiesLayout->addWidget(mLabelBlockStrideY, 2, 2);
+  mBlockStrideY->setRange(0, 10000);
+  propertiesLayout->addWidget(mBlockStrideY, 2, 3);
+
+  propertiesLayout->addWidget(mLabelCellSizeX, 3, 0);
+  mCellSizeX->setRange(0, 10000);
+  propertiesLayout->addWidget(mCellSizeX, 3, 1);
+  propertiesLayout->addWidget(mLabelCellSizeY, 3, 2);
+  mCellSizeY->setRange(0, 10000);
+  propertiesLayout->addWidget(mCellSizeY, 3, 3);
+
+  propertiesLayout->addWidget(mLabelNbins, 4, 0);
+  mNbins->setRange(0, 10000);
+  propertiesLayout->addWidget(mNbins, 4, 1);
+
+  propertiesLayout->addWidget(mLabelDerivAperture, 5, 0);
+  mDerivAperture->setRange(0, 10000);
+  propertiesLayout->addWidget(mDerivAperture, 5, 1);
+
+//  propertiesLayout->addWidget(new QLabel(tr("winSigma:")), 6, 0);
+//  mWinSigma->setRange(-1, 10000);
+//  propertiesLayout->addWidget(mWinSigma, 6, 1);
+
+//  propertiesLayout->addWidget(new QLabel(tr("Histogram Norm Type:")), 7, 0);
+//  mHistogramNormType->addItem("L2Hys");  ///TODO: solo este tipo???
+//  propertiesLayout->addWidget(mHistogramNormType, 7, 1);
+
+//  propertiesLayout->addWidget(new QLabel(tr("L2Hys Threshold:")), 8, 0);
+//  mL2HysThreshold->setRange(0., 100.);
+//  propertiesLayout->addWidget(mL2HysThreshold, 8, 1);
+
+//  mGammaCorrection->setText(tr("Gamma Correction:"));
+//  propertiesLayout->addWidget(mGammaCorrection, 9, 1);
+
+//  propertiesLayout->addWidget(new QLabel(tr("free_coef:")), 10, 0);
+//  mFreeCoef->setRange(-1., 100.);
+//  propertiesLayout->addWidget(mFreeCoef, 10, 1);
+
+//  propertiesLayout->addWidget(new QLabel(tr("N Levels:")), 11, 0);
+//  mNlevels->setRange(0, 100);
+//  propertiesLayout->addWidget(mNlevels, 11, 1);
+
+//  mSignedGradient->setText(tr("Signed Gradient:"));
+//  propertiesLayout->addWidget(mSignedGradient, 12, 1);
+
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
+}
+
+void HogWidgetImp::initSignalAndSlots()
+{
+  connect(mWinSizeHeight,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onWinSizeHeightChange);
+  connect(mWinSizeWidth,   QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onWinSizeWidthChange);
+  connect(mBlockSizeX,     QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onBlockSizeXChange);
+  connect(mBlockSizeY,     QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onBlockSizeYChange);
+  connect(mBlockStrideX,   QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onBlockStrideXChange);
+  connect(mBlockStrideY,   QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onBlockStrideYChange);
+  connect(mCellSizeX,      QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onCellSizeXChange);
+  connect(mCellSizeY,      QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidgetImp::onCellSizeYChange);
+  connect(mNbins,          QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidget::nbinsChange);
+  connect(mDerivAperture,  QOverload<int>::of(&QSpinBox::valueChanged),  this, &HogWidget::derivApertureChange);
+}
+
+void HogWidgetImp::reset()
+{
+  const QSignalBlocker blockerWinSizeHeight(mWinSizeHeight);
+  const QSignalBlocker blockerWinSizeWidth(mWinSizeWidth);
+  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
+  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
+  const QSignalBlocker blockerBlockStrideX(mBlockStrideX);
+  const QSignalBlocker blockerBlockStrideY(mBlockStrideY);
+  const QSignalBlocker blockerCellSizeX(mCellSizeX);
+  const QSignalBlocker blockerCellSizeY(mCellSizeY);
+  const QSignalBlocker blockerNbins(mNbins);
+  const QSignalBlocker blockerDerivAperture(mDerivAperture);
+//  const QSignalBlocker blockerWinSigma(mWinSigma);
+//  const QSignalBlocker blockerHistogramNormType(mHistogramNormType);
+//  const QSignalBlocker blockerL2HysThreshold(mL2HysThreshold);
+//  const QSignalBlocker blockerFreeCoef(mFreeCoef);
+//  const QSignalBlocker blockerNlevels(mNlevels);
+
+  mWinSizeWidth->setValue(64);
+  mWinSizeHeight->setValue(128);
+  mBlockSizeX->setValue(16);
+  mBlockSizeY->setValue(16);
+  mBlockStrideX->setValue(8);
+  mBlockStrideY->setValue(8);
+  mCellSizeX->setValue(8);
+  mCellSizeY->setValue(8);
+  mNbins->setValue(9);
+  mDerivAperture->setValue(1);
+//  mWinSigma->setValue(-1);
+//  mHistogramNormType->setCurrentText("L2Hys");
+//  mL2HysThreshold->setValue(0.2);
+//  mGammaCorrection->setChecked(true);
+//  mFreeCoef->setValue(-1.);
+//  mNlevels->setValue(64);
+//  mSignedGradient->setChecked(false);
+}
+
+void HogWidgetImp::update()
+{
+}
+
+void HogWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("HogWidget", "HOG Parameters"));
+  mLabelWinSizeHeight->setText(QApplication::translate("HogWidget", "Window Height:"));
+  mLabelWinSizeWidth->setText(QApplication::translate("HogWidget", "Window Width:"));
+  mLabelBlockSizeX->setText(QApplication::translate("HogWidget", "Block Size X:"));
+  mLabelBlockSizeY->setText(QApplication::translate("HogWidget", "Block Size Y:"));
+  mLabelBlockStrideX->setText(QApplication::translate("HogWidget", "Block Stride X:"));
+  mLabelBlockStrideY->setText(QApplication::translate("HogWidget", "Block Stride Y:"));
+  mLabelCellSizeX->setText(QApplication::translate("HogWidget", "Cell Size X:"));
+  mLabelCellSizeY->setText(QApplication::translate("HogWidget", "Cell Size Y:"));
+  mLabelNbins->setText(QApplication::translate("HogWidget", "nbins:"));
+  mLabelDerivAperture->setText(QApplication::translate("HogWidget", "DerivAperture:"));
+}
+
 void HogWidgetImp::onWinSizeHeightChange(int height)
 {
   emit winSizeChange(QSize(mWinSizeWidth->value(), height));
@@ -114,7 +265,6 @@ void HogWidgetImp::onCellSizeYChange(int cellSizeY)
 {
   emit cellSizeChange(QSize(mCellSizeX->value(),cellSizeY));
 }
-
 
 QSize HogWidgetImp::winSize() const
 {
@@ -265,167 +415,6 @@ void HogWidgetImp::setDerivAperture(int derivAperture)
 //  mSignedGradient->setChecked(signedGradient);
 //}
 
-void HogWidgetImp::update()
-{
-}
-
-void HogWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("HogWidgetImp", "HOG Parameters"));
-  mLabelWinSizeHeight->setText(QApplication::translate("HogWidgetImp", "Window Height:"));
-  mLabelWinSizeWidth->setText(QApplication::translate("HogWidgetImp", "Window Width:"));
-  mLabelBlockSizeX->setText(QApplication::translate("HogWidgetImp", "Block Size X:"));
-  mLabelBlockSizeY->setText(QApplication::translate("HogWidgetImp", "Block Size Y:"));
-  mLabelBlockStrideX->setText(QApplication::translate("HogWidgetImp", "Block Stride X:"));
-  mLabelBlockStrideY->setText(QApplication::translate("HogWidgetImp", "Block Stride Y:"));
-  mLabelCellSizeX->setText(QApplication::translate("HogWidgetImp", "Cell Size X:"));
-  mLabelCellSizeY->setText(QApplication::translate("HogWidgetImp", "Cell Size Y:"));
-  mLabelNbins->setText(QApplication::translate("HogWidgetImp", "nbins:"));
-  mLabelDerivAperture->setText(QApplication::translate("HogWidgetImp", "DerivAperture:"));
-}
-
-void HogWidgetImp::reset()
-{
-  const QSignalBlocker blockerWinSizeHeight(mWinSizeHeight);
-  const QSignalBlocker blockerWinSizeWidth(mWinSizeWidth);
-  const QSignalBlocker blockerBlockSizeX(mBlockSizeX);
-  const QSignalBlocker blockerBlockSizeY(mBlockSizeY);
-  const QSignalBlocker blockerBlockStrideX(mBlockStrideX);
-  const QSignalBlocker blockerBlockStrideY(mBlockStrideY);
-  const QSignalBlocker blockerCellSizeX(mCellSizeX);
-  const QSignalBlocker blockerCellSizeY(mCellSizeY);
-  const QSignalBlocker blockerNbins(mNbins);
-  const QSignalBlocker blockerDerivAperture(mDerivAperture);
-//  const QSignalBlocker blockerWinSigma(mWinSigma);
-//  const QSignalBlocker blockerHistogramNormType(mHistogramNormType);
-//  const QSignalBlocker blockerL2HysThreshold(mL2HysThreshold);
-//  const QSignalBlocker blockerFreeCoef(mFreeCoef);
-//  const QSignalBlocker blockerNlevels(mNlevels);
-
-  mWinSizeWidth->setValue(64);
-  mWinSizeHeight->setValue(128);
-  mBlockSizeX->setValue(16);
-  mBlockSizeY->setValue(16);
-  mBlockStrideX->setValue(8);
-  mBlockStrideY->setValue(8);
-  mCellSizeX->setValue(8);
-  mCellSizeY->setValue(8);
-  mNbins->setValue(9);
-  mDerivAperture->setValue(1);
-//  mWinSigma->setValue(-1);
-//  mHistogramNormType->setCurrentText("L2Hys");
-//  mL2HysThreshold->setValue(0.2);
-//  mGammaCorrection->setChecked(true);
-//  mFreeCoef->setValue(-1.);
-//  mNlevels->setValue(64);
-//  mSignedGradient->setChecked(false);
-}
-
-void HogWidgetImp::initUI()
-{
-  this->setWindowTitle("HOG");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelWinSizeHeight, 0, 0);
-  mWinSizeHeight->setRange(0, 10000);
-  propertiesLayout->addWidget(mWinSizeHeight, 0, 1);
-  propertiesLayout->addWidget(mLabelWinSizeWidth, 0, 2);
-  mWinSizeWidth->setRange(0, 10000);
-  propertiesLayout->addWidget(mWinSizeWidth, 0, 3);
-
-  propertiesLayout->addWidget(mLabelBlockSizeX, 1, 0);
-  mBlockSizeX->setRange(0, 10000);
-  propertiesLayout->addWidget(mBlockSizeX, 1, 1);
-  propertiesLayout->addWidget(mLabelBlockSizeY, 1, 2);
-  mBlockSizeY->setRange(0, 10000);
-  propertiesLayout->addWidget(mBlockSizeY, 1, 3);
-
-  propertiesLayout->addWidget(mLabelBlockStrideX, 2, 0);
-  mBlockStrideX->setRange(0, 10000);
-  propertiesLayout->addWidget(mBlockStrideX, 2, 1);
-  propertiesLayout->addWidget(mLabelBlockStrideY, 2, 2);
-  mBlockStrideY->setRange(0, 10000);
-  propertiesLayout->addWidget(mBlockStrideY, 2, 3);
-
-  propertiesLayout->addWidget(mLabelCellSizeX, 3, 0);
-  mCellSizeX->setRange(0, 10000);
-  propertiesLayout->addWidget(mCellSizeX, 3, 1);
-  propertiesLayout->addWidget(mLabelCellSizeY, 3, 2);
-  mCellSizeY->setRange(0, 10000);
-  propertiesLayout->addWidget(mCellSizeY, 3, 3);
-
-  propertiesLayout->addWidget(mLabelNbins, 4, 0);
-  mNbins->setRange(0, 10000);
-  propertiesLayout->addWidget(mNbins, 4, 1);
-
-  propertiesLayout->addWidget(mLabelDerivAperture, 5, 0);
-  mDerivAperture->setRange(0, 10000);
-  propertiesLayout->addWidget(mDerivAperture, 5, 1);
-
-//  propertiesLayout->addWidget(new QLabel(tr("winSigma:")), 6, 0);
-//  mWinSigma->setRange(-1, 10000);
-//  propertiesLayout->addWidget(mWinSigma, 6, 1);
-
-//  propertiesLayout->addWidget(new QLabel(tr("Histogram Norm Type:")), 7, 0);
-//  mHistogramNormType->addItem("L2Hys");  ///TODO: solo este tipo???
-//  propertiesLayout->addWidget(mHistogramNormType, 7, 1);
-
-//  propertiesLayout->addWidget(new QLabel(tr("L2Hys Threshold:")), 8, 0);
-//  mL2HysThreshold->setRange(0., 100.);
-//  propertiesLayout->addWidget(mL2HysThreshold, 8, 1);
-
-//  mGammaCorrection->setText(tr("Gamma Correction:"));
-//  propertiesLayout->addWidget(mGammaCorrection, 9, 1);
-
-//  propertiesLayout->addWidget(new QLabel(tr("free_coef:")), 10, 0);
-//  mFreeCoef->setRange(-1., 100.);
-//  propertiesLayout->addWidget(mFreeCoef, 10, 1);
-
-//  propertiesLayout->addWidget(new QLabel(tr("N Levels:")), 11, 0);
-//  mNlevels->setRange(0, 100);
-//  propertiesLayout->addWidget(mNlevels, 11, 1);
-
-//  mSignedGradient->setText(tr("Signed Gradient:"));
-//  propertiesLayout->addWidget(mSignedGradient, 12, 1);
-
-  this->retranslate();
-  this->reset(); // Set default values
-  this->update();
-}
-
-void HogWidgetImp::initSignalAndSlots()
-{
-  connect(mWinSizeHeight,  SIGNAL(valueChanged(int)),        this, SLOT(onWinSizeHeightChange(int)));
-  connect(mWinSizeWidth,   SIGNAL(valueChanged(int)),        this, SLOT(onWinSizeWidthChange(int)));
-  connect(mBlockSizeX,     SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeXChange(int)));
-  connect(mBlockSizeY,     SIGNAL(valueChanged(int)),        this, SLOT(onBlockSizeYChange(int)));
-  connect(mBlockStrideX,   SIGNAL(valueChanged(int)),        this, SLOT(onBlockStrideXChange(int)));
-  connect(mBlockStrideY,   SIGNAL(valueChanged(int)),        this, SLOT(onBlockStrideYChange(int)));
-  connect(mCellSizeX,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeXChange(int)));
-  connect(mCellSizeY,      SIGNAL(valueChanged(int)),        this, SLOT(onCellSizeYChange(int)));
-  connect(mNbins,          SIGNAL(valueChanged(int)),        this, SIGNAL(nbinsChange(int)));
-  connect(mDerivAperture,  SIGNAL(valueChanged(int)),        this, SIGNAL(derivApertureChange(int)));
-}
-
-void HogWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
-}
 
 } // namespace photomatch
 

@@ -38,15 +38,15 @@ namespace Ui
 namespace photomatch
 {
 
-class IProgressDialog
+class ProgressDialog
   : public QDialog
 {
   Q_OBJECT
 
 public:
 
-  explicit IProgressDialog(QWidget *parent = nullptr) : QDialog(parent){}
-  virtual ~IProgressDialog() = default;
+  explicit ProgressDialog(QWidget *parent = nullptr) : QDialog(parent){}
+  virtual ~ProgressDialog() = default;
 
 public slots:
 
@@ -67,15 +67,15 @@ signals:
 
 };
 
-class ProgressDialog
-  : public IProgressDialog
+class ProgressDialogImp
+  : public ProgressDialog
 {
   Q_OBJECT
 
 public:
 
-  explicit ProgressDialog(QWidget *parent = nullptr);
-  ~ProgressDialog()  override;
+  explicit ProgressDialogImp(QWidget *parent = nullptr);
+  ~ProgressDialogImp()  override;
 
 protected slots:
 

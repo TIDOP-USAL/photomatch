@@ -52,6 +52,67 @@ BriskWidgetImp::~BriskWidgetImp()
 
 }
 
+void BriskWidgetImp::initUI()
+{
+  this->setWindowTitle("BRISK");
+  this->setObjectName("BriskWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelThreshold, 0, 0);
+  mThreshold->setRange(0, 100);
+  propertiesLayout->addWidget(mThreshold, 0, 1);
+
+  propertiesLayout->addWidget(mLabelOctaves, 1, 0);
+  mOctaves->setRange(0, 100);
+  propertiesLayout->addWidget(mOctaves, 1, 1);
+
+  propertiesLayout->addWidget(mLabelPatternScale, 2, 0);
+  mPatternScale->setRange(0., 10000.);
+  propertiesLayout->addWidget(mPatternScale, 2, 1);
+
+  this->retranslate();
+  this->reset(); // set default values
+  this->update();
+}
+
+void BriskWidgetImp::initSignalAndSlots()
+{
+  connect(mThreshold,     QOverload<int>::of(&QSpinBox::valueChanged),          this, &BriskWidget::thresholdChange);
+  connect(mOctaves,       QOverload<int>::of(&QSpinBox::valueChanged),          this, &BriskWidget::octavesChange);
+  connect(mPatternScale,  QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &BriskWidget::patternScaleChange);
+}
+
+void BriskWidgetImp::reset()
+{
+  const QSignalBlocker blockerThreshold(mThreshold);
+  const QSignalBlocker blockerOctaves(mOctaves);
+  const QSignalBlocker blockerPatternScale(mPatternScale);
+
+  mThreshold->setValue(30);
+  mOctaves->setValue(3);
+  mPatternScale->setValue(1.0);
+}
+
+void BriskWidgetImp::update()
+{
+}
+
+void BriskWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("BriskWidget", "BRISK Parameters"));
+  mLabelThreshold->setText(QApplication::translate("BriskWidget", "Threshold:"));
+  mLabelOctaves->setText(QApplication::translate("BriskWidget", "Octaves:"));
+  mLabelPatternScale->setText(QApplication::translate("BriskWidget", "Pattern Scale:"));
+}
+
 int BriskWidgetImp::threshold() const
 {
   return mThreshold->value();
@@ -83,78 +144,6 @@ void BriskWidgetImp::setPatternScale(double patternScale)
 {
   const QSignalBlocker blockerPatternScale(mPatternScale);
   mPatternScale->setValue(patternScale);
-}
-
-void BriskWidgetImp::update()
-{
-}
-
-void BriskWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("BriskWidgetImp", "BRISK Parameters"));
-  mLabelThreshold->setText(QApplication::translate("BriskWidgetImp", "Threshold:"));
-  mLabelOctaves->setText(QApplication::translate("BriskWidgetImp", "Octaves:"));
-  mLabelPatternScale->setText(QApplication::translate("BriskWidgetImp", "Pattern Scale:"));
-}
-
-void BriskWidgetImp::reset()
-{
-  const QSignalBlocker blockerThreshold(mThreshold);
-  const QSignalBlocker blockerOctaves(mOctaves);
-  const QSignalBlocker blockerPatternScale(mPatternScale);
-
-  mThreshold->setValue(30);
-  mOctaves->setValue(3);
-  mPatternScale->setValue(1.0);
-}
-
-void BriskWidgetImp::initUI()
-{
-  this->setWindowTitle("BRISK");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelThreshold, 0, 0);
-  mThreshold->setRange(0, 100);
-  propertiesLayout->addWidget(mThreshold, 0, 1);
-
-  propertiesLayout->addWidget(mLabelOctaves, 1, 0);
-  mOctaves->setRange(0, 100);
-  propertiesLayout->addWidget(mOctaves, 1, 1);
-
-  propertiesLayout->addWidget(mLabelPatternScale, 2, 0);
-  mPatternScale->setRange(0., 10000.);
-  propertiesLayout->addWidget(mPatternScale, 2, 1);
-
-  this->retranslate();
-  this->reset(); // set default values
-  this->update();
-}
-
-void BriskWidgetImp::initSignalAndSlots()
-{
-  connect(mThreshold,        SIGNAL(valueChanged(int)),        this, SIGNAL(thresholdChange(int)));
-  connect(mOctaves,          SIGNAL(valueChanged(int)),        this, SIGNAL(octavesChange(int)));
-  connect(mPatternScale,     SIGNAL(valueChanged(double)),     this, SIGNAL(patternScaleChange(double)));
-}
-
-void BriskWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

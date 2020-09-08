@@ -87,20 +87,14 @@ LceBsescsPreprocess::~LceBsescsPreprocess()
 
 }
 
-bool LceBsescsPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat LceBsescsPreprocess::process(const cv::Mat &imgIn)
 {
+  cv::Mat imgOut;
 
-  try {
+  pixkit::enhancement::local::LCE_BSESCS2014(convertToGray(imgIn), imgOut,
+                                             qSizeToCvSize(LceBsescsProperties::blockSize()));
 
-    pixkit::enhancement::local::LCE_BSESCS2014(convertToGray(imgIn), imgOut,
-                                               qSizeToCvSize(LceBsescsProperties::blockSize()));
-
-  } catch (cv::Exception &e) {
-    msgError("LCE-BSESCS Image preprocess error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  return imgOut;
 }
 
 } // namespace photomatch

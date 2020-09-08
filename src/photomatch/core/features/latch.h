@@ -48,7 +48,7 @@ public:
   LatchProperties(const LatchProperties &latchProperties);
   ~LatchProperties() override = default;
 
-// ILatch interface
+// Latch interface
 
 public:
 
@@ -88,7 +88,6 @@ public:
   LatchDescriptor(const QString& bytes,
                   bool rotationInvariance,
                   int halfSsdSize);
-
   ~LatchDescriptor() override = default;
 
 private:
@@ -99,12 +98,10 @@ private:
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-
-// IBrief interface
+// Latch interface
 
 public:
 

@@ -81,19 +81,19 @@ private slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
+private:
 
-  void update() override;
-  void retranslate() override;
+  void initUI() override;
+  void initSignalAndSlots() override;
 
 public slots:
 
   void reset() override;
 
-private:
+protected slots:
 
-  void initUI() override;
-  void initSignalAndSlots() override;
+  void update() override;
+  void retranslate() override;
 
 // Listener interface
 

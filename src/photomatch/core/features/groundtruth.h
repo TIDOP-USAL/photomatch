@@ -54,9 +54,11 @@ public:
 
 public:
 
-  HomologusPoints(const QString &idImg1, const QString &idImg2);
+  HomologusPoints(const QString &idImg1, 
+                  const QString &idImg2);
 
-  void addPoints(const QPointF &pt1, const QPointF &pt2);
+  void addPoints(const QPointF &pt1, 
+                 const QPointF &pt2);
 
   iterator begin();
   const_iterator begin() const;
@@ -69,7 +71,8 @@ public:
   bool empty() const;
   void reserve(size_type size);
   void resize(size_type count);
-  void resize(size_type count, const std::pair<QPointF, QPointF> &points);
+  void resize(size_type count, 
+              const std::pair<QPointF, QPointF> &points);
   size_type size() const;
   const_reference operator[](size_type position) const;
   reference operator[](size_type position);
@@ -146,7 +149,8 @@ public:
    * \param[in] idImg2 Id image 2 (base name of image file)
    * \return
    */
-  std::shared_ptr<HomologusPoints> findPair(const QString &idImg1, const QString &idImg2);
+  std::shared_ptr<HomologusPoints> findPair(const QString &idImg1, 
+                                            const QString &idImg2);
 
   /*!
    * \brief pair
@@ -154,7 +158,8 @@ public:
    * \param[in] idImg2 Id image 2 (base name of image file)
    * \return
    */
-  std::shared_ptr<HomologusPoints> pair(const QString &idImg1, const QString &idImg2);
+  std::shared_ptr<HomologusPoints> pair(const QString &idImg1, 
+                                        const QString &idImg2);
 
   void clear();
 

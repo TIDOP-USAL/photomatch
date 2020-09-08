@@ -53,63 +53,10 @@ LatchWidgetImp::~LatchWidgetImp()
 
 }
 
-QString LatchWidgetImp::bytes() const
-{
-  return mBytes->currentText();
-}
-
-bool LatchWidgetImp::rotationInvariance() const
-{
-  return mRotationInvariance->isChecked();
-}
-
-int LatchWidgetImp::halfSsdSize() const
-{
-  return mHalfSsdSize->value();
-}
-
-void LatchWidgetImp::setBytes(const QString &bytes)
-{
-  const QSignalBlocker blockerBytes(mBytes);
-  mBytes->setCurrentText(bytes);
-}
-
-void LatchWidgetImp::setRotationInvariance(bool rotationInvariance)
-{
-  mRotationInvariance->setChecked(rotationInvariance);
-}
-
-void LatchWidgetImp::setHalfSsdSize(int halfSsdSize)
-{
-  const QSignalBlocker blockerHalfSsdSize(mHalfSsdSize);
-  mHalfSsdSize->setValue(halfSsdSize);
-}
-
-void LatchWidgetImp::update()
-{
-}
-
-void LatchWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("LatchWidgetImp", "LATCH Parameters"));
-  mLabelBytes->setText(QApplication::translate("LatchWidgetImp", "Descriptor Size:"));
-  mRotationInvariance->setText(QApplication::translate("LatchWidgetImp", "Rotation Invariance"));
-  mLabelHalfSsdSize->setText(QApplication::translate("LatchWidgetImp", "Half of the mini-patches size:"));
-}
-
-void LatchWidgetImp::reset()
-{
-  const QSignalBlocker blockerBytes(mBytes);
-  const QSignalBlocker blockerHalfSsdSize(mHalfSsdSize);
-
-  mBytes->setCurrentText("32");
-  mRotationInvariance->setChecked(true);
-  mHalfSsdSize->setValue(3);
-}
-
 void LatchWidgetImp::initUI()
 {
   this->setWindowTitle("LATCH");
+  this->setObjectName("LatchWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0, 0, 0, 0);
@@ -143,21 +90,63 @@ void LatchWidgetImp::initUI()
 
 void LatchWidgetImp::initSignalAndSlots()
 {
-  connect(mBytes,               SIGNAL(currentTextChanged(QString)),  this, SIGNAL(bytesChange(QString)));
-  connect(mRotationInvariance,  SIGNAL(clicked(bool)),                this, SIGNAL(rotationInvarianceChange(bool)));
-  connect(mHalfSsdSize,         SIGNAL(valueChanged(int)),            this, SIGNAL(halfSsdSizeChange(int)));
+  connect(mBytes,               &QComboBox::currentTextChanged,              this, &LatchWidget::bytesChange);
+  connect(mRotationInvariance,  &QAbstractButton::clicked,                   this, &LatchWidget::rotationInvarianceChange);
+  connect(mHalfSsdSize,         QOverload<int>::of(&QSpinBox::valueChanged), this, &LatchWidget::halfSsdSizeChange);
 }
 
-void LatchWidgetImp::changeEvent(QEvent *event)
+void LatchWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+  const QSignalBlocker blockerBytes(mBytes);
+  const QSignalBlocker blockerHalfSsdSize(mHalfSsdSize);
+
+  mBytes->setCurrentText("32");
+  mRotationInvariance->setChecked(true);
+  mHalfSsdSize->setValue(3);
+}
+
+void LatchWidgetImp::update()
+{
+}
+
+void LatchWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("LatchWidget", "LATCH Parameters"));
+  mLabelBytes->setText(QApplication::translate("LatchWidget", "Descriptor Size:"));
+  mRotationInvariance->setText(QApplication::translate("LatchWidget", "Rotation Invariance"));
+  mLabelHalfSsdSize->setText(QApplication::translate("LatchWidget", "Half of the mini-patches size:"));
+}
+
+QString LatchWidgetImp::bytes() const
+{
+  return mBytes->currentText();
+}
+
+bool LatchWidgetImp::rotationInvariance() const
+{
+  return mRotationInvariance->isChecked();
+}
+
+int LatchWidgetImp::halfSsdSize() const
+{
+  return mHalfSsdSize->value();
+}
+
+void LatchWidgetImp::setBytes(const QString &bytes)
+{
+  const QSignalBlocker blockerBytes(mBytes);
+  mBytes->setCurrentText(bytes);
+}
+
+void LatchWidgetImp::setRotationInvariance(bool rotationInvariance)
+{
+  mRotationInvariance->setChecked(rotationInvariance);
+}
+
+void LatchWidgetImp::setHalfSsdSize(int halfSsdSize)
+{
+  const QSignalBlocker blockerHalfSsdSize(mHalfSsdSize);
+  mHalfSsdSize->setValue(halfSsdSize);
 }
 
 } // namespace photomatch

@@ -3,6 +3,8 @@
 #include <QTabBar>
 #include <QMenu>
 #include <QFileInfo>
+#include <QEvent>
+#include <QApplication>
 
 #include "photomatch/ui/utils/GraphicViewer.h"
 #include "photomatch/ui/utils/GraphicItem.h"
@@ -18,18 +20,66 @@ TabHandler::TabHandler(QWidget *parent)
     mActionZoomExtend(new QAction(this)),
     mActionZoom11(new QAction(this))
 {
-  init();
+  this->init();
+  this->connectSignalsAndSlots();
+}
 
-  connect(this, SIGNAL(tabCloseRequested(int)),                     this, SLOT(hideTab(int)));
-  connect(this, SIGNAL(currentChanged(int)),                        this, SLOT(onTabChanged(int)));
-  connect(this, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onTabWidgetContextMenu(const QPoint &)));
+void TabHandler::init()
+{
+  this->setObjectName(QString("TabHandler"));
+  this->setContextMenuPolicy(Qt::CustomContextMenu);
+  this->setTabsClosable(true);
 
+  this->initActions();
+  this->retranslate();
+  this->update();
+}
+
+void TabHandler::initActions()
+{
+  QIcon iconZoomIn;
+  iconZoomIn.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomIn->setIcon(iconZoomIn);
+
+  QIcon iconZoomOut;
+  iconZoomOut.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomOut->setIcon(iconZoomOut);
+
+  QIcon iconZoomExtend;
+  iconZoomExtend.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoomExtend->setIcon(iconZoomExtend);
+
+  QIcon iconZoom11;
+  iconZoom11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
+  mActionZoom11->setIcon(iconZoom11);
+}
+
+void TabHandler::connectSignalsAndSlots()
+{
+  connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(hideTab(int)));
+  connect(this, SIGNAL(currentChanged(int)), this, SLOT(onTabChanged(int)));
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onTabWidgetContextMenu(const QPoint&)));
+}
+
+void TabHandler::retranslate()
+{
+  mActionZoomIn->setText(tr("Zoom In"));
+  mActionZoomOut->setText(tr("Zoom Out"));
+  mActionZoomExtend->setText(tr("Zoom Extend"));
+  mActionZoom11->setText(tr("Zoom 1:1"));
+}
+
+void TabHandler::changeEvent(QEvent *event)
+{
+  if (event->type() == QEvent::LanguageChange) {
+    this->retranslate();
+  }
 }
 
 void TabHandler::hideTab(int tabId)
 {
   if (tabId != -1) {
-    GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(this->widget(tabId));
+    GraphicViewerImp *graphicViewer = dynamic_cast<GraphicViewerImp *>(this->widget(tabId));
     this->removeTab(tabId);
     if (graphicViewer){
       delete graphicViewer;
@@ -44,7 +94,7 @@ void TabHandler::hideTab(int tabId)
 void TabHandler::setCurrentTab(int tabId)
 {
   this->setCurrentIndex(tabId);
-  if (GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(this->widget(tabId)))
+  if (GraphicViewerImp *graphicViewer = dynamic_cast<GraphicViewerImp *>(this->widget(tabId)))
     mGraphicViewer = graphicViewer;
 }
 
@@ -90,7 +140,7 @@ void TabHandler::setImage(const QString &image)
   }
 
   if (id == -1) {
-    GraphicViewer *graphicViewer = new GraphicViewer(this);
+    GraphicViewerImp *graphicViewer = new GraphicViewerImp(this);
     mGraphicViewer = graphicViewer;
     mGraphicViewer->setImage(QImage(image));
     id = this->addTab(mGraphicViewer, fileInfo.fileName());
@@ -114,9 +164,9 @@ void TabHandler::setImage(const QString &image)
   update();
 }
 
-GraphicViewer *TabHandler::graphicViewer(int tabId)
+GraphicViewerImp *TabHandler::graphicViewer(int tabId)
 {
-  return dynamic_cast<GraphicViewer *>(this->widget(tabId));
+  return dynamic_cast<GraphicViewerImp *>(this->widget(tabId));
 }
 
 int TabHandler::graphicViewerId(const QString &name)
@@ -130,7 +180,7 @@ int TabHandler::graphicViewerId(const QString &name)
   return id;
 }
 
-GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
+GraphicViewerImp *TabHandler::addGraphicViewer(const QString &name)
 {
 
   if (mGraphicViewer != nullptr){
@@ -143,7 +193,7 @@ GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
   int id = this->graphicViewerId(name);
 
   if (id == -1 ) {
-    GraphicViewer *graphicViewer = new GraphicViewer(this);
+    GraphicViewerImp *graphicViewer = new GraphicViewerImp(this);
 
     QMenu *contextMenu = new QMenu(graphicViewer);
     contextMenu->addAction(mActionZoomIn);
@@ -168,7 +218,7 @@ GraphicViewer *TabHandler::addGraphicViewer(const QString &name)
 
 void TabHandler::onTabChanged(int tabId)
 {
-  GraphicViewer *graphicViewer = dynamic_cast<GraphicViewer *>(this->widget(tabId));
+  GraphicViewerImp *graphicViewer = dynamic_cast<GraphicViewerImp *>(this->widget(tabId));
 
   if (graphicViewer){
     setImage(this->tabToolTip(tabId));
@@ -227,33 +277,6 @@ void TabHandler::update()
   mActionZoomOut->setEnabled(bImageOpen);
   mActionZoomExtend->setEnabled(bImageOpen);
   mActionZoom11->setEnabled(bImageOpen);
-}
-
-void TabHandler::init()
-{
-  this->setContextMenuPolicy(Qt::CustomContextMenu);
-  this->setTabsClosable(true);
-
-  mActionZoomIn->setText(tr("Zoom In"));
-  QIcon iconZoomIn;
-  iconZoomIn.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_in_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomIn->setIcon(iconZoomIn);
-
-  mActionZoomOut->setText(tr("Zoom Out"));
-  QIcon iconZoomOut;
-  iconZoomOut.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_out_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomOut->setIcon(iconZoomOut);
-
-  mActionZoomExtend->setText(tr("Zoom Extend"));
-  QIcon iconZoomExtend;
-  iconZoomExtend.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_extents_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoomExtend->setIcon(iconZoomExtend);
-
-  mActionZoom11->setText(tr("Zoom 1:1"));
-  QIcon iconZoom11;
-  iconZoom11.addFile(QStringLiteral(":/ico/24/img/material/24/icons8_zoom_to_actual_size_24px.png"), QSize(), QIcon::Normal, QIcon::Off);
-  mActionZoom11->setIcon(iconZoom11);
-
 }
 
 QAction *TabHandler::actionZoom11() const

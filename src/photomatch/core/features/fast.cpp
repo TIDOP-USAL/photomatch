@@ -108,12 +108,14 @@ FastDetector::FastDetector(const FastDetector &fastDetector)
                                           convertDetectorType(FastProperties::detectorType()));
 }
 
-FastDetector::FastDetector(int threshold, bool nonmaxSuppression, const QString &detectorType)
+FastDetector::FastDetector(int threshold,
+                           bool nonmaxSuppression,
+                           const QString &detectorType)
   : mFast(cv::FastFeatureDetector::create())
 {
-  setThreshold(threshold);
-  setNonmaxSuppression(nonmaxSuppression);
-  setDetectorType(detectorType);
+  this->setThreshold(threshold);
+  this->setNonmaxSuppression(nonmaxSuppression);
+  this->setDetectorType(detectorType);
 }
 
 
@@ -151,19 +153,11 @@ int FastDetector::convertDetectorType(const QString &detectorType)
 }
 #endif
 
-bool FastDetector::detect(const cv::Mat &img,
-                          std::vector<cv::KeyPoint> &keyPoints,
-                          cv::InputArray &mask)
+std::vector<cv::KeyPoint> FastDetector::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-
-  try {
-    mFast->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("FAST Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mFast->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
 void FastDetector::setThreshold(int threshold)
@@ -191,6 +185,111 @@ void FastDetector::reset()
   mFast->setNonmaxSuppression(FastProperties::nonmaxSuppression());
   mFast->setType(convertDetectorType(FastProperties::detectorType()));
 }
+
+
+/*----------------------------------------------------------------*/
+
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
+
+FastDetectorCuda::FastDetectorCuda()
+{
+  this->update();
+}
+
+FastDetectorCuda::FastDetectorCuda(const FastDetector &fastDetector)
+  : FastProperties(fastDetector),
+    KeypointDetector(fastDetector)
+{
+  this->update();
+}
+
+FastDetectorCuda::FastDetectorCuda(int threshold,
+                                   bool nonmaxSuppression,
+                                   const QString &detectorType)
+{
+  FastProperties::setThreshold(threshold);
+  FastProperties::setNonmaxSuppression(nonmaxSuppression);
+  FastProperties::setDetectorType(detectorType);
+  this->update();
+}
+
+
+//#if CV_VERSION_MAJOR >= 4
+//cv::FastFeatureDetector::DetectorType FastDetectorCuda::convertDetectorType(const QString &detectorType)
+//{
+//  cv::FastFeatureDetector::DetectorType type = cv::FastFeatureDetector::DetectorType::TYPE_9_16;
+
+//  if (detectorType.compare("TYPE_5_8") == 0){
+//    type = cv::FastFeatureDetector::TYPE_5_8;
+//  } else if (detectorType.compare("TYPE_7_12") == 0) {
+//    type = cv::FastFeatureDetector::TYPE_7_12;
+//  } else if (detectorType.compare("TYPE_9_16") == 0) {
+//    type = cv::FastFeatureDetector::TYPE_9_16;
+//  }
+
+//  return type;
+//}
+
+//#else
+
+int FastDetectorCuda::convertDetectorType(const QString &detectorType)
+{
+  int type = cv::FastFeatureDetector::TYPE_9_16;
+
+  if (detectorType.compare("TYPE_5_8") == 0){
+    type = cv::FastFeatureDetector::TYPE_5_8;
+  } else if (detectorType.compare("TYPE_7_12") == 0) {
+    type = cv::FastFeatureDetector::TYPE_7_12;
+  } else if (detectorType.compare("TYPE_9_16") == 0) {
+    type = cv::FastFeatureDetector::TYPE_9_16;
+  }
+
+  return type;
+}
+//#endif
+
+void FastDetectorCuda::update()
+{
+  mFast = cv::cuda::FastFeatureDetector::create(FastProperties::threshold(),
+                                                FastProperties::nonmaxSuppression(),
+                                                convertDetectorType(FastProperties::detectorType()),
+                                                10000);
+}
+
+std::vector<cv::KeyPoint> FastDetectorCuda::detect(const cv::Mat &img, const cv::Mat &mask)
+{
+  std::vector<cv::KeyPoint> keyPoints;
+  cv::cuda::GpuMat g_img(img);
+  cv::cuda::GpuMat g_mask(mask);
+  mFast->detect(g_img, keyPoints, g_mask);
+  return keyPoints;
+}
+
+void FastDetectorCuda::setThreshold(int threshold)
+{
+  FastProperties::setThreshold(threshold);
+  update();
+}
+
+void FastDetectorCuda::setNonmaxSuppression(bool nonmaxSuppression)
+{
+  FastProperties::setNonmaxSuppression(nonmaxSuppression);
+  update();
+}
+
+void FastDetectorCuda::setDetectorType(const QString &detectorType)
+{
+  FastProperties::setDetectorType(detectorType);
+  update();
+}
+
+void FastDetectorCuda::reset()
+{
+  FastProperties::reset();
+  update();
+}
+
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 
 } // namespace photomatch

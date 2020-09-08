@@ -24,22 +24,6 @@ public:
 
   void setHistory(const QStringList &history);
 
-// PhotoMatchWidget interface
-
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
-private:
-
-  void initUI() override;
-  void initSignalAndSlots() override;
-
 signals:
 
   void openNew();
@@ -49,11 +33,21 @@ signals:
   void clearHistory();
   void openProjectFromHistory(QString);
 
-// QWidget interface
+// PhotoMatchWidget interface
 
-protected:
+private:
 
-  void changeEvent(QEvent *event) override;
+  void initUI() override;
+  void initSignalAndSlots() override;
+
+public slots:
+
+  void reset() override;
+
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

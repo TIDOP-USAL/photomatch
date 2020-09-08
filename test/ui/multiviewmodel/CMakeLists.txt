@@ -9,8 +9,8 @@ set(test_KIND TEST)
 set(the_target "${test_kind}_${test_name}")
 add_executable(${the_target}
     ${test_filename}
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/MultiViewModel.cpp
-    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/MultiViewModel.h
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/multiview/MultiViewModel.cpp
+    ${CMAKE_SOURCE_DIR}/src/photomatch/ui/multiview/MultiViewModel.h
     ${CMAKE_SOURCE_DIR}/src/photomatch/ui/mvp.h
     )
 

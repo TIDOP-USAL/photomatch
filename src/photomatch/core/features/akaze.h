@@ -48,7 +48,7 @@ public:
   AkazeProperties(const AkazeProperties &akazeProperties);
   ~AkazeProperties() override = default;
 
-// IAkaze interface
+// Akaze interface
 
 public:
 
@@ -124,20 +124,17 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-
-// IAkaze interface
+// Akaze interface
 
 public:
 

@@ -99,6 +99,9 @@ public slots:
 
 };
 
+
+
+
 class PHOTOMATCH_EXPORT BriskWidgetImp
   : public BriskWidget
 {
@@ -109,7 +112,7 @@ public:
   BriskWidgetImp(QWidget *parent = nullptr);
   ~BriskWidgetImp() override;
 
-// IBriskWidget interface
+// BriskWidget interface
 
   int threshold() const override;
   int octaves() const override;
@@ -123,25 +126,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 
@@ -152,7 +149,6 @@ protected:
   QSpinBox *mOctaves;
   QLabel *mLabelPatternScale;
   QDoubleSpinBox *mPatternScale;
-
 
 };
 

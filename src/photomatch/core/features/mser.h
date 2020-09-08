@@ -45,7 +45,7 @@ public:
   MserProperties(const MserProperties &mserProperties);
   ~MserProperties() override = default;
 
-// IMser interface
+// Mser interface
 
 public:
 
@@ -92,7 +92,7 @@ private:
 /*----------------------------------------------------------------*/
 
 
-class MserDetector
+class PHOTOMATCH_EXPORT MserDetector
   : public MserProperties,
     public KeypointDetector
 {
@@ -120,11 +120,10 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
-// IFast interface
+// Mser interface
 
 public:
 

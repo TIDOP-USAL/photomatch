@@ -89,7 +89,7 @@ public:
    * mensajes mediante el método addListener() recibiran los diferentes 
    * mensajes (Depuración, error, etc) que se emitan desde la librería.
    */
-	class TL_EXPORT Listener
+  class TL_EXPORT Listener
   {
 
   public:

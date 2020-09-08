@@ -25,6 +25,8 @@
 #ifndef PHOTOMATCH_HELP_DIALOG_H
 #define PHOTOMATCH_HELP_DIALOG_H
 
+#include "photomatch/photomatch_global.h"
+
 #include "mvp.h"
 
 #include <QTextBrowser>
@@ -37,7 +39,8 @@ class HelpBrowser
 
 public:
 
-  HelpBrowser(QHelpEngine *helpEngine, QWidget *parent = nullptr);
+  HelpBrowser(QHelpEngine *helpEngine,
+              QWidget *parent = nullptr);
 
   QVariant loadResource (int type, const QUrl& name);
 
@@ -112,7 +115,7 @@ private slots:
    */
   void searchFinished(int hits);
 
-// IDialogView interface
+// PhotoMatchDialogView interface
 
 private:
 

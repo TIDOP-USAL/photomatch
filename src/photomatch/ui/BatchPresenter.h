@@ -13,7 +13,7 @@ class ISettingsModel;
 class Help;
 
 class IBatchPresenter
-  : public IPresenter
+  : public PhotoMatchModel
 {
 
   Q_OBJECT
@@ -45,7 +45,7 @@ public:
                  ISettingsModel *settingsModel);
   ~BatchPresenter() override;
 
-// IPresenter interface
+// PhotoMatchModel interface
 
 public slots:
 

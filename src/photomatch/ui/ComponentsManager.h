@@ -61,13 +61,14 @@ class AboutDialog;
 class HelpDialog;
 
 class ProgressHandler;
-class IProgressDialog;
+class ProgressDialog;
 
 
-class ComponentsManager : public QObject
+class ComponentsManager
+  : public QObject
 {
   Q_OBJECT
-
+    
 public:
 
   explicit ComponentsManager(QObject *parent = nullptr);
@@ -80,8 +81,6 @@ public:
 
   ProjectModel *projectModel();
 
-//  Settings *settings();
-//  SettingsController *settingsRW();
   SettingsModel *settingsModel();
   SettingsPresenter *settingsPresenter();
 
@@ -94,13 +93,10 @@ public:
   ExportMatchesPresenter *exportMatchesPresenter();
   ExportMatchesModel *exportMatchesModel();
 
-  //IPreprocessModel *preprocessModel();
   PreprocessPresenter *preprocessPresenter();
 
-  //IFeatureExtractorModel *featureExtractorModel();
   FeatureExtractorPresenter *featureExtractorPresenter();
 
-  //IDescriptorMatcherModel *descriptorMatcherModel();
   DescriptorMatcherPresenter *descriptorMatcherPresenter();
 
   FeaturesViewerPresenter *featuresViewerPresenter();
@@ -133,7 +129,7 @@ public:
   HelpDialog *helpDialog();
 
   ProgressHandler *progressHandler();
-  IProgressDialog *progressDialog();
+  ProgressDialog *progressDialog();
 
 signals:
 
@@ -145,10 +141,13 @@ protected slots:
   void initAndOpenFeatureExtractionDialog();
   void initAndOpenFeatureMatchingDialog();
   void initAndOpenKeypointsViewerDialogFromSession(const QString &session);
-  void initAndOpenKeypointsViewerDialogFromSessionAndImage(const QString &session, const QString &image);
+  void initAndOpenKeypointsViewerDialogFromSessionAndImage(const QString &session,
+                                                           const QString &image);
   void initKeypointsViewer();
   void initAndOpenMatchesViewerDialogFromSession(const QString &session);
-  void initAndOpenMatchesViewerDialogFromSessionAndImages(const QString &session, const QString &leftImage, const QString &rightImage);
+  void initAndOpenMatchesViewerDialogFromSessionAndImages(const QString &session,
+                                                          const QString &leftImage,
+                                                          const QString &rightImage);
   void initMatchesViewer();
   void initAndOpenExportFeaturesDialog();
   void initAndOpenExportMatchesDialog();
@@ -165,6 +164,10 @@ protected slots:
   void initSettingsDialog();
   void initAndOpenMultiviewMatchingAssessmentDialog();
 
+private:
+
+  void mainWindowConnectSignalsSlots();
+
 protected:
 
   MainWindowView *mMainWindowView;
@@ -172,7 +175,7 @@ protected:
   MainWindowPresenter *mMainWindowPresenter;
 
   Project *mProject;
-  ProjectController *mProjectIO;
+  ProjectController *mProjectController;
   ProjectModel *mProjectModel;
 
   NewProjectPresenter *mNewProjectPresenter;
@@ -225,7 +228,7 @@ protected:
   HelpDialog *mHelpDialog;
 
   ProgressHandler *mProgressHandler;
-  IProgressDialog *mProgressDialog;
+  ProgressDialog *mProgressDialog;
 
 };
 

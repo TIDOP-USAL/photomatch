@@ -47,8 +47,8 @@ public:
   explicit ThumbnailsWidget(QWidget *parent = nullptr);
   virtual ~ThumbnailsWidget() override {}
 
-  void setActiveImage(const QString &image);
-  void setActiveImages(const QStringList &images);
+  void setActiveImage(const QString &imageName);
+  void setActiveImages(const QStringList &imageNames);
 
 signals:
 
@@ -70,9 +70,9 @@ private slots:
   void onThumbnailDoubleClicked(QListWidgetItem *item);
   void onSelectionChanged();
 
-  void onThumbnailToggled(bool active);
-  void onThumbnailSmallToggled(bool active);
-  void onDetailsToggled(bool active);
+  void onThumbnailClicked();
+  void onThumbnailSmallClicked();
+  void onDetailsClicked();
   void onDeleteImageClicked();
 
   void showThumbnail(int id);
@@ -80,25 +80,19 @@ private slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
+private:
 
-  void update() override;
-  void retranslate() override;
+  void initUI() override;
+  void initSignalAndSlots() override;
 
 public slots:
 
   void reset() override;
 
-private:
+protected slots:
 
-  virtual void initUI() override;
-  void initSignalAndSlots() override;
-
-// QWidget interface
-
-protected:
-
-  void changeEvent(QEvent *event) override;
+  void update() override;
+  void retranslate() override;
 
 protected:
 
@@ -111,6 +105,7 @@ protected:
   QAction *mDeleteImageAction;
   QFutureWatcher<QImage> *mFutureWatcherThumbnail;
   int mThumbnaislSize;
+  bool bLoadingImages;
 };
 
 } // namespace photomatch

@@ -121,30 +121,30 @@ TL_EXPORT std::string formatWindowsErrorMsg(DWORD errorCode);
 #endif
 
 
-#ifdef TL_MESSAGE_HANDLER
-#ifdef _DEBUG
-#define TL_ERROR(...) make_exception(MessageManager::Message(__VA_ARGS__).message(), __FILE__, __LINE__, TL_FUNCTION)
-#define TL_THROW_ERROR(...) throw make_exception(MessageManager::Message(__VA_ARGS__).message(), __FILE__, __LINE__, TL_FUNCTION)
+//#ifdef TL_MESSAGE_HANDLER
+//#ifdef _DEBUG
+#define TL_ERROR(...) tl::make_exception(tl::MessageManager::Message(__VA_ARGS__).message(), __FILE__, __LINE__, TL_FUNCTION)
+#define TL_THROW_ERROR(...) throw tl::make_exception(tl::MessageManager::Message(__VA_ARGS__).message(), __FILE__, __LINE__, TL_FUNCTION)
 
 //https://www.softwariness.com/articles/assertions-in-cpp/
 //#define TL_THROW_ASSERT(EXPRESSION, ...) if(!(EXPRESSION)) { throw Exception(#EXPRESSION MessageManager::Message(__VA_ARGS__).getMessage(), __FILE__, __LINE__, TL_FUNCTION); }
-#define TL_THROW_ASSERT(EXPRESSION, MESSAGE) if(!(EXPRESSION)) { TL_THROW_ERROR( "Assertion '" #EXPRESSION "' " MESSAGE); }
+#define TL_ASSERT(EXPRESSION, MESSAGE) if(!(EXPRESSION)) { TL_THROW_ERROR( "Assertion '" #EXPRESSION "' " MESSAGE); }
 
-#else
-#define TL_ERROR(...) make_exception(MessageManager::Message(__VA_ARGS__).message())
-#define TL_THROW_ERROR(...) throw make_exception(MessageManager::Message(__VA_ARGS__).message())
+//#else
+//#define TL_ERROR(...) make_exception(MessageManager::Message(__VA_ARGS__).message())
+//#define TL_THROW_ERROR(...) throw make_exception(MessageManager::Message(__VA_ARGS__).message())
 
-//https://www.softwariness.com/articles/assertions-in-cpp/
-#define TL_THROW_ASSERT(EXPRESSION, MESSAGE) if(!(EXPRESSION)) { TL_THROW_ERROR(#EXPRESSION MESSAGE); }
+////https://www.softwariness.com/articles/assertions-in-cpp/
+//#define TL_THROW_ASSERT(EXPRESSION, MESSAGE) if(!(EXPRESSION)) { TL_THROW_ERROR(#EXPRESSION MESSAGE); }
 
-#endif
-#else  // End TL_MESSAGE_HANDLER
+//#endif
+//#else  // End TL_MESSAGE_HANDLER
 
-#define TL_ERROR(...)
-#define TL_THROW_ERROR(...)
-#define TL_THROW_ASSERT(EXPRESSION, MESSAGE)
+//#define TL_ERROR(...)
+//#define TL_THROW_ERROR(...)
+//#define TL_THROW_ASSERT(EXPRESSION, MESSAGE)
 
-#endif
+//#endif
 
 } // fin namespace tl
 

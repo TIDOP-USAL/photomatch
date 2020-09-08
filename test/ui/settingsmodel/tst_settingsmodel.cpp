@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include "photomatch/ui/SettingsModel.h"
+#include "photomatch/ui/settings/SettingsModel.h"
 
 using namespace photomatch;
 

@@ -60,6 +60,96 @@ DaisyWidgetImp::~DaisyWidgetImp()
 
 }
 
+void DaisyWidgetImp::initUI()
+{
+  this->setWindowTitle("DAISY");
+  this->setObjectName("DaisyWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelRadius, 0, 0);
+  mRadius->setRange(0., 100.);
+  propertiesLayout->addWidget(mRadius, 0, 1);
+
+  propertiesLayout->addWidget(mLabelQRadius, 1, 0);
+  mQRadius->setRange(1, 100);
+  propertiesLayout->addWidget(mQRadius, 1, 1);
+
+  propertiesLayout->addWidget(mLabelQTheta, 2, 0);
+  mQTheta->setRange(0, 100);
+  propertiesLayout->addWidget(mQTheta, 2, 1);
+
+  propertiesLayout->addWidget(mLabelQHist, 3, 0);
+  mQHist->setRange(0, 100);
+  propertiesLayout->addWidget(mQHist, 3, 1);
+
+  propertiesLayout->addWidget(mInterpolation, 4, 0);
+
+  propertiesLayout->addWidget(mUseOrientation, 5, 0);
+
+  propertiesLayout->addWidget(mLabelNorm, 6, 0);
+  mNorm->addItem("NRM_NONE");
+  mNorm->addItem("NRM_PARTIAL");
+  mNorm->addItem("NRM_FULL");
+  mNorm->addItem("NRM_SIFT");
+  propertiesLayout->addWidget(mNorm, 6, 1);
+
+  this->retranslate();
+  this->reset(); /// set default values
+  this->update();
+}
+
+void DaisyWidgetImp::initSignalAndSlots()
+{
+  connect(mRadius,         QOverload<double>::of(&QDoubleSpinBox::valueChanged),   this, &DaisyWidget::radiusChange);
+  connect(mQRadius,        QOverload<int>::of(&QSpinBox::valueChanged),            this, &DaisyWidget::qRadiusChange);
+  connect(mQTheta,         QOverload<int>::of(&QSpinBox::valueChanged),            this, &DaisyWidget::qThetaChange);
+  connect(mQHist,          QOverload<int>::of(&QSpinBox::valueChanged),            this, &DaisyWidget::qHistChange);
+  connect(mNorm,           &QComboBox::currentTextChanged,                         this, &DaisyWidget::normChange);
+  connect(mInterpolation,  &QAbstractButton::clicked,                              this, &DaisyWidget::interpolationChange);
+  connect(mUseOrientation, &QAbstractButton::clicked,                              this, &DaisyWidget::useOrientationChange);
+}
+
+void DaisyWidgetImp::reset()
+{
+  const QSignalBlocker blockerRadius(mRadius);
+  const QSignalBlocker blockerQRadius(mQRadius);
+  const QSignalBlocker blockerQTheta(mQTheta);
+  const QSignalBlocker blockerQHist(mQHist);
+  const QSignalBlocker blockerNorm(mNorm);
+
+  mRadius->setValue(15.);
+  mQRadius->setValue(3);
+  mQTheta->setValue(8);
+  mQHist->setValue(8);
+  mNorm->setCurrentText("NRM_NONE");
+  mInterpolation->setChecked(true);
+  mUseOrientation->setChecked(false);
+}
+
+void DaisyWidgetImp::update()
+{
+}
+
+void DaisyWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("DaisyWidget", "DAISY Parameters"));
+  mLabelRadius->setText(QApplication::translate("DaisyWidget", "Radius:"));
+  mLabelQRadius->setText(QApplication::translate("DaisyWidget", "Radial range division quantity:"));
+  mLabelQTheta->setText(QApplication::translate("DaisyWidget", "Angular range division quantity:"));
+  mLabelQHist->setText(QApplication::translate("DaisyWidget", "Gradient orientations range division quantity:"));
+  mLabelNorm->setText(QApplication::translate("DaisyWidget", "Descriptor normalization type:"));
+  mInterpolation->setText(QApplication::translate("DaisyWidget", "Interpolation"));
+  mUseOrientation->setText(QApplication::translate("DaisyWidget", "Keypoints orientation"));
+}
+
 double DaisyWidgetImp::radius() const
 {
   return mRadius->value();
@@ -133,107 +223,6 @@ void DaisyWidgetImp::setInterpolation(bool interpolation)
 void DaisyWidgetImp::setUseOrientation(bool useOrientation)
 {
   mUseOrientation->setChecked(useOrientation);
-}
-
-void DaisyWidgetImp::update()
-{
-}
-
-void DaisyWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("DaisyWidgetImp", "DAISY Parameters"));
-  mLabelRadius->setText(QApplication::translate("DaisyWidgetImp", "Radius:"));
-  mLabelQRadius->setText(QApplication::translate("DaisyWidgetImp", "Radial range division quantity:"));
-  mLabelQTheta->setText(QApplication::translate("DaisyWidgetImp", "Angular range division quantity:"));
-  mLabelQHist->setText(QApplication::translate("DaisyWidgetImp", "Gradient orientations range division quantity:"));
-  mLabelNorm->setText(QApplication::translate("DaisyWidgetImp", "Descriptor normalization type:"));
-  mInterpolation->setText(QApplication::translate("DaisyWidgetImp", "Interpolation"));
-  mUseOrientation->setText(QApplication::translate("DaisyWidgetImp", "Keypoints orientation"));
-}
-
-void DaisyWidgetImp::reset()
-{
-  const QSignalBlocker blockerRadius(mRadius);
-  const QSignalBlocker blockerQRadius(mQRadius);
-  const QSignalBlocker blockerQTheta(mQTheta);
-  const QSignalBlocker blockerQHist(mQHist);
-  const QSignalBlocker blockerNorm(mNorm);
-
-  mRadius->setValue(15.);
-  mQRadius->setValue(3);
-  mQTheta->setValue(8);
-  mQHist->setValue(8);
-  mNorm->setCurrentText("NRM_NONE");
-  mInterpolation->setChecked(true);
-  mUseOrientation->setChecked(false);
-}
-
-void DaisyWidgetImp::initUI()
-{
-  this->setWindowTitle("DAISY");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelRadius, 0, 0);
-  mRadius->setRange(0., 100.);
-  propertiesLayout->addWidget(mRadius, 0, 1);
-
-  propertiesLayout->addWidget(mLabelQRadius, 1, 0);
-  mQRadius->setRange(1, 100);
-  propertiesLayout->addWidget(mQRadius, 1, 1);
-
-  propertiesLayout->addWidget(mLabelQTheta, 2, 0);
-  mQTheta->setRange(0, 100);
-  propertiesLayout->addWidget(mQTheta, 2, 1);
-
-  propertiesLayout->addWidget(mLabelQHist, 3, 0);
-  mQHist->setRange(0, 100);
-  propertiesLayout->addWidget(mQHist, 3, 1);
-
-  propertiesLayout->addWidget(mInterpolation, 4, 0);
-
-  propertiesLayout->addWidget(mUseOrientation, 5, 0);
-
-  propertiesLayout->addWidget(mLabelNorm, 6, 0);
-  mNorm->addItem("NRM_NONE");
-  mNorm->addItem("NRM_PARTIAL");
-  mNorm->addItem("NRM_FULL");
-  mNorm->addItem("NRM_SIFT");
-  propertiesLayout->addWidget(mNorm, 6, 1);
-
-  this->retranslate();
-  this->reset(); /// set default values
-  this->update();
-}
-
-void DaisyWidgetImp::initSignalAndSlots()
-{
-  connect(mRadius,         SIGNAL(valueChanged(double)),         this, SIGNAL(radiusChange(double)));
-  connect(mQRadius,        SIGNAL(valueChanged(int)),            this, SIGNAL(qRadiusChange(int)));
-  connect(mQTheta,         SIGNAL(valueChanged(int)),            this, SIGNAL(qThetaChange(int)));
-  connect(mQHist,          SIGNAL(valueChanged(int)),            this, SIGNAL(qHistChange(int)));
-  connect(mNorm,           SIGNAL(currentTextChanged(QString)),  this, SIGNAL(normChange(QString)));
-  connect(mInterpolation,  SIGNAL(clicked(bool)),                this, SIGNAL(interpolationChange(bool)));
-  connect(mUseOrientation, SIGNAL(clicked(bool)),                this, SIGNAL(useOrientationChange(bool)));
-}
-
-void DaisyWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

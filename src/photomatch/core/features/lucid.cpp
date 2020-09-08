@@ -89,19 +89,11 @@ void LucidDescriptor::update()
                                           LucidProperties::blurKernel());
 }
 
-bool LucidDescriptor::extract(const cv::Mat &img,
-                              std::vector<cv::KeyPoint> &keyPoints,
-                              cv::Mat &descriptors)
+cv::Mat LucidDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mLUCID->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("LUCID Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mLUCID->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void LucidDescriptor::setLucidKernel(int lucidKernel)

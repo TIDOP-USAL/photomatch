@@ -56,7 +56,7 @@ public:
 signals:
 
   void clipLimitChange(double);
-  void tileGridSizeChange(QSize);
+  void tileGridSizeChange(const QSize &);
 
 public slots:
 
@@ -64,6 +64,9 @@ public slots:
   virtual void setTilesGridSize (const QSize &tileGridSize) = 0;
 
 };
+
+
+
 
 
 class PHOTOMATCH_EXPORT ClaheWidgetImp
@@ -81,7 +84,7 @@ protected slots:
   void onTilesGridXChange(int gx);
   void onTilesGridYChange(int gy);
 
-// ICLAHEWidget interface
+// ClaheWidget interface
 
 public:
 
@@ -95,25 +98,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

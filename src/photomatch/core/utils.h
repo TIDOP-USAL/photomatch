@@ -65,6 +65,14 @@ static float distancePointLine(const cv::Point_<T> point, const cv::Vec3f &line)
       / std::sqrt(line(0)*line(0)+line(1)*line(1));
 }
 
+
+/*----------------------------------------------------------------*/
+
+
+PHOTOMATCH_EXPORT bool cudaEnabled();
+PHOTOMATCH_EXPORT bool cudaEnabled(double minDriver, double minCapability);
+
+
 } // namespace photomatch
 
 #endif // PHOTOMATCH_UTILS_H

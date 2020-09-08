@@ -46,23 +46,10 @@ DecolorWidgetImp::~DecolorWidgetImp()
 
 }
 
-void DecolorWidgetImp::update()
-{
-}
-
-void DecolorWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("DecolorWidgetImp", "Decolorization Parameters"));
-  mLabelDescription->setText(QApplication::translate("DecolorWidgetImp", "Contrast Preserving Decolorization"));
-}
-
-void DecolorWidgetImp::reset()
-{
-}
-
 void DecolorWidgetImp::initUI()
 {
   this->setWindowTitle("Decolorization");
+  this->setObjectName("DecolorWidget");
 
   QGridLayout *layout = new QGridLayout();
   layout->setContentsMargins(0,0,0,0);
@@ -88,16 +75,18 @@ void DecolorWidgetImp::initSignalAndSlots()
 
 }
 
-void DecolorWidgetImp::changeEvent(QEvent *event)
+void DecolorWidgetImp::reset()
 {
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
+}
+
+void DecolorWidgetImp::update()
+{
+}
+
+void DecolorWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("DecolorWidget", "Decolorization Parameters"));
+  mLabelDescription->setText(QApplication::translate("DecolorWidget", "Contrast Preserving Decolorization"));
 }
 
 } // namespace photomatch

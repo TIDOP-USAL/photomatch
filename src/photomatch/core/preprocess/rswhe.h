@@ -89,7 +89,7 @@ public:
 
 public:
 
-  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
+  cv::Mat process(const cv::Mat &imgIn) override;
 
 };
 

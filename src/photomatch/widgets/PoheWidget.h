@@ -55,7 +55,7 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
 
 public slots:
 
@@ -79,7 +79,7 @@ protected slots:
   void onBlockSizeXChange(int blockSizeX);
   void onBlockSizeYChange(int blockSizeY);
 
-// ICLAHEWidget interface
+// PoheWidget interface
 
 public:
 
@@ -91,25 +91,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

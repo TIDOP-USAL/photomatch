@@ -49,13 +49,15 @@ public:
 
 signals:
 
-  void blockSizeChange(QSize);
+  void blockSizeChange(const QSize &);
 
 public slots:
 
   virtual void setBlockSize(const QSize &blockSize) = 0;
 
 };
+
+
 
 
 class PHOTOMATCH_EXPORT LceBsescsWidgetImp
@@ -73,7 +75,7 @@ protected slots:
   void onBlockSizeXChange(int gx);
   void onBlockSizeYChange(int gy);
 
-// ICLAHEWidget interface
+// LceBsescsWidget interface
 
 public:
 
@@ -85,25 +87,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

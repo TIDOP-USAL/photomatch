@@ -32,8 +32,8 @@
 namespace photomatch
 {
 
-ProgressDialog::ProgressDialog(QWidget *parent)
-  : IProgressDialog(parent),
+ProgressDialogImp::ProgressDialogImp(QWidget *parent)
+  : ProgressDialog(parent),
     ui(new Ui::ProgressDialog)
 {
 
@@ -43,7 +43,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
   this->setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
 
   ui->setupUi(this);
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
 
   ui->pushButtonMinimize->setEnabled(false);
 
@@ -52,27 +52,27 @@ ProgressDialog::ProgressDialog(QWidget *parent)
   connect(ui->pushButtonClose, SIGNAL(clicked(bool)), this, SLOT(close()));
 }
 
-ProgressDialog::~ProgressDialog()
+ProgressDialogImp::~ProgressDialogImp()
 {
   delete ui;
 }
 
-void ProgressDialog::setStatusText(QString text)
+void ProgressDialogImp::setStatusText(QString text)
 {
   ui->labelStatus->setText(text);
 }
 
-void ProgressDialog::setRange(int min, int max)
+void ProgressDialogImp::setRange(int min, int max)
 {
   ui->progressBar->setRange(min, max);
 }
 
-void ProgressDialog::setValue(int value)
+void ProgressDialogImp::setValue(int value)
 {
   ui->progressBar->setValue(value);
 }
 
-void ProgressDialog::setInitialized()
+void ProgressDialogImp::setInitialized()
 {
   //ui->pushButton->setText(tr("Cancel"));
   ui->pushButtonCancel->setVisible(true);
@@ -81,7 +81,7 @@ void ProgressDialog::setInitialized()
   this->show();
 }
 
-void ProgressDialog::setFinished()
+void ProgressDialogImp::setFinished()
 {
   ui->pushButtonCancel->setVisible(false);
   ui->pushButtonClose->setVisible(true);
@@ -92,17 +92,17 @@ void ProgressDialog::setFinished()
   ui->pushButtonMinimize->setDisabled(true);
 }
 
-void ProgressDialog::setTitle(QString title)
+void ProgressDialogImp::setTitle(QString title)
 {
   ui->progressBar->setWindowTitle(title);
 }
 
-void ProgressDialog::onMinimized()
+void ProgressDialogImp::onMinimized()
 {
   this->hide();
 }
 
-void ProgressDialog::onPushButtonCancelClicked()
+void ProgressDialogImp::onPushButtonCancelClicked()
 {
   emit cancel();
   close();

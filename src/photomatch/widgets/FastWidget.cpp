@@ -52,6 +52,66 @@ FastWidgetImp::~FastWidgetImp()
 {
 }
 
+void FastWidgetImp::initUI()
+{
+  this->setWindowTitle("FAST");
+  this->setObjectName("FastWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mLabelThreshold, 0, 0);
+  mThreshold->setRange(0, 100);
+  propertiesLayout->addWidget(mThreshold, 0, 1);
+
+  propertiesLayout->addWidget(mNonmaxSuppression, 1, 0);
+
+  propertiesLayout->addWidget(mLabelDetectorType, 2, 0);
+  mDetectorType->addItem("TYPE_5_8");
+  mDetectorType->addItem("TYPE_7_12");
+  mDetectorType->addItem("TYPE_9_16");
+  propertiesLayout->addWidget(mDetectorType, 2, 1);
+
+  this->retranslate();
+  this->reset(); // Set default values
+  this->update();
+}
+
+void FastWidgetImp::initSignalAndSlots()
+{
+  connect(mThreshold,          QOverload<int>::of(&QSpinBox::valueChanged), this, &FastWidget::thresholdChange);
+  connect(mNonmaxSuppression,  &QAbstractButton::clicked,                   this, &FastWidget::nonmaxSuppressionChange);
+  connect(mDetectorType,       &QComboBox::currentTextChanged,              this, &FastWidget::detectorTypeChange);
+}
+
+void FastWidgetImp::reset()
+{
+  const QSignalBlocker blockerFastThreshold(mThreshold);
+  const QSignalBlocker blockerDetectorType(mDetectorType);
+
+  mThreshold->setValue(10);
+  mNonmaxSuppression->setChecked(true);
+  mDetectorType->setCurrentText("TYPE_9_16");
+}
+
+void FastWidgetImp::update()
+{
+}
+
+void FastWidgetImp::retranslate()
+{
+  mGroupBox->setTitle(QApplication::translate("FastWidget", "FAST Parameters"));
+  mLabelThreshold->setText(QApplication::translate("FastWidget", "Threshold:"));
+  mNonmaxSuppression->setText(QApplication::translate("FastWidget", "Nonmax Suppression"));
+  mLabelDetectorType->setText(QApplication::translate("FastWidget", "Detector Type:"));
+}
+
 int FastWidgetImp::threshold() const
 {
   return mThreshold->value();
@@ -82,77 +142,6 @@ void FastWidgetImp::setDetectorType(QString detectorType)
 {
   const QSignalBlocker blockerDetectorType(mDetectorType);
   mDetectorType->setCurrentText(detectorType);
-}
-
-void FastWidgetImp::update()
-{
-}
-
-void FastWidgetImp::retranslate()
-{
-  mGroupBox->setTitle(QApplication::translate("FastWidgetImp", "FAST Parameters"));
-  mLabelThreshold->setText(QApplication::translate("FastWidgetImp", "Threshold:"));
-  mNonmaxSuppression->setText(QApplication::translate("FastWidgetImp", "Nonmax Suppression"));
-  mLabelDetectorType->setText(QApplication::translate("FastWidgetImp", "Detector Type:"));
-}
-
-void FastWidgetImp::reset()
-{
-  const QSignalBlocker blockerFastThreshold(mThreshold);
-  const QSignalBlocker blockerDetectorType(mDetectorType);
-
-  mThreshold->setValue(10);
-  mNonmaxSuppression->setChecked(true);
-  mDetectorType->setCurrentText("TYPE_9_16");
-}
-
-void FastWidgetImp::initUI()
-{
-  this->setWindowTitle("FAST");
-
-  QGridLayout *layout = new QGridLayout();
-  layout->setContentsMargins(0,0,0,0);
-  this->setLayout(layout);
-
-  layout->addWidget(mGroupBox);
-
-  QGridLayout *propertiesLayout = new QGridLayout();
-  mGroupBox->setLayout(propertiesLayout);
-
-  propertiesLayout->addWidget(mLabelThreshold, 0, 0);
-  mThreshold->setRange(0, 100);
-  propertiesLayout->addWidget(mThreshold, 0, 1);
-
-  propertiesLayout->addWidget(mNonmaxSuppression, 1, 0);
-
-  propertiesLayout->addWidget(mLabelDetectorType, 2, 0);
-  mDetectorType->addItem("TYPE_5_8");
-  mDetectorType->addItem("TYPE_7_12");
-  mDetectorType->addItem("TYPE_9_16");
-  propertiesLayout->addWidget(mDetectorType, 2, 1);
-
-  this->retranslate();
-  this->reset(); // Set default values
-  this->update();
-}
-
-void FastWidgetImp::initSignalAndSlots()
-{
-  connect(mThreshold,          SIGNAL(valueChanged(int)),            this, SIGNAL(thresholdChange(int)));
-  connect(mNonmaxSuppression,  SIGNAL(clicked(bool)),                this, SIGNAL(nonmaxSuppressionChange(bool)));
-  connect(mDetectorType,       SIGNAL(currentTextChanged(QString)),  this, SIGNAL(detectorTypeChange(QString)));
-}
-
-void FastWidgetImp::changeEvent(QEvent *event)
-{
-  QWidget::changeEvent(event);
-  switch (event->type()) {
-    case QEvent::LanguageChange:
-      this->retranslate();
-      break;
-    default:
-      break;
-  }
 }
 
 } // namespace photomatch

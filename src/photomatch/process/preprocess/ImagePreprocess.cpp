@@ -28,9 +28,12 @@
 
 #include <tidop/core/utils.h>
 #include <tidop/core/messages.h>
+#include <tidop/core/exception.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
+
+#include <QFileInfo>
 
 namespace photomatch
 {
@@ -80,57 +83,60 @@ std::shared_ptr<ImageProcess> ImagePreprocess::preprocess() const
 
 void ImagePreprocess::run()
 {
-  QByteArray ba = mImgInput.toLocal8Bit();
-  const char *input_img = ba.data();
-
-  msgInfo("Preprocessing image %s", input_img);
-
-  QImageReader imageReader(input_img);
-  QSize size = imageReader.size();
-  double scale = 1.;
-  int w = size.width();
-  int h = size.height();
-  if (w > h){
-    scale = w / static_cast<double>(mMaxSize);
-  } else {
-    scale = h / static_cast<double>(mMaxSize);
-  }
-
-  cv::Mat img;
-  if (scale > 1.) {
-
-    size /= scale;
-    imageReader.setScaledSize(size);
-    QImage image_scaled = imageReader.read();
-    img = qImageToCvMat(image_scaled);
-    msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
-  } else {
-    /// Se ignoran las imagenes giradas ya que QImageReader ignora si están giradas
-    img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
-    //msgWarning("Full image size. ");
-  }
-
-  tl::Chrono chrono;
-  chrono.run();
-  cv::Mat img_out;
-  bool err = mPreprocess->process(img, img_out);
-  if (err){
-    emit error(0, "Image preprocess error");
-    return;
-  }
-  uint64_t time = chrono.stop();
-  msgInfo("Preprocessed image %s [Time: %f seconds]", input_img, time / 1000.);
-
-  ba = mImgOutput.toLocal8Bit();
-  const char *output_img = ba.data();
 
   try {
+
+    QByteArray ba = mImgInput.toLocal8Bit();
+    const char *input_img = ba.data();
+
+    if (!QFileInfo::exists(mImgInput)) TL_THROW_ERROR("Image doesn't exist: %s", input_img);
+
+    msgInfo("Preprocessing image %s", input_img);
+
+    QImageReader imageReader(input_img);
+    QSize size = imageReader.size();
+    double scale = 1.;
+    int w = size.width();
+    int h = size.height();
+    if (w > h) {
+      scale = w / static_cast<double>(mMaxSize);
+    } else {
+      scale = h / static_cast<double>(mMaxSize);
+    }
+
+    cv::Mat img;
+    if (scale > 1.) {
+      size /= scale;
+      imageReader.setScaledSize(size);
+      QImage image_scaled = imageReader.read();
+      img = qImageToCvMat(image_scaled);
+      msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
+    } else {
+      /// Se ignoran las imagenes giradas ya que QImageReader ignora si están giradas
+      img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
+      //msgWarning("Full image size. ");
+    }
+    if (img.empty()) TL_THROW_ERROR("Could not load image: %s", input_img);
+
+    tl::Chrono chrono;
+    chrono.run();
+    cv::Mat img_out = mPreprocess->process(img);
+
+    uint64_t time = chrono.stop();
+    msgInfo("Preprocessed image %s [Time: %f seconds]", input_img, time / 1000.);
+
+    ba = mImgOutput.toLocal8Bit();
+    const char *output_img = ba.data();
+
     cv::imwrite(output_img, img_out);
     msgInfo("Write preprocessed image: %s", output_img);
     emit preprocessed(mImgOutput);
     emit statusChangedNext();
-  } catch (cv::Exception& e) {
-    msgError("Write preprocessed image Exception: %s\n", e.what());
+
+  } catch (const std::exception &e) {
+    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
+  } catch (...) {
+    msgError("Preprocess image unknow exception");
   }
 
 }

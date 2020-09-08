@@ -75,7 +75,7 @@ signals:
 
   void thresholdChange(int);
   void nonmaxSuppressionChange(bool);
-  void detectorTypeChange(QString);
+  void detectorTypeChange(const QString &);
 
 public slots:
 
@@ -104,6 +104,9 @@ public slots:
 
 };
 
+
+
+
 class PHOTOMATCH_EXPORT FastWidgetImp
   : public FastWidget
 {
@@ -115,7 +118,7 @@ public:
   FastWidgetImp(QWidget *parent = nullptr);
   ~FastWidgetImp() override;
 
-// IFastWidget interface
+// FastWidget interface
 
 public:
 
@@ -131,25 +134,19 @@ public slots:
 
 // PhotoMatchWidget interface
 
-protected slots:
-
-  void update() override;
-  void retranslate() override;
-
-public slots:
-
-  void reset() override;
-
 private:
 
   void initUI() override;
   void initSignalAndSlots() override;
 
-// QWidget interface
+public slots:
 
-protected:
+  void reset() override;
 
-  void changeEvent(QEvent *event) override;
+protected slots:
+
+  void update() override;
+  void retranslate() override;
 
 protected:
 

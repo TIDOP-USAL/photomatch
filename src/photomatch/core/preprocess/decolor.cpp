@@ -60,19 +60,14 @@ DecolorPreprocess::~DecolorPreprocess()
 {
 }
 
-bool DecolorPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat DecolorPreprocess::process(const cv::Mat &imgIn)
 {
 
-  try {
+  cv::Mat imgOut;
 
-    imgOut = convertToGray(imgIn);
+  imgOut = convertToGray(imgIn);
 
-  } catch (cv::Exception &e) {
-    msgError("Decolor image preprocess error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  return imgOut;
 }
 
 

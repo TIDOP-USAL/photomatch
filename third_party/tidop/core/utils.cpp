@@ -801,15 +801,15 @@ int loadBinMat(const char *file, cv::Mat *data)
   int32_t type;
   try {
     size_t err = std::fread(&rows, sizeof(int32_t), 1, fp);
-    TL_THROW_ASSERT(err != 1, "Reading error")
+    TL_ASSERT(err != 1, "Reading error")
     err = std::fread(&cols, sizeof(int32_t), 1, fp);
-    TL_THROW_ASSERT(err != 1, "Reading error")
+    TL_ASSERT(err != 1, "Reading error")
     err = std::fread(&type, sizeof(int32_t), 1, fp);
-    TL_THROW_ASSERT(err != 1, "Reading error")
+    TL_ASSERT(err != 1, "Reading error")
     //Cuerpo
     cv::Mat aux(rows, cols, type);
     err = std::fread(aux.data, sizeof(float), rows*cols, fp);
-    TL_THROW_ASSERT(err != rows*cols, "Reading error")
+    TL_ASSERT(err != rows*cols, "Reading error")
     aux.copyTo(*data);
   } catch (std::exception &e) {
     msgError(e.what());

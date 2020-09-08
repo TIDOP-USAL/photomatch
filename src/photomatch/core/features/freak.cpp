@@ -37,7 +37,6 @@ FreakProperties::FreakProperties()
     mPatternScale(22.),
     mOctaves(4)
 {
-
 }
 
 FreakProperties::FreakProperties(const FreakProperties &freakProperties)
@@ -47,7 +46,6 @@ FreakProperties::FreakProperties(const FreakProperties &freakProperties)
     mPatternScale(freakProperties.mPatternScale),
     mOctaves(freakProperties.mOctaves)
 {
-
 }
 
 bool FreakProperties::orientationNormalized() const
@@ -140,19 +138,11 @@ void FreakDescriptor::update()
                                           FreakProperties::octaves());
 }
 
-bool FreakDescriptor::extract(const cv::Mat &img,
-                              std::vector<cv::KeyPoint> &keyPoints,
-                              cv::Mat &descriptors)
+cv::Mat FreakDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mFREAK->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("FREAK Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mFREAK->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void FreakDescriptor::setOrientationNormalized(bool orientationNormalized)

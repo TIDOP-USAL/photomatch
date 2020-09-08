@@ -32,10 +32,10 @@
 #include <QString>
 
 #include <opencv2/xfeatures2d.hpp>
-#ifdef HAVE_CUDA
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 #include <opencv2/cudafeatures2d.hpp>
-#include "opencv2/xfeatures2d/cuda.hpp"
-#endif // HAVE_CUDA
+#include <opencv2/xfeatures2d/cuda.hpp>
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 
 namespace photomatch
@@ -55,7 +55,7 @@ public:
   SurfProperties(const SurfProperties &surfProperties);
   ~SurfProperties() override = default;
 
-  // ISurf interface
+// Surf interface
 
 public:
 
@@ -112,19 +112,17 @@ public:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-// ISurf interface
+// Surf interface
 
 public:
 
@@ -148,7 +146,7 @@ protected:
 
 /*----------------------------------------------------------------*/
 
-#ifdef HAVE_CUDA
+#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
 
 class PHOTOMATCH_EXPORT SurfCudaDetectorDescriptor
   : public SurfProperties,
@@ -165,26 +163,23 @@ public:
                              int octaveLayers,
                              bool extendedDescriptor,
                              bool upright);
-                             
   ~SurfCudaDetectorDescriptor() override = default;
 
 // KeypointDetector interface
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
-// ISurf interface
+// Surf interface
 
 public:
 
@@ -206,8 +201,7 @@ protected:
 };
 
 
-#endif // HAVE_CUDA
-
+#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #endif // OPENCV_ENABLE_NONFREE
 
