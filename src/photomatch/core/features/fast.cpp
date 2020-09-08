@@ -153,19 +153,11 @@ int FastDetector::convertDetectorType(const QString &detectorType)
 }
 #endif
 
-bool FastDetector::detect(const cv::Mat &img,
-                          std::vector<cv::KeyPoint> &keyPoints,
-                          cv::InputArray &mask)
+std::vector<cv::KeyPoint> FastDetector::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-
-  try {
-    mFast->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("FAST Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mFast->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
 void FastDetector::setThreshold(int threshold)
@@ -264,21 +256,13 @@ void FastDetectorCuda::update()
                                                 10000);
 }
 
-bool FastDetectorCuda::detect(const cv::Mat &img,
-                              std::vector<cv::KeyPoint> &keyPoints,
-                              cv::InputArray &mask)
+std::vector<cv::KeyPoint> FastDetectorCuda::detect(const cv::Mat &img, const cv::Mat &mask)
 {
-
-  try {
-    cv::cuda::GpuMat g_img(img);
-    cv::cuda::GpuMat g_mask(mask);
-    mFast->detect(g_img, keyPoints, g_mask);
-  } catch (cv::Exception &e) {
-    msgError("FAST Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  cv::cuda::GpuMat g_img(img);
+  cv::cuda::GpuMat g_mask(mask);
+  mFast->detect(g_img, keyPoints, g_mask);
+  return keyPoints;
 }
 
 void FastDetectorCuda::setThreshold(int threshold)

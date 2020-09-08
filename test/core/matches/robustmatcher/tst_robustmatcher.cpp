@@ -2,7 +2,8 @@
 #include <QCoreApplication>
 
 #include "photomatch/photomatch_global.h"
-#include "photomatch/core/features/matcher.h"
+#include "photomatch/core/features/robustmatch.h"
+#include "photomatch/core/features/flann.h"
 
 using namespace photomatch;
 

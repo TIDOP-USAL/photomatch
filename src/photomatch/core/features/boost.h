@@ -111,13 +111,12 @@ public:
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 
 protected:
 
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   cv::Ptr<cv::xfeatures2d::BoostDesc> mBoost;
 #endif
 

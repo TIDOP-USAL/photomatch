@@ -203,19 +203,11 @@ void DaisyDescriptor::update()
                                           DaisyProperties::useOrientation());
 }
 
-bool DaisyDescriptor::extract(const cv::Mat &img,
-                              std::vector<cv::KeyPoint> &keyPoints,
-                              cv::Mat &descriptors)
+cv::Mat DaisyDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-      mDAISY->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("DAISY Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mDAISY->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void DaisyDescriptor::setRadius(double radius)

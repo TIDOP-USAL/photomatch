@@ -161,7 +161,7 @@ protected:
   MsdWidget *mMsdDetector;
   MserWidget *mMserDetector;
   OrbWidget *mOrbDetector;
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   SiftWidget *mSiftDetector;
 #endif
   StarWidget *mStarDetector;
@@ -170,7 +170,7 @@ protected:
 #endif
 
   AkazeWidget *mAkazeDescriptor;
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   BoostWidget *mBoostDescriptor;
 #endif
   BriefWidget *mBriefDescriptor;
@@ -182,11 +182,13 @@ protected:
   LatchWidget *mLatchDescriptor;
   LssWidget *mLssDescriptor;
   OrbWidget *mOrbDescriptor;
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   SiftWidget *mSiftDescriptor;
+#endif
+#ifdef OPENCV_ENABLE_NONFREE
   SurfWidget *mSurfDescriptor;
 #endif
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   VggWidget *mVggDescriptor;
 #endif
   KeypointsFilterWidget *mKeypointsFilterWidget;

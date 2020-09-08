@@ -21,78 +21,87 @@
  *                                                                      *
  ************************************************************************/
 
-
-#ifndef PHOTOMATCH_RSWHE_PREPROCESS_H
-#define PHOTOMATCH_RSWHE_PREPROCESS_H
+#ifndef PHOTOMATCH_GSM_H
+#define PHOTOMATCH_GSM_H
 
 #include "photomatch/photomatch_global.h"
-
-#include "photomatch/core/preprocess/preprocess.h"
-
-#include <opencv2/photo.hpp>
-
-#include <QString>
+#include "photomatch/core/features/matcher.h"
 
 namespace photomatch
 {
 
-
-class PHOTOMATCH_EXPORT RswheProperties
-  : public Rswhe
+class PHOTOMATCH_EXPORT GmsProperties
+  : public Gms
 {
 
 public:
 
-  RswheProperties();
-  ~RswheProperties() override;
+  GmsProperties();
+  ~GmsProperties() override = default;
 
-// IRswhe interface
 
-public:
-
-  int histogramDivisions() const override;
-  void setHistogramDivisions(int histogramDivisions) override;
-  HistogramCut histogramCut() const override;
-  void setHistogramCut(HistogramCut histogramCut) override;
-
-// Preprocess interface
+// MatchingStrategy interface
 
 public:
 
   void reset() override;
-  QString name() const final;
+  QString name() const override;
 
-private:
+// IGms interface
 
-  HistogramCut mHistogramCut;
-  int mHistogramDivisions;
+public:
 
+  bool rotation() const override;
+  void setRotation(bool rotation) override;
+  bool scale() const override;
+  void setScale(bool scale) override;
+  double threshold() const override;
+  void setThreshold(double threshold) override;
+
+protected:
+
+  bool mRotation;
+  bool mScale;
+  double mThreshold;
 };
-
 
 
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT RswhePreprocess
-  : public RswheProperties,
-    public ImageProcess
+class PHOTOMATCH_EXPORT GsmImp
+  : public GmsProperties,
+    public MatchingAlgorithm
 {
 
 public:
 
-  RswhePreprocess();
-  RswhePreprocess(int histogramDivisions, HistogramCut histogramCut);
-  ~RswhePreprocess() override;
+  explicit GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher);
+  GsmImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
+         bool rotation,
+         bool scale,
+         double threshold);
+  ~GsmImp() override = default;
 
-// ImageProcess interface
+// MatchingAlgorithm interface
 
 public:
 
-  cv::Mat process(const cv::Mat &imgIn) override;
+  bool compute(const cv::Mat &queryDescriptor,
+               const cv::Mat &trainDescriptor,
+               const std::vector<cv::KeyPoint> &keypoints1,
+               const std::vector<cv::KeyPoint> &keypoints2,
+               std::vector<cv::DMatch> *goodMatches,
+               std::vector<cv::DMatch> *wrongMatches = nullptr,
+               const QSize &queryImageSize = QSize(),
+               const QSize &trainImageSize = QSize()) override;
+
+protected:
+
+  std::shared_ptr<DescriptorMatcher> mDescriptorMatcher;
 
 };
 
 } // namespace photomatch
 
-#endif // PHOTOMATCH_RSWHE_PREPROCESS_H
+#endif // PHOTOMATCH_GSM_H

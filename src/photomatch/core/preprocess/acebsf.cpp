@@ -136,6 +136,11 @@ void AcebsfProperties::reset()
   mK2 = 0.5;
 }
 
+QString AcebsfProperties::name() const
+{
+  return QString("ACEBSF");
+}
+
 
 /*----------------------------------------------------------------*/
 
@@ -162,7 +167,9 @@ AcebsfPreprocess::AcebsfPreprocess(AcebsfPreprocess &&acebsfPreprocess) PHOTOMAT
 }
 
 AcebsfPreprocess::AcebsfPreprocess(const QSize &blockSize,
-                                   double l, double k1, double k2)
+                                   double l, 
+                                   double k1, 
+                                   double k2)
   : AcebsfProperties(),
     ImageProcess()
 {
@@ -177,29 +184,20 @@ AcebsfPreprocess::~AcebsfPreprocess()
 
 }
 
-bool AcebsfPreprocess::process(const cv::Mat &imgIn, cv::Mat &imgOut)
+cv::Mat AcebsfPreprocess::process(const cv::Mat &imgIn)
 {
+  cv::Mat imgOut;
 
-  try {
+  pixkit::enhancement::local::Lal2014(convertToGray(imgIn), imgOut,
+                                      qSizeToCvSize(AcebsfProperties::blockSize()),
+                                      static_cast<float>(AcebsfProperties::l()),
+                                      static_cast<float>(AcebsfProperties::k1()),
+                                      static_cast<float>(AcebsfProperties::k2()));
 
-    pixkit::enhancement::local::Lal2014(convertToGray(imgIn), imgOut,
-                                        qSizeToCvSize(AcebsfProperties::blockSize()),
-                                        static_cast<float>(AcebsfProperties::l()),
-                                        static_cast<float>(AcebsfProperties::k1()),
-                                        static_cast<float>(AcebsfProperties::k2()));
 
-  } catch (cv::Exception &e) {
-    msgError("ACEBSF Image preprocess error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  return imgOut;
 }
 
-QString AcebsfProperties::name() const
-{
-  return QString("ACEBSF");
-}
 
 } // namespace photomatch
 

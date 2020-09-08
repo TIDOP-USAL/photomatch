@@ -46,8 +46,10 @@
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
-#include "photomatch/core/features/matcher.h"
-
+#include "photomatch/core/features/flann.h"
+#include "photomatch/core/features/bfmatch.h"
+#include "photomatch/core/features/robustmatch.h"
+#include "photomatch/core/features/gsm.h"
 #include "photomatch/core/preprocess/acebsf.h"
 #include "photomatch/core/preprocess/clahe.h"
 #include "photomatch/core/preprocess/cmbfhe.h"
@@ -241,7 +243,8 @@ size_t ProjectImp::imagesCount() const
   return mImages.size();
 }
 
-void ProjectImp::addSession(const QString &name, const QString &description)
+void ProjectImp::addSession(const QString &name, 
+                            const QString &description)
 {
   std::shared_ptr<Session> session(new SessionImp(name, description));
   addSession(session);
@@ -417,7 +420,8 @@ bool ProjectControllerImp::read(const QString &file, Project &prj)
   return false;
 }
 
-bool ProjectControllerImp::write(const QString &file, const Project &prj) const
+bool ProjectControllerImp::write(const QString &file, 
+                                 const Project &prj) const
 {
   std::lock_guard<std::mutex> lck(ProjectControllerImp::sMutex);
 

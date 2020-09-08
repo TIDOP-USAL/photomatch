@@ -76,7 +76,8 @@ public:
   QSize tilesGridSize() const override;
 
   /*!
-   * \brief Sets size of grid for histogram equalization. Input image will be divided into equally sized rectangular tiles.
+   * \brief Sets size of grid for histogram equalization.
+   * Input image will be divided into equally sized rectangular tiles.
    * \param[in] tilesGridSize
    */
   void setTilesGridSize(const QSize &tilesGridSize) override;
@@ -107,7 +108,8 @@ public:
 
   ClahePreprocess();
   ClahePreprocess(const ClahePreprocess &clahePreprocess);
-  ClahePreprocess(double clipLimit, const QSize &tilesGridSize);
+  ClahePreprocess(double clipLimit, 
+                  const QSize &tilesGridSize);
   ~ClahePreprocess() override;
 
 // Preprocess interface
@@ -127,7 +129,7 @@ public:
 
 public:
 
-  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
+  cv::Mat process(const cv::Mat &imgIn) override;
 
 protected:
 
@@ -148,7 +150,8 @@ public:
 
   ClahePreprocessCuda();
   ClahePreprocessCuda(const ClahePreprocessCuda &clahePreprocessCuda);
-  ClahePreprocessCuda(double clipLimit, const QSize &tilesGridSize);
+  ClahePreprocessCuda(double clipLimit, 
+                      const QSize &tilesGridSize);
   ~ClahePreprocessCuda() override;
 
 // Preprocess interface
@@ -168,7 +171,7 @@ public:
 
 public:
 
-  bool process(const cv::Mat &imgIn, cv::Mat &imgOut) override;
+  cv::Mat process(const cv::Mat &imgIn) override;
 
 protected:
 

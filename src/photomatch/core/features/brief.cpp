@@ -108,19 +108,11 @@ void BriefDescriptor::update()
                                                              BriefProperties::useOrientation());
 }
 
-bool BriefDescriptor::extract(const cv::Mat &img,
-                              std::vector<cv::KeyPoint> &keyPoints,
-                              cv::Mat &descriptors)
+cv::Mat BriefDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    mBrief->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("BRIEF Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mBrief->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void BriefDescriptor::setBytes(const QString &bytes)

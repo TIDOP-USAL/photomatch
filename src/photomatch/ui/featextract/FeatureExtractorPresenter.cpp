@@ -27,7 +27,7 @@
 #include "photomatch/core/features/features.h"
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/core/features/boost.h"
 #endif
 #include "photomatch/core/features/brief.h"
@@ -58,7 +58,7 @@
 
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/BoostWidget.h"
 #endif
 #include "photomatch/widgets/BriefWidget.h"
@@ -74,14 +74,14 @@
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SiftWidget.h"
 #endif
 #include "photomatch/widgets/StarWidget.h"
 #ifdef OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SurfWidget.h"
 #endif
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/VggWidget.h"
 #endif
 #include "photomatch/widgets/KeypointsFilterWidget.h"
@@ -117,7 +117,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mMsdDetector(new MsdWidgetImp),
     mMserDetector(new MserWidgetImp),
     mOrbDetector(new OrbWidgetImp),
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
     mSiftDetector(new SiftWidgetImp),
 #endif
     mStarDetector(new StarWidgetImp),
@@ -125,7 +125,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mSurfDetector(new SurfWidgetImp),
 #endif
     mAkazeDescriptor(new AkazeWidgetImp),
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
     mBoostDescriptor(new BoostWidgetImp),
 #endif
     mBriefDescriptor(new BriefWidgetImp),
@@ -137,11 +137,13 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mLatchDescriptor(new LatchWidgetImp),
     mLssDescriptor(new LssWidgetImp),
     mOrbDescriptor(new OrbWidgetImp),
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
     mSiftDescriptor(new SiftWidgetImp),
-    mSurfDescriptor(new SurfWidgetImp),
 #endif
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#ifdef OPENCV_ENABLE_NONFREE
+  mSurfDescriptor(new SurfWidgetImp),
+#endif
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
     mVggDescriptor(new VggWidgetImp),
 #endif
     mKeypointsFilterWidget(new KeypointsFilterWidgetImp)
@@ -197,7 +199,7 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mOrbDetector = nullptr;
   }
 
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   if (mSiftDetector){
     delete mSiftDetector;
     mSiftDetector = nullptr;
@@ -221,7 +223,7 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mAkazeDescriptor = nullptr;
   }
 
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   if (mBoostDescriptor){
     delete mBoostDescriptor;
     mBoostDescriptor = nullptr;
@@ -273,7 +275,7 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mOrbDescriptor = nullptr;
   }
 
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   if (mSiftDescriptor){
     delete mSiftDescriptor;
     mSiftDescriptor = nullptr;
@@ -285,7 +287,7 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
   }
 #endif
 
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   if (mVggDescriptor){
     delete mVggDescriptor;
     mVggDescriptor = nullptr;
@@ -310,7 +312,7 @@ void FeatureExtractorPresenterImp::init()
   mView->addKeypointDetector(mMsdDetector);
   mView->addKeypointDetector(mMserDetector);
   mView->addKeypointDetector(mOrbDetector);
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   mView->addKeypointDetector(mSiftDetector);
 #endif
   mView->addKeypointDetector(mStarDetector);
@@ -319,7 +321,7 @@ void FeatureExtractorPresenterImp::init()
 #endif
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mBoostDescriptor);
 #endif
   mView->addDescriptorExtractor(mBriefDescriptor);
@@ -331,16 +333,17 @@ void FeatureExtractorPresenterImp::init()
   mView->addDescriptorExtractor(mLatchDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mVggDescriptor);
 #endif
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   mView->addDescriptorExtractor(mSiftDescriptor);
-  mView->addDescriptorExtractor(mSurfDescriptor);
-
   this->setCurrentkeypointDetector(mSiftDescriptor->windowTitle());
 #else
   this->setCurrentkeypointDetector(mOrbDescriptor->windowTitle());
+#endif
+#ifdef OPENCV_ENABLE_NONFREE  
+  mView->addDescriptorExtractor(mSurfDescriptor);
 #endif
 
   mView->addKeypointsFilter(mKeypointsFilterWidget);
@@ -673,7 +676,7 @@ void FeatureExtractorPresenterImp::setAkazeDescriptorProperties()
 
 void FeatureExtractorPresenterImp::setBoostDescriptorProperties()
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
     Feature *descriptor = current_session->descriptor().get();
@@ -1211,7 +1214,7 @@ void FeatureExtractorPresenterImp::setSurfDescriptorProperties()
 
 void FeatureExtractorPresenterImp::setVggDescriptorProperties()
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()){
 
     Feature *descriptor = current_session->descriptor().get();
@@ -1393,7 +1396,7 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
                                                                       mAkazeDescriptor->diffusivity());
     }
   }
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   else if (descriptorExtractor.compare("BOOST") == 0){
     descriptor_extractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
                                                             mBoostDescriptor->useOrientation(),
@@ -1550,7 +1553,7 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
 #endif // HAVE_CUDA
   } 
 #endif
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   else if (descriptorExtractor.compare("VGG") == 0){
     descriptor_extractor = std::make_shared<VggDescriptor>(mVggDescriptor->descriptorType(),
                                                           mVggDescriptor->scaleFactor(),
@@ -1642,7 +1645,7 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
 
 void FeatureExtractorPresenterImp::setCurrentDescriptorExtractor(const QString &descriptorExtractor)
 {
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   if (descriptorExtractor.compare("BOOST") == 0 ||
       descriptorExtractor.compare("VGG") == 0){
     QString keypointDetector = mView->currentKeypointDetector();

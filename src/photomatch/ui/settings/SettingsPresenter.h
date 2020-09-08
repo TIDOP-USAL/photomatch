@@ -187,7 +187,7 @@ protected:
 
   AgastWidget *mAgast;
   AkazeWidget *mAkaze;
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   BoostWidget *mBoost;
 #endif
   BriefWidget *mBrief;
@@ -202,14 +202,14 @@ protected:
   MsdWidget *mMsd;
   MserWidget *mMser;
   OrbWidget *mOrb;
-#ifdef OPENCV_ENABLE_NONFREE
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   SiftWidget *mSift;
 #endif
   StarWidget *mStar;
 #ifdef OPENCV_ENABLE_NONFREE
   SurfWidget *mSurf;
 #endif
-#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR > 2)
+#if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   VggWidget *mVgg;
 #endif
   DescriptorMatcherWidget *mMatcher;

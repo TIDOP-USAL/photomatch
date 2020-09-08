@@ -152,19 +152,12 @@ void StarDetector::update()
                                                 StarProperties::suppressNonmaxSize());
 }
 
-bool StarDetector::detect(const cv::Mat &img,
-                          std::vector<cv::KeyPoint> &keyPoints,
-                          cv::InputArray &mask)
+std::vector<cv::KeyPoint> StarDetector::detect(const cv::Mat &img, 
+                                               const cv::Mat &mask)
 {
-
-  try {
-    mSTAR->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("STAR Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mSTAR->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
 void StarDetector::setMaxSize(int maxSize)

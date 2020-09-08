@@ -22,77 +22,92 @@
  ************************************************************************/
 
 
-#ifndef PHOTOMATCH_RSWHE_PREPROCESS_H
-#define PHOTOMATCH_RSWHE_PREPROCESS_H
+#ifndef PHOTOMATCH_FLANN_MATCHER_H
+#define PHOTOMATCH_FLANN_MATCHER_H
 
 #include "photomatch/photomatch_global.h"
-
-#include "photomatch/core/preprocess/preprocess.h"
-
-#include <opencv2/photo.hpp>
-
-#include <QString>
+#include "photomatch/core/features/matcher.h"
 
 namespace photomatch
 {
 
-
-class PHOTOMATCH_EXPORT RswheProperties
-  : public Rswhe
+class PHOTOMATCH_EXPORT FlannMatcherProperties
+  : public FlannMatcher
 {
 
 public:
 
-  RswheProperties();
-  ~RswheProperties() override;
+  FlannMatcherProperties();
+  ~FlannMatcherProperties() override;
 
-// IRswhe interface
-
-public:
-
-  int histogramDivisions() const override;
-  void setHistogramDivisions(int histogramDivisions) override;
-  HistogramCut histogramCut() const override;
-  void setHistogramCut(HistogramCut histogramCut) override;
-
-// Preprocess interface
+// Match interface
 
 public:
 
   void reset() override;
   QString name() const final;
 
+// IFlannMatcher interface
+
+public:
+
+  Index index() const override;
+  virtual void setIndex(Index index) override;
+
 private:
 
-  HistogramCut mHistogramCut;
-  int mHistogramDivisions;
-
+  Index mIndex;
 };
-
-
 
 /*----------------------------------------------------------------*/
 
-
-class PHOTOMATCH_EXPORT RswhePreprocess
-  : public RswheProperties,
-    public ImageProcess
+class PHOTOMATCH_EXPORT FlannMatcherImp
+  : public FlannMatcherProperties,
+    public DescriptorMatcher
 {
 
 public:
 
-  RswhePreprocess();
-  RswhePreprocess(int histogramDivisions, HistogramCut histogramCut);
-  ~RswhePreprocess() override;
+  FlannMatcherImp();
+  explicit FlannMatcherImp(FlannMatcher::Index index);
+  ~FlannMatcherImp() override = default;
 
-// ImageProcess interface
+private:
+
+  void update();
+
+// DescriptorMatcher interface
 
 public:
 
-  cv::Mat process(const cv::Mat &imgIn) override;
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
+             std::vector<cv::DMatch> &matches,
+             const cv::Mat &mask = cv::Mat()) override;
+
+  bool match(const cv::Mat &queryDescriptors,
+             const cv::Mat &trainDescriptors,
+             std::vector<std::vector<cv::DMatch>> &matches,
+             const cv::Mat &mask = cv::Mat()) override;
+
+// Match interface
+
+public:
+
+  void reset() override;
+
+// IFlannMatcher interface
+
+public:
+
+  void setIndex(Index index) override;
+
+protected:
+
+  cv::Ptr<cv::FlannBasedMatcher> mFlannBasedMatcher;
 
 };
 
 } // namespace photomatch
 
-#endif // PHOTOMATCH_RSWHE_PREPROCESS_H
+#endif // PHOTOMATCH_FLANN_MATCHER_H

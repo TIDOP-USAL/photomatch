@@ -104,9 +104,8 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // Fast interface
 
@@ -161,10 +160,8 @@ private:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask = cv::noArray()) override;
-
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 // Fast interface
 
 public:

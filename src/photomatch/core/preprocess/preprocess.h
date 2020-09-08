@@ -39,7 +39,9 @@ namespace photomatch
 
 /*----------------------------------------------------------------*/
 
-
+/*!
+ * \brief Preprocess Interface
+ */
 class PHOTOMATCH_EXPORT Preprocess
 {
 
@@ -65,23 +67,41 @@ public:
 
 public:
 
-  Preprocess(Type type) : mPreprocessType(type) {}
+  Preprocess() {}
   virtual ~Preprocess() = default;
 
-  /*!
-   * \brief Recover the default values
-   */
-  virtual void reset() = 0;
 
-  Type type() const { return mPreprocessType.flags(); }
+  virtual void reset() = 0;
+  virtual Type type() const = 0;
   virtual QString name() const = 0;
+
+};
+ALLOW_BITWISE_FLAG_OPERATIONS(Preprocess::Type)
+
+
+/*!
+ * \brief Preprocess abstract base class
+ */
+class PHOTOMATCH_EXPORT PreprocesBase
+  : public Preprocess
+{
+
+public:
+
+  PreprocesBase(Type type) : mPreprocessType(type) {}
+  ~PreprocesBase() override = default;
+
+  Type type() const override 
+  { 
+    return mPreprocessType.flags(); 
+  }
 
 protected:
 
   tl::EnumFlags<Type> mPreprocessType;
 
 };
-ALLOW_BITWISE_FLAG_OPERATIONS(Preprocess::Type)
+
 
 /*----------------------------------------------------------------*/
 
@@ -97,10 +117,9 @@ public:
   /*!
    * \brief procesa una imagen
    * \param[in] imgIn Imagen
-   * \param[out] imgOut Imagen
-   * \return true if error
+   * \return Processed image
    */
-  virtual bool process(const cv::Mat &imgIn, cv::Mat &imgOut) = 0;
+  virtual cv::Mat process(const cv::Mat &imgIn) = 0;
 
 };
 
@@ -108,14 +127,14 @@ public:
 /*----------------------------------------------------------------*/
 
 
-class PHOTOMATCH_EXPORT IDownsample
-  : public Preprocess
+class PHOTOMATCH_EXPORT Downsample
+  : public PreprocesBase
 {
 
 public:
 
-  IDownsample() : Preprocess(Preprocess::Type::downsample) {}
-  ~IDownsample() override = default;
+  Downsample() : PreprocesBase(Preprocess::Type::downsample) {}
+  ~Downsample() override = default;
 
   virtual int maxImageSize() const = 0;
   virtual void setMaxImageSize(int size) = 0;
@@ -132,12 +151,12 @@ public:
  * vol. 11, no. 1, January 2014.
  */
 class PHOTOMATCH_EXPORT Acebsf
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Acebsf() : Preprocess(Preprocess::Type::acebsf) {}
+  Acebsf() : PreprocesBase(Preprocess::Type::acebsf) {}
   ~Acebsf() override = default;
 
   virtual QSize blockSize() const = 0;
@@ -161,12 +180,12 @@ public:
  * Adaptive Histogram Equalization.
  */
 class PHOTOMATCH_EXPORT Clahe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Clahe() : Preprocess(Preprocess::Type::clahe) {}
+  Clahe() : PreprocesBase(Preprocess::Type::clahe) {}
   ~Clahe() override = default;
 
   virtual double clipLimit() const = 0;
@@ -186,12 +205,12 @@ public:
  * histogram equalization," TCE, vol. 52, no. 3, 2006.
  */
 class PHOTOMATCH_EXPORT Cmbfhe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Cmbfhe() : Preprocess(Preprocess::Type::cmbfhe) {}
+  Cmbfhe() : PreprocesBase(Preprocess::Type::cmbfhe) {}
   ~Cmbfhe() override = default;
 
   virtual QSize blockSize() const = 0;
@@ -209,12 +228,12 @@ public:
  * dynamic histogram equalization (DHE)
  */
 class PHOTOMATCH_EXPORT Dhe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Dhe() : Preprocess(Preprocess::Type::dhe) {}
+  Dhe() : PreprocesBase(Preprocess::Type::dhe) {}
   ~Dhe() override = default;
 
   virtual int x() const = 0;
@@ -232,12 +251,12 @@ public:
  * IEEE International Conference on Computational Photography (ICCP), 2012.
  */
 class PHOTOMATCH_EXPORT Decolor
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Decolor() : Preprocess(Preprocess::Type::decolor) {}
+  Decolor() : PreprocesBase(Preprocess::Type::decolor) {}
   ~Decolor() override = default;
 
 };
@@ -252,12 +271,12 @@ public:
  * histogram equalization," in Proc. ICSP, 2006.
  */
 class PHOTOMATCH_EXPORT Fahe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Fahe() : Preprocess(Preprocess::Type::fahe) {}
+  Fahe() : PreprocesBase(Preprocess::Type::fahe) {}
   ~Fahe() override = default;
 
   ///TODO: las dimensiones tienen que ser iguales
@@ -276,12 +295,12 @@ public:
  * Computing and Networking Technologies, 2011.
  */
 class PHOTOMATCH_EXPORT Hmclahe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Hmclahe() : Preprocess(Preprocess::Type::hmclahe) {}
+  Hmclahe() : PreprocesBase(Preprocess::Type::hmclahe) {}
   ~Hmclahe() override = default;
 
   ///TODO: las dimensiones tienen que ser iguales
@@ -303,12 +322,12 @@ public:
  * Mathematical Problems in Engineering, vol. 2014, 2014.
  */
 class PHOTOMATCH_EXPORT LceBsescs
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  LceBsescs() : Preprocess(Preprocess::Type::lce_bsescs) {}
+  LceBsescs() : PreprocesBase(Preprocess::Type::lce_bsescs) {}
   ~LceBsescs() override = default;
 
   virtual QSize blockSize() const = 0;
@@ -325,12 +344,12 @@ public:
  * "Multiscale Retinex," Image Processing On Line, 2014.
  */
 class PHOTOMATCH_EXPORT Msrcp
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Msrcp() : Preprocess(Preprocess::Type::msrcp) {}
+  Msrcp() : PreprocesBase(Preprocess::Type::msrcp) {}
   ~Msrcp() override = default;
 
   virtual double smallScale() const = 0;
@@ -353,12 +372,12 @@ public:
  * TCE, vol. 57, no. 2, 2011.
  */
 class PHOTOMATCH_EXPORT Noshp
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Noshp() : Preprocess(Preprocess::Type::noshp) {}
+  Noshp() : PreprocesBase(Preprocess::Type::noshp) {}
   ~Noshp() override = default;
 
   virtual QSize blockSize() const = 0;
@@ -377,12 +396,12 @@ public:
  * in Proc. IEEE ICASSP, pp. 2444-2448, 26-31 May 2013.
  */
 class PHOTOMATCH_EXPORT Pohe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
 
-  Pohe() : Preprocess(Preprocess::Type::pohe) {}
+  Pohe() : PreprocesBase(Preprocess::Type::pohe) {}
   ~Pohe() override = default;
 
   virtual QSize blockSize() const = 0;
@@ -400,7 +419,7 @@ public:
  * Enhancement," 2008.
  */
 class PHOTOMATCH_EXPORT Rswhe
-  : public Preprocess
+  : public PreprocesBase
 {
 
 public:
@@ -412,7 +431,7 @@ public:
 
 public:
 
-  Rswhe() : Preprocess(Preprocess::Type::rswhe) {}
+  Rswhe() : PreprocesBase(Preprocess::Type::rswhe) {}
   ~Rswhe() override = default;
 
   virtual int histogramDivisions() const = 0;
@@ -426,11 +445,11 @@ public:
 
 
 class PHOTOMATCH_EXPORT Wallis
-  : public Preprocess
+  : public PreprocesBase
 {
 public:
 
-  Wallis() : Preprocess(Preprocess::Type::wallis) {}
+  Wallis() : PreprocesBase(Preprocess::Type::wallis) {}
   ~Wallis() override = default;
 
   virtual double contrast() const = 0;

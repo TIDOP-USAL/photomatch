@@ -104,9 +104,8 @@ public:
 
 public:
 
-  bool detect(const cv::Mat &img,
-              std::vector<cv::KeyPoint> &keyPoints,
-              cv::InputArray &mask) override;
+  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
+                                   const cv::Mat &mask = cv::Mat()) override;
 
 // Gftt interface
 

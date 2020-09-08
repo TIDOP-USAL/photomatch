@@ -33,6 +33,8 @@
 
 #include <tidop/core/flags.h>
 
+#include <QString>
+
 namespace photomatch
 {
 
@@ -52,7 +54,7 @@ public:
 
 public:
 
-  KeyPointsFilter(Type type) : mFilterType(type) {}
+  KeyPointsFilter() {}
   virtual ~KeyPointsFilter() = default;
 
   /*!
@@ -64,13 +66,37 @@ public:
    * \brief type of keypoints filter
    * \return filter type
    */
-  Type type() const { return mFilterType.flags(); }
+  virtual Type type() const = 0;
+  virtual QString name() const = 0;
+
+};
+ALLOW_BITWISE_FLAG_OPERATIONS(KeyPointsFilter::Type)
+
+
+
+class PHOTOMATCH_EXPORT KeyPointsFilterBase
+  : public KeyPointsFilter
+{
+
+public:
+
+  KeyPointsFilterBase(Type type) : mFilterType(type) {}
+  ~KeyPointsFilterBase() override = default;
+
+  /*!
+   * \brief type of keypoints filter
+   * \return filter type
+   */
+  Type type() const override
+  { 
+    return mFilterType.flags(); 
+  }
 
 protected:
 
   tl::EnumFlags<Type> mFilterType;
 };
-ALLOW_BITWISE_FLAG_OPERATIONS(KeyPointsFilter::Type)
+
 
 
 /*----------------------------------------------------------------*/
@@ -87,11 +113,9 @@ public:
   /*!
    * \brief filter
    * \param[in] keypoints
-   * \param[out] filteredKeypoints
-   * \return
+   * \return Filtered Keypoints
    */
-  virtual bool filter(const std::vector<cv::KeyPoint> &keypoints,
-                      std::vector<cv::KeyPoint> &filteredKeypoints) = 0;
+  virtual std::vector<cv::KeyPoint> filter(const std::vector<cv::KeyPoint> &keypoints) = 0;
 };
 
 
@@ -99,7 +123,7 @@ public:
 
 
 class PHOTOMATCH_EXPORT KeyPointsFilterNBestProperties
-  : public KeyPointsFilter
+  : public KeyPointsFilterBase
 {
 
 public:
@@ -124,6 +148,7 @@ public:
 public:
 
   void reset() override;
+  QString name() const final;
 
 private:
 
@@ -161,7 +186,7 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
+  std::vector<cv::KeyPoint> filter(const std::vector<cv::KeyPoint> &keypoints) override;
 
 };
 
@@ -170,7 +195,7 @@ public:
 
 
 class PHOTOMATCH_EXPORT KeyPointsFilterBySizeProperties
-  : public KeyPointsFilter
+  : public KeyPointsFilterBase
 {
 
 public:
@@ -207,6 +232,7 @@ public:
 public:
 
   void reset() override;
+  QString name() const final;
 
 private:
 
@@ -241,7 +267,7 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
+  std::vector<cv::KeyPoint> filter(const std::vector<cv::KeyPoint> &keypoints) override;
 
 // KeyPointsFilter interface
 
@@ -255,9 +281,31 @@ public:
 
 /*----------------------------------------------------------------*/
 
+class PHOTOMATCH_EXPORT KeyPointsFilterRemoveDuplicatedProperties
+  : public KeyPointsFilterBase
+{
+
+public:
+
+  KeyPointsFilterRemoveDuplicatedProperties();
+  ~KeyPointsFilterRemoveDuplicatedProperties() override = default;
+
+// KeyPointsFilter interface
+
+public:
+
+  void reset() override;
+  QString name() const final;
+
+};
+
+
+/*----------------------------------------------------------------*/
+
+
 
 class PHOTOMATCH_EXPORT KeyPointsFilterRemoveDuplicated
-  : public KeyPointsFilter,
+  : public KeyPointsFilterRemoveDuplicatedProperties,
     public KeyPointsFilterProcess
 {
 
@@ -270,7 +318,7 @@ public:
 
 public:
 
-  bool filter(const std::vector<cv::KeyPoint> &keypoints, std::vector<cv::KeyPoint> &filteredKeypoints) override;
+  std::vector<cv::KeyPoint> filter(const std::vector<cv::KeyPoint> &keypoints) override;
 
 // KeyPointsFilter interface
 

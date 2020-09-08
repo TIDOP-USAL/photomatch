@@ -95,10 +95,10 @@ public:
 
   HogDescriptor();
   HogDescriptor(const HogDescriptor &hogDescriptor);
-  HogDescriptor(QSize winSize,
-                QSize blockSize,
-                QSize blockStride,
-                QSize cellSize,
+  HogDescriptor(const QSize &winSize,
+                const QSize &blockSize,
+                const QSize &blockStride,
+                const QSize &cellSize,
                 int nbins,
                 int derivAperture);
   ~HogDescriptor() override = default;
@@ -106,16 +106,16 @@ public:
 private:
 
   void update();
-  void normalizepatch(const cv::Mat &gray, const cv::KeyPoint &keypoint, cv::Mat &output);
+  void normalizepatch(const cv::Mat &gray, 
+                      const cv::KeyPoint &keypoint, 
+                      cv::Mat &output);
 
 // DescriptorExtractor interface
 
 public:
 
-  bool extract(const cv::Mat &img,
-               std::vector<cv::KeyPoint> &keyPoints,
-               cv::Mat &descriptors) override;
-
+  cv::Mat extract(const cv::Mat &img,
+                  std::vector<cv::KeyPoint> &keyPoints) override;
 // Hog interface
 
 public:

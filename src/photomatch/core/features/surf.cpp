@@ -148,32 +148,20 @@ SurfDetectorDescriptor::SurfDetectorDescriptor(double hessianThreshold,
   setUpright(upright);
 }
 
-bool SurfDetectorDescriptor::detect(const cv::Mat &img,
-                                    std::vector<cv::KeyPoint> &keyPoints,
-                                    cv::InputArray &mask)
+std::vector<cv::KeyPoint> SurfDetectorDescriptor::detect(const cv::Mat &img, 
+                                                         const cv::Mat &mask)
 {
-  try {
-    mSurf->detect(img, keyPoints, mask);
-  } catch (cv::Exception &e) {
-    msgError("SURF Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  mSurf->detect(img, keyPoints, mask);
+  return keyPoints;
 }
 
-bool SurfDetectorDescriptor::extract(const cv::Mat &img,
-                                     std::vector<cv::KeyPoint> &keyPoints,
-                                     cv::Mat &descriptors)
+cv::Mat SurfDetectorDescriptor::extract(const cv::Mat &img, 
+                                        std::vector<cv::KeyPoint> &keyPoints)
 {
-  try {
-    mSurf->compute(img, keyPoints, descriptors);
-  } catch (cv::Exception &e) {
-    msgError("SURF Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  mSurf->compute(img, keyPoints, descriptors);
+  return descriptors;
 }
 
 void SurfDetectorDescriptor::setHessianThreshold(double hessianThreshold)
@@ -259,39 +247,25 @@ SurfCudaDetectorDescriptor::SurfCudaDetectorDescriptor(double hessianThreshold,
   setUpright(upright);
 }
 
-bool SurfCudaDetectorDescriptor::detect(const cv::Mat &img,
-                                        std::vector<cv::KeyPoint> &keyPoints,
-                                        cv::InputArray &mask)
+std::vector<cv::KeyPoint> SurfCudaDetectorDescriptor::detect(const cv::Mat &img, 
+                                                             const cv::Mat &mask)
 {
-
-  try {
-    cv::cuda::GpuMat g_img(img);
-    cv::cuda::GpuMat g_mask(mask);
-    (*mSurf)(g_img, g_mask, keyPoints);
-  } catch (cv::Exception &e) {
-    msgError("SURF Detector error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  std::vector<cv::KeyPoint> keyPoints;
+  cv::cuda::GpuMat g_img(img);
+  cv::cuda::GpuMat g_mask(mask);
+  (*mSurf)(g_img, g_mask, keyPoints);
+  return keyPoints;
 }
 
-bool SurfCudaDetectorDescriptor::extract(const cv::Mat &img,
-                                         std::vector<cv::KeyPoint> &keyPoints,
-                                         cv::Mat &descriptors)
+cv::Mat SurfCudaDetectorDescriptor::extract(const cv::Mat &img, 
+                                            std::vector<cv::KeyPoint> &keyPoints)
 {
-
-  try {
-    cv::cuda::GpuMat g_img(img);
-    cv::cuda::GpuMat g_descriptors;
-    (*mSurf)(g_img, cv::cuda::GpuMat(), keyPoints, g_descriptors, true);
-    g_descriptors.download(descriptors);
-  } catch (cv::Exception &e) {
-    msgError("SURF Descriptor error: %s", e.what());
-    return true;
-  }
-
-  return false;
+  cv::Mat descriptors;
+  cv::cuda::GpuMat g_img(img);
+  cv::cuda::GpuMat g_descriptors;
+  (*mSurf)(g_img, cv::cuda::GpuMat(), keyPoints, g_descriptors, true);
+  g_descriptors.download(descriptors);
+  return descriptors;
 }
 
 void SurfCudaDetectorDescriptor::setHessianThreshold(double hessianThreshold)
