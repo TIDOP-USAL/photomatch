@@ -34,9 +34,6 @@
 #include <QSize>
 
 #include <opencv2/xfeatures2d.hpp>
-//#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
-//#include <opencv2/cudafeatures2d.hpp>
-//#endif // HAVE_OPENCV_CUDAFEATURES2D
 
 #include <tidop/core/flags.h>
 

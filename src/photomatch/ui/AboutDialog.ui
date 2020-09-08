@@ -47,7 +47,7 @@
         <string notr="true">color: rgb(26, 188, 156);</string>
        </property>
        <property name="text">
-        <string>PhotoMatch 1.0 rc</string>
+        <string>PhotoMatch 1.0.1</string>
        </property>
       </widget>
      </item>
