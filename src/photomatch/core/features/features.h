@@ -84,9 +84,9 @@ public:
   virtual Type type() const = 0;
   virtual QString name() const = 0;
 
-protected:
-
-  tl::EnumFlags<Type> mFeatType;
+//protected:
+//
+//  tl::EnumFlags<Type> mFeatType;
 
 };
 ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)

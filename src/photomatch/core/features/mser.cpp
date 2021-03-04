@@ -218,7 +218,7 @@ void MserDetector::update()
 }
 
 std::vector<cv::KeyPoint> MserDetector::detect(const cv::Mat &img, 
-                                                          const cv::Mat &mask)
+                                               const cv::Mat &mask)
 {
   std::vector<cv::KeyPoint> keyPoints;
   mMSER->detect(img, keyPoints, mask);
