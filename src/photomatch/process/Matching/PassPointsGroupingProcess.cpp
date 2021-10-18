@@ -54,15 +54,15 @@ void PassPointsGroupingProcess::run()
     QString matches;
     std::tie(features1, features2, matches) = pair;
 
-    std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(features1);
-    featuresRead->read();
-    std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
-    cv::Mat descriptors1 = featuresRead->descriptors();
+    //std::unique_ptr<FeaturesReader> featuresRead = FeaturesReaderFactory::createReader(features1);
+    //featuresRead->read();
+    //std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
+    //cv::Mat descriptors1 = featuresRead->descriptors();
 
-    featuresRead = FeaturesReaderFactory::createReader(features2);
-    featuresRead->read();
-    std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
-    cv::Mat descriptors2 = featuresRead->descriptors();
+    //featuresRead = FeaturesReaderFactory::createReader(features2);
+    //featuresRead->read();
+    //std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
+    //cv::Mat descriptors2 = featuresRead->descriptors();
 
     std::unique_ptr<MatchesReader> matchesReader = MatchesReaderFactory::createReader(matches);
     matchesReader->read();
