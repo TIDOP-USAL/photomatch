@@ -79,7 +79,7 @@ public:
 ALLOW_BITWISE_FLAG_OPERATIONS(MatchingMethod::Type)
 
 
-class MatchingMethodBase
+class PHOTOMATCH_EXPORT MatchingMethodBase
   : public MatchingMethod
 {
 
@@ -226,7 +226,7 @@ public:
 ALLOW_BITWISE_FLAG_OPERATIONS(MatchingStrategy::Strategy)
 
 
-class MatchingStrategyBase
+class PHOTOMATCH_EXPORT MatchingStrategyBase
   : public MatchingStrategy
 {
 
@@ -277,7 +277,7 @@ public:
 
 
 /*!
- * \brief The IRobustMatcherRefinement class
+ * \brief The RobustMatcher class
  *
  * Robust Matching:
  *

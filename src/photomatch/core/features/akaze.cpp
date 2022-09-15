@@ -271,14 +271,16 @@ int AkazeDetectorDescriptor::convertDiffusivity(const QString &diffusivity)
 
 #endif
 
-std::vector<cv::KeyPoint> AkazeDetectorDescriptor::detect(const cv::Mat &img, const cv::Mat &mask)
+std::vector<cv::KeyPoint> AkazeDetectorDescriptor::detect(const cv::Mat &img, 
+                                                          const cv::Mat &mask)
 {
   std::vector<cv::KeyPoint> keyPoints;
   mAkaze->detect(img, keyPoints, mask);
   return keyPoints;
 }
 
-cv::Mat AkazeDetectorDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+cv::Mat AkazeDetectorDescriptor::extract(const cv::Mat &img, 
+                                         std::vector<cv::KeyPoint> &keyPoints)
 {
   cv::Mat descriptors;
   mAkaze->compute(img, keyPoints, descriptors);

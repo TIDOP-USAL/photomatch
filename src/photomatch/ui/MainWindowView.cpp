@@ -1761,8 +1761,7 @@ void MainWindowView::onSelectionChanged()
   if (item[0]->data(0, Qt::UserRole) == photomatch::project){
 
   } else if (item[0]->data(0, Qt::UserRole) == photomatch::images){
-  } else if (item[0]->data(0, Qt::UserRole) == photomatch::image ||
-             item[0]->data(0, Qt::UserRole) == photomatch::preprocess_image){
+  } else if (item[0]->data(0, Qt::UserRole) == photomatch::image){
     int size = item.size();
     if(size > 0){
       if (size == 1) {
@@ -1775,6 +1774,8 @@ void MainWindowView::onSelectionChanged()
         emit selectImages(selected_images);
       }
     }
+  } else if (item[0]->data(0, Qt::UserRole) == photomatch::preprocess_image){
+    ui->treeWidgetProperties->clear();
   } else if (item[0]->data(0, Qt::UserRole) == photomatch::sessions){
     ui->treeWidgetProperties->clear();
   } else if (item[0]->data(0, Qt::UserRole) == photomatch::session){
@@ -1853,7 +1854,7 @@ void MainWindowView::onItemDoubleClicked(QTreeWidgetItem *item, int column)
   if (item){
     if (item->data(0, Qt::UserRole) == photomatch::image ||
       item->data(0, Qt::UserRole) == photomatch::preprocess_image){
-     emit openImage(item->text(column));
+     emit openImage(item->toolTip(column));
    } else if (item->data(0, Qt::UserRole) == photomatch::pair_right){
      QString session = item->parent()->parent()->parent()->parent()->text(0);
      emit openImageMatches(session, item->parent()->text(0), item->text(column));
@@ -1880,8 +1881,7 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
 
     QAction *selectedItem = menu.exec(globalPos);
   } else if (item->data(0, Qt::UserRole) == photomatch::images){
-  } else if (item->data(0, Qt::UserRole) == photomatch::image ||
-             item->data(0, Qt::UserRole) == photomatch::preprocess_image){
+  } else if (item->data(0, Qt::UserRole) == photomatch::image){
     QMenu menu;
     QAction *open_image = new QAction(QIcon(QStringLiteral(":/ico/24/img/material/24/icons8_image_file_24px.png")),
                                        tr("Open Image"), this);
@@ -1891,10 +1891,25 @@ void MainWindowView::onTreeContextMenu(const QPoint &point)
     menu.addAction(delete_image);
     if (QAction *selectedItem = menu.exec(globalPos)) {
       if (selectedItem->text() == tr("Open Image")) {
-        emit openImage(item->text(0));
+        emit openImage(item->toolTip(0));
       } else if (selectedItem->text() == tr("Delete Image")) {
         emit deleteImages(QStringList(item->text(0)));
       }
+    }
+  } else if (item->data(0, Qt::UserRole) == photomatch::preprocess_image){
+    QMenu menu;
+    QAction *open_image = new QAction(QIcon(QStringLiteral(":/ico/24/img/material/24/icons8_image_file_24px.png")),
+                                       tr("Open Image"), this);
+    menu.addAction(open_image);
+//    QAction *delete_image = new QAction(QIcon(QStringLiteral(":/ico/24/img/material/24/icons8_remove_image_24px.png")),
+//                                       tr("Delete Image"), this);
+//    menu.addAction(delete_image);
+    if (QAction *selectedItem = menu.exec(globalPos)) {
+      if (selectedItem->text() == tr("Open Image")) {
+        emit openImage(item->toolTip(0));
+      } /*else if (selectedItem->text() == tr("Delete Image")) {
+        emit deleteImages(QStringList(item->toolTip(0)));
+      }*/
     }
   } else if (item->data(0, Qt::UserRole) == photomatch::sessions){
     QMenu menu;

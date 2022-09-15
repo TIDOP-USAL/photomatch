@@ -108,7 +108,8 @@ void BriefDescriptor::update()
                                                              BriefProperties::useOrientation());
 }
 
-cv::Mat BriefDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+cv::Mat BriefDescriptor::extract(const cv::Mat &img, 
+                                 std::vector<cv::KeyPoint> &keyPoints)
 {
   cv::Mat descriptors;
   mBrief->compute(img, keyPoints, descriptors);

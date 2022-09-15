@@ -79,7 +79,7 @@ option(WITH_PIXKIT   "Include PixKit"                  ON)
 if(MSVC)
 option (WITH_VLD     "Include Visual Leak Detector Support"    OFF)
 endif(MSVC)
-option(WITH_CUDA     "Include Cuda"                    OFF)
+option(WITH_CUDA     "Include Cuda"                    ON)
 
 #------------------------------------------------------------#
 
@@ -154,7 +154,7 @@ endif(Boost_FOUND)
 #------------------------------------------------------------#
 
 if (WITH_CUDA)
-find_package(CUDA 10)
+find_package(CUDA)
 include_directories(${CUDA_INCLUDE_DIRS})
 
 if (CUDA_FOUND)

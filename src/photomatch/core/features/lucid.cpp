@@ -89,7 +89,8 @@ void LucidDescriptor::update()
                                           LucidProperties::blurKernel());
 }
 
-cv::Mat LucidDescriptor::extract(const cv::Mat &img, std::vector<cv::KeyPoint> &keyPoints)
+cv::Mat LucidDescriptor::extract(const cv::Mat &img, 
+                                 std::vector<cv::KeyPoint> &keyPoints)
 {
   cv::Mat descriptors;
   mLUCID->compute(img, keyPoints, descriptors);

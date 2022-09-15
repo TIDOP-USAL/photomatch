@@ -436,6 +436,8 @@ void FeaturesViewerViewImp::closeEvent(QCloseEvent *event)
       }
     }
   }
+
+  QDialog::closeEvent(event);
 }
 
 } // namespace photomatch
