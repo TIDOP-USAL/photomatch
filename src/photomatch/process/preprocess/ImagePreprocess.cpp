@@ -105,17 +105,27 @@ void ImagePreprocess::run()
     }
 
     cv::Mat img;
+    //if (scale > 1.) {
+    //  size /= scale;
+    //  imageReader.setScaledSize(size);
+    //  QImage image_scaled = imageReader.read();
+    //  img = qImageToCvMat(image_scaled);
+    //  msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
+    //} else {
+    //  /// Se ignoran las imagenes giradas ya que QImageReader ignora si están giradas
+    //  img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
+    //  //msgWarning("Full image size. ");
+    //}
+    img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
     if (scale > 1.) {
       size /= scale;
-      imageReader.setScaledSize(size);
-      QImage image_scaled = imageReader.read();
-      img = qImageToCvMat(image_scaled);
+      //imageReader.setScaledSize(size);
+      //QImage image_scaled = imageReader.read();
+      //img = qImageToCvMat(image_scaled);
+      cv::resize(img, img, cv::Size(size.width(), size.height()));
       msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
-    } else {
-      /// Se ignoran las imagenes giradas ya que QImageReader ignora si están giradas
-      img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
-      //msgWarning("Full image size. ");
     }
+
     if (img.empty()) TL_THROW_ERROR("Could not load image: %s", input_img);
 
     tl::Chrono chrono;
