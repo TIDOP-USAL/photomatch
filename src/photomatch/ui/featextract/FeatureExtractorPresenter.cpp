@@ -27,6 +27,7 @@
 #include "photomatch/core/features/features.h"
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/asift.h"
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/core/features/boost.h"
 #endif
@@ -58,6 +59,7 @@
 
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
+#include "photomatch/widgets/ASiftWidget.h"
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/BoostWidget.h"
 #endif
@@ -110,6 +112,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mHelp(nullptr),
     mAgastDetector(new AgastWidgetImp),
     mAkazeDetector(new AkazeWidgetImp),
+    mASiftDetector(new ASiftWidgetImp),
     mBriskDetector(new BriskWidgetImp),
     mFastDetector(new FastWidgetImp),
     mGfttDetector(new GfttWidgetImp),
@@ -125,6 +128,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mSurfDetector(new SurfWidgetImp),
 #endif
     mAkazeDescriptor(new AkazeWidgetImp),
+    mASiftDescriptor(new ASiftWidgetImp),
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
     mBoostDescriptor(new BoostWidgetImp),
 #endif
@@ -162,6 +166,11 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
   if (mAkazeDetector){
     delete mAkazeDetector;
     mAkazeDetector = nullptr;
+  }
+
+  if(mASiftDetector) {
+    delete mASiftDetector;
+    mASiftDetector = nullptr;
   }
 
   if (mBriskDetector){
@@ -221,6 +230,11 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
   if (mAkazeDescriptor){
     delete mAkazeDescriptor;
     mAkazeDescriptor = nullptr;
+  }
+
+  if(mASiftDescriptor) {
+    delete mASiftDescriptor;
+    mASiftDescriptor = nullptr;
   }
 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
@@ -305,6 +319,7 @@ void FeatureExtractorPresenterImp::init()
 {
   mView->addKeypointDetector(mAgastDetector);
   mView->addKeypointDetector(mAkazeDetector);
+  mView->addKeypointDetector(mASiftDetector);
   mView->addKeypointDetector(mBriskDetector);
   mView->addKeypointDetector(mFastDetector);
   mView->addKeypointDetector(mGfttDetector);
@@ -321,6 +336,7 @@ void FeatureExtractorPresenterImp::init()
 #endif
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
+  mView->addDescriptorExtractor(mASiftDescriptor);
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mBoostDescriptor);
 #endif
@@ -375,10 +391,10 @@ void FeatureExtractorPresenterImp::open()
     return;
   }
 
-  if (Feature *detector = current_session->detector().get()){
+  if (auto detector = current_session->detector()){
     setCurrentkeypointDetector(detector->name());
   }
-  if (Feature *descriptor = current_session->descriptor().get()){
+  if (auto descriptor = current_session->descriptor()){
     setCurrentDescriptorExtractor(descriptor->name());
   }
 
@@ -427,8 +443,8 @@ void FeatureExtractorPresenterImp::createProcess()
     mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
   }
 
-  Feature *detector = current_session->detector().get();
-  Feature *descriptor = current_session->descriptor().get();
+  auto detector = current_session->detector();
+  auto descriptor = current_session->descriptor();
   if (detector && descriptor){
     int i_ret = QMessageBox(QMessageBox::Warning,
                             tr("Previous results"),
@@ -561,31 +577,33 @@ void FeatureExtractorPresenterImp::cancel()
 
 void FeatureExtractorPresenterImp::setDetectorAndDescriptorProperties()
 {
-  this->setAgastDetectorProperties();
-  this->setAkazeDetectorPropierties();
-  this->setAkazeDescriptorProperties();
-  this->setBoostDescriptorProperties();
-  this->setBriefDescriptorProperties();
-  this->setBriskDetectorProperties();
-  this->setBriskDescriptorProperties();
-  this->setDaisyDescriptorProperties();
-  this->setFastDetectorProperties();
-  this->setFreakDescriptorProperties();
-  this->setGfttDetectorProperties();
-  this->setHogDescriptorProperties();
-  this->setKazeDetectorProperties();
-  this->setKazeDescriptorProperties();
-  this->setLatchDescriptorProperties();
-  this->setMsdDetectorProperties();
-  this->setMserDetectorProperties();
-  this->setOrbDetectorProperties();
-  this->setOrbDescriptorProperties();
-  this->setSiftDetectorProperties();
-  this->setSiftDescriptorProperties();
-  this->setStarDetectorProperties();
-  this->setSurfDetectorProperties();
-  this->setSurfDescriptorProperties();
-  this->setVggDescriptorProperties();
+  setAgastDetectorProperties();
+  setAkazeDetectorPropierties();
+  setASiftDetectorPropierties();
+  setASiftDescriptorPropierties();
+  setAkazeDescriptorProperties();
+  setBoostDescriptorProperties();
+  setBriefDescriptorProperties();
+  setBriskDetectorProperties();
+  setBriskDescriptorProperties();
+  setDaisyDescriptorProperties();
+  setFastDetectorProperties();
+  setFreakDescriptorProperties();
+  setGfttDetectorProperties();
+  setHogDescriptorProperties();
+  setKazeDetectorProperties();
+  setKazeDescriptorProperties();
+  setLatchDescriptorProperties();
+  setMsdDetectorProperties();
+  setMserDetectorProperties();
+  setOrbDetectorProperties();
+  setOrbDescriptorProperties();
+  setSiftDetectorProperties();
+  setSiftDescriptorProperties();
+  setStarDetectorProperties();
+  setSurfDetectorProperties();
+  setSurfDescriptorProperties();
+  setVggDescriptorProperties();
 
   ///TODO: guardar en proyecto y configuración y recuperarlo desde aqui
   //mKeypointsFilterWidget->setNPoints();
@@ -641,6 +659,54 @@ void FeatureExtractorPresenterImp::setAkazeDetectorPropierties()
     mAkazeDetector->setDescriptorChannels(detector && detector->type() == Feature::Type::akaze ?
                                           dynamic_cast<Akaze *>(detector)->descriptorChannels() :
                                           mSettingsModel->akazeDescriptorChannels());
+  }
+}
+
+void FeatureExtractorPresenterImp::setASiftDetectorPropierties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto detector = std::dynamic_pointer_cast<Sift>(current_session->detector());
+
+    mSiftDetector->setSigma(detector && detector->type() == Feature::Type::asift ?
+                              detector->sigma() :
+                              mSettingsModel->asiftSigma());
+    mSiftDetector->setOctaveLayers(detector && detector->type() == Feature::Type::asift ?
+                                     detector->octaveLayers() :
+                                     mSettingsModel->asiftOctaveLayers());
+    mSiftDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::asift ?
+                                      detector->edgeThreshold() :
+                                      mSettingsModel->asiftEdgeThreshold());
+    mSiftDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::asift ?
+                                       detector->featuresNumber() :
+                                       mSettingsModel->asiftFeaturesNumber());
+    mSiftDetector->setContrastThreshold(detector && detector->type() == Feature::Type::asift ?
+                                          detector->contrastThreshold() :
+                                          mSettingsModel->asiftContrastThreshold());
+  }
+}
+
+void FeatureExtractorPresenterImp::setASiftDescriptorPropierties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto detector = std::dynamic_pointer_cast<Sift>(current_session->detector());
+
+    mSiftDetector->setSigma(detector && detector->type() == Feature::Type::asift ?
+                              detector->sigma() :
+                              mSettingsModel->asiftSigma());
+    mSiftDetector->setOctaveLayers(detector && detector->type() == Feature::Type::asift ?
+                                     detector->octaveLayers() :
+                                     mSettingsModel->asiftOctaveLayers());
+    mSiftDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::asift ?
+                                      detector->edgeThreshold() :
+                                      mSettingsModel->asiftEdgeThreshold());
+    mSiftDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::asift ?
+                                       detector->featuresNumber() :
+                                       mSettingsModel->asiftFeaturesNumber());
+    mSiftDetector->setContrastThreshold(detector && detector->type() == Feature::Type::asift ?
+                                          detector->contrastThreshold() :
+                                          mSettingsModel->asiftContrastThreshold());
   }
 }
 
@@ -1257,7 +1323,19 @@ std::shared_ptr<KeypointDetector> FeatureExtractorPresenterImp::makeKeypointDete
                                                                  mAkazeDetector->octaves(),
                                                                  mAkazeDetector->octaveLayers(),
                                                                  mAkazeDetector->diffusivity());
-  } else if (keypointDetector.compare("BRISK") == 0){
+  } 
+#ifdef OPENCV_ENABLE_NONFREE
+  else if(keypointDetector.compare("ASIFT") == 0) {
+    keypoint_detector = std::make_shared<ASiftDetectorDescriptor>(mASiftDetector->featuresNumber(),
+                                                                  mASiftDetector->octaveLayers(),
+                                                                  mASiftDetector->contrastThreshold(),
+                                                                  mASiftDetector->edgeThreshold(),
+                                                                  mASiftDetector->sigma(),
+                                                                  mASiftDetector->minTilt(),
+                                                                  mASiftDetector->maxTilt());
+  }
+#endif  
+  else if (keypointDetector.compare("BRISK") == 0){
     keypoint_detector = std::make_shared<BriskDetectorDescriptor>(mBriskDetector->threshold(),
                                                                  mBriskDetector->octaves(),
                                                                  mBriskDetector->patternScale());
@@ -1380,22 +1458,43 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
   if (descriptorExtractor.compare("AKAZE") == 0){
     if (keypointDetector.compare("AKAZE") == 0){
       descriptor_extractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
-                                                                      mAkazeDetector->descriptorSize(),
-                                                                      mAkazeDetector->descriptorChannels(),
-                                                                      mAkazeDetector->threshold(),
-                                                                      mAkazeDetector->octaves(),
-                                                                      mAkazeDetector->octaveLayers(),
-                                                                      mAkazeDetector->diffusivity());
+                                                                       mAkazeDetector->descriptorSize(),
+                                                                       mAkazeDetector->descriptorChannels(),
+                                                                       mAkazeDetector->threshold(),
+                                                                       mAkazeDetector->octaves(),
+                                                                       mAkazeDetector->octaveLayers(),
+                                                                       mAkazeDetector->diffusivity());
     } else {
       descriptor_extractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDescriptor->descriptorType(),
-                                                                      mAkazeDescriptor->descriptorSize(),
-                                                                      mAkazeDescriptor->descriptorChannels(),
-                                                                      mAkazeDescriptor->threshold(),
-                                                                      mAkazeDescriptor->octaves(),
-                                                                      mAkazeDescriptor->octaveLayers(),
-                                                                      mAkazeDescriptor->diffusivity());
+                                                                       mAkazeDescriptor->descriptorSize(),
+                                                                       mAkazeDescriptor->descriptorChannels(),
+                                                                       mAkazeDescriptor->threshold(),
+                                                                       mAkazeDescriptor->octaves(),
+                                                                       mAkazeDescriptor->octaveLayers(),
+                                                                       mAkazeDescriptor->diffusivity());
     }
   }
+#ifdef OPENCV_ENABLE_NONFREE
+  else if(descriptorExtractor.compare("ASIFT") == 0) {
+    if(keypointDetector.compare("ASIFT") == 0) {
+      descriptor_extractor = std::make_shared<ASiftDetectorDescriptor>(mASiftDetector->featuresNumber(),
+                                                                       mASiftDetector->octaveLayers(),
+                                                                       mASiftDetector->contrastThreshold(),
+                                                                       mASiftDetector->edgeThreshold(),
+                                                                       mASiftDetector->sigma(),
+                                                                       mASiftDetector->minTilt(),
+                                                                       mASiftDetector->maxTilt());
+    } else {
+      descriptor_extractor = std::make_shared<ASiftDetectorDescriptor>(mASiftDescriptor->featuresNumber(),
+                                                                       mASiftDescriptor->octaveLayers(),
+                                                                       mASiftDescriptor->contrastThreshold(),
+                                                                       mASiftDescriptor->edgeThreshold(),
+                                                                       mASiftDescriptor->sigma(),
+                                                                       mASiftDetector->minTilt(),
+                                                                       mASiftDetector->maxTilt());
+    }
+  }
+#endif 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   else if (descriptorExtractor.compare("BOOST") == 0){
     descriptor_extractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
@@ -1644,6 +1743,20 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
 #ifdef OPENCV_ENABLE_NONFREE
   else if (keypointDetector.compare("SURF") == 0){
     mView->setCurrentDescriptorExtractor("SURF");
+  } else if (keypointDetector.compare("ASIFT") == 0) {
+    mView->setCurrentDescriptorExtractor("ASIFT");
+    mView->disableDescriptorExtractor("AGAST");
+    mView->disableDescriptorExtractor("AKAZE");
+    mView->disableDescriptorExtractor("BRISK");
+    mView->disableDescriptorExtractor("FAST");
+    mView->disableDescriptorExtractor("GFTT");
+    mView->disableDescriptorExtractor("KAZE");
+    mView->disableDescriptorExtractor("MSD");
+    mView->disableDescriptorExtractor("MSER");
+    mView->disableDescriptorExtractor("ORB");
+    mView->disableDescriptorExtractor("SIFT");
+    mView->disableDescriptorExtractor("STAR");
+    mView->disableDescriptorExtractor("SURF");
   }
 #endif
 }

@@ -15,19 +15,20 @@
  * GNU General Public License for more details.                         *
  *                                                                      *
  * You should have received a copy of the GNU General Public License    *
- * along with PhotoMatch.  If not, see <http://www.gnu.org/licenses/>.  *
+ * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
  *                                                                      *
  * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
  *                                                                      *
  ************************************************************************/
 
 
-#ifndef PHOTOMATCH_SIFT_DETECTOR_DESCRIPTOR_H
-#define PHOTOMATCH_SIFT_DETECTOR_DESCRIPTOR_H
+#ifndef PHOTOMATCH_ASIFT_DETECTOR_DESCRIPTOR_H
+#define PHOTOMATCH_ASIFT_DETECTOR_DESCRIPTOR_H
 
 #include "photomatch/photomatch_global.h"
 
 #include "photomatch/core/features/features.h"
+#include "asift/aff_features2d.hpp"
 
 #include <opencv2/xfeatures2d.hpp>
 
@@ -38,19 +39,19 @@ namespace photomatch
 
 
 /*!
- * \brief SIFT detector/descriptor properties class
+ * \brief ASIFT detector/descriptor properties class
  */
-class PHOTOMATCH_EXPORT SiftProperties
-  : public Sift
+class PHOTOMATCH_EXPORT ASiftProperties
+  : public ASift
 {
 
 public:
 
-  SiftProperties();
-  SiftProperties(const SiftProperties &siftProperties);
-  ~SiftProperties() override = default;
+  ASiftProperties();
+  ASiftProperties(const ASiftProperties &asiftProperties);
+  ~ASiftProperties() override = default;
 
-// Sift interface
+// ASift interface
 
 public:
 
@@ -64,6 +65,10 @@ public:
   void setContrastThreshold(double contrastThreshold) override;
   void setEdgeThreshold(double edgeThreshold) override;
   void setSigma(double sigma) override;
+  int minTilt() const override;
+  int maxTilt() const override;
+  void setMinTilt(int minTilt) override;
+  void setMaxTilt(int maxTilt) override;
 
 // Feature interface
 
@@ -79,29 +84,33 @@ private:
   double mContrastThreshold;
   double mEdgeThreshold;
   double mSigma;
+  int mMinTilt;
+  int mMaxTilt;
+
 };
 
 
 /*----------------------------------------------------------------*/
 
-#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
 
-class PHOTOMATCH_EXPORT SiftDetectorDescriptor
-  : public SiftProperties,
+class PHOTOMATCH_EXPORT ASiftDetectorDescriptor
+  : public ASiftProperties,
     public KeypointDetector,
     public DescriptorExtractor
 {
 
 public:
 
-  SiftDetectorDescriptor();
-  SiftDetectorDescriptor(const SiftDetectorDescriptor &siftDetectorDescriptor);
-  SiftDetectorDescriptor(int featuresNumber,
-                         int octaveLayers,
-                         double contrastThreshold,
-                         double edgeThreshold,
-                         double sigma);
-  ~SiftDetectorDescriptor() override = default;
+  ASiftDetectorDescriptor();
+  ASiftDetectorDescriptor(const ASiftDetectorDescriptor &asiftDetectorDescriptor);
+  ASiftDetectorDescriptor(int featuresNumber,
+                          int octaveLayers,
+                          double contrastThreshold,
+                          double edgeThreshold,
+                          double sigma,
+                          int minTilt,
+                          int maxTilt);
+  ~ASiftDetectorDescriptor() override = default;
 
 private:
 
@@ -121,7 +130,7 @@ public:
   cv::Mat extract(const cv::Mat &img,
                   std::vector<cv::KeyPoint> &keyPoints) override;
 
-// Sift interface
+// ASift interface
 
 public:
 
@@ -130,6 +139,8 @@ public:
   void setContrastThreshold(double contrastThreshold) override;
   void setEdgeThreshold(double edgeThreshold) override;
   void setSigma(double sigma) override;
+  void setMinTilt(int minTilt) override;
+  void setMaxTilt(int maxTilt) override;
 
 // Feature interface
 
@@ -139,12 +150,11 @@ public:
 
 protected:
 
-  cv::Ptr<cv::xfeatures2d::SIFT> mSift;
+  cv::Ptr<cv::affma::AffFeatureDetector> mDetector;
+  cv::Ptr<cv::affma::AffDescriptorExtractor> mDescriptor;
 };
-
-#endif
 
 
 } // namespace photomatch
 
-#endif // PHOTOMATCH_SIFT_DETECTOR_DESCRIPTOR_H
+#endif // PHOTOMATCH_ASIFT_DETECTOR_DESCRIPTOR_H

@@ -43,6 +43,7 @@ class HelpDialog;
 
 class AgastWidget;
 class AkazeWidget;
+class ASiftWidget;
 class BoostWidget;
 class BriefWidget;
 class BriskWidget;
@@ -83,6 +84,8 @@ private:
   void setDetectorAndDescriptorProperties();
   void setAgastDetectorProperties();
   void setAkazeDetectorPropierties();
+  void setASiftDetectorPropierties();
+  void setASiftDescriptorPropierties();
   void setAkazeDescriptorProperties();
   void setBoostDescriptorProperties();
   void setBriefDescriptorProperties();
@@ -159,6 +162,7 @@ protected:
 
   AgastWidget *mAgastDetector;
   AkazeWidget *mAkazeDetector;
+  ASiftWidget *mASiftDetector;
   BriskWidget *mBriskDetector;
   FastWidget *mFastDetector;
   GfttWidget *mGfttDetector;
@@ -175,6 +179,7 @@ protected:
 #endif
 
   AkazeWidget *mAkazeDescriptor;
+  ASiftWidget *mASiftDescriptor;
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   BoostWidget *mBoostDescriptor;
 #endif

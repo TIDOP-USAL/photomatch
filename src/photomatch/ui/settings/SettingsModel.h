@@ -110,6 +110,14 @@ public:
   int akazeOctaveLayers() const override;
   QString akazeDiffusivity() const override;
 
+  int asiftFeaturesNumber() const override;
+  int asiftOctaveLayers() const override;
+  double asiftContrastThreshold() const override;
+  double asiftEdgeThreshold() const override;
+  double asiftSigma() const override;
+  int asiftMinTilt() const override;
+  int asiftMaxTilt() const override;
+
   QString boostDescriptorType() const override;
   bool boostUseOrientation() const override;
   double boostScaleFactor() const override;

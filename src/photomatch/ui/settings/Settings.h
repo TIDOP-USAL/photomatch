@@ -133,6 +133,14 @@ public:
   virtual int akazeOctaveLayers() const = 0;
   virtual QString akazeDiffusivity() const = 0;
 
+  virtual int asiftFeaturesNumber() const = 0;
+  virtual int asiftOctaveLayers() const = 0;
+  virtual double asiftContrastThreshold() const = 0;
+  virtual double asiftEdgeThreshold() const = 0;
+  virtual double asiftSigma() const = 0;
+  virtual int asiftMinTilt() const = 0;
+  virtual int asiftMaxTilt() const = 0;
+
   virtual QString boostDescriptorType() const = 0;
   virtual bool boostUseOrientation() const = 0;
   virtual double boostScaleFactor() const = 0;

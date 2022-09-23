@@ -25,9 +25,9 @@
 #ifndef PHOTOMATCH_THUMBNAILS_WIDGET_H
 #define PHOTOMATCH_THUMBNAILS_WIDGET_H
 
-#include <QImage>
-
 #include "photomatch/widgets/PhotoMatchWidget.h"
+
+#include <QImage>
 
 class QListWidget;
 class QListWidgetItem;

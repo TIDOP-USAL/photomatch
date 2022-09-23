@@ -293,6 +293,41 @@ QString SettingsModelImp::akazeDiffusivity() const
   return mSettings->akaze()->diffusivity();
 }
 
+int SettingsModelImp::asiftFeaturesNumber() const
+{
+  return mSettings->asift()->featuresNumber();
+}
+
+int SettingsModelImp::asiftOctaveLayers() const
+{
+  return mSettings->asift()->octaveLayers();
+}
+
+double SettingsModelImp::asiftContrastThreshold() const
+{
+  return mSettings->asift()->contrastThreshold();
+}
+
+double SettingsModelImp::asiftEdgeThreshold() const
+{
+  return mSettings->asift()->edgeThreshold();
+}
+
+double SettingsModelImp::asiftSigma() const
+{
+  return mSettings->asift()->sigma();
+}
+
+int SettingsModelImp::asiftMinTilt() const
+{
+  return mSettings->asift()->minTilt();
+}
+
+int SettingsModelImp::asiftMaxTilt() const
+{
+  return mSettings->asift()->maxTilt();
+}
+
 QString SettingsModelImp::boostDescriptorType() const
 {
   return mSettings->boost()->descriptorType();

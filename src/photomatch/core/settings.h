@@ -52,6 +52,7 @@ class Rswhe;
 class Wallis;
 class Agast;
 class Akaze;
+class ASift;
 class Boost;
 class Brief;
 class Brisk;
@@ -197,6 +198,8 @@ public:
   virtual const Agast *agast() const = 0;
   virtual Akaze *akaze() = 0;
   virtual const Akaze *akaze() const = 0;
+  virtual ASift *asift() = 0;
+  virtual const ASift *asift() const = 0;
   virtual Boost *boost() = 0;
   virtual const Boost *boost() const = 0;
   virtual Brief *brief() = 0;
@@ -404,6 +407,8 @@ public:
   const Agast *agast() const override;
   Akaze *akaze() override;
   const Akaze *akaze() const override;
+  ASift *asift() override;
+  const ASift *asift() const override;
   Boost *boost() override;
   const Boost *boost() const override;
   Brief *brief() override;
@@ -532,6 +537,7 @@ protected:
 
   Agast *mAgast;
   Akaze *mAkaze;
+  ASift *mASift;
   Boost *mBoost;
   Brief *mBrief;
   Brisk *mBrisk;

@@ -26,6 +26,7 @@
 
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/asift.h"
 #include "photomatch/core/features/boost.h"
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
@@ -93,6 +94,7 @@ SettingsImp::SettingsImp()
     mWallis(new WallisProperties),
     mAgast(new AgastProperties),
     mAkaze(new AkazeProperties),
+    mASift(new ASiftProperties),
     mBoost(new BoostProperties),
     mBrief(new BriefProperties),
     mBrisk(new BriskProperties),
@@ -545,6 +547,16 @@ Akaze *SettingsImp::akaze()
 const Akaze *SettingsImp::akaze() const
 {
   return mAkaze;
+}
+
+ASift *SettingsImp::asift()
+{
+  return mASift;
+}
+
+const ASift *SettingsImp::asift() const
+{
+  return mASift;
 }
 
 Boost *SettingsImp::boost()

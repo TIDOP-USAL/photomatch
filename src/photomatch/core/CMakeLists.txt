@@ -7,6 +7,10 @@ add_library(libcore ${LIB_TYPE}
             ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.cpp
             ${CMAKE_SOURCE_DIR}/third_party/lss/lss.cpp
             ${CMAKE_SOURCE_DIR}/third_party/lss/lss.h
+            ${CMAKE_SOURCE_DIR}/third_party/asift/aff_features2d.cpp
+            ${CMAKE_SOURCE_DIR}/third_party/asift/aff_features2d.hpp
+            ${CMAKE_SOURCE_DIR}/third_party/asift/aff_angles.cpp
+            ${CMAKE_SOURCE_DIR}/third_party/asift/aff_helper.cpp
             project.cpp
             project.h
             image.cpp
@@ -20,6 +24,8 @@ add_library(libcore ${LIB_TYPE}
             features/agast.cpp
             features/akaze.h
             features/akaze.cpp
+            features/asift.h
+            features/asift.cpp
             features/boost.h
             features/boost.cpp
             features/brief.h
