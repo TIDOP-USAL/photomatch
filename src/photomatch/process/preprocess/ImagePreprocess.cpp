@@ -29,6 +29,7 @@
 #include <tidop/core/utils.h>
 #include <tidop/core/messages.h>
 #include <tidop/core/exception.h>
+#include <tidop/core/chrono.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -89,7 +90,7 @@ void ImagePreprocess::run()
     QByteArray ba = mImgInput.toLocal8Bit();
     const char *input_img = ba.data();
 
-    if (!QFileInfo::exists(mImgInput)) TL_THROW_ERROR("Image doesn't exist: %s", input_img);
+    if (!QFileInfo::exists(mImgInput)) TL_THROW_EXCEPTION("Image doesn't exist: %s", input_img);
 
     msgInfo("Preprocessing image %s", input_img);
 
@@ -126,7 +127,7 @@ void ImagePreprocess::run()
       msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
     }
 
-    if (img.empty()) TL_THROW_ERROR("Could not load image: %s", input_img);
+    if (img.empty()) TL_THROW_EXCEPTION("Could not load image: %s", input_img);
 
     tl::Chrono chrono;
     chrono.run();

@@ -26,6 +26,7 @@
 
 #include <tidop/core/messages.h>
 #include <tidop/core/exception.h>
+#include <tidop/core/chrono.h>
 
 #include "photomatch/core/features/featio.h"
 
@@ -97,14 +98,14 @@ void FeatureExtractor::run()
     QByteArray ba = mImage.toLocal8Bit();
     const char *img_file = ba.data();
 
-    if (!QFileInfo::exists(mImage)) TL_THROW_ERROR("Image doesn't exist: %s", img_file);
+    if (!QFileInfo::exists(mImage)) TL_THROW_EXCEPTION("Image doesn't exist: %s", img_file);
 
     cv::Mat img = cv::imread(img_file, cv::IMREAD_IGNORE_ORIENTATION);
-    if (img.empty()) TL_THROW_ERROR("Could not load image: %s", img_file);
+    if (img.empty()) TL_THROW_EXCEPTION("Could not load image: %s", img_file);
 
     if (mKeypointDetector == nullptr) {
       emit error(0, "Keypoint Detector error");
-      TL_THROW_ERROR("Keypoint Detector error");
+      TL_THROW_EXCEPTION("Keypoint Detector error");
     }
 
     msgInfo("Searching Keypoints for image %s", img_file);
@@ -124,7 +125,7 @@ void FeatureExtractor::run()
 
     if (mDescriptorExtractor == nullptr) {
       emit error(0, "Descriptor Extractor Error");
-      TL_THROW_ERROR("Descriptor Extractor error");
+      TL_THROW_EXCEPTION("Descriptor Extractor error");
     }
 
     msgInfo("Computing keypoints descriptors for image %s", img_file);

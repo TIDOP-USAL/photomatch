@@ -140,11 +140,11 @@ void LogWidget::setLogLevel(MessageLevel level)
   sLevel = level;
 }
 
-void LogWidget::print(const char *msg, const char *date, MessageLevel level)
+void LogWidget::print(const std::string &msg, const std::string &date, MessageLevel level)
 {
   std::lock_guard<std::mutex> lck(LogWidget::mtx);
 
-  QString _msg = QString(date) + " " + msg;
+  QString _msg = QString(date.c_str()) + " " + msg.c_str();
 
   QListWidgetItem *qListWidgetItem = new QListWidgetItem(_msg);
   qListWidgetItem->setData(Qt::UserRole, QVariant(static_cast<int>(level)));
@@ -213,28 +213,28 @@ void LogWidget::onRowsRemoved(const QModelIndex &parent, int start, int end, Log
   update();
 }
 
-void LogWidget::onMsgDebug(const char *msg, const char *date)
+void LogWidget::onMsgDebug(const std::string &msg, const std::string &date)
 {
   if (sLevel.isActive(MessageLevel::msg_debug)) {
     print(msg, date, MessageLevel::msg_debug);
   }
 }
 
-void LogWidget::onMsgInfo(const char *msg, const char *date)
+void LogWidget::onMsgInfo(const std::string &msg, const std::string &date)
 {
   if (sLevel.isActive(MessageLevel::msg_info)) {
     print(msg, date, MessageLevel::msg_info);
   }
 }
 
-void LogWidget::onMsgWarning(const char *msg, const char *date)
+void LogWidget::onMsgWarning(const std::string &msg, const std::string &date)
 {
   if (sLevel.isActive(MessageLevel::msg_warning)) {
     print(msg, date, MessageLevel::msg_warning);
   }
 }
 
-void LogWidget::onMsgError(const char *msg, const char *date)
+void LogWidget::onMsgError(const std::string &msg, const std::string &date)
 {
   if (sLevel.isActive(MessageLevel::msg_error)) {
     print(msg, date, MessageLevel::msg_error);

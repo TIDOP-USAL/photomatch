@@ -39,6 +39,8 @@
 
 #include <QFileInfo>
 
+#include <fstream>
+
 namespace photomatch
 {
 
