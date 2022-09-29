@@ -15,9 +15,9 @@
  * GNU General Public License for more details.                         *
  *                                                                      *
  * You should have received a copy of the GNU General Public License    *
- * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.      *
+ * along with PhotoMatch. If not, see <http://www.gnu.org/licenses/>.   *
  *                                                                      *
- * @license GPL-3.0+ <http://spdx.org/licenses/GPL-3.0+>                *
+ * https://spdx.org/licenses/GPL-3.0-or-later.html                      *
  *                                                                      *
  ************************************************************************/
 
@@ -69,14 +69,14 @@ private slots:
 
   void onThumbnailDoubleClicked(QListWidgetItem *item);
   void onSelectionChanged();
-
+  void loadVisibleImages();
   void onThumbnailClicked();
   void onThumbnailSmallClicked();
   void onDetailsClicked();
   void onDeleteImageClicked();
 
-  void showThumbnail(int id);
-  void finished();
+  //void showThumbnail(int id);
+  //void finished();
 
 // PhotoMatchWidget interface
 

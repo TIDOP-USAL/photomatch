@@ -25,6 +25,7 @@
 #include "msd.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/math/math.h>
 
 #include <opencv2/imgproc.hpp>
 
@@ -309,14 +310,14 @@ void MsdDetector::compensateAffineCoor1(float *x0, float *y0, int w1, int h1, fl
   float y1 = *y0;
 
 
-  Rtheta = Rtheta * static_cast<float>(TL_DEG_TO_RAD);
+  Rtheta = Rtheta * tl::math::consts::deg_to_rad<float>;
 
-  if (Rtheta <= static_cast<float>(TL_PI_2)) {
+  if (Rtheta <= tl::math::consts::half_pi<float>) {
     x_ori = 0;
     y_ori = w1 * sin(Rtheta) / t1;
   } else {
     x_ori = -w1 * cos(Rtheta) / t2;
-    y_ori = ( w1 * sin(Rtheta) + h1 * sin(Rtheta-TL_PI_2) ) / t1;
+    y_ori = ( w1 * sin(Rtheta) + h1 * sin(Rtheta- tl::math::consts::half_pi<float>) ) / t1;
   }
 
   float sin_Rtheta = sin(Rtheta);

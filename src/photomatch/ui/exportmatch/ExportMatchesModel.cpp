@@ -34,6 +34,8 @@
 #include <QImageReader>
 #include <QFileInfo>
 
+#include <fstream>
+
 namespace photomatch
 {
 

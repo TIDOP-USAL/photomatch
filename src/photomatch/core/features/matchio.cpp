@@ -30,6 +30,7 @@
 #include <QFileInfo>
 
 #include <stdexcept>
+#include <fstream>
 
 namespace photomatch
 {

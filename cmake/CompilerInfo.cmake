@@ -1,0 +1,7 @@
+message(STATUS "\nCompiler info:\n")
+if(CMAKE_CXX_COMPILER_LOADED)
+  message(STATUS "  C++ compiler:         ${CMAKE_CXX_COMPILER}")
+  message(STATUS "  C++ compiler ID:      ${CMAKE_CXX_COMPILER_ID}")
+  message(STATUS "  C++ compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
+  message(STATUS "  C++ estandar:         ${CMAKE_CXX_STANDARD}\n")
+endif()
