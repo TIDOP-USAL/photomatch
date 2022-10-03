@@ -139,7 +139,7 @@ void ASiftWidgetImp::setMaxTilt(int maxTilt)
 
 void ASiftWidgetImp::initUI()
 {
-  this->setWindowTitle("SIFT");
+  this->setWindowTitle("ASIFT");
   this->setObjectName("ASiftWidget");
 
   QGridLayout *layout = new QGridLayout();
@@ -175,12 +175,12 @@ void ASiftWidgetImp::initUI()
   propertiesLayout->addWidget(mSigma, 4, 1);
 
   propertiesLayout->addWidget(mLabelMinTilt, 5, 0);
-  mSpinBoxMinTilt->setRange(0, 6);
+  mSpinBoxMinTilt->setRange(0, 5);
   mSpinBoxMinTilt->setSingleStep(1);
   propertiesLayout->addWidget(mSpinBoxMinTilt, 5, 1);
 
   propertiesLayout->addWidget(mLabelMaxTilt, 6, 0);
-  mSpinBoxMaxTilt->setRange(0, 6);
+  mSpinBoxMaxTilt->setRange(0, 5);
   mSpinBoxMaxTilt->setSingleStep(1);
   propertiesLayout->addWidget(mSpinBoxMaxTilt, 6, 1);
 
@@ -216,7 +216,7 @@ void ASiftWidgetImp::reset()
   mEdgeThreshold->setValue(10.);
   mSigma->setValue(1.6);
   mSpinBoxMinTilt->setValue(0);
-  mSpinBoxMaxTilt->setValue(6);
+  mSpinBoxMaxTilt->setValue(5);
 }
 
 void ASiftWidgetImp::update()
@@ -226,7 +226,7 @@ void ASiftWidgetImp::update()
 
 void ASiftWidgetImp::retranslate()
 {
-  mGroupBox->setTitle(QApplication::translate("ASiftWidget", "SIFT Parameters", nullptr));
+  mGroupBox->setTitle(QApplication::translate("ASiftWidget", "ASIFT Parameters", nullptr));
   mLabelFeaturesNumber->setText(QApplication::translate("ASiftWidget", "Features Number:"));
   mLabelOctaveLayers->setText(QApplication::translate("ASiftWidget", "Octave Layers:"));
   mLabelContrastThreshold->setText(QApplication::translate("ASiftWidget", "Contrast Threshold:"));

@@ -144,7 +144,7 @@ message(STATUS "\nDependency loading:\n")
 # TidopLib (REQUIRED)                                                    #
 ##########################################################################      
 
-find_package(TidopLib REQUIRED)
+find_package(TidopLib 2.1 REQUIRED)
 
 
 

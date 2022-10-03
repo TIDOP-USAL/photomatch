@@ -29,12 +29,15 @@ set(PHOTOMATCH_CORE_SOURCES
     ${CMAKE_SOURCE_DIR}/third_party/msd/MSD.cpp
     ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.cpp
     ${CMAKE_SOURCE_DIR}/third_party/lss/lss.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/asift/aff_features2d.cpp
+    ${CMAKE_SOURCE_DIR}/third_party/asift/aff_angles.cpp
     project.cpp
     image.cpp
     settings.cpp
     session.cpp
     features/agast.cpp
     features/akaze.cpp
+    features/asift.cpp
     features/boost.cpp
     features/brief.cpp
     features/brisk.cpp
@@ -82,6 +85,7 @@ set(PHOTOMATCH_CORE_HEADERS
     ${CMAKE_SOURCE_DIR}/third_party/msd/MSD.h
     ${CMAKE_SOURCE_DIR}/third_party/msd/MSDImgPyramid.h
     ${CMAKE_SOURCE_DIR}/third_party/lss/lss.h
+    ${CMAKE_SOURCE_DIR}/third_party/asift/aff_features2d.hpp
     project.h
     image.h
     settings.h
@@ -89,6 +93,7 @@ set(PHOTOMATCH_CORE_HEADERS
     features/features.h
     features/agast.h
     features/akaze.h
+    features/asift.h
     features/boost.h
     features/brief.h
     features/brisk.h

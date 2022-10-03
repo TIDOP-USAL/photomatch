@@ -471,6 +471,7 @@ protected:
 
   void readAGAST(QXmlStreamReader &stream, Agast *agast) const;
   void readAKAZE(QXmlStreamReader &stream, Akaze *akaze) const;
+  void readASIFT(QXmlStreamReader &stream, ASift *asift) const;
   void readBOOST(QXmlStreamReader &stream, Boost *boost) const;
   void readBRIEF(QXmlStreamReader &stream, Brief *brief) const;
   void readBRISK(QXmlStreamReader &stream, Brisk *brisk) const;
@@ -537,6 +538,7 @@ protected:
 
   void writeAGAST(QXmlStreamWriter &stream, Agast *agast) const;
   void writeAKAZE(QXmlStreamWriter &stream, Akaze *akaze) const;
+  void writeASIFT(QXmlStreamWriter &stream, ASift *asift) const;
   void writeBOOST(QXmlStreamWriter &stream, Boost *boost) const;
   void writeBRIEF(QXmlStreamWriter &stream, Brief *brief) const;
   void writeBRISK(QXmlStreamWriter &stream, Brisk *brisk) const;

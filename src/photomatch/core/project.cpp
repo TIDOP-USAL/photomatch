@@ -28,6 +28,7 @@
 
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/asift.h"
 #include "photomatch/core/features/boost.h"
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
@@ -749,6 +750,10 @@ void ProjectControllerImp::readFeaturesDetector(QXmlStreamReader &stream, Sessio
       std::shared_ptr<Akaze> akaze = std::make_shared<AkazeProperties>();
       readAKAZE(stream, akaze.get());
       session->setDetector(akaze);
+    } else if(stream.name() == "ASIFT") {
+      std::shared_ptr<ASift> asift = std::make_shared<ASiftProperties>();
+      readASIFT(stream, asift.get());
+      session->setDetector(asift);
     } else if (stream.name() == "BRISK") {
       std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
       readBRISK(stream, brisk.get());
@@ -801,6 +806,10 @@ void ProjectControllerImp::readFeaturesDescriptor(QXmlStreamReader &stream, Sess
       std::shared_ptr<Akaze> akaze = std::make_shared<AkazeProperties>();
       readAKAZE(stream, akaze.get());
       session->setDescriptor(akaze);
+    } else if(stream.name() == "ASIFT") {
+      std::shared_ptr<ASift> asift = std::make_shared<ASiftProperties>();
+      readASIFT(stream, asift.get());
+      session->setDescriptor(asift);
     } else if (stream.name() == "BRIEF") {
       std::shared_ptr<Brief> brief = std::make_shared<BriefProperties>();
       readBRIEF(stream, brief.get());
@@ -1323,6 +1332,28 @@ void ProjectControllerImp::readAKAZE(QXmlStreamReader &stream, Akaze *akaze) con
   }
 }
 
+void ProjectControllerImp::readASIFT(QXmlStreamReader &stream, ASift *asift) const
+{
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "FeaturesNumber") {
+      asift->setFeaturesNumber(readInt(stream));
+    } else if(stream.name() == "OctaveLayers") {
+      asift->setOctaveLayers(readInt(stream));
+    } else if(stream.name() == "ContrastThreshold") {
+      asift->setContrastThreshold(readDouble(stream));
+    } else if(stream.name() == "EdgeThreshold") {
+      asift->setEdgeThreshold(readDouble(stream));
+    } else if(stream.name() == "Sigma") {
+      asift->setSigma(readDouble(stream));
+    } else if(stream.name() == "MinTilt") {
+      asift->setMinTilt(readInt(stream));
+    } else if(stream.name() == "MaxTilt") {
+      asift->setMaxTilt(readInt(stream));
+    } else
+      stream.skipCurrentElement();
+  }
+}
+
 void ProjectControllerImp::readBOOST(QXmlStreamReader &stream, Boost *boost) const
 {
   while (stream.readNextStartElement()) {
@@ -1823,6 +1854,8 @@ void ProjectControllerImp::writeFeatureDetector(QXmlStreamWriter &stream, Featur
       writeAGAST(stream, dynamic_cast<Agast *>(detector));
     } else if (detector->type() == Feature::Type::akaze){
       writeAKAZE(stream, dynamic_cast<Akaze *>(detector));
+    } else if(detector->type() == Feature::Type::asift) {
+      writeASIFT(stream, dynamic_cast<ASift *>(detector));
     } else if (detector->type() == Feature::Type::brisk){
       writeBRISK(stream, dynamic_cast<Brisk *>(detector));
     } else if (detector->type() == Feature::Type::fast){
@@ -1856,6 +1889,8 @@ void ProjectControllerImp::writeFeatureExtractor(QXmlStreamWriter &stream, Featu
 
     if (descriptor->type() == Feature::Type::akaze){
       writeAKAZE(stream, dynamic_cast<Akaze *>(descriptor));
+    } else if(descriptor->type() == Feature::Type::asift) {
+      writeASIFT(stream, dynamic_cast<ASift *>(descriptor));
     } else if (descriptor->type() == Feature::Type::brief){
       writeBRIEF(stream, dynamic_cast<Brief *>(descriptor));
     } else if (descriptor->type() == Feature::Type::brisk){
@@ -2289,6 +2324,21 @@ void ProjectControllerImp::writeAKAZE(QXmlStreamWriter &stream, Akaze *akaze) co
     stream.writeTextElement("Diffusivity", akaze->diffusivity());
   }
   stream.writeEndElement(); // AKAZE
+}
+
+void ProjectControllerImp::writeASIFT(QXmlStreamWriter &stream, ASift *asift) const
+{
+  stream.writeStartElement("ASIFT");
+  {
+    stream.writeTextElement("FeaturesNumber", QString::number(asift->featuresNumber()));
+    stream.writeTextElement("OctaveLayers", QString::number(asift->octaveLayers()));
+    stream.writeTextElement("ContrastThreshold", QString::number(asift->contrastThreshold()));
+    stream.writeTextElement("EdgeThreshold", QString::number(asift->edgeThreshold()));
+    stream.writeTextElement("Sigma", QString::number(asift->sigma()));
+    stream.writeTextElement("MinTilt", QString::number(asift->minTilt()));
+    stream.writeTextElement("MaxTilt", QString::number(asift->maxTilt()));
+  }
+  stream.writeEndElement(); // SIFT
 }
 
 void ProjectControllerImp::writeBOOST(QXmlStreamWriter &stream, Boost *boost) const

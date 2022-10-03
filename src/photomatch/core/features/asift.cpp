@@ -184,7 +184,7 @@ void ASiftDetectorDescriptor::update()
                                                                     ASiftProperties::contrastThreshold(),
                                                                     ASiftProperties::edgeThreshold(),
                                                                     ASiftProperties::sigma());
-  cv::Ptr<cv::affma::AffAngles> angles = cv::affma::createAffAngles(cv::affma::AffAngles::MaxPossibleTilt, 0);
+  cv::Ptr<cv::affma::AffAngles> angles = cv::affma::createAffAngles(ASiftProperties::maxTilt(), ASiftProperties::minTilt());
 
   mDetector = cv::affma::createAffFeatureDetector(sift, angles); 
   mDescriptor = cv::affma::createAffDescriptorExtractor(sift, ASiftProperties::maxTilt());                                    
