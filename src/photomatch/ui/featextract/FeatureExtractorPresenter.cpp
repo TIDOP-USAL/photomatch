@@ -33,6 +33,7 @@
 #endif
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
+#include "photomatch/core/features/d2net.h"
 #include "photomatch/core/features/daisy.h"
 #include "photomatch/core/features/fast.h"
 #include "photomatch/core/features/freak.h"
@@ -65,6 +66,7 @@
 #endif
 #include "photomatch/widgets/BriefWidget.h"
 #include "photomatch/widgets/BriskWidget.h"
+#include "photomatch/widgets/D2NetWidget.h"
 #include "photomatch/widgets/DaisyWidget.h"
 #include "photomatch/widgets/FastWidget.h"
 #include "photomatch/widgets/FreakWidget.h"
@@ -114,6 +116,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mAkazeDetector(new AkazeWidgetImp),
     mASiftDetector(new ASiftWidgetImp),
     mBriskDetector(new BriskWidgetImp),
+    mD2NetDetector(new D2NetWidgetImp),
     mFastDetector(new FastWidgetImp),
     mGfttDetector(new GfttWidgetImp),
     mKazeDetector(new KazeWidgetImp),
@@ -134,6 +137,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
 #endif
     mBriefDescriptor(new BriefWidgetImp),
     mBriskDescriptor(new BriskWidgetImp),
+    mD2NetDescriptor(new D2NetWidgetImp),
     mDaisyDescriptor(new DaisyWidgetImp),
     mFreakDescriptor(new FreakWidgetImp),
     mHogDescriptor(new HogWidgetImp),
@@ -176,6 +180,11 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
   if (mBriskDetector){
     delete mBriskDetector;
     mBriskDetector = nullptr;
+  }
+
+  if(mD2NetDetector) {
+    delete mD2NetDetector;
+    mD2NetDetector = nullptr;
   }
 
   if (mFastDetector){
@@ -254,6 +263,12 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mBriskDescriptor = nullptr;
   }
 
+
+  if(mD2NetDescriptor) {
+    delete mD2NetDescriptor;
+    mD2NetDescriptor = nullptr;
+  }
+
   if (mDaisyDescriptor){
     delete mDaisyDescriptor;
     mDaisyDescriptor = nullptr;
@@ -321,6 +336,7 @@ void FeatureExtractorPresenterImp::init()
   mView->addKeypointDetector(mAkazeDetector);
   mView->addKeypointDetector(mASiftDetector);
   mView->addKeypointDetector(mBriskDetector);
+  mView->addKeypointDetector(mD2NetDetector);
   mView->addKeypointDetector(mFastDetector);
   mView->addKeypointDetector(mGfttDetector);
   mView->addKeypointDetector(mKazeDetector);
@@ -343,6 +359,7 @@ void FeatureExtractorPresenterImp::init()
   mView->addDescriptorExtractor(mBriefDescriptor);
   mView->addDescriptorExtractor(mBriskDescriptor);
   mView->addDescriptorExtractor(mDaisyDescriptor);
+  mView->addDescriptorExtractor(mD2NetDescriptor);
   mView->addDescriptorExtractor(mFreakDescriptor);
   mView->addDescriptorExtractor(mHogDescriptor);
   mView->addDescriptorExtractor(mKazeDescriptor);
@@ -586,6 +603,8 @@ void FeatureExtractorPresenterImp::setDetectorAndDescriptorProperties()
   setBriefDescriptorProperties();
   setBriskDetectorProperties();
   setBriskDescriptorProperties();
+  setD2NetDetectorProperties();
+  setD2NetDescriptorProperties();
   setDaisyDescriptorProperties();
   setFastDetectorProperties();
   setFreakDescriptorProperties();
@@ -808,6 +827,30 @@ void FeatureExtractorPresenterImp::setBriskDescriptorProperties()
     mBriskDescriptor->setPatternScale(descriptor && descriptor->type() == Feature::Type::brisk ?
                                         dynamic_cast<Brisk *>(descriptor)->patternScale() :
                                         mSettingsModel->briskPatternScale());
+  }
+}
+
+void FeatureExtractorPresenterImp::setD2NetDetectorProperties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto detector = current_session->detector();
+
+    mD2NetDetector->setMultiscale(detector && detector->type() == Feature::Type::d2net ?
+                                  std::dynamic_pointer_cast<D2Net>(detector)->multiscale() :
+                                  false);
+  }
+}
+
+void FeatureExtractorPresenterImp::setD2NetDescriptorProperties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto descriptor = current_session->descriptor();
+
+    mD2NetDescriptor->setMultiscale(descriptor && descriptor->type() == Feature::Type::d2net ?
+                                    std::dynamic_pointer_cast<D2Net>(descriptor)->multiscale() :
+                                    false);
   }
 }
 
@@ -1339,6 +1382,8 @@ std::shared_ptr<KeypointDetector> FeatureExtractorPresenterImp::makeKeypointDete
     keypoint_detector = std::make_shared<BriskDetectorDescriptor>(mBriskDetector->threshold(),
                                                                  mBriskDetector->octaves(),
                                                                  mBriskDetector->patternScale());
+  } else if(keypointDetector.compare("D2Net") == 0) {
+    keypoint_detector = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
   } else if (keypointDetector.compare("FAST") == 0){
     keypoint_detector = std::make_shared<FastDetector>(mFastDetector->threshold(),
                                                       mFastDetector->nonmaxSuppression(),
@@ -1509,41 +1554,43 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
     descriptor_extractor = std::make_shared<BriskDetectorDescriptor>(mBriskDescriptor->threshold(),
                                                                     mBriskDescriptor->octaves(),
                                                                     mBriskDescriptor->patternScale());
+  } else if(keypointDetector.compare("D2Net") == 0) {
+    descriptor_extractor = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
   } else if (descriptorExtractor.compare("DAISY") == 0){
     descriptor_extractor = std::make_shared<DaisyDescriptor>(mDaisyDescriptor->radius(),
-                                                            mDaisyDescriptor->qRadius(),
-                                                            mDaisyDescriptor->qTheta(),
-                                                            mDaisyDescriptor->qHist(),
-                                                            mDaisyDescriptor->norm(),
-                                                            mDaisyDescriptor->interpolation(),
-                                                            mDaisyDescriptor->useOrientation());
+                                                             mDaisyDescriptor->qRadius(),
+                                                             mDaisyDescriptor->qTheta(),
+                                                             mDaisyDescriptor->qHist(),
+                                                             mDaisyDescriptor->norm(),
+                                                             mDaisyDescriptor->interpolation(),
+                                                             mDaisyDescriptor->useOrientation());
   } else if (descriptorExtractor.compare("FREAK") == 0){
     descriptor_extractor = std::make_shared<FreakDescriptor>(mFreakDescriptor->orientationNormalized(),
-                                                            mFreakDescriptor->scaleNormalized(),
-                                                            mFreakDescriptor->patternScale(),
-                                                            mFreakDescriptor->octaves());
+                                                             mFreakDescriptor->scaleNormalized(),
+                                                             mFreakDescriptor->patternScale(),
+                                                             mFreakDescriptor->octaves());
   } else if (descriptorExtractor.compare("HOG") == 0){
     descriptor_extractor = std::make_shared<HogDescriptor>(mHogDescriptor->winSize(),
-                                                          mHogDescriptor->blockSize(),
-                                                          mHogDescriptor->blockStride(),
-                                                          mHogDescriptor->cellSize(),
-                                                          mHogDescriptor->nbins(),
-                                                          mHogDescriptor->derivAperture());
+                                                           mHogDescriptor->blockSize(),
+                                                           mHogDescriptor->blockStride(),
+                                                           mHogDescriptor->cellSize(),
+                                                           mHogDescriptor->nbins(),
+                                                           mHogDescriptor->derivAperture());
   } else if (descriptorExtractor.compare("KAZE") == 0){
     if (keypointDetector.compare("KAZE") == 0){
       descriptor_extractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
-                                                                     mKazeDetector->uprightDescriptor(),
-                                                                     mKazeDetector->threshold(),
-                                                                     mKazeDetector->octaves(),
-                                                                     mKazeDetector->octaveLayers(),
-                                                                     mKazeDetector->diffusivity());
+                                                                      mKazeDetector->uprightDescriptor(),
+                                                                      mKazeDetector->threshold(),
+                                                                      mKazeDetector->octaves(),
+                                                                      mKazeDetector->octaveLayers(),
+                                                                      mKazeDetector->diffusivity());
     } else {
       descriptor_extractor = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
-                                                                     mKazeDescriptor->uprightDescriptor(),
-                                                                     mKazeDescriptor->threshold(),
-                                                                     mKazeDescriptor->octaves(),
-                                                                     mKazeDescriptor->octaveLayers(),
-                                                                     mKazeDescriptor->diffusivity());
+                                                                      mKazeDescriptor->uprightDescriptor(),
+                                                                      mKazeDescriptor->threshold(),
+                                                                      mKazeDescriptor->octaves(),
+                                                                      mKazeDescriptor->octaveLayers(),
+                                                                      mKazeDescriptor->diffusivity());
     }
   } else if (descriptorExtractor.compare("LATCH") == 0){
     descriptor_extractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
@@ -1680,8 +1727,21 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
 
   mView->disableDescriptorExtractor("AKAZE");
   mView->disableDescriptorExtractor("KAZE");
-  mView->enableDescriptorExtractor("ORB");
+  mView->disableDescriptorExtractor("ASIFT");
+  mView->disableDescriptorExtractor("D2Net");
+  mView->enableDescriptorExtractor("BRISK");
+  mView->enableDescriptorExtractor("BOOST");
+  mView->enableDescriptorExtractor("BRIEF");
+  mView->enableDescriptorExtractor("BRISK");
+  mView->enableDescriptorExtractor("DAISY");
+  mView->enableDescriptorExtractor("FREAK");
   mView->enableDescriptorExtractor("HOG");
+  mView->enableDescriptorExtractor("LATCH");
+  mView->enableDescriptorExtractor("LSS");
+  mView->enableDescriptorExtractor("ORB");
+  mView->enableDescriptorExtractor("VGG");
+  mView->enableDescriptorExtractor("SIFT");
+  mView->enableDescriptorExtractor("SURF");
 
   if (keypointDetector.compare("AGAST") == 0){
 #ifdef OPENCV_ENABLE_NONFREE
@@ -1743,22 +1803,34 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
 #ifdef OPENCV_ENABLE_NONFREE
   else if (keypointDetector.compare("SURF") == 0){
     mView->setCurrentDescriptorExtractor("SURF");
-  } else if (keypointDetector.compare("ASIFT") == 0) {
-    mView->setCurrentDescriptorExtractor("ASIFT");
-    mView->disableDescriptorExtractor("AGAST");
-    mView->disableDescriptorExtractor("AKAZE");
-    mView->disableDescriptorExtractor("BRISK");
-    mView->disableDescriptorExtractor("FAST");
-    mView->disableDescriptorExtractor("GFTT");
-    mView->disableDescriptorExtractor("KAZE");
-    mView->disableDescriptorExtractor("MSD");
-    mView->disableDescriptorExtractor("MSER");
-    mView->disableDescriptorExtractor("ORB");
-    mView->disableDescriptorExtractor("SIFT");
-    mView->disableDescriptorExtractor("STAR");
-    mView->disableDescriptorExtractor("SURF");
   }
 #endif
+  else if(keypointDetector.compare("ASIFT") == 0 ||
+          keypointDetector.compare("D2Net") == 0) {
+    if(keypointDetector.compare("ASIFT") == 0) {
+      mView->setCurrentDescriptorExtractor("ASIFT");
+      mView->disableDescriptorExtractor("D2Net");
+    } else if (keypointDetector.compare("D2Net") == 0){
+      mView->setCurrentDescriptorExtractor("D2Net");
+      mView->disableDescriptorExtractor("ASIFT");
+    }
+    
+    mView->disableDescriptorExtractor("AKAZE");
+    mView->disableDescriptorExtractor("BRISK");
+    mView->disableDescriptorExtractor("BOOST");
+    mView->disableDescriptorExtractor("BRIEF");
+    mView->disableDescriptorExtractor("BRISK");
+    mView->disableDescriptorExtractor("DAISY");
+    mView->disableDescriptorExtractor("FREAK");
+    mView->disableDescriptorExtractor("HOG");
+    mView->disableDescriptorExtractor("KAZE");
+    mView->disableDescriptorExtractor("LATCH");
+    mView->disableDescriptorExtractor("LSS");
+    mView->disableDescriptorExtractor("ORB");
+    mView->disableDescriptorExtractor("VGG");
+    mView->disableDescriptorExtractor("SIFT");
+    mView->disableDescriptorExtractor("SURF");
+  }
 }
 
 void FeatureExtractorPresenterImp::setCurrentDescriptorExtractor(const QString &descriptorExtractor)

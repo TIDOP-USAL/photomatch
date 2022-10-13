@@ -53,6 +53,7 @@ public:
     boost,
     brief,
     brisk,
+    d2net,
     daisy,
     fast,
     freak,
@@ -617,6 +618,29 @@ public:
    * \param[in] patternScale Pattern Scale
    */
   virtual void setPatternScale(double patternScale) = 0;
+
+};
+
+
+
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT D2Net
+  : public FeatureBase
+{
+
+public:
+
+  D2Net() : FeatureBase(Feature::Type::d2net) {}
+  ~D2Net() override = default;
+
+  virtual bool multiscale() const = 0;
+  virtual void setMultiscale(bool multiscale) = 0;
 
 };
 

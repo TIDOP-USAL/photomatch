@@ -475,6 +475,7 @@ protected:
   void readBOOST(QXmlStreamReader &stream, Boost *boost) const;
   void readBRIEF(QXmlStreamReader &stream, Brief *brief) const;
   void readBRISK(QXmlStreamReader &stream, Brisk *brisk) const;
+  void readD2NET(QXmlStreamReader &stream, D2Net *d2net) const;
   void readDAISY(QXmlStreamReader &stream, Daisy *daisy) const;
   void readFAST(QXmlStreamReader &stream, Fast *fast) const;
   void readFREAK(QXmlStreamReader &stream, Freak *freak) const;
@@ -542,6 +543,7 @@ protected:
   void writeBOOST(QXmlStreamWriter &stream, Boost *boost) const;
   void writeBRIEF(QXmlStreamWriter &stream, Brief *brief) const;
   void writeBRISK(QXmlStreamWriter &stream, Brisk *brisk) const;
+  void writeD2NET(QXmlStreamWriter &stream, D2Net *d2net) const;
   void writeDAISY(QXmlStreamWriter &stream, Daisy *daisy) const;
   void writeFAST(QXmlStreamWriter &stream, Fast *fast) const;
   void writeFREAK(QXmlStreamWriter &stream, Freak *freak) const;

@@ -41,6 +41,7 @@ set(PHOTOMATCH_CORE_SOURCES
     features/boost.cpp
     features/brief.cpp
     features/brisk.cpp
+    features/d2net.cpp
     features/daisy.cpp
     features/fast.cpp
     features/freak.cpp
@@ -97,6 +98,7 @@ set(PHOTOMATCH_CORE_HEADERS
     features/boost.h
     features/brief.h
     features/brisk.h
+    features/d2net.h
     features/daisy.h
     features/fast.h
     features/freak.h

@@ -32,6 +32,7 @@
 #include "photomatch/core/features/boost.h"
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
+#include "photomatch/core/features/d2net.h"
 #include "photomatch/core/features/daisy.h"
 #include "photomatch/core/features/fast.h"
 #include "photomatch/core/features/freak.h"
@@ -818,6 +819,10 @@ void ProjectControllerImp::readFeaturesDescriptor(QXmlStreamReader &stream, Sess
       std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
       readBRISK(stream, brisk.get());
       session->setDescriptor(brisk);
+    } else if(stream.name() == "D2NET") {
+      std::shared_ptr<D2Net> d2net = std::make_shared<D2NetProperties>();
+      readD2NET(stream, d2net.get());
+      session->setDescriptor(d2net);
     } else if (stream.name() == "DAISY") {
       std::shared_ptr<Daisy> daisy = std::make_shared<DaisyProperties>();
       readDAISY(stream, daisy.get());
@@ -1394,6 +1399,16 @@ void ProjectControllerImp::readBRISK(QXmlStreamReader &stream, Brisk *brisk) con
   }
 }
 
+void ProjectControllerImp::readD2NET(QXmlStreamReader &stream, D2Net *d2net) const
+{
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Multiscale") {
+      d2net->setMultiscale(readBoolean(stream));
+    }  else
+      stream.skipCurrentElement();
+  }
+}
+
 void ProjectControllerImp::readDAISY(QXmlStreamReader &stream, Daisy *daisy) const
 {
   while (stream.readNextStartElement()) {
@@ -1858,7 +1873,9 @@ void ProjectControllerImp::writeFeatureDetector(QXmlStreamWriter &stream, Featur
       writeASIFT(stream, dynamic_cast<ASift *>(detector));
     } else if (detector->type() == Feature::Type::brisk){
       writeBRISK(stream, dynamic_cast<Brisk *>(detector));
-    } else if (detector->type() == Feature::Type::fast){
+    } else if(detector->type() == Feature::Type::d2net) {
+      writeD2NET(stream, dynamic_cast<D2Net *>(detector));
+    } else if(detector->type() == Feature::Type::fast) {
       writeFAST(stream, dynamic_cast<Fast *>(detector));
     } else if (detector->type() == Feature::Type::gftt){
       writeGFTT(stream, dynamic_cast<Gftt *>(detector));
@@ -2371,6 +2388,15 @@ void ProjectControllerImp::writeBRISK(QXmlStreamWriter &stream, Brisk *brisk) co
     stream.writeTextElement("PatternScale", QString::number(brisk->patternScale()));
   }
   stream.writeEndElement(); // BRISK
+}
+
+void ProjectControllerImp::writeD2NET(QXmlStreamWriter &stream, D2Net *d2net) const
+{
+  stream.writeStartElement("D2NET");
+  {
+    stream.writeTextElement("Multiscale", d2net->multiscale() ? "true" : "false");
+  }
+  stream.writeEndElement(); // BRIEF
 }
 
 void ProjectControllerImp::writeDAISY(QXmlStreamWriter &stream, Daisy *daisy) const

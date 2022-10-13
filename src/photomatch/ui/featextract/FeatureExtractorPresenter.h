@@ -47,6 +47,7 @@ class ASiftWidget;
 class BoostWidget;
 class BriefWidget;
 class BriskWidget;
+class D2NetWidget;
 class DaisyWidget;
 class FastWidget;
 class FreakWidget;
@@ -91,6 +92,8 @@ private:
   void setBriefDescriptorProperties();
   void setBriskDetectorProperties();
   void setBriskDescriptorProperties();
+  void setD2NetDetectorProperties();
+  void setD2NetDescriptorProperties();
   void setDaisyDescriptorProperties();
   void setFastDetectorProperties();
   void setFreakDescriptorProperties();
@@ -164,6 +167,7 @@ protected:
   AkazeWidget *mAkazeDetector;
   ASiftWidget *mASiftDetector;
   BriskWidget *mBriskDetector;
+  D2NetWidget *mD2NetDetector;
   FastWidget *mFastDetector;
   GfttWidget *mGfttDetector;
   KazeWidget *mKazeDetector;
@@ -185,6 +189,7 @@ protected:
 #endif
   BriefWidget *mBriefDescriptor;
   BriskWidget *mBriskDescriptor;
+  D2NetWidget *mD2NetDescriptor;
   DaisyWidget *mDaisyDescriptor;
   FreakWidget *mFreakDescriptor;
   HogWidget *mHogDescriptor;

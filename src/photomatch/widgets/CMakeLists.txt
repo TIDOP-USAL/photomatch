@@ -44,6 +44,8 @@ add_library(${PROJECT_NAME} ${LIB_TYPE}
             CLaheWidget.h
             CmbfheWidget.cpp
             CmbfheWidget.h
+            D2NetWidget.cpp
+            D2NetWidget.h
             DaisyWidget.cpp
             DaisyWidget.h
             DescriptorMatcherWidget.cpp
