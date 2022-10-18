@@ -117,7 +117,6 @@ QString SiftProperties::name() const
 
 /*----------------------------------------------------------------*/
 
-#if (CV_VERSION_MAJOR > 4 || CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4) || defined OPENCV_ENABLE_NONFREE
 
 SiftDetectorDescriptor::SiftDetectorDescriptor()
 { 
@@ -148,11 +147,19 @@ SiftDetectorDescriptor::SiftDetectorDescriptor(int featuresNumber,
 
 void SiftDetectorDescriptor::update()
 {
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4))
+  mSift = cv::SIFT::create(SiftProperties::featuresNumber(),
+                           SiftProperties::octaveLayers(),
+                           SiftProperties::contrastThreshold(),
+                           SiftProperties::edgeThreshold(),
+                           SiftProperties::sigma());
+#elif defined HAVE_OPENCV_XFEATURES2D && defined OPENCV_ENABLE_NONFREE
   mSift = cv::xfeatures2d::SIFT::create(SiftProperties::featuresNumber(),
                                         SiftProperties::octaveLayers(),
                                         SiftProperties::contrastThreshold(),
                                         SiftProperties::edgeThreshold(),
                                         SiftProperties::sigma());
+#endif
 }
 
 std::vector<cv::KeyPoint> SiftDetectorDescriptor::detect(const cv::Mat &img, 
@@ -207,7 +214,6 @@ void SiftDetectorDescriptor::reset()
   update();
 }
 
-#endif
 
 } // namespace photomatch
 

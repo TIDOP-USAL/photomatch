@@ -448,11 +448,11 @@ protected:
   void readRobustMatching(QXmlStreamReader &stream, Session *session);
   void readRobustMatchingGeometricTest(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
   void readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
-  RobustMatcher::HomographyComputeMethod readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream);
+  //RobustMatcher::HomographyComputeMethod readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream);
   void readRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
-  RobustMatcher::FundamentalComputeMethod readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream);
+  //RobustMatcher::FundamentalComputeMethod readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream);
   void readRobustMatchingGeometricTestEssentialMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
-  RobustMatcher::EssentialComputeMethod readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream);
+  //RobustMatcher::EssentialComputeMethod readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream);
   void readGms(QXmlStreamReader &stream, Session *session);
   void readMatchesImages(QXmlStreamReader &stream, Session *session);
   void readPassPoints(QXmlStreamReader &stream, Session *session);

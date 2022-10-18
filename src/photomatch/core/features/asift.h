@@ -30,7 +30,9 @@
 #include "photomatch/core/features/features.h"
 #include "asift/aff_features2d.hpp"
 
+#if defined OPENCV_ENABLE_NONFREE && defined HAVE_OPENCV_XFEATURES2D
 #include <opencv2/xfeatures2d.hpp>
+#endif // HAVE_OPENCV_XFEATURES2D
 
 #include <QString>
 

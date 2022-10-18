@@ -234,14 +234,14 @@ public:
   QString matchStrategy() const override;
   QString matchNormType() const override;
   double matchRatio() const override;
-  double matchDistance() const override;
-  double matchConfidence() const override;
+  //double matchDistance() const override;
+  //double matchConfidence() const override;
   bool matchCrossMatching() const override;
-  int matchMaxIters() const override;
-  QString matchGeometricTest() const override;
-  QString matchHomographyComputeMethod() const override;
-  QString matchFundamentalComputeMethod() const override;
-  QString matchEssentialComputeMethod() const override;
+  //int matchMaxIters() const override;
+  //QString matchGeometricTest() const override;
+  //QString matchHomographyComputeMethod() const override;
+  //QString matchFundamentalComputeMethod() const override;
+  //QString matchEssentialComputeMethod() const override;
 
   QString keypointsViewerBGColor() const override;
   int keypointsViewerMarkerType() const override;
@@ -453,14 +453,14 @@ public slots:
   void setMatchStrategy(const QString &matchingStrategy) override;
   void setMatchNormType(const QString &normType) override;
   void setMatchRatio(double ratio) override;
-  void setMatchDistance(double distance) override;
-  void setMatchConfidence(double confidence) override;
+  //void setMatchDistance(double distance) override;
+  //void setMatchConfidence(double confidence) override;
   void setMatchCrossMatching(bool crossMatching) override;
-  void setMatchMaxIters(int maxIters) override;
-  void setMatchGeometricTest(const QString &geometricTest) override;
-  void setMatchHomographyComputeMethod(const QString &computeMethod) override;
-  void setMatchFundamentalComputeMethod(const QString &computeMethod) override;
-  void setMatchEssentialComputeMethod(const QString &computeMethod) override;
+  //void setMatchMaxIters(int maxIters) override;
+  //void setMatchGeometricTest(const QString &geometricTest) override;
+  //void setMatchHomographyComputeMethod(const QString &computeMethod) override;
+  //void setMatchFundamentalComputeMethod(const QString &computeMethod) override;
+  //void setMatchEssentialComputeMethod(const QString &computeMethod) override;
 
   void setKeypointsViewerBGColor(const QString &color) override;
   void setKeypointsViewerMarkerType(int type) override;

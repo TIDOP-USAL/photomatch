@@ -37,6 +37,11 @@
 
 #include <tidop/core/flags.h>
 
+namespace tl
+{
+class GeometricTest;
+}
+
 
 namespace photomatch
 {
@@ -287,36 +292,37 @@ class PHOTOMATCH_EXPORT RobustMatcher
   : public MatchingStrategyBase
 {
 
-public:
-
-  enum class GeometricTest
-  {
-    homography,
-    fundamental,
-    essential
-  };
-
-  enum class HomographyComputeMethod
-  {
-    all_points,
-    ransac,
-    lmeds,
-    rho
-  };
-
-  enum class FundamentalComputeMethod
-  {
-    algorithm_7_point,
-    algorithm_8_point,
-    ransac,
-    lmeds
-  };
-
-  enum class EssentialComputeMethod
-  {
-    ransac,
-    lmeds
-  };
+//public:
+//
+//  enum class GeometricTest
+//  {
+//    homography,
+//    fundamental,
+//    essential
+//  };
+//
+//  enum class HomographyComputeMethod
+//  {
+//    all_points,
+//    ransac,
+//    usac,
+//    lmeds,
+//    rho
+//  };
+//
+//  enum class FundamentalComputeMethod
+//  {
+//    algorithm_7_point,
+//    algorithm_8_point,
+//    ransac,
+//    lmeds
+//  };
+//
+//  enum class EssentialComputeMethod
+//  {
+//    ransac,
+//    lmeds
+//  };
 
 public:
 
@@ -329,26 +335,29 @@ public:
   virtual bool crossCheck() const = 0;
   virtual void setCrossCheck(bool crossCheck) = 0;
 
-  virtual GeometricTest geometricTest() const = 0;
-  virtual void setGeometricTest(GeometricTest geometricTest) = 0;
+  virtual std::shared_ptr<tl::GeometricTest> geometricTest() const = 0;
+  virtual void setGeometricTest(std::shared_ptr<tl::GeometricTest> geometricTest) = 0;
 
-  virtual HomographyComputeMethod homographyComputeMethod() const = 0;
-  virtual void setHomographyComputeMethod(HomographyComputeMethod computeMethod) = 0;
+  //virtual GeometricTest geometricTest() const = 0;
+  //virtual void setGeometricTest(GeometricTest geometricTest) = 0;
 
-  virtual FundamentalComputeMethod fundamentalComputeMethod() const = 0;
-  virtual void setFundamentalComputeMethod(FundamentalComputeMethod computeMethod) = 0;
+  //virtual HomographyComputeMethod homographyComputeMethod() const = 0;
+  //virtual void setHomographyComputeMethod(HomographyComputeMethod computeMethod) = 0;
 
-  virtual EssentialComputeMethod essentialComputeMethod() const = 0;
-  virtual void setEssentialComputeMethod(EssentialComputeMethod computeMethod) = 0;
+  //virtual FundamentalComputeMethod fundamentalComputeMethod() const = 0;
+  //virtual void setFundamentalComputeMethod(FundamentalComputeMethod computeMethod) = 0;
 
-  virtual double distance() const = 0;
-  virtual void setDistance(double distance) = 0;
+  //virtual EssentialComputeMethod essentialComputeMethod() const = 0;
+  //virtual void setEssentialComputeMethod(EssentialComputeMethod computeMethod) = 0;
 
-  virtual double confidence() const = 0;
-  virtual void setConfidence(double confidence) = 0;
+  //virtual double distance() const = 0;
+  //virtual void setDistance(double distance) = 0;
 
-  virtual int maxIter() const = 0;
-  virtual void setMaxIters(int maxIter) = 0;
+  //virtual double confidence() const = 0;
+  //virtual void setConfidence(double confidence) = 0;
+
+  //virtual int maxIter() const = 0;
+  //virtual void setMaxIters(int maxIter) = 0;
 
 };
 
@@ -380,9 +389,9 @@ public:
 } // namespace photomatch
 
 Q_DECLARE_METATYPE(photomatch::BruteForceMatcher::Norm)
-Q_DECLARE_METATYPE(photomatch::RobustMatcher::GeometricTest)
-Q_DECLARE_METATYPE(photomatch::RobustMatcher::HomographyComputeMethod)
-Q_DECLARE_METATYPE(photomatch::RobustMatcher::FundamentalComputeMethod)
-Q_DECLARE_METATYPE(photomatch::RobustMatcher::EssentialComputeMethod)
+//Q_DECLARE_METATYPE(photomatch::RobustMatcher::GeometricTest)
+//Q_DECLARE_METATYPE(photomatch::RobustMatcher::HomographyComputeMethod)
+//Q_DECLARE_METATYPE(photomatch::RobustMatcher::FundamentalComputeMethod)
+//Q_DECLARE_METATYPE(photomatch::RobustMatcher::EssentialComputeMethod)
 
 #endif // PHOTOMATCH_MATCHER_H

@@ -233,6 +233,7 @@ target_link_libraries(${PROJECT_NAME}
                       TidopLib::Geom
                       TidopLib::Img
                       TidopLib::Math
+                      TidopLib::FeatMatch
                       Qt5::Core
                       Qt5::Widgets
                       Qt5::Help

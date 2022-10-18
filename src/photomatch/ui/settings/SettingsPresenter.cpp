@@ -680,14 +680,14 @@ void SettingsPresenterImp::setMatchingSettings()
   mMatcher->setMatchingMethod(mModel->matchMethod());
   mMatcher->setNormType(mModel->matchNormType());
   mMatcher->setRatio(mModel->matchRatio());
-  mMatcher->setDistance(mModel->matchDistance());
-  mMatcher->setConfidence(mModel->matchConfidence());
+  //mMatcher->setDistance(mModel->matchDistance());
+  //mMatcher->setConfidence(mModel->matchConfidence());
   mMatcher->setCrossMatching(mModel->matchCrossMatching());
-  mMatcher->setMaxIters(mModel->matchMaxIters());
-  mMatcher->setGeometricTest(mModel->matchGeometricTest());
-  mMatcher->setHomographyComputeMethod(mModel->matchHomographyComputeMethod());
-  mMatcher->setFundamentalComputeMethod(mModel->matchFundamentalComputeMethod());
-  mMatcher->setEssentialComputeMethod(mModel->matchEssentialComputeMethod());
+  //mMatcher->setMaxIters(mModel->matchMaxIters());
+  //mMatcher->setGeometricTest(mModel->matchGeometricTest());
+  //mMatcher->setHomographyComputeMethod(mModel->matchHomographyComputeMethod());
+  //mMatcher->setFundamentalComputeMethod(mModel->matchFundamentalComputeMethod());
+  //mMatcher->setEssentialComputeMethod(mModel->matchEssentialComputeMethod());
 }
 
 void SettingsPresenterImp::setQualityControlSettings()
@@ -995,14 +995,14 @@ void SettingsPresenterImp::initSignalAndSlots()
   connect(mMatcher, &DescriptorMatcherWidget::matchingMethodChange, mModel, &SettingsModel::setMatchMethod);
   connect(mMatcher, &DescriptorMatcherWidget::normTypeChange, mModel, &SettingsModel::setMatchNormType);
   connect(mMatcher, &DescriptorMatcherWidget::ratioChange, mModel, &SettingsModel::setMatchRatio);
-  connect(mMatcher, &DescriptorMatcherWidget::distanceChange, mModel, &SettingsModel::setMatchDistance);
-  connect(mMatcher, &DescriptorMatcherWidget::confidenceChange, mModel, &SettingsModel::setMatchConfidence);
+  //connect(mMatcher, &DescriptorMatcherWidget::distanceChange, mModel, &SettingsModel::setMatchDistance);
+  //connect(mMatcher, &DescriptorMatcherWidget::confidenceChange, mModel, &SettingsModel::setMatchConfidence);
   connect(mMatcher, &DescriptorMatcherWidget::crossMatchingChange, mModel, &SettingsModel::setMatchCrossMatching);
-  connect(mMatcher, &DescriptorMatcherWidget::maxItersChange, mModel, &SettingsModel::setMatchMaxIters);
+ /* connect(mMatcher, &DescriptorMatcherWidget::maxItersChange, mModel, &SettingsModel::setMatchMaxIters);
   connect(mMatcher, &DescriptorMatcherWidget::geometricTestChange, mModel, &SettingsModel::setMatchGeometricTest);
   connect(mMatcher, &DescriptorMatcherWidget::homographyComputeMethodChange, mModel, &SettingsModel::setMatchHomographyComputeMethod);
   connect(mMatcher, &DescriptorMatcherWidget::fundamentalComputeMethodChange, mModel, &SettingsModel::setMatchFundamentalComputeMethod);
-  connect(mMatcher, &DescriptorMatcherWidget::essentialComputeMethodChange, mModel, &SettingsModel::setMatchEssentialComputeMethod);
+  connect(mMatcher, &DescriptorMatcherWidget::essentialComputeMethodChange, mModel, &SettingsModel::setMatchEssentialComputeMethod);*/
 
   /* Keypoints Viewer */
   connect(mView, &SettingsView::keypointsViewerBGColorChange, mModel, &SettingsModel::setKeypointsViewerBGColor);

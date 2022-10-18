@@ -27,8 +27,11 @@
 #include "photomatch/photomatch_global.h"
 #include "photomatch/core/features/matcher.h"
 
+#include <opencv2/calib3d.hpp>
+
 namespace photomatch
 {
+
 
 class PHOTOMATCH_EXPORT RobustMatchingProperties
   : public RobustMatcher
@@ -47,20 +50,22 @@ public:
   void setRatio(double ratio) override;
   bool crossCheck() const override;
   void setCrossCheck(bool crossCheck) override;
-  GeometricTest geometricTest() const override;
-  void setGeometricTest(GeometricTest geometricTest) override;
-  HomographyComputeMethod homographyComputeMethod() const override;
-  void setHomographyComputeMethod(HomographyComputeMethod computeMethod) override;
-  FundamentalComputeMethod fundamentalComputeMethod() const override;
-  void setFundamentalComputeMethod(FundamentalComputeMethod computeMethod) override;
-  EssentialComputeMethod essentialComputeMethod() const override;
-  void setEssentialComputeMethod(EssentialComputeMethod computeMethod) override;
-  double distance() const override;
-  void setDistance(double distance) override;
-  double confidence() const override;
-  void setConfidence(double confidence) override;
-  int maxIter() const override;
-  void setMaxIters(int maxIter) override;
+  std::shared_ptr<tl::GeometricTest> geometricTest() const override;
+  void setGeometricTest(std::shared_ptr<tl::GeometricTest> geometricTest) override;
+  //GeometricTest geometricTest() const override;
+  //void setGeometricTest(GeometricTest geometricTest) override;
+  //HomographyComputeMethod homographyComputeMethod() const override;
+  //void setHomographyComputeMethod(HomographyComputeMethod computeMethod) override;
+  //FundamentalComputeMethod fundamentalComputeMethod() const override;
+  //void setFundamentalComputeMethod(FundamentalComputeMethod computeMethod) override;
+  //EssentialComputeMethod essentialComputeMethod() const override;
+  //void setEssentialComputeMethod(EssentialComputeMethod computeMethod) override;
+  //double distance() const override;
+  //void setDistance(double distance) override;
+  //double confidence() const override;
+  //void setConfidence(double confidence) override;
+  //int maxIter() const override;
+  //void setMaxIters(int maxIter) override;
 
 // MatchingStrategy interface
 
@@ -73,13 +78,14 @@ private:
 
   double mRatio;
   bool mCrossCheck;
-  GeometricTest mGeometricTest;
-  HomographyComputeMethod mHomographyComputeMethod;
-  FundamentalComputeMethod mFundamentalComputeMethod;
-  EssentialComputeMethod mEssentialComputeMethod;
-  double mDistance;
-  double mConfidence;
-  int mMaxIters;
+  std::shared_ptr<tl::GeometricTest> mGeometricTest;
+  //GeometricTest mGeometricTest;
+  //HomographyComputeMethod mHomographyComputeMethod;
+  //FundamentalComputeMethod mFundamentalComputeMethod;
+  //EssentialComputeMethod mEssentialComputeMethod;
+  //double mDistance;
+  //double mConfidence;
+  //int mMaxIters;
 
 };
 
@@ -96,13 +102,14 @@ public:
   RobustMatchingImp(const std::shared_ptr<DescriptorMatcher> &descriptorMatcher,
                     double ratio,
                     bool crossCheck,
+                    std::shared_ptr<tl::GeometricTest> geometricTest/*,
                     GeometricTest geometricTest,
                     HomographyComputeMethod homographyComputeMethod,
                     FundamentalComputeMethod fundamentalComputeMethod,
                     EssentialComputeMethod essentialComputeMethod,
                     double distance,
                     double confidence,
-                    int maxIter);
+                    int maxIter*/);
   ~RobustMatchingImp() override = default;
 
   /*!
@@ -189,18 +196,18 @@ public:
                                           const std::vector<cv::KeyPoint>& keypoints2,
                                           std::vector<cv::DMatch> *wrongMatches = nullptr);
 
-  std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
-                                                   const std::vector<cv::Point2f>& points1,
-                                                   const std::vector<cv::Point2f>& points2,
-                                                   std::vector<cv::DMatch> *wrongMatches = nullptr);
-  std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
-                                                  const std::vector<cv::Point2f>& points1,
-                                                  const std::vector<cv::Point2f>& points2,
-                                                  std::vector<cv::DMatch> *wrongMatches = nullptr);
-  std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
-                                                    const std::vector<cv::Point2f>& points1,
-                                                    const std::vector<cv::Point2f>& points2,
-                                                    std::vector<cv::DMatch> *wrongMatches = nullptr);
+  //std::vector<cv::DMatch> filterByHomographyMatrix(const std::vector<cv::DMatch> &matches,
+  //                                                 const std::vector<cv::Point2f>& points1,
+  //                                                 const std::vector<cv::Point2f>& points2,
+  //                                                 std::vector<cv::DMatch> *wrongMatches = nullptr);
+  //std::vector<cv::DMatch> filterByEssentialMatrix(const std::vector<cv::DMatch> &matches,
+  //                                                const std::vector<cv::Point2f>& points1,
+  //                                                const std::vector<cv::Point2f>& points2,
+  //                                                std::vector<cv::DMatch> *wrongMatches = nullptr);
+  //std::vector<cv::DMatch> filterByFundamentalMatrix(const std::vector<cv::DMatch> &matches,
+  //                                                  const std::vector<cv::Point2f>& points1,
+  //                                                  const std::vector<cv::Point2f>& points2,
+  //                                                  std::vector<cv::DMatch> *wrongMatches = nullptr);
 
   /*!
    * \brief Matching

@@ -179,11 +179,24 @@ ASiftDetectorDescriptor::ASiftDetectorDescriptor(int featuresNumber,
 
 void ASiftDetectorDescriptor::update()
 {
-  cv::Ptr<cv::FeatureDetector> sift = cv::xfeatures2d::SIFT::create(ASiftProperties::featuresNumber(),
-                                                                    ASiftProperties::octaveLayers(),
-                                                                    ASiftProperties::contrastThreshold(),
-                                                                    ASiftProperties::edgeThreshold(),
-                                                                    ASiftProperties::sigma());
+  cv::Ptr<cv::FeatureDetector> sift;// = cv::xfeatures2d::SIFT::create(ASiftProperties::featuresNumber(),
+                                    //                                ASiftProperties::octaveLayers(),
+                                    //                                ASiftProperties::contrastThreshold(),
+                                    //                                ASiftProperties::edgeThreshold(),
+                                    //                                ASiftProperties::sigma());
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4))
+  sift = cv::SIFT::create(ASiftProperties::featuresNumber(),
+                          ASiftProperties::octaveLayers(),
+                          ASiftProperties::contrastThreshold(),
+                          ASiftProperties::edgeThreshold(),
+                          ASiftProperties::sigma());
+#elif defined HAVE_OPENCV_XFEATURES2D && defined OPENCV_ENABLE_NONFREE
+  sift = cv::xfeatures2d::SIFT::create(ASiftProperties::featuresNumber(),
+                                       ASiftProperties::octaveLayers(),
+                                       ASiftProperties::contrastThreshold(),
+                                       ASiftProperties::edgeThreshold(),
+                                       ASiftProperties::sigma());
+#endif
   cv::Ptr<cv::affma::AffAngles> angles = cv::affma::createAffAngles(ASiftProperties::maxTilt(), ASiftProperties::minTilt());
 
   mDetector = cv::affma::createAffFeatureDetector(sift, angles); 

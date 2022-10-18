@@ -109,6 +109,11 @@ public:
    */
   virtual int maxIters() const = 0;
 
+  virtual bool usacIsParallel() const = 0;
+  virtual int usacLocalOptimIterations() const = 0;
+  virtual int usacLocalSampleSize() const = 0;
+  virtual int usacMaxIters() const = 0;
+
   /*!
    * \brief crossMatching
    * \return
@@ -136,6 +141,10 @@ signals:
   void gmsRotationChange(bool);
   void gmsScaleChange(bool);
   void gmsThresholdChange(double);
+  void usacIsParallelChanged(bool);
+  void usacLocalOptimIterationsChanged(int);
+  void usacLocalSampleSizeChanged(int);
+  void usacMaxItersChanged(int);
 
 public slots:
 
@@ -201,6 +210,11 @@ public slots:
    */
   virtual void setMaxIters(int maxIter) = 0;
 
+  virtual void setUsacIsParallel(bool usacIsParallel) = 0;
+  virtual void setUsacLocalOptimIterations(int usacLocalOptimIterations) = 0;
+  virtual void setUsacLocalSampleSize(int usacLocalSampleSize) = 0;
+  virtual void setUsacMaxIters(int usacMaxIters) = 0;
+
   /*!
    * \brief setCrossMatching
    * \param[in] crossMatching
@@ -244,6 +258,10 @@ public:
   double distance() const override;
   double confidence() const override;
   int maxIters() const override;
+  bool usacIsParallel() const override;
+  int usacLocalOptimIterations() const override;
+  int usacLocalSampleSize() const override;
+  int usacMaxIters() const override;
   bool crossMatching() const override;
   bool gmsRotation() const override;
   bool gmsScale() const override;
@@ -262,6 +280,10 @@ public slots:
   void setDistance(double distance) override;
   void setConfidence(double confidence) override;
   void setMaxIters(int maxIter) override;
+  void setUsacIsParallel(bool usacIsParallel) override;
+  void setUsacLocalOptimIterations(int usacLocalOptimIterations) override;
+  void setUsacLocalSampleSize(int usacLocalSampleSize) override;
+  void setUsacMaxIters(int usacMaxIters) override;
   void setCrossMatching(bool crossMatching) override;
   void disableBruteForceNorm(const QString &norm) override;
   void enableBruteForceNorm(const QString &norm) override;
@@ -305,6 +327,15 @@ protected:
   QLabel *mConfidenceLabel;
   QSpinBox  *mMaxIters;
   QLabel *mMaxItersLabel;
+  QCheckBox *mCheckBoxIsParallel;
+  QLabel *mLabelLocalOptimIterations;
+  QSpinBox *mSpinBoxLocalOptimIterations;
+  /// cv::LocalOptimMethod loMethod;
+  QLabel *mLabelLocalSampleSize;
+  QSpinBox *mSpinBoxLocalSampleSize;
+  QLabel *mLabelLocalMaxIterations;
+  QSpinBox *mSpinBoxLocalMaxIterations;
+
   QCheckBox *mCrossMatching;
   QComboBox *mHComputeMethod;
   QLabel *mHComputeMethodLabel;

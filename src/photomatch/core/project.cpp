@@ -1002,101 +1002,101 @@ void ProjectControllerImp::readRobustMatchingGeometricTest(QXmlStreamReader &str
 
 void ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
 {
-  robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::homography);
-  while (stream.readNextStartElement()) {
-    if (stream.name() == "ComputeMethod") {
-      robustMatcher->setHomographyComputeMethod(readRobustMatchingGeometricTestHomographyMatrixComputeMethod(stream));
-    } else if (stream.name() == "Distance") {
-      robustMatcher->setDistance(readDouble(stream));
-    } else if (stream.name() == "MaxIter") {
-      robustMatcher->setMaxIters(readInt(stream));
-    } else if (stream.name() == "Confidence") {
-      robustMatcher->setConfidence(readDouble(stream));
-    } else {
-      stream.skipCurrentElement();
-    }
-  }
+  //robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::homography);
+  //while (stream.readNextStartElement()) {
+  //  if (stream.name() == "ComputeMethod") {
+  //    robustMatcher->setHomographyComputeMethod(readRobustMatchingGeometricTestHomographyMatrixComputeMethod(stream));
+  //  } else if (stream.name() == "Distance") {
+  //    robustMatcher->setDistance(readDouble(stream));
+  //  } else if (stream.name() == "MaxIter") {
+  //    robustMatcher->setMaxIters(readInt(stream));
+  //  } else if (stream.name() == "Confidence") {
+  //    robustMatcher->setConfidence(readDouble(stream));
+  //  } else {
+  //    stream.skipCurrentElement();
+  //  }
+  //}
 }
 
-RobustMatcher::HomographyComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream)
-{
-  QString computeMethod = stream.readElementText();
-  RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
-  if (computeMethod.compare("All Points") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::all_points;
-  } else if (computeMethod.compare("RANSAC") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::lmeds;
-  } else if (computeMethod.compare("RHO") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::rho;
-  }
-  return homographyComputeMethod;
-}
+//RobustMatcher::HomographyComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream)
+//{
+//  QString computeMethod = stream.readElementText();
+//  RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
+//  if (computeMethod.compare("All Points") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::all_points;
+//  } else if (computeMethod.compare("RANSAC") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::lmeds;
+//  } else if (computeMethod.compare("RHO") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::rho;
+//  }
+//  return homographyComputeMethod;
+//}
 
 void ProjectControllerImp::readRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
 {
-  robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::fundamental);
-  while (stream.readNextStartElement()) {
-    if (stream.name() == "ComputeMethod") {
-      robustMatcher->setFundamentalComputeMethod(readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(stream));
-    } else if (stream.name() == "Distance") {
-      robustMatcher->setDistance(readDouble(stream));
-    } else if (stream.name() == "MaxIter") {
-      robustMatcher->setMaxIters(readInt(stream));
-    } else if (stream.name() == "Confidence") {
-      robustMatcher->setConfidence(readDouble(stream));
-    } else {
-      stream.skipCurrentElement();
-    }
-  }
+  //robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::fundamental);
+  //while (stream.readNextStartElement()) {
+  //  if (stream.name() == "ComputeMethod") {
+  //    robustMatcher->setFundamentalComputeMethod(readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(stream));
+  //  } else if (stream.name() == "Distance") {
+  //    robustMatcher->setDistance(readDouble(stream));
+  //  } else if (stream.name() == "MaxIter") {
+  //    robustMatcher->setMaxIters(readInt(stream));
+  //  } else if (stream.name() == "Confidence") {
+  //    robustMatcher->setConfidence(readDouble(stream));
+  //  } else {
+  //    stream.skipCurrentElement();
+  //  }
+  //}
 }
 
-RobustMatcher::FundamentalComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream)
-{
-  QString computeMethod = stream.readElementText();
-  RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
-  if (computeMethod.compare("LMedS") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::lmeds;
-  } else if (computeMethod.compare("RANSAC") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
-  } else if (computeMethod.compare("7-point algorithm") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
-  } else if (computeMethod.compare("8-point algorithm") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
-  }
-  return fundamentalComputeMethod;
-}
+//RobustMatcher::FundamentalComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream)
+//{
+//  QString computeMethod = stream.readElementText();
+//  RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
+//  if (computeMethod.compare("LMedS") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::lmeds;
+//  } else if (computeMethod.compare("RANSAC") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
+//  } else if (computeMethod.compare("7-point algorithm") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
+//  } else if (computeMethod.compare("8-point algorithm") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
+//  }
+//  return fundamentalComputeMethod;
+//}
 
 void ProjectControllerImp::readRobustMatchingGeometricTestEssentialMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
 {
-  robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::essential);
-  while (stream.readNextStartElement()) {
-    if (stream.name() == "ComputeMethod") {
-      robustMatcher->setEssentialComputeMethod(readRobustMatchingGeometricTestEssentialMatrixComputeMethod(stream));
-    } else if (stream.name() == "Distance") {
-      robustMatcher->setDistance(readDouble(stream));
-    } else if (stream.name() == "MaxIter") {
-      robustMatcher->setMaxIters(readInt(stream));
-    } else if (stream.name() == "Confidence") {
-      robustMatcher->setConfidence(readDouble(stream));
-    } else {
-      stream.skipCurrentElement();
-    }
-  }
+  //robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::essential);
+  //while (stream.readNextStartElement()) {
+  //  if (stream.name() == "ComputeMethod") {
+  //    robustMatcher->setEssentialComputeMethod(readRobustMatchingGeometricTestEssentialMatrixComputeMethod(stream));
+  //  } else if (stream.name() == "Distance") {
+  //    robustMatcher->setDistance(readDouble(stream));
+  //  } else if (stream.name() == "MaxIter") {
+  //    robustMatcher->setMaxIters(readInt(stream));
+  //  } else if (stream.name() == "Confidence") {
+  //    robustMatcher->setConfidence(readDouble(stream));
+  //  } else {
+  //    stream.skipCurrentElement();
+  //  }
+  //}
 }
 
-RobustMatcher::EssentialComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream)
-{
-  QString computeMethod = stream.readElementText();
-  RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
-  if (computeMethod.compare("RANSAC") == 0){
-    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0){
-    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::lmeds;
-  }
-  return essentialComputeMethod;
-}
+//RobustMatcher::EssentialComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream)
+//{
+//  QString computeMethod = stream.readElementText();
+//  RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
+//  if (computeMethod.compare("RANSAC") == 0){
+//    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0){
+//    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::lmeds;
+//  }
+//  return essentialComputeMethod;
+//}
 
 void ProjectControllerImp::readGms(QXmlStreamReader &stream, Session *session)
 {
@@ -2049,14 +2049,14 @@ void ProjectControllerImp::writeRobustMatchingGeometricTest(QXmlStreamWriter &st
 {
   stream.writeStartElement("GeometricTest");
   {
-    RobustMatcher::GeometricTest geometricTest = robustMatcher->geometricTest();
-    if (geometricTest == RobustMatcher::GeometricTest::homography){
-      writeRobustMatchingGeometricTestHomographyMatrix(stream, robustMatcher);
-    } else if (geometricTest == RobustMatcher::GeometricTest::fundamental){
-      writeRobustMatchingGeometricTestFundamentalMatrix(stream, robustMatcher);
-    } else if (geometricTest == RobustMatcher::GeometricTest::essential){
-      writeRobustMatchingGeometricTestEssentialMatrix(stream, robustMatcher);
-    }
+    //RobustMatcher::GeometricTest geometricTest = robustMatcher->geometricTest();
+    //if (geometricTest == RobustMatcher::GeometricTest::homography){
+    //  writeRobustMatchingGeometricTestHomographyMatrix(stream, robustMatcher);
+    //} else if (geometricTest == RobustMatcher::GeometricTest::fundamental){
+    //  writeRobustMatchingGeometricTestFundamentalMatrix(stream, robustMatcher);
+    //} else if (geometricTest == RobustMatcher::GeometricTest::essential){
+    //  writeRobustMatchingGeometricTestEssentialMatrix(stream, robustMatcher);
+    //}
   }
   stream.writeEndElement();
 }
@@ -2065,21 +2065,21 @@ void ProjectControllerImp::writeRobustMatchingGeometricTestHomographyMatrix(QXml
 {
   stream.writeStartElement("HomographyMatrix");
   {
-    RobustMatcher::HomographyComputeMethod hcm = robustMatcher->homographyComputeMethod();
-    if (hcm == RobustMatcher::HomographyComputeMethod::all_points){
-      stream.writeTextElement("ComputeMethod", "All Points");
-    } else if (hcm == RobustMatcher::HomographyComputeMethod::ransac){
-      stream.writeTextElement("ComputeMethod", "RANSAC");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-      stream.writeTextElement("MaxIter", QString::number(robustMatcher->maxIter()));
-    } else if (hcm == RobustMatcher::HomographyComputeMethod::lmeds){
-      stream.writeTextElement("ComputeMethod", "LMedS");
-    } else if (hcm == RobustMatcher::HomographyComputeMethod::rho){
-      stream.writeTextElement("ComputeMethod", "RHO");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-    }
+    //RobustMatcher::HomographyComputeMethod hcm = robustMatcher->homographyComputeMethod();
+    //if (hcm == RobustMatcher::HomographyComputeMethod::all_points){
+    //  stream.writeTextElement("ComputeMethod", "All Points");
+    //} else if (hcm == RobustMatcher::HomographyComputeMethod::ransac){
+    //  stream.writeTextElement("ComputeMethod", "RANSAC");
+    //  stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
+    //  stream.writeTextElement("MaxIter", QString::number(robustMatcher->maxIter()));
+    //} else if (hcm == RobustMatcher::HomographyComputeMethod::lmeds){
+    //  stream.writeTextElement("ComputeMethod", "LMedS");
+    //} else if (hcm == RobustMatcher::HomographyComputeMethod::rho){
+    //  stream.writeTextElement("ComputeMethod", "RHO");
+    //  stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
+    //}
 
-    stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
+    //stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
 
   }
   stream.writeEndElement();
@@ -2089,19 +2089,19 @@ void ProjectControllerImp::writeRobustMatchingGeometricTestFundamentalMatrix(QXm
 {
   stream.writeStartElement("FundamentalMatrix");
   {
-    RobustMatcher::FundamentalComputeMethod fcm =  robustMatcher->fundamentalComputeMethod();
-    if (fcm == RobustMatcher::FundamentalComputeMethod::lmeds){
-      stream.writeTextElement("ComputeMethod", "LMedS");
-      stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
-    } else if (fcm == RobustMatcher::FundamentalComputeMethod::ransac){
-      stream.writeTextElement("ComputeMethod", "RANSAC");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-      stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
-    } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_7_point){
-      stream.writeTextElement("ComputeMethod", "7-point algorithm");
-    } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_8_point){
-      stream.writeTextElement("ComputeMethod", "8-point algorithm");
-    }
+    //RobustMatcher::FundamentalComputeMethod fcm =  robustMatcher->fundamentalComputeMethod();
+    //if (fcm == RobustMatcher::FundamentalComputeMethod::lmeds){
+    //  stream.writeTextElement("ComputeMethod", "LMedS");
+    //  stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
+    //} else if (fcm == RobustMatcher::FundamentalComputeMethod::ransac){
+    //  stream.writeTextElement("ComputeMethod", "RANSAC");
+    //  stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
+    //  stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
+    //} else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_7_point){
+    //  stream.writeTextElement("ComputeMethod", "7-point algorithm");
+    //} else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_8_point){
+    //  stream.writeTextElement("ComputeMethod", "8-point algorithm");
+    //}
   }
   stream.writeEndElement();
 }
@@ -2110,14 +2110,14 @@ void ProjectControllerImp::writeRobustMatchingGeometricTestEssentialMatrix(QXmlS
 {
   stream.writeStartElement("EssentialMatrix");
   {
-    RobustMatcher::EssentialComputeMethod ecm = robustMatcher->essentialComputeMethod();
-    if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
-      stream.writeTextElement("ComputeMethod", "RANSAC");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-    } else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
-      stream.writeTextElement("ComputeMethod", "LMedS");
-    }
-    stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
+    //RobustMatcher::EssentialComputeMethod ecm = robustMatcher->essentialComputeMethod();
+    //if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
+    //  stream.writeTextElement("ComputeMethod", "RANSAC");
+    //  stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
+    //} else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
+    //  stream.writeTextElement("ComputeMethod", "LMedS");
+    //}
+    //stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
   }
   stream.writeEndElement();
 }

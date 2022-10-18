@@ -160,6 +160,26 @@ int DescriptorMatcherViewImp::maxIters() const
   return mDescriptorMatcherWidget->maxIters();
 }
 
+bool DescriptorMatcherViewImp::usacIsParallel() const
+{
+  return mDescriptorMatcherWidget->usacIsParallel();
+}
+
+int DescriptorMatcherViewImp::usacLocalOptimIterations() const
+{
+  return mDescriptorMatcherWidget->usacLocalOptimIterations();
+}
+
+int DescriptorMatcherViewImp::usacLocalSampleSize() const
+{
+  return mDescriptorMatcherWidget->usacLocalSampleSize();
+}
+
+int DescriptorMatcherViewImp::usacMaxIters() const
+{
+  return mDescriptorMatcherWidget->usacMaxIters();
+}
+
 bool DescriptorMatcherViewImp::crossMatching() const
 {
   return mDescriptorMatcherWidget->crossMatching();
@@ -233,6 +253,26 @@ void DescriptorMatcherViewImp::setConfidence(double confidence)
 void DescriptorMatcherViewImp::setMaxIters(int maxIter)
 {
   mDescriptorMatcherWidget->setMaxIters(maxIter);
+}
+
+void DescriptorMatcherViewImp::setUsacIsParallel(bool usacIsParallel)
+{
+  mDescriptorMatcherWidget->setUsacIsParallel(usacIsParallel);
+}
+
+void DescriptorMatcherViewImp::setUsacLocalOptimIterations(int usacLocalOptimIterations)
+{
+  mDescriptorMatcherWidget->setUsacLocalOptimIterations(usacLocalOptimIterations);
+}
+
+void DescriptorMatcherViewImp::setUsacLocalSampleSize(int usacLocalSampleSize)
+{
+  mDescriptorMatcherWidget->setUsacLocalSampleSize(usacLocalSampleSize);
+}
+
+void DescriptorMatcherViewImp::setUsacMaxIters(int usacMaxIters)
+{
+  mDescriptorMatcherWidget->setUsacMaxIters(usacMaxIters);
 }
 
 void DescriptorMatcherViewImp::setCrossMatching(bool crossMatching)

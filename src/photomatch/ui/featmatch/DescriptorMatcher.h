@@ -117,6 +117,11 @@ public:
    */
   virtual int maxIters() const = 0;
 
+  virtual bool usacIsParallel() const = 0;
+  virtual int usacLocalOptimIterations() const = 0;
+  virtual int usacLocalSampleSize() const = 0;
+  virtual int usacMaxIters() const = 0;
+
   /*!
    * \brief crossMatching
    * \return
@@ -195,6 +200,11 @@ public slots:
    * \param maxIter
    */
   virtual void setMaxIters(int maxIter) = 0;
+
+  virtual void setUsacIsParallel(bool usacIsParallel) = 0;
+  virtual void setUsacLocalOptimIterations(int usacLocalOptimIterations) = 0;
+  virtual void setUsacLocalSampleSize(int usacLocalSampleSize) = 0;
+  virtual void setUsacMaxIters(int usacMaxIters) = 0;
 
   /*!
    * \brief setCrossMatching

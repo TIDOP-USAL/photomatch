@@ -62,6 +62,10 @@ public:
   double distance() const override;
   double confidence() const override;
   int maxIters() const override;
+  bool usacIsParallel() const override;
+  int usacLocalOptimIterations() const override;
+  int usacLocalSampleSize() const override;
+  int usacMaxIters() const override;
   bool crossMatching() const override;
   bool gmsRotation() const override;
   bool gmsScale() const override;
@@ -80,6 +84,10 @@ public slots:
   void setDistance(double distance) override;
   void setConfidence(double confidence) override;
   void setMaxIters(int maxIter) override;
+  void setUsacIsParallel(bool usacIsParallel) override;
+  void setUsacLocalOptimIterations(int usacLocalOptimIterations) override;
+  void setUsacLocalSampleSize(int usacLocalSampleSize) override;
+  void setUsacMaxIters(int usacMaxIters) override;
   void setCrossMatching(bool crossMatching) override;
   void disableBruteForceNorm(const QString &norm) override;
   void enableBruteForceNorm(const QString &norm) override;

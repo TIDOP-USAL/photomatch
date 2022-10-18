@@ -39,6 +39,7 @@
 #include "photomatch/process/Matching/PassPointsGroupingProcess.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/featmatch/geomtest.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -116,49 +117,49 @@ void DescriptorMatcherPresenterImp::open()
       mView->setRatio(robustMatcherRefinement->ratio());
       mView->setCrossMatching(robustMatcherRefinement->crossCheck());
 
-      RobustMatcher::GeometricTest geometricTest = robustMatcherRefinement->geometricTest();
-      if (geometricTest == RobustMatcher::GeometricTest::homography){
-        mView->setGeometricTest("Homography Matrix");
-        mView->setConfidence(robustMatcherRefinement->confidence());
-        RobustMatcher::HomographyComputeMethod hcm = robustMatcherRefinement->homographyComputeMethod();
-        if (hcm == RobustMatcher::HomographyComputeMethod::all_points){
-          mView->setHomographyComputeMethod("All Points");
-        } else if (hcm == RobustMatcher::HomographyComputeMethod::ransac){
-          mView->setHomographyComputeMethod("RANSAC");
-          mView->setDistance(robustMatcherRefinement->distance());
-          mView->setMaxIters(robustMatcherRefinement->maxIter());
-        } else if (hcm == RobustMatcher::HomographyComputeMethod::lmeds){
-          mView->setHomographyComputeMethod("LMedS");
-        } else if (hcm == RobustMatcher::HomographyComputeMethod::rho){
-          mView->setHomographyComputeMethod("RHO");
-          mView->setDistance(robustMatcherRefinement->distance());
-        }
-      } else if (geometricTest == RobustMatcher::GeometricTest::fundamental){
-        mView->setGeometricTest("Fundamental Matrix");
-        RobustMatcher::FundamentalComputeMethod fcm =  robustMatcherRefinement->fundamentalComputeMethod();
-        if (fcm == RobustMatcher::FundamentalComputeMethod::lmeds){
-          mView->setFundamentalComputeMethod("LMedS");
-          mView->setConfidence(robustMatcherRefinement->confidence());
-        } else if (fcm == RobustMatcher::FundamentalComputeMethod::ransac){
-          mView->setFundamentalComputeMethod("RANSAC");
-          mView->setDistance(robustMatcherRefinement->distance());
-          mView->setConfidence(robustMatcherRefinement->confidence());
-        } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_7_point){
-          mView->setFundamentalComputeMethod("7-point algorithm");
-        } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_8_point){
-          mView->setFundamentalComputeMethod("8-point algorithm");
-        }
-      } else if (geometricTest == RobustMatcher::GeometricTest::essential){
-        mView->setGeometricTest("Essential Matrix");
-        mView->setConfidence(robustMatcherRefinement->confidence());
-        RobustMatcher::EssentialComputeMethod ecm = robustMatcherRefinement->essentialComputeMethod();
-        if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
-          mView->setEssentialComputeMethod("RANSAC");
-          mView->setDistance(robustMatcherRefinement->distance());
-        } else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
-          mView->setEssentialComputeMethod("LMedS");
-        }
-      }
+      //RobustMatcher::GeometricTest geometricTest = robustMatcherRefinement->geometricTest();
+      //if (geometricTest == RobustMatcher::GeometricTest::homography){
+      //  mView->setGeometricTest("Homography Matrix");
+      //  mView->setConfidence(robustMatcherRefinement->confidence());
+      //  RobustMatcher::HomographyComputeMethod hcm = robustMatcherRefinement->homographyComputeMethod();
+      //  if (hcm == RobustMatcher::HomographyComputeMethod::all_points){
+      //    mView->setHomographyComputeMethod("All Points");
+      //  } else if (hcm == RobustMatcher::HomographyComputeMethod::ransac){
+      //    mView->setHomographyComputeMethod("RANSAC");
+      //    mView->setDistance(robustMatcherRefinement->distance());
+      //    mView->setMaxIters(robustMatcherRefinement->maxIter());
+      //  } else if (hcm == RobustMatcher::HomographyComputeMethod::lmeds){
+      //    mView->setHomographyComputeMethod("LMedS");
+      //  } else if (hcm == RobustMatcher::HomographyComputeMethod::rho){
+      //    mView->setHomographyComputeMethod("RHO");
+      //    mView->setDistance(robustMatcherRefinement->distance());
+      //  }
+      //} else if (geometricTest == RobustMatcher::GeometricTest::fundamental){
+      //  mView->setGeometricTest("Fundamental Matrix");
+      //  RobustMatcher::FundamentalComputeMethod fcm =  robustMatcherRefinement->fundamentalComputeMethod();
+      //  if (fcm == RobustMatcher::FundamentalComputeMethod::lmeds){
+      //    mView->setFundamentalComputeMethod("LMedS");
+      //    mView->setConfidence(robustMatcherRefinement->confidence());
+      //  } else if (fcm == RobustMatcher::FundamentalComputeMethod::ransac){
+      //    mView->setFundamentalComputeMethod("RANSAC");
+      //    mView->setDistance(robustMatcherRefinement->distance());
+      //    mView->setConfidence(robustMatcherRefinement->confidence());
+      //  } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_7_point){
+      //    mView->setFundamentalComputeMethod("7-point algorithm");
+      //  } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_8_point){
+      //    mView->setFundamentalComputeMethod("8-point algorithm");
+      //  }
+      //} else if (geometricTest == RobustMatcher::GeometricTest::essential){
+      //  mView->setGeometricTest("Essential Matrix");
+      //  mView->setConfidence(robustMatcherRefinement->confidence());
+      //  RobustMatcher::EssentialComputeMethod ecm = robustMatcherRefinement->essentialComputeMethod();
+      //  if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
+      //    mView->setEssentialComputeMethod("RANSAC");
+      //    mView->setDistance(robustMatcherRefinement->distance());
+      //  } else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
+      //    mView->setEssentialComputeMethod("LMedS");
+      //  }
+      //}
 
     } else {
       Gms *gms = dynamic_cast<Gms *>(matchingStrategy);
@@ -172,8 +173,8 @@ void DescriptorMatcherPresenterImp::open()
     mView->setGeometricTest("Homography Matrix");
     mView->setHomographyComputeMethod("RANSAC");
     mView->setRatio(mSettingsModel->matchRatio());
-    mView->setDistance(mSettingsModel->matchDistance());
-    mView->setConfidence(mSettingsModel->matchConfidence());
+    //mView->setDistance(mSettingsModel->matchDistance());
+    //mView->setConfidence(mSettingsModel->matchConfidence());
     mView->setCrossMatching(mSettingsModel->matchCrossMatching());
   }
 
@@ -355,48 +356,101 @@ void DescriptorMatcherPresenterImp::run()
     robustMatchingStrategy->setRatio(mView->ratio());
     robustMatchingStrategy->setCrossCheck(mView->crossMatching());
     QString geometricTest = mView->geometricTest();
+    std::shared_ptr<tl::GeometricTest> geometric_test;
     if (geometricTest == "Homography Matrix"){
-      robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::homography);
+    //  robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::homography);
       QString computeMethod = mView->homographyComputeMethod();
-      RobustMatcher::HomographyComputeMethod hcm = RobustMatcher::HomographyComputeMethod::ransac;
+    //  RobustMatcher::HomographyComputeMethod hcm = RobustMatcher::HomographyComputeMethod::ransac;
       if (computeMethod.compare("All Points") == 0){
-        hcm = RobustMatcher::HomographyComputeMethod::all_points;
+        tl::AllPointsTestProperties properties;
+        properties.confidence = mView->confidence();
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_all_points, &properties);
+    //    hcm = RobustMatcher::HomographyComputeMethod::all_points;
       } else if (computeMethod.compare("RANSAC") == 0){
-        hcm = RobustMatcher::HomographyComputeMethod::ransac;
+        tl::RANSACTestProperties properties;
+        properties.distance = mView->distance();
+        properties.confidence = mView->confidence();
+        properties.iterations = mView->maxIters();
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_ransac, &properties);
+    //    hcm = RobustMatcher::HomographyComputeMethod::ransac;
       } else if (computeMethod.compare("LMedS") == 0){
-        hcm = RobustMatcher::HomographyComputeMethod::lmeds;
+        tl::LMedsTestProperties properties;
+        properties.confidence = mView->confidence();
+        properties.iterations = mView->maxIters();
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_lmeds, &properties);
+    //    hcm = RobustMatcher::HomographyComputeMethod::lmeds;
       } else if (computeMethod.compare("RHO") == 0){
-        hcm = RobustMatcher::HomographyComputeMethod::rho;
+        tl::RHOTestProperties properties;
+        properties.distance = mView->distance();
+        properties.confidence = mView->confidence();
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_rho, &properties);
+    //    hcm = RobustMatcher::HomographyComputeMethod::rho;
       }
-      robustMatchingStrategy->setHomographyComputeMethod(hcm);
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR > 4))
+      else if(computeMethod.compare("USAC") == 0) {
+        tl::UsacTestProperties properties;
+        properties.confidence = mView->confidence();
+        properties.isParallel = mView->usacIsParallel();
+        properties.loIterations = mView->usacLocalOptimIterations();
+        properties.loSampleSize = mView->usacLocalSampleSize();
+        properties.maxIterations = mView->usacMaxIters();
+        ///TODO: Añadir el resto de parámetros
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_usac, &properties);
+      }
+#endif
+    //  robustMatchingStrategy->setHomographyComputeMethod(hcm);
     } else if (geometricTest == "Fundamental Matrix"){
-      robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::fundamental);
+    //  robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::fundamental);
       QString computeMethod = mView->fundamentalComputeMethod();
-      RobustMatcher::FundamentalComputeMethod fcm = RobustMatcher::FundamentalComputeMethod::ransac;
+    //  RobustMatcher::FundamentalComputeMethod fcm = RobustMatcher::FundamentalComputeMethod::ransac;
       if (computeMethod.compare("LMedS") == 0){
-        fcm = RobustMatcher::FundamentalComputeMethod::lmeds;
+    //    fcm = RobustMatcher::FundamentalComputeMethod::lmeds;
+        tl::LMedsTestProperties properties;
+        properties.confidence = mView->confidence();
+        properties.iterations = mView->maxIters();
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_lmeds, &properties);
       } else if (computeMethod.compare("RANSAC") == 0){
-        fcm = RobustMatcher::FundamentalComputeMethod::ransac;
+        tl::RANSACTestProperties properties;
+        properties.distance = mView->distance();
+        properties.confidence = mView->confidence();
+        properties.iterations = mView->maxIters();
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_ransac, &properties);
+    //    fcm = RobustMatcher::FundamentalComputeMethod::ransac;
       } else if (computeMethod.compare("7-point algorithm") == 0){
-        fcm = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_seven_points);
+    //    fcm = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
       } else if (computeMethod.compare("8-point algorithm") == 0){
-        fcm = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_eight_points);
+    //    fcm = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
       }
-      robustMatchingStrategy->setFundamentalComputeMethod(fcm);
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR > 4))
+      else if(computeMethod.compare("USAC") == 0) {
+        tl::UsacTestProperties properties;
+        properties.confidence = mView->confidence();
+        properties.isParallel = mView->usacIsParallel();
+        properties.loIterations = mView->usacLocalOptimIterations();
+        properties.loSampleSize = mView->usacLocalSampleSize();
+        properties.maxIterations = mView->usacMaxIters();
+        ///TODO: Añadir el resto de parámetros
+        geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_usac, &properties);
+      }
+#endif
+    //  robustMatchingStrategy->setFundamentalComputeMethod(fcm);
     } else if (geometricTest == "Essential Matrix"){
-      robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::essential);
-      QString computeMethod = mView->essentialComputeMethod();
-      RobustMatcher::EssentialComputeMethod ecm = RobustMatcher::EssentialComputeMethod::ransac;
-      if (computeMethod.compare("RANSAC") == 0){
-        ecm = RobustMatcher::EssentialComputeMethod::ransac;
-      } else if (computeMethod.compare("LMedS") == 0){
-        ecm = RobustMatcher::EssentialComputeMethod::lmeds;
-      }
-      robustMatchingStrategy->setEssentialComputeMethod(ecm);
+    //  robustMatchingStrategy->setGeometricTest(RobustMatcher::GeometricTest::essential);
+    //  QString computeMethod = mView->essentialComputeMethod();
+    //  RobustMatcher::EssentialComputeMethod ecm = RobustMatcher::EssentialComputeMethod::ransac;
+    //  if (computeMethod.compare("RANSAC") == 0){
+    //    ecm = RobustMatcher::EssentialComputeMethod::ransac;
+    //  } else if (computeMethod.compare("LMedS") == 0){
+    //    ecm = RobustMatcher::EssentialComputeMethod::lmeds;
+    //  }
+    //  robustMatchingStrategy->setEssentialComputeMethod(ecm);
     }
-    robustMatchingStrategy->setDistance(mView->distance());
-    robustMatchingStrategy->setConfidence(mView->confidence());
-    robustMatchingStrategy->setMaxIters(mView->maxIters());
+    robustMatchingStrategy->setGeometricTest(geometric_test);
+    //robustMatchingStrategy->setDistance(mView->distance());
+    //robustMatchingStrategy->setConfidence(mView->confidence());
+    //robustMatchingStrategy->setMaxIters(mView->maxIters());
   } else {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1)
     matchingAlgorithm = std::make_shared<GsmImp>(descriptorMatcher,
