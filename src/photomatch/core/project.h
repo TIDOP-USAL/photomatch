@@ -33,6 +33,8 @@
 
 #include <QString>
 
+#include <tidop/featmatch/geomtest.h>
+
 #include "photomatch/core/image.h"
 #include "photomatch/core/session.h"
 #include "photomatch/core/preprocess/preprocess.h"
@@ -448,6 +450,11 @@ protected:
   void readRobustMatching(QXmlStreamReader &stream, Session *session);
   void readRobustMatchingGeometricTest(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
   void readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
+  tl::LMedsTestProperties readLMeds(QXmlStreamReader &stream);
+  tl::AllPointsTestProperties readAllPoints(QXmlStreamReader &stream);
+  tl::RANSACTestProperties readRANSAC(QXmlStreamReader &stream);
+  tl::RHOTestProperties readRho(QXmlStreamReader &stream);
+  tl::UsacTestProperties readUSAC(QXmlStreamReader &stream);
   //RobustMatcher::HomographyComputeMethod readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream);
   void readRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
   //RobustMatcher::FundamentalComputeMethod readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream);

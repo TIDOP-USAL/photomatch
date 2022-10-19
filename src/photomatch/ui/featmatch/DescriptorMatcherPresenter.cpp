@@ -451,12 +451,14 @@ void DescriptorMatcherPresenterImp::run()
     //robustMatchingStrategy->setDistance(mView->distance());
     //robustMatchingStrategy->setConfidence(mView->confidence());
     //robustMatchingStrategy->setMaxIters(mView->maxIters());
+    mProjectModel->setMatchingStrategy(std::dynamic_pointer_cast<MatchingStrategy>(robustMatchingStrategy));
   } else {
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR >= 3 && CV_VERSION_MINOR >= 4 && CV_VERSION_REVISION >= 1)
     matchingAlgorithm = std::make_shared<GsmImp>(descriptorMatcher,
                                                  mView->gmsRotation(),
                                                  mView->gmsScale(),
                                                  mView->gmsThreshold());
+    mProjectModel->setMatchingStrategy(std::dynamic_pointer_cast<MatchingStrategy>(matchingAlgorithm));
 #else
     int i_ret = QMessageBox(QMessageBox::Information,
                             tr("GMS not supported"),
@@ -467,10 +469,6 @@ void DescriptorMatcherPresenterImp::run()
     }
 #endif
   }
-
-
-  /// TODO: Guardar en proyecto
-  //mProjectModel->setRobustMatcherRefinement(matchingAlgorithm);
 
   /// Listado con los ficheros de puntos de interés de un par de fotogramas y el de las correspondencias entre ellos
   std::list<std::tuple<QString,QString,QString>> pairs;

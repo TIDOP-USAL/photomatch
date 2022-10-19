@@ -333,11 +333,7 @@ public:
    */
   virtual void deleteMatcher() = 0;
 
-  /*!
-   * \brief Set Robust Matcher Refinement
-   * \param[in] robustMatcherRefinement
-   */
-  virtual void setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement) = 0;
+  virtual void setMatchingStrategy(const std::shared_ptr<MatchingStrategy> &robustMatcherRefinement) = 0;
 
   /*!
    * \brief Returns Maximum image size
@@ -497,7 +493,7 @@ public:
   void deleteDescriptor() override;
   void setMatcher(const std::shared_ptr<MatchingMethod> &matcher) override;
   void deleteMatcher() override;
-  void setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement) override;
+  void setMatchingStrategy(const std::shared_ptr<MatchingStrategy> &matchingStrategy) override;
   int maxImageSize() const override;
   void setMaxImageSize(int size) override;
   bool fullImageSize() const override;
