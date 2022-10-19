@@ -67,6 +67,9 @@ class KeypointsFilterWidget;
 class KeypointDetector;
 class DescriptorExtractor;
 
+class ImagePreprocess;
+class KeyPointsFilterProcess;
+class ImageProcess;
 
 class FeatureExtractorPresenterImp
   : public FeatureExtractorPresenter
@@ -139,6 +142,7 @@ protected slots:
   void onFinished() override;
   void createProcess() override;
 
+
 public slots:
 
   void cancel();
@@ -155,6 +159,16 @@ private:
 
   void init() override;
   void initSignalAndSlots() override;
+
+
+private:
+
+  std::shared_ptr<ImagePreprocess> createImagePreprocess(std::shared_ptr<ImageProcess> &imageProcess,
+                                                         const QString &filePath,
+                                                         QString &preprocessed_image);
+  QString featuresFile(QString &fileName);
+  double imageScale(const QString &image);
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> createKeyPointsFilterProcess(double scale);
 
 protected:
 

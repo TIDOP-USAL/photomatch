@@ -454,10 +454,18 @@ void FeatureExtractorPresenterImp::createProcess()
 
   std::shared_ptr<Preprocess> preprocess = current_session->preprocess();
   std::shared_ptr<ImageProcess> imageProcess;
+  QString preprocessed_path;
   if (preprocess == nullptr){
     imageProcess = std::make_shared<DecolorPreprocess>();
     mProjectModel->setMaxImageSize(2000);
     mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
+    preprocessed_path = mProjectModel->projectFolder();
+    preprocessed_path.append("\\").append(mProjectModel->currentSession()->name());
+    preprocessed_path.append("\\preprocess\\");
+    QDir dir_out(preprocessed_path);
+    if(!dir_out.exists()) {
+      dir_out.mkpath(".");
+    }
   }
 
   auto detector = current_session->detector();
@@ -475,99 +483,82 @@ void FeatureExtractorPresenterImp::createProcess()
 
   QString currentKeypointDetector = mView->currentKeypointDetector();
   QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
-  std::shared_ptr<KeypointDetector> keypointDetector = makeKeypointDetector(currentKeypointDetector);
-  std::shared_ptr<DescriptorExtractor> descriptorExtractor = makeDescriptorExtractor(currentDescriptorExtractor, 
-                                                                                     currentKeypointDetector);
+  
+  if(currentKeypointDetector == "D2Net") {
 
+    std::shared_ptr<FeatureExtractorPython> featureExtractor = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
 
-  mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
-  mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+    mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(featureExtractor));
+    mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(featureExtractor));
 
+    for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++) {
+      QString fileName = (*it)->name();
+      QString filePath = (*it)->path();
+      QString preprocessed_image;
 
-  for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-    QString fileName = (*it)->name();
-    QString preprocessed_image;
-
-    if (imageProcess){
-      QString file_in = (*it)->path();
-      QFileInfo fileInfo(file_in);
-      preprocessed_image = mProjectModel->projectFolder();
-      preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
-      preprocessed_image.append("\\preprocess\\");
-      QDir dir_out(preprocessed_image);
-      if (!dir_out.exists()) {
-        dir_out.mkpath(".");
-      }
-      preprocessed_image.append(fileInfo.fileName());
-      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
-                                                                      preprocessed_image,
-                                                                      imageProcess,
-                                                                      2000));
-      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
-      mMultiProcess->appendProcess(preprocess);
-    } else {
-      preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
-    }
-
-    QString features = mProjectModel->projectFolder();
-    features.append("\\").append(mProjectModel->currentSession()->name());
-    features.append("\\features\\");
-    QDir dir_out(features);
-    if (!dir_out.exists()) {
-      dir_out.mkpath(".");
-    }
-    features.append(fileName);
-    QString keypointsFormat = mSettingsModel->keypointsFormat();
-    if (keypointsFormat.compare("Binary") == 0){
-      features.append(".bin");
-    } else if (keypointsFormat.compare("YML") == 0){
-      features.append(".yml");
-    } else {
-      features.append(".xml");
-    }
-
-    double scale = 1.;
-    if (mProjectModel->fullImageSize() == false){
-      int maxSize = mProjectModel->maxImageSize();
-      QImageReader imageReader((*it)->path());
-      QSize size = imageReader.size();
-      int w = size.width();
-      int h = size.height();
-      if (w > h){
-        scale = w / static_cast<double>(maxSize);
+      if(imageProcess) {
+        preprocessed_image = preprocessed_path;
+        preprocessed_image.append(fileName);
+        std::shared_ptr<ImagePreprocess> preprocess = createImagePreprocess(imageProcess, filePath, preprocessed_image);
+        mMultiProcess->appendProcess(preprocess);
       } else {
-        scale = h / static_cast<double>(maxSize);
+        preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
       }
-      if (scale < 1.) scale = 1.;
+
+      QString features = featuresFile(fileName);
+      double scale = imageScale(fileName);
+
+      std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess = createKeyPointsFilterProcess(scale);
+
+      std::shared_ptr<FeatureExtractorPythonTask> feat_extract(new FeatureExtractorPythonTask(preprocessed_image,
+                                                     features,
+                                                     scale,
+                                                     featureExtractor,
+                                                     keyPointsFiltersProcess));
+      connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
+
+      mMultiProcess->appendProcess(feat_extract);
     }
 
-    /// Se añade aqui porque se necesita la escala
-    std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
-    if (mKeypointsFilterWidget->isActiveFilterBest()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
-      keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
-    }
-    if (mKeypointsFilterWidget->isActiveFilterSize()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize()/scale, 
-                                                                                                              mKeypointsFilterWidget->maxSize()/scale);
-      keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
-    }
-    if (mKeypointsFilterWidget->isActiveRemoveDuplicated()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
-      keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
+  } else {
+    std::shared_ptr<KeypointDetector> keypointDetector = makeKeypointDetector(currentKeypointDetector);
+    std::shared_ptr<DescriptorExtractor> descriptorExtractor = makeDescriptorExtractor(currentDescriptorExtractor, 
+                                                                                       currentKeypointDetector);
+    mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
+    mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+
+    for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++) {
+      QString fileName = (*it)->name();
+      QString filePath = (*it)->path();
+      QString preprocessed_image;
+
+      if(imageProcess) {
+        preprocessed_image = preprocessed_path;
+        preprocessed_image.append(fileName);
+        std::shared_ptr<ImagePreprocess> preprocess = createImagePreprocess(imageProcess, filePath, preprocessed_image);
+        mMultiProcess->appendProcess(preprocess);
+      } else {
+        preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
+      }
+
+      QString features = featuresFile(fileName);
+
+      double scale = imageScale(fileName);
+
+      std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess = createKeyPointsFilterProcess(scale);
+
+      std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
+                                                     features,
+                                                     scale,
+                                                     keypointDetector,
+                                                     descriptorExtractor,
+                                                     keyPointsFiltersProcess));
+      connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
+
+      mMultiProcess->appendProcess(feat_extract);
     }
 
-    std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
-                                                                        features,
-                                                                        scale,
-                                                                        keypointDetector,
-                                                                        descriptorExtractor,
-                                                                        keyPointsFiltersProcess));
-    connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
-
-    mMultiProcess->appendProcess(feat_extract);
   }
-
 
   if (mProgressHandler){
     mProgressHandler->setTitle("Computing Features...");
@@ -584,6 +575,80 @@ void FeatureExtractorPresenterImp::createProcess()
   const char *descriptor_extractor = ba.constData();
   msgInfo("  DescriptorExtractor  :  %s", descriptor_extractor);
 
+}
+
+double FeatureExtractorPresenterImp::imageScale(const QString &image)
+{
+  double scale = 1;
+  if(mProjectModel->fullImageSize() == false) {
+    int maxSize = mProjectModel->maxImageSize();
+    QImageReader imageReader(image);
+    QSize size = imageReader.size();
+    int w = size.width();
+    int h = size.height();
+    if(w > h) {
+      scale = w / static_cast<double>(maxSize);
+    } else {
+      scale = h / static_cast<double>(maxSize);
+    }
+    if(scale < 1.) scale = 1.;
+  }
+  return scale;
+}
+
+std::list<std::shared_ptr<KeyPointsFilterProcess>> FeatureExtractorPresenterImp::createKeyPointsFilterProcess(double scale)
+{
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+
+  if(mKeypointsFilterWidget->isActiveFilterBest()) {
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+    keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+  }
+  if(mKeypointsFilterWidget->isActiveFilterSize()) {
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize() / scale,
+                                                                                                            mKeypointsFilterWidget->maxSize() / scale);
+    keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+  }
+  if(mKeypointsFilterWidget->isActiveRemoveDuplicated()) {
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
+    keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
+  }
+
+  return keyPointsFiltersProcess;
+}
+
+QString FeatureExtractorPresenterImp::featuresFile(QString &fileName)
+{
+  QString features = mProjectModel->projectFolder();
+  features.append("\\").append(mProjectModel->currentSession()->name());
+  features.append("\\features\\");
+  QDir dir_out(features);
+  if(!dir_out.exists()) {
+    dir_out.mkpath(".");
+  }
+  features.append(fileName);
+  QString keypointsFormat = mSettingsModel->keypointsFormat();
+  if(keypointsFormat.compare("Binary") == 0) {
+    features.append(".bin");
+  } else if(keypointsFormat.compare("YML") == 0) {
+    features.append(".yml");
+  } else {
+    features.append(".xml");
+  }
+  return features;
+}
+
+std::shared_ptr<ImagePreprocess> FeatureExtractorPresenterImp::createImagePreprocess(std::shared_ptr<photomatch::ImageProcess> &imageProcess,
+                                                         const QString &filePath,
+                                                         QString &preprocessed_image)
+{
+  std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess(filePath,
+                                                                  preprocessed_image,
+                                                                  imageProcess,
+                                                                  2000));
+  connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+  
+  return preprocess;
 }
 
 void FeatureExtractorPresenterImp::cancel()
@@ -1382,8 +1447,6 @@ std::shared_ptr<KeypointDetector> FeatureExtractorPresenterImp::makeKeypointDete
     keypoint_detector = std::make_shared<BriskDetectorDescriptor>(mBriskDetector->threshold(),
                                                                  mBriskDetector->octaves(),
                                                                  mBriskDetector->patternScale());
-  } else if(keypointDetector.compare("D2Net") == 0) {
-    keypoint_detector = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
   } else if (keypointDetector.compare("FAST") == 0){
     keypoint_detector = std::make_shared<FastDetector>(mFastDetector->threshold(),
                                                       mFastDetector->nonmaxSuppression(),
@@ -1554,8 +1617,6 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
     descriptor_extractor = std::make_shared<BriskDetectorDescriptor>(mBriskDescriptor->threshold(),
                                                                     mBriskDescriptor->octaves(),
                                                                     mBriskDescriptor->patternScale());
-  } else if(keypointDetector.compare("D2Net") == 0) {
-    descriptor_extractor = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
   } else if (descriptorExtractor.compare("DAISY") == 0){
     descriptor_extractor = std::make_shared<DaisyDescriptor>(mDaisyDescriptor->radius(),
                                                              mDaisyDescriptor->qRadius(),

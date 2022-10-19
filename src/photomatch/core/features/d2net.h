@@ -71,8 +71,7 @@ private:
 
 class PHOTOMATCH_EXPORT D2NetDetectorDescriptor
   : public D2NetProperties,
-    public KeypointDetector,
-    public DescriptorExtractor
+    public FeatureExtractorPython
 {
 
 public:
@@ -83,19 +82,13 @@ public:
 
   ~D2NetDetectorDescriptor() override = default;
 
-// KeypointDetector interface
+// FeatureExtractorPython interface
 
 public:
 
-  std::vector<cv::KeyPoint> detect(const cv::Mat &img,
-                                   const cv::Mat &mask = cv::Mat()) override;
-
-// DescriptorExtractor interface
-
-public:
-
-  cv::Mat extract(const cv::Mat &img,
-                  std::vector<cv::KeyPoint> &keyPoints) override;
+  void extract(const QString &imagePath,
+               const QString &featuresPath,
+               double scale) override;
 
 // Feature interface
 

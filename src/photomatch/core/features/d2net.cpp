@@ -25,7 +25,8 @@
 #include "d2net.h"
 
 #include <tidop/core/messages.h>
-
+#include <tidop/core/task.h>
+#include <tidop/core/app.h>
 
 namespace photomatch
 {
@@ -74,8 +75,7 @@ D2NetDetectorDescriptor::D2NetDetectorDescriptor()
 
 D2NetDetectorDescriptor::D2NetDetectorDescriptor(const D2NetDetectorDescriptor &d2NetDetectorDescriptor)
   : D2NetProperties(d2NetDetectorDescriptor),
-    KeypointDetector(d2NetDetectorDescriptor),
-    DescriptorExtractor(d2NetDetectorDescriptor)
+    FeatureExtractorPython(d2NetDetectorDescriptor)
 {
 
 }
@@ -85,20 +85,30 @@ D2NetDetectorDescriptor::D2NetDetectorDescriptor(bool multiscale)
   setMultiscale(multiscale);
 }
 
-std::vector<cv::KeyPoint> D2NetDetectorDescriptor::detect(const cv::Mat &img, 
-                                                          const cv::Mat &mask)
+void D2NetDetectorDescriptor::extract(const QString &imagePath, 
+                                      const QString &featuresPath, 
+                                      double scale)
 {
-  std::vector<cv::KeyPoint> keyPoints;
-
-  return keyPoints;
-}
-
-cv::Mat D2NetDetectorDescriptor::extract(const cv::Mat &img, 
-                                         std::vector<cv::KeyPoint> &keyPoints)
-{
-  cv::Mat descriptors;
-
-  return descriptors;
+  try {
+    
+    tl::Path app_path = tl::App::instance().path();
+    
+    std::string cmd("\"");
+    cmd.append(app_path.parentPath().toString());
+    cmd.append("\\scripts\\D2netFeat.py\" ");
+    cmd.append("\"").append(imagePath.toStdString()).append("\" ");
+    cmd.append("\"").append(featuresPath.toStdString()).append("\" ");
+    cmd.append(std::to_string(scale));
+    
+    tl::Process process(cmd);
+    
+    process.run();
+    
+    TL_ASSERT(process.status() == tl::Process::Status::finalized, "Feature extractor error");
+  
+  } catch(...) {
+    TL_THROW_EXCEPTION_WITH_NESTED("");
+  }
 }
 
 void D2NetDetectorDescriptor::reset()

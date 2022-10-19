@@ -173,6 +173,25 @@ public:
 
 
 
+class PHOTOMATCH_EXPORT FeatureExtractorPython
+{
+
+public:
+
+  FeatureExtractorPython() {}
+  virtual ~FeatureExtractorPython() = default;
+
+  virtual void extract(const QString &imagePath,
+                       const QString &featuresPath,
+                       double scale) = 0;
+};
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
 /*!
  * \brief Agast Interface
  * AGAST: Adaptive and Generic Corner Detection Based on the Accelerated Segment Test
