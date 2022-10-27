@@ -759,6 +759,10 @@ void ProjectControllerImp::readFeaturesDetector(QXmlStreamReader &stream, Sessio
       std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
       readBRISK(stream, brisk.get());
       session->setDetector(brisk);
+    } else if (stream.name() == "D2NET") {
+      std::shared_ptr<D2Net> d2net = std::make_shared<D2NetProperties>();
+      readD2NET(stream, d2net.get());
+      session->setDetector(d2net);
     } else if (stream.name() == "FAST") {
       std::shared_ptr<Fast> fast = std::make_shared<FastProperties>();
       readFAST(stream, fast.get());
@@ -2034,6 +2038,8 @@ void ProjectControllerImp::writeFeatureExtractor(QXmlStreamWriter &stream, Featu
       writeBRISK(stream, dynamic_cast<Brisk *>(descriptor));
     } else if (descriptor->type() == Feature::Type::daisy){
       writeDAISY(stream, dynamic_cast<Daisy *>(descriptor));
+    } else if (descriptor->type() == Feature::Type::d2net) {
+      writeD2NET(stream, dynamic_cast<D2Net *>(descriptor));
     } else if (descriptor->type() == Feature::Type::freak){
       writeFREAK(stream, dynamic_cast<Freak *>(descriptor));
     } else if (descriptor->type() == Feature::Type::hog){

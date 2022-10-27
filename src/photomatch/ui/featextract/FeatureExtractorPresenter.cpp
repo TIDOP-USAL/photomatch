@@ -95,6 +95,7 @@
 #include "photomatch/process/preprocess/ImagePreprocess.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/core/path.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -454,18 +455,16 @@ void FeatureExtractorPresenterImp::createProcess()
 
   std::shared_ptr<Preprocess> preprocess = current_session->preprocess();
   std::shared_ptr<ImageProcess> imageProcess;
-  QString preprocessed_path;
+  tl::Path preprocessed_path;
+
   if (preprocess == nullptr){
     imageProcess = std::make_shared<DecolorPreprocess>();
     mProjectModel->setMaxImageSize(2000);
     mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
-    preprocessed_path = mProjectModel->projectFolder();
-    preprocessed_path.append("\\").append(mProjectModel->currentSession()->name());
-    preprocessed_path.append("\\preprocess\\");
-    QDir dir_out(preprocessed_path);
-    if(!dir_out.exists()) {
-      dir_out.mkpath(".");
-    }
+    preprocessed_path = mProjectModel->projectFolder().toStdWString();
+    preprocessed_path.append(mProjectModel->currentSession()->name().toStdWString());
+    preprocessed_path.append("preprocess");
+    preprocessed_path.createDirectories();
   }
 
   auto detector = current_session->detector();
@@ -497,8 +496,9 @@ void FeatureExtractorPresenterImp::createProcess()
       QString preprocessed_image;
 
       if(imageProcess) {
-        preprocessed_image = preprocessed_path;
-        preprocessed_image.append(fileName);
+        tl::Path preprocessed_image_path = preprocessed_path;
+        preprocessed_image_path.append(tl::Path(filePath.toStdWString()).fileName());
+        preprocessed_image = QString::fromStdWString(preprocessed_image_path.toWString());
         std::shared_ptr<ImagePreprocess> preprocess = createImagePreprocess(imageProcess, filePath, preprocessed_image);
         mMultiProcess->appendProcess(preprocess);
       } else {
@@ -506,15 +506,15 @@ void FeatureExtractorPresenterImp::createProcess()
       }
 
       QString features = featuresFile(fileName);
-      double scale = imageScale(fileName);
+      double scale = imageScale(filePath);
 
       std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess = createKeyPointsFilterProcess(scale);
 
       std::shared_ptr<FeatureExtractorPythonTask> feat_extract(new FeatureExtractorPythonTask(preprocessed_image,
-                                                     features,
-                                                     scale,
-                                                     featureExtractor,
-                                                     keyPointsFiltersProcess));
+                                                                                              features,
+                                                                                              scale,
+                                                                                              featureExtractor,
+                                                                                              keyPointsFiltersProcess));
       connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
 
       mMultiProcess->appendProcess(feat_extract);
@@ -533,8 +533,9 @@ void FeatureExtractorPresenterImp::createProcess()
       QString preprocessed_image;
 
       if(imageProcess) {
-        preprocessed_image = preprocessed_path;
-        preprocessed_image.append(fileName);
+        tl::Path preprocessed_image_path = preprocessed_path;
+        preprocessed_image_path.append(tl::Path(filePath.toStdWString()).fileName());
+        preprocessed_image = QString::fromStdWString(preprocessed_image_path.toWString());
         std::shared_ptr<ImagePreprocess> preprocess = createImagePreprocess(imageProcess, filePath, preprocessed_image);
         mMultiProcess->appendProcess(preprocess);
       } else {
@@ -543,16 +544,16 @@ void FeatureExtractorPresenterImp::createProcess()
 
       QString features = featuresFile(fileName);
 
-      double scale = imageScale(fileName);
+      double scale = imageScale(filePath);
 
       std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess = createKeyPointsFilterProcess(scale);
 
       std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
-                                                     features,
-                                                     scale,
-                                                     keypointDetector,
-                                                     descriptorExtractor,
-                                                     keyPointsFiltersProcess));
+                                                                          features,
+                                                                          scale,
+                                                                          keypointDetector,
+                                                                          descriptorExtractor,
+                                                                          keyPointsFiltersProcess));
       connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
 
       mMultiProcess->appendProcess(feat_extract);

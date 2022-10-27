@@ -182,8 +182,7 @@ public:
   virtual ~FeatureExtractorPython() = default;
 
   virtual void extract(const QString &imagePath,
-                       const QString &featuresPath,
-                       double scale) = 0;
+                       const QString &featuresPath) = 0;
 };
 
 

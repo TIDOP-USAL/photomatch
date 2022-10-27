@@ -87,8 +87,7 @@ public:
 public:
 
   void extract(const QString &imagePath,
-               const QString &featuresPath,
-               double scale) override;
+               const QString &featuresPath) override;
 
 // Feature interface
 

@@ -115,8 +115,8 @@ void FeatureExtractor::run()
 
     std::vector<cv::KeyPoint> key_points = mKeypointDetector->detect(img);
 
-    uint64_t time = chrono.stop();
-    msgInfo("%i Keypoints detected in image %s [Time: %f seconds]", key_points.size(), img_file, time / 1000.);
+    double time = chrono.stop();
+    msgInfo("%i Keypoints detected in image %s [Time: %f seconds]", key_points.size(), img_file, time);
 
     /// Filtrado de puntos
     for (auto &filter : mKeyPointsFiltersProcess) {
@@ -136,7 +136,7 @@ void FeatureExtractor::run()
     cv::Mat descriptors = mDescriptorExtractor->extract(img, key_points);
 
     time = chrono.stop();
-    msgInfo("Descriptors computed for image %s [Time: %f seconds]", img_file, time / 1000.);
+    msgInfo("Descriptors computed for image %s [Time: %f seconds]", img_file, time);
 
     for (size_t i = 0; i < key_points.size(); i++) {
       key_points[i].pt *= mImageScale;
@@ -231,42 +231,48 @@ void FeatureExtractorPythonTask::run()
 
     tl::Chrono chrono;
     chrono.run();
+    
+    mFeatureExtractor->extract(mImage, mFeatures);
+    
 
-    //std::vector<cv::KeyPoint> key_points;
-    mFeatureExtractor->extract(mImage, mFeatures, mImageScale);
+    // Lectura
+    cv::FileStorage file_storage(mFeatures.toStdString(), cv::FileStorage::READ);
+    TL_ASSERT(file_storage.isOpened(), "Load features failed");
 
-    uint64_t time = chrono.stop();
-    //msgInfo("%i Keypoints detected in image %s [Time: %f seconds]", key_points.size(), img_file, time);
+    cv::Mat keypoints;
+    file_storage["keypoints"] >> keypoints;
 
-    /// Filtrado de puntos
-    //for(auto &filter : mKeyPointsFiltersProcess) {
-    //  key_points = filter->filter(key_points);
-    //}
+    cv::Mat descriptors;
+    file_storage["descriptors"] >> descriptors;
 
-    /*if(mDescriptorExtractor == nullptr) {
-      emit error(0, "Descriptor Extractor Error");
-      TL_THROW_EXCEPTION("Descriptor Extractor error");
+    file_storage.release();
+
+    std::vector<cv::KeyPoint> key_points(keypoints.rows);
+
+    for (size_t i = 0; i < key_points.size(); i++) {
+      key_points[i].pt.x = keypoints.at<float>(i, 0);
+      key_points[i].pt.y = keypoints.at<float>(i, 1);
     }
 
-    msgInfo("Computing keypoints descriptors for image %s", img_file);
+    double time = chrono.stop();
+    msgInfo("%i features detected in image %s [Time: %f seconds]", key_points.size(), img_file, time);
 
-    chrono.reset();
-    chrono.run();
+    /// Filtrado de puntos
+    for(auto &filter : mKeyPointsFiltersProcess) {
+      key_points = filter->filter(key_points);
+    }
 
-    cv::Mat descriptors = mDescriptorExtractor->extract(img, key_points);
+    if (mImageScale != 1.) {
+      for(size_t i = 0; i < key_points.size(); i++) {
+        key_points[i].pt *= mImageScale;
+        key_points[i].size *= static_cast<float>(mImageScale);
+      }
+    }
 
-    time = chrono.stop();
-    msgInfo("Descriptors computed for image %s [Time: %f seconds]", img_file, time / 1000.);*/
-
-    //for(size_t i = 0; i < key_points.size(); i++) {
-    //  key_points[i].pt *= mImageScale;
-    //  key_points[i].size *= static_cast<float>(mImageScale);
-    //}
-
-    //std::unique_ptr<FeaturesWriter> writer = FeaturesWriterFactory::createWriter(mFeatures);
-    //writer->setKeyPoints(key_points);
-    //writer->setDescriptors(descriptors);
-    //writer->write();
+    std::unique_ptr<FeaturesWriter> writer = FeaturesWriterFactory::createWriter(mFeatures);
+    writer->setKeyPoints(key_points);
+    writer->setDescriptors(descriptors);
+    writer->write();
 
     ba = mFeatures.toLocal8Bit();
     const char *cfeat = ba.data();

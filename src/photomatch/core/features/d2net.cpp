@@ -27,6 +27,7 @@
 #include <tidop/core/messages.h>
 #include <tidop/core/task.h>
 #include <tidop/core/app.h>
+#include <tidop/core/exception.h>
 
 namespace photomatch
 {
@@ -86,20 +87,22 @@ D2NetDetectorDescriptor::D2NetDetectorDescriptor(bool multiscale)
 }
 
 void D2NetDetectorDescriptor::extract(const QString &imagePath, 
-                                      const QString &featuresPath, 
-                                      double scale)
+                                      const QString &featuresPath)
 {
   try {
     
     tl::Path app_path = tl::App::instance().path();
     
-    std::string cmd("\"");
+    std::string cmd;
+    cmd.append("\"");
+    cmd.append(app_path.parentPath().toString());
+    cmd.append("\\PhotoMatch CMD.bat\" python \"");
     cmd.append(app_path.parentPath().toString());
     cmd.append("\\scripts\\D2netFeat.py\" ");
-    cmd.append("\"").append(imagePath.toStdString()).append("\" ");
-    cmd.append("\"").append(featuresPath.toStdString()).append("\" ");
-    cmd.append(std::to_string(scale));
-    
+    cmd.append(" --image \"").append(imagePath.toStdString()).append("\" ");
+    tl::Path features_path(featuresPath.toStdWString());
+    features_path.replaceExtension(".xml");
+    cmd.append(" --features \"").append(features_path.toString()).append("\"");
     tl::Process process(cmd);
     
     process.run();
@@ -113,7 +116,7 @@ void D2NetDetectorDescriptor::extract(const QString &imagePath,
 
 void D2NetDetectorDescriptor::reset()
 {
-  D2NetDetectorDescriptor::reset();
+  reset();
 }
 
 

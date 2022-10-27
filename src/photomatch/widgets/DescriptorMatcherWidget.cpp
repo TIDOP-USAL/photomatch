@@ -187,8 +187,8 @@ void DescriptorMatcherWidgetImp::initUI()
   filteringTestLayout->addWidget(mSpinBoxLocalSampleSize, 11, 1);
 
   filteringTestLayout->addWidget(mLabelLocalMaxIterations, 12, 0);
-  //mSpinBoxLocalMaxIterations->setRange(0, 1000);
-  //mSpinBoxLocalMaxIterations->setSingleStep(1);
+  mSpinBoxLocalMaxIterations->setRange(0, 10000);
+  mSpinBoxLocalMaxIterations->setSingleStep(1);
   filteringTestLayout->addWidget(mSpinBoxLocalMaxIterations, 12, 1);
 
 
