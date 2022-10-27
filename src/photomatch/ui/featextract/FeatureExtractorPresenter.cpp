@@ -1778,11 +1778,6 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
   return descriptor_extractor;
 }
 
-void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
-{
-  mProgressHandler = progressHandler;
-}
-
 void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &keypointDetector)
 {
   mView->setCurrentKeypointDetector(keypointDetector);

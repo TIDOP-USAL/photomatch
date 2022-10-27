@@ -55,9 +55,7 @@ DescriptorMatcherPresenterImp::DescriptorMatcherPresenterImp(DescriptorMatcherVi
     mView(view),
     mProjectModel(projectModel),
     mSettingsModel(settingsModel),
-    mHelp(nullptr),
-    mMultiProcess(new MultiProcess(true)),
-    mProgressHandler(nullptr)
+    mHelp(nullptr)
 {
   this->init();
   this->initSignalAndSlots();
@@ -242,11 +240,6 @@ void DescriptorMatcherPresenterImp::initSignalAndSlots()
   connect(mView, SIGNAL(help()),     this, SLOT(help()));
 }
 
-void DescriptorMatcherPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
-{
-  mProgressHandler = progressHandler;
-}
-
 void DescriptorMatcherPresenterImp::cancel()
 {
   mMultiProcess->stop();
@@ -272,7 +265,7 @@ void DescriptorMatcherPresenterImp::cancel()
   msgWarning("Processing has been canceled by the user");
 }
 
-void DescriptorMatcherPresenterImp::run()
+void DescriptorMatcherPresenterImp::createProcess()
 {
   std::shared_ptr<Session> current_session = mProjectModel->currentSession();
   if (current_session == nullptr) {
