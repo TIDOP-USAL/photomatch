@@ -53,6 +53,7 @@ set(PHOTOMATCH_CORE_SOURCES
     features/kaze.cpp
     features/msd.cpp
     features/mser.cpp
+    features/r2d2.cpp
     features/sift.cpp
     features/star.cpp            
     features/surf.cpp
@@ -110,6 +111,7 @@ set(PHOTOMATCH_CORE_HEADERS
     features/kaze.h
     features/msd.h
     features/mser.h
+    features/r2d2.h
     features/sift.h
     features/star.h         
     features/surf.h

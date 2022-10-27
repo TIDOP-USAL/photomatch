@@ -66,6 +66,7 @@ public:
     msd,
     mser,
     orb,
+    r2d2,
     sift,
     star,
     surf,
@@ -1408,6 +1409,36 @@ public:
 
 };
 
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT R2D2
+  : public FeatureBase
+{
+
+public:
+
+  R2D2() : FeatureBase(Feature::Type::r2d2) {}
+  ~R2D2() override = default;
+
+  virtual double scaleF() const = 0;
+  virtual void setScaleF(double scaleF) = 0;
+  virtual int minSize() const = 0;
+  virtual void setMinSize(double size) = 0;
+  virtual int maxSize() const = 0;
+  virtual void setMaxSize(double size) = 0;
+  virtual double minScale() const = 0;
+  virtual void setMinScale(double minScale) = 0;
+  virtual double maxScale() const = 0;
+  virtual void setMaxScale(double maxScale) = 0;
+  virtual double reliabilityThreshold() const = 0;
+  virtual void setReliabilityThreshold(double reliabilityThreshold) = 0;
+  virtual double repeatabilityThreshold() const = 0;
+  virtual void setRepeatabilityThreshold(double repeatabilityThreshold) = 0;
+};
 
 
 /*----------------------------------------------------------------*/
