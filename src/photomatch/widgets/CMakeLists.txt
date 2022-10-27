@@ -1,12 +1,39 @@
+##########################################################################
+#                                                                        #
+# Copyright 2016 by Tidop Research Group <daguilera@usal.es>             #
+#                                                                        #
+# This file is part of PhotoMatch                                        #
+#                                                                        #
+# PhotoMatch is free software: you can redistribute it and/or modify     #
+# it under the terms of the GNU General Public License as published by   #
+# the Free Software Foundation, either version 3 of the License, or      #
+# (at your option) any later version.                                    #
+#                                                                        #
+# PhotoMatch is distributed in the hope that it will be useful,          #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of         #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the           #
+# GNU General Public License for more details.                           #
+#                                                                        #
+# You should have received a copy of the GNU General Public License      #
+# along with PhotoMatch. If not, see <http://www.gnu.org/licenses/>.     #
+#                                                                        #
+# https://spdx.org/licenses/GPL-3.0-or-later.html                        #
+#                                                                        #
+##########################################################################
+
 include_directories(${CMAKE_SOURCE_DIR}/third_party)
 
-add_library(libwidgets ${LIB_TYPE}
+project(Widgets LANGUAGES CXX)
+
+add_library(${PROJECT_NAME} ${LIB_TYPE}
             AcebsfWidget.cpp
             AcebsfWidget.h
             AgastWidget.cpp
             AgastWidget.h
             AkazeWidget.cpp
             AkazeWidget.h
+            ASiftWidget.cpp
+            ASiftWidget.h
             BoostWidget.cpp
             BoostWidget.h
             BriefWidget.cpp
@@ -17,6 +44,8 @@ add_library(libwidgets ${LIB_TYPE}
             CLaheWidget.h
             CmbfheWidget.cpp
             CmbfheWidget.h
+            D2NetWidget.cpp
+            D2NetWidget.h
             DaisyWidget.cpp
             DaisyWidget.h
             DescriptorMatcherWidget.cpp
@@ -81,23 +110,20 @@ add_library(libwidgets ${LIB_TYPE}
             StartPageWidget.cpp
             StartPageWidget.h)
 
-set_property(TARGET libwidgets PROPERTY FOLDER "lib")
+add_library(PhotoMatch::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-#if(BUILD_SHARED_LIBS)
-#    
-#  install(TARGETS libgraphos
-#          RUNTIME DESTINATION bin
-#          LIBRARY DESTINATION lib
-#          ARCHIVE DESTINATION lib)
-#	
-#  set_target_properties(libgraphos PROPERTIES
-#                        DEFINE_SYMBOL PHOTOMATCH_EXPORTS)
-#	target_link_libraries(libwidgets .... ) 
-#else()
-  install(TARGETS libwidgets 
-          LIBRARY DESTINATION lib 
-          ARCHIVE DESTINATION lib)
-#endif()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+                      TidopLib::Core
+                      TidopLib::Img)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+                      FOLDER "lib"
+                      OUTPUT_NAME "libwidgets")
+
+install(TARGETS ${PROJECT_NAME} 
+        LIBRARY DESTINATION lib 
+        ARCHIVE DESTINATION lib)
 
 install(DIRECTORY .
         DESTINATION include/photomatch/widgets

@@ -22,99 +22,82 @@
  ************************************************************************/
 
 
-#include "lucid.h"
+#ifndef PHOTOMATCH_D2_NET_WIDGET_H
+#define PHOTOMATCH_D2_NET_WIDGET_H
 
-#include <tidop/core/messages.h>
+#include "photomatch/widgets/PhotoMatchWidget.h"
 
+class QGroupBox;
+class QCheckBox;
 
 namespace photomatch
 {
 
-
-LucidProperties::LucidProperties()
-  : mLucidKernel(1),
-    mBlurKernel(2)
-{}
-
-int LucidProperties::lucidKernel() const
+class PHOTOMATCH_EXPORT D2NetWidget
+  : public PhotoMatchWidget
 {
-  return mLucidKernel;
-}
+  Q_OBJECT
 
-int LucidProperties::blurKernel() const
+public:
+
+  D2NetWidget(QWidget *parent = nullptr) : PhotoMatchWidget(parent){}
+  virtual ~D2NetWidget() = default;
+
+  virtual bool multiscale() const = 0;
+
+signals:
+
+  void multiscaleChange(bool);
+
+public slots:
+
+  virtual void setMultiscale(bool multiscale) = 0;
+
+};
+
+
+
+class PHOTOMATCH_EXPORT D2NetWidgetImp
+  : public D2NetWidget
 {
-  return mBlurKernel;
-}
+  Q_OBJECT
 
-void LucidProperties::setLucidKernel(int lucidKernel)
-{
-  mLucidKernel = lucidKernel;
-}
+public:
 
-void LucidProperties::setBlurKernel(int blurKernel)
-{
-  mBlurKernel = blurKernel;
-}
+  D2NetWidgetImp(QWidget *parent = nullptr);
+  ~D2NetWidgetImp() override;
 
-void LucidProperties::reset()
-{
-  mLucidKernel = 1;
-  mBlurKernel = 2;
-}
+// D2NetWidget interface
 
-QString LucidProperties::name() const
-{
-  return QString("LUCID");
-}
+  bool multiscale() const override;
+  
+public slots:
 
+  void setMultiscale(bool multiscale) override;
 
-/*----------------------------------------------------------------*/
+// PhotoMatchWidget interface
 
+private:
 
-LucidDescriptor::LucidDescriptor()
-{
-  update();
-}
+  void initUI() override;
+  void initSignalAndSlots() override;
 
-LucidDescriptor::LucidDescriptor(int lucidKernel, int blurKernel)
-{
-  LucidProperties::setLucidKernel(lucidKernel);
-  LucidProperties::setBlurKernel(blurKernel);
-  update();
-}
+public slots:
 
-void LucidDescriptor::update()
-{
-  mLUCID = cv::xfeatures2d::LUCID::create(LucidProperties::lucidKernel(),
-                                          LucidProperties::blurKernel());
-}
+  void reset() override;
 
-cv::Mat LucidDescriptor::extract(const cv::Mat &img, 
-                                 std::vector<cv::KeyPoint> &keyPoints)
-{
-  cv::Mat descriptors;
-  mLUCID->compute(img, keyPoints, descriptors);
-  return descriptors;
-}
+protected slots:
 
-void LucidDescriptor::setLucidKernel(int lucidKernel)
-{
-  LucidProperties::setLucidKernel(lucidKernel);
-  update();
-}
+  void update() override;
+  void retranslate() override;
 
-void LucidDescriptor::setBlurKernel(int blurKernel)
-{
-  LucidProperties::setBlurKernel(blurKernel);
-  update();
-}
+protected:
 
-void LucidDescriptor::reset()
-{
-  LucidProperties::reset();
-  update();
-}
+  QGroupBox *mGroupBox;
+  QCheckBox *mCheckBoxMultiscale;
 
-
+};
 
 } // namespace photomatch
+
+#endif // PHOTOMATCH_D2_NET_WIDGET_H

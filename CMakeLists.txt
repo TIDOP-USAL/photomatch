@@ -1,22 +1,59 @@
-# Minimum version required CMAKE
-cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
+##########################################################################
+#                                                                        #
+# Copyright 2016 by Tidop Research Group <daguilera@usal.es>             #
+#                                                                        #
+# This file is part of PhotoMatch                                        #
+#                                                                        #
+# PhotoMatch is free software: you can redistribute it and/or modify     #
+# it under the terms of the GNU General Public License as published by   #
+# the Free Software Foundation, either version 3 of the License, or      #
+# (at your option) any later version.                                    #
+#                                                                        #
+# PhotoMatch is distributed in the hope that it will be useful,          #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of         #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the           #
+# GNU General Public License for more details.                           #
+#                                                                        #
+# You should have received a copy of the GNU General Public License      #
+# along with PhotoMatch. If not, see <http://www.gnu.org/licenses/>.     #
+#                                                                        #
+# https://spdx.org/licenses/GPL-3.0-or-later.html                        #
+#                                                                        #
+##########################################################################
 
-# PhotoMatch
-project(photomatch 
-        VERSION 1.0.0 
+cmake_minimum_required(VERSION 3.10.0...3.22)
+
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+    cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+endif()
+
+
+project(PhotoMatch 
+        VERSION 1.1.0 
+        DESCRIPTION "Open-source multi-view and multimodal feature matching tool for photogrammetric applications."
+        HOMEPAGE_URL "https://github.com/TIDOP-USAL/photomatch"
 		LANGUAGES CXX)
 
+
+message(STATUS "\n${PROJECT_NAME} ${PhotoMatch_VERSION}")
+message(STATUS ${PhotoMatch_DESCRIPTION})
+message(STATUS ${PhotoMatch_HOMEPAGE_URL})
 
 
 ##############################################################
 # Configuration                                              #
 ##############################################################
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_DEBUG_POSTFIX d)
 set(CMAKE_CONFIGURATION_TYPES Release;Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
+
 
 if(MSVC)
 
@@ -34,17 +71,18 @@ if(MSVC)
 	
 endif(MSVC)
 
+
 if (UNIX)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 endif(UNIX)
 
-set (CMAKE_CXX_STANDARD 14)
+
 
 # Find extra modules
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE_PATH})
-
 
 # Build test
 OPTION (BUILD_TEST            "Include test"          OFF)
@@ -68,9 +106,26 @@ if (BUILD_SHARED_LIBS)
   
 endif (BUILD_SHARED_LIBS)
 
-##############################################################
-# 3rd-party libraries                                        #
-##############################################################
+
+include(CompilerInfo)
+include(OperatingSystemInfo)
+
+include(CMakeDependentOption)
+
+
+##########################################################################
+#  Dependencies                                                          #
+#------------------------------------------------------------------------#
+# - TidopLib                  REQUIRED                                   #
+# - BOOST                     REQUIRED                                   #
+# - CUDA                      REQUIRED                                   #
+# - OpenCV                    REQUIRED                                   #
+# - COLMAP                    REQUIRED                                   #
+# - OpenMP                    OPTIONAL                                   #
+# - Qt5                       REQUIRED                                   #
+# - CloudCompare              REQUIRED                                   #
+# - VLD                       OPTIONAL                                   #
+##########################################################################
 
 ### No son opcionales
 #option(WITH_BOOST    "Include Boost"                   ON)
@@ -79,9 +134,19 @@ option(WITH_PIXKIT   "Include PixKit"                  ON)
 if(MSVC)
 option (WITH_VLD     "Include Visual Leak Detector Support"    OFF)
 endif(MSVC)
-option(WITH_CUDA     "Include Cuda"                    OFF)
+option(WITH_CUDA     "Include Cuda"                    ON)
 
-#------------------------------------------------------------#
+
+message(STATUS "\nDependency loading:\n")
+
+
+##########################################################################
+# TidopLib (REQUIRED)                                                    #
+##########################################################################      
+
+find_package(TidopLib 2.1 REQUIRED)
+
+
 
 # Qt
 find_package(Qt5 REQUIRED 
@@ -154,7 +219,7 @@ endif(Boost_FOUND)
 #------------------------------------------------------------#
 
 if (WITH_CUDA)
-find_package(CUDA 10)
+find_package(CUDA)
 include_directories(${CUDA_INCLUDE_DIRS})
 
 if (CUDA_FOUND)
@@ -249,7 +314,7 @@ endif(WITH_VLD)
 set(TL_MESSAGE_HANDLER YES)
 message(STATUS "[TidopLib] Message manager enabled")
 
-configure_file("${PROJECT_SOURCE_DIR}/cmake/config_tl.h.in" "${PROJECT_BINARY_DIR}/config_tl.h")
+#configure_file("${PROJECT_SOURCE_DIR}/cmake/config_tl.h.in" "${PROJECT_BINARY_DIR}/config_tl.h")
 include_directories("${PROJECT_BINARY_DIR}")
 
 add_subdirectory(third_party)

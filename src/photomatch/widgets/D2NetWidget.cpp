@@ -22,99 +22,85 @@
  ************************************************************************/
 
 
-#include "lucid.h"
+#include "D2NetWidget.h"
 
-#include <tidop/core/messages.h>
-
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QApplication>
 
 namespace photomatch
 {
 
-
-LucidProperties::LucidProperties()
-  : mLucidKernel(1),
-    mBlurKernel(2)
-{}
-
-int LucidProperties::lucidKernel() const
+D2NetWidgetImp::D2NetWidgetImp(QWidget *parent)
+  : D2NetWidget(parent),
+    mGroupBox(new QGroupBox(this)),
+    mCheckBoxMultiscale(new QCheckBox(this))
 {
-  return mLucidKernel;
+  this->initUI();
+  this->initSignalAndSlots();
 }
 
-int LucidProperties::blurKernel() const
+D2NetWidgetImp::~D2NetWidgetImp()
 {
-  return mBlurKernel;
+
 }
 
-void LucidProperties::setLucidKernel(int lucidKernel)
+void D2NetWidgetImp::initUI()
 {
-  mLucidKernel = lucidKernel;
+  this->setWindowTitle("D2Net");
+  this->setObjectName("D2NetWidget");
+
+  QGridLayout *layout = new QGridLayout();
+  layout->setContentsMargins(0,0,0,0);
+  this->setLayout(layout);
+
+  layout->addWidget(mGroupBox);
+
+  QGridLayout *propertiesLayout = new QGridLayout();
+  mGroupBox->setLayout(propertiesLayout);
+
+  propertiesLayout->addWidget(mCheckBoxMultiscale, 0, 0);
+
+  this->retranslate();
+  this->reset();  /// set default values
+  this->update();
 }
 
-void LucidProperties::setBlurKernel(int blurKernel)
+void D2NetWidgetImp::initSignalAndSlots()
 {
-  mBlurKernel = blurKernel;
+  connect(mCheckBoxMultiscale, &QAbstractButton::clicked, this, &D2NetWidget::multiscaleChange);
 }
 
-void LucidProperties::reset()
+void D2NetWidgetImp::reset()
 {
-  mLucidKernel = 1;
-  mBlurKernel = 2;
+  const QSignalBlocker blocker(mCheckBoxMultiscale);
+
+  mCheckBoxMultiscale->setChecked(false);
 }
 
-QString LucidProperties::name() const
+void D2NetWidgetImp::update()
 {
-  return QString("LUCID");
+
 }
 
-
-/*----------------------------------------------------------------*/
-
-
-LucidDescriptor::LucidDescriptor()
+void D2NetWidgetImp::retranslate()
 {
-  update();
+  mGroupBox->setTitle(QApplication::translate("D2NetWidget", "D2Net Parameters", nullptr));
+  mCheckBoxMultiscale->setText(QApplication::translate("D2NetWidget", "Multiscale", nullptr));
 }
 
-LucidDescriptor::LucidDescriptor(int lucidKernel, int blurKernel)
+bool D2NetWidgetImp::multiscale() const
 {
-  LucidProperties::setLucidKernel(lucidKernel);
-  LucidProperties::setBlurKernel(blurKernel);
-  update();
+  return mCheckBoxMultiscale->isChecked();
 }
 
-void LucidDescriptor::update()
+void D2NetWidgetImp::setMultiscale(bool multiscale)
 {
-  mLUCID = cv::xfeatures2d::LUCID::create(LucidProperties::lucidKernel(),
-                                          LucidProperties::blurKernel());
+  mCheckBoxMultiscale->setChecked(multiscale);
 }
-
-cv::Mat LucidDescriptor::extract(const cv::Mat &img, 
-                                 std::vector<cv::KeyPoint> &keyPoints)
-{
-  cv::Mat descriptors;
-  mLUCID->compute(img, keyPoints, descriptors);
-  return descriptors;
-}
-
-void LucidDescriptor::setLucidKernel(int lucidKernel)
-{
-  LucidProperties::setLucidKernel(lucidKernel);
-  update();
-}
-
-void LucidDescriptor::setBlurKernel(int blurKernel)
-{
-  LucidProperties::setBlurKernel(blurKernel);
-  update();
-}
-
-void LucidDescriptor::reset()
-{
-  LucidProperties::reset();
-  update();
-}
-
-
 
 } // namespace photomatch
+
+
+

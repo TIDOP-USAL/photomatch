@@ -44,8 +44,7 @@ public:
                   const QString &matches,
                   const std::shared_ptr<MatchingAlgorithm> &descriptorMatcher,
                   const QString &queryImage,
-                  const QString &trainImage
-                  );
+                  const QString &trainImage);
 
   QString queryDescriptors() const;
   void setQueryDescriptors(const QString &descriptors);

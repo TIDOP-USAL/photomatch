@@ -226,15 +226,19 @@ endforeach()
 
 # Lincado de librerias
 target_link_libraries(${PROJECT_NAME}
-                      tl_core
+                      PhotoMatch::Core
+                      PhotoMatch::Widgets
+                      PhotoMatch::Process
+                      TidopLib::Core
+                      TidopLib::Geom
+                      TidopLib::Img
+                      TidopLib::Math
+                      TidopLib::FeatMatch
                       Qt5::Core
                       Qt5::Widgets
                       Qt5::Help
                       Qt5::Concurrent
                       Qt5::Charts
-                      libcore
-                      libwidgets
-                      libprocess
                       ${OpenCV_LIBS}
                       ${PIXKIT_LIBRARIES}
 )

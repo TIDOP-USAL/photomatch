@@ -49,9 +49,11 @@ public:
   {
     agast,
     akaze,
+    asift,
     boost,
     brief,
     brisk,
+    d2net,
     daisy,
     fast,
     freak,
@@ -84,9 +86,9 @@ public:
   virtual Type type() const = 0;
   virtual QString name() const = 0;
 
-protected:
-
-  tl::EnumFlags<Type> mFeatType;
+//protected:
+//
+//  tl::EnumFlags<Type> mFeatType;
 
 };
 ALLOW_BITWISE_FLAG_OPERATIONS(Feature::Type)
@@ -163,6 +165,24 @@ public:
    */
   virtual cv::Mat extract(const cv::Mat &img,
                           std::vector<cv::KeyPoint> &keyPoints) = 0;
+};
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT FeatureExtractorPython
+{
+
+public:
+
+  FeatureExtractorPython() {}
+  virtual ~FeatureExtractorPython() = default;
+
+  virtual void extract(const QString &imagePath,
+                       const QString &featuresPath) = 0;
 };
 
 
@@ -360,6 +380,102 @@ public:
 
 
 /*!
+ * \brief The ASift class
+ */
+class PHOTOMATCH_EXPORT ASift
+  : public FeatureBase
+{
+
+public:
+
+  ASift() : FeatureBase(Feature::Type::asift)
+  {
+  }
+  ~ASift() override = default;
+
+  /*!
+   * \brief The number of best features to retain
+   * The features are ranked by their scores (measured in
+   * SIFT algorithm as the local contrast)
+   * \return
+   */
+  virtual int featuresNumber() const = 0;
+
+  /*!
+   * \brief The number of layers in each octave.
+   * 3 is the value used in D. Lowe paper. The number of octaves
+   * is computed automatically from the image resolution.
+   * \return
+   */
+  virtual int octaveLayers() const = 0;
+
+  /*!
+   * \brief The contrast threshold used to filter out weak features in semi-uniform (low-contrast) regions.
+   * The larger the threshold, the less features are produced by the detector.
+   * \return
+   */
+  virtual double contrastThreshold() const = 0;
+
+  /*!
+   * \brief The threshold used to filter out edge-like features
+   * Note that the its meaning is different from the contrastThreshold, i.e. the larger
+   * the edgeThreshold, the less features are filtered out (more features are retained).
+   * \return
+   */
+  virtual double edgeThreshold() const = 0;
+
+  /*!
+   * \brief The sigma of the Gaussian applied to the input image at the octave 0.
+   * If your image is captured with a weak camera with soft lenses, you might want to reduce the number.
+   * \return
+   */
+  virtual double sigma() const = 0;
+
+  /*!
+   * \brief Set the number of best features to retain
+   * \param[in] featuresNumber Number of features
+   */
+  virtual void setFeaturesNumber(int featuresNumber) = 0;
+
+  /*!
+   * \brief Set the number of layers in each octave
+   * \param[in] octaveLayers The number of layers in each octave (3 by default)
+   */
+  virtual void setOctaveLayers(int octaveLayers) = 0;
+
+  /*!
+   * \brief Set the contrast threshold
+   * \param[in] contrastThreshold Contrast threshold
+   */
+  virtual void setContrastThreshold(double contrastThreshold) = 0;
+
+  /*!
+   * \brief Set the threshold used to filter out edge-like features
+   * \param[in] edgeThreshold Edge threshold
+   */
+  virtual void setEdgeThreshold(double edgeThreshold) = 0;
+
+  /*!
+   * \brief Set sigma of the Gaussian
+   * \param[in] sigma Sigma of the Gaussian
+   */
+  virtual void setSigma(double sigma) = 0;
+
+  virtual int minTilt() const = 0;
+  virtual int maxTilt() const = 0;
+  virtual void setMinTilt(int minTilt) = 0;
+  virtual void setMaxTilt(int maxTilt) = 0;
+
+};
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+
+/*!
  * \brief The Boost class
  */
 class PHOTOMATCH_EXPORT Boost
@@ -520,6 +636,29 @@ public:
    * \param[in] patternScale Pattern Scale
    */
   virtual void setPatternScale(double patternScale) = 0;
+
+};
+
+
+
+
+
+
+/*----------------------------------------------------------------*/
+
+
+
+class PHOTOMATCH_EXPORT D2Net
+  : public FeatureBase
+{
+
+public:
+
+  D2Net() : FeatureBase(Feature::Type::d2net) {}
+  ~D2Net() override = default;
+
+  virtual bool multiscale() const = 0;
+  virtual void setMultiscale(bool multiscale) = 0;
 
 };
 
@@ -1351,6 +1490,7 @@ public:
   virtual void setSigma(double sigma) = 0;
 
 };
+
 
 
 

@@ -57,7 +57,7 @@ NewSessionViewImp::~NewSessionViewImp()
 void NewSessionViewImp::initUI()
 {
   this->setObjectName(QString("NewSessionView"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(450,250);
 
   QGridLayout *layout = new QGridLayout();

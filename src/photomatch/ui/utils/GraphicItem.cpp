@@ -25,6 +25,7 @@
 #include "GraphicItem.h"
 
 #include <tidop/core/defs.h>
+#include <tidop/math/math.h>
 
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
@@ -299,7 +300,7 @@ void KeyPointGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsIt
   }
   double r = mSize / 2.;
   painter->drawEllipse(mCenter, r, r);
-  QPointF pt2(mCenter.x() + r * cos(mAngle * TL_DEG_TO_RAD), mCenter.y() + r * sin(mAngle * TL_DEG_TO_RAD));
+  QPointF pt2(mCenter.x() + r * cos(mAngle * tl::math::consts::deg_to_rad<float>), mCenter.y() + r * sin(mAngle * tl::math::consts::deg_to_rad<float>));
   painter->drawLine(mCenter, pt2);
 }
 

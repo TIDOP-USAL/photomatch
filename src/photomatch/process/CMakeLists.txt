@@ -1,6 +1,8 @@
 include_directories(${CMAKE_SOURCE_DIR}/third_party)
 
-add_library(libprocess ${LIB_TYPE}
+project(Process LANGUAGES CXX)
+
+add_library(${PROJECT_NAME} ${LIB_TYPE}
             Process.cpp
             Process.h
             MultiProcess.cpp
@@ -16,26 +18,21 @@ add_library(libprocess ${LIB_TYPE}
             Matching/MatchingProcess.cpp
             Matching/MatchingProcess.h
             Matching/PassPointsGroupingProcess.cpp
-            Matching/PassPointsGroupingProcess.h
-           )
+            Matching/PassPointsGroupingProcess.h )
 
-set_property(TARGET libprocess PROPERTY FOLDER "lib")
+add_library(PhotoMatch::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-#if(BUILD_SHARED_LIBS)
-#    
-#  install(TARGETS libgraphos
-#          RUNTIME DESTINATION bin
-#          LIBRARY DESTINATION lib
-#          ARCHIVE DESTINATION lib)
-#	
-#  set_target_properties(libgraphos PROPERTIES
-#                        DEFINE_SYMBOL PHOTOMATCH_EXPORTS)
-#	target_link_libraries(libprocess .... ) 
-#else()
-  install(TARGETS libprocess 
-          LIBRARY DESTINATION lib 
-          ARCHIVE DESTINATION lib)
-#endif()
+target_link_libraries(${PROJECT_NAME} PUBLIC
+                      TidopLib::Core)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES 
+                      FOLDER "lib"
+                      OUTPUT_NAME "libprocess")
+
+
+install(TARGETS ${PROJECT_NAME} 
+        LIBRARY DESTINATION lib 
+        ARCHIVE DESTINATION lib)
 
 install(DIRECTORY .
         DESTINATION include/photomatch/process

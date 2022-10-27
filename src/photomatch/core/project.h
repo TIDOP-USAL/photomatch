@@ -33,6 +33,8 @@
 
 #include <QString>
 
+#include <tidop/featmatch/geomtest.h>
+
 #include "photomatch/core/image.h"
 #include "photomatch/core/session.h"
 #include "photomatch/core/preprocess/preprocess.h"
@@ -448,11 +450,16 @@ protected:
   void readRobustMatching(QXmlStreamReader &stream, Session *session);
   void readRobustMatchingGeometricTest(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
   void readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
-  RobustMatcher::HomographyComputeMethod readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream);
+  tl::LMedsTestProperties readLMeds(QXmlStreamReader &stream);
+  tl::AllPointsTestProperties readAllPoints(QXmlStreamReader &stream);
+  tl::RANSACTestProperties readRANSAC(QXmlStreamReader &stream);
+  tl::RHOTestProperties readRho(QXmlStreamReader &stream);
+  tl::UsacTestProperties readUSAC(QXmlStreamReader &stream);
+  //RobustMatcher::HomographyComputeMethod readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream);
   void readRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
-  RobustMatcher::FundamentalComputeMethod readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream);
+  //RobustMatcher::FundamentalComputeMethod readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream);
   void readRobustMatchingGeometricTestEssentialMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher);
-  RobustMatcher::EssentialComputeMethod readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream);
+  //RobustMatcher::EssentialComputeMethod readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream);
   void readGms(QXmlStreamReader &stream, Session *session);
   void readMatchesImages(QXmlStreamReader &stream, Session *session);
   void readPassPoints(QXmlStreamReader &stream, Session *session);
@@ -471,9 +478,11 @@ protected:
 
   void readAGAST(QXmlStreamReader &stream, Agast *agast) const;
   void readAKAZE(QXmlStreamReader &stream, Akaze *akaze) const;
+  void readASIFT(QXmlStreamReader &stream, ASift *asift) const;
   void readBOOST(QXmlStreamReader &stream, Boost *boost) const;
   void readBRIEF(QXmlStreamReader &stream, Brief *brief) const;
   void readBRISK(QXmlStreamReader &stream, Brisk *brisk) const;
+  void readD2NET(QXmlStreamReader &stream, D2Net *d2net) const;
   void readDAISY(QXmlStreamReader &stream, Daisy *daisy) const;
   void readFAST(QXmlStreamReader &stream, Fast *fast) const;
   void readFREAK(QXmlStreamReader &stream, Freak *freak) const;
@@ -537,9 +546,11 @@ protected:
 
   void writeAGAST(QXmlStreamWriter &stream, Agast *agast) const;
   void writeAKAZE(QXmlStreamWriter &stream, Akaze *akaze) const;
+  void writeASIFT(QXmlStreamWriter &stream, ASift *asift) const;
   void writeBOOST(QXmlStreamWriter &stream, Boost *boost) const;
   void writeBRIEF(QXmlStreamWriter &stream, Brief *brief) const;
   void writeBRISK(QXmlStreamWriter &stream, Brisk *brisk) const;
+  void writeD2NET(QXmlStreamWriter &stream, D2Net *d2net) const;
   void writeDAISY(QXmlStreamWriter &stream, Daisy *daisy) const;
   void writeFAST(QXmlStreamWriter &stream, Fast *fast) const;
   void writeFREAK(QXmlStreamWriter &stream, Freak *freak) const;

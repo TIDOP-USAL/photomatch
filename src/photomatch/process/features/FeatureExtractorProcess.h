@@ -87,6 +87,52 @@ protected:
 };
 
 
+
+
+
+class PHOTOMATCH_EXPORT FeatureExtractorPythonTask
+  : public ProcessConcurrent
+{
+
+  Q_OBJECT
+
+public:
+
+  FeatureExtractorPythonTask(const QString &image,
+                             const QString &features,
+                             double imageScale,
+                             const std::shared_ptr<FeatureExtractorPython> &featureExtractor,
+                             const std::list<std::shared_ptr<KeyPointsFilterProcess>> &keyPointsFiltersProcess);
+
+
+  QString image() const;
+  void setImage(const QString &image);
+  QString features() const;
+  void setFeatures(const QString &features);
+  void setScale(double scale);
+
+  std::shared_ptr<FeatureExtractorPython> featureExtractor() const;
+
+signals:
+
+  void featuresExtracted(QString);
+
+  // ProcessConcurrent interface
+
+protected:
+
+  void run() override;
+
+protected:
+
+  QString mImage;
+  QString mFeatures;
+  double mImageScale;
+  std::shared_ptr<FeatureExtractorPython> mFeatureExtractor;
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> mKeyPointsFiltersProcess;
+};
+
+
 } // namespace photomatch
 
 #endif // PHOTOMATCH_FEATURE_EXTRACTOR_PROCESS_H

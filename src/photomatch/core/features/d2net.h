@@ -22,99 +22,82 @@
  ************************************************************************/
 
 
-#include "lucid.h"
+#ifndef PHOTOMATCH_D2_NET_DETECTOR_DESCRIPTOR_H
+#define PHOTOMATCH_D2_NET_DETECTOR_DESCRIPTOR_H
 
-#include <tidop/core/messages.h>
+#include "photomatch/photomatch_global.h"
 
+#include "photomatch/core/features/features.h"
+
+#include <QString>
 
 namespace photomatch
 {
 
 
-LucidProperties::LucidProperties()
-  : mLucidKernel(1),
-    mBlurKernel(2)
-{}
-
-int LucidProperties::lucidKernel() const
+class PHOTOMATCH_EXPORT D2NetProperties
+  : public D2Net
 {
-  return mLucidKernel;
-}
 
-int LucidProperties::blurKernel() const
-{
-  return mBlurKernel;
-}
+public:
 
-void LucidProperties::setLucidKernel(int lucidKernel)
-{
-  mLucidKernel = lucidKernel;
-}
+  D2NetProperties();
+  D2NetProperties(const D2NetProperties &d2netProperties);
+  ~D2NetProperties() override = default;
 
-void LucidProperties::setBlurKernel(int blurKernel)
-{
-  mBlurKernel = blurKernel;
-}
+// D2Net interface
 
-void LucidProperties::reset()
-{
-  mLucidKernel = 1;
-  mBlurKernel = 2;
-}
+public:
 
-QString LucidProperties::name() const
-{
-  return QString("LUCID");
-}
+  bool multiscale() const override;
+  void setMultiscale(bool multiscale) override;
+
+// Feature interface
+
+public:
+
+  void reset() override;
+  QString name() const final;
+
+private:
+
+  bool mMultiscale;
+
+};
 
 
 /*----------------------------------------------------------------*/
 
 
-LucidDescriptor::LucidDescriptor()
+class PHOTOMATCH_EXPORT D2NetDetectorDescriptor
+  : public D2NetProperties,
+    public FeatureExtractorPython
 {
-  update();
-}
 
-LucidDescriptor::LucidDescriptor(int lucidKernel, int blurKernel)
-{
-  LucidProperties::setLucidKernel(lucidKernel);
-  LucidProperties::setBlurKernel(blurKernel);
-  update();
-}
+public:
 
-void LucidDescriptor::update()
-{
-  mLUCID = cv::xfeatures2d::LUCID::create(LucidProperties::lucidKernel(),
-                                          LucidProperties::blurKernel());
-}
+  D2NetDetectorDescriptor();
+  D2NetDetectorDescriptor(const D2NetDetectorDescriptor &d2NetDetectorDescriptor);
+  D2NetDetectorDescriptor(bool multiscale);
 
-cv::Mat LucidDescriptor::extract(const cv::Mat &img, 
-                                 std::vector<cv::KeyPoint> &keyPoints)
-{
-  cv::Mat descriptors;
-  mLUCID->compute(img, keyPoints, descriptors);
-  return descriptors;
-}
+  ~D2NetDetectorDescriptor() override = default;
 
-void LucidDescriptor::setLucidKernel(int lucidKernel)
-{
-  LucidProperties::setLucidKernel(lucidKernel);
-  update();
-}
+// FeatureExtractorPython interface
 
-void LucidDescriptor::setBlurKernel(int blurKernel)
-{
-  LucidProperties::setBlurKernel(blurKernel);
-  update();
-}
+public:
 
-void LucidDescriptor::reset()
-{
-  LucidProperties::reset();
-  update();
-}
+  void extract(const QString &imagePath,
+               const QString &featuresPath) override;
+
+// Feature interface
+
+public:
+
+  void reset() override;
 
 
+};
 
 } // namespace photomatch
+
+#endif // PHOTOMATCH_D2_NET_DETECTOR_DESCRIPTOR_H

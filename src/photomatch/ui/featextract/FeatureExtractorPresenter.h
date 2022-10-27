@@ -42,9 +42,11 @@ class HelpDialog;
 
 class AgastWidget;
 class AkazeWidget;
+class ASiftWidget;
 class BoostWidget;
 class BriefWidget;
 class BriskWidget;
+class D2NetWidget;
 class DaisyWidget;
 class FastWidget;
 class FreakWidget;
@@ -64,6 +66,9 @@ class KeypointsFilterWidget;
 class KeypointDetector;
 class DescriptorExtractor;
 
+class ImagePreprocess;
+class KeyPointsFilterProcess;
+class ImageProcess;
 
 class FeatureExtractorPresenterImp
   : public FeatureExtractorPresenter
@@ -82,11 +87,15 @@ private:
   void setDetectorAndDescriptorProperties();
   void setAgastDetectorProperties();
   void setAkazeDetectorPropierties();
+  void setASiftDetectorPropierties();
+  void setASiftDescriptorPropierties();
   void setAkazeDescriptorProperties();
   void setBoostDescriptorProperties();
   void setBriefDescriptorProperties();
   void setBriskDetectorProperties();
   void setBriskDescriptorProperties();
+  void setD2NetDetectorProperties();
+  void setD2NetDescriptorProperties();
   void setDaisyDescriptorProperties();
   void setFastDetectorProperties();
   void setFreakDescriptorProperties();
@@ -128,6 +137,7 @@ protected slots:
   void onFinished() override;
   void createProcess() override;
 
+
 public slots:
 
   void cancel() override;
@@ -145,6 +155,16 @@ private:
   void init() override;
   void initSignalAndSlots() override;
 
+
+private:
+
+  std::shared_ptr<ImagePreprocess> createImagePreprocess(std::shared_ptr<ImageProcess> &imageProcess,
+                                                         const QString &filePath,
+                                                         QString &preprocessed_image);
+  QString featuresFile(QString &fileName);
+  double imageScale(const QString &image);
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> createKeyPointsFilterProcess(double scale);
+
 protected:
 
   FeatureExtractorView *mView;
@@ -154,7 +174,9 @@ protected:
 
   AgastWidget *mAgastDetector;
   AkazeWidget *mAkazeDetector;
+  ASiftWidget *mASiftDetector;
   BriskWidget *mBriskDetector;
+  D2NetWidget *mD2NetDetector;
   FastWidget *mFastDetector;
   GfttWidget *mGfttDetector;
   KazeWidget *mKazeDetector;
@@ -170,11 +192,13 @@ protected:
 #endif
 
   AkazeWidget *mAkazeDescriptor;
+  ASiftWidget *mASiftDescriptor;
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   BoostWidget *mBoostDescriptor;
 #endif
   BriefWidget *mBriefDescriptor;
   BriskWidget *mBriskDescriptor;
+  D2NetWidget *mD2NetDescriptor;
   DaisyWidget *mDaisyDescriptor;
   FreakWidget *mFreakDescriptor;
   HogWidget *mHogDescriptor;

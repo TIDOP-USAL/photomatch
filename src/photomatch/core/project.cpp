@@ -28,9 +28,11 @@
 
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/asift.h"
 #include "photomatch/core/features/boost.h"
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
+#include "photomatch/core/features/d2net.h"
 #include "photomatch/core/features/daisy.h"
 #include "photomatch/core/features/fast.h"
 #include "photomatch/core/features/freak.h"
@@ -749,10 +751,18 @@ void ProjectControllerImp::readFeaturesDetector(QXmlStreamReader &stream, Sessio
       std::shared_ptr<Akaze> akaze = std::make_shared<AkazeProperties>();
       readAKAZE(stream, akaze.get());
       session->setDetector(akaze);
+    } else if(stream.name() == "ASIFT") {
+      std::shared_ptr<ASift> asift = std::make_shared<ASiftProperties>();
+      readASIFT(stream, asift.get());
+      session->setDetector(asift);
     } else if (stream.name() == "BRISK") {
       std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
       readBRISK(stream, brisk.get());
       session->setDetector(brisk);
+    } else if (stream.name() == "D2NET") {
+      std::shared_ptr<D2Net> d2net = std::make_shared<D2NetProperties>();
+      readD2NET(stream, d2net.get());
+      session->setDetector(d2net);
     } else if (stream.name() == "FAST") {
       std::shared_ptr<Fast> fast = std::make_shared<FastProperties>();
       readFAST(stream, fast.get());
@@ -801,6 +811,10 @@ void ProjectControllerImp::readFeaturesDescriptor(QXmlStreamReader &stream, Sess
       std::shared_ptr<Akaze> akaze = std::make_shared<AkazeProperties>();
       readAKAZE(stream, akaze.get());
       session->setDescriptor(akaze);
+    } else if(stream.name() == "ASIFT") {
+      std::shared_ptr<ASift> asift = std::make_shared<ASiftProperties>();
+      readASIFT(stream, asift.get());
+      session->setDescriptor(asift);
     } else if (stream.name() == "BRIEF") {
       std::shared_ptr<Brief> brief = std::make_shared<BriefProperties>();
       readBRIEF(stream, brief.get());
@@ -809,6 +823,10 @@ void ProjectControllerImp::readFeaturesDescriptor(QXmlStreamReader &stream, Sess
       std::shared_ptr<Brisk> brisk = std::make_shared<BriskProperties>();
       readBRISK(stream, brisk.get());
       session->setDescriptor(brisk);
+    } else if(stream.name() == "D2NET") {
+      std::shared_ptr<D2Net> d2net = std::make_shared<D2NetProperties>();
+      readD2NET(stream, d2net.get());
+      session->setDescriptor(d2net);
     } else if (stream.name() == "DAISY") {
       std::shared_ptr<Daisy> daisy = std::make_shared<DaisyProperties>();
       readDAISY(stream, daisy.get());
@@ -971,7 +989,8 @@ void ProjectControllerImp::readRobustMatching(QXmlStreamReader &stream, Session 
   session->setMatchingStrategy(robustMatcher);
 }
 
-void ProjectControllerImp::readRobustMatchingGeometricTest(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
+void ProjectControllerImp::readRobustMatchingGeometricTest(QXmlStreamReader &stream,
+                                                           RobustMatcher *robustMatcher)
 {
   while (stream.readNextStartElement()) {
     if (stream.name() == "HomographyMatrix") {
@@ -986,103 +1005,222 @@ void ProjectControllerImp::readRobustMatchingGeometricTest(QXmlStreamReader &str
   }
 }
 
-void ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
+void ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrix(QXmlStreamReader &stream, 
+                                                                           RobustMatcher *robustMatcher)
 {
-  robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::homography);
-  while (stream.readNextStartElement()) {
-    if (stream.name() == "ComputeMethod") {
-      robustMatcher->setHomographyComputeMethod(readRobustMatchingGeometricTestHomographyMatrixComputeMethod(stream));
-    } else if (stream.name() == "Distance") {
-      robustMatcher->setDistance(readDouble(stream));
-    } else if (stream.name() == "MaxIter") {
-      robustMatcher->setMaxIters(readInt(stream));
-    } else if (stream.name() == "Confidence") {
-      robustMatcher->setConfidence(readDouble(stream));
+  std::shared_ptr<tl::GeometricTest> geometric_test;
+
+  QString type;
+  for(auto &attr : stream.attributes()) {
+    if(attr.name().compare(QString("Type")) == 0) {
+      type = attr.value().toString();
+      break;
+    }
+  }
+
+  if (type == "all_points") {
+    tl::AllPointsTestProperties properties = readAllPoints(stream);;
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_all_points, &properties);
+  } else if (type == "ransac") {
+    tl::RANSACTestProperties properties = readRANSAC(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_ransac, &properties);
+  } else if (type == "lmeds") {
+    tl::LMedsTestProperties properties = readLMeds(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_lmeds, &properties);
+  } else if (type == "rho") {
+    tl::RHOTestProperties properties = readRho(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_rho, &properties);
+  } else if (type == "usac") {
+    tl::UsacTestProperties properties = readUSAC(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::homography_usac, &properties);
+  }
+
+  robustMatcher->setGeometricTest(geometric_test);
+}
+
+tl::AllPointsTestProperties ProjectControllerImp::readAllPoints(QXmlStreamReader &stream)
+{
+  tl::AllPointsTestProperties properties;
+
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Confidence") {
+      properties.confidence = readDouble(stream);
     } else {
       stream.skipCurrentElement();
     }
   }
+
+  return properties;
 }
 
-RobustMatcher::HomographyComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream)
+tl::RANSACTestProperties ProjectControllerImp::readRANSAC(QXmlStreamReader &stream)
 {
-  QString computeMethod = stream.readElementText();
-  RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
-  if (computeMethod.compare("All Points") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::all_points;
-  } else if (computeMethod.compare("RANSAC") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::lmeds;
-  } else if (computeMethod.compare("RHO") == 0){
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::rho;
+  tl::RANSACTestProperties properties;
+
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Confidence") {
+      properties.confidence = readDouble(stream);
+    } else if(stream.name() == "Iterations") {
+      properties.iterations = readInt(stream);
+    } else if(stream.name() == "Distance") {
+      properties.distance = readInt(stream);
+    } else {
+      stream.skipCurrentElement();
+    }
   }
-  return homographyComputeMethod;
+
+  return properties;
 }
+
+tl::RHOTestProperties ProjectControllerImp::readRho(QXmlStreamReader &stream)
+{
+  tl::RHOTestProperties properties;
+
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Confidence") {
+      properties.confidence = readDouble(stream);
+    } else if(stream.name() == "Distance") {
+      properties.distance = readInt(stream);
+    } else {
+      stream.skipCurrentElement();
+    }
+  }
+
+  return properties;
+}
+
+tl::UsacTestProperties ProjectControllerImp::readUSAC(QXmlStreamReader &stream)
+{
+  tl::UsacTestProperties properties;
+
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Confidence") {
+      properties.confidence = readDouble(stream);
+    } else if(stream.name() == "IsParallel") {
+      properties.isParallel = readBoolean(stream);
+    } else if(stream.name() == "Iterations") {
+      properties.loIterations = readInt(stream);
+    } else if(stream.name() == "SampleSize") {
+      properties.loSampleSize = readInt(stream);
+    } else if(stream.name() == "MaxIters") {
+      properties.maxIterations = readInt(stream);
+    } else {
+      stream.skipCurrentElement();
+    }
+  }
+  ///TODO: Añadir el resto de parámetros
+  
+  return properties;
+}
+
+tl::LMedsTestProperties ProjectControllerImp::readLMeds(QXmlStreamReader &stream)
+{
+  tl::LMedsTestProperties properties;
+
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Confidence") {
+      properties.confidence = readDouble(stream);
+    } else if(stream.name() == "Iterations") {
+      properties.iterations = readInt(stream);
+    } else {
+      stream.skipCurrentElement();
+    }
+  }
+
+  return properties;
+}
+
+//RobustMatcher::HomographyComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestHomographyMatrixComputeMethod(QXmlStreamReader &stream)
+//{
+//  QString computeMethod = stream.readElementText();
+//  RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
+//  if (computeMethod.compare("All Points") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::all_points;
+//  } else if (computeMethod.compare("RANSAC") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::lmeds;
+//  } else if (computeMethod.compare("RHO") == 0){
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::rho;
+//  }
+//  return homographyComputeMethod;
+//}
 
 void ProjectControllerImp::readRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
 {
-  robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::fundamental);
-  while (stream.readNextStartElement()) {
-    if (stream.name() == "ComputeMethod") {
-      robustMatcher->setFundamentalComputeMethod(readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(stream));
-    } else if (stream.name() == "Distance") {
-      robustMatcher->setDistance(readDouble(stream));
-    } else if (stream.name() == "MaxIter") {
-      robustMatcher->setMaxIters(readInt(stream));
-    } else if (stream.name() == "Confidence") {
-      robustMatcher->setConfidence(readDouble(stream));
-    } else {
-      stream.skipCurrentElement();
+  std::shared_ptr<tl::GeometricTest> geometric_test;
+
+  QString type;
+  for(auto &attr : stream.attributes()) {
+    if(attr.name().compare(QString("Type")) == 0) {
+      type = attr.value().toString();
+      break;
     }
   }
+
+  if(type == "seven_points") {
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_seven_points);
+  } else if(type == "eight_points") {
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_eight_points);
+  } else if(type == "ransac") {
+    tl::RANSACTestProperties properties = readRANSAC(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_ransac, &properties);
+  } else if(type == "lmeds") {
+    tl::LMedsTestProperties properties = readLMeds(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_lmeds, &properties);
+  } else if(type == "usac") {
+    tl::UsacTestProperties properties = readUSAC(stream);
+    geometric_test = tl::GeometricTestFactory::create(tl::GeometricTest::Type::fundamental_usac, &properties);
+  }
+
+  robustMatcher->setGeometricTest(geometric_test);
 }
 
-RobustMatcher::FundamentalComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream)
-{
-  QString computeMethod = stream.readElementText();
-  RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
-  if (computeMethod.compare("LMedS") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::lmeds;
-  } else if (computeMethod.compare("RANSAC") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
-  } else if (computeMethod.compare("7-point algorithm") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
-  } else if (computeMethod.compare("8-point algorithm") == 0){
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
-  }
-  return fundamentalComputeMethod;
-}
+//RobustMatcher::FundamentalComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestFundamentalMatrixComputeMethod(QXmlStreamReader &stream)
+//{
+//  QString computeMethod = stream.readElementText();
+//  RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
+//  if (computeMethod.compare("LMedS") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::lmeds;
+//  } else if (computeMethod.compare("RANSAC") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
+//  } else if (computeMethod.compare("7-point algorithm") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
+//  } else if (computeMethod.compare("8-point algorithm") == 0){
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
+//  }
+//  return fundamentalComputeMethod;
+//}
 
 void ProjectControllerImp::readRobustMatchingGeometricTestEssentialMatrix(QXmlStreamReader &stream, RobustMatcher *robustMatcher)
 {
-  robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::essential);
-  while (stream.readNextStartElement()) {
-    if (stream.name() == "ComputeMethod") {
-      robustMatcher->setEssentialComputeMethod(readRobustMatchingGeometricTestEssentialMatrixComputeMethod(stream));
-    } else if (stream.name() == "Distance") {
-      robustMatcher->setDistance(readDouble(stream));
-    } else if (stream.name() == "MaxIter") {
-      robustMatcher->setMaxIters(readInt(stream));
-    } else if (stream.name() == "Confidence") {
-      robustMatcher->setConfidence(readDouble(stream));
-    } else {
-      stream.skipCurrentElement();
-    }
-  }
+  //robustMatcher->setGeometricTest(RobustMatcher::GeometricTest::essential);
+  //while (stream.readNextStartElement()) {
+  //  if (stream.name() == "ComputeMethod") {
+  //    robustMatcher->setEssentialComputeMethod(readRobustMatchingGeometricTestEssentialMatrixComputeMethod(stream));
+  //  } else if (stream.name() == "Distance") {
+  //    robustMatcher->setDistance(readDouble(stream));
+  //  } else if (stream.name() == "MaxIter") {
+  //    robustMatcher->setMaxIters(readInt(stream));
+  //  } else if (stream.name() == "Confidence") {
+  //    robustMatcher->setConfidence(readDouble(stream));
+  //  } else {
+  //    stream.skipCurrentElement();
+  //  }
+  //}
 }
 
-RobustMatcher::EssentialComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream)
-{
-  QString computeMethod = stream.readElementText();
-  RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
-  if (computeMethod.compare("RANSAC") == 0){
-    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0){
-    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::lmeds;
-  }
-  return essentialComputeMethod;
-}
+//RobustMatcher::EssentialComputeMethod ProjectControllerImp::readRobustMatchingGeometricTestEssentialMatrixComputeMethod(QXmlStreamReader &stream)
+//{
+//  QString computeMethod = stream.readElementText();
+//  RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
+//  if (computeMethod.compare("RANSAC") == 0){
+//    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0){
+//    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::lmeds;
+//  }
+//  return essentialComputeMethod;
+//}
 
 void ProjectControllerImp::readGms(QXmlStreamReader &stream, Session *session)
 {
@@ -1323,6 +1461,28 @@ void ProjectControllerImp::readAKAZE(QXmlStreamReader &stream, Akaze *akaze) con
   }
 }
 
+void ProjectControllerImp::readASIFT(QXmlStreamReader &stream, ASift *asift) const
+{
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "FeaturesNumber") {
+      asift->setFeaturesNumber(readInt(stream));
+    } else if(stream.name() == "OctaveLayers") {
+      asift->setOctaveLayers(readInt(stream));
+    } else if(stream.name() == "ContrastThreshold") {
+      asift->setContrastThreshold(readDouble(stream));
+    } else if(stream.name() == "EdgeThreshold") {
+      asift->setEdgeThreshold(readDouble(stream));
+    } else if(stream.name() == "Sigma") {
+      asift->setSigma(readDouble(stream));
+    } else if(stream.name() == "MinTilt") {
+      asift->setMinTilt(readInt(stream));
+    } else if(stream.name() == "MaxTilt") {
+      asift->setMaxTilt(readInt(stream));
+    } else
+      stream.skipCurrentElement();
+  }
+}
+
 void ProjectControllerImp::readBOOST(QXmlStreamReader &stream, Boost *boost) const
 {
   while (stream.readNextStartElement()) {
@@ -1359,6 +1519,16 @@ void ProjectControllerImp::readBRISK(QXmlStreamReader &stream, Brisk *brisk) con
     } else if (stream.name() == "PatternScale") {
       brisk->setPatternScale(readDouble(stream));
     } else
+      stream.skipCurrentElement();
+  }
+}
+
+void ProjectControllerImp::readD2NET(QXmlStreamReader &stream, D2Net *d2net) const
+{
+  while(stream.readNextStartElement()) {
+    if(stream.name() == "Multiscale") {
+      d2net->setMultiscale(readBoolean(stream));
+    }  else
       stream.skipCurrentElement();
   }
 }
@@ -1823,9 +1993,13 @@ void ProjectControllerImp::writeFeatureDetector(QXmlStreamWriter &stream, Featur
       writeAGAST(stream, dynamic_cast<Agast *>(detector));
     } else if (detector->type() == Feature::Type::akaze){
       writeAKAZE(stream, dynamic_cast<Akaze *>(detector));
+    } else if(detector->type() == Feature::Type::asift) {
+      writeASIFT(stream, dynamic_cast<ASift *>(detector));
     } else if (detector->type() == Feature::Type::brisk){
       writeBRISK(stream, dynamic_cast<Brisk *>(detector));
-    } else if (detector->type() == Feature::Type::fast){
+    } else if(detector->type() == Feature::Type::d2net) {
+      writeD2NET(stream, dynamic_cast<D2Net *>(detector));
+    } else if(detector->type() == Feature::Type::fast) {
       writeFAST(stream, dynamic_cast<Fast *>(detector));
     } else if (detector->type() == Feature::Type::gftt){
       writeGFTT(stream, dynamic_cast<Gftt *>(detector));
@@ -1856,12 +2030,16 @@ void ProjectControllerImp::writeFeatureExtractor(QXmlStreamWriter &stream, Featu
 
     if (descriptor->type() == Feature::Type::akaze){
       writeAKAZE(stream, dynamic_cast<Akaze *>(descriptor));
+    } else if(descriptor->type() == Feature::Type::asift) {
+      writeASIFT(stream, dynamic_cast<ASift *>(descriptor));
     } else if (descriptor->type() == Feature::Type::brief){
       writeBRIEF(stream, dynamic_cast<Brief *>(descriptor));
     } else if (descriptor->type() == Feature::Type::brisk){
       writeBRISK(stream, dynamic_cast<Brisk *>(descriptor));
     } else if (descriptor->type() == Feature::Type::daisy){
       writeDAISY(stream, dynamic_cast<Daisy *>(descriptor));
+    } else if (descriptor->type() == Feature::Type::d2net) {
+      writeD2NET(stream, dynamic_cast<D2Net *>(descriptor));
     } else if (descriptor->type() == Feature::Type::freak){
       writeFREAK(stream, dynamic_cast<Freak *>(descriptor));
     } else if (descriptor->type() == Feature::Type::hog){
@@ -1993,63 +2171,161 @@ void ProjectControllerImp::writeRobustMatchingRatio(QXmlStreamWriter &stream, Ro
   stream.writeTextElement("Ratio", QString::number(robustMatcher->ratio()));
 }
 
-void ProjectControllerImp::writeRobustMatchingGeometricTest(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const
+void ProjectControllerImp::writeRobustMatchingGeometricTest(QXmlStreamWriter &stream,
+                                                            RobustMatcher *robustMatcher) const
 {
   stream.writeStartElement("GeometricTest");
   {
-    RobustMatcher::GeometricTest geometricTest = robustMatcher->geometricTest();
-    if (geometricTest == RobustMatcher::GeometricTest::homography){
+    tl::GeometricTest::Type type = robustMatcher->geometricTest()->type();
+    if (type == tl::GeometricTest::Type::homography_all_points ||
+        type == tl::GeometricTest::Type::homography_ransac ||
+        type == tl::GeometricTest::Type::homography_lmeds ||
+        type == tl::GeometricTest::Type::homography_rho ||
+        type == tl::GeometricTest::Type::homography_usac) {
       writeRobustMatchingGeometricTestHomographyMatrix(stream, robustMatcher);
-    } else if (geometricTest == RobustMatcher::GeometricTest::fundamental){
+    } else if(type == tl::GeometricTest::Type::fundamental_seven_points ||
+              type == tl::GeometricTest::Type::fundamental_eight_points ||
+              type == tl::GeometricTest::Type::fundamental_ransac ||
+              type == tl::GeometricTest::Type::fundamental_lmeds ||
+              type == tl::GeometricTest::Type::fundamental_usac) {
       writeRobustMatchingGeometricTestFundamentalMatrix(stream, robustMatcher);
-    } else if (geometricTest == RobustMatcher::GeometricTest::essential){
+    } else {
       writeRobustMatchingGeometricTestEssentialMatrix(stream, robustMatcher);
     }
   }
   stream.writeEndElement();
 }
 
-void ProjectControllerImp::writeRobustMatchingGeometricTestHomographyMatrix(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const
+void ProjectControllerImp::writeRobustMatchingGeometricTestHomographyMatrix(QXmlStreamWriter &stream, 
+                                                                            RobustMatcher *robustMatcher) const
 {
   stream.writeStartElement("HomographyMatrix");
   {
-    RobustMatcher::HomographyComputeMethod hcm = robustMatcher->homographyComputeMethod();
-    if (hcm == RobustMatcher::HomographyComputeMethod::all_points){
-      stream.writeTextElement("ComputeMethod", "All Points");
-    } else if (hcm == RobustMatcher::HomographyComputeMethod::ransac){
-      stream.writeTextElement("ComputeMethod", "RANSAC");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-      stream.writeTextElement("MaxIter", QString::number(robustMatcher->maxIter()));
-    } else if (hcm == RobustMatcher::HomographyComputeMethod::lmeds){
-      stream.writeTextElement("ComputeMethod", "LMedS");
-    } else if (hcm == RobustMatcher::HomographyComputeMethod::rho){
-      stream.writeTextElement("ComputeMethod", "RHO");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
+    QString type;
+    std::shared_ptr<tl::GeometricTest> geometric_test = robustMatcher->geometricTest();
+    tl::GeometricTest::Type test_type = geometric_test->type();
+    switch(test_type) {
+      case tl::GeometricTest::Type::homography_all_points:
+        type = "all_points";
+        break;
+      case tl::GeometricTest::Type::homography_ransac:
+        type = "ransac";
+        break;
+      case tl::GeometricTest::Type::homography_lmeds:
+        type = "lmeds";
+        break;
+      case tl::GeometricTest::Type::homography_rho:
+        type = "rho";
+        break;
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR > 4))
+      case tl::GeometricTest::Type::homography_usac:
+        type = "usac";
+        break;
+#endif
+      default:
+        break;
     }
 
-    stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
+    stream.writeAttribute("Type", type);
+
+    if(test_type == tl::GeometricTest::Type::homography_all_points) {
+      const tl::AllPointsTestProperties *properties = static_cast<const tl::AllPointsTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Confidence", QString::number(properties->confidence));
+    } else if(test_type == tl::GeometricTest::Type::homography_ransac) {
+      const tl::RANSACTestProperties *ransac_test_properties = static_cast<const tl::RANSACTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Distance", QString::number(ransac_test_properties->distance));
+      stream.writeTextElement("Confidence", QString::number(ransac_test_properties->confidence));
+      stream.writeTextElement("Iterations", QString::number(ransac_test_properties->iterations));
+    } else if(test_type == tl::GeometricTest::Type::homography_lmeds) {
+      const tl::LMedsTestProperties *lmeds_test_properties = static_cast<const tl::LMedsTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Confidence", QString::number(lmeds_test_properties->confidence));
+      stream.writeTextElement("Iterations", QString::number(lmeds_test_properties->iterations));
+    } else if(test_type == tl::GeometricTest::Type::homography_rho) {
+      const tl::RHOTestProperties *rho_test_properties = static_cast<const tl::RHOTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Distance", QString::number(rho_test_properties->distance));
+      stream.writeTextElement("Confidence", QString::number(rho_test_properties->confidence));
+    }
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR > 4))
+    else if(test_type == tl::GeometricTest::Type::homography_usac) {
+      const tl::UsacTestProperties *usac_test_properties = static_cast<const tl::UsacTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Confidence", QString::number(usac_test_properties->confidence));
+      stream.writeTextElement("IsParallel", usac_test_properties->isParallel ? "true" : "false");
+      stream.writeTextElement("Iterations", QString::number(usac_test_properties->loIterations));
+      //BOOST_CHECK_EQUAL(cv::LocalOptimMethod::LOCAL_OPTIM_INNER_LO, usac_test_properties->loMethod);
+      stream.writeTextElement("SampleSize", QString::number(usac_test_properties->loSampleSize));
+      stream.writeTextElement("MaxIters", QString::number(usac_test_properties->maxIterations));
+      //BOOST_CHECK_EQUAL(cv::NeighborSearchMethod::NEIGH_GRID, usac_test_properties->neighborsSearch);
+      //BOOST_CHECK_EQUAL(0, usac_test_properties->randomGeneratorState);
+      //BOOST_CHECK_EQUAL(cv::SamplingMethod::SAMPLING_UNIFORM, usac_test_properties->sampler);
+      //BOOST_CHECK_EQUAL(cv::ScoreMethod::SCORE_METHOD_MSAC, usac_test_properties->score);
+      //BOOST_CHECK_EQUAL(1.5, usac_test_properties->threshold);
+    }
+#endif
 
   }
+
   stream.writeEndElement();
 }
 
-void ProjectControllerImp::writeRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamWriter &stream, RobustMatcher *robustMatcher) const
+void ProjectControllerImp::writeRobustMatchingGeometricTestFundamentalMatrix(QXmlStreamWriter &stream,
+                                                                             RobustMatcher *robustMatcher) const
 {
   stream.writeStartElement("FundamentalMatrix");
   {
-    RobustMatcher::FundamentalComputeMethod fcm =  robustMatcher->fundamentalComputeMethod();
-    if (fcm == RobustMatcher::FundamentalComputeMethod::lmeds){
-      stream.writeTextElement("ComputeMethod", "LMedS");
-      stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
-    } else if (fcm == RobustMatcher::FundamentalComputeMethod::ransac){
-      stream.writeTextElement("ComputeMethod", "RANSAC");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-      stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
-    } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_7_point){
-      stream.writeTextElement("ComputeMethod", "7-point algorithm");
-    } else if (fcm == RobustMatcher::FundamentalComputeMethod::algorithm_8_point){
-      stream.writeTextElement("ComputeMethod", "8-point algorithm");
+    QString type;
+    std::shared_ptr<tl::GeometricTest> geometric_test = robustMatcher->geometricTest();
+    tl::GeometricTest::Type test_type = geometric_test->type();
+    switch(test_type) {
+      case tl::GeometricTest::Type::fundamental_seven_points:
+        type = "seven_points";
+        break;
+      case tl::GeometricTest::Type::fundamental_eight_points:
+        type = "eight_points";
+        break;
+      case tl::GeometricTest::Type::fundamental_ransac:
+        type = "ransac";
+        break;
+      case tl::GeometricTest::Type::fundamental_lmeds:
+        type = "lmeds";
+        break;
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR > 4))
+      case tl::GeometricTest::Type::fundamental_usac:
+        type = "usac";
+        break;
+#endif
+      default:
+        break;
     }
+
+    stream.writeAttribute("Type", type);
+
+    if (test_type == tl::GeometricTest::Type::fundamental_ransac) {
+      const tl::RANSACTestProperties *ransac_test_properties = static_cast<const tl::RANSACTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Distance", QString::number(ransac_test_properties->distance));
+      stream.writeTextElement("Confidence", QString::number(ransac_test_properties->confidence));
+      stream.writeTextElement("Iterations", QString::number(ransac_test_properties->iterations));
+    } else if (test_type == tl::GeometricTest::Type::fundamental_lmeds) {
+      const tl::LMedsTestProperties *lmeds_test_properties = static_cast<const tl::LMedsTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Confidence", QString::number(lmeds_test_properties->confidence));
+      stream.writeTextElement("Iterations", QString::number(lmeds_test_properties->iterations));
+    }
+#if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR > 4))
+    else if (test_type == tl::GeometricTest::Type::fundamental_usac) {
+      const tl::UsacTestProperties *usac_test_properties = static_cast<const tl::UsacTestProperties *>(geometric_test->properties());
+      stream.writeTextElement("Confidence", QString::number(usac_test_properties->confidence));
+      stream.writeTextElement("IsParallel", usac_test_properties->isParallel ? "true" : "false");
+      stream.writeTextElement("Iterations", QString::number(usac_test_properties->loIterations));
+      //BOOST_CHECK_EQUAL(cv::LocalOptimMethod::LOCAL_OPTIM_INNER_LO, usac_test_properties->loMethod);
+      stream.writeTextElement("SampleSize", QString::number(usac_test_properties->loSampleSize));
+      stream.writeTextElement("MaxIters", QString::number(usac_test_properties->maxIterations));
+      //BOOST_CHECK_EQUAL(cv::NeighborSearchMethod::NEIGH_GRID, usac_test_properties->neighborsSearch);
+      //BOOST_CHECK_EQUAL(0, usac_test_properties->randomGeneratorState);
+      //BOOST_CHECK_EQUAL(cv::SamplingMethod::SAMPLING_UNIFORM, usac_test_properties->sampler);
+      //BOOST_CHECK_EQUAL(cv::ScoreMethod::SCORE_METHOD_MSAC, usac_test_properties->score);
+      //BOOST_CHECK_EQUAL(1.5, usac_test_properties->threshold);
+    }
+#endif
+
   }
   stream.writeEndElement();
 }
@@ -2058,14 +2334,14 @@ void ProjectControllerImp::writeRobustMatchingGeometricTestEssentialMatrix(QXmlS
 {
   stream.writeStartElement("EssentialMatrix");
   {
-    RobustMatcher::EssentialComputeMethod ecm = robustMatcher->essentialComputeMethod();
-    if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
-      stream.writeTextElement("ComputeMethod", "RANSAC");
-      stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
-    } else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
-      stream.writeTextElement("ComputeMethod", "LMedS");
-    }
-    stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
+    //RobustMatcher::EssentialComputeMethod ecm = robustMatcher->essentialComputeMethod();
+    //if (ecm == RobustMatcher::EssentialComputeMethod::ransac){
+    //  stream.writeTextElement("ComputeMethod", "RANSAC");
+    //  stream.writeTextElement("Distance", QString::number(robustMatcher->distance()));
+    //} else if (ecm == RobustMatcher::EssentialComputeMethod::lmeds){
+    //  stream.writeTextElement("ComputeMethod", "LMedS");
+    //}
+    //stream.writeTextElement("Confidence", QString::number(robustMatcher->confidence()));
   }
   stream.writeEndElement();
 }
@@ -2291,6 +2567,21 @@ void ProjectControllerImp::writeAKAZE(QXmlStreamWriter &stream, Akaze *akaze) co
   stream.writeEndElement(); // AKAZE
 }
 
+void ProjectControllerImp::writeASIFT(QXmlStreamWriter &stream, ASift *asift) const
+{
+  stream.writeStartElement("ASIFT");
+  {
+    stream.writeTextElement("FeaturesNumber", QString::number(asift->featuresNumber()));
+    stream.writeTextElement("OctaveLayers", QString::number(asift->octaveLayers()));
+    stream.writeTextElement("ContrastThreshold", QString::number(asift->contrastThreshold()));
+    stream.writeTextElement("EdgeThreshold", QString::number(asift->edgeThreshold()));
+    stream.writeTextElement("Sigma", QString::number(asift->sigma()));
+    stream.writeTextElement("MinTilt", QString::number(asift->minTilt()));
+    stream.writeTextElement("MaxTilt", QString::number(asift->maxTilt()));
+  }
+  stream.writeEndElement(); // SIFT
+}
+
 void ProjectControllerImp::writeBOOST(QXmlStreamWriter &stream, Boost *boost) const
 {
   stream.writeStartElement("BOOST");
@@ -2321,6 +2612,15 @@ void ProjectControllerImp::writeBRISK(QXmlStreamWriter &stream, Brisk *brisk) co
     stream.writeTextElement("PatternScale", QString::number(brisk->patternScale()));
   }
   stream.writeEndElement(); // BRISK
+}
+
+void ProjectControllerImp::writeD2NET(QXmlStreamWriter &stream, D2Net *d2net) const
+{
+  stream.writeStartElement("D2NET");
+  {
+    stream.writeTextElement("Multiscale", d2net->multiscale() ? "true" : "false");
+  }
+  stream.writeEndElement(); // BRIEF
 }
 
 void ProjectControllerImp::writeDAISY(QXmlStreamWriter &stream, Daisy *daisy) const

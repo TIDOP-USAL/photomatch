@@ -257,7 +257,7 @@ void MainWindowPresenter::openStartPage()
 
 void MainWindowPresenter::openGitHub()
 {
-  QDesktopServices::openUrl(QUrl("https://github.com/Luisloez89/FME"));
+  QDesktopServices::openUrl(QUrl("https://github.com/TIDOP-USAL/photomatch"));
 }
 
 void MainWindowPresenter::openKeypointsViewer()
@@ -367,8 +367,8 @@ void MainWindowPresenter::updateProject()
 void MainWindowPresenter::openImage(const QString &image)
 {
   try {
-    QString image_path = mProjectModel->findImageByName(image)->path();
-    mTabHandler->setImage(image_path);
+    //QString image_path = mProjectModel->findImageByName(image)->path();
+    mTabHandler->setImage(image);
   } catch (std::exception &e) {
     tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
   }

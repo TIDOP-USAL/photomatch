@@ -29,6 +29,7 @@
 #include <tidop/core/utils.h>
 #include <tidop/core/messages.h>
 #include <tidop/core/exception.h>
+#include <tidop/core/chrono.h>
 
 #include <opencv2/core.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -89,7 +90,7 @@ void ImagePreprocess::run()
     QByteArray ba = mImgInput.toLocal8Bit();
     const char *input_img = ba.data();
 
-    if (!QFileInfo::exists(mImgInput)) TL_THROW_ERROR("Image doesn't exist: %s", input_img);
+    if (!QFileInfo::exists(mImgInput)) TL_THROW_EXCEPTION("Image doesn't exist: %s", input_img);
 
     msgInfo("Preprocessing image %s", input_img);
 
@@ -105,25 +106,21 @@ void ImagePreprocess::run()
     }
 
     cv::Mat img;
+    img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
     if (scale > 1.) {
       size /= scale;
-      imageReader.setScaledSize(size);
-      QImage image_scaled = imageReader.read();
-      img = qImageToCvMat(image_scaled);
+      cv::resize(img, img, cv::Size(size.width(), size.height()));
       msgInfo("Rescale image. New resolution: %ix%i px", size.width(), size.height());
-    } else {
-      /// Se ignoran las imagenes giradas ya que QImageReader ignora si están giradas
-      img = cv::imread(input_img, cv::IMREAD_IGNORE_ORIENTATION);
-      //msgWarning("Full image size. ");
     }
-    if (img.empty()) TL_THROW_ERROR("Could not load image: %s", input_img);
+
+    if (img.empty()) TL_THROW_EXCEPTION("Could not load image: %s", input_img);
 
     tl::Chrono chrono;
     chrono.run();
     cv::Mat img_out = mPreprocess->process(img);
 
-    uint64_t time = chrono.stop();
-    msgInfo("Preprocessed image %s [Time: %f seconds]", input_img, time / 1000.);
+    double time = chrono.stop();
+    msgInfo("Preprocessed image %s [Time: %f seconds]", input_img, time);
 
     ba = mImgOutput.toLocal8Bit();
     const char *output_img = ba.data();

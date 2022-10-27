@@ -293,6 +293,41 @@ QString SettingsModelImp::akazeDiffusivity() const
   return mSettings->akaze()->diffusivity();
 }
 
+int SettingsModelImp::asiftFeaturesNumber() const
+{
+  return mSettings->asift()->featuresNumber();
+}
+
+int SettingsModelImp::asiftOctaveLayers() const
+{
+  return mSettings->asift()->octaveLayers();
+}
+
+double SettingsModelImp::asiftContrastThreshold() const
+{
+  return mSettings->asift()->contrastThreshold();
+}
+
+double SettingsModelImp::asiftEdgeThreshold() const
+{
+  return mSettings->asift()->edgeThreshold();
+}
+
+double SettingsModelImp::asiftSigma() const
+{
+  return mSettings->asift()->sigma();
+}
+
+int SettingsModelImp::asiftMinTilt() const
+{
+  return mSettings->asift()->minTilt();
+}
+
+int SettingsModelImp::asiftMaxTilt() const
+{
+  return mSettings->asift()->maxTilt();
+}
+
 QString SettingsModelImp::boostDescriptorType() const
 {
   return mSettings->boost()->descriptorType();
@@ -795,83 +830,83 @@ double SettingsModelImp::matchRatio() const
   return mSettings->robustMatcher()->ratio();
 }
 
-double SettingsModelImp::matchDistance() const
-{
-  return mSettings->robustMatcher()->distance();
-}
-
-double SettingsModelImp::matchConfidence() const
-{
-  return mSettings->robustMatcher()->confidence();
-}
+//double SettingsModelImp::matchDistance() const
+//{
+//  return mSettings->robustMatcher()->distance();
+//}
+//
+//double SettingsModelImp::matchConfidence() const
+//{
+//  return mSettings->robustMatcher()->confidence();
+//}
 
 bool SettingsModelImp::matchCrossMatching() const
 {
   return mSettings->robustMatcher()->crossCheck();
 }
 
-int SettingsModelImp::matchMaxIters() const
-{
-  return mSettings->robustMatcher()->maxIter();
-}
+//int SettingsModelImp::matchMaxIters() const
+//{
+//  return mSettings->robustMatcher()->maxIter();
+//}
 
-QString SettingsModelImp::matchGeometricTest() const
-{
-  RobustMatcher::GeometricTest geometric_test = mSettings->robustMatcher()->geometricTest();
-  QString geometricTest = "Homography Matrix";
-  if (geometric_test == RobustMatcher::GeometricTest::homography) {
-    geometricTest = "Homography Matrix";
-  } else if (geometric_test == RobustMatcher::GeometricTest::fundamental) {
-    geometricTest = "Fundamental Matrix";
-  } else if (geometric_test == RobustMatcher::GeometricTest::essential) {
-    geometricTest = "Essential Matrix";
-  }
-  return geometricTest;
-}
+//QString SettingsModelImp::matchGeometricTest() const
+//{
+//  RobustMatcher::GeometricTest geometric_test = mSettings->robustMatcher()->geometricTest();
+//  QString geometricTest = "Homography Matrix";
+//  if (geometric_test == RobustMatcher::GeometricTest::homography) {
+//    geometricTest = "Homography Matrix";
+//  } else if (geometric_test == RobustMatcher::GeometricTest::fundamental) {
+//    geometricTest = "Fundamental Matrix";
+//  } else if (geometric_test == RobustMatcher::GeometricTest::essential) {
+//    geometricTest = "Essential Matrix";
+//  }
+//  return geometricTest;
+//}
 
-QString SettingsModelImp::matchHomographyComputeMethod() const
-{
-  RobustMatcher::HomographyComputeMethod computeMethod = mSettings->robustMatcher()->homographyComputeMethod();
-  QString homographyComputeMethod = "RANSAC";
-  if (computeMethod == RobustMatcher::HomographyComputeMethod::all_points) {
-    homographyComputeMethod = "All Points";
-  } else if (computeMethod == RobustMatcher::HomographyComputeMethod::ransac) {
-    homographyComputeMethod = "RANSAC";
-  } else if (computeMethod == RobustMatcher::HomographyComputeMethod::lmeds) {
-    homographyComputeMethod = "LMedS";
-  } else if (computeMethod == RobustMatcher::HomographyComputeMethod::rho) {
-    homographyComputeMethod = "RHO";
-  }
-  return homographyComputeMethod;
-}
-
-QString SettingsModelImp::matchFundamentalComputeMethod() const
-{
-  RobustMatcher::FundamentalComputeMethod computeMethod = mSettings->robustMatcher()->fundamentalComputeMethod();
-  QString fundamentalComputeMethod = "RANSAC";
-  if (computeMethod == RobustMatcher::FundamentalComputeMethod::algorithm_7_point) {
-    fundamentalComputeMethod = "7-point algorithm";
-  } else if (computeMethod == RobustMatcher::FundamentalComputeMethod::algorithm_8_point) {
-    fundamentalComputeMethod = "8-point algorithm";
-  } else if (computeMethod == RobustMatcher::FundamentalComputeMethod::ransac) {
-    fundamentalComputeMethod = "RANSAC";
-  } else if (computeMethod == RobustMatcher::FundamentalComputeMethod::lmeds) {
-    fundamentalComputeMethod = "LMedS";
-  }
-  return fundamentalComputeMethod;
-}
-
-QString SettingsModelImp::matchEssentialComputeMethod() const
-{
-  RobustMatcher::EssentialComputeMethod computeMethod = mSettings->robustMatcher()->essentialComputeMethod();
-  QString essentialComputeMethod = "RANSAC";
-  if (computeMethod == RobustMatcher::EssentialComputeMethod::ransac) {
-    essentialComputeMethod = "RANSAC";
-  } else if (computeMethod == RobustMatcher::EssentialComputeMethod::lmeds) {
-    essentialComputeMethod = "LMedS";
-  }
-  return essentialComputeMethod;
-}
+//QString SettingsModelImp::matchHomographyComputeMethod() const
+//{
+//  RobustMatcher::HomographyComputeMethod computeMethod = mSettings->robustMatcher()->homographyComputeMethod();
+//  QString homographyComputeMethod = "RANSAC";
+//  if (computeMethod == RobustMatcher::HomographyComputeMethod::all_points) {
+//    homographyComputeMethod = "All Points";
+//  } else if (computeMethod == RobustMatcher::HomographyComputeMethod::ransac) {
+//    homographyComputeMethod = "RANSAC";
+//  } else if (computeMethod == RobustMatcher::HomographyComputeMethod::lmeds) {
+//    homographyComputeMethod = "LMedS";
+//  } else if (computeMethod == RobustMatcher::HomographyComputeMethod::rho) {
+//    homographyComputeMethod = "RHO";
+//  }
+//  return homographyComputeMethod;
+//}
+//
+//QString SettingsModelImp::matchFundamentalComputeMethod() const
+//{
+//  RobustMatcher::FundamentalComputeMethod computeMethod = mSettings->robustMatcher()->fundamentalComputeMethod();
+//  QString fundamentalComputeMethod = "RANSAC";
+//  if (computeMethod == RobustMatcher::FundamentalComputeMethod::algorithm_7_point) {
+//    fundamentalComputeMethod = "7-point algorithm";
+//  } else if (computeMethod == RobustMatcher::FundamentalComputeMethod::algorithm_8_point) {
+//    fundamentalComputeMethod = "8-point algorithm";
+//  } else if (computeMethod == RobustMatcher::FundamentalComputeMethod::ransac) {
+//    fundamentalComputeMethod = "RANSAC";
+//  } else if (computeMethod == RobustMatcher::FundamentalComputeMethod::lmeds) {
+//    fundamentalComputeMethod = "LMedS";
+//  }
+//  return fundamentalComputeMethod;
+//}
+//
+//QString SettingsModelImp::matchEssentialComputeMethod() const
+//{
+//  RobustMatcher::EssentialComputeMethod computeMethod = mSettings->robustMatcher()->essentialComputeMethod();
+//  QString essentialComputeMethod = "RANSAC";
+//  if (computeMethod == RobustMatcher::EssentialComputeMethod::ransac) {
+//    essentialComputeMethod = "RANSAC";
+//  } else if (computeMethod == RobustMatcher::EssentialComputeMethod::lmeds) {
+//    essentialComputeMethod = "LMedS";
+//  }
+//  return essentialComputeMethod;
+//}
 
 QString SettingsModelImp::keypointsViewerBGColor() const
 {
@@ -1844,17 +1879,17 @@ void SettingsModelImp::setMatchRatio(double ratio)
   emit unsavedChanges(true);
 }
 
-void SettingsModelImp::setMatchDistance(double distance)
-{
-  mSettings->robustMatcher()->setDistance(distance);
-  emit unsavedChanges(true);
-}
-
-void SettingsModelImp::setMatchConfidence(double confidence)
-{
-  mSettings->robustMatcher()->setConfidence(confidence);
-  emit unsavedChanges(true);
-}
+//void SettingsModelImp::setMatchDistance(double distance)
+//{
+//  mSettings->robustMatcher()->setDistance(distance);
+//  emit unsavedChanges(true);
+//}
+//
+//void SettingsModelImp::setMatchConfidence(double confidence)
+//{
+//  mSettings->robustMatcher()->setConfidence(confidence);
+//  emit unsavedChanges(true);
+//}
 
 void SettingsModelImp::setMatchCrossMatching(bool crossMatching)
 {
@@ -1862,69 +1897,69 @@ void SettingsModelImp::setMatchCrossMatching(bool crossMatching)
   emit unsavedChanges(true);
 }
 
-void SettingsModelImp::setMatchMaxIters(int maxIters)
-{
-  mSettings->robustMatcher()->setMaxIters(maxIters);
-  emit unsavedChanges(true);
-}
-
-void SettingsModelImp::setMatchGeometricTest(const QString &geometricTest)
-{
-  RobustMatcher::GeometricTest geometric_test = RobustMatcher::GeometricTest::homography;
-  if (geometricTest.compare("Homography Matrix") == 0) {
-    geometric_test = RobustMatcher::GeometricTest::homography;
-  } else if (geometricTest.compare("Fundamental Matrix") == 0) {
-    geometric_test = RobustMatcher::GeometricTest::fundamental;
-  } else if (geometricTest.compare("Essential Matrix") == 0) {
-    geometric_test = RobustMatcher::GeometricTest::essential;
-  }
-  mSettings->robustMatcher()->setGeometricTest(geometric_test);
-  emit unsavedChanges(true);
-}
-
-void SettingsModelImp::setMatchHomographyComputeMethod(const QString &computeMethod)
-{
-  RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
-  if (computeMethod.compare("All Points") == 0) {
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::all_points;
-  } else if (computeMethod.compare("RANSAC") == 0) {
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0) {
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::lmeds;
-  } else if (computeMethod.compare("RHO") == 0) {
-    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::rho;
-  }
-  mSettings->robustMatcher()->setHomographyComputeMethod(homographyComputeMethod);
-  emit unsavedChanges(true);
-}
-
-void SettingsModelImp::setMatchFundamentalComputeMethod(const QString &computeMethod)
-{
-  RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
-  if (computeMethod.compare("7-point algorithm") == 0) {
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
-  } else if (computeMethod.compare("8-point algorithm") == 0) {
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
-  } else if (computeMethod.compare("RANSAC") == 0) {
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0) {
-    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::lmeds;
-  }
-  mSettings->robustMatcher()->setFundamentalComputeMethod(fundamentalComputeMethod);
-  emit unsavedChanges(true);
-}
-
-void SettingsModelImp::setMatchEssentialComputeMethod(const QString &computeMethod)
-{
-  RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
-  if (computeMethod.compare("RANSAC") == 0) {
-    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
-  } else if (computeMethod.compare("LMedS") == 0) {
-    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::lmeds;
-  }
-  mSettings->robustMatcher()->setEssentialComputeMethod(essentialComputeMethod);
-  emit unsavedChanges(true);
-}
+//void SettingsModelImp::setMatchMaxIters(int maxIters)
+//{
+//  mSettings->robustMatcher()->setMaxIters(maxIters);
+//  emit unsavedChanges(true);
+//}
+//
+//void SettingsModelImp::setMatchGeometricTest(const QString &geometricTest)
+//{
+//  RobustMatcher::GeometricTest geometric_test = RobustMatcher::GeometricTest::homography;
+//  if (geometricTest.compare("Homography Matrix") == 0) {
+//    geometric_test = RobustMatcher::GeometricTest::homography;
+//  } else if (geometricTest.compare("Fundamental Matrix") == 0) {
+//    geometric_test = RobustMatcher::GeometricTest::fundamental;
+//  } else if (geometricTest.compare("Essential Matrix") == 0) {
+//    geometric_test = RobustMatcher::GeometricTest::essential;
+//  }
+//  mSettings->robustMatcher()->setGeometricTest(geometric_test);
+//  emit unsavedChanges(true);
+//}
+//
+//void SettingsModelImp::setMatchHomographyComputeMethod(const QString &computeMethod)
+//{
+//  RobustMatcher::HomographyComputeMethod homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
+//  if (computeMethod.compare("All Points") == 0) {
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::all_points;
+//  } else if (computeMethod.compare("RANSAC") == 0) {
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0) {
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::lmeds;
+//  } else if (computeMethod.compare("RHO") == 0) {
+//    homographyComputeMethod = RobustMatcher::HomographyComputeMethod::rho;
+//  }
+//  mSettings->robustMatcher()->setHomographyComputeMethod(homographyComputeMethod);
+//  emit unsavedChanges(true);
+//}
+//
+//void SettingsModelImp::setMatchFundamentalComputeMethod(const QString &computeMethod)
+//{
+//  RobustMatcher::FundamentalComputeMethod fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
+//  if (computeMethod.compare("7-point algorithm") == 0) {
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_7_point;
+//  } else if (computeMethod.compare("8-point algorithm") == 0) {
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::algorithm_8_point;
+//  } else if (computeMethod.compare("RANSAC") == 0) {
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0) {
+//    fundamentalComputeMethod = RobustMatcher::FundamentalComputeMethod::lmeds;
+//  }
+//  mSettings->robustMatcher()->setFundamentalComputeMethod(fundamentalComputeMethod);
+//  emit unsavedChanges(true);
+//}
+//
+//void SettingsModelImp::setMatchEssentialComputeMethod(const QString &computeMethod)
+//{
+//  RobustMatcher::EssentialComputeMethod essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
+//  if (computeMethod.compare("RANSAC") == 0) {
+//    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::ransac;
+//  } else if (computeMethod.compare("LMedS") == 0) {
+//    essentialComputeMethod = RobustMatcher::EssentialComputeMethod::lmeds;
+//  }
+//  mSettings->robustMatcher()->setEssentialComputeMethod(essentialComputeMethod);
+//  emit unsavedChanges(true);
+//}
 
 void SettingsModelImp::setKeypointsViewerBGColor(const QString &color)
 {

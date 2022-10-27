@@ -77,7 +77,7 @@ CurvesViewerViewImp::~CurvesViewerViewImp()
 void CurvesViewerViewImp::initUI()
 {
   this->setObjectName(QString("CurvesViewerView"));
-  this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
+  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(994, 688);
 
   QGridLayout *gridLayout = new QGridLayout();

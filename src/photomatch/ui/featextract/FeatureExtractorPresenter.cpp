@@ -27,11 +27,13 @@
 #include "photomatch/core/features/features.h"
 #include "photomatch/core/features/agast.h"
 #include "photomatch/core/features/akaze.h"
+#include "photomatch/core/features/asift.h"
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/core/features/boost.h"
 #endif
 #include "photomatch/core/features/brief.h"
 #include "photomatch/core/features/brisk.h"
+#include "photomatch/core/features/d2net.h"
 #include "photomatch/core/features/daisy.h"
 #include "photomatch/core/features/fast.h"
 #include "photomatch/core/features/freak.h"
@@ -58,11 +60,13 @@
 
 #include "photomatch/widgets/AgastWidget.h"
 #include "photomatch/widgets/AkazeWidget.h"
+#include "photomatch/widgets/ASiftWidget.h"
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
 #include "photomatch/widgets/BoostWidget.h"
 #endif
 #include "photomatch/widgets/BriefWidget.h"
 #include "photomatch/widgets/BriskWidget.h"
+#include "photomatch/widgets/D2NetWidget.h"
 #include "photomatch/widgets/DaisyWidget.h"
 #include "photomatch/widgets/FastWidget.h"
 #include "photomatch/widgets/FreakWidget.h"
@@ -91,6 +95,7 @@
 #include "photomatch/process/preprocess/ImagePreprocess.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/core/path.h>
 
 #include <QFileInfo>
 #include <QDir>
@@ -110,7 +115,9 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mHelp(nullptr),
     mAgastDetector(new AgastWidgetImp),
     mAkazeDetector(new AkazeWidgetImp),
+    mASiftDetector(new ASiftWidgetImp),
     mBriskDetector(new BriskWidgetImp),
+    mD2NetDetector(new D2NetWidgetImp),
     mFastDetector(new FastWidgetImp),
     mGfttDetector(new GfttWidgetImp),
     mKazeDetector(new KazeWidgetImp),
@@ -125,11 +132,13 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mSurfDetector(new SurfWidgetImp),
 #endif
     mAkazeDescriptor(new AkazeWidgetImp),
+    mASiftDescriptor(new ASiftWidgetImp),
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
     mBoostDescriptor(new BoostWidgetImp),
 #endif
     mBriefDescriptor(new BriefWidgetImp),
     mBriskDescriptor(new BriskWidgetImp),
+    mD2NetDescriptor(new D2NetWidgetImp),
     mDaisyDescriptor(new DaisyWidgetImp),
     mFreakDescriptor(new FreakWidgetImp),
     mHogDescriptor(new HogWidgetImp),
@@ -164,9 +173,19 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mAkazeDetector = nullptr;
   }
 
+  if(mASiftDetector) {
+    delete mASiftDetector;
+    mASiftDetector = nullptr;
+  }
+
   if (mBriskDetector){
     delete mBriskDetector;
     mBriskDetector = nullptr;
+  }
+
+  if(mD2NetDetector) {
+    delete mD2NetDetector;
+    mD2NetDetector = nullptr;
   }
 
   if (mFastDetector){
@@ -223,6 +242,11 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mAkazeDescriptor = nullptr;
   }
 
+  if(mASiftDescriptor) {
+    delete mASiftDescriptor;
+    mASiftDescriptor = nullptr;
+  }
+
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   if (mBoostDescriptor){
     delete mBoostDescriptor;
@@ -238,6 +262,12 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
   if (mBriskDescriptor){
     delete mBriskDescriptor;
     mBriskDescriptor = nullptr;
+  }
+
+
+  if(mD2NetDescriptor) {
+    delete mD2NetDescriptor;
+    mD2NetDescriptor = nullptr;
   }
 
   if (mDaisyDescriptor){
@@ -305,7 +335,9 @@ void FeatureExtractorPresenterImp::init()
 {
   mView->addKeypointDetector(mAgastDetector);
   mView->addKeypointDetector(mAkazeDetector);
+  mView->addKeypointDetector(mASiftDetector);
   mView->addKeypointDetector(mBriskDetector);
+  mView->addKeypointDetector(mD2NetDetector);
   mView->addKeypointDetector(mFastDetector);
   mView->addKeypointDetector(mGfttDetector);
   mView->addKeypointDetector(mKazeDetector);
@@ -321,12 +353,14 @@ void FeatureExtractorPresenterImp::init()
 #endif
 
   mView->addDescriptorExtractor(mAkazeDescriptor);
+  mView->addDescriptorExtractor(mASiftDescriptor);
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mBoostDescriptor);
 #endif
   mView->addDescriptorExtractor(mBriefDescriptor);
   mView->addDescriptorExtractor(mBriskDescriptor);
   mView->addDescriptorExtractor(mDaisyDescriptor);
+  mView->addDescriptorExtractor(mD2NetDescriptor);
   mView->addDescriptorExtractor(mFreakDescriptor);
   mView->addDescriptorExtractor(mHogDescriptor);
   mView->addDescriptorExtractor(mKazeDescriptor);
@@ -375,10 +409,10 @@ void FeatureExtractorPresenterImp::open()
     return;
   }
 
-  if (Feature *detector = current_session->detector().get()){
+  if (auto detector = current_session->detector()){
     setCurrentkeypointDetector(detector->name());
   }
-  if (Feature *descriptor = current_session->descriptor().get()){
+  if (auto descriptor = current_session->descriptor()){
     setCurrentDescriptorExtractor(descriptor->name());
   }
 
@@ -421,120 +455,111 @@ void FeatureExtractorPresenterImp::createProcess()
 
   std::shared_ptr<Preprocess> preprocess = current_session->preprocess();
   std::shared_ptr<ImageProcess> imageProcess;
+  tl::Path preprocessed_path;
+
   if (preprocess == nullptr){
     imageProcess = std::make_shared<DecolorPreprocess>();
     mProjectModel->setMaxImageSize(2000);
     mProjectModel->setPreprocess(std::dynamic_pointer_cast<Preprocess>(imageProcess));
+    preprocessed_path = mProjectModel->projectFolder().toStdWString();
+    preprocessed_path.append(mProjectModel->currentSession()->name().toStdWString());
+    preprocessed_path.append("preprocess");
+    preprocessed_path.createDirectories();
   }
 
-  Feature *detector = current_session->detector().get();
-  Feature *descriptor = current_session->descriptor().get();
+  auto detector = current_session->detector();
+  auto descriptor = current_session->descriptor();
   if (detector && descriptor){
     int i_ret = QMessageBox(QMessageBox::Warning,
                             tr("Previous results"),
                             tr("The previous results will be overwritten. Do you wish to continue?"),
                             QMessageBox::Yes|QMessageBox::No).exec();
     if (i_ret == QMessageBox::No) {
+      //return;
       throw std::runtime_error("Canceled by user");
     }
   }
 
   QString currentKeypointDetector = mView->currentKeypointDetector();
   QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
-  std::shared_ptr<KeypointDetector> keypointDetector = this->makeKeypointDetector(currentKeypointDetector);
-  std::shared_ptr<DescriptorExtractor> descriptorExtractor = this->makeDescriptorExtractor(currentDescriptorExtractor,
-                                                                                     currentKeypointDetector);
+  
+  if(currentKeypointDetector == "D2Net") {
 
-  mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
-  mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+    std::shared_ptr<FeatureExtractorPython> featureExtractor = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
 
+    mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(featureExtractor));
+    mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(featureExtractor));
 
-  for (auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++){
-    QString fileName = (*it)->name();
-    QString preprocessed_image;
+    for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++) {
+      QString fileName = (*it)->name();
+      QString filePath = (*it)->path();
+      QString preprocessed_image;
 
-    if (imageProcess){
-      QString file_in = (*it)->path();
-      QFileInfo fileInfo(file_in);
-      preprocessed_image = mProjectModel->projectFolder();
-      preprocessed_image.append("\\").append(mProjectModel->currentSession()->name());
-      preprocessed_image.append("\\preprocess\\");
-      QDir dir_out(preprocessed_image);
-      if (!dir_out.exists()) {
-        dir_out.mkpath(".");
-      }
-      preprocessed_image.append(fileInfo.fileName());
-      std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess((*it)->path(),
-                                                                      preprocessed_image,
-                                                                      imageProcess,
-                                                                      2000));
-      connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
-
-      mMultiProcess->appendProcess(preprocess);
-
-    } else {
-      preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
-    }
-
-    QString features = mProjectModel->projectFolder();
-    features.append("\\").append(mProjectModel->currentSession()->name());
-    features.append("\\features\\");
-    QDir dir_out(features);
-    if (!dir_out.exists()) {
-      dir_out.mkpath(".");
-    }
-    features.append(fileName);
-    QString keypointsFormat = mSettingsModel->keypointsFormat();
-    if (keypointsFormat.compare("Binary") == 0){
-      features.append(".bin");
-    } else if (keypointsFormat.compare("YML") == 0){
-      features.append(".yml");
-    } else {
-      features.append(".xml");
-    }
-
-    double scale = 1.;
-    if (mProjectModel->fullImageSize() == false){
-      int maxSize = mProjectModel->maxImageSize();
-      QImageReader imageReader((*it)->path());
-      QSize size = imageReader.size();
-      int w = size.width();
-      int h = size.height();
-      if (w > h){
-        scale = w / static_cast<double>(maxSize);
+      if(imageProcess) {
+        tl::Path preprocessed_image_path = preprocessed_path;
+        preprocessed_image_path.append(tl::Path(filePath.toStdWString()).fileName());
+        preprocessed_image = QString::fromStdWString(preprocessed_image_path.toWString());
+        std::shared_ptr<ImagePreprocess> preprocess = createImagePreprocess(imageProcess, filePath, preprocessed_image);
+        mMultiProcess->appendProcess(preprocess);
       } else {
-        scale = h / static_cast<double>(maxSize);
+        preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
       }
-      if (scale < 1.) scale = 1.;
+
+      QString features = featuresFile(fileName);
+      double scale = imageScale(filePath);
+
+      std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess = createKeyPointsFilterProcess(scale);
+
+      std::shared_ptr<FeatureExtractorPythonTask> feat_extract(new FeatureExtractorPythonTask(preprocessed_image,
+                                                                                              features,
+                                                                                              scale,
+                                                                                              featureExtractor,
+                                                                                              keyPointsFiltersProcess));
+      connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
+
+      mMultiProcess->appendProcess(feat_extract);
     }
 
-    /// Se añade aqui porque se necesita la escala
-    std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
-    if (mKeypointsFilterWidget->isActiveFilterBest()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
-      keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
-    }
-    if (mKeypointsFilterWidget->isActiveFilterSize()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize()/scale, 
-                                                                                                              mKeypointsFilterWidget->maxSize()/scale);
-      keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
-    }
-    if (mKeypointsFilterWidget->isActiveRemoveDuplicated()){
-      std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
-      keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
+  } else {
+    std::shared_ptr<KeypointDetector> keypointDetector = makeKeypointDetector(currentKeypointDetector);
+    std::shared_ptr<DescriptorExtractor> descriptorExtractor = makeDescriptorExtractor(currentDescriptorExtractor, 
+                                                                                       currentKeypointDetector);
+    mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(keypointDetector));
+    mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(descriptorExtractor));
+
+    for(auto it = mProjectModel->imageBegin(); it != mProjectModel->imageEnd(); it++) {
+      QString fileName = (*it)->name();
+      QString filePath = (*it)->path();
+      QString preprocessed_image;
+
+      if(imageProcess) {
+        tl::Path preprocessed_image_path = preprocessed_path;
+        preprocessed_image_path.append(tl::Path(filePath.toStdWString()).fileName());
+        preprocessed_image = QString::fromStdWString(preprocessed_image_path.toWString());
+        std::shared_ptr<ImagePreprocess> preprocess = createImagePreprocess(imageProcess, filePath, preprocessed_image);
+        mMultiProcess->appendProcess(preprocess);
+      } else {
+        preprocessed_image = mProjectModel->currentSession()->preprocessImage(fileName);
+      }
+
+      QString features = featuresFile(fileName);
+
+      double scale = imageScale(filePath);
+
+      std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess = createKeyPointsFilterProcess(scale);
+
+      std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
+                                                                          features,
+                                                                          scale,
+                                                                          keypointDetector,
+                                                                          descriptorExtractor,
+                                                                          keyPointsFiltersProcess));
+      connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
+
+      mMultiProcess->appendProcess(feat_extract);
     }
 
-    std::shared_ptr<FeatureExtractor> feat_extract(new FeatureExtractor(preprocessed_image,
-                                                                        features,
-                                                                        scale,
-                                                                        keypointDetector,
-                                                                        descriptorExtractor,
-                                                                        keyPointsFiltersProcess));
-    connect(feat_extract.get(), SIGNAL(featuresExtracted(QString)), this, SLOT(onFeaturesExtracted(QString)));
-
-    mMultiProcess->appendProcess(feat_extract);
   }
-
 
   if (mProgressHandler){
     mProgressHandler->setTitle("Computing Features...");
@@ -553,6 +578,80 @@ void FeatureExtractorPresenterImp::createProcess()
 
 }
 
+double FeatureExtractorPresenterImp::imageScale(const QString &image)
+{
+  double scale = 1;
+  if(mProjectModel->fullImageSize() == false) {
+    int maxSize = mProjectModel->maxImageSize();
+    QImageReader imageReader(image);
+    QSize size = imageReader.size();
+    int w = size.width();
+    int h = size.height();
+    if(w > h) {
+      scale = w / static_cast<double>(maxSize);
+    } else {
+      scale = h / static_cast<double>(maxSize);
+    }
+    if(scale < 1.) scale = 1.;
+  }
+  return scale;
+}
+
+std::list<std::shared_ptr<KeyPointsFilterProcess>> FeatureExtractorPresenterImp::createKeyPointsFilterProcess(double scale)
+{
+  std::list<std::shared_ptr<KeyPointsFilterProcess>> keyPointsFiltersProcess;
+
+  if(mKeypointsFilterWidget->isActiveFilterBest()) {
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterNBest = std::make_shared<KeyPointsFilterNBest>(mKeypointsFilterWidget->nPoints());
+    keyPointsFiltersProcess.push_back(keyPointsFilterNBest);
+  }
+  if(mKeypointsFilterWidget->isActiveFilterSize()) {
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterBySize = std::make_shared<KeyPointsFilterBySize>(mKeypointsFilterWidget->minSize() / scale,
+                                                                                                            mKeypointsFilterWidget->maxSize() / scale);
+    keyPointsFiltersProcess.push_back(keyPointsFilterBySize);
+  }
+  if(mKeypointsFilterWidget->isActiveRemoveDuplicated()) {
+    std::shared_ptr<KeyPointsFilterProcess> keyPointsFilterRemoveDuplicated = std::make_shared<KeyPointsFilterRemoveDuplicated>();
+    keyPointsFiltersProcess.push_back(keyPointsFilterRemoveDuplicated);
+  }
+
+  return keyPointsFiltersProcess;
+}
+
+QString FeatureExtractorPresenterImp::featuresFile(QString &fileName)
+{
+  QString features = mProjectModel->projectFolder();
+  features.append("\\").append(mProjectModel->currentSession()->name());
+  features.append("\\features\\");
+  QDir dir_out(features);
+  if(!dir_out.exists()) {
+    dir_out.mkpath(".");
+  }
+  features.append(fileName);
+  QString keypointsFormat = mSettingsModel->keypointsFormat();
+  if(keypointsFormat.compare("Binary") == 0) {
+    features.append(".bin");
+  } else if(keypointsFormat.compare("YML") == 0) {
+    features.append(".yml");
+  } else {
+    features.append(".xml");
+  }
+  return features;
+}
+
+std::shared_ptr<ImagePreprocess> FeatureExtractorPresenterImp::createImagePreprocess(std::shared_ptr<photomatch::ImageProcess> &imageProcess,
+                                                         const QString &filePath,
+                                                         QString &preprocessed_image)
+{
+  std::shared_ptr<ImagePreprocess> preprocess(new ImagePreprocess(filePath,
+                                                                  preprocessed_image,
+                                                                  imageProcess,
+                                                                  2000));
+  connect(preprocess.get(), SIGNAL(preprocessed(QString)), this, SLOT(onImagePreprocessed(QString)));
+  
+  return preprocess;
+}
+
 void FeatureExtractorPresenterImp::cancel()
 {
   ProcessPresenter::cancel();
@@ -561,31 +660,35 @@ void FeatureExtractorPresenterImp::cancel()
 
 void FeatureExtractorPresenterImp::setDetectorAndDescriptorProperties()
 {
-  this->setAgastDetectorProperties();
-  this->setAkazeDetectorPropierties();
-  this->setAkazeDescriptorProperties();
-  this->setBoostDescriptorProperties();
-  this->setBriefDescriptorProperties();
-  this->setBriskDetectorProperties();
-  this->setBriskDescriptorProperties();
-  this->setDaisyDescriptorProperties();
-  this->setFastDetectorProperties();
-  this->setFreakDescriptorProperties();
-  this->setGfttDetectorProperties();
-  this->setHogDescriptorProperties();
-  this->setKazeDetectorProperties();
-  this->setKazeDescriptorProperties();
-  this->setLatchDescriptorProperties();
-  this->setMsdDetectorProperties();
-  this->setMserDetectorProperties();
-  this->setOrbDetectorProperties();
-  this->setOrbDescriptorProperties();
-  this->setSiftDetectorProperties();
-  this->setSiftDescriptorProperties();
-  this->setStarDetectorProperties();
-  this->setSurfDetectorProperties();
-  this->setSurfDescriptorProperties();
-  this->setVggDescriptorProperties();
+  setAgastDetectorProperties();
+  setAkazeDetectorPropierties();
+  setASiftDetectorPropierties();
+  setASiftDescriptorPropierties();
+  setAkazeDescriptorProperties();
+  setBoostDescriptorProperties();
+  setBriefDescriptorProperties();
+  setBriskDetectorProperties();
+  setBriskDescriptorProperties();
+  setD2NetDetectorProperties();
+  setD2NetDescriptorProperties();
+  setDaisyDescriptorProperties();
+  setFastDetectorProperties();
+  setFreakDescriptorProperties();
+  setGfttDetectorProperties();
+  setHogDescriptorProperties();
+  setKazeDetectorProperties();
+  setKazeDescriptorProperties();
+  setLatchDescriptorProperties();
+  setMsdDetectorProperties();
+  setMserDetectorProperties();
+  setOrbDetectorProperties();
+  setOrbDescriptorProperties();
+  setSiftDetectorProperties();
+  setSiftDescriptorProperties();
+  setStarDetectorProperties();
+  setSurfDetectorProperties();
+  setSurfDescriptorProperties();
+  setVggDescriptorProperties();
 
   ///TODO: guardar en proyecto y configuración y recuperarlo desde aqui
   //mKeypointsFilterWidget->setNPoints();
@@ -641,6 +744,54 @@ void FeatureExtractorPresenterImp::setAkazeDetectorPropierties()
     mAkazeDetector->setDescriptorChannels(detector && detector->type() == Feature::Type::akaze ?
                                           dynamic_cast<Akaze *>(detector)->descriptorChannels() :
                                           mSettingsModel->akazeDescriptorChannels());
+  }
+}
+
+void FeatureExtractorPresenterImp::setASiftDetectorPropierties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto detector = std::dynamic_pointer_cast<Sift>(current_session->detector());
+
+    mSiftDetector->setSigma(detector && detector->type() == Feature::Type::asift ?
+                              detector->sigma() :
+                              mSettingsModel->asiftSigma());
+    mSiftDetector->setOctaveLayers(detector && detector->type() == Feature::Type::asift ?
+                                     detector->octaveLayers() :
+                                     mSettingsModel->asiftOctaveLayers());
+    mSiftDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::asift ?
+                                      detector->edgeThreshold() :
+                                      mSettingsModel->asiftEdgeThreshold());
+    mSiftDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::asift ?
+                                       detector->featuresNumber() :
+                                       mSettingsModel->asiftFeaturesNumber());
+    mSiftDetector->setContrastThreshold(detector && detector->type() == Feature::Type::asift ?
+                                          detector->contrastThreshold() :
+                                          mSettingsModel->asiftContrastThreshold());
+  }
+}
+
+void FeatureExtractorPresenterImp::setASiftDescriptorPropierties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto detector = std::dynamic_pointer_cast<Sift>(current_session->detector());
+
+    mSiftDetector->setSigma(detector && detector->type() == Feature::Type::asift ?
+                              detector->sigma() :
+                              mSettingsModel->asiftSigma());
+    mSiftDetector->setOctaveLayers(detector && detector->type() == Feature::Type::asift ?
+                                     detector->octaveLayers() :
+                                     mSettingsModel->asiftOctaveLayers());
+    mSiftDetector->setEdgeThreshold(detector && detector->type() == Feature::Type::asift ?
+                                      detector->edgeThreshold() :
+                                      mSettingsModel->asiftEdgeThreshold());
+    mSiftDetector->setFeaturesNumber(detector && detector->type() == Feature::Type::asift ?
+                                       detector->featuresNumber() :
+                                       mSettingsModel->asiftFeaturesNumber());
+    mSiftDetector->setContrastThreshold(detector && detector->type() == Feature::Type::asift ?
+                                          detector->contrastThreshold() :
+                                          mSettingsModel->asiftContrastThreshold());
   }
 }
 
@@ -742,6 +893,30 @@ void FeatureExtractorPresenterImp::setBriskDescriptorProperties()
     mBriskDescriptor->setPatternScale(descriptor && descriptor->type() == Feature::Type::brisk ?
                                         dynamic_cast<Brisk *>(descriptor)->patternScale() :
                                         mSettingsModel->briskPatternScale());
+  }
+}
+
+void FeatureExtractorPresenterImp::setD2NetDetectorProperties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto detector = current_session->detector();
+
+    mD2NetDetector->setMultiscale(detector && detector->type() == Feature::Type::d2net ?
+                                  std::dynamic_pointer_cast<D2Net>(detector)->multiscale() :
+                                  false);
+  }
+}
+
+void FeatureExtractorPresenterImp::setD2NetDescriptorProperties()
+{
+  if(std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    auto descriptor = current_session->descriptor();
+
+    mD2NetDescriptor->setMultiscale(descriptor && descriptor->type() == Feature::Type::d2net ?
+                                    std::dynamic_pointer_cast<D2Net>(descriptor)->multiscale() :
+                                    false);
   }
 }
 
@@ -1257,7 +1432,19 @@ std::shared_ptr<KeypointDetector> FeatureExtractorPresenterImp::makeKeypointDete
                                                                  mAkazeDetector->octaves(),
                                                                  mAkazeDetector->octaveLayers(),
                                                                  mAkazeDetector->diffusivity());
-  } else if (keypointDetector.compare("BRISK") == 0){
+  } 
+#ifdef OPENCV_ENABLE_NONFREE
+  else if(keypointDetector.compare("ASIFT") == 0) {
+    keypoint_detector = std::make_shared<ASiftDetectorDescriptor>(mASiftDetector->featuresNumber(),
+                                                                  mASiftDetector->octaveLayers(),
+                                                                  mASiftDetector->contrastThreshold(),
+                                                                  mASiftDetector->edgeThreshold(),
+                                                                  mASiftDetector->sigma(),
+                                                                  mASiftDetector->minTilt(),
+                                                                  mASiftDetector->maxTilt());
+  }
+#endif  
+  else if (keypointDetector.compare("BRISK") == 0){
     keypoint_detector = std::make_shared<BriskDetectorDescriptor>(mBriskDetector->threshold(),
                                                                  mBriskDetector->octaves(),
                                                                  mBriskDetector->patternScale());
@@ -1380,22 +1567,43 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
   if (descriptorExtractor.compare("AKAZE") == 0){
     if (keypointDetector.compare("AKAZE") == 0){
       descriptor_extractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDetector->descriptorType(),
-                                                                      mAkazeDetector->descriptorSize(),
-                                                                      mAkazeDetector->descriptorChannels(),
-                                                                      mAkazeDetector->threshold(),
-                                                                      mAkazeDetector->octaves(),
-                                                                      mAkazeDetector->octaveLayers(),
-                                                                      mAkazeDetector->diffusivity());
+                                                                       mAkazeDetector->descriptorSize(),
+                                                                       mAkazeDetector->descriptorChannels(),
+                                                                       mAkazeDetector->threshold(),
+                                                                       mAkazeDetector->octaves(),
+                                                                       mAkazeDetector->octaveLayers(),
+                                                                       mAkazeDetector->diffusivity());
     } else {
       descriptor_extractor = std::make_shared<AkazeDetectorDescriptor>(mAkazeDescriptor->descriptorType(),
-                                                                      mAkazeDescriptor->descriptorSize(),
-                                                                      mAkazeDescriptor->descriptorChannels(),
-                                                                      mAkazeDescriptor->threshold(),
-                                                                      mAkazeDescriptor->octaves(),
-                                                                      mAkazeDescriptor->octaveLayers(),
-                                                                      mAkazeDescriptor->diffusivity());
+                                                                       mAkazeDescriptor->descriptorSize(),
+                                                                       mAkazeDescriptor->descriptorChannels(),
+                                                                       mAkazeDescriptor->threshold(),
+                                                                       mAkazeDescriptor->octaves(),
+                                                                       mAkazeDescriptor->octaveLayers(),
+                                                                       mAkazeDescriptor->diffusivity());
     }
   }
+#ifdef OPENCV_ENABLE_NONFREE
+  else if(descriptorExtractor.compare("ASIFT") == 0) {
+    if(keypointDetector.compare("ASIFT") == 0) {
+      descriptor_extractor = std::make_shared<ASiftDetectorDescriptor>(mASiftDetector->featuresNumber(),
+                                                                       mASiftDetector->octaveLayers(),
+                                                                       mASiftDetector->contrastThreshold(),
+                                                                       mASiftDetector->edgeThreshold(),
+                                                                       mASiftDetector->sigma(),
+                                                                       mASiftDetector->minTilt(),
+                                                                       mASiftDetector->maxTilt());
+    } else {
+      descriptor_extractor = std::make_shared<ASiftDetectorDescriptor>(mASiftDescriptor->featuresNumber(),
+                                                                       mASiftDescriptor->octaveLayers(),
+                                                                       mASiftDescriptor->contrastThreshold(),
+                                                                       mASiftDescriptor->edgeThreshold(),
+                                                                       mASiftDescriptor->sigma(),
+                                                                       mASiftDetector->minTilt(),
+                                                                       mASiftDetector->maxTilt());
+    }
+  }
+#endif 
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   else if (descriptorExtractor.compare("BOOST") == 0){
     descriptor_extractor = std::make_shared<BoostDescriptor>(mBoostDescriptor->descriptorType(),
@@ -1412,39 +1620,39 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
                                                                     mBriskDescriptor->patternScale());
   } else if (descriptorExtractor.compare("DAISY") == 0){
     descriptor_extractor = std::make_shared<DaisyDescriptor>(mDaisyDescriptor->radius(),
-                                                            mDaisyDescriptor->qRadius(),
-                                                            mDaisyDescriptor->qTheta(),
-                                                            mDaisyDescriptor->qHist(),
-                                                            mDaisyDescriptor->norm(),
-                                                            mDaisyDescriptor->interpolation(),
-                                                            mDaisyDescriptor->useOrientation());
+                                                             mDaisyDescriptor->qRadius(),
+                                                             mDaisyDescriptor->qTheta(),
+                                                             mDaisyDescriptor->qHist(),
+                                                             mDaisyDescriptor->norm(),
+                                                             mDaisyDescriptor->interpolation(),
+                                                             mDaisyDescriptor->useOrientation());
   } else if (descriptorExtractor.compare("FREAK") == 0){
     descriptor_extractor = std::make_shared<FreakDescriptor>(mFreakDescriptor->orientationNormalized(),
-                                                            mFreakDescriptor->scaleNormalized(),
-                                                            mFreakDescriptor->patternScale(),
-                                                            mFreakDescriptor->octaves());
+                                                             mFreakDescriptor->scaleNormalized(),
+                                                             mFreakDescriptor->patternScale(),
+                                                             mFreakDescriptor->octaves());
   } else if (descriptorExtractor.compare("HOG") == 0){
     descriptor_extractor = std::make_shared<HogDescriptor>(mHogDescriptor->winSize(),
-                                                          mHogDescriptor->blockSize(),
-                                                          mHogDescriptor->blockStride(),
-                                                          mHogDescriptor->cellSize(),
-                                                          mHogDescriptor->nbins(),
-                                                          mHogDescriptor->derivAperture());
+                                                           mHogDescriptor->blockSize(),
+                                                           mHogDescriptor->blockStride(),
+                                                           mHogDescriptor->cellSize(),
+                                                           mHogDescriptor->nbins(),
+                                                           mHogDescriptor->derivAperture());
   } else if (descriptorExtractor.compare("KAZE") == 0){
     if (keypointDetector.compare("KAZE") == 0){
       descriptor_extractor = std::make_shared<KazeDetectorDescriptor>(mKazeDetector->extendedDescriptor(),
-                                                                     mKazeDetector->uprightDescriptor(),
-                                                                     mKazeDetector->threshold(),
-                                                                     mKazeDetector->octaves(),
-                                                                     mKazeDetector->octaveLayers(),
-                                                                     mKazeDetector->diffusivity());
+                                                                      mKazeDetector->uprightDescriptor(),
+                                                                      mKazeDetector->threshold(),
+                                                                      mKazeDetector->octaves(),
+                                                                      mKazeDetector->octaveLayers(),
+                                                                      mKazeDetector->diffusivity());
     } else {
       descriptor_extractor = std::make_shared<KazeDetectorDescriptor>(mKazeDescriptor->extendedDescriptor(),
-                                                                     mKazeDescriptor->uprightDescriptor(),
-                                                                     mKazeDescriptor->threshold(),
-                                                                     mKazeDescriptor->octaves(),
-                                                                     mKazeDescriptor->octaveLayers(),
-                                                                     mKazeDescriptor->diffusivity());
+                                                                      mKazeDescriptor->uprightDescriptor(),
+                                                                      mKazeDescriptor->threshold(),
+                                                                      mKazeDescriptor->octaves(),
+                                                                      mKazeDescriptor->octaveLayers(),
+                                                                      mKazeDescriptor->diffusivity());
     }
   } else if (descriptorExtractor.compare("LATCH") == 0){
     descriptor_extractor = std::make_shared<LatchDescriptor>(mLatchDescriptor->bytes(),
@@ -1570,14 +1778,32 @@ std::shared_ptr<DescriptorExtractor> FeatureExtractorPresenterImp::makeDescripto
   return descriptor_extractor;
 }
 
+void FeatureExtractorPresenterImp::setProgressHandler(ProgressHandler *progressHandler)
+{
+  mProgressHandler = progressHandler;
+}
+
 void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &keypointDetector)
 {
   mView->setCurrentKeypointDetector(keypointDetector);
 
   mView->disableDescriptorExtractor("AKAZE");
   mView->disableDescriptorExtractor("KAZE");
-  mView->enableDescriptorExtractor("ORB");
+  mView->disableDescriptorExtractor("ASIFT");
+  mView->disableDescriptorExtractor("D2Net");
+  mView->enableDescriptorExtractor("BRISK");
+  mView->enableDescriptorExtractor("BOOST");
+  mView->enableDescriptorExtractor("BRIEF");
+  mView->enableDescriptorExtractor("BRISK");
+  mView->enableDescriptorExtractor("DAISY");
+  mView->enableDescriptorExtractor("FREAK");
   mView->enableDescriptorExtractor("HOG");
+  mView->enableDescriptorExtractor("LATCH");
+  mView->enableDescriptorExtractor("LSS");
+  mView->enableDescriptorExtractor("ORB");
+  mView->enableDescriptorExtractor("VGG");
+  mView->enableDescriptorExtractor("SIFT");
+  mView->enableDescriptorExtractor("SURF");
 
   if (keypointDetector.compare("AGAST") == 0){
 #ifdef OPENCV_ENABLE_NONFREE
@@ -1641,6 +1867,32 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
     mView->setCurrentDescriptorExtractor("SURF");
   }
 #endif
+  else if(keypointDetector.compare("ASIFT") == 0 ||
+          keypointDetector.compare("D2Net") == 0) {
+    if(keypointDetector.compare("ASIFT") == 0) {
+      mView->setCurrentDescriptorExtractor("ASIFT");
+      mView->disableDescriptorExtractor("D2Net");
+    } else if (keypointDetector.compare("D2Net") == 0){
+      mView->setCurrentDescriptorExtractor("D2Net");
+      mView->disableDescriptorExtractor("ASIFT");
+    }
+    
+    mView->disableDescriptorExtractor("AKAZE");
+    mView->disableDescriptorExtractor("BRISK");
+    mView->disableDescriptorExtractor("BOOST");
+    mView->disableDescriptorExtractor("BRIEF");
+    mView->disableDescriptorExtractor("BRISK");
+    mView->disableDescriptorExtractor("DAISY");
+    mView->disableDescriptorExtractor("FREAK");
+    mView->disableDescriptorExtractor("HOG");
+    mView->disableDescriptorExtractor("KAZE");
+    mView->disableDescriptorExtractor("LATCH");
+    mView->disableDescriptorExtractor("LSS");
+    mView->disableDescriptorExtractor("ORB");
+    mView->disableDescriptorExtractor("VGG");
+    mView->disableDescriptorExtractor("SIFT");
+    mView->disableDescriptorExtractor("SURF");
+  }
 }
 
 void FeatureExtractorPresenterImp::setCurrentDescriptorExtractor(const QString &descriptorExtractor)

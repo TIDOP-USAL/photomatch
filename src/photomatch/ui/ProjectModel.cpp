@@ -263,7 +263,7 @@ void ProjectModelImp::deleteMatcher()
   bUnsavedChanges = true;
 }
 
-void ProjectModelImp::setRobustMatcherRefinement(const std::shared_ptr<RobustMatcher> &robustMatcherRefinement)
+void ProjectModelImp::setMatchingStrategy(const std::shared_ptr<MatchingStrategy> &robustMatcherRefinement)
 {
   this->currentSession()->setMatchingStrategy(robustMatcherRefinement);
   bUnsavedChanges = true;

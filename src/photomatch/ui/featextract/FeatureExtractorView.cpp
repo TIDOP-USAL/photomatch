@@ -132,16 +132,20 @@ void FeatureExtractorViewImp::setSessionName(const QString &name)
 
 void FeatureExtractorViewImp::addKeypointDetector(QWidget *keypointDetector)
 {
-  mComboBoxKeypointDetector->addItem(keypointDetector->windowTitle());
-  mGridLayoutKeypointDetector->addWidget(keypointDetector, 0, 0, 1, 2);
-  keypointDetector->setVisible(false);
+  if(keypointDetector) {
+    mComboBoxKeypointDetector->addItem(keypointDetector->windowTitle());
+    mGridLayoutKeypointDetector->addWidget(keypointDetector, 0, 0, 1, 2);
+    keypointDetector->setVisible(false);
+  }
 }
 
 void FeatureExtractorViewImp::addDescriptorExtractor(QWidget *descriptorExtractor)
 {
-  mComboBoxDescriptorExtractor->addItem(descriptorExtractor->windowTitle());
-  mGridLayoutDescriptorExtractor->addWidget(descriptorExtractor, 0, 0, 1, 2);
-  descriptorExtractor->setVisible(false);
+  if(descriptorExtractor) {
+    mComboBoxDescriptorExtractor->addItem(descriptorExtractor->windowTitle());
+    mGridLayoutDescriptorExtractor->addWidget(descriptorExtractor, 0, 0, 1, 2);
+    descriptorExtractor->setVisible(false);
+  }
 }
 
 QString FeatureExtractorViewImp::currentKeypointDetector() const

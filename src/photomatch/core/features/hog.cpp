@@ -236,15 +236,6 @@ cv::Mat HogDescriptor::extract(const cv::Mat &img,
 {
   cv::Mat descriptors;
 
-  cv::Size win_size(HogProperties::winSize().width(),
-                    HogProperties::winSize().height());
-
-  std::vector<cv::Point> p_c;
-  cv::Point punto_central;
-  punto_central.x = win_size.width / 2;
-  punto_central.y = win_size.height / 2;
-  p_c.push_back(punto_central);
-
   int size = static_cast<int>(keyPoints.size());
   descriptors = cv::Mat(size, static_cast<int>(mHOG->getDescriptorSize()), CV_32FC1);
 

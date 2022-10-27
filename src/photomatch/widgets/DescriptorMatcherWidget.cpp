@@ -54,6 +54,13 @@ DescriptorMatcherWidgetImp::DescriptorMatcherWidgetImp(QWidget *parent)
     mConfidenceLabel(new QLabel(this)),
     mMaxIters(new QSpinBox(this)),
     mMaxItersLabel(new QLabel(this)),
+    mCheckBoxIsParallel(new QCheckBox(this)),
+    mLabelLocalOptimIterations(new QLabel(this)),
+    mSpinBoxLocalOptimIterations(new QSpinBox(this)),
+    mLabelLocalSampleSize(new QLabel(this)),
+    mSpinBoxLocalSampleSize(new QSpinBox(this)),
+    mLabelLocalMaxIterations(new QLabel(this)),
+    mSpinBoxLocalMaxIterations(new QSpinBox(this)),
     mCrossMatching(new QCheckBox(this)),
     mHComputeMethod(new QComboBox(this)),
     mHComputeMethodLabel(new QLabel(this)),
@@ -134,6 +141,7 @@ void DescriptorMatcherWidgetImp::initUI()
   mHComputeMethod->addItem("RANSAC");
   mHComputeMethod->addItem("LMedS");
   mHComputeMethod->addItem("RHO");
+  mHComputeMethod->addItem("USAC"); 
   filteringTestLayout->addWidget(mHComputeMethod, 3, 1);
 
   filteringTestLayout->addWidget(mFComputeMethodLabel, 4, 0);
@@ -141,6 +149,7 @@ void DescriptorMatcherWidgetImp::initUI()
   mFComputeMethod->addItem("8-point algorithm");
   mFComputeMethod->addItem("RANSAC");
   mFComputeMethod->addItem("LMedS");
+  mFComputeMethod->addItem("USAC");
   filteringTestLayout->addWidget(mFComputeMethod, 4, 1);
 
   filteringTestLayout->addWidget(mEComputeMethodLabel, 5, 0);
@@ -164,6 +173,24 @@ void DescriptorMatcherWidgetImp::initUI()
   mMaxIters->setRange(0, 10000);
   mMaxIters->setSingleStep(1);
   filteringTestLayout->addWidget(mMaxIters, 8, 1);
+
+  filteringTestLayout->addWidget(mCheckBoxIsParallel, 9, 0);
+
+  filteringTestLayout->addWidget(mLabelLocalOptimIterations, 10, 0);
+  //mSpinBoxLocalOptimIterations->setRange(0, 1000);
+  //mSpinBoxLocalOptimIterations->setSingleStep(1);
+  filteringTestLayout->addWidget(mSpinBoxLocalOptimIterations, 10, 1);
+
+  filteringTestLayout->addWidget(mLabelLocalSampleSize, 11, 0);
+  //mSpinBoxLocalSampleSize->setRange(0, 1000);
+  //mSpinBoxLocalSampleSize->setSingleStep(1);
+  filteringTestLayout->addWidget(mSpinBoxLocalSampleSize, 11, 1);
+
+  filteringTestLayout->addWidget(mLabelLocalMaxIterations, 12, 0);
+  mSpinBoxLocalMaxIterations->setRange(0, 10000);
+  mSpinBoxLocalMaxIterations->setSingleStep(1);
+  filteringTestLayout->addWidget(mSpinBoxLocalMaxIterations, 12, 1);
+
 
   mGroupBoxGMS = new QGroupBox("GMS", this);
   layout->addWidget(mGroupBoxGMS, 3, 0, 1, 2);
@@ -196,6 +223,10 @@ void DescriptorMatcherWidgetImp::initSignalAndSlots()
   connect(mConfidence,        QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &DescriptorMatcherWidget::confidenceChange);
   connect(mCrossMatching,     &QAbstractButton::clicked,                            this, &DescriptorMatcherWidget::crossMatchingChange);
   connect(mMaxIters,          QOverload<int>::of(&QSpinBox::valueChanged),          this, &DescriptorMatcherWidget::maxItersChange);
+  connect(mCheckBoxIsParallel, &QAbstractButton::clicked,                           this, &DescriptorMatcherWidget::usacIsParallelChanged);
+  connect(mSpinBoxLocalOptimIterations, QOverload<int>::of(&QSpinBox::valueChanged), this, &DescriptorMatcherWidget::usacLocalOptimIterationsChanged);
+  connect(mSpinBoxLocalSampleSize, QOverload<int>::of(&QSpinBox::valueChanged), this, &DescriptorMatcherWidget::usacLocalSampleSizeChanged);
+  connect(mSpinBoxLocalMaxIterations, QOverload<int>::of(&QSpinBox::valueChanged), this, &DescriptorMatcherWidget::usacMaxItersChanged);
   connect(mGeometricTest,     &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::geometricTestChange);
   connect(mHComputeMethod,    &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::homographyComputeMethodChange);
   connect(mFComputeMethod,    &QComboBox::currentTextChanged,                       this, &DescriptorMatcherWidget::fundamentalComputeMethodChange);
@@ -225,7 +256,9 @@ void DescriptorMatcherWidgetImp::reset()
   const QSignalBlocker blockerDistance(mDistance);
   const QSignalBlocker blockerConfidence(mConfidence);
   const QSignalBlocker blockerMaxIters(mMaxIters);
-  const QSignalBlocker blockerThresholdGMS(mThresholdGMS);
+  const QSignalBlocker blockerSpinBoxLocalSampleSize(mSpinBoxLocalSampleSize);
+  const QSignalBlocker blockerSpinBoxLocalOptimIterations(mSpinBoxLocalOptimIterations);
+  const QSignalBlocker blockerSpinBoxLocalMaxIterations(mSpinBoxLocalMaxIterations);
 
   mMatchingMethod->setCurrentText("Brute-Force");
   mNormType->setCurrentText("NORM_L1");
@@ -241,6 +274,10 @@ void DescriptorMatcherWidgetImp::reset()
   mDistance->setValue(0.7);
   mConfidence->setValue(0.999);
   mMaxIters->setValue(2000);
+  mCheckBoxIsParallel->setChecked(false);
+  mSpinBoxLocalOptimIterations->setValue(5);
+  mSpinBoxLocalSampleSize->setValue(14);
+  mSpinBoxLocalMaxIterations->setValue(5000);
   mCrossMatching->setChecked(true);
   mRotationGMS->setChecked(false);
   mScaleGMS->setChecked(false);
@@ -276,6 +313,13 @@ void DescriptorMatcherWidgetImp::update()
     QString computeMethod = mHComputeMethod->currentText();
     mConfidence->show();
     mConfidenceLabel->show();
+    mCheckBoxIsParallel->hide();
+    mLabelLocalOptimIterations->hide();
+    mSpinBoxLocalOptimIterations->hide();
+    mLabelLocalSampleSize->hide();
+    mSpinBoxLocalSampleSize->hide();
+    mLabelLocalMaxIterations->hide();
+    mSpinBoxLocalMaxIterations->hide();
     if (computeMethod.compare(QApplication::translate("DescriptorMatcherWidget", "All Points")) == 0){
       mDistance->hide();
       mDistanceLabel->hide();
@@ -296,6 +340,18 @@ void DescriptorMatcherWidgetImp::update()
       mDistanceLabel->show();
       mMaxIters->hide();
       mMaxItersLabel->hide();
+    } else if(computeMethod.compare("USAC") == 0) {
+      mCheckBoxIsParallel->show();
+      mLabelLocalOptimIterations->show();
+      mSpinBoxLocalOptimIterations->show();
+      mLabelLocalSampleSize->show();
+      mSpinBoxLocalSampleSize->show();
+      mLabelLocalMaxIterations->show();
+      mSpinBoxLocalMaxIterations->show();
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mMaxIters->hide();
+      mMaxItersLabel->hide();
     }
   } else if (geomTest.compare(QApplication::translate("DescriptorMatcherWidget", "Fundamental Matrix")) == 0){
     mHComputeMethod->hide();
@@ -307,6 +363,13 @@ void DescriptorMatcherWidgetImp::update()
     QString computeMethod = mFComputeMethod->currentText();
     mMaxIters->hide();
     mMaxItersLabel->hide();
+    mCheckBoxIsParallel->hide();
+    mLabelLocalOptimIterations->hide();
+    mSpinBoxLocalOptimIterations->hide();
+    mLabelLocalSampleSize->hide();
+    mSpinBoxLocalSampleSize->hide();
+    mLabelLocalMaxIterations->hide();
+    mSpinBoxLocalMaxIterations->hide();
     if (computeMethod.compare("7-point algorithm") == 0){
       mDistance->hide();
       mDistanceLabel->hide();
@@ -322,11 +385,25 @@ void DescriptorMatcherWidgetImp::update()
       mDistanceLabel->show();
       mConfidence->show();
       mConfidenceLabel->show();
+      mMaxIters->hide();
+      mMaxItersLabel->hide();
     } else if (computeMethod.compare("LMedS") == 0){
       mDistance->hide();
       mDistanceLabel->hide();
       mConfidence->show();
       mConfidenceLabel->show();
+    } else if(computeMethod.compare("USAC") == 0) {
+      mCheckBoxIsParallel->show();
+      mLabelLocalOptimIterations->show();
+      mSpinBoxLocalOptimIterations->show();
+      mLabelLocalSampleSize->show();
+      mSpinBoxLocalSampleSize->show();
+      mLabelLocalMaxIterations->show();
+      mSpinBoxLocalMaxIterations->show();
+      mDistance->hide();
+      mDistanceLabel->hide();
+      mMaxIters->hide();
+      mMaxItersLabel->hide();
     }
   } else if (geomTest.compare(QApplication::translate("DescriptorMatcherWidget", "Essential Matrix")) == 0) {
     mHComputeMethod->hide();
@@ -370,6 +447,10 @@ void DescriptorMatcherWidgetImp::retranslate()
   mLabelThresholdGMS->setText(QApplication::translate("DescriptorMatcherWidget", "Threshold:"));
   mRotationGMS->setText(QApplication::translate("DescriptorMatcherWidget", "Rotation:"));
   mScaleGMS->setText(QApplication::translate("DescriptorMatcherWidget", "Scale:"));
+  mCheckBoxIsParallel->setText(QApplication::translate("DescriptorMatcherWidget", "Parallel"));
+  mLabelLocalOptimIterations->setText(QApplication::translate("DescriptorMatcherWidget", "Local Optim Iterations:"));
+  mLabelLocalSampleSize->setText(QApplication::translate("DescriptorMatcherWidget", "Local Sample Size:"));
+  mLabelLocalMaxIterations->setText(QApplication::translate("DescriptorMatcherWidget", "Local Max Iterations:"));
 
   mGeometricTest->setItemText(0, QApplication::translate("DescriptorMatcherWidget", "Homography Matrix"));
   mGeometricTest->setItemText(1, QApplication::translate("DescriptorMatcherWidget", "Fundamental Matrix"));
@@ -430,6 +511,26 @@ double DescriptorMatcherWidgetImp::confidence() const
 int DescriptorMatcherWidgetImp::maxIters() const
 {
   return mMaxIters->value();
+}
+
+bool DescriptorMatcherWidgetImp::usacIsParallel() const
+{
+  return mCheckBoxIsParallel->isChecked();
+}
+
+int DescriptorMatcherWidgetImp::usacLocalOptimIterations() const
+{
+  return mSpinBoxLocalOptimIterations->value();
+}
+
+int DescriptorMatcherWidgetImp::usacLocalSampleSize() const
+{
+  return mSpinBoxLocalSampleSize->value();
+}
+
+int DescriptorMatcherWidgetImp::usacMaxIters() const
+{
+  return mSpinBoxLocalMaxIterations->value();
 }
 
 bool DescriptorMatcherWidgetImp::crossMatching() const
@@ -522,6 +623,26 @@ void DescriptorMatcherWidgetImp::setMaxIters(int maxIter)
 {
   const QSignalBlocker blockerMaxIters(mMaxIters);
   mMaxIters->setValue(maxIter);
+}
+
+void DescriptorMatcherWidgetImp::setUsacIsParallel(bool usacIsParallel)
+{
+  mCheckBoxIsParallel->setChecked(usacIsParallel);
+}
+
+void DescriptorMatcherWidgetImp::setUsacLocalOptimIterations(int usacLocalOptimIterations)
+{
+  mSpinBoxLocalOptimIterations->setValue(usacLocalOptimIterations);
+}
+
+void DescriptorMatcherWidgetImp::setUsacLocalSampleSize(int usacLocalSampleSize)
+{ 
+  mSpinBoxLocalSampleSize->setValue(usacLocalSampleSize);
+}
+
+void DescriptorMatcherWidgetImp::setUsacMaxIters(int usacMaxIters)
+{
+  mSpinBoxLocalMaxIterations->setValue(usacMaxIters);
 }
 
 void DescriptorMatcherWidgetImp::setCrossMatching(bool crossMatching)

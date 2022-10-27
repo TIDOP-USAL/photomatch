@@ -133,6 +133,14 @@ public:
   virtual int akazeOctaveLayers() const = 0;
   virtual QString akazeDiffusivity() const = 0;
 
+  virtual int asiftFeaturesNumber() const = 0;
+  virtual int asiftOctaveLayers() const = 0;
+  virtual double asiftContrastThreshold() const = 0;
+  virtual double asiftEdgeThreshold() const = 0;
+  virtual double asiftSigma() const = 0;
+  virtual int asiftMinTilt() const = 0;
+  virtual int asiftMaxTilt() const = 0;
+
   virtual QString boostDescriptorType() const = 0;
   virtual bool boostUseOrientation() const = 0;
   virtual double boostScaleFactor() const = 0;
@@ -249,14 +257,14 @@ public:
   virtual QString matchStrategy() const = 0;
   virtual QString matchNormType() const = 0;
   virtual double matchRatio() const = 0;
-  virtual double matchDistance() const = 0;
-  virtual double matchConfidence() const = 0;
+  //virtual double matchDistance() const = 0;
+  //virtual double matchConfidence() const = 0;
   virtual bool matchCrossMatching() const = 0;
-  virtual int matchMaxIters() const = 0;
-  virtual QString matchGeometricTest() const = 0;
-  virtual QString matchHomographyComputeMethod() const = 0;
-  virtual QString matchFundamentalComputeMethod() const = 0;
-  virtual QString matchEssentialComputeMethod() const = 0;
+  //virtual int matchMaxIters() const = 0;
+  //virtual QString matchGeometricTest() const = 0;
+  //virtual QString matchHomographyComputeMethod() const = 0;
+  //virtual QString matchFundamentalComputeMethod() const = 0;
+  //virtual QString matchEssentialComputeMethod() const = 0;
 
   virtual QString keypointsViewerBGColor() const = 0;
   virtual int keypointsViewerMarkerType() const = 0;
@@ -512,14 +520,14 @@ public slots:
   virtual void setMatchStrategy(const QString &matchingMethod) = 0;
   virtual void setMatchNormType(const QString &normType) = 0;
   virtual void setMatchRatio(double ratio) = 0;
-  virtual void setMatchDistance(double distance) = 0;
-  virtual void setMatchConfidence(double confidence) = 0;
+  //virtual void setMatchDistance(double distance) = 0;
+  //virtual void setMatchConfidence(double confidence) = 0;
   virtual void setMatchCrossMatching(bool crossMatching) = 0;
-  virtual void setMatchMaxIters(int maxIters) = 0;
-  virtual void setMatchGeometricTest(const QString &geometricTest) = 0;
-  virtual void setMatchHomographyComputeMethod(const QString &computeMethod) = 0;
-  virtual void setMatchFundamentalComputeMethod(const QString &computeMethod) = 0;
-  virtual void setMatchEssentialComputeMethod(const QString &computeMethod) = 0;
+  //virtual void setMatchMaxIters(int maxIters) = 0;
+  //virtual void setMatchGeometricTest(const QString &geometricTest) = 0;
+  //virtual void setMatchHomographyComputeMethod(const QString &computeMethod) = 0;
+  //virtual void setMatchFundamentalComputeMethod(const QString &computeMethod) = 0;
+  //virtual void setMatchEssentialComputeMethod(const QString &computeMethod) = 0;
 
   virtual void setKeypointsViewerBGColor(const QString &color) = 0;
   virtual void setKeypointsViewerMarkerType(int type) = 0;

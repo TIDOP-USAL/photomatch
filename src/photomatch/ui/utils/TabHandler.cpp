@@ -8,6 +8,10 @@
 
 #include "photomatch/ui/utils/GraphicViewer.h"
 #include "photomatch/ui/utils/GraphicItem.h"
+#include "photomatch/core/utils.h"
+
+#include <tidop/core/path.h>
+#include <tidop/img/imgreader.h>
 
 namespace photomatch
 {
@@ -108,6 +112,42 @@ void TabHandler::clear()
   update();
 }
 
+QImage readImage(const QString &image_file)
+{
+  QImage image;
+
+  try {
+
+    std::unique_ptr<tl::ImageReader> imageReader = tl::ImageReaderFactory::create(tl::Path(image_file.toStdWString()));
+    imageReader->open();
+    if(imageReader->isOpen()) {
+
+      /// Imagen georeferenciada.
+      /// TODO: mostrar coordenadas en la barra de estado
+      bool geo = imageReader->isGeoreferenced();
+
+      cv::Mat bmp;
+
+      tl::DataType data_type = imageReader->dataType();
+      if(data_type == tl::DataType::TL_32F ||
+          data_type == tl::DataType::TL_64F) {
+        /// TODO: Aplicar paleta, mapa de sombras, etc, al DTM
+      } else {
+        bmp = imageReader->read();
+      }
+
+      image = cvMatToQImage(bmp);
+
+      imageReader->close();
+    }
+
+  } catch(...) {
+    TL_THROW_EXCEPTION_WITH_NESTED("Catched exception");
+  }
+
+  return image;
+}
+
 void TabHandler::setImage(const QString &image)
 {
   const QSignalBlocker blocker(this);
@@ -142,7 +182,7 @@ void TabHandler::setImage(const QString &image)
   if (id == -1) {
     GraphicViewerImp *graphicViewer = new GraphicViewerImp(this);
     mGraphicViewer = graphicViewer;
-    mGraphicViewer->setImage(QImage(image));
+    mGraphicViewer->setImage(readImage(image));
     id = this->addTab(mGraphicViewer, fileInfo.fileName());
     this->setCurrentIndex(id);
     this->setTabToolTip(id, image);
