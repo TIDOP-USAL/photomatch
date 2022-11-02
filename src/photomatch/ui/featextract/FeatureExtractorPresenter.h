@@ -58,6 +58,7 @@ class LssWidget;
 class MsdWidget;
 class MserWidget;
 class OrbWidget;
+class R2D2Widget;
 class SiftWidget;
 class StarWidget;
 class SurfWidget;
@@ -108,6 +109,8 @@ private:
   void setMserDetectorProperties();
   void setOrbDetectorProperties();
   void setOrbDescriptorProperties();
+  void setR2D2DetectorProperties();
+  void setR2D2DescriptorProperties();
   void setSiftDetectorProperties();
   void setSiftDescriptorProperties();
   void setStarDetectorProperties();
@@ -183,6 +186,7 @@ protected:
   MsdWidget *mMsdDetector;
   MserWidget *mMserDetector;
   OrbWidget *mOrbDetector;
+  R2D2Widget *mR2D2Detector;
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   SiftWidget *mSiftDetector;
 #endif
@@ -206,6 +210,7 @@ protected:
   LatchWidget *mLatchDescriptor;
   LssWidget *mLssDescriptor;
   OrbWidget *mOrbDescriptor;
+  R2D2Widget *mR2D2Descriptor;
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   SiftWidget *mSiftDescriptor;
 #endif

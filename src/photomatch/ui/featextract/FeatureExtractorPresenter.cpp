@@ -46,6 +46,7 @@
 #include "photomatch/core/features/mser.h"
 #include "photomatch/core/features/kaze.h"
 #include "photomatch/core/features/orb.h"
+#include "photomatch/core/features/r2d2.h"
 #include "photomatch/core/features/sift.h"
 #include "photomatch/core/features/star.h"
 #include "photomatch/core/features/surf.h"
@@ -78,6 +79,7 @@
 #include "photomatch/widgets/MsdWidget.h"
 #include "photomatch/widgets/MserWidget.h"
 #include "photomatch/widgets/OrbWidget.h"
+#include "photomatch/widgets/R2D2Widget.h"
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
 #include "photomatch/widgets/SiftWidget.h"
 #endif
@@ -124,6 +126,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mMsdDetector(new MsdWidgetImp),
     mMserDetector(new MserWidgetImp),
     mOrbDetector(new OrbWidgetImp),
+    mR2D2Detector(new R2D2WidgetImp),
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
     mSiftDetector(new SiftWidgetImp),
 #endif
@@ -146,6 +149,7 @@ FeatureExtractorPresenterImp::FeatureExtractorPresenterImp(FeatureExtractorView 
     mLatchDescriptor(new LatchWidgetImp),
     mLssDescriptor(new LssWidgetImp),
     mOrbDescriptor(new OrbWidgetImp),
+    mR2D2Descriptor(new R2D2WidgetImp),
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
     mSiftDescriptor(new SiftWidgetImp),
 #endif
@@ -216,6 +220,11 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
   if (mOrbDetector){
     delete mOrbDetector;
     mOrbDetector = nullptr;
+  }
+
+  if (mR2D2Detector) {
+    delete mR2D2Detector;
+    mR2D2Detector = nullptr;
   }
 
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
@@ -305,6 +314,11 @@ FeatureExtractorPresenterImp::~FeatureExtractorPresenterImp()
     mOrbDescriptor = nullptr;
   }
 
+  if (mR2D2Descriptor) {
+    delete mR2D2Descriptor;
+    mR2D2Descriptor = nullptr;
+  }
+
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   if (mSiftDescriptor){
     delete mSiftDescriptor;
@@ -344,6 +358,7 @@ void FeatureExtractorPresenterImp::init()
   mView->addKeypointDetector(mMsdDetector);
   mView->addKeypointDetector(mMserDetector);
   mView->addKeypointDetector(mOrbDetector);
+  mView->addKeypointDetector(mR2D2Detector);
 #if (CV_VERSION_MAJOR > 4 || (CV_VERSION_MAJOR == 4 && CV_VERSION_MINOR >= 4)) || defined OPENCV_ENABLE_NONFREE
   mView->addKeypointDetector(mSiftDetector);
 #endif
@@ -367,6 +382,7 @@ void FeatureExtractorPresenterImp::init()
   mView->addDescriptorExtractor(mLatchDescriptor);
   mView->addDescriptorExtractor(mLssDescriptor);
   mView->addDescriptorExtractor(mOrbDescriptor);
+  mView->addDescriptorExtractor(mR2D2Descriptor);
 #if CV_VERSION_MAJOR >= 4 || (CV_VERSION_MAJOR == 3 && CV_VERSION_MINOR > 2)
   mView->addDescriptorExtractor(mVggDescriptor);
 #endif
@@ -483,9 +499,22 @@ void FeatureExtractorPresenterImp::createProcess()
   QString currentKeypointDetector = mView->currentKeypointDetector();
   QString currentDescriptorExtractor = mView->currentDescriptorExtractor();
   
-  if(currentKeypointDetector == "D2Net") {
+  if(currentKeypointDetector == "D2Net" ||
+     currentKeypointDetector == "R2D2") {
 
-    std::shared_ptr<FeatureExtractorPython> featureExtractor = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
+    std::shared_ptr<FeatureExtractorPython> featureExtractor;
+    
+    if (currentKeypointDetector.compare("D2Net") == 0) {
+      featureExtractor = std::make_shared<D2NetDetectorDescriptor>(mD2NetDetector->multiscale());
+    } else if (currentKeypointDetector.compare("R2D2") == 0) {
+      featureExtractor = std::make_shared<R2D2DetectorDescriptor>(mR2D2Detector->scaleF(),
+                                                                  mR2D2Detector->minSize(),
+                                                                  mR2D2Detector->maxSize(),
+                                                                  mR2D2Detector->minScale(),
+                                                                  mR2D2Detector->maxScale(),
+                                                                  mR2D2Detector->reliabilityThreshold(),
+                                                                  mR2D2Detector->repeatabilityThreshold());
+    }
 
     mProjectModel->setDetector(std::dynamic_pointer_cast<Feature>(featureExtractor));
     mProjectModel->setDescriptor(std::dynamic_pointer_cast<Feature>(featureExtractor));
@@ -683,6 +712,8 @@ void FeatureExtractorPresenterImp::setDetectorAndDescriptorProperties()
   setMserDetectorProperties();
   setOrbDetectorProperties();
   setOrbDescriptorProperties();
+  setR2D2DetectorProperties();
+  setR2D2DescriptorProperties();
   setSiftDetectorProperties();
   setSiftDescriptorProperties();
   setStarDetectorProperties();
@@ -1259,6 +1290,66 @@ void FeatureExtractorPresenterImp::setOrbDescriptorProperties()
   }
 }
 
+void FeatureExtractorPresenterImp::setR2D2DetectorProperties()
+{
+  if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    Feature *detector = current_session->detector().get();
+
+    mR2D2Detector->setScaleF(detector && detector->type() == Feature::Type::r2d2 ?
+                                 dynamic_cast<R2D2 *>(detector)->scaleF() :
+                                 pow(2, 0.25));
+    mR2D2Detector->setMinSize(detector && detector->type() == Feature::Type::r2d2 ?
+                                    dynamic_cast<R2D2 *>(detector)->minSize() :
+                                    256);
+    mR2D2Detector->setMaxSize(detector && detector->type() == Feature::Type::r2d2 ?
+                                  dynamic_cast<R2D2 *>(detector)->maxSize() :
+                                  1024);
+    mR2D2Detector->setMinScale(detector && detector->type() == Feature::Type::r2d2 ?
+                                   dynamic_cast<R2D2 *>(detector)->minScale() :
+                                   0);
+    mR2D2Detector->setMaxScale(detector && detector->type() == Feature::Type::r2d2 ?
+                           dynamic_cast<R2D2 *>(detector)->maxScale() :
+                           1);
+    mR2D2Detector->setReliabilityThreshold(detector && detector->type() == Feature::Type::r2d2 ?
+                               dynamic_cast<R2D2 *>(detector)->reliabilityThreshold() :
+                               0.7);
+    mR2D2Detector->setRepeatabilityThreshold(detector && detector->type() == Feature::Type::r2d2 ?
+                               dynamic_cast<R2D2 *>(detector)->repeatabilityThreshold() :
+                               0.7);
+  }
+}
+
+void FeatureExtractorPresenterImp::setR2D2DescriptorProperties()
+{
+  if (std::shared_ptr<Session> current_session = mProjectModel->currentSession()) {
+
+    Feature *descriptor = current_session->descriptor().get();
+
+    mR2D2Descriptor->setScaleF(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                                   dynamic_cast<R2D2 *>(descriptor)->scaleF() :
+                                   pow(2, 0.25));
+    mR2D2Descriptor->setMinSize(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                                      dynamic_cast<R2D2 *>(descriptor)->minSize() :
+                                      256);
+    mR2D2Descriptor->setMaxSize(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                                    dynamic_cast<R2D2 *>(descriptor)->maxSize() :
+                                    1024);
+    mR2D2Descriptor->setMinScale(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                                     dynamic_cast<R2D2 *>(descriptor)->minScale() :
+                                     0);
+    mR2D2Descriptor->setMaxScale(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                             dynamic_cast<R2D2 *>(descriptor)->maxScale() :
+                             1);
+    mR2D2Descriptor->setReliabilityThreshold(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                                 dynamic_cast<R2D2 *>(descriptor)->reliabilityThreshold() :
+                                 0.7);
+    mR2D2Descriptor->setRepeatabilityThreshold(descriptor && descriptor->type() == Feature::Type::r2d2 ?
+                                 dynamic_cast<R2D2 *>(descriptor)->repeatabilityThreshold() :
+                                 0.7);
+  }
+}
+
 void FeatureExtractorPresenterImp::setSiftDetectorProperties()
 {
 #ifdef OPENCV_ENABLE_NONFREE
@@ -1502,13 +1593,13 @@ std::shared_ptr<KeypointDetector> FeatureExtractorPresenterImp::makeKeypointDete
     } else {
 #endif // HAVE_CUDA
       keypoint_detector = std::make_shared<OrbDetectorDescriptor>(mOrbDetector->featuresNumber(),
-                                                                 mOrbDetector->scaleFactor(),
-                                                                 mOrbDetector->levelsNumber(),
-                                                                 mOrbDetector->edgeThreshold(),
-                                                                 mOrbDetector->wta_k(),
-                                                                 mOrbDetector->scoreType(),
-                                                                 mOrbDetector->patchSize(),
-                                                                 mOrbDetector->fastThreshold());
+                                                                  mOrbDetector->scaleFactor(),
+                                                                  mOrbDetector->levelsNumber(),
+                                                                  mOrbDetector->edgeThreshold(),
+                                                                  mOrbDetector->wta_k(),
+                                                                  mOrbDetector->scoreType(),
+                                                                  mOrbDetector->patchSize(),
+                                                                  mOrbDetector->fastThreshold());
 
 #ifdef HAVE_CUDA
     }
@@ -1786,6 +1877,7 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
   mView->disableDescriptorExtractor("KAZE");
   mView->disableDescriptorExtractor("ASIFT");
   mView->disableDescriptorExtractor("D2Net");
+  mView->disableDescriptorExtractor("R2D2");
   mView->enableDescriptorExtractor("BRISK");
   mView->enableDescriptorExtractor("BOOST");
   mView->enableDescriptorExtractor("BRIEF");
@@ -1863,12 +1955,19 @@ void FeatureExtractorPresenterImp::setCurrentkeypointDetector(const QString &key
   }
 #endif
   else if(keypointDetector.compare("ASIFT") == 0 ||
-          keypointDetector.compare("D2Net") == 0) {
+          keypointDetector.compare("D2Net") == 0 ||
+          keypointDetector.compare("R2D2") == 0) {
     if(keypointDetector.compare("ASIFT") == 0) {
       mView->setCurrentDescriptorExtractor("ASIFT");
       mView->disableDescriptorExtractor("D2Net");
+      mView->disableDescriptorExtractor("R2D2");
     } else if (keypointDetector.compare("D2Net") == 0){
       mView->setCurrentDescriptorExtractor("D2Net");
+      mView->disableDescriptorExtractor("ASIFT");
+      mView->disableDescriptorExtractor("R2D2");
+    } else if (keypointDetector.compare("R2D2") == 0) {
+      mView->setCurrentDescriptorExtractor("R2D2");
+      mView->disableDescriptorExtractor("D2Net");
       mView->disableDescriptorExtractor("ASIFT");
     }
     

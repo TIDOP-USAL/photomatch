@@ -57,7 +57,7 @@ int R2D2Properties::minSize() const
   return mMinSize;
 }
 
-void R2D2Properties::setMinSize(double size)
+void R2D2Properties::setMinSize(int size)
 {
   mMinSize = size;
 }
@@ -67,7 +67,7 @@ int R2D2Properties::maxSize() const
   return mMaxSize;
 }
 
-void R2D2Properties::setMaxSize(double size)
+void R2D2Properties::setMaxSize(int size)
 {
   mMaxSize = size;
 }
@@ -114,13 +114,13 @@ void R2D2Properties::setRepeatabilityThreshold(double repeatabilityThreshold)
 
 void R2D2Properties::reset()
 {
-  //mScaleF = 2**0.25?;
-  int mMinSize = 256;
-  int mMaxSize = 1024;
-  double mMinScale = 0;
-  double mMaxScale = 1;
-  double mReliabilityThreshold = 0.7;
-  double mRepeatabilityThreshold = 0.7;
+  mScaleF = pow(2,0.25);
+  mMinSize = 256;
+  mMaxSize = 1024;
+  mMinScale = 0;
+  mMaxScale = 1;
+  mReliabilityThreshold = 0.7;
+  mRepeatabilityThreshold = 0.7;
 }
 
 QString R2D2Properties::name() const
@@ -168,7 +168,7 @@ void R2D2DetectorDescriptor::extract(const QString &imagePath,
   try {
     
     tl::Path app_path = tl::App::instance().path();
-    
+
     std::string cmd;
     cmd.append("\"");
     cmd.append(app_path.parentPath().toString());
@@ -186,7 +186,7 @@ void R2D2DetectorDescriptor::extract(const QString &imagePath,
     cmd.append(" --min-scale ").append(std::to_string(minScale()));
     cmd.append(" --max-scale ").append(std::to_string(maxScale()));
     cmd.append(" --reliability-thr ").append(std::to_string(reliabilityThreshold()));
-    cmd.append(" --repeatability-thr").append(std::to_string(repeatabilityThreshold()));
+    cmd.append(" --repeatability-thr ").append(std::to_string(repeatabilityThreshold()));
     // Si no se soporta cuda
     //cmd.append("--gpu -1");
 

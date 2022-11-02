@@ -92,7 +92,7 @@ void D2NetDetectorDescriptor::extract(const QString &imagePath,
   try {
     
     tl::Path app_path = tl::App::instance().path();
-    
+
     std::string cmd;
     cmd.append("\"");
     cmd.append(app_path.parentPath().toString());

@@ -52,9 +52,9 @@ public:
   double scaleF() const override;
   void setScaleF(double scaleF) override;
   int minSize() const override;
-  void setMinSize(double size) override;
+  void setMinSize(int size) override;
   int maxSize() const override;
-  void setMaxSize(double size) override;
+  void setMaxSize(int size) override;
   double minScale() const override;
   void setMinScale(double minScale) override;
   double maxScale() const override;
@@ -73,7 +73,7 @@ public:
 
 private:
 
-  double mScaleF; // 2**0.25
+  double mScaleF;
   int mMinSize{256};
   int mMaxSize{1024};
   double mMinScale{0};

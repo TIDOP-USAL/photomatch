@@ -28,6 +28,7 @@
 #include "photomatch/core/features/matchio.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/core/exception.h>
 
 #include <QFileInfo>
 #include <QImageReader>
@@ -89,7 +90,7 @@ void MatchingProcess::run()
     featuresRead->read();
     std::vector<cv::KeyPoint> keyPoints1 = featuresRead->keyPoints();
     cv::Mat descriptors1 = featuresRead->descriptors();
-
+  
     featuresRead = FeaturesReaderFactory::createReader(mTrainDescriptors);
     featuresRead->read();
     std::vector<cv::KeyPoint> keyPoints2 = featuresRead->keyPoints();
@@ -106,6 +107,8 @@ void MatchingProcess::run()
       imageReader.setFileName(mTrainImage);
       train_size = imageReader.size();
     }
+
+    TL_ASSERT(mDescriptorMatcher, "Descriptor Matcher not exist");
 
     mDescriptorMatcher->compute(descriptors1, descriptors2, keyPoints1, keyPoints2, &goodMatches, &wrongMatches, query_size, train_size);
 

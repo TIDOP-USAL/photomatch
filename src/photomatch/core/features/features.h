@@ -1427,9 +1427,9 @@ public:
   virtual double scaleF() const = 0;
   virtual void setScaleF(double scaleF) = 0;
   virtual int minSize() const = 0;
-  virtual void setMinSize(double size) = 0;
+  virtual void setMinSize(int size) = 0;
   virtual int maxSize() const = 0;
-  virtual void setMaxSize(double size) = 0;
+  virtual void setMaxSize(int size) = 0;
   virtual double minScale() const = 0;
   virtual void setMinScale(double minScale) = 0;
   virtual double maxScale() const = 0;

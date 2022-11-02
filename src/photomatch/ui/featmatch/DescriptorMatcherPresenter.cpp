@@ -535,9 +535,9 @@ void DescriptorMatcherPresenterImp::createProcess()
 
   mView->hide();
 
-  emit running();
+  //emit running();
 
-  mMultiProcess->start();
+  //mMultiProcess->start();
 }
 
 void DescriptorMatcherPresenterImp::onError(int code, const QString &msg)

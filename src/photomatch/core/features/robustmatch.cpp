@@ -24,6 +24,7 @@
 #include "robustmatch.h"
 
 #include <tidop/core/messages.h>
+#include <tidop/core/exception.h>
 #include <tidop/featmatch/geomtest.h>
 
 #include <opencv2/xfeatures2d.hpp>
@@ -390,11 +391,21 @@ std::vector<cv::DMatch> RobustMatchingImp::match(const cv::Mat &queryDescriptor,
                                                  const cv::Mat &trainDescriptor,
                                                  std::vector<cv::DMatch> *wrongMatches)
 {
-  if (this->crossCheck()){
-    return this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
-  } else {
-    return this->fastRobustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+  std::vector<cv::DMatch> goodMatches;
+
+  try {
+
+    if (this->crossCheck()){
+      goodMatches = this->robustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+    } else {
+      goodMatches = this->fastRobustMatch(queryDescriptor, trainDescriptor, wrongMatches);
+    }
+
+  } catch (...) {
+    TL_THROW_EXCEPTION_WITH_NESTED("");
   }
+
+  return goodMatches;
 }
 
 std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescriptor,
@@ -403,35 +414,41 @@ std::vector<cv::DMatch> RobustMatchingImp::robustMatch(const cv::Mat &queryDescr
 {
   std::vector<cv::DMatch> goodMatches;
 
-  std::vector<std::vector<cv::DMatch>> matches12;
-  std::vector<std::vector<cv::DMatch>> matches21;
+  try {
 
-  bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches12);
-  if (err) return goodMatches;
+    std::vector<std::vector<cv::DMatch>> matches12;
+    std::vector<std::vector<cv::DMatch>> matches21;
 
-  err = mDescriptorMatcher->match(trainDescriptor, queryDescriptor, matches21);
-  if (err) return goodMatches;
+    bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches12);
+    if (err) return goodMatches;
 
-  std::vector<std::vector<cv::DMatch>> wrong_matches12;
-  std::vector<std::vector<cv::DMatch>> wrong_matches21;
-  std::vector<std::vector<cv::DMatch>> good_matches12 = RobustMatchingImp::ratioTest(matches12,
-                                                                                     this->ratio(),
-                                                                                     &wrong_matches12);
-  std::vector<std::vector<cv::DMatch>> good_matches21 = RobustMatchingImp::ratioTest(matches21,
-                                                                                     this->ratio(),
-                                                                                     &wrong_matches21);
+    err = mDescriptorMatcher->match(trainDescriptor, queryDescriptor, matches21);
+    if (err) return goodMatches;
 
-  matches12.clear();
-  matches21.clear();
+    std::vector<std::vector<cv::DMatch>> wrong_matches12;
+    std::vector<std::vector<cv::DMatch>> wrong_matches21;
+    std::vector<std::vector<cv::DMatch>> good_matches12 = RobustMatchingImp::ratioTest(matches12,
+                                                                                       ratio(),
+                                                                                       &wrong_matches12);
+    std::vector<std::vector<cv::DMatch>> good_matches21 = RobustMatchingImp::ratioTest(matches21,
+                                                                                       ratio(),
+                                                                                       &wrong_matches21);
 
-  if (wrongMatches){
-    for (auto &wrong_match : wrong_matches12){
-      wrongMatches->push_back(wrong_match[0]);
+    matches12.clear();
+    matches21.clear();
+
+    if (wrongMatches) {
+      for (auto &wrong_match : wrong_matches12) {
+        wrongMatches->push_back(wrong_match[0]);
+      }
     }
+
+    goodMatches = RobustMatchingImp::crossCheckTest(good_matches12, good_matches21, wrongMatches);
+
+  } catch (...) {
+    TL_THROW_EXCEPTION_WITH_NESTED("");
   }
-
-  goodMatches = RobustMatchingImp::crossCheckTest(good_matches12, good_matches21, wrongMatches);
-
+  
   return goodMatches;
 }
 
@@ -441,23 +458,29 @@ std::vector<cv::DMatch> RobustMatchingImp::fastRobustMatch(const cv::Mat &queryD
 {
   std::vector<cv::DMatch> goodMatches;
 
-  std::vector<std::vector<cv::DMatch>> matches;
-  bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches);
-  if (err) return goodMatches;
+  try {
 
-  std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
-  std::vector<std::vector<cv::DMatch>> ratio_test_matches = RobustMatchingImp::ratioTest(matches,
-                                                                                         this->ratio(),
-                                                                                         &ratio_test_wrong_matches);
+    std::vector<std::vector<cv::DMatch>> matches;
+    bool err = mDescriptorMatcher->match(queryDescriptor, trainDescriptor, matches);
+    if (err) return goodMatches;
 
-  for (auto &match : ratio_test_matches){
-    goodMatches.push_back(match[0]);
-  }
+    std::vector<std::vector<cv::DMatch>> ratio_test_wrong_matches;
+    std::vector<std::vector<cv::DMatch>> ratio_test_matches = RobustMatchingImp::ratioTest(matches,
+                                                                                           this->ratio(),
+                                                                                           &ratio_test_wrong_matches);
 
-  if (wrongMatches) {
-    for (auto &wrong_match : ratio_test_wrong_matches){
-      wrongMatches->push_back(wrong_match[0]);
+    for (auto &match : ratio_test_matches){
+      goodMatches.push_back(match[0]);
     }
+
+    if (wrongMatches) {
+      for (auto &wrong_match : ratio_test_wrong_matches){
+        wrongMatches->push_back(wrong_match[0]);
+      }
+    }
+
+  } catch (...) {
+    TL_THROW_EXCEPTION_WITH_NESTED("");
   }
 
   return goodMatches;
@@ -477,7 +500,7 @@ bool RobustMatchingImp::compute(const cv::Mat &queryDescriptor,
     *goodMatches = this->geometricFilter(*goodMatches, keypoints1, keypoints2, wrongMatches);
     return false;
   } catch(std::exception &e){
-    msgError(e.what());
+    tl::printException(e);
     return true;
   }
 }

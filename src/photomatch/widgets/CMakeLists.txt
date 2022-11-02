@@ -89,6 +89,8 @@ add_library(${PROJECT_NAME} ${LIB_TYPE}
             OrbWidget.h
             PoheWidget.cpp
             PoheWidget.h
+            R2D2Widget.cpp
+            R2D2Widget.h
             RswheWidget.cpp
             RswheWidget.h
             SiftWidget.cpp

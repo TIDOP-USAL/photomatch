@@ -28,7 +28,7 @@
 
 #include "photomatch/core/features/matcher.h"
 
-#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 #include <opencv2/cudafeatures2d.hpp>
 #endif // HAVE_OPENCV_CUDAFEATURES2D
 
@@ -120,7 +120,7 @@ protected:
 /*----------------------------------------------------------------*/
 
 
-#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 class PHOTOMATCH_EXPORT BruteForceMatcherCuda
   : public BruteForceMatcherProperties,

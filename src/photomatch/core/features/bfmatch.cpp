@@ -131,7 +131,7 @@ void BruteForceMatcherImp::setNormType(BruteForceMatcher::Norm normType)
 
 /*----------------------------------------------------------------*/
 
-#if defined HAVE_CUDA && defined HAVE_OPENCV_CUDAFEATURES2D
+#ifdef HAVE_OPENCV_CUDAFEATURES2D
 
 BruteForceMatcherCuda::BruteForceMatcherCuda()
 {
