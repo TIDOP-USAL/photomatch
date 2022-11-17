@@ -280,10 +280,8 @@ void FeatureExtractorPythonTask::run()
     emit featuresExtracted(mFeatures);
     emit statusChangedNext();
 
-  } catch(const std::exception &e) {
-    tl::MessageManager::release(e.what(), tl::MessageLevel::msg_error);
-  } catch(...) {
-    msgError("Feature Extractor unknow exception");
+  } catch(std::exception &e) {
+    tl::printException(e);
   }
 
 }

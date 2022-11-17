@@ -189,6 +189,7 @@ void R2D2DetectorDescriptor::extract(const QString &imagePath,
     cmd.append(" --repeatability-thr ").append(std::to_string(repeatabilityThreshold()));
     // Si no se soporta cuda
     //cmd.append("--gpu -1");
+    msgInfo("Command run: %s", cmd.c_str());
 
     tl::Process process(cmd);
     

@@ -137,6 +137,11 @@ QImage HomographyViewerModelImp::homography(const QString &imgName1,
             pts_train.push_back(keyPoints2[train_id].pt);
           }
 
+          if (pts_query.size() < 4) {
+            msgError("A minimum of 4 points is needed to calculate the homography.");
+            break;
+          }
+
           cv::Mat H = cv::findHomography(pts_query, pts_train);
 
           QByteArray ba = imgPath1.toLocal8Bit();

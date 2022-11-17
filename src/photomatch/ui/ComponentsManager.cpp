@@ -53,6 +53,10 @@
 #include "photomatch/ui/homography/HomographyViewerView.h"
 #include "photomatch/ui/homography/HomographyViewerPresenter.h"
 
+#include "photomatch/ui/evaluation/EvaluationModel.h"
+#include "photomatch/ui/evaluation/EvaluationView.h"
+#include "photomatch/ui/evaluation/EvaluationPresenter.h"
+
 #include "photomatch/ui/curves/CurvesViewerModel.h"
 #include "photomatch/ui/curves/CurvesViewerView.h"
 #include "photomatch/ui/curves/CurvesViewerPresenter.h"
@@ -103,6 +107,8 @@ ComponentsManager::ComponentsManager(QObject *parent)
     mGroundTruthModel(nullptr),
     mHomographyViewerPresenter(nullptr),
     mHomographyViewerModel(nullptr),
+    mEvaluationPresenter(nullptr),
+    mEvaluationModel(nullptr),
     mCurvesPRViewerPresenter(nullptr),
     mCurvesPRViewerModel(nullptr),
     mCurvesROCViewerPresenter(nullptr),
@@ -257,6 +263,16 @@ ComponentsManager::~ComponentsManager()
     mHomographyViewerModel = nullptr;
   }
 
+  if (mEvaluationPresenter) {
+    delete mEvaluationPresenter;
+    mEvaluationPresenter = nullptr;
+  }
+
+  if (mEvaluationModel) {
+    delete mEvaluationModel;
+    mEvaluationModel = nullptr;
+  }
+
   if (mCurvesPRViewerPresenter){
     delete mCurvesPRViewerPresenter;
     mCurvesPRViewerPresenter = nullptr;
@@ -377,6 +393,8 @@ void ComponentsManager::mainWindowConnectSignalsSlots()
           this, &ComponentsManager::initAndOpenGroundTruthEditorDialog);
   connect(mMainWindowPresenter, &MainWindowPresenter::openHomographyViewerDialog,
           this, &ComponentsManager::initAndOpenHomographyViewerDialog);
+  connect(mMainWindowPresenter, &MainWindowPresenter::openEvaluationDialog,
+          this, &ComponentsManager::initAndOpenEvaluationDialog);
   connect(mMainWindowPresenter, &MainWindowPresenter::openPRCurvesViewerDialog,
           this, &ComponentsManager::initAndOpenPRCurvesViewerDialog);
   connect(mMainWindowPresenter, &MainWindowPresenter::openROCCurvesViewerDialog,
@@ -616,6 +634,26 @@ HomographyViewerModel *ComponentsManager::homographyViewerModel()
     mHomographyViewerModel = new HomographyViewerModelImp(mProjectModel);
   }
   return mHomographyViewerModel;
+}
+
+EvaluationPresenter *ComponentsManager::evaluationPresenter()
+{
+  if (mEvaluationPresenter == nullptr) {
+    Qt::WindowFlags f(Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
+    EvaluationView *evaluationView = new EvaluationViewImp(this->mainWindowView(), f);
+    mEvaluationPresenter = new EvaluationPresenterImp(evaluationView,
+                                                      this->evaluationModel(),
+                                                      this->settingsModel());
+  }
+  return mEvaluationPresenter;
+}
+
+EvaluationModel *ComponentsManager::evaluationModel()
+{
+  if (mEvaluationModel == nullptr) {
+    mEvaluationModel = new EvaluationModelImp(mProjectModel);
+  }
+  return mEvaluationModel;
 }
 
 CurvesViewerPresenter *ComponentsManager::curvesPRViewerPresenter()
@@ -936,6 +974,17 @@ void ComponentsManager::initAndOpenHomographyViewerDialog()
 
   this->homographyViewerPresenter()->setHelp(this->helpDialog());
   this->homographyViewerPresenter()->open();
+}
+
+void ComponentsManager::initAndOpenEvaluationDialog()
+{
+  disconnect(this->mainWindowPresenter(), &MainWindowPresenter::openEvaluationDialog,
+             this, &ComponentsManager::initAndOpenEvaluationDialog);
+  connect(this->mainWindowPresenter(), &MainWindowPresenter::openEvaluationDialog,
+          this->evaluationPresenter(), &PhotoMatchPresenter::open);
+
+  this->evaluationPresenter()->setHelp(this->helpDialog());
+  this->evaluationPresenter()->open();
 }
 
 void ComponentsManager::initAndOpenPRCurvesViewerDialog()

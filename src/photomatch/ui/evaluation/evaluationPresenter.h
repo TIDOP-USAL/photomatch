@@ -22,42 +22,69 @@
  ************************************************************************/
 
 
-#include "MainWindowView.h"
-#include "MainWindowModel.h"
-#include "MainWindowPresenter.h"
-#include "ComponentsManager.h"
+#ifndef PHOTOMATCH_EVALUATION_PRESENTER_H
+#define PHOTOMATCH_EVALUATION_PRESENTER_H
 
-#include <QApplication>
+#include <memory>
 
-#include "photomatch/photomatch_global.h"
+#include <QObject>
 
-#include <tidop/core/console.h>
-#include <tidop/core/messages.h>
+#include "photomatch/ui/evaluation/Evaluation.h"
 
-
-#ifdef HAVE_VLD
-#include "vld.h"
-#endif
-
-using namespace photomatch;
-
-int main(int argc, char *argv[])
+namespace photomatch
 {
-  QApplication a(argc, argv);
 
-  tl::Console &console = tl::Console::instance();
-  console.setMessageLevel(tl::MessageLevel::msg_verbose);
-  console.setTitle("PhotoMatch");
-  tl::MessageManager::instance().addListener(&console);
+class EvaluationView;
+class EvaluationModel;
+class SettingsModel;
+class HelpDialog;
 
-  ComponentsManager componentsManager;
-  componentsManager.mainWindowPresenter()->open();
-//  MainWindowView view;
-//  MainWindowModel model;
-//  MainWindowPresenter presenter(&view, &model);
-//  presenter.open();
 
-  bool r = a.exec();
+class EvaluationPresenterImp
+  : public EvaluationPresenter
+{
 
-  return r;
-}
+  Q_OBJECT
+
+public:
+
+  EvaluationPresenterImp(EvaluationView *view,
+                         EvaluationModel *model,
+                         SettingsModel *settings);
+  ~EvaluationPresenterImp() override {}
+
+// EvaluationPresenter interface
+
+protected slots:
+
+  void loadLeftImage(const QString &image) override;
+  void loadRightImage(const QString &image) override;
+  void activeSession(const QString &session) override;
+  void disableSession(const QString &session) override;
+  void setErrorThreshold(double error) override;
+
+// PhotoMatchModel interface
+
+public slots:
+
+  void help() override;
+  void open() override;
+  void setHelp(HelpDialog *help) override;
+
+private:
+
+  void init() override;
+  void initSignalAndSlots() override;
+
+private:
+
+  EvaluationView *mView;
+  EvaluationModel *mModel;
+  SettingsModel *mSettingsModel;
+  HelpDialog *mHelp;
+
+};
+
+} // namespace photomatch
+
+#endif // PHOTOMATCH_EVALUATION_PRESENTER_H

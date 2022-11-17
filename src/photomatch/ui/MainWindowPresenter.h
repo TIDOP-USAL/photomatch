@@ -68,6 +68,7 @@ signals:
   void openExportMatchesDialog();
   void openGroundTruthEditorDialog();
   void openHomographyViewerDialog();
+  void openEvaluationDialog();
   void openMultiviewMatchingAssessmentDialog();
   void openPRCurvesViewerDialog();
   void openROCCurvesViewerDialog();

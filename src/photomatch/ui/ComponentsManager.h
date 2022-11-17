@@ -51,6 +51,9 @@ class GroundTruthPresenter;
 class HomographyViewerPresenter;
 class HomographyViewerModel;
 
+class EvaluationPresenter;
+class EvaluationModel;
+
 class CurvesViewerPresenter;
 class CurvesViewerModel;
 
@@ -114,6 +117,9 @@ public:
   HomographyViewerPresenter *homographyViewerPresenter();
   HomographyViewerModel *homographyViewerModel();
 
+  EvaluationPresenter *evaluationPresenter();
+  EvaluationModel *evaluationModel();
+
   CurvesViewerPresenter *curvesPRViewerPresenter();
   CurvesViewerModel *curvesPRViewerModel();
   CurvesViewerPresenter *curvesROCViewerPresenter();
@@ -153,6 +159,7 @@ protected slots:
   void initAndOpenExportMatchesDialog();
   void initAndOpenGroundTruthEditorDialog();
   void initAndOpenHomographyViewerDialog();
+  void initAndOpenEvaluationDialog();
   void initAndOpenPRCurvesViewerDialog();
   void initAndOpenROCCurvesViewerDialog();
   void initAndOpenDETCurvesViewerDialog();
@@ -213,6 +220,9 @@ protected:
 
   HomographyViewerPresenter *mHomographyViewerPresenter;
   HomographyViewerModel *mHomographyViewerModel;
+
+  EvaluationPresenter *mEvaluationPresenter;
+  EvaluationModel *mEvaluationModel;
 
   CurvesViewerPresenter *mCurvesPRViewerPresenter;
   CurvesViewerModel *mCurvesPRViewerModel;

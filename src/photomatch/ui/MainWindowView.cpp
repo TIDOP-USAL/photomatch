@@ -103,6 +103,7 @@ void MainWindowView::initActions()
   this->initActionPassPointsViewer();
   this->initActionGroundTruthEditor();
   this->initActionHomography();
+  this->initActionEvaluation();
   this->initActionPRCurves();
   this->initActionROCCurves();
   this->initActionDETCurves();
@@ -300,6 +301,11 @@ void MainWindowView::initActionGroundTruthEditor()
 void MainWindowView::initActionHomography()
 {
   mActionHomography = new QAction(this);
+}
+
+void MainWindowView::initActionEvaluation()
+{
+  mActionEvaluation = new QAction(this);
 }
 
 void MainWindowView::initActionPRCurves()
@@ -562,6 +568,7 @@ void MainWindowView::initMenuQualityControl()
   ui->menuQualityControl->addAction(mActionHomography);
   //ui->menuQualityControl->addAction(mActionRepeatability);
   //ui->menuQualityControl->addAction(mActionPRCurves);
+  ui->menuQualityControl->addAction(mActionEvaluation);
   ui->menuQualityControl->addAction(mActionROCCurves);
   ui->menuQualityControl->addAction(mActionDETCurves);
   ui->menuQualityControl->addSeparator();
@@ -620,6 +627,7 @@ void MainWindowView::connectSignalAndSlots()
   connect(mActionPassPointsViewer, SIGNAL(triggered(bool)), this, SIGNAL(openMultiviewMatchingAssessment()));
   connect(mActionGroundTruthEditor, SIGNAL(triggered(bool)), this, SIGNAL(groundTruthEditor()));
   connect(mActionHomography, SIGNAL(triggered(bool)), this, SIGNAL(homography()));
+  connect(mActionEvaluation, SIGNAL(triggered(bool)), this, SIGNAL(evaluation()));
   //connect(mActionRepeatability,      SIGNAL(triggered(bool)),   this,   SIGNAL(repeatability()));
   connect(mActionPRCurves, SIGNAL(triggered(bool)), this, SIGNAL(prCurves()));
   connect(mActionROCCurves, SIGNAL(triggered(bool)), this, SIGNAL(rocCurves()));
@@ -1673,6 +1681,7 @@ void MainWindowView::update()
   mActionMatchesViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionPassPointsViewer->setEnabled(mFlags.isActive(Flag::feature_matching));
   mActionHomography->setEnabled(mFlags.isActive(Flag::feature_matching));
+  mActionEvaluation->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   //mActionRepeatability->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionPRCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
   mActionROCCurves->setEnabled(mFlags.isActive(Flag::feature_matching) && mFlags.isActive(Flag::ground_truth));
@@ -1730,6 +1739,7 @@ void MainWindowView::retranslate()
   mActionPassPointsViewer->setText(QApplication::translate("MainWindowView", "Multiview Matching Assessment", nullptr));
   mActionGroundTruthEditor->setText(QApplication::translate("MainWindowView", "Ground Truth Editor", nullptr));
   mActionHomography->setText(QApplication::translate("MainWindowView", "Homography", nullptr));
+  mActionEvaluation->setText(QApplication::translate("MainWindowView", "Evaluation", nullptr));
   mActionPRCurves->setText(QApplication::translate("MainWindowView", "Precision-Recall Curves", nullptr));
   mActionROCCurves->setText(QApplication::translate("MainWindowView", "ROC Curves", nullptr));
   mActionDETCurves->setText(QApplication::translate("MainWindowView", "DET Curves", nullptr));

@@ -1012,6 +1012,7 @@ void MainWindowPresenter::init()
 
 void MainWindowPresenter::initSignalAndSlots()
 {
+
 /* Menú Archivo */
 
   connect(mView, &MainWindowView::openNew,                this, &MainWindowPresenter::openNew);
@@ -1038,6 +1039,7 @@ void MainWindowPresenter::initSignalAndSlots()
   connect(mView,  &MainWindowView::openMultiviewMatchingAssessment,  this, &MainWindowPresenter::openMultiviewMatchingAssessmentDialog);
   connect(mView,  &MainWindowView::groundTruthEditor,        this, &MainWindowPresenter::openGroundTruthEditorDialog);
   connect(mView,  &MainWindowView::homography,               this, &MainWindowPresenter::openHomographyViewerDialog);
+  connect(mView,  &MainWindowView::evaluation,               this, &MainWindowPresenter::openEvaluationDialog);
   connect(mView,  &MainWindowView::prCurves,                 this, &MainWindowPresenter::openPRCurvesViewerDialog);
   connect(mView,  &MainWindowView::rocCurves,                this, &MainWindowPresenter::openROCCurvesViewerDialog);
   connect(mView,  &MainWindowView::detCurves,                this, &MainWindowPresenter::openDETCurvesViewerDialog);

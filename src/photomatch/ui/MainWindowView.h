@@ -186,6 +186,7 @@ signals:
   void openMultiviewMatchingAssessment();
   void groundTruthEditor();
   void homography();
+  void evaluation();
   void repeatability();
   void prCurves();
   void rocCurves();
@@ -266,6 +267,7 @@ private:
   void initActionPassPointsViewer();
   void initActionGroundTruthEditor();
   void initActionHomography();
+  void initActionEvaluation();
   void initActionPRCurves();
   void initActionROCCurves();
   void initActionDETCurves();
@@ -327,6 +329,7 @@ protected:
   QAction *mActionPassPointsViewer;
   QAction *mActionGroundTruthEditor;
   QAction *mActionHomography;
+  QAction *mActionEvaluation;
   //QAction *mActionRepeatability;
   QAction *mActionPRCurves;
   QAction *mActionROCCurves;

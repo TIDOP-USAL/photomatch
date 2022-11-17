@@ -70,6 +70,9 @@ set(PHOTOMATCH_SOURCES
     exportmatch/ExportMatchesModel.cpp
     exportmatch/ExportMatchesView.cpp
     exportmatch/ExportMatchesPresenter.cpp
+	evaluation/EvaluationModel.cpp
+    evaluation/EvaluationView.cpp
+    evaluation/EvaluationPresenter.cpp
     process/ProcessPresenter.cpp
     process/ProcessView.cpp
     #BatchModel.cpp
@@ -154,6 +157,10 @@ set(PHOTOMATCH_HEADERS
     exportmatch/ExportMatchesModel.h
     exportmatch/ExportMatchesView.h
     exportmatch/ExportMatchesPresenter.h
+    evaluation/Evaluation.h
+    evaluation/EvaluationModel.h
+    evaluation/EvaluationView.h
+    evaluation/EvaluationPresenter.h
     process/ProcessPresenter.h
     process/ProcessView.h
     #BatchModel.h
@@ -196,7 +203,8 @@ qt5_create_translation(PHOTOMATCH_QM_FILES ${CMAKE_SOURCE_DIR} photomatch_en.ts 
 
 QT5_ADD_RESOURCES(UI_PHOTOMATCH_RES ${PHOTOMATCH_RESOURCES} )
 
-add_executable(${PROJECT_NAME} WIN32
+add_executable(${PROJECT_NAME}
+               #${PROJECT_NAME} WIN32
                ${PHOTOMATCH_SOURCES}
                ${PHOTOMATCH_HEADERS}
                ${PHOTOMATCH_FORMS}

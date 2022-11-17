@@ -104,7 +104,9 @@ void D2NetDetectorDescriptor::extract(const QString &imagePath,
     features_path.replaceExtension(".xml");
     cmd.append(" --features \"").append(features_path.toString()).append("\"");
     tl::Process process(cmd);
-    
+
+    msgInfo("Command run: %s", cmd.c_str());
+
     process.run();
     
     TL_ASSERT(process.status() == tl::Process::Status::finalized, "Feature extractor error");
@@ -112,11 +114,6 @@ void D2NetDetectorDescriptor::extract(const QString &imagePath,
   } catch(...) {
     TL_THROW_EXCEPTION_WITH_NESTED("");
   }
-}
-
-void D2NetDetectorDescriptor::reset()
-{
-  reset();
 }
 
 
