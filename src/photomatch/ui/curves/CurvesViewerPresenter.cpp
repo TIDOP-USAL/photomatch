@@ -57,7 +57,7 @@ void CurvesViewerPresenterImp::loadLeftImage(const QString &image)
     for (auto &session_name : session_names){
       if (mView->isSessionActive(session_name)){
         this->deleteCurve(session_name);
-        this->computeCurve(session_name, image, mView->rightImage());
+        this->computeCurve(session_name, image, mView->rightImage(), mView->errorThreshold());
       }
     }
   }
@@ -69,14 +69,14 @@ void CurvesViewerPresenterImp::loadRightImage(const QString &image)
   for (auto &session_name : session_names){
     if (mView->isSessionActive(session_name)){
       this->deleteCurve(session_name);
-      this->computeCurve(session_name, mView->leftImage(), image);
+      this->computeCurve(session_name, mView->leftImage(), image, mView->errorThreshold());
     }
   }
 }
 
 void CurvesViewerPresenterImp::activeSession(const QString &session)
 {
-  this->computeCurve(session, mView->leftImage(), mView->rightImage());
+  this->computeCurve(session, mView->leftImage(), mView->rightImage(), mView->errorThreshold());
 }
 
 void CurvesViewerPresenterImp::disableSession(const QString &session)
@@ -86,14 +86,15 @@ void CurvesViewerPresenterImp::disableSession(const QString &session)
 
 void CurvesViewerPresenterImp::computeCurve(const QString &session,
                                             const QString &imageLeft,
-                                            const QString &imageRight)
+                                            const QString &imageRight,
+                                            double error)
 {
   std::vector<QPointF> curve;
 
   QString matrixAdjust = mSettingsModel->groundTruthEditorMatrixAdjust();
   mModel->setAdjustMatrix(matrixAdjust);
 
-  double auc = mModel->computeCurve(session, imageLeft, imageRight, curve);
+  double auc = mModel->computeCurve(session, imageLeft, imageRight, curve, mView->errorThreshold());
   QString title = session;
   title.append(" [AUC=").append(QString::number(auc, 'g', 3)).append("]");
   mView->setCurve(title, curve);
@@ -102,6 +103,17 @@ void CurvesViewerPresenterImp::computeCurve(const QString &session,
 void CurvesViewerPresenterImp::deleteCurve(const QString &session)
 {
   mView->eraseCurve(session);
+}
+
+void CurvesViewerPresenterImp::setErrorThreshold(double error)
+{
+  std::vector<QString> session_names = mModel->sessionNames();
+  for (auto &session_name : session_names) {
+    if (mView->isSessionActive(session_name)) {
+      this->deleteCurve(session_name);
+      this->computeCurve(session_name, mView->leftImage(), mView->rightImage(), error);
+    }
+  }
 }
 
 void CurvesViewerPresenterImp::help()
@@ -150,6 +162,7 @@ void CurvesViewerPresenterImp::initSignalAndSlots()
   connect(mView, &CurvesViewerView::rightImageChange,   this, &CurvesViewerPresenterImp::loadRightImage);
   connect(mView, &CurvesViewerView::activeSession,      this, &CurvesViewerPresenterImp::activeSession);
   connect(mView, &CurvesViewerView::disableSession,     this, &CurvesViewerPresenterImp::disableSession);
+  connect(mView, &CurvesViewerView::error_threshold_changed, this, &CurvesViewerPresenterImp::setErrorThreshold);
   connect(mView, &PhotoMatchDialogView::help,           this, &CurvesViewerPresenterImp::help);
 }
 

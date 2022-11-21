@@ -203,8 +203,7 @@ qt5_create_translation(PHOTOMATCH_QM_FILES ${CMAKE_SOURCE_DIR} photomatch_en.ts 
 
 QT5_ADD_RESOURCES(UI_PHOTOMATCH_RES ${PHOTOMATCH_RESOURCES} )
 
-add_executable(${PROJECT_NAME}
-               #${PROJECT_NAME} WIN32
+add_executable(${PROJECT_NAME} WIN32
                ${PHOTOMATCH_SOURCES}
                ${PHOTOMATCH_HEADERS}
                ${PHOTOMATCH_FORMS}

@@ -118,7 +118,8 @@ std::vector<std::tuple<QString, QString, QString> > CurvesViewerModelImp::sessio
 
 std::vector<std::pair<double, int> > CurvesViewerModelImp::classifiedMatches(const QString &session,
                                                                              const QString &imgLeft,
-                                                                             const QString &imgRight) const
+                                                                             const QString &imgRight,
+                                                                             double error) const
 {
   std::vector<std::pair<double, int>> classified_matches;
 
@@ -182,6 +183,8 @@ std::vector<std::pair<double, int> > CurvesViewerModelImp::classifiedMatches(con
 
     cv::Mat img1 = cv::imread(imgPath1.toStdString().c_str());
     cv::Mat img2 = cv::imread(imgPath2.toStdString().c_str());
+
+    float inlierDistance = static_cast<float>(error);
 
     if (std::shared_ptr<Session> _session = mProjectModel->findSession(session)){
       std::vector<std::pair<QString, QString>> matches = _session->matches(imgLeft);
@@ -268,8 +271,6 @@ std::vector<std::pair<double, int> > CurvesViewerModelImp::classifiedMatches(con
               cv::computeCorrespondEpilines(query_points, 1, fundamental_matrix, lines1);
               cv::computeCorrespondEpilines(train_points, 2, fundamental_matrix, lines2);
 
-              float inlierDistance = 1.f;
-
               size_t i = 0;
               for (; i < goodMatches.size(); i++){
                 if(distancePointLine(train_points[i], lines1[i]) < inlierDistance &&
@@ -339,23 +340,25 @@ ROCCurvesViewerModel::~ROCCurvesViewerModel()
 
 std::vector<QPointF> ROCCurvesViewerModel::computeCurve(const QString &session,
                                                         const QString &imgLeft,
-                                                        const QString &imgRight) const
+                                                        const QString &imgRight,
+                                                        double error) const
 {
   std::vector<QPointF> curve;
-  this->computeCurve(session, imgLeft, imgRight, curve);
+  this->computeCurve(session, imgLeft, imgRight, curve, error);
   return curve;
 }
 
 double ROCCurvesViewerModel::computeCurve(const QString &session,
                                           const QString &imgLeft,
                                           const QString &imgRight,
-                                          std::vector<QPointF> &curve) const
+                                          std::vector<QPointF> &curve,
+                                          double error) const
 {
   double auc = 0.0;
   msgInfo("Compute ROC Curve for session %s", session.toStdString().c_str());
 
   try {
-    std::vector<std::pair<double, int>> classified_matches = classifiedMatches(session, imgLeft, imgRight);
+    std::vector<std::pair<double, int>> classified_matches = classifiedMatches(session, imgLeft, imgRight, error);
 
     ROCCurve<double> rocCurve(classified_matches);
     rocCurve.compute();
@@ -380,20 +383,27 @@ PRCurvesViewerModel::~PRCurvesViewerModel()
 
 }
 
-std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const
+std::vector<QPointF> PRCurvesViewerModel::computeCurve(const QString &session,
+                                                       const QString &imgLeft,
+                                                       const QString &imgRight,
+                                                       double error) const
 {
   std::vector<QPointF> curve;
-  this->computeCurve(session, imgLeft, imgRight, curve);
+  this->computeCurve(session, imgLeft, imgRight, curve, error);
   return curve;
 }
 
-double PRCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const
+double PRCurvesViewerModel::computeCurve(const QString &session, 
+                                         const QString &imgLeft,
+                                         const QString &imgRight, 
+                                         std::vector<QPointF> &curve,
+                                         double error) const
 {
   double auc = 0.0;
 
   msgInfo("Compute PR Curve for session %s", session.toStdString().c_str());
 
-  std::vector<std::pair<double, int>> classified_matches = classifiedMatches(session, imgLeft, imgRight);
+  std::vector<std::pair<double, int>> classified_matches = classifiedMatches(session, imgLeft, imgRight, error);
 
   PRCurve<double> prCurve(classified_matches);
   prCurve.compute();
@@ -415,20 +425,27 @@ DETCurvesViewerModel::~DETCurvesViewerModel()
 
 }
 
-std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight) const
+std::vector<QPointF> DETCurvesViewerModel::computeCurve(const QString &session, 
+                                                        const QString &imgLeft, 
+                                                        const QString &imgRight,
+                                                        double error) const
 {
   std::vector<QPointF> curve;
-  this->computeCurve(session, imgLeft, imgRight, curve);
+  this->computeCurve(session, imgLeft, imgRight, curve, error);
   return curve;
 }
 
-double DETCurvesViewerModel::computeCurve(const QString &session, const QString &imgLeft, const QString &imgRight, std::vector<QPointF> &curve) const
+double DETCurvesViewerModel::computeCurve(const QString &session, 
+                                          const QString &imgLeft, 
+                                          const QString &imgRight, 
+                                          std::vector<QPointF> &curve,
+                                          double error) const
 {
   double auc = 0.0;
 
   msgInfo("Compute DET Curve for session %s", session.toStdString().c_str());
 
-  std::vector<std::pair<double, int>> classified_matches = classifiedMatches(session, imgLeft, imgRight);
+  std::vector<std::pair<double, int>> classified_matches = classifiedMatches(session, imgLeft, imgRight, error);
 
   DETCurve<double> detCurve(classified_matches);
   detCurve.compute();

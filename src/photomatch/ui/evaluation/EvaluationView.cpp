@@ -171,7 +171,7 @@ void EvaluationViewImp::clear()
   mComboBoxLeftImage->clear();
   mTreeWidgetSessions->clear();
   mTabWidget->clear();
-  mDoubleSpinBoxErrorThreshold->setValue(10.);
+  mDoubleSpinBoxErrorThreshold->setValue(2.);
 }
 
 void EvaluationViewImp::update()

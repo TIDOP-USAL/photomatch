@@ -63,9 +63,10 @@ protected slots:
   void disableSession(const QString &session) override;
   void computeCurve(const QString &session,
                     const QString &imageLeft,
-                    const QString &imageRight) override;
+                    const QString &imageRight,
+                    double error) override;
   void deleteCurve(const QString &session) override;
-
+  void setErrorThreshold(double error) override;
 
 // PhotoMatchModel interface
 

@@ -58,7 +58,8 @@ public:
   std::vector<std::tuple<QString, QString, QString>> sessions() const override;
   std::vector<std::pair<double, int>> classifiedMatches(const QString &session,
                                                         const QString &imgLeft,
-                                                        const QString &imgRight) const override;
+                                                        const QString &imgRight,
+                                                        double error = 2.) const override;
   QString adjustMatrix() const override;
   void setAdjustMatrix(const QString &adjustMatrix) override;
 
@@ -93,11 +94,13 @@ public:
 
   std::vector<QPointF> computeCurve(const QString &session,
                                     const QString &imgLeft,
-                                    const QString &imgRight) const override;
+                                    const QString &imgRight,
+                                    double error) const override;
   double computeCurve(const QString &session,
                       const QString &imgLeft,
                       const QString &imgRight,
-                      std::vector<QPointF> &curve) const override;
+                      std::vector<QPointF> &curve,
+                      double error) const override;
 
 };
 
@@ -119,11 +122,13 @@ public:
 
   std::vector<QPointF> computeCurve(const QString &session,
                                     const QString &imgLeft,
-                                    const QString &imgRight) const override;
+                                    const QString &imgRight,
+                                    double error) const override;
   double computeCurve(const QString &session,
                       const QString &imgLeft,
                       const QString &imgRight,
-                      std::vector<QPointF> &curve) const override;
+                      std::vector<QPointF> &curve,
+                      double error) const override;
 
 };
 
@@ -144,11 +149,13 @@ public:
 
   std::vector<QPointF> computeCurve(const QString &session,
                                     const QString &imgLeft,
-                                    const QString &imgRight) const override;
+                                    const QString &imgRight,
+                                    double error) const override;
   double computeCurve(const QString &session,
                       const QString &imgLeft,
                       const QString &imgRight,
-                      std::vector<QPointF> &curve) const override;
+                      std::vector<QPointF> &curve,
+                      double error) const override;
 };
 
 

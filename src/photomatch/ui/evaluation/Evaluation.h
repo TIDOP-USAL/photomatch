@@ -62,7 +62,7 @@ public:
   virtual Report computeErrors(const QString &session,
                                const QString &imgLeft,
                                const QString &imgRight,
-                               double errorThreshold = 10.) const = 0;
+                               double errorThreshold = 2.) const = 0;
   virtual QString adjustMatrix() const = 0;
   virtual void setAdjustMatrix(const QString &adjustMatrix) = 0;
 

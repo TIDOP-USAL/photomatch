@@ -34,6 +34,7 @@
 #include <QtCharts>
 #include <QHBoxLayout>
 #include <QApplication>
+#include <QDoubleSpinBox>
 
 namespace photomatch
 {
@@ -62,52 +63,42 @@ CurvesViewerViewImp::~CurvesViewerViewImp()
     delete mChart;
     mChart = nullptr;
   }
-
-//  if (mAxisX){
-//    delete mAxisX;
-//    mAxisX = nullptr;
-//  }
-
-//  if (mAxisY){
-//    delete mAxisY;
-//    mAxisY = nullptr;
-//  }
 }
 
 void CurvesViewerViewImp::initUI()
 {
   this->setObjectName(QString("CurvesViewerView"));
-  //this->setWindowIcon(QIcon(":/ico/app/img/FMELogo.ico"));
   this->resize(994, 688);
 
   QGridLayout *gridLayout = new QGridLayout();
   this->setLayout(gridLayout);
-
-  mLabelLeftImage = new QLabel(this);
-  gridLayout->addWidget(mLabelLeftImage, 0, 0, 1, 1);
-
-  mComboBoxLeftImage = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxLeftImage, 0, 1, 1, 1);
-
-  mLabelRightImage = new QLabel(this);
-  gridLayout->addWidget(mLabelRightImage, 0, 2, 1, 1);
-
-  mComboBoxRightImage = new QComboBox(this);
-  gridLayout->addWidget(mComboBoxRightImage, 0, 3, 1, 1);
-
-  QHBoxLayout *hBoxLayout = new QHBoxLayout();
 
   mTreeWidgetSessions = new QTreeWidget(this);
   QTreeWidgetItem *qtreewidgetitem = new QTreeWidgetItem();
   qtreewidgetitem->setText(0, "");
   qtreewidgetitem->setText(1, "");
   qtreewidgetitem->setText(2, "");
-//  qtreewidgetitem->setText(0, tr("Session"));
-//  qtreewidgetitem->setText(1, tr("Detector"));
-//  qtreewidgetitem->setText(2, tr("Descriptor"));
   mTreeWidgetSessions->setHeaderItem(qtreewidgetitem);
   mTreeWidgetSessions->setMaximumWidth(250);
-  hBoxLayout->addWidget(mTreeWidgetSessions);
+  gridLayout->addWidget(mTreeWidgetSessions, 0, 0, 4, 1);
+
+  mLabelLeftImage = new QLabel(this);
+  gridLayout->addWidget(mLabelLeftImage, 0, 1, 1, 1);
+
+  mComboBoxLeftImage = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxLeftImage, 0, 2, 1, 1);
+
+  mLabelRightImage = new QLabel(this);
+  gridLayout->addWidget(mLabelRightImage, 1, 1, 1, 1);
+
+  mComboBoxRightImage = new QComboBox(this);
+  gridLayout->addWidget(mComboBoxRightImage, 1, 2, 1, 1);
+
+  mLabelErrorThreshold = new QLabel(this);
+  gridLayout->addWidget(mLabelErrorThreshold, 2, 1, 1, 1);
+
+  mDoubleSpinBoxErrorThreshold = new QDoubleSpinBox(this);
+  gridLayout->addWidget(mDoubleSpinBoxErrorThreshold, 2, 2, 1, 1);
 
 
   mChart = new QtCharts::QChart();
@@ -121,13 +112,12 @@ void CurvesViewerViewImp::initUI()
 
   QChartView *chartView = new QChartView(mChart);
   chartView->setRenderHint(QPainter::Antialiasing);
-  hBoxLayout->addWidget(chartView);
-  gridLayout->addLayout(hBoxLayout, 1, 0, 1, 4);
+  gridLayout->addWidget(chartView, 3, 1, 1, 2);
 
   mButtonBox = new QDialogButtonBox(this);
   mButtonBox->setOrientation(Qt::Horizontal);
   mButtonBox->setStandardButtons(QDialogButtonBox::Close|QDialogButtonBox::Help);
-  gridLayout->addWidget(mButtonBox, 2, 0, 1, 4);
+  gridLayout->addWidget(mButtonBox, 4, 0, 1, 3);
 
   this->update();
   this->retranslate();
@@ -148,10 +138,12 @@ void CurvesViewerViewImp::clear()
   QSignalBlocker blocker1(mComboBoxLeftImage);
   QSignalBlocker blocker2(mComboBoxRightImage);
   QSignalBlocker blocker3(mTreeWidgetSessions);
+  QSignalBlocker blocker4(mDoubleSpinBoxErrorThreshold);
 
   mComboBoxLeftImage->clear();
   mComboBoxLeftImage->clear();
   mTreeWidgetSessions->clear();
+  mDoubleSpinBoxErrorThreshold->setValue(2.);
 }
 
 void CurvesViewerViewImp::update()
@@ -166,6 +158,7 @@ void CurvesViewerViewImp::retranslate()
   qtreewidgetitem->setText(0, QApplication::translate("CurvesViewerView", "Session"));
   qtreewidgetitem->setText(1, QApplication::translate("CurvesViewerView", "Detector"));
   qtreewidgetitem->setText(2, QApplication::translate("CurvesViewerView", "Descriptor"));
+  mLabelErrorThreshold->setText(QApplication::translate("CurvesViewerView", "Error threshold:", nullptr));
   mButtonBox->button(QDialogButtonBox::Close)->setText(QApplication::translate("CurvesViewerView", "Close"));
   mButtonBox->button(QDialogButtonBox::Help)->setText(QApplication::translate("CurvesViewerView", "Help"));
 }
@@ -288,6 +281,11 @@ void CurvesViewerViewImp::onTreeWidgetSessionsItemChanged(QTreeWidgetItem *item,
   } else {
     emit disableSession(item->text(0));
   }
+}
+
+double CurvesViewerViewImp::errorThreshold() const
+{
+  return mDoubleSpinBoxErrorThreshold->value();
 }
 
 /*----------------------------------------------------------------*/

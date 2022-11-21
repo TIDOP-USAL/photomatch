@@ -32,6 +32,7 @@ class QComboBox;
 class QTreeWidget;
 class QTreeWidgetItem;
 class QLabel;
+class QDoubleSpinBox;
 
 namespace QtCharts
 {
@@ -62,16 +63,17 @@ protected slots :
 
 // CurvesViewerView interface
 
-  virtual void addSession(const QString &session, const QString &detector, const QString &descriptor) override;
-  virtual bool isSessionActive(const QString &session) const override;
-  virtual QString leftImage() const override;
-  virtual void setLeftImage(const QString &leftImage) override;
-  virtual QString rightImage() const override;
-  virtual void setRightImage(const QString &rightImage) override;
-  virtual void setLeftImageList(const std::vector<QString> &leftImageList) override;
-  virtual void setRightImageList(const std::vector<QString> &rightImageList) override;
-  virtual void setCurve(const QString &title, const std::vector<QPointF> &curve) override;
-  virtual void eraseCurve(const QString &session) override;
+  void addSession(const QString &session, const QString &detector, const QString &descriptor) override;
+  bool isSessionActive(const QString &session) const override;
+  QString leftImage() const override;
+  void setLeftImage(const QString &leftImage) override;
+  QString rightImage() const override;
+  void setRightImage(const QString &rightImage) override;
+  void setLeftImageList(const std::vector<QString> &leftImageList) override;
+  void setRightImageList(const std::vector<QString> &rightImageList) override;
+  void setCurve(const QString &title, const std::vector<QPointF> &curve) override;
+  void eraseCurve(const QString &session) override;
+  double errorThreshold() const override;
 
 // PhotoMatchDialogView interface
 
@@ -96,6 +98,8 @@ protected:
   QComboBox  *mComboBoxLeftImage;
   QLabel *mLabelRightImage;
   QComboBox  *mComboBoxRightImage;
+  QLabel *mLabelErrorThreshold;
+  QDoubleSpinBox *mDoubleSpinBoxErrorThreshold;
   QTreeWidget *mTreeWidgetSessions;
   QtCharts::QChart *mChart;
   QtCharts::QValueAxis *mAxisX;

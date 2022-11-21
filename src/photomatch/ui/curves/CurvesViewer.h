@@ -49,14 +49,17 @@ public:
   virtual std::vector<std::tuple<QString, QString, QString>> sessions() const = 0;
   virtual std::vector<QPointF> computeCurve(const QString &session,
                                             const QString &imgLeft,
-                                            const QString &imgRight) const = 0;
+                                            const QString &imgRight,
+                                            double error = 0.) const = 0;
   virtual double computeCurve(const QString &session,
                               const QString &imgLeft,
                               const QString &imgRight,
-                              std::vector<QPointF> &curve) const = 0;
+                              std::vector<QPointF> &curve,
+                              double error) const = 0;
   virtual std::vector<std::pair<double, int>> classifiedMatches(const QString &session,
                                                                 const QString &imgLeft,
-                                                                const QString &imgRight) const = 0;
+                                                                const QString &imgRight,
+                                                                double error = 0.) const = 0;
   virtual QString adjustMatrix() const = 0;
   virtual void setAdjustMatrix(const QString &adjustMatrix) = 0;
 
@@ -104,6 +107,7 @@ public:
 
   virtual void setCurve(const QString &title, const std::vector<QPointF> &curve) = 0;
   virtual void eraseCurve(const QString &session) = 0;
+  virtual double errorThreshold() const = 0;
 
 signals:
 
@@ -111,7 +115,7 @@ signals:
   void rightImageChange(QString);
   void activeSession(QString);
   void disableSession(QString);
-
+  void error_threshold_changed(double);
 };
 
 
@@ -134,8 +138,10 @@ protected slots:
   virtual void disableSession(const QString &session) = 0;
   virtual void computeCurve(const QString &session,
                             const QString &imageLeft,
-                            const QString &imageRight) = 0;
+                            const QString &imageRight,
+                            double error) = 0;
   virtual void deleteCurve(const QString &session) = 0;
+  virtual void setErrorThreshold(double error) = 0;
 };
 
 
